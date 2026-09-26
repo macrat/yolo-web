@@ -1,50 +1,32 @@
 /**
- * Cross-linking utility between blog posts and tools/games.
- * M10: Keeps blog.ts independent by centralizing
- * cross-reference logic here.
+ * ブログ記事と、記事が取り上げたツール・ゲームのつながり。
+ * 記事どうしの処理を持つ blog.ts から、ほかの面との参照を切り離してここに置く。
  */
 
 import { getAllBlogPosts, type BlogPostMeta } from "@/blog/_lib/blog";
 
-interface BlogReferenceIndex {
-  toolToPosts: Map<string, BlogPostMeta[]>;
-}
-
-function addToReverseIndex(
-  index: Map<string, BlogPostMeta[]>,
-  key: string,
-  post: BlogPostMeta,
-): void {
-  const posts = index.get(key);
-  if (posts) {
-    posts.push(post);
-    return;
-  }
-  index.set(key, [post]);
-}
-
 /**
- * Build reverse indexes from blog metadata once, then reuse for all lookup APIs.
+ * ツール・ゲームの slug から、それを取り上げた記事を引く表。記事はツールとゲームの slug を
+ * 同じ欄（related_tool_slugs）に持つので、表も1つにする。
  */
-function buildBlogReferenceIndex(posts: BlogPostMeta[]): BlogReferenceIndex {
-  const toolToPosts = new Map<string, BlogPostMeta[]>();
-
+function buildPostsBySlug(posts: BlogPostMeta[]): Map<string, BlogPostMeta[]> {
+  const postsBySlug = new Map<string, BlogPostMeta[]>();
   for (const post of posts) {
-    for (const toolSlug of post.related_tool_slugs) {
-      addToReverseIndex(toolToPosts, toolSlug, post);
+    for (const slug of post.related_tool_slugs) {
+      const found = postsBySlug.get(slug);
+      if (found) {
+        found.push(post);
+      } else {
+        postsBySlug.set(slug, [post]);
+      }
     }
   }
-
-  return { toolToPosts };
+  return postsBySlug;
 }
 
-const blogReferenceIndex = buildBlogReferenceIndex(getAllBlogPosts());
+const postsBySlug = buildPostsBySlug(getAllBlogPosts());
 
-/**
- * Get blog posts that reference a given tool or game slug.
- * Blog posts store both kinds of slugs in the same related_tool_slugs field.
- * Returns an empty array when there is no matching reference.
- */
-export function getRelatedBlogPostsForTool(toolSlug: string): BlogPostMeta[] {
-  return blogReferenceIndex.toolToPosts.get(toolSlug) ?? [];
+/** そのツール・ゲームを取り上げた記事。無ければ空の配列。 */
+export function getBlogPostsReferencing(slug: string): BlogPostMeta[] {
+  return postsBySlug.get(slug) ?? [];
 }

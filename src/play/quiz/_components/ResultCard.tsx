@@ -206,6 +206,7 @@ function renderStandardContent(
           quizSlug={quizSlug}
           currentResultId={resultId}
           results={allResults}
+          placement="solvedScreen"
         />
       )}
     </>

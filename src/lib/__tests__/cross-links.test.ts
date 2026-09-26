@@ -54,23 +54,23 @@ describe("cross-links", () => {
     mockGetAllBlogPosts.mockReturnValue(FIXED_POSTS);
   });
 
-  test("tool/game slug参照を正しく逆引きできる", async () => {
-    const { getRelatedBlogPostsForTool } = await import("../cross-links");
+  test("ツール・ゲームの slug から、それを取り上げた記事を引けること", async () => {
+    const { getBlogPostsReferencing } = await import("../cross-links");
 
     expect(
-      getRelatedBlogPostsForTool("json-formatter").map((post) => post.slug),
+      getBlogPostsReferencing("json-formatter").map((post) => post.slug),
     ).toEqual(["memo-link-post", "tool-link-post"]);
     expect(
-      getRelatedBlogPostsForTool("kanji-kanaru").map((post) => post.slug),
+      getBlogPostsReferencing("kanji-kanaru").map((post) => post.slug),
     ).toEqual(["shared-link-post", "tool-link-post"]);
-    expect(getRelatedBlogPostsForTool("missing-tool")).toEqual([]);
+    expect(getBlogPostsReferencing("missing-tool")).toEqual([]);
   });
 
-  test("ブログ参照インデックスはモジュール内で1回だけ構築される", async () => {
-    const { getRelatedBlogPostsForTool } = await import("../cross-links");
+  test("記事を引く表は、モジュールの中で1回だけ作ること", async () => {
+    const { getBlogPostsReferencing } = await import("../cross-links");
 
-    getRelatedBlogPostsForTool("json-formatter");
-    getRelatedBlogPostsForTool("kanji-kanaru");
+    getBlogPostsReferencing("json-formatter");
+    getBlogPostsReferencing("kanji-kanaru");
 
     expect(mockGetAllBlogPosts).toHaveBeenCalledTimes(1);
   });

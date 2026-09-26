@@ -154,6 +154,33 @@ describe("ItemList", () => {
     expect(secondRow.querySelectorAll("p")).toHaveLength(1);
   });
 
+  test("showKind を渡すと、渡した項目から決めずにそれに従う", () => {
+    const { unmount } = render(
+      <ItemList
+        label="見本"
+        items={[
+          { name: "一", href: "/a", kind: "小学1年" },
+          { name: "森", href: "/b", kind: "小学1年" },
+        ]}
+        showKind
+      />,
+    );
+    expect(screen.getAllByText("小学1年")).toHaveLength(2);
+    unmount();
+    render(
+      <ItemList
+        label="見本"
+        items={[
+          { name: "文字数カウント", href: "/a", kind: "文章" },
+          { name: "Base64", href: "/b", kind: "データ" },
+        ]}
+        showKind={false}
+      />,
+    );
+    expect(screen.queryByText("文章")).not.toBeInTheDocument();
+    expect(screen.queryByText("データ")).not.toBeInTheDocument();
+  });
+
   test("いま開いているページの行だけが現在地になり、リンクのまま名前も変わらない", () => {
     render(
       <ItemList
@@ -165,6 +192,23 @@ describe("ItemList", () => {
     const current = screen.getByRole("link", { name: "水" });
     expect(current).toHaveAttribute("aria-current", "page");
     expect(current).toHaveAttribute("href", "/dictionary/kanji/水");
+    expect(
+      screen.getByRole("link", { name: "文字数カウント" }),
+    ).not.toHaveAttribute("aria-current");
+  });
+
+  test("来訪者のものに決まった項目の行は、いまの項目になり、現在地にはならない", () => {
+    render(
+      <ItemList
+        label="見本"
+        items={items}
+        currentItemHref="/dictionary/kanji/水"
+      />,
+    );
+    expect(screen.getByRole("link", { name: "水" })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
     expect(
       screen.getByRole("link", { name: "文字数カウント" }),
     ).not.toHaveAttribute("aria-current");

@@ -144,10 +144,7 @@ export default function ColorDetail({
       </section>
 
       {relatedColors.length > 0 && (
-        <section
-          className={styles.section}
-          aria-labelledby={SAME_CATEGORY_HEADING_ID}
-        >
+        <section className={styles.section}>
           <h2 id={SAME_CATEGORY_HEADING_ID}>
             同じカテゴリの伝統色（{categoryLabel}）
           </h2>

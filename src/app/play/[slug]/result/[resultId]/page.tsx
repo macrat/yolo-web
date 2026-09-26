@@ -271,7 +271,7 @@ export default async function PlayQuizResultPage({
             quizSlug={slug}
             currentResultId={result.id}
             results={quiz.results}
-            headingLevel={2}
+            placement="resultPage"
           />
 
           {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}

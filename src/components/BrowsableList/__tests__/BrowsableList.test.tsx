@@ -142,6 +142,20 @@ describe("BrowsableList", () => {
     replace.mockRestore();
   });
 
+  test("行の種別は範囲の全件で決め、種別で絞ってページの行がそろっても出す", () => {
+    render(<BrowsableList {...props()} />);
+    fireEvent.click(screen.getByRole("radio", { name: "データ" }));
+    const list = screen.getByRole("list", { name: "項目の一覧" });
+    expect(within(list).getAllByText("データ")).toHaveLength(50);
+  });
+
+  test("範囲の全件で同じ種別は、行に出さない", () => {
+    const items = makeItems(3).map((item) => ({ ...item, kind: "文章" }));
+    render(<BrowsableList {...props({ items, kindGroup: undefined })} />);
+    const list = screen.getByRole("list", { name: "項目の一覧" });
+    expect(within(list).queryByText("文章")).not.toBeInTheDocument();
+  });
+
   test("既定でない状態のページ送りは button モードで、pushState で送り、フォーカスを件数の行に移す", () => {
     const push = vi.spyOn(window.history, "pushState");
     render(<BrowsableList {...props()} />);

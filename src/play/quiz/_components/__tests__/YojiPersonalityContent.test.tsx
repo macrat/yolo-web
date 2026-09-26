@@ -276,7 +276,7 @@ describe("YojiPersonalityContent - aria-current", () => {
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("別の resultId では、そのタイプのリンクに aria-current='page' が設定されること", () => {
+  it("解き終えた画面（h3）では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
     render(
       <YojiPersonalityContent
         content={sampleContent}
@@ -286,7 +286,7 @@ describe("YojiPersonalityContent - aria-current", () => {
       />,
     );
     const currentLink = screen.getByRole("link", { name: /天真爛漫/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
+    expect(currentLink).toHaveAttribute("aria-current", "true");
     const otherLink = screen.getByRole("link", { name: /初志貫徹/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });

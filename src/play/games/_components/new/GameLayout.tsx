@@ -89,7 +89,7 @@ export default function GameLayout({
         relatedSlugs={meta.relatedGameSlugs}
       />
       <RecommendedContent currentSlug={meta.slug} />
-      <RelatedBlogPosts toolSlug={meta.slug} />
+      <RelatedBlogPosts slug={meta.slug} />
     </article>
   );
 }

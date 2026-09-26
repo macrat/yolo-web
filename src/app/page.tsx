@@ -9,12 +9,12 @@ import { getContentPath } from "@/play/paths";
 import styles from "./page.module.css";
 
 /**
- * トップページ = よろず屋の店先
+ * トップページ
  *
- * 同じ形の行を並べただけの索引にせず、焦点（目玉）のある店先にする。器は紙・墨・罫・組版のみ。
+ * 同じ形の行を並べただけの索引にせず、焦点（目玉）のあるページにする。器は紙・墨・罫・組版のみ。
  * その器の中で「階層と焦点」を作る（site-concept「その場でためして持ち帰れる」）:
  *
- * 1. 名乗り（compact）: 店号（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせ、
+ * 1. 名乗り（compact）: サイト名（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせ、
  *    説明の羅列はしない（具体は目玉と行の一覧が担う）。AI 明示は Footer が常時持つため、
  *    ここは短い一言に留める（§9「AI 運営を正直に、簡潔に示す」）。
  * 2. 目玉（今日のためしどころ・above the fold）: 成長エンジンの「あなたに似たキャラ診断」を
@@ -24,7 +24,7 @@ import styles from "./page.module.css";
  *    実際に見せる。「持ち帰れる札」を言うだけでなく成果物として見せ、来訪者自身
  *    の結果と誤認させないよう「見本」であることを正直に添える。デスクトップは左右・モバイルは縦積み。
  * 3. 分野ごとのセクション: 目玉の後ろに、残りの体験・辞典・道具・読みものを、見出しと行の一覧
- *    （ItemList）で並べる。ここは「品揃えの広さ＝よろず」を示す部分。器は静かに。
+ *    （ItemList）で並べる。ここはサイトにあるものの幅を示す部分。器は静かに。
  *    目玉に立てた診断は一覧から外す（同じページで同一診断を二度立てない）。
  *
  * インライン style は使わない（色・角丸はすべてトークン経由で module.css に置く）。
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 
 /**
  * 目玉（今日のためしどころ）に立てる診断。成長エンジン＝実測集客首位の
- * character-personality を店先の焦点にする。品名・遷移先はレジストリ（単一情報源）から
+ * character-personality をページの焦点にする。名前・遷移先はレジストリ（単一情報源）から
  * 引き、コピーの具体（問数「12」・タイプ数「24」）は診断データの正典値と一致する
  * （page.test.tsx が questionCount / result 数の一致を機械ガードし、乖離を防ぐ）。
  */
@@ -66,7 +66,7 @@ const heroContent: PlayContentMeta | undefined =
 /**
  * 「診断・占い・あそび」のセクションに並べる体験の入口。
  * 名前（title）と遷移先（href）はレジストリ（単一情報源）から描画時に引き、ここでは
- * slug と、店の言葉で書いた「ひとこと」・補助情報だけを持つ（コピーの重複と乖離を防ぐ）。
+ * slug と、トップページのために書いた「ひとこと」・補助情報だけを持つ（コピーの重複と乖離を防ぐ）。
  *
  * character-personality は目玉に立てたため、ここからは外す（同一診断を同じページで
  * 二度立てない）。性格・キャラ診断で発見の幅を、contrarian-fortune で占い枠を、
@@ -180,7 +180,7 @@ const READING_ITEMS: ItemListItem[] = [
 export default function Home() {
   return (
     <div className={styles.page}>
-      {/* 名乗り（compact）: 店号（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせる。 */}
+      {/* 名乗り（compact）: サイト名（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせる。 */}
       <div className={styles.intro}>
         <h1 className={styles.title}>{SITE_NAME}</h1>
         {/* 一言は文節の塊（span=inline-block）で組み、折り返しを文節境界だけで起こす。
@@ -191,8 +191,7 @@ export default function Home() {
           <span className={styles.phrase}>AIが営む、よろず屋です。</span>
         </p>
         {/* AI 運営の明示（constitution rule 3・正直の開示であって「実験」を価値として売り込まない）。
-            詳細な注記は Footer が常時表示するため一言に。店の見立て（「店主」）は来訪者に解読を
-            強いるので、「運営しているのは」と平明に言う。 */}
+            詳細な注記は Footer が常時表示するため一言に。来訪者に解読を強いない平明な言い方にする。 */}
         <p className={styles.aiNotice}>
           運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。
         </p>
@@ -247,7 +246,7 @@ export default function Home() {
         </section>
       ) : null}
 
-      {/* 分野ごとのセクション。ここは器を静かに、品揃えの広さを示す。 */}
+      {/* 分野ごとのセクション。ここは器を静かに、サイトにあるものの幅を示す。 */}
       {/* 診断・占い・あそび（見せたくなる結果への入口・目玉の診断は除く） */}
       <section className={styles.section}>
         <h2 id="section-play" className={styles.sectionHeading}>

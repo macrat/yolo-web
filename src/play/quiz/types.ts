@@ -257,6 +257,11 @@ export type QuizResult = {
   /** URL-safe ID (e.g. 'master', 'ai-iro') */
   id: string;
   title: string;
+  /**
+   * title が名前の後ろに読みを添えた形（「藍色(あいいろ)」）のタイプの、名前と読み。タイプを並べる一覧は、
+   * 読みをリンクの外に置くためにこれを使う（DESIGN.md §7）。
+   */
+  nameParts?: { name: string; reading: string };
   description: string;
   /** Theme color hex (used for personality type) */
   color?: string;

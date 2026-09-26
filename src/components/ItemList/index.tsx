@@ -17,7 +17,7 @@ export interface ItemListItem {
   reading?: string;
   /** 何ができるか・何であるかを言う短い文。 */
   description?: string;
-  /** 何の仲間かを言う一語。並べる全件で同じなら、行に出ない。 */
+  /** 何の仲間かを言う一語。行に出すかは一覧の showKind が決める。 */
   kind?: string;
   facts?: ItemListFact[];
   /** 主題が色である項目の色見本の色。 */
@@ -33,6 +33,16 @@ export type ItemListProps = ItemListName & {
   ordered?: boolean;
   /** いま開いているページのパス。一致する行を現在地にする。 */
   currentHref?: string;
+  /**
+   * 開いているページの中で、来訪者のものに決まった項目のパス（解き終えた画面での来訪者のタイプ）。
+   * 一致する行の名前を太字にし、読み上げは「いまの項目」と言う。押すと別のページへ移るので、下線は残す。
+   */
+  currentItemHref?: string;
+  /**
+   * 種別を行に出すか。一覧が並べる全件で同じ種別は、項目を見分ける手がかりにならないので出さない（§7）。
+   * 既定では渡した項目から決める。ページに切り出した一部を渡すときは、呼び出し側が一覧の全件から決めて渡す。
+   */
+  showKind?: boolean;
   /** 結果のボックスや Panel の中に置くときは false にし、ボーダーを二重にしない。 */
   boxed?: boolean;
 };
@@ -48,14 +58,19 @@ export type ItemListProps = ItemListName & {
  * 読み上げが一覧の名前も件数も言わなくなるため。
  */
 export default function ItemList(props: ItemListProps): ReactElement {
-  const { items, ordered = false, currentHref, boxed = true } = props;
+  const {
+    items,
+    ordered = false,
+    currentHref,
+    currentItemHref,
+    boxed = true,
+    showKind = new Set(items.map((item) => item.kind)).size > 1,
+  } = props;
   const List = ordered ? "ol" : "ul";
   const nameProps =
     "labelledBy" in props
       ? { "aria-labelledby": props.labelledBy }
       : { "aria-label": props.label };
-  // 全件で同じ種別は項目を見分ける手がかりにならないので、行に出さない（§7）。
-  const showKind = new Set(items.map((item) => item.kind)).size > 1;
   // 番号の列の幅を最も長い番号に揃え、名前の左端を行ごとに揃える。
   const numberWidth = ordered
     ? ({
@@ -72,7 +87,12 @@ export default function ItemList(props: ItemListProps): ReactElement {
       {...nameProps}
     >
       {items.map((item, index) => {
-        const current = item.href === currentHref;
+        const current =
+          item.href === currentHref
+            ? "page"
+            : item.href === currentItemHref
+              ? "true"
+              : undefined;
         const kind = showKind ? item.kind : undefined;
         const facts = item.facts ?? [];
         const hasMeta = kind !== undefined || facts.length > 0;
@@ -105,7 +125,7 @@ export default function ItemList(props: ItemListProps): ReactElement {
               <Link
                 href={item.href}
                 className={styles.name}
-                aria-current={current ? "page" : undefined}
+                aria-current={current}
                 data-hit-area="after"
               >
                 {item.name}

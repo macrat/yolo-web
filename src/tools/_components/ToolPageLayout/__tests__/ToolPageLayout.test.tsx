@@ -39,7 +39,7 @@ vi.mock("@/tools/registry", () => ({
 
 // cross-links のモック
 vi.mock("@/lib/cross-links", () => ({
-  getRelatedBlogPostsForTool: vi.fn().mockReturnValue([]),
+  getBlogPostsReferencing: vi.fn().mockReturnValue([]),
 }));
 
 // date のモック

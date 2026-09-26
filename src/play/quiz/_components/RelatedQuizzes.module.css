@@ -1,11 +1,9 @@
+/* ページの末尾の関連の一覧。見出しの大きさは h2 の既定（§4 のセクションの見出し）に従う。
+ * セクションのあいだの全幅の罫線は、ページがセクションを組むときに引く（§5）。 */
 .related {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  margin-top: var(--space-32);
 }
 
 .heading {
-  font-size: 1rem;
   margin: 0 0 var(--space-16);
-  color: var(--ink);
 }

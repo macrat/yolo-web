@@ -85,7 +85,7 @@ export default function TraditionalColorContent({
         quizSlug={quiz.meta.slug}
         currentResultId={resultId}
         results={quiz.results}
-        headingLevel={headingLevel}
+        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
         showSwatch
       />
     </div>

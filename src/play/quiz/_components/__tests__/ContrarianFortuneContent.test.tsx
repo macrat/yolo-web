@@ -360,7 +360,7 @@ describe("ContrarianFortuneContent - aria-current", () => {
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("別のresultIdを渡した場合、そのタイプがカレントになること", () => {
+  it("解き終えた画面（h3）では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
@@ -372,7 +372,7 @@ describe("ContrarianFortuneContent - aria-current", () => {
       />,
     );
     const currentLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
+    expect(currentLink).toHaveAttribute("aria-current", "true");
     const otherLink = screen.getByRole("link", { name: /逆張りマスター/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });

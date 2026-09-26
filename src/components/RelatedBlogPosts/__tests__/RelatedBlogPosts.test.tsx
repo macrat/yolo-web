@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-// `getRelatedBlogPostsForTool` をモックする
+// `getBlogPostsReferencing` をモックする
 vi.mock("@/lib/cross-links", () => ({
-  getRelatedBlogPostsForTool: vi.fn(),
+  getBlogPostsReferencing: vi.fn(),
 }));
 
 // `formatDate` をモックする
@@ -11,14 +11,14 @@ vi.mock("@/lib/date", () => ({
   formatDate: vi.fn((isoString: string) => isoString.slice(0, 10)),
 }));
 
-import { getRelatedBlogPostsForTool } from "@/lib/cross-links";
+import { getBlogPostsReferencing } from "@/lib/cross-links";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 
-const mockGetRelatedBlogPostsForTool = vi.mocked(getRelatedBlogPostsForTool);
+const mockGetBlogPostsReferencing = vi.mocked(getBlogPostsReferencing);
 
 describe("RelatedBlogPosts", () => {
   it("関連記事がある場合にセクションが描画される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "test-post",
         title: "テスト記事",
@@ -33,14 +33,14 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     expect(
       screen.getByRole("list", { name: "関連ブログ記事" }),
     ).toBeInTheDocument();
   });
 
   it("関連記事のタイトルが表示される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "test-post",
         title: "テスト記事タイトル",
@@ -55,12 +55,12 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     expect(screen.getByText("テスト記事タイトル")).toBeInTheDocument();
   });
 
   it("関連記事の日付（published_at）が表示される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "test-post",
         title: "日付テスト記事",
@@ -75,7 +75,7 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     // formatDate のモックは先頭10文字を返す
     const timeEl = screen.getByText("2026-03-20");
     expect(timeEl).toBeInTheDocument();
@@ -84,14 +84,14 @@ describe("RelatedBlogPosts", () => {
   });
 
   it("関連記事が 0 件のとき null を返す", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([]);
+    mockGetBlogPostsReferencing.mockReturnValue([]);
 
-    const { container } = render(<RelatedBlogPosts toolSlug="no-posts-tool" />);
+    const { container } = render(<RelatedBlogPosts slug="no-posts-tool" />);
     expect(container.firstChild).toBeNull();
   });
 
   it("関連記事のリンクが /blog/<slug> を向いている", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "linked-post",
         title: "リンクテスト記事",
@@ -106,13 +106,13 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     const link = screen.getByRole("link", { name: /リンクテスト記事/ });
     expect(link).toHaveAttribute("href", "/blog/linked-post");
   });
 
   it("複数の記事が存在するとき全件描画される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "post-1",
         title: "記事1",
@@ -139,13 +139,13 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     expect(screen.getByText("記事1")).toBeInTheDocument();
     expect(screen.getByText("記事2")).toBeInTheDocument();
   });
 
   it("行は説明と分類を持ち、リンクの読み上げの名前は題名だけである", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "name-post",
         title: "名前テスト記事",
@@ -172,7 +172,7 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     expect(screen.getByText("名前テストの説明")).toBeInTheDocument();
     expect(screen.getByText("ツールガイド")).toBeInTheDocument();
     expect(

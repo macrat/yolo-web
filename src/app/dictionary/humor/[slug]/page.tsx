@@ -91,10 +91,7 @@ export default async function HumorDictEntryPage({
         </section>
 
         {relatedEntries.length > 0 && (
-          <section
-            className={styles.section}
-            aria-labelledby={RELATED_HEADING_ID}
-          >
+          <section className={styles.section}>
             <h2 id={RELATED_HEADING_ID} className={styles.sectionTitle}>
               関連語
             </h2>

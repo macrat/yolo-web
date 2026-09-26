@@ -113,7 +113,7 @@ export default function ContrarianFortuneContent({
         quizSlug={quizSlug}
         currentResultId={resultId}
         results={allResults}
-        headingLevel={headingLevel}
+        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
       />
     </div>
   );

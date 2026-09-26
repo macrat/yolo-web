@@ -172,7 +172,7 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           quizSlug={SLUG}
           currentResultId={resultId}
           results={quiz.results}
-          headingLevel={2}
+          placement="resultPage"
         />
         <div className={styles.closingTry}>
           <Link

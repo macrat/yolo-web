@@ -237,7 +237,7 @@ export default function CharacterPersonalityContent({
         quizSlug={QUIZ_SLUG}
         currentResultId={resultId}
         results={allTypes}
-        headingLevel={headingLevel}
+        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
       />
     </div>
   );

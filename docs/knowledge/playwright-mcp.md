@@ -27,6 +27,10 @@
 
 CLAUDE.md の規約どおり、Playwright / GA を使うサブエージェントは**必ずフォアグラウンド**で起動する。バックグラウンド起動の sub-agent は MCP に到達できない。
 
+## クラウドのコンテナでは MCP のブラウザが起動しない
+
+claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出しが `Browser "chrome-for-testing" is not installed` で失敗する。入っているのは `/opt/pw-browsers/chromium` の Chromium だけで、コンテナの決まりにより `playwright install` でブラウザを足すこともできない。このときは、リポジトリの `playwright` ライブラリで `chromium.launch({ executablePath: "/opt/pw-browsers/chromium" })` とするスクリプトを `tmp/` に書き、`node` で動かして操作とスクリーンショットを行う。このスクリプトでも、解決しない Promise や無限の待ちは使わない。
+
 ## 本番ビルドの実機検証の段取り
 
 - `npm run build` → `npm start`（任意のポート、例 `PORT=3127`）で本番ビルドを起動してから検証する。

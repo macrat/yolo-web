@@ -598,7 +598,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
     );
   });
 
-  test("現在の自タイプは現在地（aria-current=page のリンク）で示すこと", () => {
+  test("自分のタイプの行は、結果のページへ移るので、現在地でなくいまの項目（aria-current=true）で示すこと", () => {
     render(
       <ResultCard
         {...defaultProps}
@@ -609,7 +609,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
     );
     expect(screen.getByRole("link", { name: "タイプA" })).toHaveAttribute(
       "aria-current",
-      "page",
+      "true",
     );
   });
 

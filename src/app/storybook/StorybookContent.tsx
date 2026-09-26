@@ -120,6 +120,7 @@ const TOC_ITEMS = [
   { id: "related-blog-posts", label: "20. RelatedBlogPosts" },
   { id: "item-list", label: "21. ItemList" },
   { id: "link-index", label: "22. LinkIndex" },
+  { id: "browsable-list", label: "23. BrowsableList" },
 ];
 
 // LinkIndex の見本。順を持たない分類（多い順・数を添える）と、見えない値で区切る索引。
@@ -249,11 +250,14 @@ interface StorybookContentProps {
    * 描画して渡す。client component から直接 import できないため prop 化している。 */
   relatedBlogPostsWithPosts: React.ReactNode;
   relatedBlogPostsEmpty: React.ReactNode;
+  /** BrowsableList の見本のページへの行。見本のデータは辞典のデータを読むので、server の page.tsx で組んで渡す。 */
+  listSamples: ItemListItem[];
 }
 
 export default function StorybookContent({
   relatedBlogPostsWithPosts,
   relatedBlogPostsEmpty,
+  listSamples,
 }: StorybookContentProps) {
   // Checkbox・Radio controlled state
   const [checkboxOn, setCheckboxOn] = useState(false);
@@ -1106,12 +1110,12 @@ export default function StorybookContent({
           <span className={styles.previewLabel}>Preview: RelatedBlogPosts</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            toolSlug=&quot;business-email&quot;（関連記事あり）
+            slug=&quot;business-email&quot;（関連記事あり）
           </h3>
           {relatedBlogPostsWithPosts}
 
           <h3 className={styles.subsectionTitle}>
-            toolSlug=&quot;char-count&quot;（関連記事なし → null を返す）
+            slug=&quot;char-count&quot;（関連記事なし → null を返す）
           </h3>
           <div style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}>
             （関連記事なしのとき何も表示されない）
@@ -1193,6 +1197,18 @@ export default function StorybookContent({
           groups={LINK_INDEX_STROKES}
           groupHeadingLevel={4}
         />
+      </Section>
+
+      <Section id="browsable-list">
+        <h2 className={styles.sectionTitle}>23. BrowsableList</h2>
+        <p>
+          一覧の状態は URL
+          が持つので、見本は1つのページに1つの一覧を置き、それぞれ別のページで開く。
+        </p>
+        <h3 id="browsable-list-samples" className={styles.subsectionTitle}>
+          見本のページ
+        </h3>
+        <ItemList labelledBy="browsable-list-samples" items={listSamples} />
       </Section>
     </>
   );

@@ -4,16 +4,14 @@ const nextConfig: NextConfig = {
   // `next dev` は AI エージェントを検出すると nextjs-agent-rules ブロックを
   // AGENTS.md / CLAUDE.md へ自動 upsert する（Next.js 16.3+ の既定 ON）。
   // 本プロジェクトでは CLAUDE.md が Claude Code の動作指示そのものであり、
-  // 外部ツールがそこへ書き込むのは指示の完全性を損なう重大事故（cycle-303/incident-agent-files.md）。
-  // 公式の opt-out（ai-agents.md / start-server.js の `agentRules !== false` ゲート）で無効化する。
+  // 外部ツールがそこへ書き込むと指示の完全性が損なわれるので、公式の opt-out で無効化する。
   agentRules: false,
   experimental: {
     // どのルートにも一致しない URL の 404 を src/app/global-not-found.js で描く。
     globalNotFound: true,
   },
   async redirects() {
-    // Redirect old category URLs to /blog (301 permanent)
-    // These categories were removed in the category reorganization (B-083)
+    // なくなったブログの分類は、行き先の分類が無いので /blog へ送る。
     const oldCategories = [
       "decision",
       "collaboration",
@@ -53,8 +51,7 @@ const nextConfig: NextConfig = {
       permanent: true,
     }));
 
-    // Redirect old /games URLs to /play (301 permanent)
-    // Migrated in cycle-100 (B-201): games section is now under /play
+    // ゲームは /play の下にあるので、/games の URL をそこへ送る。
     const gamesRedirects = [
       {
         source: "/games",
@@ -68,8 +65,7 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    // Redirect old /quiz URLs to /play (301 permanent)
-    // Migrated in cycle-102 (B-206): quiz and fortune sections are now under /play
+    // クイズ・診断は /play の下にあるので、/quiz の URL をそこへ送る。
     const quizRedirects = [
       {
         source: "/quiz",
@@ -88,11 +84,8 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    // cycle-279 フェーズ R: 道具箱ダッシュボード（/toolbox）を完全撤去した。
-    // ツール本体（全36ツール）は /tools 一覧と各詳細ページとして存続するため、
-    // /toolbox は死ページ（410）にせず、最も近い生存面である /tools へ 308 恒久
-    // リダイレクトする。これによりブックマーク・被リンク・検索インデックスの価値を
-    // 失わず、訪問者を関連する生きた面（同じ道具の一覧）へ確実に着地させる。
+    // /toolbox には同じ道具を並べた一覧 /tools があるので、410 にせずそこへ送る。
+    // ブックマーク・被リンク・検索インデックスから来た人が、同じ道具の一覧に着く。
     const toolboxRedirects = [
       {
         source: "/toolbox",
@@ -101,8 +94,7 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    // Redirect old /fortune URLs to /play (301 permanent)
-    // Migrated in cycle-102 (B-206): fortune section is now under /play
+    // 占いは /play の下にあるので、/fortune の URL をそこへ送る。
     const fortuneRedirects = [
       {
         source: "/fortune/daily",
@@ -111,8 +103,7 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    // Redirect old /colors URLs to /dictionary/colors (308 permanent)
-    // Migrated in cycle-50 (B-122): colors is now under the dictionary section
+    // 伝統色は辞典の下にあるので、/colors の URL をそこへ送る。
     const colorsRedirects = [
       {
         source: "/colors",
@@ -131,10 +122,7 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    // Redirect old blog category URLs to new category URLs (301 permanent)
-    // Category reorganization (B-xxx): blog categories renamed for clarity
-    // Mapping: technical -> dev-notes, ai-ops -> ai-workflow, release -> site-updates,
-    //          guide -> tool-guides, behind-the-scenes -> ai-workflow
+    // 名前の替わったブログの分類は、同じ記事を持ついまの分類へ送る。
     const oldBlogCategoryMapping: Array<{
       old: string;
       new: string;
@@ -161,11 +149,9 @@ const nextConfig: NextConfig = {
       ],
     );
 
-    // cycle-244 (B-511): 7 トピックの早見表記事へ 301 恒久誘導する。
-    // 6 トピック（regex/cron/git/sql/markdown/html-tags）は専用の早見表記事へ。
-    // http-status は既存ガイドに網羅的な早見表セクションがあるため、その早見表アンカーへ誘導する
-    // （独立記事を作らず重複/カニバリを避ける。アンカーは既存ガイド内リンクで実証済み）。
-    // index (/cheatsheets) は早見表タグページ /blog/tag/早見表 へ向ける。
+    // 早見表はブログの記事なので、/cheatsheets の URL を同じ主題の記事へ送る。
+    // http-status はガイドの記事が早見表の節を持つので、同じ記事を2本作らずその節へ送る。
+    // /cheatsheets は早見表のタグのページへ送る。
     const cheatsheetRedirects = [
       {
         source: "/cheatsheets/cron",

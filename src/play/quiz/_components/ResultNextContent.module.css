@@ -1,10 +1,10 @@
+/* 結果の中の小見出しなので、上に細い罫線を引く（§5）。見出しの大きさは h3 の既定
+ * （§4 のセクションの中の小見出し）に従う。 */
 .section {
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  padding-top: var(--space-24);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .heading {
-  font-size: 1rem;
   margin: 0 0 var(--space-16);
-  color: var(--ink);
 }

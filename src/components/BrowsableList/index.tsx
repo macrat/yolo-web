@@ -265,6 +265,13 @@ export default function BrowsableList({
     swatch: item.swatch,
   }));
 
+  // 行に出す種別は、表示中のページでなく範囲の全件で決める。ページや絞り込みによって種別の列が出たり
+  // 消えたりしないようにするため（§7）。
+  const showKind = useMemo(
+    () => new Set(items.map((item) => item.kind)).size > 1,
+    [items],
+  );
+
   const hasControls = items.length > CONTROLS_THRESHOLD;
   const showKindGroup = hasControls && (kindGroup?.options.length ?? 0) >= 2;
   const showSortGroup = hasControls && sorts.length >= 2;
@@ -319,7 +326,7 @@ export default function BrowsableList({
       </div>
       {pageItems.length > 0 ? (
         <div>
-          <ItemList label={label} items={pageItems} />
+          <ItemList label={label} items={pageItems} showKind={showKind} />
           {isDefault ? (
             <Pagination
               currentPage={slice.page}

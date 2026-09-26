@@ -108,7 +108,7 @@ export default function ToolPageLayout({
       <RelatedTools currentSlug={meta.slug} relatedSlugs={meta.relatedSlugs} />
 
       {/* 9. 関連ブログ */}
-      <RelatedBlogPosts toolSlug={meta.slug} />
+      <RelatedBlogPosts slug={meta.slug} />
     </article>
   );
 }
