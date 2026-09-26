@@ -37,7 +37,7 @@ type IndexAccordionContent =
 export type IndexAccordionProps = IndexAccordionContent & {
   /**
    * アコーディオンのラベルを語の切れ目で分けたもの（["カテゴリから", "探す"]）。何から探せるかを言い、
-   * 1行に収まらないときはこの切れ目でだけ折る（DESIGN.md §4）。
+   * 1行に収まらないときは、この切れ目と添えた数の始め括弧の前でだけ折る（DESIGN.md §4）。
    */
   summary: readonly string[];
   /** いま開いているページの一覧の元のパス。一致する語を現在地にする。 */
@@ -49,8 +49,8 @@ function withCount(name: string, count: number): string {
 }
 
 /**
- * ラベルと索引の見出しの名前。語と、添えた数の括弧をそれぞれ1つのまとまりにし、そのあいだでだけ折る
- * （DESIGN.md §4）。数は始め括弧の前で名前から折れる（「部首／（198）」）。1語が幅に収まらないときだけ、
+ * ラベルと索引の見出しの名前。名前の中の語の切れ目と、添えた数の始め括弧の前でだけ折り、括弧の数の中では
+ * 折らない（「カテゴリから／探す（10）」「部首／（198）」、DESIGN.md §4）。一語が1行に収まらないときだけ、
  * 本文から継ぐ overflow-wrap がその語の中で折る。
  */
 function IndexName({

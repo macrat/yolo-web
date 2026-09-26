@@ -26,7 +26,7 @@
   font-size: max(var(--text-heading-sub), var(--text-step-2));
 }
 
-/* ラベルと索引の見出しの名前は、語と数の括弧のあいだの切れ目（<wbr>）でだけ折る（§4）。 */
+/* ラベルと索引の見出しの名前は、<wbr> を置いた所（名前の中の語の切れ目と始め括弧の前）でだけ折る（§4）。 */
 .name {
   word-break: keep-all;
 }
