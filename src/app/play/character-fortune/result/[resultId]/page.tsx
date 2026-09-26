@@ -13,6 +13,9 @@ import Link from "next/link";
 import ShareButtons from "@/components/ShareButtons";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
+import PhrasedText from "@/components/PhrasedText";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
@@ -26,6 +29,7 @@ type Props = {
 
 const SLUG = "character-fortune";
 const quiz = characterFortuneQuiz;
+const THIRD_PARTY_HEADING = "このキャラの守護を受けている人と一緒にいると";
 
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
@@ -88,13 +92,9 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
       shareText={shareText}
       shareUrl={shareUrl}
     >
-      {/* character-fortune固有のJSX。キャラごとの色を持たず、インライン結果（ResultCard）と
-          同じ無彩のトーンで組む。 */}
       <div className={styles.detailedSection}>
-        {/* (a) キャラクターの自己紹介。--paper-2 の地に左寄せで置く。 */}
         <p className={styles.characterIntro}>{cf.characterIntro}</p>
 
-        {/* CTA1 */}
         <div className={styles.trySection}>
           <Link
             href={`/play/${SLUG}`}
@@ -108,17 +108,19 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           </p>
         </div>
 
-        {/* (b) キャラが語る「あるある」 */}
-        <h2 className={styles.detailedSectionHeading}>{cf.behaviorsHeading}</h2>
-        <ul className={styles.behaviorsList}>
+        <PhrasedText
+          as="h2"
+          phrases={splitIntoPhrases(cf.behaviorsHeading)}
+          className={styles.subheading}
+          {...headingFontAttr(cf.behaviorsHeading)}
+        />
+        <ul className={styles.list}>
           {cf.behaviors.map((behavior, i) => (
-            <li key={i} className={styles.behaviorsItem}>
-              {behavior}
-            </li>
+            <li key={i}>{behavior}</li>
           ))}
         </ul>
 
-        {/* シェアボタン中間配置 */}
+        {/* あるあるを読んで「自分のことだ」と思った所で共有できるよう、読みものの途中にも置く。 */}
         <div className={styles.midShareSection}>
           <ShareButtons
             url={shareUrl}
@@ -131,23 +133,24 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           />
         </div>
 
-        {/* (c) キャラの本音 */}
-        <h2 className={styles.detailedSectionHeading}>
-          {cf.characterMessageHeading}
-        </h2>
-        <p className={styles.characterMessage}>{cf.characterMessage}</p>
+        <PhrasedText
+          as="h2"
+          phrases={splitIntoPhrases(cf.characterMessageHeading)}
+          className={styles.subheading}
+          {...headingFontAttr(cf.characterMessageHeading)}
+        />
+        <p className={styles.paragraph}>{cf.characterMessage}</p>
 
-        {/* (d) 第三者視点のシーン描写 */}
-        <div className={styles.thirdPartySection}>
-          <h2 className={styles.thirdPartyHeading}>
-            このキャラの守護を受けている人と一緒にいると
-          </h2>
-          <p className={styles.thirdPartyNote}>{cf.thirdPartyNote}</p>
-        </div>
+        <PhrasedText
+          as="h2"
+          phrases={splitIntoPhrases(THIRD_PARTY_HEADING)}
+          className={styles.subheading}
+          {...headingFontAttr(THIRD_PARTY_HEADING)}
+        />
+        <p className={styles.paragraph}>{cf.thirdPartyNote}</p>
 
-        {/* (e) 相性診断への誘導 */}
         <div className={styles.compatibilitySection}>
-          <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
+          <p className={styles.paragraph}>{cf.compatibilityPrompt}</p>
           <Link
             href={`/play/${SLUG}`}
             className={styles.tryLink}
@@ -157,7 +160,6 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           </Link>
         </div>
 
-        {/* (f) すべてのタイプと、診断への誘い */}
         <OtherTypesNav
           quizSlug={SLUG}
           currentResultId={resultId}

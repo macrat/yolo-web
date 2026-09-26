@@ -165,7 +165,6 @@ export default async function MusicPersonalityResultPage({
     >
       {/* music-personality固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: DescriptionExpanderの前に配置し第一印象を与える */}
         <p className={styles.catchphrase}>{musicDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}

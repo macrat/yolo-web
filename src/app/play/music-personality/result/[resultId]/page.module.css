@@ -1,21 +1,23 @@
 /*
- * 診断の結果のページ（/play/music-personality/result/[resultId]）のスタイル。
- * 強みから「すべてのタイプ」までの区画は MusicPersonalityContent.module.css が持ち、
- * このファイルは page.tsx だけが持つ要素（catchphrase, trySection, detailedSection, cta2）を持つ。
+ * 診断の結果のページ（/play/music-personality/result/[resultId]）のうち、page.tsx だけが持つ要素
+ * （キャッチコピー・診断への誘い）。強みから「すべてのタイプ」までの区画は MusicPersonalityContent が組む。
  */
 
-/* detailedContent セクションの外側コンテナ */
 .detailedSection {
-  margin-top: 2rem;
-  text-align: left;
+  margin: 0;
+}
+
+/* キャッチコピー。タイプ名のすぐ後の、本文の大きさの段落（§4）。 */
+.catchphrase {
+  margin: 0 0 var(--space-16);
 }
 
 /* ============================================================
-   music-personality 結果ページ固有スタイル（ページ構造要素）
+   診断への誘い
    ============================================================ */
 
 .trySection {
-  margin-bottom: 0;
+  margin-block-start: var(--space-24);
 }
 
 /* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
@@ -27,50 +29,28 @@
   min-height: 44px;
   padding: var(--space-8);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: var(--text-body);
   line-height: 1.4;
 }
 
 .tryCost {
-  font-size: 0.8rem;
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-top: 0.5rem;
-  margin-bottom: 0;
 }
 
-/* ============================================================
-   music-personality variant 固有スタイル（ページ固有）
-   ============================================================ */
-
-/* キャッチコピー: descriptionの前に表示、第一印象を強調。
- * 左寄せで、淡い面（--paper-2）に置く。 */
-.catchphrase {
-  font-size: 1.1rem;
-  font-weight: 600;
-  line-height: 1.7;
-  text-align: left;
-  color: var(--ink);
-  margin-bottom: 1.25rem;
-  padding: 1rem 1.25rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-  letter-spacing: 0.02em;
-}
-
-/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+/* 読み終えた人への、2つ目の誘い。 */
 .cta2Section {
-  margin-top: 1.5rem;
-  text-align: left;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  margin-block-start: var(--space-24);
+  padding-block-start: var(--space-24);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* CTA2: 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
+/* 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
  * 張り出しは data-text-box（globals.css）が持つ。 */
 .cta2Link {
   display: inline-flex;
   align-items: center;
   min-width: 44px;
   min-height: 44px;
-  font-size: 0.9375rem;
 }

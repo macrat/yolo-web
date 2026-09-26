@@ -1,45 +1,23 @@
 /*
- * 診断の結果のページ（/play/impossible-advice/result/[resultId]）のスタイル。
- * 悩みの本質から「すべてのタイプ」までの区画は ImpossibleAdviceContent.module.css が持ち、
- * このファイルは page.tsx だけが持つ要素（catchphrase, trySection, detailedSection, cta2）を持つ。
+ * 診断の結果のページ（/play/impossible-advice/result/[resultId]）のうち、page.tsx だけが持つ要素
+ * （キャッチコピー・診断への誘い）。悩みの本質から「すべてのタイプ」までの区画は ImpossibleAdviceContent が組む。
  */
 
-/* detailedContent セクションの外側コンテナ */
 .detailedSection {
-  margin-top: 0;
-  text-align: left;
-}
-
-/* ============================================================
-   キャッチコピー
-   ============================================================ */
-
-/*
- * 結果のコアメッセージ。地は --paper-2。
- */
-.catchphraseCard {
-  margin: 0 0 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-  text-align: left;
-}
-
-.catchphrase {
-  font-size: 1.2rem;
-  font-weight: 600;
-  line-height: 1.7;
-  color: var(--ink);
   margin: 0;
-  padding: 0;
+}
+
+/* キャッチコピー。タイプ名のすぐ後の、本文の大きさの段落（§4）。 */
+.catchphrase {
+  margin: 0 0 var(--space-16);
 }
 
 /* ============================================================
-   impossible-advice 結果ページ固有スタイル（ページ構造要素）
+   診断への誘い
    ============================================================ */
 
 .trySection {
-  margin-bottom: 0;
+  margin-block-start: var(--space-24);
 }
 
 /* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
@@ -51,31 +29,28 @@
   min-height: 44px;
   padding: var(--space-8);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: var(--text-body);
   line-height: 1.4;
 }
 
 .tryCost {
-  font-size: 0.8rem;
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-top: 0.5rem;
-  margin-bottom: 0;
 }
 
-/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+/* 読み終えた人への、2つ目の誘い。 */
 .cta2Section {
-  margin-top: 1.5rem;
-  text-align: left;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  margin-block-start: var(--space-24);
+  padding-block-start: var(--space-24);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* CTA2: 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
+/* 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
  * 張り出しは data-text-box（globals.css）が持つ。 */
 .cta2Link {
   display: inline-flex;
   align-items: center;
   min-width: 44px;
   min-height: 44px;
-  font-size: 0.9375rem;
 }

@@ -94,7 +94,6 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
     >
       {/* yoji-personality固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: description の前の静かなリード文（解き終えた画面の ResultCard と同じ組み方）。 */}
         <p className={styles.catchphrase}>{yojiDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}

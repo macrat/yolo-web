@@ -99,10 +99,7 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
     >
       {/* impossible-advice固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。 */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: 結果のコアメッセージ。--paper-2 の地に置く。 */}
-        <div className={styles.catchphraseCard}>
-          <p className={styles.catchphrase}>{iaDc.catchphrase}</p>
-        </div>
+        <p className={styles.catchphrase}>{iaDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
         <DescriptionExpander

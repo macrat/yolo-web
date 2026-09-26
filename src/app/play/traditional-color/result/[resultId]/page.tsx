@@ -91,14 +91,11 @@ export default async function TraditionalColorResultPage({ params }: Props) {
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      swatch={result.color}
     >
-      {/* traditional-color固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。
-       * 伝統色そのものは、TraditionalColorContent のすべてのタイプの行が色見本で見せる。 */}
+      {/* 結果の色はタイプ名の下の色見本だけが見せ、ほかの区画は無彩で組む（DESIGN.md §2）。 */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: 結果のコアメッセージ。--paper-2 の地に置く。 */}
-        <div className={styles.catchphraseCard}>
-          <p className={styles.catchphrase}>{colorDc.catchphrase}</p>
-        </div>
+        <p className={styles.catchphrase}>{colorDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
         <DescriptionExpander

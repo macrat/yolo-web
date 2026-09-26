@@ -8,11 +8,8 @@
  *
  * 一人完結型（相性機能なし）: CompatibilityDisplay, InviteFriendButton, searchParams は使用しない。
  *
- * 解き終えた画面（ResultCard）と同じ組み方にそろえる:
- * - catchphrase: --paper-2 の地に置く。タイプごとの色は敷かない（DESIGN.md §2）
- * - DescriptionExpander: 長いdescriptionは折りたたみ
- * - CTA1: プライマリの反転で示す主要 CTA
- * - ContrarianFortuneContent: 共通コンポーネントでコアコンテンツを一括レンダリング
+ * タイプ名のあとに、キャッチコピーと説明を段落で置き、プライマリの反転の誘いを添える。
+ * coreSentence から先は ContrarianFortuneContent が組む。
  */
 
 import type { Metadata } from "next";
@@ -108,10 +105,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
     >
       {/* contrarian-fortune固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。 */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: 結果のコアメッセージ。--paper-2 の地に置く。 */}
-        <div className={styles.catchphraseCard}>
-          <p className={styles.catchphrase}>{cfDc.catchphrase}</p>
-        </div>
+        <p className={styles.catchphrase}>{cfDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
         <DescriptionExpander

@@ -14,6 +14,9 @@ import { extractWithParam } from "./extractWithParam";
 import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
+import PhrasedText from "@/components/PhrasedText";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { resultNameWithReading } from "@/play/quiz/resultName";
 import styles from "./page.module.css";
 
@@ -208,14 +211,11 @@ export default async function PlayQuizResultPage({
         ) : undefined
       }
     >
-      {/* Standard variant のレンダリングロジックをインライン化 */}
-      {/* DescriptionExpander + CTA1 は常に表示 */}
       <DescriptionExpander
         description={result.description}
         isLong={isDescriptionLong}
       />
 
-      {/* CTA1 */}
       <div className={styles.trySection}>
         <Link href={`/play/${slug}`} className={styles.tryButton} data-inverted>
           {ctaText}
@@ -225,31 +225,40 @@ export default async function PlayQuizResultPage({
         </p>
       </div>
 
-      {/* detailedContent がある場合のみ追加セクションを表示（標準形式）。
-          専用ルートを持つクイズはNext.jsのファイルシステムルーティングが自動的に優先する。
-          型ナローイングのために !detailedContent.variant を条件に含める。 */}
+      {/* 詳しい読みものは、variant を持たない標準の形のときだけ組む。variant を持つ診断は専用のルートが描く。 */}
       {detailedContent && !detailedContent.variant && (
         <div className={styles.detailedSection}>
-          <h2 className={styles.detailedSectionHeading}>{traitsHeading}</h2>
-          <ul className={styles.traitsList}>
+          <PhrasedText
+            as="h2"
+            phrases={splitIntoPhrases(traitsHeading)}
+            className={styles.subheading}
+            {...headingFontAttr(traitsHeading)}
+          />
+          <ul className={styles.list}>
             {detailedContent.traits.map((trait, i) => (
-              <li key={i} className={styles.traitsItem}>
-                {trait}
-              </li>
+              <li key={i}>{trait}</li>
             ))}
           </ul>
 
-          <h2 className={styles.detailedSectionHeading}>{behaviorsHeading}</h2>
-          <ul className={styles.behaviorsList}>
+          <PhrasedText
+            as="h2"
+            phrases={splitIntoPhrases(behaviorsHeading)}
+            className={styles.subheading}
+            {...headingFontAttr(behaviorsHeading)}
+          />
+          <ul className={styles.list}>
             {detailedContent.behaviors.map((behavior, i) => (
-              <li key={i} className={styles.behaviorsItem}>
-                {behavior}
-              </li>
+              <li key={i}>{behavior}</li>
             ))}
           </ul>
 
-          <h2 className={styles.detailedSectionHeading}>{adviceHeading}</h2>
-          <div className={styles.adviceCard}>{detailedContent.advice}</div>
+          <PhrasedText
+            as="h2"
+            phrases={splitIntoPhrases(adviceHeading)}
+            className={styles.subheading}
+            {...headingFontAttr(adviceHeading)}
+          />
+          <p className={styles.paragraph}>{detailedContent.advice}</p>
 
           {/* 解き終えた画面（ResultCard）と同じく、検索やシェアから来た人にもほかのタイプを見せる。 */}
           <OtherTypesNav
@@ -259,7 +268,7 @@ export default async function PlayQuizResultPage({
             placement="resultPage"
           />
 
-          {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
+          {/* 読み終えた人への、2つ目の診断への誘い */}
           <div className={styles.cta2Section}>
             <Link
               href={`/play/${slug}`}

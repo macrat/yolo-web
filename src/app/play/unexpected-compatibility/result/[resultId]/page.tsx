@@ -101,7 +101,6 @@ export default async function UnexpectedCompatibilityResultPage({
     >
       {/* unexpected-compatibility固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: 結果のコアメッセージ。静かなリード文として置く（§4）。 */}
         <p className={styles.catchphrase}>{ucDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}

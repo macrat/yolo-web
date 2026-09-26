@@ -65,121 +65,76 @@ const mockResult: QuizResult = {
   color: "#ff5733",
 };
 
-test("ResultPageShell renders quiz title and shortDescription", () => {
-  render(
+function renderShell(
+  result: QuizResult = mockResult,
+  swatch?: string,
+): ReturnType<typeof render> {
+  return render(
     <ResultPageShell
       quiz={mockQuiz}
-      result={mockResult}
+      result={result}
       shareText="シェアテキスト"
       shareUrl="https://example.com/result"
+      swatch={swatch}
     >
       <div>子コンテンツ</div>
     </ResultPageShell>,
   );
+}
 
-  expect(screen.getByText("テストクイズの結果")).toBeInTheDocument();
-  expect(screen.getByText("クイズの短い説明")).toBeInTheDocument();
-});
-
-test("ResultPageShell renders result title as h1", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("ResultPageShell names the quiz right above the type name", () => {
+  renderShell();
 
   const h1 = screen.getByRole("heading", { level: 1 });
-  expect(h1).toHaveTextContent("テスト結果タイトル");
+  expect(h1.previousElementSibling).toHaveTextContent(/^テストクイズの結果$/);
 });
 
-test("ResultPageShell renders the result as a Tsutsumi wrapping when icon+color are provided (no emoji)", () => {
-  const { container } = render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("ResultPageShell renders the type name as the h1, once, broken only between phrases", () => {
+  const { container } = renderShell({
+    ...mockResult,
+    title: "締切3分前に本気出す炎の司令塔",
+  });
 
-  // 結果は Tsutsumi（figure[data-color]）で包まれる
-  expect(container.querySelector("figure[data-color]")).not.toBeNull();
-  // 絵文字（result.icon）は装飾として描画しない（DESIGN.md §5 絵文字を置かない）
-  expect(screen.queryByText("🎯")).not.toBeInTheDocument();
-});
-
-test("ResultPageShell does not render Tsutsumi when result.icon is undefined (fallback header)", () => {
-  const resultWithoutIcon: QuizResult = { ...mockResult, icon: undefined };
-
-  const { container } = render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={resultWithoutIcon}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
-
-  expect(container.querySelector("figure[data-color]")).toBeNull();
-  expect(screen.queryByText("🎯")).not.toBeInTheDocument();
-});
-
-test("ResultPageShell keeps the h1 to the type name and adds the reading under the name in the Tsutsumi", () => {
-  const { container } = render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={{
-        ...mockResult,
-        title: "花鳥風月タイプ",
-        reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
-      }}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
-
-  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-    /^花鳥風月タイプ$/,
-  );
-  const figure = container.querySelector("figure[data-color]");
-  expect(figure).not.toBeNull();
+  const h1 = screen.getByRole("heading", { level: 1 });
+  expect(h1).toHaveTextContent(/^締切3分前に本気出す炎の司令塔$/);
+  // 見出しの中は文の字と折り所の <wbr> だけで、字を分ける要素を持たない（DESIGN.md §4）
+  expect(h1.querySelectorAll("wbr").length).toBeGreaterThan(0);
+  expect([...h1.children].every((child) => child.tagName === "WBR")).toBe(true);
+  // 同じタイプ名を2度出さない
   expect(
-    within(figure as HTMLElement).getByText("花鳥風月タイプ")
-      .nextElementSibling,
-  ).toHaveTextContent("かちょうふうげつ");
+    container.textContent?.split("締切3分前に本気出す炎の司令塔").length,
+  ).toBe(2);
+  // 絵文字（result.icon）は描かない（DESIGN.md §5）
+  expect(screen.queryByText("🎯")).not.toBeInTheDocument();
 });
 
-test("ResultPageShell adds the reading right after the h1 in the fallback header", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={{
-        ...mockResult,
-        icon: undefined,
-        title: "花鳥風月タイプ",
-        reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
-      }}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("ResultPageShell adds the reading right after the h1, outside it", () => {
+  renderShell({
+    ...mockResult,
+    title: "花鳥風月タイプ",
+    reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
+  });
 
+  const h1 = screen.getByRole("heading", { level: 1 });
+  expect(h1).toHaveTextContent(/^花鳥風月タイプ$/);
+  expect(h1.nextElementSibling).toHaveTextContent(/^かちょうふうげつ$/);
+});
+
+test("ResultPageShell shows the result color as a swatch without text only when given", () => {
+  const { unmount } = renderShell(mockResult, "#0d5661");
+
+  const swatch = screen.getByRole("heading", { level: 1 })
+    .nextElementSibling as HTMLElement;
+  expect(swatch.style.backgroundColor).toBe("rgb(13, 86, 97)");
+  expect(swatch).toHaveTextContent("");
+  expect(swatch).toHaveAttribute("aria-hidden", "true");
+  unmount();
+
+  const { container } = renderShell(mockResult);
   expect(
     screen.getByRole("heading", { level: 1 }).nextElementSibling,
-  ).toHaveTextContent("かちょうふうげつ");
+  ).toBeNull();
+  expect(container.querySelector("figure")).toBeNull();
 });
 
 test("ResultPageShell renders children", () => {

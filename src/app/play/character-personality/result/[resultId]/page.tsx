@@ -176,7 +176,6 @@ export default async function CharacterPersonalityResultPage({
     >
       {/* character-personality固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: description の前の静かなリード文（解き終えた画面の ResultCard と同じ組み方）。 */}
         <p className={styles.catchphrase}>{characterDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}

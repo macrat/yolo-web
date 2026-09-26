@@ -1,13 +1,23 @@
 /*
- * 診断の結果のページ（/play/character-fortune/result/[resultId]）のスタイル。
+ * 診断の結果のページ（/play/character-fortune/result/[resultId]）の中身。
+ * キャラの自己紹介・診断への誘い・詳しい読みもの（小見出し・段落・箇条書き）・相性への誘いを組む。
  */
 
+.detailedSection {
+  margin: 0;
+}
+
+/* キャラの自己紹介。タイプ名のすぐ後の、本文の大きさの段落（§4）。 */
+.characterIntro {
+  margin: 0;
+}
+
 /* ============================================================
-   CTA（trySection / tryButton / tryLink）
+   診断への誘い
    ============================================================ */
 
 .trySection {
-  margin-bottom: 0;
+  margin-block-start: var(--space-24);
 }
 
 /* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
@@ -19,138 +29,70 @@
   min-height: 44px;
   padding: var(--space-8);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: var(--text-body);
   line-height: 1.4;
 }
 
-/* 2つ目以降の誘い。1ページに1つまでの反転は最初の CTA が持つので、ここは縁の見えないリンクにする。下線と
+/* 2つ目からの誘い。1ページに1つまでの反転は最初の誘いが持つので、ここは縁の見えないリンクにする。下線と
  * 訪問済みの色は a の既定に従い、字の左右の余白と張り出しは data-text-box（globals.css）が持つ。 */
 .tryLink {
   display: inline-flex;
   align-items: center;
   min-width: 44px;
   min-height: 44px;
-  font-size: 1.0625rem;
 }
 
 .tryCost {
-  font-size: 0.8rem;
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-top: 0.5rem;
-  margin-bottom: 0;
 }
 
 /* ============================================================
-   detailedContent セクション（character-fortune 本文）
+   詳しい読みもの
    ============================================================ */
 
-.detailedSection {
-  margin-top: 2rem;
-  text-align: left;
+/* セクションの中の小見出し。上の細い罫線で、前の内容と分ける（§5）。 */
+.subheading {
+  margin: var(--space-32) 0 var(--space-16);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-heading-sub);
 }
 
-/* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
- * .detailedHeading と同じ語彙）。 */
-.detailedSectionHeading {
-  font-size: 1.05rem;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
+.list {
+  margin: 0;
+  padding-inline-start: 1.5em;
+  list-style: disc;
 }
 
-/* (b) 「あるある」リスト。絵文字マーカーを持たず、無彩・左寄せのカード風の囲み。 */
-.behaviorsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
+.list li + li {
+  margin-block-start: var(--space-8);
 }
 
-.behaviorsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-/* ============================================================
-   character-fortune variant 固有ブロック
-   ============================================================ */
-
-/* (a) キャラクターの自己紹介。地は --paper-2。 */
-.characterIntro {
-  font-size: 1rem;
-  line-height: 1.8;
-  text-align: left;
-  color: var(--ink);
-  margin-bottom: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-
-/* (c) キャラの本音（散文） */
-.characterMessage {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  text-align: left;
-  margin-bottom: 2rem;
-  padding: 0 0.25rem;
-}
-
-/* (e) 相性診断への誘導 */
-.compatibilitySection {
-  margin-bottom: 2rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--rule);
-  text-align: left;
-}
-
-.compatibilityPrompt {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--ink);
-  margin-bottom: 1rem;
-}
-
-/* シェアボタン中間配置用 */
-.midShareSection {
-  margin: 1.5rem 0;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-
-/* (d) 第三者の視点から見たシーン */
-.thirdPartySection {
-  margin-bottom: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-.thirdPartyHeading {
-  font-size: 1.05rem;
-  color: var(--ink);
-  margin: 0 0 0.875rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-.thirdPartyNote {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  text-align: left;
+.paragraph {
   margin: 0;
 }
 
-/* (f) すべてのタイプのあとの、診断への誘い。 */
+/* 読みものの途中の共有。本文の区切りの細い罫線で、前の読みものと分ける。後ろとは、次の小見出しの線が分ける。 */
+.midShareSection {
+  margin-block-start: var(--space-32);
+  padding-block-start: var(--space-24);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 相性への誘い。 */
+.compatibilitySection {
+  margin-block: var(--space-32);
+  padding-block-start: var(--space-24);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.compatibilitySection .paragraph {
+  margin-block-end: var(--space-8);
+}
+
+/* すべてのタイプのあとの、診断への誘い。 */
 .closingTry {
-  margin-top: var(--space-24);
+  margin-block-start: var(--space-24);
 }

@@ -1,13 +1,14 @@
 /*
- * 診断の結果のページ（/play/{slug}/result/[resultId]）のスタイル。
+ * 診断の結果のページ（/play/{slug}/result/[resultId]）のうち、専用のルートを持たない診断の中身。
+ * タイプ名の説明・診断への誘い・詳しい読みもの（小見出し・段落・箇条書き）を組む。
  */
 
 /* ============================================================
-   CTA1セクション
+   診断への誘い
    ============================================================ */
 
 .trySection {
-  margin-bottom: 0;
+  margin-block-start: var(--space-24);
 }
 
 /* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
@@ -19,113 +20,58 @@
   min-height: 44px;
   padding: var(--space-8);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: var(--text-body);
   line-height: 1.4;
 }
 
 .tryCost {
-  font-size: 0.8rem;
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-top: 0.5rem;
-  margin-bottom: 0;
 }
 
 /* ============================================================
-   detailedContent セクション
-   （traits・behaviors・advice の追加コンテンツ）
+   詳しい読みもの（特徴・あるある・アドバイス）
    ============================================================ */
 
 .detailedSection {
-  margin-top: 2rem;
-  text-align: left;
+  margin-block-start: var(--space-32);
 }
 
-/* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
- * .detailedHeading と同じ語彙）。 */
-.detailedSectionHeading {
-  font-size: 1.05rem;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
+/* セクションの中の小見出し。上の細い罫線で、前の内容と分ける（§5）。 */
+.subheading {
+  margin: var(--space-32) 0 var(--space-16);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-heading-sub);
 }
 
-.behaviorsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
+.list {
+  margin: 0;
+  padding-inline-start: 1.5em;
+  list-style: disc;
 }
 
-.behaviorsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
+.list li + li {
+  margin-block-start: var(--space-8);
 }
 
-/* ============================================================
-   traits（特徴リスト）・advice・CTA2
-   ============================================================ */
-
-.traitsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.paragraph {
+  margin: 0;
 }
 
-.traitsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.625rem 0.875rem;
-  background: var(--paper-2);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-}
-
-/* 絵文字を使わない静かなマーカー（墨の中黒）。インライン ResultCard の .traitsItem::before と同じ語彙。 */
-.traitsItem::before {
-  content: "・";
-  flex-shrink: 0;
-  color: var(--ink-2);
-}
-
-/* advice カード。地は --paper-2、左寄せ（ResultCard の .adviceCard と同じ語彙）。 */
-.adviceCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius);
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--ink);
-  margin-bottom: 0;
-  text-align: left;
-  background: var(--paper-2);
-}
-
-/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+/* 読み終えた人への、2つ目の誘い。 */
 .cta2Section {
-  margin-top: 2rem;
-  text-align: left;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  margin-block-start: var(--space-32);
+  padding-block-start: var(--space-24);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* CTA2: 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
+/* 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
  * 張り出しは data-text-box（globals.css）が持つ。 */
 .cta2Link {
   display: inline-flex;
   align-items: center;
   min-width: 44px;
   min-height: 44px;
-  font-size: 0.9375rem;
 }
