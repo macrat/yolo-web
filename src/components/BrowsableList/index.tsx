@@ -20,6 +20,7 @@ import {
   isFiltered,
   readBrowseState,
   slicePage,
+  statusText,
   type BrowseChoice,
   type BrowseItem,
   type BrowseSort,
@@ -90,7 +91,10 @@ export interface BrowsableListProps {
   unit: BrowseUnit;
   /** 名前の欄のラベル。何で探せるかを言う（例「名前・説明で探す」）。 */
   searchLabel: string;
-  /** 種別の組。範囲に種別が2つ以上あり、同じ軸の索引を一覧の上に置かないときだけ渡す。 */
+  /**
+   * 種別の組。同じ軸の索引を一覧の上に置かないときだけ渡す。選択肢は、範囲の中に項目を持つものだけを出し、
+   * それが2つ以上あるときだけ組を出す（§7）。
+   */
   kindGroup?: { legend: string; options: BrowseChoice[] };
   /** 並び順の選択肢。先頭が既定。 */
   sorts: BrowseSort[];
@@ -137,9 +141,17 @@ export default function BrowsableList({
   // Next.js の遷移は pushState を自分で呼ぶので、購読しているクエリの変化としては届かない。パスが替わった
   // ことはルーターの値から受け取る。
   const pathname = usePathname();
+  // 押すと必ず0件になる選択肢を出さないよう、種別の選択肢を範囲の項目が持つ種別に絞る。
+  const kindOptions = useMemo(
+    () =>
+      (kindGroup?.options ?? []).filter((option) =>
+        items.some((item) => item.kind === option.label),
+      ),
+    [kindGroup, items],
+  );
   const spec = useMemo<BrowseSpec>(
-    () => ({ kinds: kindGroup?.options ?? [], sorts, filterGroups: [] }),
-    [kindGroup, sorts],
+    () => ({ kinds: kindOptions, sorts, filterGroups: [] }),
+    [kindOptions, sorts],
   );
   const urlState = useMemo(() => readBrowseState(search, spec), [search, spec]);
 
@@ -164,7 +176,30 @@ export default function BrowsableList({
     : state.page;
   const slice = slicePage(shown, shownPage, perPage);
 
+  // 読み上げに伝える件数は、URL に書いた落ち着いた条件から数える。名前の欄に打っている途中の件数を
+  // 読み上げの予約に積まないため。表示している範囲は入れず、ページを送っても文が替わらないようにする。
+  const settledShown = useMemo(
+    () => (queryPending ? browseItems(items, urlState, spec) : shown),
+    [queryPending, items, urlState, spec, shown],
+  );
+  const settledText = statusText({
+    total: items.length,
+    matched: settledShown.length,
+    filtering: isFiltered(urlState),
+    unit,
+  });
+  // 来訪者が条件を変えるまでは読み上げない。クエリのある URL に着いたときのハイドレーションの組み替えで
+  // 読ませないため。
+  const [conditionsTouched, setConditionsTouched] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
+  const [lastSettledText, setLastSettledText] = useState(settledText);
+  if (settledText !== lastSettledText) {
+    setLastSettledText(settledText);
+    if (conditionsTouched) setAnnouncement(settledText);
+  }
+
   const statusRef = useRef<HTMLParagraphElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const focusStatusAfterPageChange = useRef(false);
   const queryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -181,6 +216,7 @@ export default function BrowsableList({
     method: "push" | "replace",
   ) => {
     cancelQueryWrite();
+    setConditionsTouched(true);
     const next: BrowseState = {
       ...readBrowseState(window.location.search, spec),
       query,
@@ -202,9 +238,12 @@ export default function BrowsableList({
     }, QUERY_WRITE_DELAY_MS);
   };
 
+  // 押したボタンは該当が0件でなくなると消えるので、フォーカスを名前の欄へ移す。外したあとの次の操作は
+  // 探し直しで、欄に打てばそのまま一覧が絞られる。欄を持たない10件以下の一覧では件数の行へ移す。
   const handleClear = () => {
     setTypedQuery("");
     writeState({ query: "", kind: ALL }, "replace");
+    (searchRef.current ?? statusRef.current)?.focus();
   };
 
   const handlePageButton = (next: number) => {
@@ -218,7 +257,10 @@ export default function BrowsableList({
 
   // 戻る・進むで URL が替わったら、名前の欄を URL の値に戻す。
   useEffect(() => {
-    const followUrl = () => setTypedQuery(null);
+    const followUrl = () => {
+      setConditionsTouched(true);
+      setTypedQuery(null);
+    };
     window.addEventListener("popstate", followUrl);
     return () => {
       window.removeEventListener("popstate", followUrl);
@@ -273,7 +315,7 @@ export default function BrowsableList({
   );
 
   const hasControls = items.length > CONTROLS_THRESHOLD;
-  const showKindGroup = hasControls && (kindGroup?.options.length ?? 0) >= 2;
+  const showKindGroup = hasControls && kindOptions.length >= 2;
   const showSortGroup = hasControls && sorts.length >= 2;
   const sortChoice = sorts.find((sort) => sort.value === state.sort);
 
@@ -294,18 +336,20 @@ export default function BrowsableList({
           sortLabel={
             showSortGroup || items.length === 0 ? undefined : sortChoice?.label
           }
+          announcement={announcement}
           onClear={handleClear}
         />
         {hasControls ? (
           <ListControls
             searchLabel={searchLabel}
+            searchRef={searchRef}
             query={query}
             onQueryChange={handleQueryChange}
             kindGroup={
               showKindGroup && kindGroup
                 ? {
                     legend: kindGroup.legend,
-                    options: kindGroup.options,
+                    options: kindOptions,
                     value: state.kind,
                     onChange: (kind) => writeState({ kind }, "replace"),
                   }

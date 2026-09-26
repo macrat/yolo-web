@@ -59,6 +59,17 @@ function visit(path: string) {
   window.history.replaceState(null, "", path);
 }
 
+// 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
+function countLine(): HTMLElement {
+  const line = document.querySelector<HTMLElement>('p[tabindex="-1"]');
+  if (!line) throw new Error("件数の行がありません");
+  return line;
+}
+
+function announcement(): string {
+  return screen.getByRole("status").textContent ?? "";
+}
+
 function rowNames(): string[] {
   const list = screen.getByRole("list", { name: "項目の一覧" });
   return within(list)
@@ -80,9 +91,7 @@ describe("BrowsableList", () => {
   test("既定の状態では、パスが示すページの行と link モードのページ送りを出す", () => {
     visit(`${BASE}/page/2`);
     render(<BrowsableList {...props({ page: 2 })} />);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "全101件のうち51〜100件目",
-    );
+    expect(countLine()).toHaveTextContent("全101件のうち51〜100件目");
     expect(rowNames()[0]).toBe("項目051");
     expect(screen.getByRole("link", { name: "ページ3" })).toHaveAttribute(
       "href",
@@ -92,14 +101,14 @@ describe("BrowsableList", () => {
 
   test("10件以下の一覧は件数の行だけを持ち、並び順を件数の行が言う", () => {
     render(<BrowsableList {...props({ items: makeItems(10) })} />);
-    expect(screen.getByRole("status")).toHaveTextContent("全10件・名前順");
+    expect(countLine()).toHaveTextContent("全10件・名前順");
     expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
 
   test("項目の無い範囲は件数の行だけで、空の一覧も並び順も出さない", () => {
     render(<BrowsableList {...props({ items: [] })} />);
-    expect(screen.getByRole("status")).toHaveTextContent(/^全0件$/);
+    expect(countLine()).toHaveTextContent(/^全0件$/);
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
 
@@ -112,7 +121,7 @@ describe("BrowsableList", () => {
     fireEvent.change(screen.getByRole("searchbox"), {
       target: { value: "項目10" },
     });
-    expect(screen.getByRole("status")).toHaveTextContent("2件（全101件）");
+    expect(countLine()).toHaveTextContent("2件（全101件）");
     expect(rowNames()).toEqual(["項目100", "項目101"]);
     expect(window.location.pathname).toBe(`${BASE}/page/2`);
 
@@ -131,7 +140,7 @@ describe("BrowsableList", () => {
     render(<BrowsableList {...props()} />);
     fireEvent.click(screen.getByRole("radio", { name: "データ" }));
     expect(window.location.search).toBe("?kind=data");
-    expect(screen.getByRole("status")).toHaveTextContent("50件（全101件）");
+    expect(countLine()).toHaveTextContent("50件（全101件）");
     fireEvent.click(screen.getByRole("radio", { name: "逆順" }));
     expect(window.location.search).toBe("?kind=data&sort=reverse");
     expect(rowNames()[0]).toBe("項目100");
@@ -164,14 +173,14 @@ describe("BrowsableList", () => {
     next.focus();
     fireEvent.click(next);
     expect(push).toHaveBeenCalledWith(null, "", `${BASE}?sort=reverse&page=2`);
-    const status = screen.getByRole("status");
+    const status = countLine();
     expect(status).toHaveTextContent("全101件のうち51〜100件目");
     expect(status).toHaveFocus();
     expect(status.scrollIntoView).toHaveBeenCalledWith({ block: "start" });
 
     // 端で押した「次へ」が消えても、フォーカスは件数の行に残る。
     fireEvent.click(screen.getByRole("button", { name: "次へ（ページ3）" }));
-    expect(screen.getByRole("status")).toHaveFocus();
+    expect(countLine()).toHaveFocus();
     push.mockRestore();
   });
 
@@ -188,9 +197,7 @@ describe("BrowsableList", () => {
       window.dispatchEvent(new PopStateEvent("popstate"));
     });
     expect(input).toHaveValue("");
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "全101件のうち1〜50件目",
-    );
+    expect(countLine()).toHaveTextContent("全101件のうち1〜50件目");
   });
 
   test("クエリのある URL に着くと、その状態で組む", () => {
@@ -206,7 +213,7 @@ describe("BrowsableList", () => {
     fireEvent.change(screen.getByRole("searchbox"), {
       target: { value: "存在しない" },
     });
-    expect(screen.getByRole("status")).toHaveTextContent(
+    expect(countLine()).toHaveTextContent(
       "条件に合うものはありません（全101件）",
     );
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
@@ -215,8 +222,91 @@ describe("BrowsableList", () => {
     expect(window.location.search).toBe("?sort=reverse");
   });
 
+  test("「絞り込みを外す」を押すと、消えるボタンの代わりに名前の欄へフォーカスを移す", () => {
+    render(<BrowsableList {...props()} />);
+    fireEvent.click(screen.getByRole("radio", { name: "データ" }));
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "項目001" },
+    });
+    const clear = screen.getByRole("button", { name: "絞り込みを外す" });
+    clear.focus();
+    fireEvent.click(clear);
+    expect(
+      screen.queryByRole("button", { name: "絞り込みを外す" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("searchbox")).toHaveFocus();
+    expect(countLine()).toHaveTextContent("全101件のうち1〜50件目");
+  });
+
+  test("名前の欄を持たない一覧で「絞り込みを外す」を押すと、件数の行へフォーカスを移す", () => {
+    visit(`${BASE}?q=${encodeURIComponent("存在しない")}`);
+    render(<BrowsableList {...props({ items: makeItems(10) })} />);
+    fireEvent.click(screen.getByRole("button", { name: "絞り込みを外す" }));
+    expect(countLine()).toHaveFocus();
+    expect(countLine()).toHaveTextContent("全10件・名前順");
+  });
+
+  test("読み上げの文は、来訪者が条件を変えるまで空で、打つあいだは積まず、落ち着いてから1回替わる", () => {
+    vi.useFakeTimers();
+    visit(`${BASE}?q=${encodeURIComponent("項目09")}`);
+    render(<BrowsableList {...props()} />);
+    expect(announcement()).toBe("");
+
+    const input = screen.getByRole("searchbox");
+    for (const value of ["項目0", "項目01", "項目010"]) {
+      fireEvent.change(input, { target: { value } });
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+      expect(announcement()).toBe("");
+    }
+    expect(countLine()).toHaveTextContent("1件（全101件）");
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(announcement()).toBe("1件（全101件）");
+  });
+
+  test("ページを送っても読み上げの文は替わらず、見えている件数の行だけが範囲を替える", () => {
+    render(<BrowsableList {...props()} />);
+    fireEvent.click(screen.getByRole("radio", { name: "データ" }));
+    fireEvent.click(screen.getByRole("radio", { name: "すべて" }));
+    fireEvent.click(screen.getByRole("radio", { name: "逆順" }));
+    expect(announcement()).toBe("全101件");
+    fireEvent.click(screen.getByRole("button", { name: "次へ（ページ2）" }));
+    expect(countLine()).toHaveTextContent("全101件のうち51〜100件目");
+    expect(countLine()).toHaveFocus();
+    expect(announcement()).toBe("全101件");
+  });
+
+  test("種別の組は範囲の中に項目を持つ選択肢だけを出し、それが1つなら組を出さない", () => {
+    const kindGroup = {
+      legend: "種別",
+      options: [
+        { value: "text", label: "文章" },
+        { value: "data", label: "データ" },
+        { value: "image", label: "画像" },
+      ],
+    };
+    const { unmount } = render(<BrowsableList {...props({ kindGroup })} />);
+    expect(
+      screen.getByRole("radiogroup", { name: "種別" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "文章" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("radio", { name: "画像" }),
+    ).not.toBeInTheDocument();
+    unmount();
+
+    const items = makeItems(20).map((item) => ({ ...item, kind: "文章" }));
+    render(<BrowsableList {...props({ items, kindGroup })} />);
+    expect(
+      screen.queryByRole("radiogroup", { name: "種別" }),
+    ).not.toBeInTheDocument();
+  });
+
   test("ほかのページから一覧を開いたときは、フォーカスを件数の行へ移さない", () => {
     render(<BrowsableList {...props()} />);
-    expect(screen.getByRole("status")).not.toHaveFocus();
+    expect(countLine()).not.toHaveFocus();
   });
 });

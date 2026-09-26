@@ -10,8 +10,6 @@ interface KanjiDetailProps {
   kanji: KanjiEntry;
 }
 
-const RELATED_HEADING_ID = "same-radical-kanji";
-
 /** 同じ部首の漢字を画数の順に区切る。画数は字に見えないので、区切りの見出しで見せる（§7）。 */
 function groupByStrokeCount(kanjiList: KanjiEntry[]): LinkIndexGroup[] {
   const groups = new Map<number, KanjiEntry[]>();
@@ -125,15 +123,10 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
       )}
 
       {relatedKanji.length > 0 && (
-        <section
-          className={styles.section}
-          aria-labelledby={RELATED_HEADING_ID}
-        >
-          <h2 id={RELATED_HEADING_ID} {...headingFontAttr(relatedHeading)}>
-            {relatedHeading}
-          </h2>
+        <section className={styles.section}>
+          <h2 {...headingFontAttr(relatedHeading)}>{relatedHeading}</h2>
           <LinkIndex
-            labelledBy={RELATED_HEADING_ID}
+            singleCharacters
             groups={groupByStrokeCount(relatedKanji)}
             groupHeadingLevel={3}
           />

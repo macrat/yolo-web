@@ -19,8 +19,6 @@ interface YojiDetailProps {
   yoji: YojiEntry;
 }
 
-const RELATED_HEADING_ID = "same-category-yoji";
-
 const DIFFICULTY_ORDER: YojiDifficulty[] = [1, 2, 3];
 
 /** 同じカテゴリの四字熟語を難易度の順に区切る。難易度は語に見えないので、区切りの見出しで見せる（§7）。 */
@@ -199,15 +197,9 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       )}
 
       {relatedYoji.length > 0 && (
-        <section
-          className={styles.section}
-          aria-labelledby={RELATED_HEADING_ID}
-        >
-          <h2 id={RELATED_HEADING_ID} {...headingFontAttr(relatedHeading)}>
-            {relatedHeading}
-          </h2>
+        <section className={styles.section}>
+          <h2 {...headingFontAttr(relatedHeading)}>{relatedHeading}</h2>
           <LinkIndex
-            labelledBy={RELATED_HEADING_ID}
             groups={groupByDifficulty(relatedYoji)}
             groupHeadingLevel={3}
           />

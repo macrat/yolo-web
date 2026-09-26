@@ -1,7 +1,8 @@
 /**
  * 一覧の件数と備え（DESIGN.md §7「件数と備え」）の純粋な関数。名前の絞り込み・種別と道具ごとの組の絞り込み・
  * 並べ替え・ページの切り出し・URL のクエリとの読み書き・畳んだ枠のラベルと件数の行の文を組む。
- * サーバーとクライアントで同じ結果を出すため、ロケールに依存する比較（Intl.Collator）を使わない。
+ * サーバーとクライアントで同じ結果を出すため、ロケールに依存する比較（Intl.Collator）を使わず、仮名の読みの
+ * 辞書の並びは自前の比べる形で作る。
  */
 
 import type { ItemListFact } from "@/components/ItemList";
@@ -114,44 +115,107 @@ export function matchDegree(
   return null;
 }
 
+// 辞書の五十音順で、1段目に比べるときに外す濁点・半濁点（NFD で分かれた結合文字）と、並の仮名に寄せる小書きの仮名。
+const VOICING_MARKS = /[\u3099\u309a]/g;
+const SMALL_KANA: Record<string, string> = {
+  ぁ: "あ",
+  ぃ: "い",
+  ぅ: "う",
+  ぇ: "え",
+  ぉ: "お",
+  っ: "つ",
+  ゃ: "や",
+  ゅ: "ゆ",
+  ょ: "よ",
+  ゎ: "わ",
+  ゕ: "か",
+  ゖ: "け",
+};
+// 長音符は、直前の仮名の母音として比べる（「かー」は「かあ」の位置）。
+const VOWEL_ROWS: ReadonlyArray<readonly [string, string]> = [
+  ["あ", "あかさたなはまやらわ"],
+  ["い", "いきしちにひみりゐ"],
+  ["う", "うくすつぬふむゆる"],
+  ["え", "えけせてねへめれゑ"],
+  ["お", "おこそとのほもよろを"],
+];
+
+function vowelOf(kana: string): string | undefined {
+  return VOWEL_ROWS.find(([, row]) => row.includes(kana))?.[0];
+}
+
+/**
+ * 仮名の読みを辞書の並びで比べるための2段の形。1段目は濁点・半濁点を外し、小書きの仮名を並の仮名に寄せ、
+ * 長音符を母音にしたもの。清音と濁音・半濁音が同じ位置に並ぶ。2段目は寄せる前の形で、1段目が同じ語どうしを
+ * 小書き → 並、清音 → 濁音 → 半濁音の順に並べる。どちらも片仮名を平仮名に寄せてから作る。
+ */
+export function kanaCollationKey(text: string): [string, string] {
+  const secondary = normalizeSearchText(text);
+  let primary = "";
+  for (const char of secondary.normalize("NFD").replace(VOICING_MARKS, "")) {
+    const base = SMALL_KANA[char] ?? char;
+    primary += base === "ー" ? (vowelOf(primary.slice(-1)) ?? base) : base;
+  }
+  return [primary, secondary];
+}
+
+type PreparedKey = ReadonlyArray<number | readonly [string, string]>;
+
+function prepareKey(key: BrowseSortKey): PreparedKey {
+  return key.map((value) =>
+    typeof value === "number" ? value : kanaCollationKey(value),
+  );
+}
+
+function compareValues(
+  x: number | readonly [string, string],
+  y: number | readonly [string, string],
+): number {
+  if (typeof x === "number" && typeof y === "number") return x - y;
+  if (typeof x === "number" || typeof y === "number") {
+    return String(x) < String(y) ? -1 : 1;
+  }
+  for (let level = 0; level < 2; level++) {
+    if (x[level] !== y[level]) return x[level] < y[level] ? -1 : 1;
+  }
+  return 0;
+}
+
 function compareKeys(
-  a: BrowseSortKey,
-  b: BrowseSortKey,
+  a: PreparedKey,
+  b: PreparedKey,
   directions: ReadonlyArray<"asc" | "desc">,
 ): number {
   const length = Math.max(a.length, b.length);
   for (let i = 0; i < length; i++) {
     const x = a[i];
     const y = b[i];
-    if (x === y) continue;
     // 値を持たない項目は、その並び順で後ろに回す。
+    if (x === undefined && y === undefined) continue;
     if (x === undefined) return 1;
     if (y === undefined) return -1;
-    const sign = directions[i] === "desc" ? -1 : 1;
-    if (typeof x === "number" && typeof y === "number") {
-      return (x - y) * sign;
-    }
-    return (String(x) < String(y) ? -1 : 1) * sign;
+    const order = compareValues(x, y);
+    if (order !== 0) return directions[i] === "desc" ? -order : order;
   }
   return 0;
 }
 
-/** 並び順で並べる。比べる値が同じ項目は、渡された順のまま並ぶ（安定な並べ替え）。 */
+/**
+ * 並び順で並べる。数は数の大小で、文字列は仮名の読みの辞書の並び（kanaCollationKey）で比べる。
+ * 比べる値が同じ項目は、渡された順のまま並ぶ（安定な並べ替え）。
+ */
 export function sortBrowseItems<T extends BrowseItem>(
   items: readonly T[],
   sort: BrowseSort,
 ): T[] {
   const directions = sort.directions ?? [];
   return items
-    .map((item, index) => ({ item, index }))
-    .sort(
-      (a, b) =>
-        compareKeys(
-          a.item.sortKeys[sort.value] ?? [],
-          b.item.sortKeys[sort.value] ?? [],
-          directions,
-        ) || a.index - b.index,
-    )
+    .map((item, index) => ({
+      item,
+      index,
+      key: prepareKey(item.sortKeys[sort.value] ?? []),
+    }))
+    .sort((a, b) => compareKeys(a.key, b.key, directions) || a.index - b.index)
     .map(({ item }) => item);
 }
 
@@ -355,9 +419,11 @@ export function statusText(options: {
   const head = filtering
     ? `${count(matched, unit)}（全${count(total, unit)}）`
     : `全${count(total, unit)}`;
-  const rangeText = range
-    ? `のうち${numberFormat.format(range.start)}〜${count(range.end, unit)}目`
-    : "";
+  const rangeText = !range
+    ? ""
+    : range.start === range.end
+      ? `のうち${count(range.end, unit)}目`
+      : `のうち${numberFormat.format(range.start)}〜${count(range.end, unit)}目`;
   const sortText = sortLabel ? `・${sortLabel}` : "";
   return `${head}${rangeText}${sortText}`;
 }

@@ -7,6 +7,7 @@ import {
   defaultBrowseState,
   isDefaultBrowseState,
   isFiltered,
+  kanaCollationKey,
   matchDegree,
   normalizeSearchText,
   readBrowseState,
@@ -17,6 +18,7 @@ import {
   type BrowseSpec,
   type BrowseState,
 } from "@/lib/list-browse";
+import { getAllYoji } from "@/dictionary/_lib/yoji";
 
 function item(
   name: string,
@@ -118,15 +120,59 @@ describe("sortBrowseItems", () => {
     ).toEqual(["a", "b", "c", "d"]);
   });
 
-  test("文字列は符号位置で比べ、平仮名の読みが五十音の順に並ぶ", () => {
-    const items = ["さくら", "あお", "かき"].map((name) =>
-      item(name, {}, { reading: [name] }),
-    );
+  test("仮名の読みは辞書の五十音順に並ぶ（清音と濁音・半濁音を同じ位置に並べる）", () => {
+    const readings = [
+      "かんぜんむけつ",
+      "がりょうてんせい",
+      "かいき",
+      "ぎょう",
+      "きよう",
+      "きょう",
+      "ぱぱ",
+      "ばば",
+      "はば",
+      "はは",
+      "じょう",
+      "しよう",
+      "しょう",
+    ];
+    const items = readings.map((name) => item(name, {}, { reading: [name] }));
     expect(
       sortBrowseItems(items, { value: "reading", label: "五十音順" }).map(
         (entry) => entry.name,
       ),
-    ).toEqual(["あお", "かき", "さくら"]);
+    ).toEqual([
+      "かいき",
+      "がりょうてんせい",
+      "かんぜんむけつ",
+      "きょう",
+      "きよう",
+      "ぎょう",
+      "しょう",
+      "しよう",
+      "じょう",
+      "はは",
+      "はば",
+      "ばば",
+      "ぱぱ",
+    ]);
+  });
+
+  test("四字熟語の全件の読みが、日本語の照合（Intl.Collator）と同じ順に並ぶ", () => {
+    const readings = getAllYoji().map((entry) => entry.reading);
+    const items = readings.map((name) => item(name, {}, { reading: [name] }));
+    const sorted = sortBrowseItems(items, {
+      value: "reading",
+      label: "五十音順",
+    }).map((entry) => entry.name);
+    expect(sorted).toEqual([...readings].sort(new Intl.Collator("ja").compare));
+  });
+});
+
+describe("kanaCollationKey", () => {
+  test("1段目は濁点・半濁点を外し、小書きの仮名を並に寄せ、長音符を母音にする", () => {
+    expect(kanaCollationKey("ガッコウ")).toEqual(["かつこう", "がっこう"]);
+    expect(kanaCollationKey("ぱーてぃー")[0]).toBe("はあていい");
   });
 });
 
@@ -338,6 +384,18 @@ describe("statusText", () => {
         range: { start: 1001, end: 1100 },
       }),
     ).toBe("全2,136字のうち1,001〜1,100字目");
+  });
+
+  test("表示している範囲が1件なら、その1つの番号だけを言う", () => {
+    expect(
+      statusText({
+        total: 101,
+        matched: 101,
+        filtering: false,
+        unit: "語",
+        range: { start: 101, end: 101 },
+      }),
+    ).toBe("全101語のうち101語目");
   });
 
   test("該当が0件のときは、条件に合うものが無いことと全体の件数を言う", () => {

@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithRef } from "react";
 
 type InputType =
   "text" | "email" | "number" | "password" | "search" | "tel" | "url" | "date";
@@ -11,13 +11,13 @@ interface InputOwnProps {
 }
 
 type InputProps = InputOwnProps &
-  Omit<ComponentPropsWithoutRef<"input">, keyof InputOwnProps>;
+  Omit<ComponentPropsWithRef<"input">, keyof InputOwnProps>;
 
 /**
  * 書き込む欄（DESIGN.md §8）。見え方は globals.css の [data-field] が持つ。
  * ラベルと、エラーの理由の文は Field が付ける。
  *
- * `type` と `error` を除く属性は、そのまま `<input>` に渡る。
+ * `type` と `error` を除く属性は、ref も含めてそのまま `<input>` に渡る。
  */
 function Input({ type = "text", error = false, ...rest }: InputProps) {
   return (

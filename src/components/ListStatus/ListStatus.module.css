@@ -1,15 +1,16 @@
-/* 件数の文と「絞り込みを外す」を1行に並べ、収まらなければボタンを次の行へ送る。ボタンは縁の見えない
- * コントロールで左へ張り出すので、字と字のあいだは押せる範囲の余白で取る（§5）。 */
+/* 件数の文と「絞り込みを外す」を1行に並べ、収まらなければボタンを次の行へ送る。文の箱もボタンも字の左右に
+ * 押せる範囲と同じ余白を持つので、間隔を余白と同じ幅にすると箱どうしが接し、字と字のあいだは 16px になる（§5）。 */
 .status {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  column-gap: var(--space-16);
+  column-gap: var(--text-box-pad);
 }
 
-/* ページを送ったあとに画面の上へ出すとき、行を画面の端に付けない。 */
+/* 左右の余白と左への張り出しは data-text-box が持つので、上下の余白だけを消す。ページを送ったあとに画面の上へ
+ * 出すとき、行を画面の端に付けない。 */
 .text {
-  margin: 0;
+  margin-block: 0;
   color: var(--ink);
   font-size: var(--text-body);
   line-height: var(--leading-body);

@@ -8,6 +8,7 @@ import {
   useState,
   type ChangeEvent,
   type CompositionEvent,
+  type Ref,
 } from "react";
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import Field from "@/components/Field";
@@ -27,6 +28,8 @@ export interface ListControlsGroup {
 interface ListControlsProps {
   /** 名前の欄のラベル。何で探せるかを言う（§7）。 */
   searchLabel: string;
+  /** 名前の欄の要素。一覧の操作のあとに、親がここへフォーカスを移す。 */
+  searchRef?: Ref<HTMLInputElement>;
   /** 名前の条件。欄の外から変わったとき（戻る・「絞り込みを外す」）は、欄の字もこの値にする。 */
   query: string;
   /** 名前の条件が変わったときに呼ぶ。IME の変換中は呼ばず、確定で呼ぶ。 */
@@ -60,6 +63,7 @@ function selectedLabel(group: ListControlsGroup): string | undefined {
  */
 export default function ListControls({
   searchLabel,
+  searchRef,
   query,
   onQueryChange,
   kindGroup,
@@ -137,6 +141,7 @@ export default function ListControls({
         {(control) => (
           <Input
             {...control}
+            ref={searchRef}
             type="search"
             value={inputValue}
             onChange={handleChange}

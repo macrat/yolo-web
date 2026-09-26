@@ -88,19 +88,19 @@ describe("LinkIndex", () => {
     expect(screen.getByRole("list", { name: "タグ（3）" })).toBeInTheDocument();
   });
 
-  test("区切りを持つ索引は、区切りごとに見出しと、その見出しを名前に持つリストを置く", () => {
-    render(
-      <LinkIndex
-        label="同じ部首の漢字（3字）"
-        groups={strokeGroups}
-        groupHeadingLevel={3}
-      />,
+  test("区切りを持つ索引は、区切りごとに見出しと、その見出しを名前に持つリストを置き、全体には名前を重ねない", () => {
+    const { container } = render(
+      <>
+        <h2>同じ部首の漢字（3字）</h2>
+        <LinkIndex groups={strokeGroups} groupHeadingLevel={3} />
+      </>,
     );
-    const group = screen.getByRole("group", { name: "同じ部首の漢字（3字）" });
-    const headings = within(group).getAllByRole("heading", { level: 3 });
+    expect(screen.queryByRole("group")).not.toBeInTheDocument();
+    expect(container.querySelectorAll("[aria-label]")).toHaveLength(0);
+    const headings = screen.getAllByRole("heading", { level: 3 });
     expect(headings.map((h) => h.textContent)).toEqual(["4画", "5画"]);
 
-    const fourStrokes = within(group).getByRole("list", { name: "4画" });
+    const fourStrokes = screen.getByRole("list", { name: "4画" });
     expect(fourStrokes).toHaveAttribute("role", "list");
     expect(
       within(fourStrokes)
@@ -108,20 +108,29 @@ describe("LinkIndex", () => {
         .map((l) => l.textContent),
     ).toEqual(["氷", "永"]);
     expect(
-      within(within(group).getByRole("list", { name: "5画" })).getAllByRole(
-        "link",
-      ),
+      within(screen.getByRole("list", { name: "5画" })).getAllByRole("link"),
     ).toHaveLength(1);
   });
 
-  test("区切りの見出しは、渡された段と書体の属性で組む", () => {
-    render(
+  test("単字の索引は、字の形で選ぶ組み方の印を語に付ける", () => {
+    const { rerender } = render(
+      <LinkIndex groups={strokeGroups} groupHeadingLevel={3} />,
+    );
+    const plainClass = screen.getByRole("link", { name: "氷" }).className;
+    rerender(
       <LinkIndex
-        label="部首（2）"
+        singleCharacters
         groups={strokeGroups}
-        groupHeadingLevel={4}
+        groupHeadingLevel={3}
       />,
     );
+    const singleClass = screen.getByRole("link", { name: "氷" }).className;
+    expect(singleClass).not.toBe(plainClass);
+    expect(singleClass).toContain(plainClass);
+  });
+
+  test("区切りの見出しは、渡された段と書体の属性で組む", () => {
+    render(<LinkIndex groups={strokeGroups} groupHeadingLevel={4} />);
     expect(screen.getAllByRole("heading", { level: 4 })).toHaveLength(2);
     expect(screen.getByRole("heading", { name: "5画" })).toHaveAttribute(
       "data-heading-font",

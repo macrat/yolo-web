@@ -149,7 +149,7 @@ test("大字は直後の h1 と同じ語なので、読み上げの木に現れ�
   );
 });
 
-test("同じカテゴリの四字熟語は、見出しが語の数を言い、難易度ごとのリストとして読まれる", () => {
+test("同じカテゴリの四字熟語は、見出しだけが語の数を言い、難易度ごとのリストとして読まれる", () => {
   const others = getYojiByCategory("life").filter((y) => y.yoji !== "一期一会");
   render(<YojiDetail yoji={mockYoji} />);
 
@@ -157,7 +157,10 @@ test("同じカテゴリの四字熟語は、見出しが語の数を言い、�
     level: 2,
     name: `同じカテゴリの四字熟語（${others.length}語）`,
   });
-  const index = screen.getByRole("group", { name: heading.textContent! });
+  // 索引の名前は見出しだけが言う。領域にも索引のまとまりにも同じ名前を重ねない。
+  const index = heading.closest("section") as HTMLElement;
+  expect(index).not.toHaveAttribute("aria-labelledby");
+  expect(within(index).queryByRole("group")).not.toBeInTheDocument();
 
   const levels = [
     { label: "初級", difficulty: 1 },

@@ -80,7 +80,7 @@ test("大字は直後の h1 と同じ字なので、読み上げの木に現れ�
   );
 });
 
-test("同じ部首の漢字は、見出しが字の数を言い、画数ごとのリストとして読まれる", () => {
+test("同じ部首の漢字は、見出しだけが字の数を言い、画数ごとのリストとして読まれる", () => {
   const water = getKanjiByChar("水")!;
   const others = getKanjiByRadical("水").filter((k) => k.character !== "水");
   expect(others).toHaveLength(117);
@@ -91,7 +91,10 @@ test("同じ部首の漢字は、見出しが字の数を言い、画数ごと�
     name: `同じ部首の漢字（${others.length}字）`,
   });
   expect(heading).toBeInTheDocument();
-  const index = screen.getByRole("group", { name: heading.textContent! });
+  // 索引の名前は見出しだけが言う。領域にも索引のまとまりにも同じ名前を重ねない。
+  const index = heading.closest("section") as HTMLElement;
+  expect(index).not.toHaveAttribute("aria-labelledby");
+  expect(within(index).queryByRole("group")).not.toBeInTheDocument();
 
   const strokeCounts = [...new Set(others.map((k) => k.strokeCount))].sort(
     (a, b) => a - b,

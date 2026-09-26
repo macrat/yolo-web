@@ -84,7 +84,7 @@ function categoryChoices(categories: YojiCategory[]) {
   }));
 }
 
-const ELEVEN_CATEGORIES: YojiCategory[] = ["life", "effort", "nature"];
+const ELEVEN_CATEGORIES: YojiCategory[] = ["life", "effort"];
 
 export const LIST_SAMPLES: Record<string, ListSample> = {
   "11": {

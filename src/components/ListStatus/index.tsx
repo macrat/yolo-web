@@ -15,6 +15,11 @@ interface ListStatusProps {
   range?: { start: number; end: number };
   /** 並び順の組が無いときの、既定の並び順の語。 */
   sortLabel?: string;
+  /**
+   * 読み上げに伝える件数の文。条件が落ち着いたときだけ親が替える。来訪者が条件を変えるまでは空にしておき、
+   * 見えている件数の行と同じ文を二度読ませない。
+   */
+  announcement: string;
   /** 該当が0件のときに「絞り込みを外す」で呼ぶ。渡さなければボタンを出さない。 */
   onClear?: () => void;
   /** 件数の行の要素。ページを送ったあとに、ここへフォーカスを移す。 */
@@ -24,9 +29,11 @@ interface ListStatusProps {
 /**
  * 件数の行（DESIGN.md §7「件数と備え」）。全体の件数をいつも言い、絞っている間は該当の件数も言う。
  *
- * role="status" にして、絞り込みで変わった件数を読み上げにも伝える（§8）。「絞り込みを外す」のボタンは
- * ライブリージョンの外に置き、件数が変わるたびにボタンの名前まで読み上げさせない。tabIndex={-1} は、
- * ページを送ったあとに一覧の頭としてフォーカスを受けるため。
+ * 絞り込みで変わった件数は、見えない role="status" の文で読み上げに伝える（§8）。見えている行をライブリージョンに
+ * しないのは、ページを送ると範囲の文が替わると同時に行へフォーカスが移り、同じ文を二度読ませるうえ、打つたびの
+ * 途中の件数まで読み上げの予約に積むため。見えている行は tabIndex={-1} で、ページを送ったあとに一覧の頭として
+ * フォーカスを受ける。そのリングは縁の見えないコントロールと同じ箱（data-text-box="inline"）の内側に出す。
+ * 「絞り込みを外す」のボタンはライブリージョンの外に置き、件数が変わるたびにボタンの名前まで読み上げさせない。
  */
 export default function ListStatus({
   total,
@@ -35,14 +42,18 @@ export default function ListStatus({
   unit,
   range,
   sortLabel,
+  announcement,
   onClear,
   ref,
 }: ListStatusProps) {
   const empty = filtering && matched === 0;
   return (
     <div className={styles.status}>
-      <p ref={ref} role="status" tabIndex={-1} className={styles.text}>
+      <p ref={ref} tabIndex={-1} className={styles.text} data-text-box="inline">
         {statusText({ total, matched, filtering, unit, range, sortLabel })}
+      </p>
+      <p role="status" className="visually-hidden">
+        {announcement}
       </p>
       {empty && onClear ? (
         <Button onClick={onClear}>絞り込みを外す</Button>
