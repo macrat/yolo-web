@@ -4,7 +4,7 @@
  * テスト対象:
  * - coreSentence / behaviors / persona / thirdPartyNote の4セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
- * - 他のタイプ（OtherTypesNav）
+ * - すべてのタイプ（OtherTypesNav）
  * - 置く面（placement）による見出しの階層（h2/h3）
  * - タイプの色を wrapper に入れないこと
  * - afterThirdPartyNote スロット
@@ -160,7 +160,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
@@ -171,7 +171,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("逆張りマスター")).toBeInTheDocument();
     expect(screen.getByText("マイウェイ型")).toBeInTheDocument();
@@ -362,7 +362,7 @@ describe("ContrarianFortuneContent - aria-current", () => {
 });
 
 describe("ContrarianFortuneContent - リンクのhref", () => {
-  it("他のタイプのリンクが正しいhrefを持つこと", () => {
+  it("すべてのタイプのリンクが正しいhrefを持つこと", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}

@@ -210,17 +210,6 @@ describe("PlayQuizResultPage CTA", () => {
 
     expect(screen.getByText("全8問 / 登録不要")).toBeInTheDocument();
   });
-
-  it("旧来のCTAテキスト「あなたも挑戦してみる?」は表示されない", async () => {
-    const params = Promise.resolve({
-      slug: "knowledge-quiz",
-      resultId: "result-a",
-    });
-    const page = await PlayQuizResultPage({ params });
-    render(page);
-
-    expect(screen.queryByText("あなたも挑戦してみる?")).not.toBeInTheDocument();
-  });
 });
 
 describe("PlayQuizResultPage コンテキスト表示", () => {

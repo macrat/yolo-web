@@ -10,7 +10,7 @@
  *   - motto: 20-80 chars
  *
  * Also verifies:
- *   - resultPageLabels is removed from meta
+ *   - resultPageLabels is not set on meta
  *   - seoTitle is set on meta
  */
 import { describe, it, expect } from "vitest";
@@ -95,8 +95,8 @@ describe("yoji-personality detailedContent — new variant format", () => {
   }
 });
 
-describe("yoji-personality meta — new variant requirements", () => {
-  it("resultPageLabels is removed from meta", () => {
+describe("yoji-personality meta", () => {
+  it("resultPageLabels is not set on meta", () => {
     expect(yojiPersonalityQuiz.meta.resultPageLabels).toBeUndefined();
   });
 

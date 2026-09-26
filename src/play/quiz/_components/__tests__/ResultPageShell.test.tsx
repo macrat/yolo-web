@@ -115,7 +115,7 @@ test("ResultPageShell renders the result as a Tsutsumi wrapping when icon+color 
     </ResultPageShell>,
   );
 
-  // 結果は Tsutsumi（figure[data-color]）で包まれる（DESIGN.md §4/§7）
+  // 結果は Tsutsumi（figure[data-color]）で包まれる
   expect(container.querySelector("figure[data-color]")).not.toBeNull();
   // 絵文字（result.icon）は装飾として描画しない（DESIGN.md §5 絵文字を置かない）
   expect(screen.queryByText("🎯")).not.toBeInTheDocument();

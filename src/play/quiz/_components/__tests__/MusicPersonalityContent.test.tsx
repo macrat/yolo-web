@@ -112,7 +112,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -121,7 +121,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("フェス一番乗り族")).toBeInTheDocument();
     expect(screen.getByText("プレイリスト伝道師")).toBeInTheDocument();
@@ -248,7 +248,7 @@ describe("MusicPersonalityContent - 全タイプリンク", () => {
     expect(links.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("他のタイプの絵文字アイコン（r.icon）が描画されないこと", () => {
+  it("すべてのタイプの絵文字アイコン（r.icon）が描画されないこと", () => {
     // 絵文字を置かない（DESIGN.md §5）。各タイプはタイトルの文言で見分ける。
     render(
       <MusicPersonalityContent

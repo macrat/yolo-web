@@ -42,7 +42,7 @@ describe("extractWithParam", () => {
     it("returns undefined for character-personality slug (handled by dedicated route)", () => {
       // character-personality has its own dedicated route at
       // /play/character-personality/result/[resultId], so the dynamic route
-      // no longer handles this slug.
+      // does not handle this slug.
       const result = extractWithParam(
         { with: "blazing-strategist" },
         "character-personality",

@@ -1,6 +1,6 @@
 /*
  * YojiPersonalityContent 共通コンポーネントのスタイル。
- * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
+ * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
  *
  * 設計方針（ResultCard.module.css / CharacterPersonalityContent.module.css を一次規範として語彙をそろえる）:
  * - 左寄せ・トークンのみ・絵文字なし・影なし。

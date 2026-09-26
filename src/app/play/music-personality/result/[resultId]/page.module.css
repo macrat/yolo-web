@@ -1,15 +1,7 @@
 /*
- * 結果ページルート /play/[slug]/result/[resultId] のスタイル。
- * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
- * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
- *
- * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色を使わず共通 --accent に
- * 寄せる。
- *
- * 共通コンテンツセクション（強み〜他のタイプ）のスタイルは
- * MusicPersonalityContent.module.css に集約されている。
- * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
+ * 診断の結果のページ（/play/music-personality/result/[resultId]）のスタイル。
+ * 強みから「すべてのタイプ」までの区画は MusicPersonalityContent.module.css が持ち、
+ * このファイルは page.tsx だけが持つ要素（catchphrase, trySection, detailedSection, cta2）を持つ。
  */
 
 /* detailedContent セクションの外側コンテナ */

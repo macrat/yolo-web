@@ -144,7 +144,7 @@ describe("contrarian-fortune detailedContent", () => {
   it("meta does NOT have resultPageLabels", () => {
     expect(
       contrarianFortuneQuiz.meta.resultPageLabels,
-      "meta.resultPageLabels must be removed",
+      "meta.resultPageLabels must not be set",
     ).toBeUndefined();
   });
 });

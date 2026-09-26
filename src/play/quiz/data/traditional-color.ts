@@ -2,7 +2,7 @@ import type { QuizDefinition, QuizResult } from "../types";
 
 /**
  * タイプの title は色名の後ろに読みを添えた形で、結果の見出し・シェアの文・ページの題に使う。
- * 他のタイプの一覧では、色名と読みを分けて見せる。
+ * すべてのタイプの一覧では、色名と読みを分けて見せる。
  */
 function colorTypeName(
   name: string,

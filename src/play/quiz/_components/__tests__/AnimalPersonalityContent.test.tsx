@@ -109,7 +109,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
     expect(screen.getByText("今日のアクション")).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <AnimalPersonalityContent
         content={sampleContent}
@@ -118,7 +118,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("ニホンザル")).toBeInTheDocument();
     expect(screen.getByText("ホンドタヌキ")).toBeInTheDocument();

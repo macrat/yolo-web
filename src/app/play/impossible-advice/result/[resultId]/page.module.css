@@ -1,14 +1,7 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
- * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
- * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
- *
- * impossible-advice 専用結果ページのスタイル。
- * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor / --type-color）を使わず共通 --accent に寄せる。
- * 共通コンテンツセクション（悩みの本質〜他のタイプ）のスタイルは
- * ImpossibleAdviceContent.module.css に集約されている。
- * このファイルは page.tsx 固有の要素（catchphrase, trySection, cta2）のみを管理する。
+ * 診断の結果のページ（/play/impossible-advice/result/[resultId]）のスタイル。
+ * 悩みの本質から「すべてのタイプ」までの区画は ImpossibleAdviceContent.module.css が持ち、
+ * このファイルは page.tsx だけが持つ要素（catchphrase, trySection, detailedSection, cta2）を持つ。
  */
 
 /* detailedContent セクションの外側コンテナ */

@@ -1,16 +1,11 @@
 "use client";
 
 /**
- * ResultCard は「受検者本人向け」のインライン結果表示です。
+ * 解き終えた画面（`/play/[slug]`）に出す結果。
  *
- * 診断を完了した本人は、`/play/[slug]` 上でこの ResultCard を通して結果を見ます
- * （`QuizContainer` の intro→playing→result の段階遷移。variant ごとの結果コンポーネント
- *  への dispatch もここで行う）。本人はこの後 `/play/[slug]/result/[resultId]` へは遷移せず、
- *  その `/result/<id>` URL はシェア用にここで生成される（→ 第三者が開く静的ページ）。
- *
- * つまり「本人向け = ResultCard（このファイル）」「第三者向けシェア/検索ランディング =
- *  /play/[slug]/result/[resultId] ルート（ResultPageShell 側）」と役割が分かれている。
- * 本人向けの結果体験を変えたいときは必ずこちら（ResultCard）を編集すること。
+ * `QuizContainer` が intro→playing→result と進んだあとに描き、variant ごとの結果コンポーネントへの
+ * 振り分けもここで行う。各タイプの結果のページ（`/play/[slug]/result/[resultId]`。枠は ResultPageShell）は、
+ * ここからシェアする URL であり、ここに並ぶタイプの行から移る先でもある。
  */
 import type React from "react";
 import Link from "next/link";
@@ -118,7 +113,7 @@ type ResultCardProps = {
  * 診断が構造的に残す残余同点（本当に複数タイプの声を等しく持つ人）を、恣意的・不可視に
  * 配列順で割らず、**同格**として正直に開示する。主タイプ（determineResult の決定的勝者）と
  * co-types を上下つけず同じ強さの声として列挙し、「主に X」のような X>Y を暗示するコピーには
- * しない。各 co-type にはその第三者向け結果解説ページ（/play/[slug]/result/[id]）への
+ * しない。各 co-type にはその結果のページ（/play/[slug]/result/[id]）への
  * リンクを添える。
  *
  * --paper-2 の地＋罫（--rule）の静かな区画。装飾線・絵文字・

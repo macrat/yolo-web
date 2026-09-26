@@ -1,12 +1,12 @@
 /**
  * CharacterPersonalityContent - character-personality variant の共通コンテンツコンポーネント。
  *
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
  * ResultCard.tsx からは next/dynamic で遅延ロードされるため、クライアントバンドルへの
  * character-personality データの混入を防ぐ。
  *
  * 共通化対象:
- * - archetypeBreakdown / behaviors / characterMessage / 他のタイプ（OtherTypesNav） の4セクション
+ * - archetypeBreakdown / behaviors / characterMessage / すべてのタイプ（OtherTypesNav） の4セクション
  * - referrerTypeId による相性セクション / 招待ボタン（ResultCard向け）
  *
  * 共通化しないもの（呼び出し側の責務）:
@@ -53,9 +53,9 @@ interface CompatibilityApiResponse {
 interface CharacterPersonalityContentProps {
   /** detailedContent（archetypeBreakdown, behaviors, characterMessage を含む） */
   content: CharacterPersonalityDetailedContent;
-  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
+  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
   /**
    * 相性診断用の referrer タイプID。
@@ -64,7 +64,7 @@ interface CharacterPersonalityContentProps {
    */
   referrerTypeId?: string;
   /**
-   * characterMessage後・他のタイプ前にページ固有要素（相性セクション・CTA等）を挿入するスロット。
+   * characterMessage後・すべてのタイプ前にページ固有要素（相性セクション・CTA等）を挿入するスロット。
    * 渡された場合は referrerTypeId によるAPI呼び出しは行わず、このスロットを優先する。
    */
   afterCharacterMessage?: React.ReactNode;

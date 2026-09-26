@@ -1,14 +1,4 @@
 /**
- * ⚠️ 重要 — このコードは「受検者本人には表示されない」第三者向け結果ページの一部です。
- *
- * ルート `/play/[slug]/result/[resultId]`（診断の result ページ）は【第三者向けの
- * シェア／検索ランディング専用】。診断を遊んだ本人は、完了時に `/play/[slug]` 上に
- * インライン描画される結果（ResultCard 経由）で見ており、この `/result/<id>` ページへは
- * 遷移しない（この URL はシェア用に生成される）。文言・構造・メタ・OGP は
- * 「診断をやっていない第三者が初めて見る」前提で設計すること。本人向け結果体験は
- * `src/play/quiz/_components/ResultCard.tsx` 側で編集する。
- */
-/**
  * /play/contrarian-fortune/result/[resultId] 専用ルート。
  * Next.jsのファイルシステムルーティングにより、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
@@ -16,9 +6,7 @@
  * contrarian-fortune variant のみを対象とするため、
  * variant dispatch ロジックが不要でシンプルな実装になる。
  *
- * 一人完結型（相性機能なし）:
- * - CompatibilityDisplay, InviteFriendButton, searchParams は一切使用しない。
- * - シェアリンク経由で第三者が見ることを主目的とするシンプルな結果ページ。
+ * 一人完結型（相性機能なし）: CompatibilityDisplay, InviteFriendButton, searchParams は使用しない。
  *
  * 解き終えた画面（ResultCard）と同じ組み方にそろえる:
  * - catchphrase: --paper-2 の地に置く。タイプごとの色は敷かない（DESIGN.md §2）
@@ -145,7 +133,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           </p>
         </div>
 
-        {/* coreSentence〜他のタイプ: 共通コンポーネントで一括レンダリング */}
+        {/* coreSentence〜すべてのタイプ: 共通コンポーネントで一括レンダリング */}
         <ContrarianFortuneContent
           quizSlug={SLUG}
           resultId={resultId}
@@ -153,7 +141,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           allResults={quiz.results}
           placement="resultPage"
           afterThirdPartyNote={
-            /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
+            /* CTA2: すべてのタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
               <Link
                 href={`/play/${SLUG}`}

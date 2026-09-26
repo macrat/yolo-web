@@ -20,6 +20,11 @@ export interface ItemListItem {
   /** 何の仲間かを言う一語。行に出すかは一覧の showKind が決める。 */
   kind?: string;
   facts?: ItemListFact[];
+  /**
+   * 補助情報に振る id。渡すと、補助情報が名前のリンクの説明（aria-describedby）になり、Tab でリンクへ移った
+   * 読み上げの利用者にも名前に続けて届く。来訪者の項目で、来訪者のものであることを言う字に使う（DESIGN.md §7）。
+   */
+  factsId?: string;
   /** 主題が色である項目の色見本の色。 */
   swatch?: string;
 }
@@ -36,7 +41,7 @@ export type ItemListProps = ItemListName & {
   /**
    * 来訪者自身の結果にあたる項目のパス（解き終えた画面での来訪者のタイプ）。一致する行の名前を太字にし、
    * 読み上げは「いまの項目」と言う。押すと別のページへ移るので、下線は残す。来訪者のものであることを言う字は、
-   * その項目の facts で添える（DESIGN.md §7）。
+   * その項目の facts で添え、factsId で名前のリンクの説明にする（DESIGN.md §7）。
    */
   currentItemHref?: string;
   /**
@@ -97,6 +102,7 @@ export default function ItemList(props: ItemListProps): ReactElement {
         const kind = showKind ? item.kind : undefined;
         const facts = item.facts ?? [];
         const hasMeta = kind !== undefined || facts.length > 0;
+        const factsId = hasMeta ? item.factsId : undefined;
         const hasLead = ordered || item.swatch !== undefined;
         return (
           <li
@@ -127,6 +133,7 @@ export default function ItemList(props: ItemListProps): ReactElement {
                 href={item.href}
                 className={styles.name}
                 aria-current={current}
+                aria-describedby={factsId}
                 data-hit-area="after"
               >
                 {item.name}
@@ -136,7 +143,7 @@ export default function ItemList(props: ItemListProps): ReactElement {
               ) : null}
             </p>
             {hasMeta ? (
-              <p className={styles.meta}>
+              <p id={factsId} className={styles.meta}>
                 {kind !== undefined ? <span>{kind}</span> : null}
                 {facts.map((fact, factIndex) =>
                   fact.dateTime ? (

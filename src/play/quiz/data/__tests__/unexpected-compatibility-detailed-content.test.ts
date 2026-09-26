@@ -130,7 +130,7 @@ describe("unexpected-compatibility detailedContent", () => {
   });
 });
 
-describe("unexpected-compatibility meta — resultPageLabels removed", () => {
+describe("unexpected-compatibility meta — resultPageLabels", () => {
   it("resultPageLabels is not set on meta (uses dedicated UnexpectedCompatibilityContent component)", () => {
     expect(unexpectedCompatibilityQuiz.meta.resultPageLabels).toBeUndefined();
   });

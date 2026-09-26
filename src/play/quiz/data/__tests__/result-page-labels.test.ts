@@ -1,34 +1,9 @@
 /**
- * Tests for resultPageLabels configuration in all personality quizzes
- * that have detailedContent with the standard QuizResultDetailedContent format.
+ * Tests for resultPageLabels in the personality quizzes whose detailedContent uses the
+ * standard QuizResultDetailedContent format.
  *
- * Note: contrarian-fortune uses ContrarianFortuneDetailedContent (variant: "contrarian-fortune")
- * and character-fortune uses CharacterFortuneDetailedContent (variant: "character-fortune"),
- * which do NOT use resultPageLabels. They are excluded from this test file.
- *
- * Note: music-personality has been migrated to MusicPersonalityContent with
- * afterTodayAction slot for compatibility section. It no longer uses
- * resultPageLabels and is excluded from this test file.
- *
- * Note: traditional-color has been migrated to TraditionalColorDetailedContent
- * (variant: "traditional-color") which uses a dedicated result component and
- * does NOT use resultPageLabels. It is excluded from this test file.
- *
- * Note: yoji-personality has been migrated to YojiPersonalityDetailedContent
- * (variant: "yoji-personality") which uses a dedicated result component and
- * does NOT use resultPageLabels. It is excluded from this test file.
- *
- * Note: character-personality has been migrated to CharacterPersonalityDetailedContent
- * (variant: "character-personality") which uses a dedicated result component and
- * does NOT use resultPageLabels. It is excluded from this test file.
- *
- * Note: unexpected-compatibility has been migrated to UnexpectedCompatibilityDetailedContent
- * (variant: "unexpected-compatibility") which uses a dedicated result component and
- * does NOT use resultPageLabels. It is excluded from this test file.
- *
- * Note: impossible-advice has been migrated to ImpossibleAdviceDetailedContent
- * (variant: "impossible-advice") which uses a dedicated result component and
- * does NOT use resultPageLabels. It is excluded from this test file.
+ * The other personality quizzes use variant-specific DetailedContent formats with dedicated
+ * result components, which do not use resultPageLabels, so they are not covered here.
  *
  * Verifies that each quiz with detailedContent has meaningful,
  * non-default resultPageLabels set in meta, and that they don't
@@ -38,12 +13,7 @@ import { describe, it, expect } from "vitest";
 import animalPersonalityQuiz from "../animal-personality";
 import wordSensePersonalityQuiz from "../word-sense-personality";
 
-// contrarian-fortune, character-fortune, music-personality, traditional-color, yoji-personality,
-// character-personality, unexpected-compatibility, and impossible-advice are excluded:
-// they use variant-specific DetailedContent formats with dedicated result components
-// that do not use resultPageLabels.
-// word-sense-personality は標準形式 detailedContent を使うため
-// この規約（差別化・三人称の resultPageLabels）の対象に含める。
+// 標準形式の detailedContent を使う診断。
 const quizzesWithDetailedContent = [
   { quiz: animalPersonalityQuiz, name: "animal-personality" },
   { quiz: wordSensePersonalityQuiz, name: "word-sense-personality" },

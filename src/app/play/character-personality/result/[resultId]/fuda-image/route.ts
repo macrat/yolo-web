@@ -3,10 +3,10 @@
  *
  *   GET /play/character-personality/result/<resultId>/fuda-image  → image/png（札）
  *
- * なぜ Route Handler か（cycle-280 設計・MUST-1）: file-based `opengraph-image.tsx` は
+ * なぜ Route Handler か: file-based `opengraph-image.tsx` は
  * メタ（og:image）向けでハッシュ付き URL に埋まり、クライアント JS が fetch するための
  * 決定的 URL を保証しない。そこで同じ {@link renderFudaImage} を固定 URL で返し、
- * クライアント（保存/共有 UI・タスク C）が `"/play/character-personality/result/<id>/fuda-image"`
+ * クライアント（保存・共有の UI）が `"/play/character-personality/result/<id>/fuda-image"`
  * で PNG を取得できるようにする。メタプレビューと保存画像は**単一のレンダラ＝単一の真実**。
  *
  * キャッシュ方針: 画像は resultId から決定的に定まるため静的に扱う。

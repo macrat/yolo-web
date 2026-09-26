@@ -1,12 +1,12 @@
 /**
  * AnimalPersonalityContent - animal-personality variant の共通コンテンツコンポーネント。
  *
- * ResultCard.tsx（受検者向けインライン結果）と
- * app/play/animal-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
+ * ResultCard.tsx（解き終えた画面）と
+ * app/play/animal-personality/result/[resultId]/page.tsx（結果のページ）の
  * 両方から使用される。Server Component（"use client" なし）: 純粋なプレゼンテーション。
  *
  * 共通化対象:
- * - strengths / weaknesses / behaviors / todayAction / 他のタイプ（OtherTypesNav） の 5 セクション
+ * - strengths / weaknesses / behaviors / todayAction / すべてのタイプ（OtherTypesNav） の 5 セクション
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
@@ -28,11 +28,11 @@ import styles from "./AnimalPersonalityContent.module.css";
 interface AnimalPersonalityContentProps {
   /** detailedContent（strengths, weaknesses, behaviors, todayAction を含む） */
   content: AnimalPersonalityDetailedContent;
-  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
+  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionと他のタイプの間に表示） */
+  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionとすべてのタイプの間に表示） */
   afterTodayAction?: React.ReactNode;
 }
 

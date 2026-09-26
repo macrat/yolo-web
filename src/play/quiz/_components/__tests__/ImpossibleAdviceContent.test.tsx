@@ -3,7 +3,7 @@
  *
  * テスト対象:
  * - diagnosisCore / behaviors / practicalTip の3セクション表示
- * - 他のタイプ（OtherTypesNav）
+ * - すべてのタイプ（OtherTypesNav）
  * - 置く面（placement）による見出しの階層（h2/h3）
  * - タイプの色を wrapper に入れないこと
  * - afterPracticalTip スロット
@@ -129,7 +129,7 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <ImpossibleAdviceContent
         quizSlug={sampleQuizSlug}
@@ -140,7 +140,7 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("完璧主義の迷宮")).toBeInTheDocument();
     expect(screen.getByText("考えすぎのループ")).toBeInTheDocument();
@@ -297,7 +297,7 @@ describe("ImpossibleAdviceContent - aria-current", () => {
 });
 
 describe("ImpossibleAdviceContent - リンクのhref", () => {
-  it("他のタイプのリンクが正しいhrefを持つこと", () => {
+  it("すべてのタイプのリンクが正しいhrefを持つこと", () => {
     render(
       <ImpossibleAdviceContent
         quizSlug={sampleQuizSlug}

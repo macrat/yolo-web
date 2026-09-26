@@ -1,13 +1,13 @@
 /*
- * クイズ設問の進捗バー。
- * トラックは罫線の器、塗りは --ink の細いバー（UI は無彩。DESIGN.md §2）。
+ * 設問の進み具合の帯（DESIGN.md §5）。太い線で囲んだ --paper-2 の地を、済んだ割合だけ --ink で塗り、
+ * 左に済んだ数と全体の数を補助情報の大きさで添える。
  */
 
 .wrapper {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: var(--space-8);
+  margin-bottom: var(--space-24);
 }
 
 .label {
@@ -18,21 +18,19 @@
   font-feature-settings: "tnum";
 }
 
-/* トラックは罫で組んだ細い器。角丸0基調（--radius）。 */
 .track {
   flex: 1;
-  height: 6px;
+  height: var(--space-16);
   background-color: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border: var(--rule-w) solid var(--rule);
   overflow: hidden;
 }
 
-/* 塗りは文字と同じ --ink（§2 の選択の塗りと同じ扱い）。 */
+/* 答えを選んで次の設問へ進んだことへの応答なので、操作のフィードバックの長さで伸ばす（§11）。 */
 .fill {
   height: 100%;
   background-color: var(--ink);
-  transition: width 0.3s ease;
+  transition: width 150ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

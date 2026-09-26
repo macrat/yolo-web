@@ -1,9 +1,7 @@
 /*
- * 今日のユーモア運勢（/play/daily）— DESIGN.md フェーズR・店構え。
- * GameLayout/ResultPageShell と同じ「狭い読みカラム」の max-width: 600px を踏襲する
- * （占いの結果は1カラムの見せ場であり、盤面/結果ページと同じ幅感で揃える）。
- * 全トークン経由（色・スペーシングを直書きしない・§10）。旧トークン（--fg/--bg/--border/
- * --r-*）は使わない。
+ * 今日のユーモア運勢（/play/daily）。
+ * GameLayout・ResultPageShell と同じ max-width: 600px の読みカラムで組む
+ * （占いの結果は1カラムの見せ場であり、盤面・結果ページと同じ幅で揃える）。
  */
 
 .wrapper {

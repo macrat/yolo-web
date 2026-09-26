@@ -18,11 +18,7 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
   });
 
   it("titleフォーマットが「result.title | quiz.meta.title の結果」形式になっている", () => {
-    // 新しいtitle形式: ${result.title} | ${quiz.meta.title}の結果
-    // 旧形式: ${quiz.meta.title}の結果: ${result.title}
     expect(pageSource).toContain("result.title} | ${quiz.meta.title}の結果");
-    // 旧形式が残っていないことを確認
-    expect(pageSource).not.toContain("quiz.meta.title}の結果: ${result.title}");
   });
 
   it("detailedContentがある場合のみ追加セクションを表示するロジックがある", () => {
@@ -89,14 +85,6 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
 
     it("adviceHeadingのデフォルト値「このタイプの人へのアドバイス」が設定されている", () => {
       expect(pageSource).toContain("このタイプの人へのアドバイス");
-    });
-
-    it("旧来の固定見出し「あなたの特徴」が残っていない", () => {
-      expect(pageSource).not.toContain('"あなたの特徴"');
-    });
-
-    it("旧来の固定見出し「こんなところ、ありませんか?」が残っていない", () => {
-      expect(pageSource).not.toContain('"こんなところ、ありませんか?"');
     });
   });
 

@@ -1,14 +1,7 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
- * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
- * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
- *
- * traditional-color 専用結果ページのスタイル。
- * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor / --type-color）を使わず共通 --accent に寄せる。
- * 伝統色そのものの色見本（色ドット）は本文 TraditionalColorContent.module.css 側が
- * 情報として保持しており、ここでは扱わない。
- * このファイルは page.tsx 固有の要素（catchphrase, trySection, cta2）のみを管理する。
+ * 診断の結果のページ（/play/traditional-color/result/[resultId]）のスタイル。
+ * 色の物語から「すべてのタイプ」までの区画は TraditionalColorContent.module.css が持ち、
+ * このファイルは page.tsx だけが持つ要素（catchphrase, trySection, detailedSection, cta2）を持つ。
  */
 
 /* detailedContent セクションの外側コンテナ */

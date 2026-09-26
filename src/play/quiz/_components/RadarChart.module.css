@@ -1,8 +1,8 @@
 /*
- * レーダーチャート（結果の成果物内のデータ可視化・DESIGN.md §7「非テキスト要素も AA」）。
+ * レーダーチャート（結果の成果物内のデータ可視化。線は 3:1 以上、DESIGN.md §12）。
  * グリッド・軸・ラベルは墨（--rule/--ink/--ink-2）。データ系列だけが和色8色の1色
- * （data-color 経由の --radar-fill）を持つ。色付きグロー・グラデーションは使わない（§8-2）。
- * リビールは 1 回・300ms 程度（§5 上限内）・prefers-reduced-motion 尊重。
+ * （data-color 経由の --radar-fill）を持つ。グロー・グラデーションは使わない（§5）。
+ * リビールは 1 回・300ms 程度（§11 の結果の登場）・prefers-reduced-motion 尊重。
  */
 .chart {
   display: block;

@@ -56,23 +56,24 @@ export default function OtherTypesNav({
 
   const onResultPage = placement === "resultPage";
   const Heading = SECTION_HEADING[placement];
-  const items: ItemListItem[] = results.map((result) => ({
-    name: result.nameParts?.name ?? result.title,
-    href: getPlayResultPath(quizSlug, result.id),
-    reading: result.nameParts?.reading,
-    // 解き終えた画面では、来訪者のタイプの行だけが太字である理由を、字でも読み上げでも伝える。
-    facts:
-      !onResultPage && result.id === currentResultId
-        ? [{ text: "あなたのタイプ" }]
-        : undefined,
-    swatch: showSwatch ? result.color : undefined,
-  }));
+  const items: ItemListItem[] = results.map((result) => {
+    // 解き終えた画面では、来訪者のタイプの行だけが太字である理由を字で添え、リンクの説明にもして読み上げでも伝える。
+    const visitors = !onResultPage && result.id === currentResultId;
+    return {
+      name: result.nameParts?.name ?? result.title,
+      href: getPlayResultPath(quizSlug, result.id),
+      reading: result.nameParts?.reading,
+      facts: visitors ? [{ text: "あなたのタイプ" }] : undefined,
+      factsId: visitors ? `${headingId}-visitor` : undefined,
+      swatch: showSwatch ? result.color : undefined,
+    };
+  });
   const currentResultHref = getPlayResultPath(quizSlug, currentResultId);
 
   return (
     <section className={styles.section}>
       <Heading id={headingId} className={styles.heading}>
-        他のタイプ（{results.length}）
+        すべてのタイプ（{results.length}）
       </Heading>
       <ItemList
         labelledBy={headingId}

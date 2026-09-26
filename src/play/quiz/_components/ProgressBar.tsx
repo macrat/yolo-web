@@ -6,7 +6,7 @@ type ProgressBarProps = {
 };
 
 /**
- * クイズ設問の進捗バー。UI の部品なので、塗りはクイズごとの色を持たず無彩で組む（DESIGN.md §1・§2）。
+ * 設問の進み具合の帯（DESIGN.md §5）。UI の部品なので、塗りはクイズごとの色を持たず --ink で塗る（§2）。
  */
 export default function ProgressBar({ current, total }: ProgressBarProps) {
   const percentage = Math.round((current / total) * 100);

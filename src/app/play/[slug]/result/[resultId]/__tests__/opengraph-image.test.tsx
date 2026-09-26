@@ -3,8 +3,7 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 // Track calls to ImageResponse for assertions
 let imageResponseCalls: Array<{ element: unknown; options: unknown }> = [];
 
-// Track calls to createOgpImageResponse。新契約は title/subtitle のみ
-// （cycle-282 で icon/accentColor は OgpImageConfig から削除済み）。
+// Track calls to createOgpImageResponse（OgpImageConfig は title/subtitle だけを持つ）。
 let createOgpImageResponseCalls: Array<{
   title: string;
   subtitle?: string;
@@ -45,8 +44,7 @@ vi.mock("@/play/quiz/registry", () => ({
     [
       "test-quiz",
       {
-        // OGP 生成が読むのは meta.title と result.title/id のみ。旧 API の名残（meta.accentColor/
-        // icon・result.icon）は OgpImageConfig から削除済みで call-site も渡さないため mock からも除く。
+        // OGP 生成が読むのは meta.title と result.title/id だけ。
         meta: {
           slug: "test-quiz",
           title: "テストクイズ",
@@ -130,10 +128,6 @@ describe("QuizResultOpenGraphImage", () => {
     });
     expect(createOgpImageResponseCalls[0].subtitle).toBe("テストクイズ");
   });
-
-  // NOTE(cycle-282): result icon / quiz accentColor は店構え化で OgpImageConfig 型から
-  // 削除された（地は常に紙・図像は店の印のみ）。call-site も渡さなくなったため、旧 API を
-  // 前提にしていた "passes result icon" / "passes quiz accentColor" のアサーションは撤去した。
 
   test("renders fallback for unknown slug", async () => {
     const mod = await getModule();

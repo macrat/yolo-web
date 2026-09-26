@@ -36,9 +36,6 @@ vi.mock("next/dynamic", () => ({
 vi.mock("../CharacterFortuneResultExtra", () => ({
   renderCharacterFortuneExtra: () => () => null,
 }));
-// AnimalPersonalityResultExtraは削除済み（animal-personality分岐はResultCard内に統合）
-// MusicPersonalityResultExtraは削除済み（MusicPersonalityContentのafterTodayActionスロットに統合）
-// CharacterPersonalityResultExtraは削除済み（CharacterPersonalityContentに統合済み）
 vi.mock("../ScienceThinkingResultExtra", () => ({
   renderScienceThinkingExtra: () => () => null,
 }));
@@ -49,7 +46,7 @@ vi.mock("../JapaneseCultureResultExtra", () => ({
 // モックのセットアップ後に対象コンポーネントをインポート
 const { default: ResultExtraLoader } = await import("../ResultExtraLoader");
 
-test("character-personality スラグでは null が返る（CharacterPersonalityContentに統合済み）", () => {
+test("character-personality スラグでは null が返る（追加の区画は CharacterPersonalityContent が持つ）", () => {
   const { container } = render(
     <ResultExtraLoader slug="character-personality" resultId="result-01" />,
   );
@@ -63,14 +60,14 @@ test("unknown スラグでは null が返る", () => {
   expect(container.firstChild).toBeNull();
 });
 
-test("music-personality スラグでは null が返る（MusicPersonalityContentのafterTodayActionスロットに統合済み）", () => {
+test("music-personality スラグでは null が返る（相性の区画は MusicPersonalityContent の afterTodayAction スロットに入る）", () => {
   const { container } = render(
     <ResultExtraLoader slug="music-personality" resultId="result-02" />,
   );
   expect(container.firstChild).toBeNull();
 });
 
-test("animal-personality スラグでは null が返る（ResultCard内に統合済み）", () => {
+test("animal-personality スラグでは null が返る（追加の区画は ResultCard が描く）", () => {
   const { container } = render(
     <ResultExtraLoader slug="animal-personality" resultId="result-03" />,
   );

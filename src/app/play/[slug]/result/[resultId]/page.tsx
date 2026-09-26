@@ -1,16 +1,3 @@
-/**
- * ⚠️ 重要 — このページは「受検者本人には表示されない」第三者向けページです。
- *
- * ルート `/play/[slug]/result/[resultId]` は【第三者向けのシェア／検索ランディング専用】。
- * 診断を遊んだ本人は、完了した時点で同一 URL `/play/[slug]` 上にインライン描画される
- * `ResultCard`（`QuizContainer` の intro→playing→result フェーズ遷移）で結果を見ます。
- * 本人はこの `/result/<id>` ページへは遷移しません（この URL は ResultCard が
- * シェア用に生成するもの）。
- *
- * したがって、このページの文言・構造・メタ・JSON-LD は「診断をやっていない第三者が
- * 初めて見る」ことを前提に設計すること。本人向けの結果体験を変えたい場合は
- * `src/play/quiz/_components/ResultCard.tsx` 側を編集する。
- */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -118,13 +105,9 @@ export async function generateMetadata({
 }
 
 /**
- * 静的結果ページ — シェアリンクや検索から来た「第三者」向けのランディングページ。
- *
- * このページを閲覧するのはクイズを受けた本人ではない。本人は /play/[slug] 上の
- * ResultCard（動的コンポーネント）で結果を確認し、そこからシェアする。
- * このページに到達するのは、シェアリンクをクリックした友人や、検索エンジンから
- * 来た来訪者であり、彼らにとっての主要アクションは「自分もクイズを受けてみる」
- * （CTAボタン）である。
+ * 診断・クイズの結果のページ。シェアのリンクや検索から来た来訪者と、解き終えた画面（ResultCard）の
+ * 一覧から来た来訪者が開く。まだ遊んでいない来訪者が最初に着くページでもあるので、
+ * 「自分も遊んでみる」への誘い（CTA）を持つ。
  */
 export default async function PlayQuizResultPage({
   params,

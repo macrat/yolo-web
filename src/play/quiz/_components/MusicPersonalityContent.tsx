@@ -1,13 +1,13 @@
 /**
  * MusicPersonalityContent - music-personality variant の共通コンテンツコンポーネント。
  *
- * ResultCard.tsx（受検者向けインライン結果）と
- * app/play/music-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
+ * ResultCard.tsx（解き終えた画面）と
+ * app/play/music-personality/result/[resultId]/page.tsx（結果のページ）の
  * 両方から使用される。ResultCard.tsx からは next/dynamic で遅延ロードされるため、
  * クライアントバンドルへの music-personality データの混入を防ぐ。
  *
  * 共通化対象:
- * - strengths / weaknesses / behaviors / todayAction / 他のタイプ（OtherTypesNav） の 5 セクション
+ * - strengths / weaknesses / behaviors / todayAction / すべてのタイプ（OtherTypesNav） の 5 セクション
  * - referrerTypeId による相性セクション / 招待ボタン（ResultCard 向け）
  *
  * 共通化しないもの（呼び出し側の責務）:
@@ -36,9 +36,9 @@ import styles from "./MusicPersonalityContent.module.css";
 interface MusicPersonalityContentProps {
   /** detailedContent（strengths, weaknesses, behaviors, todayAction を含む） */
   content: MusicPersonalityDetailedContent;
-  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
+  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
   /**
    * 相性診断用の referrer タイプID。
@@ -46,7 +46,7 @@ interface MusicPersonalityContentProps {
    * page.tsx（結果ページ）から使用する場合は afterTodayAction スロットを使用する。
    */
   referrerTypeId?: string;
-  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionと他のタイプの間に表示） */
+  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionとすべてのタイプの間に表示） */
   afterTodayAction?: React.ReactNode;
 }
 

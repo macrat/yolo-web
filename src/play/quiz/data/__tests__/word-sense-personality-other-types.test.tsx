@@ -1,5 +1,5 @@
 /**
- * 言葉センス診断の「他のタイプ」の一覧で、リンクの名前が「〇〇タイプ」になり、読みがリンクの外に出ることを確かめる。
+ * 言葉センス診断の「すべてのタイプ」の一覧で、リンクの名前が「〇〇タイプ」になり、読みがリンクの外に出ることを確かめる。
  */
 import { describe, test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -23,7 +23,7 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-describe("word-sense-personality — 他のタイプの一覧", () => {
+describe("word-sense-personality — すべてのタイプの一覧", () => {
   test("リンクの名前は読みを含まない「〇〇タイプ」で、読みはリンクの外に置かれること", () => {
     render(
       <OtherTypesNav

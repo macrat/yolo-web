@@ -1,15 +1,7 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
- * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
- * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
- *
- * animal-personality 専用結果ページのスタイル。
- * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor）を使わず共通 --accent に寄せる。
- *
- * 共通コンテンツセクション（強み〜他のタイプ）のスタイルは
- * AnimalPersonalityContent.module.css に集約されている。
- * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
+ * 診断の結果のページ（/play/animal-personality/result/[resultId]）のスタイル。
+ * 強みから「すべてのタイプ」までの区画は AnimalPersonalityContent.module.css が持ち、
+ * このファイルは page.tsx だけが持つ要素（catchphrase, trySection, detailedSection, cta2）を持つ。
  */
 
 /* detailedContent セクションの外側コンテナ */
@@ -23,7 +15,7 @@
    ============================================================ */
 
 /* インライン ResultCard の .catchphraseBeforeDescription と同じ語彙。
- * variant 別の派手色・中央寄せ・背景面は廃し、静かな左寄せのリード文として置く。 */
+ * 色を敷かず、左揃えの静かなリード文として置く。 */
 .catchphrase {
   font-size: 1.1rem;
   color: var(--ink-2);

@@ -1,18 +1,18 @@
 /**
  * TraditionalColorContent - traditional-color variant の共通コンテンツコンポーネント。
  *
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
  * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
  *
  * 共通化対象:
- * - colorMeaning / scenery+season / behaviors / colorAdvice / 他のタイプ（OtherTypesNav） の5セクション
+ * - colorMeaning / scenery+season / behaviors / colorAdvice / すべてのタイプ（OtherTypesNav） の5セクション
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
  * - 相性セクション / CTA（afterColorAdvice スロットとして注入）
  * - ShareButtons / もう一度挑戦するボタン
  *
- * 伝統色はタイプの中身なので、他のタイプの行に色見本で見せる。見出しや地などの飾りには使わない（DESIGN.md §2）。
+ * 伝統色はタイプの中身なので、すべてのタイプの行に色見本で見せる。見出しや地などの飾りには使わない（DESIGN.md §2）。
  */
 
 import type React from "react";
@@ -27,11 +27,11 @@ import styles from "./TraditionalColorContent.module.css";
 interface TraditionalColorContentProps {
   /** detailedContent（colorMeaning, season, scenery, behaviors, colorAdvice を含む） */
   content: TraditionalColorDetailedContent;
-  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
+  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** colorAdvice後・他のタイプ前にページ固有要素（CTA等）を挿入するスロット */
+  /** colorAdvice後・すべてのタイプ前にページ固有要素（CTA等）を挿入するスロット */
   afterColorAdvice?: React.ReactNode;
 }
 

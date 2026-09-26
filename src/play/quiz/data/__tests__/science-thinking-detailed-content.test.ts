@@ -2,7 +2,7 @@
  * science-thinking（理系思考タイプ診断）の全10結果 detailedContent の品質テスト。
  *
  * 10結果すべてが標準形式 detailedContent（traits / behaviors / advice）を持ち、結果到達者の体験と
- * 他のタイプ（OtherTypesNav）への回遊を支える。本テストはその品質（存在・標準形式・項目数・非空・
+ * すべてのタイプ（OtherTypesNav）への回遊を支える。本テストはその品質（存在・標準形式・項目数・非空・
  * 型をまたぐコピペなし）を恒久ロックする。
  *
  * 10結果すべて標準形式（QuizResultDetailedContent: variant なし）を用いる。

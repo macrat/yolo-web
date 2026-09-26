@@ -245,7 +245,7 @@ const ITEM_LIST_SWATCHES: ItemListItem[] = [
   },
 ];
 
-// 解き終えた画面の他のタイプ。来訪者のタイプ（2行目）は、補助情報の位置に「あなたのタイプ」と添える。
+// 解き終えた画面のすべてのタイプ。来訪者のタイプ（2行目）は、補助情報の位置に「あなたのタイプ」と添える。
 const ITEM_LIST_TYPES: ItemListItem[] = [
   {
     name: "藍色",

@@ -128,7 +128,7 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <YojiPersonalityContent
         content={sampleContent}
@@ -137,7 +137,7 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("初志貫徹")).toBeInTheDocument();
     expect(screen.getByText("天真爛漫")).toBeInTheDocument();

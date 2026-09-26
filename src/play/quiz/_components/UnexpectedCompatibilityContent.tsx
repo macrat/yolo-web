@@ -1,11 +1,11 @@
 /**
  * UnexpectedCompatibilityContent - unexpected-compatibility variant の共通コンテンツコンポーネント。
  *
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
  * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
  *
  * 共通化対象:
- * - entityEssence / whyCompatible / behaviors / lifeAdvice / 他のタイプ（OtherTypesNav） の5セクション
+ * - entityEssence / whyCompatible / behaviors / lifeAdvice / すべてのタイプ（OtherTypesNav） の5セクション
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
@@ -25,17 +25,17 @@ import OtherTypesNav, {
 import styles from "./UnexpectedCompatibilityContent.module.css";
 
 interface UnexpectedCompatibilityContentProps {
-  /** クイズのスラグ（他のタイプのリンク生成に使用） */
+  /** クイズのスラグ（すべてのタイプのリンク生成に使用） */
   quizSlug: string;
-  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
+  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
   resultId: string;
   /** detailedContent（entityEssence, whyCompatible, behaviors, lifeAdvice を含む） */
   detailedContent: UnexpectedCompatibilityDetailedContent;
-  /** 全タイプの配列（他のタイプに並べる） */
+  /** 全タイプの配列（すべてのタイプに並べる） */
   allResults: QuizResult[];
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** lifeAdvice後・他のタイプ前にページ固有要素（CTA等）を挿入するスロット */
+  /** lifeAdvice後・すべてのタイプ前にページ固有要素（CTA等）を挿入するスロット */
   afterLifeAdvice?: React.ReactNode;
 }
 

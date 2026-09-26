@@ -163,7 +163,7 @@ describe("midnight-shuffle weakness 2 should be self-deprecating humor", () => {
   it("weakness 2 should not be a neutral description about language expression", () => {
     const dc = getDC("midnight-shuffle");
     const weakness2 = dc.weaknesses[1];
-    // The original neutral description contains these neutral-sounding phrases
+    // A neutral description of language expression contains this phrase
     const isNeutralDescription = /感情を言語化するのが得意ではなく/.test(
       weakness2,
     );

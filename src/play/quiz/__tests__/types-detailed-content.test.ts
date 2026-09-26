@@ -120,12 +120,12 @@ describe("DetailedContent union type", () => {
       },
     ];
 
-    const legacy = contents[0];
+    const standard = contents[0];
     const contrarian = contents[1];
 
     // 型ガードでの分岐確認
-    if (legacy.variant === undefined) {
-      expect(legacy.advice).toBe("advice");
+    if (standard.variant === undefined) {
+      expect(standard.advice).toBe("advice");
     }
     if (contrarian.variant === "contrarian-fortune") {
       expect(contrarian.catchphrase).toBe("cp");
@@ -627,7 +627,7 @@ describe("QuizResult.detailedContent with DetailedContent union", () => {
     expect(result.detailedContent).toBeUndefined();
   });
 
-  it("accepts QuizResult with legacy QuizResultDetailedContent", () => {
+  it("accepts QuizResult with standard QuizResultDetailedContent", () => {
     const result: QuizResult = {
       id: "type-a",
       title: "タイプA",

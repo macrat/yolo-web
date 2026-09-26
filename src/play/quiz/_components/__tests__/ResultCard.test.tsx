@@ -137,7 +137,7 @@ vi.mock("@/play/quiz/_components/CompatibilitySection", () => ({
 }));
 
 // MusicPersonalityContentコンポーネントをモック
-// referrerTypeIdを受け取り、相性セクション・招待ボタンを内部で生成する新しい設計に対応
+// MusicPersonalityContent は referrerTypeId を受け取り、相性セクション・招待ボタンを内部で生成する
 vi.mock("@/play/quiz/_components/MusicPersonalityContent", () => ({
   default: ({
     content,
@@ -410,24 +410,24 @@ const defaultProps = {
   onRetry: vi.fn(),
 };
 
-describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・personality 型のみ）", () => {
+describe("ResultCard - 結果を包み（Tsutsumi）で見せる（personality 型のみ）", () => {
   // 適用条件: quizType === "personality" かつ result.icon と result.color が両方存在。
-  const medalResult: QuizResult = {
+  const tsutsumiResult: QuizResult = {
     id: "type-a",
-    title: "勲章タイプ",
-    description: "勲章の説明です。",
+    title: "包みのタイプ",
+    description: "包みの説明です。",
     icon: "🦊",
     color: "#c0392b",
   };
 
   test("personality + icon + color のとき結果が包み（Tsutsumi）で表示される（診断完了ラベル・タイプ名・絵文字なし）", () => {
     const { container } = render(
-      <ResultCard {...defaultProps} result={medalResult} />,
+      <ResultCard {...defaultProps} result={tsutsumiResult} />,
     );
     // 到達の承認ラベル（包み表示時のみ）
     expect(screen.getByText("診断完了")).toBeInTheDocument();
     // タイプ名は包みの核として表示される（複数箇所に出現しうるため queryAllByText で存在だけ確認）
-    expect(screen.queryAllByText("勲章タイプ").length).toBeGreaterThan(0);
+    expect(screen.queryAllByText("包みのタイプ").length).toBeGreaterThan(0);
     // Tsutsumi（包み）が figure として描画され、和色8色のいずれかに決定的に写像される
     const tsutsumi = container.querySelector("figure[data-color]");
     expect(tsutsumi).not.toBeNull();
@@ -446,10 +446,10 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・persona
   });
 
   test("包みで見せる結果タイトルは見出し(h2)で描画される（SRの見出しナビで結果に到達できる・WCAG 1.3.1）", () => {
-    render(<ResultCard {...defaultProps} result={medalResult} />);
+    render(<ResultCard {...defaultProps} result={tsutsumiResult} />);
     const heading = screen.getByRole("heading", {
       level: 2,
-      name: "勲章タイプ",
+      name: "包みのタイプ",
     });
     expect(heading.tagName).toBe("H2");
   });
@@ -465,16 +465,16 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・persona
     expect(screen.getByText("あなたの結果")).toBeInTheDocument();
   });
 
-  test("knowledge 型は icon/color があっても勲章を出さずフォールバックする（§7 の方針）", () => {
+  test("knowledge 型は icon/color があっても包みを出さずフォールバックする", () => {
     render(
       <ResultCard
         {...defaultProps}
         quizType="knowledge"
-        result={medalResult}
+        result={tsutsumiResult}
       />,
     );
     expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
-    expect(screen.getByText("勲章タイプ")).toBeInTheDocument();
+    expect(screen.getByText("包みのタイプ")).toBeInTheDocument();
     expect(screen.getByText("あなたの結果")).toBeInTheDocument();
   });
 });
@@ -539,8 +539,8 @@ describe("ResultCard - Standard variant", () => {
   });
 });
 
-describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
-  // 標準形式（variant なし）の診断（word-sense-personality）も、variant の診断と同じく他のタイプを並べる。
+describe("ResultCard - Standard variant すべてのタイプの一覧", () => {
+  // 標準形式（variant なし）の診断（word-sense-personality）も、variant の診断と同じくすべてのタイプを並べる。
   const standardContent: QuizResultDetailedContent = {
     traits: ["特徴1"],
     behaviors: ["あるある1"],
@@ -573,7 +573,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
     },
   ];
 
-  test("allResults が複数あるとき、見出しがタイプの数を言う他のタイプが表示されること", () => {
+  test("allResults が複数あるとき、見出しがタイプの数を言うすべてのタイプが表示されること", () => {
     render(
       <ResultCard
         {...defaultProps}
@@ -583,7 +583,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "他のタイプ（3）" }),
+      screen.getByRole("heading", { name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
   });
 
@@ -630,7 +630,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
       />,
     );
     expect(
-      screen.queryByRole("heading", { name: /^他のタイプ/ }),
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
     ).not.toBeInTheDocument();
   });
 
@@ -644,7 +644,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
       />,
     );
     expect(
-      screen.queryByRole("heading", { name: /^他のタイプ/ }),
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
     ).not.toBeInTheDocument();
   });
 });

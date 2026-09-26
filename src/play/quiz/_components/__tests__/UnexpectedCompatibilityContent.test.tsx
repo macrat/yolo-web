@@ -3,7 +3,7 @@
  *
  * テスト対象:
  * - entityEssence / whyCompatible / behaviors / lifeAdvice の4セクション表示
- * - 他のタイプ（OtherTypesNav）
+ * - すべてのタイプ（OtherTypesNav）
  * - 置く面（placement）による見出しの階層（h2/h3）
  * - タイプの色を wrapper に入れないこと
  * - afterLifeAdvice スロット
@@ -154,7 +154,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
@@ -165,7 +165,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("自動販売機")).toBeInTheDocument();
     expect(screen.getByText("古い掛け時計")).toBeInTheDocument();
@@ -322,7 +322,7 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
 });
 
 describe("UnexpectedCompatibilityContent - リンクのhref", () => {
-  it("他のタイプのリンクが正しいhrefを持つこと", () => {
+  it("すべてのタイプのリンクが正しいhrefを持つこと", () => {
     render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}

@@ -1,11 +1,5 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
- * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
- * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
- *
- * character-fortune 専用結果ページのスタイル。
- * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor）を使わない。
+ * 診断の結果のページ（/play/character-fortune/result/[resultId]）のスタイル。
  */
 
 /* ============================================================
@@ -133,7 +127,7 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/* (d) 第三者専用セクション */
+/* (d) 第三者の視点から見たシーン */
 .thirdPartySection {
   margin-bottom: 2rem;
   padding-top: 1.5rem;
@@ -156,7 +150,7 @@
   margin: 0;
 }
 
-/* (f) 他のタイプのあとの、診断への誘い。 */
+/* (f) すべてのタイプのあとの、診断への誘い。 */
 .closingTry {
   margin-top: var(--space-24);
 }

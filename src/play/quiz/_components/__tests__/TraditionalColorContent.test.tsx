@@ -120,7 +120,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <TraditionalColorContent
         content={sampleContent}
@@ -129,7 +129,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("藍色(あいいろ)")).toBeInTheDocument();
     expect(screen.getByText("朱色(しゅいろ)")).toBeInTheDocument();
@@ -227,7 +227,7 @@ describe("TraditionalColorContent - wrapper", () => {
   });
 });
 
-describe("TraditionalColorContent - 他のタイプの色見本", () => {
+describe("TraditionalColorContent - すべてのタイプの色見本", () => {
   it("各タイプの行が、そのタイプの伝統色の色見本を持つこと", () => {
     const { container } = render(
       <TraditionalColorContent

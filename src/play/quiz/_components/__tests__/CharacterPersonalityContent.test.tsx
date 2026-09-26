@@ -4,7 +4,7 @@
  * テスト対象:
  * - archetypeBreakdown / behaviors / characterMessage の3セクション表示
  * - 相性機能エリア（referrerTypeId あり/なし、API成功/失敗）
- * - 他のタイプ（OtherTypesNav）
+ * - すべてのタイプ（OtherTypesNav）
  * - 置く面（placement）による見出しの階層（h2/h3）
  * - タイプの色を wrapper に入れないこと
  * - afterCharacterMessage スロット
@@ -161,7 +161,7 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
+  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <CharacterPersonalityContent
         content={sampleContent}
@@ -170,7 +170,7 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("炎の戦略家")).toBeInTheDocument();
     expect(screen.getByText("炎の詩人")).toBeInTheDocument();

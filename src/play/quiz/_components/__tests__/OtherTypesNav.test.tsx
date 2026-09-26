@@ -44,10 +44,10 @@ describe("OtherTypesNav", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "他のタイプ（3）" }),
+      screen.getByRole("heading", { name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("list", { name: "他のタイプ（3）" }),
+      screen.getByRole("list", { name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
   });
 
@@ -60,7 +60,7 @@ describe("OtherTypesNav", () => {
         placement="solvedScreen"
       />,
     );
-    const list = screen.getByRole("list", { name: "他のタイプ（3）" });
+    const list = screen.getByRole("list", { name: "すべてのタイプ（3）" });
     const names = within(list)
       .getAllByRole("link")
       .map((link) => link.textContent);
@@ -133,6 +133,23 @@ describe("OtherTypesNav", () => {
       screen.getByRole("link", { name: "タイプB" }),
     );
     expect(screen.getAllByText("あなたのタイプ")).toHaveLength(1);
+  });
+
+  test("解き終えた画面では、いまのタイプのリンクの説明が「あなたのタイプ」で、ほかのタイプのリンクは説明を持たないこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={results}
+        placement="solvedScreen"
+      />,
+    );
+    expect(
+      screen.getByRole("link", { name: "タイプB" }),
+    ).toHaveAccessibleDescription("あなたのタイプ");
+    expect(screen.getByRole("link", { name: "タイプA" })).not.toHaveAttribute(
+      "aria-describedby",
+    );
   });
 
   test("結果のページでは、いまのタイプは現在地で示し、「あなたのタイプ」と添えないこと", () => {
@@ -208,7 +225,7 @@ describe("OtherTypesNav", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { level: 2, name: "他のタイプ（3）" }),
+      screen.getByRole("heading", { level: 2, name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
   });
 
@@ -222,7 +239,7 @@ describe("OtherTypesNav", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { level: 3, name: "他のタイプ（3）" }),
+      screen.getByRole("heading", { level: 3, name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
   });
 
