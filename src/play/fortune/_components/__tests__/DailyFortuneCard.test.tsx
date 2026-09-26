@@ -1,20 +1,12 @@
 /**
- * Tests for DailyFortuneCard component.
- *
- * DailyFortuneCard is a Client Component that:
- * - Shows a loading state on SSR (state is null initially via server snapshot)
- * - Shows fortune data (title, description, luckyItem, luckyAction) after mount
- *
- * Hydration Error prevention:
- * - useSyncExternalStore is used with a server snapshot that returns null
- * - This ensures SSR output and first client render output match (both null/loading)
- * - The client snapshot computes the actual fortune from localStorage
+ * DailyFortuneCard のテスト。サーバーの描画と最初の描画では占っていることを字で言い、読み込んだあとに
+ * 端末の種で選んだ運勢を結果のボックスに出す。
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { readFileSync } from "fs";
 import { resolve } from "path";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, within } from "@testing-library/react";
 import DailyFortuneCard from "../DailyFortuneCard";
 
 // Mock fortune logic to return deterministic values
@@ -45,6 +37,10 @@ vi.mock("@/components/ShareButtons", () => ({
 // Import resetFortuneCache to ensure test isolation across date changes
 import { resetFortuneCache } from "@/play/fortune/fortuneStore";
 
+const HEADINGS = {
+  "test-fortune": { phrases: ["テスト運勢", "タイトル"] },
+};
+
 const SOURCE_PATH = resolve(__dirname, "../DailyFortuneCard.tsx");
 
 describe("DailyFortuneCard", () => {
@@ -56,45 +52,79 @@ describe("DailyFortuneCard", () => {
     resetFortuneCache();
   });
 
-  it("renders fortune title after mount", async () => {
+  it("renders the fortune name as the heading of the result box", async () => {
     await act(async () => {
-      render(<DailyFortuneCard />);
+      render(<DailyFortuneCard headings={HEADINGS} />);
     });
-    expect(screen.getByText("テスト運勢タイトル")).toBeInTheDocument();
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "テスト運勢タイトル",
+    });
+    expect(heading.querySelectorAll("wbr")).toHaveLength(1);
+    expect(
+      screen.getByRole("region", { name: "テスト運勢タイトル" }),
+    ).toContainElement(heading);
+  });
+
+  it("renders the stars inside the result box with the rating as one name", async () => {
+    await act(async () => {
+      render(<DailyFortuneCard headings={HEADINGS} />);
+    });
+    const region = screen.getByRole("region", { name: "テスト運勢タイトル" });
+    expect(
+      within(region).getByRole("img", { name: "5つ星のうち3.5" }),
+    ).toBeInTheDocument();
+  });
+
+  it("puts the share buttons right after the result box under a heading", async () => {
+    await act(async () => {
+      render(<DailyFortuneCard headings={HEADINGS} />);
+    });
+    const region = screen.getByRole("region", { name: "テスト運勢タイトル" });
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    expect(region.nextElementSibling).toBe(share);
+    expect(within(share).getByTestId("share-buttons")).toBeInTheDocument();
+  });
+
+  it("does not animate the result box, since it appears on opening the page", async () => {
+    await act(async () => {
+      render(<DailyFortuneCard headings={HEADINGS} />);
+    });
+    const region = screen.getByRole("region", { name: "テスト運勢タイトル" });
+    expect(region.className).not.toMatch(/appears/);
   });
 
   it("renders fortune description after mount", async () => {
     await act(async () => {
-      render(<DailyFortuneCard />);
+      render(<DailyFortuneCard headings={HEADINGS} />);
     });
     expect(screen.getByText("テスト用の運勢説明文")).toBeInTheDocument();
   });
 
   it("renders lucky item after mount", async () => {
     await act(async () => {
-      render(<DailyFortuneCard />);
+      render(<DailyFortuneCard headings={HEADINGS} />);
     });
     expect(screen.getByText("テストアイテム")).toBeInTheDocument();
   });
 
   it("renders lucky action after mount", async () => {
     await act(async () => {
-      render(<DailyFortuneCard />);
+      render(<DailyFortuneCard headings={HEADINGS} />);
     });
     expect(screen.getByText("テストアクション")).toBeInTheDocument();
   });
 
-  it("renders formatted date after mount", async () => {
+  it("renders the date as the caption of the result box", async () => {
     await act(async () => {
-      render(<DailyFortuneCard />);
+      render(<DailyFortuneCard headings={HEADINGS} />);
     });
-    // "2026-03-28" should become "2026年3月28日の運勢"
-    expect(screen.getByText("2026年3月28日の運勢")).toBeInTheDocument();
+    expect(screen.getByText("2026年3月28日のユーモア運勢")).toBeInTheDocument();
   });
 
   it("renders comeback message", async () => {
     await act(async () => {
-      render(<DailyFortuneCard />);
+      render(<DailyFortuneCard headings={HEADINGS} />);
     });
     expect(
       screen.getByText("明日も来てね! 毎日運勢が変わります"),

@@ -1,12 +1,9 @@
-/*
- * 今日のユーモア運勢（/play/daily）。
- * GameLayout・ResultPageShell と同じ max-width: 600px の読みカラムで組む
- * （占いの結果は1カラムの見せ場であり、盤面・結果ページと同じ幅で揃える）。
- */
-
+/* 今日のユーモア運勢（/play/daily）。結果のボックスをコンテンツ幅いっぱいに置くため、横の余白と幅は
+ * コンテナのものだけを使う（DESIGN.md §5）。 */
 .wrapper {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: var(--space-16) var(--space-16) var(--space-64);
-  width: 100%;
+  padding-block: var(--space-16) var(--space-64);
+}
+
+.title {
+  margin-block: var(--space-16) var(--space-24);
 }

@@ -68,6 +68,13 @@ describe("DailyFortunePage (/play/daily)", () => {
     expect(main).toBeInTheDocument();
   });
 
+  it("renders the page title as the main heading", () => {
+    render(<DailyFortunePage />);
+    expect(
+      screen.getByRole("heading", { level: 1, name: "今日のユーモア運勢" }),
+    ).toBeInTheDocument();
+  });
+
   it("renders breadcrumb navigation", () => {
     render(<DailyFortunePage />);
     expect(

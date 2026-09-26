@@ -1,24 +1,14 @@
-/* ===== StarRating — 星評価コンポーネント（DailyFortuneCard の結果面補助表示）=====
- * DESIGN.md フェーズR・店構えへ変換。星の色は成果物パレットの和色（--wairo-yamabuki=
- * 山吹・金に近い暖色）を使う。結果カードの中身（成果物）としての使用であり、
- * 器（ページ UI）へ和色を漏らすものではない（DESIGN.md §2）。
- */
+/* 運勢の星。★ と ☆ を形で読み分け、どちらも --ink で組む（DESIGN.md §2）。字を大きくして星と数字が
+ * 1行に入らないときは、数字を次の行に送る。 */
+.rating {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-8);
+  color: var(--ink);
+}
 
 .stars {
-  font-size: 1.25rem;
-  color: var(--wairo-yamabuki);
-  letter-spacing: 2px;
-}
-
-/* empty star と half star: filled star と色で区別するため墨の淡い色調を使う */
-.emptyStar {
-  color: var(--rule-strong);
-}
-
-.ratingNumber {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  margin-left: var(--space-8);
-  font-weight: 400;
-  letter-spacing: normal;
+  font-size: var(--text-step-2);
+  line-height: var(--leading-heading);
 }

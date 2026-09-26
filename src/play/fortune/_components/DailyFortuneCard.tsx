@@ -1,60 +1,47 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useId, useSyncExternalStore } from "react";
 import {
   subscribeFortuneStore,
   getFortuneSnapshot,
   getFortuneServerSnapshot,
 } from "@/play/fortune/fortuneStore";
+import ResultBox, { type ResultHeading } from "@/components/ResultBox";
 import ShareButtons from "@/components/ShareButtons";
-import Tsutsumi from "@/components/Tsutsumi";
-import {
-  pickResultWairoColor,
-  pickResultSymbol,
-} from "@/play/quiz/_components/resultVisual";
 import StarRating from "./StarRating";
 import styles from "./DailyFortuneCard.module.css";
 
-/** Format "YYYY-MM-DD" to a readable Japanese date */
-function formatDate(dateStr: string): string {
-  if (!dateStr) return "";
+interface DailyFortuneCardProps {
+  /**
+   * 運勢の id ごとの、運勢の名の見出し。どの運勢が出るかは来訪者の端末で決まるので、サーバーの page.tsx が
+   * すべての運勢の名の区切りを作って渡す。
+   */
+  headings: Readonly<Record<string, ResultHeading>>;
+}
+
+/** "YYYY-MM-DD" を、結果が何の日のものかを言う補助情報の行にする。 */
+function formatCaption(dateStr: string): string {
   const [year, month, day] = dateStr.split("-");
-  return `${year}年${parseInt(month, 10)}月${parseInt(day, 10)}日の運勢`;
+  return `${year}年${parseInt(month, 10)}月${parseInt(day, 10)}日のユーモア運勢`;
 }
 
 /**
- * Client-side daily fortune card.
+ * 今日の運勢。端末に残した来訪者ごとの種と日本時間の日付から、その日の運勢を1つ選んで結果のボックスに出す。
  *
- * Uses localStorage-based user seed + JST date to deterministically
- * select a fortune entry.
- *
- * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約する。
- *
- * デザイン（DESIGN.md §4「包み」/§7「見せたくなる結果」）: 占いは診断・ゲームと同じく
- * 見せたくなる側。結果は罫で明確に包んだ独立ビジュアル（Tsutsumi）を主役にし、
- * 器（このカードの見出し部）は静かな到達ラベルだけを持つ（quiz ResultCard と同じ型）。
- * 和色は結果 id から決定的に写像（同じ運勢は常に同じ色・§2「成果物パレットは8色に限る」）。
+ * 運勢は端末の localStorage で決まるので、サーバーでは描かず、読み込んだあとに描く。サーバーの描画と
+ * 最初の描画をそろえるため、ストアのサーバーの値は null で、そのあいだは占っていることを字で言う。
+ * 結果はページを開いただけで出るもので、来訪者の操作への応えではないので、登場の動きを持たない（§11）。
  */
-export default function DailyFortuneCard() {
-  // useSyncExternalStore を使い Hydration Error を防ぐ。
-  // server snapshot (getFortuneServerSnapshot) により SSR 時は null が返り、
-  // クライアント初回レンダリングでも最初は null からスタートするため
-  // SSR とクライアントの出力が一致する。
-  // マウント後は client snapshot (getFortuneSnapshot) が評価され運勢データが返る。
-  // スナップショット関数はモジュールスコープのキャッシュを返すため参照同一性が保たれ、
-  // 無限再レンダリングを防ぐ。
+export default function DailyFortuneCard({ headings }: DailyFortuneCardProps) {
   const state = useSyncExternalStore(
     subscribeFortuneStore,
-    getFortuneSnapshot, // client snapshot
-    getFortuneServerSnapshot, // server snapshot (SSR時はnull)
+    getFortuneSnapshot,
+    getFortuneServerSnapshot,
   );
+  const shareHeadingId = useId();
 
   if (!state) {
-    return (
-      <div className={styles.card}>
-        <p className={styles.loading}>運勢を占っています...</p>
-      </div>
-    );
+    return <p className={styles.loading}>運勢を占っています...</p>;
   }
 
   const { fortune, today } = state;
@@ -62,50 +49,39 @@ export default function DailyFortuneCard() {
   const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした! #ユーモア運勢 #yolosnet`;
 
   return (
-    <div className={styles.card}>
-      <p className={styles.date}>{formatDate(today)}</p>
-
-      <div className={styles.medalWrap}>
-        <p className={styles.medalLabel}>
-          <span className={styles.medalLabelDone}>占い完了</span>
-          今日の結果
+    <>
+      <ResultBox caption={formatCaption(today)} heading={headings[fortune.id]}>
+        <p className={styles.rating}>
+          <StarRating rating={fortune.rating} />
         </p>
-        <Tsutsumi
-          typeName={fortune.title}
-          symbol={pickResultSymbol(fortune.title)}
-          color={pickResultWairoColor(fortune.id)}
-          productName="今日のユーモア運勢"
-          seal="占"
+        <p className={styles.description}>{fortune.description}</p>
+        <dl className={styles.details}>
+          <div className={styles.detail}>
+            <dt className={styles.detailLabel}>ラッキーアイテム</dt>
+            <dd>{fortune.luckyItem}</dd>
+          </div>
+          <div className={styles.detail}>
+            <dt className={styles.detailLabel}>今日のアクション</dt>
+            <dd>{fortune.luckyAction}</dd>
+          </div>
+        </dl>
+      </ResultBox>
+
+      <section className={styles.share} aria-labelledby={shareHeadingId}>
+        <h3 id={shareHeadingId} className={styles.shareHeading}>
+          この結果を共有
+        </h3>
+        <ShareButtons
+          url="/play/daily"
+          title="今日のユーモア運勢"
+          text={shareText}
+          sns={["x", "line", "copy"]}
+          contentType="fortune"
+          contentId="fortune-daily"
         />
-      </div>
-
-      <div className={styles.ratingRow}>
-        <StarRating rating={fortune.rating} />
-      </div>
-
-      <p className={styles.description}>{fortune.description}</p>
-
-      <dl className={styles.detailsGrid}>
-        <div className={styles.detailItem}>
-          <dt className={styles.detailLabel}>ラッキーアイテム</dt>
-          <dd className={styles.detailValue}>{fortune.luckyItem}</dd>
-        </div>
-        <div className={styles.detailItem}>
-          <dt className={styles.detailLabel}>今日のアクション</dt>
-          <dd className={styles.detailValue}>{fortune.luckyAction}</dd>
-        </div>
-      </dl>
-
-      <ShareButtons
-        url="/play/daily"
-        title="今日のユーモア運勢"
-        text={shareText}
-        sns={["x", "line", "copy"]}
-        contentType="fortune"
-        contentId="fortune-daily"
-      />
+      </section>
 
       <p className={styles.comeback}>明日も来てね! 毎日運勢が変わります</p>
-    </div>
+    </>
   );
 }
