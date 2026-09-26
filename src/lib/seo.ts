@@ -453,11 +453,11 @@ interface ColorMetaForSeo {
 
 export function generateColorPageMetadata(color: ColorMetaForSeo): Metadata {
   return {
-    title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色 | ${SITE_NAME}`,
+    title: `${color.name}（${color.romaji}）${color.hex} - 伝統色辞典 | ${SITE_NAME}`,
     description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。RGB・HSL値、関連する伝統色を紹介。`,
     keywords: [color.name, color.romaji, "伝統色", "日本の色", color.hex],
     openGraph: {
-      title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色`,
+      title: `${color.name}（${color.romaji}）${color.hex} - 伝統色辞典`,
       description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。`,
       type: "website",
       url: `${BASE_URL}/dictionary/colors/${color.slug}`,
@@ -465,7 +465,7 @@ export function generateColorPageMetadata(color: ColorMetaForSeo): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色`,
+      title: `${color.name}（${color.romaji}）${color.hex} - 伝統色辞典`,
       description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。`,
     },
     alternates: {

@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import Section from "@/components/Section";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
@@ -9,11 +9,6 @@ interface ListPageProps {
   trail: BreadcrumbItem[];
   /** 主見出し。 */
   heading: string;
-  /**
-   * 主見出しを意味の切れ目で分けたもの。2つ以上あれば、見出しは幅に収まらないときこの切れ目でだけ折る
-   * （DESIGN.md §4）。
-   */
-  headingPhrases?: readonly string[];
   /** 見出しの下の導入の文。 */
   description?: string;
   /** 見出しの下に積むもの（一覧の上の索引と一覧）。 */
@@ -27,7 +22,6 @@ interface ListPageProps {
 export default function ListPage({
   trail,
   heading,
-  headingPhrases = [heading],
   description,
   children,
 }: ListPageProps) {
@@ -36,20 +30,8 @@ export default function ListPage({
       <div className={styles.view}>
         <Breadcrumb items={trail} />
         <div>
-          <h1
-            className={
-              headingPhrases.length > 1
-                ? `${styles.title} ${styles.phrased}`
-                : styles.title
-            }
-            {...headingFontAttr(heading)}
-          >
-            {headingPhrases.map((phrase, i) => (
-              <Fragment key={phrase}>
-                {i > 0 ? <wbr /> : null}
-                {phrase}
-              </Fragment>
-            ))}
+          <h1 className={styles.title} {...headingFontAttr(heading)}>
+            {heading}
           </h1>
           {description ? (
             <p className={styles.description}>{description}</p>

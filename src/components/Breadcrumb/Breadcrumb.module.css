@@ -1,9 +1,13 @@
 /* パンくず（DESIGN.md §5・§6）。 */
 
-/* 項目の並び。幅が足りなければ li のあいだで折り返す。 */
+/* 項目の並び。幅が足りなければ li のあいだで折り返し、1つの項目だけで行に収まらなければその項目の中で
+ * 折り返す。li のあいだの間隔は同じ行の中にだけ置き、行の端には置かない。間隔は、区切りの「/」から次の項目の
+ * 箱までを、前の項目の箱から「/」までと同じ 8px にする量で、次の項目の箱が字より余白の分だけ前へ張り出す
+ * ぶんを足してある。 */
 .list {
   display: flex;
   flex-wrap: wrap;
+  column-gap: calc(var(--space-8) + var(--text-box-pad));
   align-items: center;
   list-style: none;
   font-size: var(--text-small);
@@ -11,38 +15,38 @@
   color: var(--ink-2);
 }
 
-/* 項目と、その後ろの区切りを1つにまとめ、あいだで折り返さない。 */
+/* 項目と、その後ろの区切りを1つにまとめ、あいだで折り返さない。項目が折り返したときは、区切りを最後の行に
+ * 並べる。 */
 .item {
   display: flex;
-  align-items: center;
+  align-items: last baseline;
   min-width: 0;
 }
 
 /* パンくずは縁の見えないコントロールで、本文の中のリンクではない（§5・§6）。押せる範囲は字の左右に 8px で、
- * 44px に届かなければ届くまで右へ広げる。字の左右の余白と、字を並びの左端に置く張り出しは
- * data-text-box（globals.css）が持つ。下線と訪問済みの色は globals.css の a の既定に従う。 */
+ * 44px に届かなければ届くまで右へ広げる。折り返した名前も、押せる範囲が全体を囲む。英数字の長い語
+ * （「Worker.terminate()で100msに」）は、それだけで行に収まらないときに限り語の中で折る（§4）。本文から
+ * 継ぐ break-word では、語の幅が項目の最小の幅に残って並びからはみ出すので、anywhere にする。字の左右の
+ * 余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。下線と訪問済みの色は
+ * globals.css の a の既定に従う。 */
 .link {
   display: inline-flex;
   align-items: center;
-  flex-shrink: 0;
   min-width: 44px;
   min-height: 44px;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
-/* いまのページは §6 の現在地。太字で示し、押しても何も起きないので下線も hover も持たない。名前は長いことが
- * あるので、行に収まらなければ li の中で折り返す。 */
+/* いまのページは §6 の現在地。太字で示し、押しても何も起きないので下線も hover も持たない。 */
 .link[aria-current="page"] {
-  flex-shrink: 1;
-  white-space: normal;
   color: var(--ink);
   font-weight: 700;
   text-decoration: none;
 }
 
-/* 区切りの「/」。前の項目の箱の後ろと、後ろの項目の箱の前に、それぞれ同じ間隔をあけ、リングと hover の
- * 線を「/」に掛けない。後ろの項目の箱は字より余白の分だけ前へ張り出すので、後ろ側はその分を足す。 */
+/* 区切りの「/」。前の項目の箱から 8px あけ、リングと hover の線を「/」に掛けない。 */
 .separator {
-  margin-inline: var(--space-8) calc(var(--space-8) + var(--text-box-pad));
+  flex-shrink: 0;
+  margin-inline-start: var(--space-8);
   user-select: none;
 }

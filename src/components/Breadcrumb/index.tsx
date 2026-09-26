@@ -16,8 +16,9 @@ interface BreadcrumbProps {
 /**
  * パンくず（DESIGN.md §5・§6）。最後の項目がいまのページで、§6 の現在地としてリンクのまま
  * aria-current="page" を付け、太字で下線を持たない形にする。
- * 区切りの「/」は前の項目の後ろに置き、項目と同じ li に入れる。折り返しは li のあいだでだけ起き、
- * 行の頭には必ず項目の名前が来る。BreadcrumbList の JSON-LD も出す。
+ * 区切りの「/」は前の項目の後ろに置き、項目と同じ li に入れる。折り返しは li のあいだで起き、1つの項目だけで
+ * 行に収まらないときはその項目の名前の中で起きる。どちらでも行の頭には項目の名前が来る。
+ * BreadcrumbList の JSON-LD も出す。
  */
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (

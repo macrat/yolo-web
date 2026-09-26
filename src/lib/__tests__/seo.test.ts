@@ -246,10 +246,25 @@ describe("generateColorPageMetadata", () => {
       category: "red",
     });
 
-    expect(result.title).toContain("撫子");
+    expect(result.title).toBe(
+      "撫子（nadeshiko）#dc9fb4 - 伝統色辞典 | yolos.net",
+    );
     expect(result.alternates?.canonical).toContain(
       "/dictionary/colors/nadeshiko",
     );
+  });
+
+  test("og:title は色名・ローマ字・カラーコードに一覧の名前「伝統色辞典」を続ける", () => {
+    const result = generateColorPageMetadata({
+      slug: "nadeshiko",
+      name: "撫子",
+      romaji: "nadeshiko",
+      hex: "#dc9fb4",
+      category: "red",
+    });
+
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.title).toBe("撫子（nadeshiko）#dc9fb4 - 伝統色辞典");
   });
 
   test("includes twitter metadata", () => {
@@ -264,7 +279,7 @@ describe("generateColorPageMetadata", () => {
     expect(result.twitter).toBeDefined();
     expect(result.twitter).toMatchObject({
       card: "summary_large_image",
-      title: expect.stringContaining("撫子"),
+      title: "撫子（nadeshiko）#dc9fb4 - 伝統色辞典",
       description: expect.stringContaining("撫子"),
     });
   });

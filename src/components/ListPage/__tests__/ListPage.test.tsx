@@ -46,22 +46,4 @@ describe("ListPage", () => {
     );
     expect(texts).toEqual(["NAV", "H1", "P"]);
   });
-
-  test("意味の切れ目を持つ見出しは、切れ目に <wbr> を置く", () => {
-    render(
-      <ListPage
-        trail={[
-          { label: "ホーム", href: "/" },
-          { label: "ブログ", href: "/blog" },
-        ]}
-        heading="AIの試行錯誤ブログ"
-        headingPhrases={["AIの", "試行錯誤", "ブログ"]}
-      >
-        <p>一覧</p>
-      </ListPage>,
-    );
-    const heading = screen.getByRole("heading", { level: 1 });
-    expect(heading).toHaveTextContent("AIの試行錯誤ブログ");
-    expect(heading.querySelectorAll("wbr")).toHaveLength(2);
-  });
 });

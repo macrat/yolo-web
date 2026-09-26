@@ -10,12 +10,6 @@
   margin-block-end: var(--space-8);
 }
 
-/* 意味の切れ目（<wbr>）を持つ見出しは、その切れ目でだけ折る（§4）。一語が幅に収まらないときは、
- * 本文から継ぐ overflow-wrap がその語の中で折る。 */
-.phrased {
-  word-break: keep-all;
-}
-
 .description {
   max-width: var(--measure);
 }

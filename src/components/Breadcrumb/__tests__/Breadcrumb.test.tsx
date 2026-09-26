@@ -70,7 +70,7 @@ describe("Breadcrumb", () => {
     expect(list.tagName).toBe("OL");
   });
 
-  // 折り返しは li のあいだでだけ起きるので、区切りを前の項目の後ろに置くと、行の頭が必ず項目の名前になる
+  // 区切りを前の項目の後ろに置くと、li のあいだで折り返しても項目の中で折り返しても、行の頭が項目の名前になる
   test("区切りは、いまのページより前の各 li の末尾にある", () => {
     const { container } = render(<Breadcrumb items={items} />);
     const listItems = container.querySelectorAll("li");
