@@ -19,12 +19,13 @@ interface ColorDetailProps {
   titleFontAttr: HeadingFontAttr;
 }
 
-/**
- * 写せたら 1.5 秒「コピー済み」、写せなかったら次に押すまで「コピー失敗」をボタンに出す。
- * どちらも「コピー」と同じ字数に近い語にして、狭い画面でボタンの列が広がって値の列を押し縮めないようにする。
- */
+/** 「コピー済み」を出しておくミリ秒数。 */
 const COPIED_DISPLAY_MS = 1500;
 
+/**
+ * カラーコードを写すボタン。写せたら 1.5 秒「コピー済み」、写せなかったら次に押すまで「コピー失敗」を出す。
+ * どちらも「コピー」と同じ字数に近い語にして、狭い画面でボタンの列が広がって値の列を押し縮めないようにする。
+ */
 function CopyButton({ text }: { text: string }) {
   const { copy, copiedKey, failedKey } = useCopyToClipboard({
     resetDelay: COPIED_DISPLAY_MS,

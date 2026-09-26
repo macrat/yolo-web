@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { trackShare } from "@/lib/analytics";
 import { copyText } from "@/lib/clipboard";
 import Button from "@/components/Button";
@@ -34,6 +34,14 @@ export default function InviteFriendButton({
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
     "idle",
   );
+  // 写せた知らせを消すタイマー。写し直すと前のタイマーを止めて2秒を数え直し、外したときも止める。
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (copiedTimerRef.current !== null) clearTimeout(copiedTimerRef.current);
+    },
+    [],
+  );
 
   const handleInvite = useCallback(async () => {
     const url =
@@ -53,19 +61,28 @@ export default function InviteFriendButton({
           trackShare("web_share", "diagnosis", contentId, "invite");
         }
         return;
-      } catch {
-        // User cancelled or share failed; fall through to clipboard
+      } catch (error) {
+        // The visitor closed the share sheet: they chose not to send, so do
+        // nothing. Closing the sheet also uses up the press, so a copy after
+        // it would fail on browsers that copy only within a press.
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        // Sharing failed for another reason; fall through to clipboard.
       }
     }
 
+    if (copiedTimerRef.current !== null) {
+      clearTimeout(copiedTimerRef.current);
+      copiedTimerRef.current = null;
+    }
     setCopyStatus("idle");
     if (await copyText(`${text}\n${url}`)) {
       setCopyStatus("copied");
-      setTimeout(
-        () =>
-          setCopyStatus((status) => (status === "copied" ? "idle" : status)),
-        2000,
-      );
+      copiedTimerRef.current = setTimeout(() => {
+        setCopyStatus("idle");
+        copiedTimerRef.current = null;
+      }, 2000);
       // Count only when the copy actually succeeded.
       if (contentId) {
         trackShare("clipboard", "diagnosis", contentId, "invite");

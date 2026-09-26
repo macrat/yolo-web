@@ -10,7 +10,12 @@ export interface UseDialogReturn {
   dialogRef: React.RefObject<HTMLDialogElement | null>;
   /** Callback for the dialog's onClose event. */
   handleClose: () => void;
-  /** Callback for backdrop click detection (click outside the dialog box). */
+  /** Callback for the dialog's onPointerDown event: notes where a press starts. */
+  handleBackdropPointerDown: (e: React.PointerEvent<HTMLDialogElement>) => void;
+  /**
+   * Callback for the dialog's onClick event: closes when both the press and the
+   * release were on the backdrop (outside the dialog box).
+   */
   handleBackdropClick: (e: React.MouseEvent<HTMLDialogElement>) => void;
 }
 
@@ -20,7 +25,8 @@ export interface UseDialogReturn {
  * Encapsulates the repeated pattern found in all 12 game modals:
  * - Syncs the dialog open state with the `open` prop via showModal()/close()
  * - Provides a close handler that calls the onClose callback
- * - Provides a backdrop click handler that closes on clicks outside the dialog
+ * - Provides backdrop handlers that close on a press that starts and ends
+ *   outside the dialog
  *
  * @param open - Whether the dialog should be open
  * @param onClose - Callback invoked when the dialog should close
@@ -84,26 +90,52 @@ export function useDialog(
     onClose();
   }, [onClose]);
 
+  // Whether the current press started on the backdrop. A click is dispatched to
+  // the common ancestor of where the press started and where it ended, so a
+  // drag from the dialog's text out onto the backdrop arrives as a click on the
+  // <dialog> outside its box; only a press that also started there closes it.
+  const pressStartedOnBackdropRef = useRef(false);
+
+  const handleBackdropPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDialogElement>) => {
+      pressStartedOnBackdropRef.current = isOnBackdrop(e);
+    },
+    [],
+  );
+
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent<HTMLDialogElement>) => {
-      // A click on the backdrop targets the <dialog> element itself, outside its
-      // box. Clicks on the dialog's contents target those elements, and a button
-      // activated with Enter/Space fires a click at (0, 0), so the coordinates
-      // alone would mistake it for a backdrop click. The dialog's own padding is
-      // the dialog element too, which the coordinates keep open.
-      if (e.target !== e.currentTarget) return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
+      const pressStartedOnBackdrop = pressStartedOnBackdropRef.current;
+      pressStartedOnBackdropRef.current = false;
+      if (pressStartedOnBackdrop && isOnBackdrop(e)) {
         onClose();
       }
     },
     [onClose],
   );
 
-  return { dialogRef, handleClose, handleBackdropClick };
+  return {
+    dialogRef,
+    handleClose,
+    handleBackdropPointerDown,
+    handleBackdropClick,
+  };
+}
+
+/**
+ * Whether a pointer event is on the backdrop: it targets the <dialog> element
+ * itself, outside its box. Events on the dialog's contents target those
+ * elements, and a button activated with Enter/Space fires a click at (0, 0), so
+ * the coordinates alone would mistake it for the backdrop. The dialog's own
+ * padding is the <dialog> element too, which the coordinates keep inside.
+ */
+function isOnBackdrop(e: React.MouseEvent<HTMLDialogElement>): boolean {
+  if (e.target !== e.currentTarget) return false;
+  const rect = e.currentTarget.getBoundingClientRect();
+  return (
+    e.clientX < rect.left ||
+    e.clientX > rect.right ||
+    e.clientY < rect.top ||
+    e.clientY > rect.bottom
+  );
 }

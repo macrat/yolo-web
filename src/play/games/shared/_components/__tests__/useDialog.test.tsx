@@ -21,12 +21,13 @@ beforeAll(() => {
 });
 
 describe("useDialog", () => {
-  it("should return dialogRef, handleClose, and handleBackdropClick", () => {
+  it("should return dialogRef, handleClose, and the backdrop handlers", () => {
     const onClose = vi.fn();
     const { result } = renderHook(() => useDialog(false, onClose));
 
     expect(result.current.dialogRef).toBeDefined();
     expect(typeof result.current.handleClose).toBe("function");
+    expect(typeof result.current.handleBackdropPointerDown).toBe("function");
     expect(typeof result.current.handleBackdropClick).toBe("function");
   });
 
@@ -40,57 +41,73 @@ describe("useDialog", () => {
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+});
 
-  const dialogRect = { left: 100, right: 500, top: 100, bottom: 400 };
+/** Renders the harness open, with the dialog's box at (100, 100)–(500, 400). */
+function renderOpenDialog(onClose: () => void) {
+  const utils = render(
+    <DialogHarness open={true} useAnchor={false} onClose={onClose} />,
+  );
+  const dialog = utils.getByRole("dialog", { hidden: true });
+  vi.spyOn(dialog, "getBoundingClientRect").mockReturnValue(
+    new DOMRect(100, 100, 400, 300),
+  );
+  return { ...utils, dialog };
+}
 
-  /** A click event dispatched on the <dialog> element itself. */
-  function clickOnDialog(
-    clientX: number,
-    clientY: number,
-  ): React.MouseEvent<HTMLDialogElement> {
-    const dialog = { getBoundingClientRect: () => dialogRect };
-    return {
-      clientX,
-      clientY,
-      target: dialog,
-      currentTarget: dialog,
-    } as unknown as React.MouseEvent<HTMLDialogElement>;
-  }
+const OUTSIDE = { clientX: 20, clientY: 20 };
+const PADDING = { clientX: 106, clientY: 250 };
 
-  it("should call onClose on backdrop click (outside dialog bounds)", () => {
+describe("useDialog with a real <dialog>", () => {
+  it("closes when a press starts and ends on the backdrop", () => {
     const onClose = vi.fn();
-    const { result } = renderHook(() => useDialog(false, onClose));
-
-    act(() => {
-      result.current.handleBackdropClick(clickOnDialog(0, 0));
-    });
-
+    const { dialog } = renderOpenDialog(onClose);
+    fireEvent.pointerDown(dialog, { ...OUTSIDE, pointerType: "mouse" });
+    fireEvent.click(dialog, OUTSIDE);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("should NOT call onClose on a click in the dialog's own padding", () => {
+  it("closes when the backdrop is tapped", () => {
     const onClose = vi.fn();
-    const { result } = renderHook(() => useDialog(false, onClose));
+    const { dialog } = renderOpenDialog(onClose);
+    fireEvent.pointerDown(dialog, { ...OUTSIDE, pointerType: "touch" });
+    fireEvent.click(dialog, OUTSIDE);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 
-    act(() => {
-      result.current.handleBackdropClick(clickOnDialog(300, 250));
+  it("stays open when a drag starts on the dialog's text and ends on the backdrop", () => {
+    const onClose = vi.fn();
+    const { dialog, getByText } = renderOpenDialog(onClose);
+    // The click of a press that starts inside and ends outside goes to their
+    // common ancestor, the <dialog>, with the release's coordinates.
+    fireEvent.pointerDown(getByText("結果の文"), {
+      clientX: 200,
+      clientY: 200,
     });
-
+    fireEvent.click(dialog, OUTSIDE);
     expect(onClose).not.toHaveBeenCalled();
   });
-});
 
-describe("useDialog with a real <dialog>", () => {
+  it("stays open when a drag starts in the dialog's padding and ends on the backdrop", () => {
+    const onClose = vi.fn();
+    const { dialog } = renderOpenDialog(onClose);
+    fireEvent.pointerDown(dialog, PADDING);
+    fireEvent.click(dialog, OUTSIDE);
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("stays open when the dialog's padding is clicked", () => {
+    const onClose = vi.fn();
+    const { dialog } = renderOpenDialog(onClose);
+    fireEvent.pointerDown(dialog, PADDING);
+    fireEvent.click(dialog, PADDING);
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it("stays open when a button inside is pressed with the keyboard (click at 0, 0)", () => {
     const onClose = vi.fn();
-    const { getByRole } = render(
-      <DialogHarness open={true} useAnchor={false} onClose={onClose} />,
-    );
-    const dialog = getByRole("dialog", { hidden: true });
-    vi.spyOn(dialog, "getBoundingClientRect").mockReturnValue(
-      new DOMRect(100, 100, 400, 300),
-    );
-    // Enter/Space on a focused button dispatches a click whose coordinates are 0, 0.
+    const { getByRole } = renderOpenDialog(onClose);
+    // Enter/Space on a focused button dispatches a click at 0, 0 with no press.
     fireEvent.click(
       getByRole("button", { name: "結果をコピー", hidden: true }),
       {
@@ -101,32 +118,33 @@ describe("useDialog with a real <dialog>", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it("closes when the backdrop is clicked", () => {
+  it("stays open on a keyboard click that follows a backdrop press which did not close", () => {
     const onClose = vi.fn();
-    const { getByRole } = render(
-      <DialogHarness open={true} useAnchor={false} onClose={onClose} />,
+    const { dialog, getByRole } = renderOpenDialog(onClose);
+    // A press on the backdrop that turns into a drag back inside ends on the dialog.
+    fireEvent.pointerDown(dialog, OUTSIDE);
+    fireEvent.click(dialog, PADDING);
+    fireEvent.click(
+      getByRole("button", { name: "結果をコピー", hidden: true }),
+      {
+        clientX: 0,
+        clientY: 0,
+      },
     );
-    const dialog = getByRole("dialog", { hidden: true });
-    vi.spyOn(dialog, "getBoundingClientRect").mockReturnValue(
-      new DOMRect(100, 100, 400, 300),
-    );
-    fireEvent.click(dialog, { clientX: 20, clientY: 20 });
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it("closes on the native close (Esc)", () => {
     const onClose = vi.fn();
-    const { getByRole } = render(
-      <DialogHarness open={true} useAnchor={false} onClose={onClose} />,
-    );
+    const { dialog } = renderOpenDialog(onClose);
     // Esc closes a modal <dialog> natively and fires its close event.
-    fireEvent(getByRole("dialog", { hidden: true }), new Event("close"));
+    fireEvent(dialog, new Event("close"));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
 
 /**
- * A minimal harness that wires useDialog to a real <dialog> (with buttons inside)
+ * A minimal harness that wires useDialog to a real <dialog> (with text and buttons inside)
  * plus a focus-restore anchor (<h1 tabindex=-1>) and a trigger <button>,
  * mirroring the game layout.
  * `returnFocusRef` is only supplied when `useAnchor` is true.
@@ -141,11 +159,12 @@ function DialogHarness({
   onClose?: () => void;
 }) {
   const anchorRef = useRef<HTMLHeadingElement>(null);
-  const { dialogRef, handleClose, handleBackdropClick } = useDialog(
-    open,
-    onClose,
-    useAnchor ? anchorRef : undefined,
-  );
+  const {
+    dialogRef,
+    handleClose,
+    handleBackdropPointerDown,
+    handleBackdropClick,
+  } = useDialog(open, onClose, useAnchor ? anchorRef : undefined);
   return (
     <div>
       <h1 ref={anchorRef} tabIndex={-1} data-testid="anchor">
@@ -155,8 +174,10 @@ function DialogHarness({
       <dialog
         ref={dialogRef}
         onClose={handleClose}
+        onPointerDown={handleBackdropPointerDown}
         onClick={handleBackdropClick}
       >
+        <p>結果の文</p>
         <button>結果をコピー</button>
         <button>閉じる</button>
       </dialog>

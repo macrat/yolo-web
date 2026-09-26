@@ -61,11 +61,12 @@ export default function GameDialog({
   footer,
   returnFocusRef,
 }: GameDialogProps) {
-  const { dialogRef, handleClose, handleBackdropClick } = useDialog(
-    open,
-    onClose,
-    returnFocusRef,
-  );
+  const {
+    dialogRef,
+    handleClose,
+    handleBackdropPointerDown,
+    handleBackdropClick,
+  } = useDialog(open, onClose, returnFocusRef);
 
   return (
     <dialog
@@ -73,6 +74,7 @@ export default function GameDialog({
       className={`${styles.modal} ${className ?? ""}`.trim()}
       style={{ width: `${width}px` }}
       onClose={handleClose}
+      onPointerDown={handleBackdropPointerDown}
       onClick={handleBackdropClick}
       aria-labelledby={titleId}
     >
