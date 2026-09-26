@@ -125,6 +125,14 @@
   color: var(--ink);
 }
 
+.reading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-small); /* 補助情報 */
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
 .word {
   margin: 0;
   font-family: var(--font-body);

@@ -454,6 +454,43 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（personality �
     expect(heading.tagName).toBe("H2");
   });
 
+  test("読み方を持つタイプは、見出しを名前だけにし、読み方をそのすぐ後ろに添える", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={{
+          ...tsutsumiResult,
+          title: "花鳥風月タイプ",
+          reading: "かちょうふうげつ",
+        }}
+      />,
+    );
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "花鳥風月タイプ",
+    });
+    expect(heading.nextElementSibling).toHaveTextContent("かちょうふうげつ");
+  });
+
+  test("包みで見せないときも、読み方を見出しのすぐ後ろに添える", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        quizType="knowledge"
+        result={{
+          ...tsutsumiResult,
+          title: "花鳥風月タイプ",
+          reading: "かちょうふうげつ",
+        }}
+      />,
+    );
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "花鳥風月タイプ",
+    });
+    expect(heading.nextElementSibling).toHaveTextContent("かちょうふうげつ");
+  });
+
   test("color 欠落時は抑制ヘッダにフォールバック（診断完了ラベル・象徴を出さない）", () => {
     // baseResult は icon はあるが color なし
     render(<ResultCard {...defaultProps} />);
@@ -826,7 +863,7 @@ describe("ResultCard - animal-personality variant", () => {
 
   const animalResult: QuizResult = {
     id: "nihon-zaru",
-    title: "ニホンザル -- 温泉を発明した革命児",
+    title: "ニホンザル——温泉を発明した革命児",
     description: "あなたはニホンザルタイプです。",
     icon: "🐵",
   };
@@ -1457,7 +1494,8 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
   // 主タイプ（result）は determineResult の決定的勝者、coTypes は同点を分け合う副タイプ。
   const wordSenseResult: QuizResult = {
     id: "elegant-precise",
-    title: "一字千金（いちじせんきん）タイプ",
+    title: "一字千金タイプ",
+    reading: "いちじせんきん",
     description: "あなたは一字千金タイプです。",
   };
   const wordSenseProps = {
@@ -1490,7 +1528,7 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
     const coTypes: QuizResult[] = [
       {
         id: "poetic-sensory",
-        title: "花鳥風月（かちょうふうげつ）タイプ",
+        title: "花鳥風月タイプ",
         description: "花鳥風月タイプの説明。",
       },
     ];
@@ -1501,16 +1539,14 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
     expect(region).toBeInTheDocument();
 
     // 同格コピー: 主・副の両型名を含み「同じくらい強く出ています」と述べる（X>Y を暗示しない）
-    expect(region.textContent).toContain("一字千金（いちじせんきん）タイプ");
-    expect(region.textContent).toContain("花鳥風月（かちょうふうげつ）タイプ");
+    expect(region.textContent).toContain("一字千金タイプ");
+    expect(region.textContent).toContain("花鳥風月タイプ");
     expect(region.textContent).toContain("同じくらい強く出ています");
     // 「主に」という優劣を暗示する語を使わない
     expect(region.textContent).not.toContain("主に");
 
     // 副タイプの第三者向け結果解説ページへのリンク
-    const link = screen
-      .getByText("花鳥風月（かちょうふうげつ）タイプの解説を見る")
-      .closest("a");
+    const link = screen.getByText("花鳥風月タイプの解説を見る").closest("a");
     expect(link).toHaveAttribute(
       "href",
       "/play/word-sense-personality/result/poetic-sensory",
@@ -1521,35 +1557,31 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
     const coTypes: QuizResult[] = [
       {
         id: "poetic-sensory",
-        title: "花鳥風月（かちょうふうげつ）タイプ",
+        title: "花鳥風月タイプ",
         description: "花鳥風月タイプの説明。",
       },
       {
         id: "logical-clear",
-        title: "理路整然（りろせいぜん）タイプ",
+        title: "理路整然タイプ",
         description: "理路整然タイプの説明。",
       },
     ];
     render(<ResultCard {...wordSenseProps} coTypes={coTypes} />);
 
     const region = screen.getByLabelText("同じくらい強く出た型");
-    expect(region.textContent).toContain("一字千金（いちじせんきん）タイプ");
-    expect(region.textContent).toContain("花鳥風月（かちょうふうげつ）タイプ");
-    expect(region.textContent).toContain("理路整然（りろせいぜん）タイプ");
+    expect(region.textContent).toContain("一字千金タイプ");
+    expect(region.textContent).toContain("花鳥風月タイプ");
+    expect(region.textContent).toContain("理路整然タイプ");
 
     // 2 つの副タイプそれぞれに結果解説ページリンクがある
     expect(
-      screen
-        .getByText("花鳥風月（かちょうふうげつ）タイプの解説を見る")
-        .closest("a"),
+      screen.getByText("花鳥風月タイプの解説を見る").closest("a"),
     ).toHaveAttribute(
       "href",
       "/play/word-sense-personality/result/poetic-sensory",
     );
     expect(
-      screen
-        .getByText("理路整然（りろせいぜん）タイプの解説を見る")
-        .closest("a"),
+      screen.getByText("理路整然タイプの解説を見る").closest("a"),
     ).toHaveAttribute(
       "href",
       "/play/word-sense-personality/result/logical-clear",

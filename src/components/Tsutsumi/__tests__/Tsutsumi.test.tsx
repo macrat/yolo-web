@@ -27,6 +27,20 @@ describe("Tsutsumi（包み）", () => {
     ).toBeInTheDocument();
   });
 
+  test("読み方を渡すと、タイプ名のすぐ後ろに添える", () => {
+    render(
+      <Tsutsumi
+        typeName="花鳥風月タイプ"
+        reading="かちょうふうげつ"
+        word="季節の移ろいを言葉にする"
+        color="ai"
+      />,
+    );
+    expect(
+      screen.getByText("花鳥風月タイプ").nextElementSibling,
+    ).toHaveTextContent("かちょうふうげつ");
+  });
+
   test("和色キーが data-color に反映される（器＝紙のまま・地は .figure の中だけ）", () => {
     const { container } = render(
       <Tsutsumi typeName="紅の型" color="kurenai" />,

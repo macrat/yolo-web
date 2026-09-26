@@ -221,7 +221,7 @@ describe("word-sense-personality — results", () => {
     }
   });
 
-  it("each title keeps the reading and nameParts splits it into name and reading", () => {
+  it("each title is the yoji type name, and the reading of the yoji is kept apart", () => {
     const expected: Record<string, [string, string]> = {
       "elegant-precise": ["一字千金", "いちじせんきん"],
       "warm-empathy": ["和顔愛語", "わがんあいご"],
@@ -234,8 +234,8 @@ describe("word-sense-personality — results", () => {
     };
     for (const result of wordSensePersonalityQuiz.results) {
       const [yoji, reading] = expected[result.id];
-      expect(result.title).toBe(`${yoji}（${reading}）タイプ`);
-      expect(result.nameParts).toEqual({ name: `${yoji}タイプ`, reading });
+      expect(result.title).toBe(`${yoji}タイプ`);
+      expect(result.reading).toBe(reading);
     }
   });
 

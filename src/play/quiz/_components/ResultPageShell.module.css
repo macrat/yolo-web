@@ -38,6 +38,13 @@
   margin-bottom: 0.75rem;
 }
 
+/* タイプ名の中の読みにくい語の読み方。タイプ名のすぐ下に補助情報として添える。 */
+.reading {
+  margin: 0 0 0.75rem;
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
 /* クイズのshortDescription: 第三者が診断内容を即座に把握するためのコンテキスト */
 .quizName {
   font-size: 0.875rem;

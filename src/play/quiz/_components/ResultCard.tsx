@@ -466,6 +466,7 @@ export default function ResultCard({
             // 結果へ到達できるようにする（WCAG 1.3.1）。ページ h1 は
             // QuizPlayPageLayout、結果内の詳細見出しは h3 のため h2 が階層上妥当。
             typeNameAs="h2"
+            reading={result.reading}
             word={catchphrase ?? undefined}
             symbol={pickResultSymbol(result.title)}
             color={pickResultWairoColor(result.id)}
@@ -489,6 +490,7 @@ export default function ResultCard({
           {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは出さない（DESIGN.md §5） */}
           <p className={styles.resultLabel}>あなたの結果</p>
           <h2 className={styles.title}>{result.title}</h2>
+          {result.reading && <p className={styles.reading}>{result.reading}</p>}
           {quizType === "knowledge" &&
             score !== undefined &&
             totalQuestions !== undefined && (

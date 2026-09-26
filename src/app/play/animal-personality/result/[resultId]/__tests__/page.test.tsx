@@ -70,7 +70,7 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
     results: [
       {
         id: "nihon-zaru",
-        title: "ニホンザル -- 温泉を発明した革命児",
+        title: "ニホンザル——温泉を発明した革命児",
         description: "ニホンザルの説明テキスト。",
         icon: "🐒",
         detailedContent: {
@@ -89,7 +89,7 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
       },
       {
         id: "hondo-tanuki",
-        title: "ホンドタヌキ -- 化かすどころか化かされる愛されキャラ",
+        title: "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
         description: "ホンドタヌキの説明テキスト。",
         icon: "🦡",
         detailedContent: {
@@ -195,10 +195,10 @@ describe("AnimalPersonalityResultPage 全タイプ一覧", () => {
     render(page);
 
     expect(
-      screen.getByText("ニホンザル -- 温泉を発明した革命児"),
+      screen.getByText("ニホンザル——温泉を発明した革命児"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("ホンドタヌキ -- 化かすどころか化かされる愛されキャラ"),
+      screen.getByText("ホンドタヌキ——化かすどころか化かされる愛されキャラ"),
     ).toBeInTheDocument();
   });
 });

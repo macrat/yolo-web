@@ -258,10 +258,15 @@ export type QuizResult = {
   id: string;
   title: string;
   /**
-   * title が名前に読みを添えた形（「藍色(あいいろ)」「一字千金（いちじせんきん）タイプ」）のタイプの、名前と読み。
+   * title が名前に読みを添えた形（「藍色(あいいろ)」）のタイプの、名前と読み。
    * タイプを並べる一覧は、読みをリンクの外に置くためにこれを使う（DESIGN.md §7）。
    */
   nameParts?: { name: string; reading: string };
+  /**
+   * title の中の読みにくい語の読み方（「一字千金タイプ」の「いちじせんきん」）。
+   * 結果の画面では title の下に添え、タイプを並べる一覧では名前の後ろに置く（DESIGN.md §7）。
+   */
+  reading?: string;
   description: string;
   /** Theme color hex (used for personality type) */
   color?: string;

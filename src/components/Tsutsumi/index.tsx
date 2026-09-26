@@ -22,6 +22,10 @@ export interface TsutsumiProps {
    */
   typeName: string;
   /**
+   * タイプ名の中の読みにくい語の読み方（任意）。タイプ名のすぐ下に補助情報として添える。
+   */
+  reading?: string;
+  /**
    * 一言（タイプ名に添える短い説明・任意）。無ければ説明行を出さない。
    */
   word?: string;
@@ -79,6 +83,7 @@ export interface TsutsumiProps {
  */
 export default function Tsutsumi({
   typeName,
+  reading,
   word,
   symbol,
   number,
@@ -132,6 +137,9 @@ export default function Tsutsumi({
         ) : (
           <p className={styles.typeName}>{typeName}</p>
         )}
+        {reading && reading.trim() !== "" ? (
+          <p className={styles.reading}>{reading}</p>
+        ) : null}
         {word && word.trim() !== "" ? (
           <p className={styles.word}>{word}</p>
         ) : null}

@@ -133,6 +133,55 @@ test("ResultPageShell does not render Tsutsumi when result.icon is undefined (fa
   expect(screen.queryByText("🎯")).not.toBeInTheDocument();
 });
 
+test("ResultPageShell keeps the h1 to the type name and adds the reading under the name in the Tsutsumi", () => {
+  const { container } = render(
+    <ResultPageShell
+      quiz={mockQuiz}
+      result={{
+        ...mockResult,
+        title: "花鳥風月タイプ",
+        reading: "かちょうふうげつ",
+      }}
+      shareText="シェアテキスト"
+      shareUrl="https://example.com/result"
+    >
+      <div>子コンテンツ</div>
+    </ResultPageShell>,
+  );
+
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    /^花鳥風月タイプ$/,
+  );
+  const figure = container.querySelector("figure[data-color]");
+  expect(figure).not.toBeNull();
+  expect(
+    within(figure as HTMLElement).getByText("花鳥風月タイプ")
+      .nextElementSibling,
+  ).toHaveTextContent("かちょうふうげつ");
+});
+
+test("ResultPageShell adds the reading right after the h1 in the fallback header", () => {
+  render(
+    <ResultPageShell
+      quiz={mockQuiz}
+      result={{
+        ...mockResult,
+        icon: undefined,
+        title: "花鳥風月タイプ",
+        reading: "かちょうふうげつ",
+      }}
+      shareText="シェアテキスト"
+      shareUrl="https://example.com/result"
+    >
+      <div>子コンテンツ</div>
+    </ResultPageShell>,
+  );
+
+  expect(
+    screen.getByRole("heading", { level: 1 }).nextElementSibling,
+  ).toHaveTextContent("かちょうふうげつ");
+});
+
 test("ResultPageShell renders children", () => {
   render(
     <ResultPageShell

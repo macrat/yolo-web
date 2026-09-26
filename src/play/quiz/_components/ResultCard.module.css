@@ -62,6 +62,13 @@
   line-height: 1.4;
 }
 
+/* タイプ名の中の読みにくい語の読み方。タイプ名のすぐ下に補助情報として添える。 */
+.reading {
+  margin: 0 0 0.75rem;
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
 .score {
   font-size: 0.95rem;
   color: var(--ink-2);
@@ -157,7 +164,7 @@
   min-height: 44px;
   font-size: 0.9rem;
   line-height: 1.4;
-  /* 型名は「柔和温順（にゅうわおんじゅん）タイプ」のように長い。語中改行を抑える。 */
+  /* 型名は「ムササビ——座布団サイズで120m飛ぶ孤高の夢想家」のように長い。語中改行を抑える。 */
   word-break: keep-all;
   overflow-wrap: anywhere;
 }

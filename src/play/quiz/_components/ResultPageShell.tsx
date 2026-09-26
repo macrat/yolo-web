@@ -80,6 +80,7 @@ export default function ResultPageShell({
             <h1 className={styles.medalHeading}>{result.title}</h1>
             <Tsutsumi
               typeName={result.title}
+              reading={result.reading}
               symbol={pickResultSymbol(result.title)}
               color={pickResultWairoColor(result.id)}
               productName={quiz.meta.title}
@@ -87,7 +88,12 @@ export default function ResultPageShell({
             />
           </div>
         ) : (
-          <h1 className={styles.title}>{result.title}</h1>
+          <>
+            <h1 className={styles.title}>{result.title}</h1>
+            {result.reading && (
+              <p className={styles.reading}>{result.reading}</p>
+            )}
+          </>
         )}
 
         {children}

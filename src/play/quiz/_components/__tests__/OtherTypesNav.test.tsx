@@ -184,6 +184,28 @@ describe("OtherTypesNav", () => {
     expect(screen.getByText("あいいろ").closest("a")).toBeNull();
   });
 
+  test("読み方を持つタイプは、名前だけをリンクにし、読み方をリンクの外に置くこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={[
+          {
+            id: "poetic-sensory",
+            title: "花鳥風月タイプ",
+            reading: "かちょうふうげつ",
+          },
+          ...results.slice(1),
+        ]}
+        placement="solvedScreen"
+      />,
+    );
+    expect(
+      screen.getByRole("link", { name: "花鳥風月タイプ" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("かちょうふうげつ").closest("a")).toBeNull();
+  });
+
   test("showSwatch のとき、色を持つタイプの行に色見本を置くこと", () => {
     const { container } = render(
       <OtherTypesNav
