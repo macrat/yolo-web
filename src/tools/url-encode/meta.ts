@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "URL変換",
     "日本語URL",
   ],
-  category: "encoding",
+  category: "data",
   relatedSlugs: ["base64", "json-formatter", "email-validator", "image-base64"],
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

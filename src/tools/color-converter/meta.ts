@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "カラーピッカー",
     "色コード変換",
   ],
-  category: "developer",
+  category: "color",
   relatedSlugs: ["json-formatter", "regex-tester", "markdown-preview"],
   publishedAt: "2026-02-14T07:34:58+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

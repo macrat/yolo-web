@@ -136,9 +136,7 @@ const staticPages: Array<{
   {
     path: "/tools",
     importMeta: () =>
-      import("@/app/tools/page").then(
-        async (m) => (await m.generateMetadata()) as Metadata,
-      ),
+      import("@/app/tools/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/blog",
@@ -245,9 +243,27 @@ describe("動的metadataページのSEO検証", () => {
     );
   });
 
-  // /tools/page/[page] は cycle-181 B-334-4 でページネーション廃止に伴い
-  // /tools への 301 リダイレクト（route.ts）に変更されたため、
-  // SEO metadata のテストは不要（リダイレクトに metadata は存在しない）。
+  test("/tools/page/[page]: SEO必須項目が存在する", async () => {
+    const { toolListPageParams } = await import("@/tools/_lib/tool-list");
+    if (toolListPageParams().length === 0) return; // 2ページ目がなければスキップ
+
+    const { generateMetadata } = await import("@/app/tools/page/[page]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ page: "2" }),
+    });
+    assertSeoMetadata(meta, "/tools/page/2", "/tools/page/[page]");
+  });
+
+  test("/play/page/[page]: SEO必須項目が存在する", async () => {
+    const { playListPageParams } = await import("@/play/play-list");
+    if (playListPageParams().length === 0) return; // 2ページ目がなければスキップ
+
+    const { generateMetadata } = await import("@/app/play/page/[page]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ page: "2" }),
+    });
+    assertSeoMetadata(meta, "/play/page/2", "/play/page/[page]");
+  });
 
   test("/dictionary/kanji/grade/[grade]: SEO必須項目が存在する", async () => {
     const { getKanjiGrades } = await import("@/dictionary/_lib/kanji");

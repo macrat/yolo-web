@@ -11,7 +11,7 @@ vi.mock("@/tools/registry", () => ({
       nameEn: "Base64 Encoder/Decoder",
       description: "テスト用",
       keywords: [],
-      category: "encoding",
+      category: "data",
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
@@ -128,6 +128,31 @@ describe("RelatedTools", () => {
 
     const link = screen.getByRole("link", { name: "文字数カウンター" });
     expect(link).toHaveAttribute("href", "/tools/char-count");
+  });
+
+  it("種別が混ざるとき、各行がツールの一覧と同じ種別の語を持つ", () => {
+    render(
+      <RelatedTools
+        currentSlug="byte-counter"
+        relatedSlugs={["base64", "char-count"]}
+      />,
+    );
+
+    const row = (name: string) =>
+      screen.getByRole("link", { name }).closest("li") as HTMLElement;
+    expect(row("Base64エンコード・デコード")).toHaveTextContent("データ");
+    expect(row("文字数カウンター")).toHaveTextContent("文章");
+  });
+
+  it("載せたツールがすべて同じ種別なら、行に種別を出さない", () => {
+    render(
+      <RelatedTools
+        currentSlug="base64"
+        relatedSlugs={["char-count", "byte-counter"]}
+      />,
+    );
+
+    expect(screen.queryByText("文章")).not.toBeInTheDocument();
   });
 
   it("「関連ツール」の見出しが表示される", () => {

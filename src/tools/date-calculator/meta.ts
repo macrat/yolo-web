@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "和暦 西暦 変換",
     "日付 加算 減算",
   ],
-  category: "developer",
+  category: "number",
   relatedSlugs: [
     "unix-timestamp",
     "number-base-converter",

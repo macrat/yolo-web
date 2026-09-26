@@ -1,11 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { generatePageNumbers, TOOLS_PER_PAGE } from "@/lib/pagination";
-
-describe("pagination constants", () => {
-  test("TOOLS_PER_PAGE is 24", () => {
-    expect(TOOLS_PER_PAGE).toBe(24);
-  });
-});
+import { generatePageNumbers } from "@/lib/pagination";
 
 describe("generatePageNumbers", () => {
   test("returns all pages when totalPages <= 7", () => {

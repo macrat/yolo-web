@@ -8,7 +8,7 @@ export const meta: ToolMeta = {
     "テキストからSHA-1、SHA-256、SHA-384、SHA-512のハッシュ値を生成するツール。ブラウザの暗号化機能を使った安全なハッシュ計算。登録不要・無料。",
   shortDescription: "SHA-1/SHA-256/SHA-384/SHA-512のハッシュ値を生成",
   keywords: ["ハッシュ生成", "SHA-256", "SHA-512", "SHA-1", "ハッシュ値計算"],
-  category: "security",
+  category: "data",
   relatedSlugs: ["base64", "password-generator", "image-base64"],
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

@@ -1,12 +1,9 @@
 /**
- * Pagination utility functions and constants.
+ * Pagination utility functions.
  *
  * Provides a pure function for generating page number lists
  * with ellipsis markers.
  */
-
-/** Number of tools displayed per page */
-export const TOOLS_PER_PAGE = 24;
 
 /** Sentinel value representing an ellipsis in a page number list */
 export type PageNumberEntry = number | "ellipsis";

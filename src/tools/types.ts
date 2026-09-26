@@ -1,5 +1,4 @@
-export type ToolCategory =
-  "text" | "encoding" | "developer" | "security" | "generator";
+import type { ToolCategory } from "./categories";
 
 export interface ToolMeta {
   slug: string;

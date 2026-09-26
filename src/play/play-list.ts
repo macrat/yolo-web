@@ -1,11 +1,15 @@
 /**
- * 遊びの一覧（/play）の項目・種別・並び順と、そのページの題・説明・metadata。
+ * 遊びの一覧（/play）の項目・種別・並び順と、そのページの題・説明・metadata・静的なページ番号。
  */
 
 import type { Metadata } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
-import { listPageTitle } from "@/lib/list-pages";
+import {
+  listPageHref,
+  listPageStaticParams,
+  listPageTitle,
+} from "@/lib/list-pages";
 import {
   sortBrowseItems,
   type BrowseChoice,
@@ -19,6 +23,9 @@ import type { PlayContentMeta } from "./types";
 
 /** 一覧の名前。上端のナビ・パンくず・見出し・ページの題で同じ名前を使う。 */
 export const PLAY_LIST_TITLE = "遊び";
+
+/** 一覧の元のパス。 */
+export const PLAY_LIST_BASE_PATH = "/play";
 
 /** 見出しの下に置く文。何が並んでいるかを言い、件数は件数の行に任せる。 */
 export const PLAY_LIST_INTRO =
@@ -39,29 +46,31 @@ export const PLAY_KINDS: BrowseChoice[] = [
 
 /**
  * 並び順。既定は種別順で、同じ種別の中は新しい順。戻ってきた来訪者が新しいものを見つけられるよう、
- * 種別をまたいだ新しい順も選べる（§7）。
+ * 種別をまたいだ新しい順も選べる（§7）。新しい順は、行に見えている公開日の日付で比べ、同じ日付の遊びどうしは
+ * 時刻で並べず、渡した順のまま並ぶ。
  */
 export const PLAY_SORTS: BrowseSort[] = [
-  { value: "kind", label: "種別順", directions: ["asc", "desc"] },
-  { value: "newest", label: "新しい順", directions: ["desc"] },
+  {
+    value: "kind",
+    label: "種別順",
+    keys: [
+      { by: "kind", order: PLAY_KINDS.map((choice) => choice.label) },
+      { by: "fact", index: 0, desc: true },
+    ],
+  },
+  {
+    value: "newest",
+    label: "新しい順",
+    keys: [{ by: "fact", index: 0, desc: true }],
+  },
 ];
 
-/**
- * 公開日を、行に見えている日付の値として比べる数（例 20260213）。並び順は見えている値で決めるので、
- * 同じ日付の遊びどうしは時刻で並べず、渡した順のまま並ぶ（§7）。
- */
-function publishedDay(content: PlayContentMeta): number {
-  return Number(formatDate(content.publishedAt).replaceAll("-", ""));
-}
-
 function playItem(content: PlayContentMeta): BrowseItem {
-  const kind = resolveDisplayCategory(content);
-  const day = publishedDay(content);
   return {
     name: content.shortTitle ?? content.title,
     slug: content.slug,
     description: content.shortDescription,
-    kind,
+    kind: resolveDisplayCategory(content),
     facts: [
       {
         text: formatDate(content.publishedAt),
@@ -70,10 +79,6 @@ function playItem(content: PlayContentMeta): BrowseItem {
       ...playFacts(content),
     ],
     searchTexts: [content.shortDescription],
-    sortKeys: {
-      kind: [PLAY_KINDS.findIndex((choice) => choice.label === kind), day],
-      newest: [day],
-    },
   };
 }
 
@@ -82,12 +87,17 @@ export function playListItems(): BrowseItem[] {
   return sortBrowseItems(allPlayContents.map(playItem), PLAY_SORTS[0]);
 }
 
+/** 2ページ目から最後のページまでの `page` の値。 */
+export function playListPageParams(): Array<{ page: string }> {
+  return listPageStaticParams(allPlayContents.length, PLAY_LIST_PER_PAGE);
+}
+
 const PLAY_LIST_DESCRIPTION = `占い・診断・クイズ・パズルなど、AIが作った全${allPlayContents.length}種のコンテンツを一覧できます。気になるものを選んで、その場で試せます。`;
 
-/** 遊びの一覧のページの metadata。 */
-export function playListMetadata(): Metadata {
-  const title = listPageTitle(PLAY_LIST_TITLE, 1);
-  const url = `${BASE_URL}/play`;
+/** 遊びの一覧のページの metadata。2ページ目からも自分を canonical にする。 */
+export function playListMetadata(page: number): Metadata {
+  const title = listPageTitle(PLAY_LIST_TITLE, page);
+  const url = `${BASE_URL}${listPageHref(PLAY_LIST_BASE_PATH, page)}`;
   return {
     title,
     description: PLAY_LIST_DESCRIPTION,

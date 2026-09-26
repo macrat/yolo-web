@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "星座 調べる",
     "生年月日 年齢",
   ],
-  category: "generator",
+  category: "number",
   relatedSlugs: ["date-calculator", "unix-timestamp", "unit-converter"],
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-03-02T09:10:04+09:00",

@@ -72,7 +72,7 @@ export const meta: ToolMeta = {
     "正規表現チェック",
     "パターンマッチ",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: ["json-formatter", "text-diff", "email-validator"],
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

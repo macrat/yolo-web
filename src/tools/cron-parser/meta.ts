@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "cron ジェネレーター",
     "cron 確認",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: ["unix-timestamp", "date-calculator", "regex-tester"],
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-03-02T12:00:00+09:00",

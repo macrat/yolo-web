@@ -17,7 +17,7 @@ export const meta: ToolMeta = {
     "変化率 計算",
     "割引 計算",
   ],
-  category: "generator",
+  category: "number",
   relatedSlugs: ["bmi-calculator", "unit-converter", "number-base-converter"],
   publishedAt: "2026-06-19T13:08:48+09:00",
   structuredDataType: "WebApplication",

@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "JSONバリデーション",
     "JSON圧縮",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: [
     "base64",
     "url-encode",
