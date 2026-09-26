@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resultNameWithReading } from "../resultName";
+import { resultHeadingName, resultNameWithReading } from "../resultName";
 import { quizBySlug } from "../registry";
 
 describe("resultNameWithReading", () => {
@@ -10,6 +10,15 @@ describe("resultNameWithReading", () => {
         reading: { word: "和顔愛語", kana: "わがんあいご" },
       }),
     ).toBe("和顔愛語（わがんあいご）タイプ");
+  });
+
+  it("名前に読みを添えた形のタイプは、名前の後ろに読みを全角の丸括弧で添える", () => {
+    expect(
+      resultNameWithReading({
+        title: "藍色(あいいろ)",
+        nameParts: { name: "藍色", reading: "あいいろ" },
+      }),
+    ).toBe("藍色（あいいろ）");
   });
 
   it("読みを持たないタイプは title のまま", () => {
@@ -31,5 +40,44 @@ describe("resultNameWithReading", () => {
         );
       }
     }
+  });
+
+  it("登録されたどのクイズでも、名前と読みを分けて持つ結果は、title が名前と読みからなる", () => {
+    for (const [slug, quiz] of quizBySlug) {
+      for (const result of quiz.results) {
+        if (!result.nameParts) continue;
+        const { name, reading } = result.nameParts;
+        expect(result.title, `${slug}/${result.id}`).toBe(
+          `${name}(${reading})`,
+        );
+      }
+    }
+  });
+});
+
+describe("resultHeadingName", () => {
+  it("名前に読みを添えた形のタイプは、名前を見出しに、読みをその下に分ける", () => {
+    expect(
+      resultHeadingName({
+        title: "藍色(あいいろ)",
+        nameParts: { name: "藍色", reading: "あいいろ" },
+      }),
+    ).toEqual({ name: "藍色", reading: "あいいろ" });
+  });
+
+  it("読みにくい語を持つタイプは、title を見出しに、語の読みをその下に置く", () => {
+    expect(
+      resultHeadingName({
+        title: "和顔愛語タイプ",
+        reading: { word: "和顔愛語", kana: "わがんあいご" },
+      }),
+    ).toEqual({ name: "和顔愛語タイプ", reading: "わがんあいご" });
+  });
+
+  it("読みを持たないタイプは、title だけを見出しにする", () => {
+    expect(resultHeadingName({ title: "初志貫徹" })).toEqual({
+      name: "初志貫徹",
+      reading: undefined,
+    });
   });
 });

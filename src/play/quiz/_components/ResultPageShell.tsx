@@ -5,39 +5,63 @@
  * 来た来訪者である。操作の結果ではなくタイプを説明するページなので、結果のボックスを持たず、タイプ名を
  * ページの h1 にする（DESIGN.md §4・§8）。解き終えた画面の結果は `ResultCard.tsx` が描く。
  */
+import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
+import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
+import { countCharWidth } from "@/lib/countCharWidth";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import type { QuizDefinition, QuizResult } from "../types";
+import { resultHeadingName } from "../resultName";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./ResultPageShell.module.css";
+
+/**
+ * 説明が4行に収まらないかを、描く前に見込む字の幅（`countCharWidth`。全角1字が 2）。375px の画面の本文の幅
+ * （321px）には、本文の大きさで全角が1行に約18字入り、4行で約72字（幅 144）になる。見込みが外れた説明は、
+ * 描いたあとに「続きを読む」の行が出入りするので、来訪者の多い 375px で当たる値にする。
+ */
+const DESCRIPTION_CLAMP_GUESS_WIDTH = 144;
+
+/** 共有の区画の見出しの id。共有の区画はページに1つだけなので、固定の値でよい。 */
+const SHARE_HEADING_ID = "result-share-heading";
 
 interface ResultPageShellProps {
   quiz: QuizDefinition;
   result: QuizResult;
+  /** タイプ名のすぐ後に置く、本文の大きさの段落（キャッチコピーやキャラの自己紹介）。 */
+  lead?: string;
+  /** タイプの説明。4行まで見せ、隠れる字があるときだけ「続きを読む」を出す。 */
+  description?: string;
+  /** 説明のあとの、この診断を遊ぶ誘いのボタンの文言。 */
+  ctaText: string;
+  /** 誘いのあとに続く、ルートごとの詳しい読みものと「すべてのタイプ」。 */
   children: React.ReactNode;
   shareText: string;
   shareUrl: string;
   /** 結果が色そのものである診断で、タイプ名のすぐ下に出す結果の色（DESIGN.md §2 の色見本）。 */
   swatch?: string;
-  /** 共有のボタンの直後に置く、ルートごとの区画（相性など）。 */
+  /** 共有の区画の直後に置く、ルートごとの区画（相性など）。 */
   afterShare?: React.ReactNode;
 }
 
 /**
- * 結果のページの頭（何の診断の結果かの行・タイプ名の h1・読み・色見本）と、共有・関連の区画を組む。
- * タイプ名の説明から先は、ルートごとの中身を children として受け取る。
+ * 結果のページを組む。上から、何の診断の結果かの行・タイプ名の h1・読み・色見本、タイプ名の説明と診断への
+ * 誘い、ルートごとの読みもの、共有の区画、関連の区画。
  *
- * タイプ名は、サーバーで作った文節の区切りで折る（DESIGN.md §4）。読みにくい語の読みは、見出しの折れを
- * 避けるため h1 に入れず、すぐ下に補助情報として添える。
+ * タイプ名は、サーバーで作った文節の区切りで折る（DESIGN.md §4）。読みは見出しの折れを避けるため h1 に
+ * 入れず、すぐ下に補助情報として添える。共有の操作はページに1か所だけ置き、何を共有するかを見出しが言う（§8）。
  */
 export default function ResultPageShell({
   quiz,
   result,
+  lead,
+  description,
+  ctaText,
   children,
   shareText,
   shareUrl,
@@ -45,6 +69,7 @@ export default function ResultPageShell({
   afterShare,
 }: ResultPageShellProps) {
   const slug = quiz.meta.slug;
+  const heading = resultHeadingName(result);
 
   return (
     <div className={styles.page}>
@@ -57,16 +82,16 @@ export default function ResultPageShell({
         ]}
       />
       <header className={styles.header}>
-        <p className={styles.quizName}>{quiz.meta.title}の結果</p>
+        <p className={styles.quizName}>
+          {quiz.meta.shortTitle ?? quiz.meta.title}の結果
+        </p>
         <PhrasedText
           as="h1"
-          phrases={splitIntoPhrases(result.title)}
+          phrases={splitIntoPhrases(heading.name)}
           className={styles.title}
-          {...headingFontAttr(result.title)}
+          {...headingFontAttr(heading.name)}
         />
-        {result.reading && (
-          <p className={styles.reading}>{result.reading.kana}</p>
-        )}
+        {heading.reading && <p className={styles.reading}>{heading.reading}</p>}
         {swatch && (
           <div
             className={styles.swatch}
@@ -77,9 +102,36 @@ export default function ResultPageShell({
       </header>
 
       <div className={styles.body}>
+        <div className={styles.intro}>
+          {lead && <p className={styles.lead}>{lead}</p>}
+          {description && (
+            <DescriptionExpander
+              description={description}
+              likelyOverflows={
+                countCharWidth(description) > DESCRIPTION_CLAMP_GUESS_WIDTH
+              }
+            />
+          )}
+          <div className={styles.try}>
+            <Link
+              href={`/play/${slug}`}
+              className={styles.tryButton}
+              data-inverted
+            >
+              {ctaText}
+            </Link>
+            <p className={styles.tryCost}>
+              全{quiz.meta.questionCount}問 / 登録不要
+            </p>
+          </div>
+        </div>
+
         {children}
 
-        <div className={styles.shareSection}>
+        <section className={styles.share} aria-labelledby={SHARE_HEADING_ID}>
+          <h2 id={SHARE_HEADING_ID} className={styles.shareHeading}>
+            この結果を共有
+          </h2>
           <ShareButtons
             url={shareUrl}
             title={quiz.meta.title}
@@ -91,7 +143,7 @@ export default function ResultPageShell({
             contentId={contentIdForQuiz(slug)}
             surface="text"
           />
-        </div>
+        </section>
         {afterShare}
       </div>
       <RelatedQuizzes currentSlug={slug} category={quiz.meta.category} />

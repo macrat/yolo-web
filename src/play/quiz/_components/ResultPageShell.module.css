@@ -3,9 +3,9 @@
   padding-block: var(--space-24) var(--space-48);
 }
 
-/* 何の診断の結果か・タイプ名・読み・色見本。タイプ名の説明（children の頭の段落）がすぐ下に続く。 */
+/* 何の診断の結果か・タイプ名・読み・色見本。 */
 .header {
-  margin-block: var(--space-24);
+  margin-block: var(--space-24) var(--space-16);
 }
 
 .quizName {
@@ -20,7 +20,7 @@
   color: var(--ink);
 }
 
-/* タイプ名の中の読みにくい語の読み方。タイプ名のすぐ下に補助情報として添える。 */
+/* タイプ名の読み。タイプ名のすぐ下に補助情報として添える。 */
 .reading {
   margin: var(--space-8) 0 0;
   font-size: var(--text-small);
@@ -40,8 +40,51 @@
   max-inline-size: var(--measure);
 }
 
-.shareSection {
+/* タイプ名の説明と診断への誘い。後ろの読みものの小見出しとは、小見出しの上の余白と線で分かれる。 */
+.intro {
+  margin-block-end: var(--space-32);
+}
+
+.lead {
+  margin: 0 0 var(--space-16);
+}
+
+.try {
+  margin-block-start: var(--space-24);
+}
+
+/* 主要な誘い: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
+ * リングは data-inverted（globals.css）が持つ。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、
+ * 字は縁の内側 8px から始める（§5・§6）。文言は「？」の後ろの空白で折り、語の中で折らない。 */
+.tryButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-8);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.4;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.tryCost {
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 共有の区画。ページに1つだけ置き、見出しが何を共有するかを言う（§8）。 */
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
   margin-block-start: var(--space-32);
-  padding-block-start: var(--space-24);
+  padding-block-start: var(--space-16);
   border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.shareHeading {
+  margin: 0;
+  font-size: var(--text-heading-sub);
 }

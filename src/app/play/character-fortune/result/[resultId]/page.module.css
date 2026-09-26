@@ -1,37 +1,7 @@
 /*
- * 診断の結果のページ（/play/character-fortune/result/[resultId]）の中身。
- * キャラの自己紹介・診断への誘い・読みものの途中の共有・相性への誘いを組む。詳しい読みものは ResultReading が組む。
+ * 診断の結果のページ（/play/character-fortune/result/[resultId]）のうち、page.tsx だけが持つ要素。
+ * タイプ名から最初の誘いまでは ResultPageShell が、詳しい読みものは ResultReading が組む。
  */
-
-.detailedSection {
-  margin: 0;
-}
-
-/* キャラの自己紹介。タイプ名のすぐ後の、本文の大きさの段落（§4）。 */
-.characterIntro {
-  margin: 0;
-}
-
-/* ============================================================
-   診断への誘い
-   ============================================================ */
-
-.trySection {
-  margin-block-start: var(--space-24);
-}
-
-/* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
- * リングは data-inverted（globals.css）が持つ。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、
- * 字は縁の内側 8px から始める（§5・§6）。 */
-.tryButton {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: var(--space-8);
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.4;
-}
 
 /* 2つ目からの誘い。1ページに1つまでの反転は最初の誘いが持つので、ここは縁の見えないリンクにする。下線と
  * 訪問済みの色は a の既定に従い、字の左右の余白と張り出しは data-text-box（globals.css）が持つ。 */
@@ -48,14 +18,7 @@
   color: var(--ink-2);
 }
 
-/* 読みものの途中の共有。本文の区切りの細い罫線で、前の読みものと分ける。後ろとは、次の小見出しの線が分ける。 */
-.midShareSection {
-  margin-block-start: var(--space-32);
-  padding-block-start: var(--space-24);
-  border-block-start: var(--rule-w-hair) solid var(--rule-2);
-}
-
-/* 相性への誘い。 */
+/* 相性への誘い。本文の区切りの細い罫線で、前の読みものと分ける。 */
 .compatibilitySection {
   margin-block: var(--space-32);
   padding-block-start: var(--space-24);

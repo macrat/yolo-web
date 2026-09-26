@@ -2,7 +2,7 @@
  * /play/contrarian-fortune/result/[resultId] 専用ルートのテスト。
  * - generateStaticParams が全8タイプのresultIdを返すこと
  * - generateMetadata が正しいメタデータを返すこと
- * - CTA_TEXTがモバイル(375px)で1行に収まる文字数であること
+ * - 誘いの文言（CTA_TEXT）が 375px の画面で1行に収まる字数であること
  */
 
 import { describe, it, expect } from "vitest";
@@ -85,7 +85,7 @@ describe("ContrarianFortuneResultPage", () => {
   });
 
   describe("CTA_TEXT", () => {
-    it("CTA1テキストが14文字以下でモバイル(375px)で1行に収まる長さである", () => {
+    it("誘いの文言が14字以下で、375px の画面で1行に収まる長さである", () => {
       expect(CTA_TEXT.length).toBeLessThanOrEqual(14);
     });
   });

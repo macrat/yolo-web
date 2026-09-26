@@ -29,10 +29,31 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// Mock ResultPageShell: childrenを透過的にレンダリングするmock
+// ResultPageShell は、ページが渡した値（添えた段落・説明・誘い・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="result-page-shell">{children}</div>
+  default: ({
+    quiz,
+    lead,
+    description,
+    ctaText,
+    children,
+    afterShare,
+  }: {
+    quiz: { meta: { questionCount: number } };
+    lead?: string;
+    description?: string;
+    ctaText: string;
+    children: React.ReactNode;
+    afterShare?: React.ReactNode;
+  }) => (
+    <div data-testid="result-page-shell">
+      {lead && <p>{lead}</p>}
+      {description && <p>{description}</p>}
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {children}
+      {afterShare}
+    </div>
   ),
 }));
 
@@ -110,8 +131,8 @@ describe("CharacterFortuneResultPage characterIntro", () => {
   });
 });
 
-describe("CharacterFortuneResultPage CTA1", () => {
-  it("最初のCTAボタンが表示されること", async () => {
+describe("CharacterFortuneResultPage 最初の誘い", () => {
+  it("最初の誘いのボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "commander" });
     const page = await CharacterFortuneResultPage({ params });
     render(page);
@@ -174,13 +195,13 @@ describe("CharacterFortuneResultPage 全タイプ一覧", () => {
   });
 });
 
-describe("CharacterFortuneResultPage CTA", () => {
+describe("CharacterFortuneResultPage 誘い", () => {
   it("診断ボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "commander" });
     const page = await CharacterFortuneResultPage({ params });
     render(page);
 
-    // CTA1 と 相性セクションのCTA の両方が存在する
+    // 最初の誘いと、相性の区画の誘いの両方がある
     const ctaButtons =
       screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaButtons.length).toBeGreaterThanOrEqual(1);

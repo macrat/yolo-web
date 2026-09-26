@@ -29,13 +29,6 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// Mock DescriptionExpander
-vi.mock("@/app/play/[slug]/result/[resultId]/DescriptionExpander", () => ({
-  default: ({ description }: { description: string }) => (
-    <p data-testid="description-expander">{description}</p>
-  ),
-}));
-
 // Mock CompatibilityDisplay
 vi.mock("@/app/play/[slug]/result/[resultId]/CompatibilityDisplay", () => ({
   default: () => <div data-testid="compatibility-display" />,
@@ -46,10 +39,31 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
   default: () => <button data-testid="invite-friend-button">友達を招待</button>,
 }));
 
-// Mock ResultPageShell: childrenを透過的にレンダリングするmock
+// ResultPageShell は、ページが渡した値（添えた段落・説明・誘い・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="result-page-shell">{children}</div>
+  default: ({
+    quiz,
+    lead,
+    description,
+    ctaText,
+    children,
+    afterShare,
+  }: {
+    quiz: { meta: { questionCount: number } };
+    lead?: string;
+    description?: string;
+    ctaText: string;
+    children: React.ReactNode;
+    afterShare?: React.ReactNode;
+  }) => (
+    <div data-testid="result-page-shell">
+      {lead && <p>{lead}</p>}
+      {description && <p>{description}</p>}
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {children}
+      {afterShare}
+    </div>
   ),
 }));
 
@@ -157,8 +171,8 @@ describe("CharacterPersonalityResultPage catchphrase", () => {
   });
 });
 
-describe("CharacterPersonalityResultPage CTA1", () => {
-  it("最初のCTAボタンが表示されること", async () => {
+describe("CharacterPersonalityResultPage 最初の誘い", () => {
+  it("最初の誘いのボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "blazing-strategist" });
     const page = await CharacterPersonalityResultPage({ params });
     render(page);
@@ -190,13 +204,12 @@ describe("CharacterPersonalityResultPage characterMessage", () => {
   });
 });
 
-describe("CharacterPersonalityResultPage CTA2", () => {
-  it("CTA2テキストリンクが表示されること", async () => {
+describe("CharacterPersonalityResultPage 読み終えた人への2つ目の誘い", () => {
+  it("2つ目の誘いのリンクが表示されること", async () => {
     const params = Promise.resolve({ resultId: "blazing-strategist" });
     const page = await CharacterPersonalityResultPage({ params });
     render(page);
 
-    // CTA2はテキストリンク形式
     const links = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(links.length).toBeGreaterThanOrEqual(1);
   });

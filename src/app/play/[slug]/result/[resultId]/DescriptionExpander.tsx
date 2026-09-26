@@ -1,36 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@/components/Button";
 import styles from "./DescriptionExpander.module.css";
 
 interface Props {
-  /** 表示するdescriptionテキスト */
+  /** タイプの説明の全文。 */
   description: string;
-  /** trueの場合、テキストを4行でクランプし展開ボタンを表示する */
-  isLong: boolean;
+  /**
+   * 描く前の、説明が4行に収まらないかの見込み。描いたあとは、実際の幅と字の大きさで隠れる字があるかを測り直す。
+   * 見込みが外れると、測り直したときに「続きを読む」の行が出入りして下の要素が動くので、来訪者の多い幅で
+   * 当たる見込みを渡す。
+   */
+  likelyOverflows: boolean;
 }
 
 /**
- * descriptionの展開/折りたたみを担うクライアントコンポーネント。
- * isLong=trueの場合のみ「続きを読む」ボタンを表示し、クリックで全文展開する。
- * useStateを使う部分をここに切り出すことで、親のServerComponentの静的性を保つ。
+ * 結果のページのタイプの説明。4行まで見せ、描いた幅で隠れる字があるときだけ「続きを読む」を出す。
+ * 押しても何も増えないボタンを出さないため、字数ではなく、描いた段落が隠している字の有無で決める。
  */
-export default function DescriptionExpander({ description, isLong }: Props) {
+export default function DescriptionExpander({
+  description,
+  likelyOverflows,
+}: Props) {
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(likelyOverflows);
+
+  useEffect(() => {
+    const paragraph = paragraphRef.current;
+    if (!paragraph || expanded) return;
+    const measure = () =>
+      setOverflows(paragraph.scrollHeight > paragraph.clientHeight);
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    // 幅と字の大きさが変わると、4行に入る字の数が変わる。
+    const observer = new ResizeObserver(measure);
+    observer.observe(paragraph);
+    return () => observer.disconnect();
+  }, [expanded]);
 
   return (
-    <div className={styles.descriptionWrapper}>
+    <div>
       <p
+        ref={paragraphRef}
         className={
-          isLong && !expanded
-            ? `${styles.description} ${styles.descriptionClamped}`
-            : styles.description
+          expanded
+            ? styles.description
+            : `${styles.description} ${styles.descriptionClamped}`
         }
       >
         {description}
       </p>
-      {isLong && (
+      {(expanded || overflows) && (
         <div className={styles.descriptionToggle}>
           <Button
             onClick={() => setExpanded((prev) => !prev)}

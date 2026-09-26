@@ -1,35 +1,67 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import DescriptionExpander from "../DescriptionExpander";
 
+/** 描いた段落が隠している字の有無を、段落の高さで決める（jsdom は字を組まないので、高さを与える）。 */
+function mockParagraphHeights(scrollHeight: number, clientHeight: number) {
+  vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(
+    scrollHeight,
+  );
+  vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockReturnValue(
+    clientHeight,
+  );
+}
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe("DescriptionExpander", () => {
-  it("descriptionテキストを表示する", () => {
-    render(<DescriptionExpander description="テスト説明文" isLong={false} />);
+  it("説明の全文を段落に置く", () => {
+    mockParagraphHeights(100, 100);
+    render(
+      <DescriptionExpander
+        description="テスト説明文"
+        likelyOverflows={false}
+      />,
+    );
     expect(screen.getByText("テスト説明文")).toBeInTheDocument();
   });
 
-  it("isLong=falseの場合は「続きを読む」ボタンを表示しない", () => {
-    render(<DescriptionExpander description="短い説明文" isLong={false} />);
+  it("隠れる字が無ければ、見込みが「隠れる」でも「続きを読む」を出さない", () => {
+    mockParagraphHeights(100, 100);
+    render(<DescriptionExpander description="4行に入る説明" likelyOverflows />);
     expect(screen.queryByText("続きを読む")).not.toBeInTheDocument();
   });
 
-  it("isLong=trueの場合は「続きを読む」ボタンを表示する", () => {
-    render(<DescriptionExpander description="長い説明文" isLong={true} />);
+  it("隠れる字があれば、見込みが「隠れない」でも「続きを読む」を出す", () => {
+    mockParagraphHeights(200, 100);
+    render(
+      <DescriptionExpander
+        description="4行に入らない説明"
+        likelyOverflows={false}
+      />,
+    );
     expect(screen.getByText("続きを読む")).toBeInTheDocument();
   });
 
-  it("「続きを読む」ボタンをクリックすると「折りたたむ」ボタンに変わる", () => {
-    render(<DescriptionExpander description="長い説明文" isLong={true} />);
-    const expandButton = screen.getByText("続きを読む");
-    fireEvent.click(expandButton);
-    expect(screen.getByText("折りたたむ")).toBeInTheDocument();
-    expect(screen.queryByText("続きを読む")).not.toBeInTheDocument();
-  });
+  it("「続きを読む」を押すと全文を開き、「折りたたむ」で戻る", () => {
+    mockParagraphHeights(200, 100);
+    render(
+      <DescriptionExpander description="4行に入らない説明" likelyOverflows />,
+    );
+    const toggle = screen.getByRole("button", { name: "続きを読む" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
 
-  it("展開後に「折りたたむ」をクリックすると「続きを読む」ボタンに戻る", () => {
-    render(<DescriptionExpander description="長い説明文" isLong={true} />);
-    fireEvent.click(screen.getByText("続きを読む"));
-    fireEvent.click(screen.getByText("折りたたむ"));
-    expect(screen.getByText("続きを読む")).toBeInTheDocument();
+    fireEvent.click(toggle);
+    expect(screen.getByRole("button", { name: "折りたたむ" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "折りたたむ" }));
+    expect(
+      screen.getByRole("button", { name: "続きを読む" }),
+    ).toBeInTheDocument();
   });
 });

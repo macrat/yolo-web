@@ -1,17 +1,12 @@
 /**
- * /play/music-personality/result/[resultId] 専用ルート。
- * Next.jsのファイルシステムルーティングにより、
+ * music-personality の結果のページ。この診断の詳しい読みものを組む専用のルートで、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
- *
- * music-personality variant のみを対象とするため、
- * variant dispatch ロジックが不要でシンプルな実装になる。
  */
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
 import MusicPersonalityContent from "@/play/quiz/_components/MusicPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
@@ -108,7 +103,6 @@ export default async function MusicPersonalityResultPage({
 
   const dc = result.detailedContent;
   if (!dc || dc.variant !== "music-personality") notFound();
-  // variant が確認できたので MusicPersonalityDetailedContent として型アサーション
   const musicDc = dc as MusicPersonalityDetailedContent;
 
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
@@ -151,73 +145,43 @@ export default async function MusicPersonalityResultPage({
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどのタイプ? 診断してみよう";
 
-  // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
-
   return (
     <ResultPageShell
       quiz={quiz}
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      lead={musicDc.catchphrase}
+      description={result.description}
+      ctaText={ctaText}
     >
-      {/* music-personality固有のJSX */}
-      <div className={styles.detailedSection}>
-        <p className={styles.catchphrase}>{musicDc.catchphrase}</p>
-
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
-
-        {/* CTA1 */}
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryButton}
-            data-inverted
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
-
-        {/* 強み〜すべてのタイプ: 共通コンポーネントで一括レンダリング */}
-        <MusicPersonalityContent
-          content={musicDc}
-          resultId={resultId}
-          placement="resultPage"
-          afterTodayAction={
-            <>
-              {/* 相性紹介: withパラメータがある場合のみ表示 */}
-              {compatData && (
-                <CompatibilityDisplay
-                  quizSlug={SLUG}
-                  quizTitle={quiz.meta.title}
-                  compatibility={compatData.compatibility}
-                  myType={compatData.myType}
-                  friendType={compatData.friendType}
-                />
-              )}
-              {/* CTA2: すべてのタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
-              <div className={styles.cta2Section}>
-                <Link
-                  href={`/play/${SLUG}`}
-                  className={styles.cta2Link}
-                  data-text-box="inline"
-                >
-                  {ctaText}
-                </Link>
-              </div>
-            </>
-          }
-        />
-      </div>
+      <MusicPersonalityContent
+        content={musicDc}
+        resultId={resultId}
+        placement="resultPage"
+        afterTodayAction={
+          <>
+            {compatData && (
+              <CompatibilityDisplay
+                quizSlug={SLUG}
+                quizTitle={quiz.meta.title}
+                compatibility={compatData.compatibility}
+                myType={compatData.myType}
+                friendType={compatData.friendType}
+              />
+            )}
+            <div className={styles.cta2Section}>
+              <Link
+                href={`/play/${SLUG}`}
+                className={styles.cta2Link}
+                data-text-box="inline"
+              >
+                {ctaText}
+              </Link>
+            </div>
+          </>
+        }
+      />
     </ResultPageShell>
   );
 }

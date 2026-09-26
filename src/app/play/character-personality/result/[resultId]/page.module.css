@@ -1,43 +1,7 @@
 /*
- * 診断の結果のページ（/play/character-personality/result/[resultId]）のうち、page.tsx だけが持つ要素
- * （キャッチコピー・診断への誘い）。キャラ解説から「すべてのタイプ」までの区画は CharacterPersonalityContent が組む。
+ * 診断の結果のページ（/play/character-personality/result/[resultId]）のうち、page.tsx だけが持つ要素。
+ * タイプ名から最初の誘いまでは ResultPageShell が、詳しい読みものは CharacterPersonalityContent が組む。
  */
-
-.detailedSection {
-  margin: 0;
-}
-
-/* キャッチコピー。タイプ名のすぐ後の、本文の大きさの段落（§4）。 */
-.catchphrase {
-  margin: 0 0 var(--space-16);
-}
-
-/* ============================================================
-   診断への誘い
-   ============================================================ */
-
-.trySection {
-  margin-block-start: var(--space-24);
-}
-
-/* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
- * リングは data-inverted（globals.css）が持つ。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、
- * 字は縁の内側 8px から始める（§5・§6）。 */
-.tryButton {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: var(--space-8);
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.4;
-}
-
-.tryCost {
-  margin-block-start: var(--space-8);
-  font-size: var(--text-small);
-  color: var(--ink-2);
-}
 
 /* 読み終えた人への、2つ目の誘い。 */
 .cta2Section {

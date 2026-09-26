@@ -1,16 +1,11 @@
 /**
- * /play/character-fortune/result/[resultId] 専用ルート。
- * Next.jsのファイルシステムルーティングにより、
+ * character-fortune の結果のページ。この診断の詳しい読みものを組む専用のルートで、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
- *
- * character-fortune variant のみを対象とするため、
- * variant dispatch ロジックが不要でシンプルな実装になる。
  */
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import ShareButtons from "@/components/ShareButtons";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import {
@@ -23,7 +18,6 @@ import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
-import { contentIdForQuiz } from "@/play/quiz/contentId";
 import characterFortuneQuiz from "@/play/quiz/data/character-fortune";
 import styles from "./page.module.css";
 
@@ -95,87 +89,57 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      lead={cf.characterIntro}
+      ctaText={ctaText}
     >
-      <div className={styles.detailedSection}>
-        <p className={styles.characterIntro}>{cf.characterIntro}</p>
-
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryButton}
-            data-inverted
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
-
-        <Reading>
-          <ReadingHeading
-            placement="resultPage"
-            phrases={splitIntoPhrases(cf.behaviorsHeading)}
-          />
-          <ReadingList items={cf.behaviors} />
-        </Reading>
-
-        {/* あるあるを読んで「自分のことだ」と思った所で共有できるよう、読みものの途中にも置く。 */}
-        <div className={styles.midShareSection}>
-          <ShareButtons
-            url={shareUrl}
-            title={quiz.meta.title}
-            text={shareText}
-            sns={["x", "line", "copy"]}
-            contentType="diagnosis"
-            contentId={contentIdForQuiz(SLUG)}
-            surface="text"
-          />
-        </div>
-
-        <Reading>
-          <ReadingHeading
-            placement="resultPage"
-            phrases={splitIntoPhrases(cf.characterMessageHeading)}
-          />
-          <ReadingText>{cf.characterMessage}</ReadingText>
-
-          <ReadingHeading
-            placement="resultPage"
-            phrases={splitIntoPhrases(THIRD_PARTY_HEADING)}
-          />
-          <ReadingText>{cf.thirdPartyNote}</ReadingText>
-        </Reading>
-
-        <div className={styles.compatibilitySection}>
-          <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryLink}
-            data-text-box="inline"
-          >
-            診断して相性を見てみる
-          </Link>
-        </div>
-
-        <OtherTypesNav
-          quizSlug={SLUG}
-          currentResultId={resultId}
-          results={quiz.results}
+      <Reading>
+        <ReadingHeading
           placement="resultPage"
+          phrases={splitIntoPhrases(cf.behaviorsHeading)}
         />
-        <div className={styles.closingTry}>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryLink}
-            data-text-box="inline"
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
+        <ReadingList items={cf.behaviors} />
+
+        <ReadingHeading
+          placement="resultPage"
+          phrases={splitIntoPhrases(cf.characterMessageHeading)}
+        />
+        <ReadingText>{cf.characterMessage}</ReadingText>
+
+        <ReadingHeading
+          placement="resultPage"
+          phrases={splitIntoPhrases(THIRD_PARTY_HEADING)}
+        />
+        <ReadingText>{cf.thirdPartyNote}</ReadingText>
+      </Reading>
+
+      <div className={styles.compatibilitySection}>
+        <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
+        <Link
+          href={`/play/${SLUG}`}
+          className={styles.tryLink}
+          data-text-box="inline"
+        >
+          診断して相性を見てみる
+        </Link>
+      </div>
+
+      <OtherTypesNav
+        quizSlug={SLUG}
+        currentResultId={resultId}
+        results={quiz.results}
+        placement="resultPage"
+      />
+      <div className={styles.closingTry}>
+        <Link
+          href={`/play/${SLUG}`}
+          className={styles.tryLink}
+          data-text-box="inline"
+        >
+          {ctaText}
+        </Link>
+        <p className={styles.tryCost}>
+          全{quiz.meta.questionCount}問 / 登録不要
+        </p>
       </div>
     </ResultPageShell>
   );

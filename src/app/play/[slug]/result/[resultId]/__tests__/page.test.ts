@@ -58,14 +58,6 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     });
   });
 
-  describe("コンテキスト表示（shortDescription）", () => {
-    it("quiz.meta.shortDescriptionをResultPageShellへ渡すロジックがある（ResultPageShell内で表示）", () => {
-      // shortDescriptionはResultPageShell内で表示されるため、
-      // page.tsxからはquizオブジェクトをshellへ渡すことで間接的に保証される。
-      expect(pageSource).toContain("ResultPageShell");
-    });
-  });
-
   describe("detailedContent見出しのデータ駆動化", () => {
     it("quiz.meta.resultPageLabelsから見出しを取得するロジックがある", () => {
       expect(pageSource).toContain("resultPageLabels");
@@ -88,31 +80,9 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     expect(pageSource).toContain("ResultPageShell");
   });
 
-  describe("CTA2（detailedContent読了者向け）", () => {
-    it("detailedContentがある場合にCTA2を表示するロジックがある", () => {
+  describe("読み終えた人への2つ目の誘い", () => {
+    it("詳しい読みもののあとに2つ目の誘いを置くロジックがある", () => {
       expect(pageSource).toContain("cta2");
-    });
-  });
-
-  describe("DescriptionExpanderコンポーネントの利用", () => {
-    it("DescriptionExpanderをimportしている", () => {
-      expect(pageSource).toContain("DescriptionExpander");
-    });
-  });
-
-  describe("DESCRIPTION_LONG_THRESHOLD の閾値", () => {
-    it("DESCRIPTION_LONG_THRESHOLDが128に設定されている（全角16文字×4行分）", () => {
-      // countCharWidth は全角1文字をwidth 2 としてカウントする。
-      // 1行あたり全角16文字 = width 32。4行分 = 32 × 4 = 128。
-      expect(pageSource).toContain("DESCRIPTION_LONG_THRESHOLD = 128");
-    });
-
-    it("コメントに「width 32 × 4 = 128」または「全角16文字 x 4行 = 128」の内容がある", () => {
-      const hasCorrectComment =
-        pageSource.includes("32") &&
-        pageSource.includes("128") &&
-        pageSource.includes("DESCRIPTION_LONG_THRESHOLD");
-      expect(hasCorrectComment).toBe(true);
     });
   });
 

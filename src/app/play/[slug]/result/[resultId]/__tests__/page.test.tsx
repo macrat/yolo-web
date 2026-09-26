@@ -39,43 +39,31 @@ vi.mock("../extractWithParam", () => ({
   extractWithParam: vi.fn(() => undefined),
 }));
 
-// Mock DescriptionExpander
-vi.mock("../DescriptionExpander", () => ({
-  default: ({ description }: { description: string; isLong: boolean }) => (
-    <p data-testid="description-expander">{description}</p>
-  ),
-}));
-
-// Mock ResultPageShell: childrenとafterShareを描画する透過的なwrapper
+// ResultPageShell は、ページが渡した値（説明・誘い・中身・共有の文）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   default: ({
     quiz,
+    description,
+    ctaText,
     children,
     afterShare,
     shareText,
   }: {
-    quiz: {
-      meta: {
-        title: string;
-        shortDescription: string;
-        type: string;
-        questionCount: number;
-        accentColor: string;
-        category: string;
-      };
-    };
-    result: { id: string; title: string; description: string; icon?: string };
+    quiz: { meta: { title: string; questionCount: number } };
+    description?: string;
+    ctaText: string;
     children: React.ReactNode;
     shareText: string;
-    shareUrl: string;
     afterShare?: React.ReactNode;
   }) => (
     <div data-testid="result-page-shell">
       <p>{quiz.meta.title}の結果</p>
-      <p>{quiz.meta.shortDescription}</p>
+      {description && <p>{description}</p>}
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
       {children}
-      {afterShare}
       <div data-testid="share-buttons">{shareText}</div>
+      {afterShare}
     </div>
   ),
 }));
@@ -209,7 +197,7 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
   getCompatibility: vi.fn(() => undefined),
 }));
 
-describe("PlayQuizResultPage CTA", () => {
+describe("PlayQuizResultPage 診断への誘い", () => {
   it("knowledge タイプのクイズでは「あなたも挑戦してみよう」と表示する", async () => {
     const params = Promise.resolve({
       slug: "knowledge-quiz",
@@ -257,21 +245,8 @@ describe("PlayQuizResultPage CTA", () => {
   });
 });
 
-describe("PlayQuizResultPage コンテキスト表示", () => {
-  it("shortDescriptionがクイズ名と共に表示される", async () => {
-    const params = Promise.resolve({
-      slug: "knowledge-quiz",
-      resultId: "result-a",
-    });
-    const page = await PlayQuizResultPage({ params });
-    render(page);
-
-    expect(screen.getByText("知識クイズの短い説明")).toBeInTheDocument();
-  });
-});
-
-describe("PlayQuizResultPage CTA2", () => {
-  it("detailedContentがある場合はCTA2が表示される", async () => {
+describe("PlayQuizResultPage 読み終えた人への2つ目の誘い", () => {
+  it("詳しい読みものがあるときは、読みもののあとにも誘いを置く", async () => {
     const params = Promise.resolve({
       slug: "personality-with-detailed",
       resultId: "result-detail",
@@ -279,13 +254,12 @@ describe("PlayQuizResultPage CTA2", () => {
     const page = await PlayQuizResultPage({ params });
     render(page);
 
-    // CTAテキストが複数存在する（CTA1 + CTA2）
     const ctaElements =
       screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaElements.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("detailedContentがない場合はCTA2が表示されない", async () => {
+  it("詳しい読みものが無いときは、誘いは最初の1つだけ", async () => {
     const params = Promise.resolve({
       slug: "personality-quiz",
       resultId: "result-x",
@@ -293,7 +267,6 @@ describe("PlayQuizResultPage CTA2", () => {
     const page = await PlayQuizResultPage({ params });
     render(page);
 
-    // CTAテキストが1つだけ存在する（CTA1のみ）
     const ctaElements =
       screen.queryAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaElements.length).toBe(1);

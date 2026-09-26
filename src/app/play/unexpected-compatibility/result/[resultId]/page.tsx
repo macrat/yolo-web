@@ -1,19 +1,14 @@
 /**
- * /play/unexpected-compatibility/result/[resultId] 専用ルート。
- * Next.jsのファイルシステムルーティングにより、
+ * unexpected-compatibility の結果のページ。この診断の詳しい読みものを組む専用のルートで、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
  *
- * unexpected-compatibility variant のみを対象とするため、
- * variant dispatch ロジックが不要でシンプルな実装になる。
- *
- * 一人完結型（相性機能なし）: CompatibilityDisplay, InviteFriendButton, searchParams は使用しない。
+ * 相性を持たない診断なので、?with= を受け取らない。
  */
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import UnexpectedCompatibilityContent from "@/play/quiz/_components/UnexpectedCompatibilityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -29,7 +24,7 @@ type Props = {
 const SLUG = "unexpected-compatibility";
 const quiz = unexpectedCompatibilityQuiz;
 
-/** CTA1ボタンのテキスト。モバイル(375px)で1行に収まる長さに保つ。 */
+/** 診断への誘いの文言。375px の画面で1行に収まる長さに保つ。 */
 export const CTA_TEXT = "あなたの相性を診断してみよう";
 
 export function generateStaticParams() {
@@ -80,17 +75,11 @@ export default async function UnexpectedCompatibilityResultPage({
 
   const dc = result.detailedContent;
   if (!dc || dc.variant !== "unexpected-compatibility") notFound();
-  // variant が確認できたので UnexpectedCompatibilityDetailedContent として型アサーション
   const ucDc = dc as UnexpectedCompatibilityDetailedContent;
 
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #斜め上の相性診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
-
-  // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -98,52 +87,28 @@ export default async function UnexpectedCompatibilityResultPage({
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      lead={ucDc.catchphrase}
+      description={result.description}
+      ctaText={ctaText}
     >
-      {/* unexpected-compatibility固有のJSX */}
-      <div className={styles.detailedSection}>
-        <p className={styles.catchphrase}>{ucDc.catchphrase}</p>
-
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
-
-        {/* CTA1 */}
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryButton}
-            data-inverted
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
-
-        {/* 存在の本質〜すべてのタイプ: 共通コンポーネントで一括レンダリング */}
-        <UnexpectedCompatibilityContent
-          quizSlug={SLUG}
-          resultId={resultId}
-          detailedContent={ucDc}
-          allResults={quiz.results}
-          placement="resultPage"
-          afterLifeAdvice={
-            /* CTA2: すべてのタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
-            <div className={styles.cta2Section}>
-              <Link
-                href={`/play/${SLUG}`}
-                className={styles.cta2Link}
-                data-text-box="inline"
-              >
-                {ctaText}
-              </Link>
-            </div>
-          }
-        />
-      </div>
+      <UnexpectedCompatibilityContent
+        quizSlug={SLUG}
+        resultId={resultId}
+        detailedContent={ucDc}
+        allResults={quiz.results}
+        placement="resultPage"
+        afterLifeAdvice={
+          <div className={styles.cta2Section}>
+            <Link
+              href={`/play/${SLUG}`}
+              className={styles.cta2Link}
+              data-text-box="inline"
+            >
+              {ctaText}
+            </Link>
+          </div>
+        }
+      />
     </ResultPageShell>
   );
 }

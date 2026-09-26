@@ -1,15 +1,9 @@
-.descriptionWrapper {
-  margin-bottom: 1.5rem;
-}
-
+/* タイプの説明。タイプ名のあとの本文の段落（§4 の本文の大きさと行間）。 */
 .description {
-  font-size: 1rem;
-  line-height: 1.8;
-  margin-bottom: 0;
-  color: var(--ink);
+  margin: 0;
 }
 
-/* 4行クランプ: isLong=trueかつ未展開の場合に適用 */
+/* 開くまでは4行まで見せる。 */
 .descriptionClamped {
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -19,5 +13,5 @@
 
 /* 「続きを読む」/「折りたたむ」ボタン。見え方は Button が持ち、ここは本文とのあいだだけを持つ。 */
 .descriptionToggle {
-  margin-top: 0.5rem;
+  margin-block-start: var(--space-8);
 }

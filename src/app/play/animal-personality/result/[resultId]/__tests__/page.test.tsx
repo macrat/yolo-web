@@ -29,22 +29,36 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// Mock DescriptionExpander
-vi.mock("@/app/play/[slug]/result/[resultId]/DescriptionExpander", () => ({
-  default: ({ description }: { description: string }) => (
-    <p data-testid="description-expander">{description}</p>
-  ),
-}));
-
 // Mock CompatibilityDisplay
 vi.mock("@/app/play/[slug]/result/[resultId]/CompatibilityDisplay", () => ({
   default: () => <div data-testid="compatibility-display" />,
 }));
 
-// Mock ResultPageShell: childrenを透過的にレンダリングするmock
+// ResultPageShell は、ページが渡した値（添えた段落・説明・誘い・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="result-page-shell">{children}</div>
+  default: ({
+    quiz,
+    lead,
+    description,
+    ctaText,
+    children,
+    afterShare,
+  }: {
+    quiz: { meta: { questionCount: number } };
+    lead?: string;
+    description?: string;
+    ctaText: string;
+    children: React.ReactNode;
+    afterShare?: React.ReactNode;
+  }) => (
+    <div data-testid="result-page-shell">
+      {lead && <p>{lead}</p>}
+      {description && <p>{description}</p>}
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {children}
+      {afterShare}
+    </div>
   ),
 }));
 
@@ -135,8 +149,8 @@ describe("AnimalPersonalityResultPage catchphrase", () => {
   });
 });
 
-describe("AnimalPersonalityResultPage CTA1", () => {
-  it("最初のCTAボタンが表示されること", async () => {
+describe("AnimalPersonalityResultPage 最初の誘い", () => {
+  it("最初の誘いのボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "nihon-zaru" });
     const page = await AnimalPersonalityResultPage({ params });
     render(page);
@@ -203,13 +217,12 @@ describe("AnimalPersonalityResultPage 全タイプ一覧", () => {
   });
 });
 
-describe("AnimalPersonalityResultPage CTA2", () => {
-  it("CTA2テキストリンクが表示されること", async () => {
+describe("AnimalPersonalityResultPage 読み終えた人への2つ目の誘い", () => {
+  it("2つ目の誘いのリンクが表示されること", async () => {
     const params = Promise.resolve({ resultId: "nihon-zaru" });
     const page = await AnimalPersonalityResultPage({ params });
     render(page);
 
-    // CTA2はテキストリンク形式
     const links = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(links.length).toBeGreaterThanOrEqual(1);
   });

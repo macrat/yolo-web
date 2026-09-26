@@ -1,19 +1,14 @@
 /**
- * /play/impossible-advice/result/[resultId] 専用ルート。
- * Next.jsのファイルシステムルーティングにより、
+ * impossible-advice の結果のページ。この診断の詳しい読みものを組む専用のルートで、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
  *
- * impossible-advice variant のみを対象とするため、
- * variant dispatch ロジックが不要でシンプルな実装になる。
- *
- * 一人完結型（相性機能なし）: CompatibilityDisplay, InviteFriendButton, searchParams は使用しない。
+ * 相性を持たない診断なので、?with= を受け取らない。
  */
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import ImpossibleAdviceContent from "@/play/quiz/_components/ImpossibleAdviceContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -29,7 +24,7 @@ type Props = {
 const SLUG = "impossible-advice";
 const quiz = impossibleAdviceQuiz;
 
-/** CTA1ボタンのテキスト。モバイル(375px)で1行に収まる長さに保つ。 */
+/** 診断への誘いの文言。375px の画面で1行に収まる長さに保つ。 */
 export const CTA_TEXT = "あなたも診断してみよう";
 
 export function generateStaticParams() {
@@ -78,17 +73,11 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
 
   const dc = result.detailedContent;
   if (!dc || dc.variant !== "impossible-advice") notFound();
-  // variant が確認できたので ImpossibleAdviceDetailedContent として型アサーション
   const iaDc = dc as ImpossibleAdviceDetailedContent;
 
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #達成困難アドバイス診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
-
-  // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -96,52 +85,28 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      lead={iaDc.catchphrase}
+      description={result.description}
+      ctaText={ctaText}
     >
-      {/* impossible-advice固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。 */}
-      <div className={styles.detailedSection}>
-        <p className={styles.catchphrase}>{iaDc.catchphrase}</p>
-
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
-
-        {/* CTA1 */}
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryButton}
-            data-inverted
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
-
-        {/* 悩みの本質〜すべてのタイプ: 共通コンポーネントで一括レンダリング */}
-        <ImpossibleAdviceContent
-          quizSlug={SLUG}
-          resultId={resultId}
-          detailedContent={iaDc}
-          allResults={quiz.results}
-          placement="resultPage"
-          afterPracticalTip={
-            /* CTA2: すべてのタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
-            <div className={styles.cta2Section}>
-              <Link
-                href={`/play/${SLUG}`}
-                className={styles.cta2Link}
-                data-text-box="inline"
-              >
-                {ctaText}
-              </Link>
-            </div>
-          }
-        />
-      </div>
+      <ImpossibleAdviceContent
+        quizSlug={SLUG}
+        resultId={resultId}
+        detailedContent={iaDc}
+        allResults={quiz.results}
+        placement="resultPage"
+        afterPracticalTip={
+          <div className={styles.cta2Section}>
+            <Link
+              href={`/play/${SLUG}`}
+              className={styles.cta2Link}
+              data-text-box="inline"
+            >
+              {ctaText}
+            </Link>
+          </div>
+        }
+      />
     </ResultPageShell>
   );
 }

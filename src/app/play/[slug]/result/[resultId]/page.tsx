@@ -11,7 +11,6 @@ import { countCharWidth } from "@/lib/countCharWidth";
 import { getCompatibility } from "@/play/quiz/data/music-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
-import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import {
@@ -71,10 +70,8 @@ export async function generateMetadata({
     title = `${resultNameWithReading(result)} x ${friendResult ? resultNameWithReading(friendResult) : ""} - ${compat?.label ?? "相性結果"}`;
     description = compat?.description ?? result.description;
   } else {
-    // 新しいtitle形式: 「結果タイトル | クイズ名の結果 | SITE_NAME」
-    // 完全なtitle（candidateTitle + " | " + SITE_NAME）が全角30文字相当（width 60）を
-    // 超える場合はクイズ名部分を省略してフォールバック。
-    // SITE_NAMEサフィックス（" | yolos.net" = 半角12文字）を含めた幅で判定する。
+    // 題は「タイプ名 | 診断名の結果 | サイト名」。サイト名まで含めた全体が全角30字相当（幅 60）を超えるときは、
+    // 検索の結果で切れないよう、診断名の部分を省く。
     const FULL_WIDTH_LIMIT = 60;
     const resultName = resultNameWithReading(result);
     const candidateTitle = `${resultName} | ${quiz.meta.title}の結果`;
@@ -115,8 +112,7 @@ export async function generateMetadata({
 
 /**
  * 診断・クイズの結果のページ。シェアのリンクや検索から来た来訪者と、解き終えた画面（ResultCard）の
- * 一覧から来た来訪者が開く。まだ遊んでいない来訪者が最初に着くページでもあるので、
- * 「自分も遊んでみる」への誘い（CTA）を持つ。
+ * 一覧から来た来訪者が開く。まだ遊んでいない来訪者が最初に着くページでもあるので、この診断を遊ぶ誘いを持つ。
  */
 export default async function PlayQuizResultPage({
   params,
@@ -174,20 +170,12 @@ export default async function PlayQuizResultPage({
   const shareText = `${quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
-  // CTAテキストをクイズタイプに応じて出し分ける
   const ctaText =
     quiz.meta.type === "personality"
       ? "あなたはどのタイプ? 診断してみよう"
       : "あなたも挑戦してみよう";
 
   const { detailedContent } = result;
-
-  // descriptionが4行を超えるかどうかの判定:
-  // countCharWidth は全角1文字を width 2 としてカウントするため、
-  // 1行あたり全角16文字 = width 32。4行分 = width 32 × 4 = 128。
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   // resultPageLabels から見出しを取得（未設定時はデフォルト値）
   const traitsHeading =
@@ -203,6 +191,8 @@ export default async function PlayQuizResultPage({
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      description={result.description}
+      ctaText={ctaText}
       afterShare={
         compatData ? (
           <CompatibilityDisplay
@@ -215,20 +205,6 @@ export default async function PlayQuizResultPage({
         ) : undefined
       }
     >
-      <DescriptionExpander
-        description={result.description}
-        isLong={isDescriptionLong}
-      />
-
-      <div className={styles.trySection}>
-        <Link href={`/play/${slug}`} className={styles.tryButton} data-inverted>
-          {ctaText}
-        </Link>
-        <p className={styles.tryCost}>
-          全{quiz.meta.questionCount}問 / 登録不要
-        </p>
-      </div>
-
       {/* 詳しい読みものは、variant を持たない標準の形のときだけ組む。variant を持つ診断は専用のルートが描く。 */}
       {detailedContent && !detailedContent.variant && (
         <>
@@ -252,7 +228,7 @@ export default async function PlayQuizResultPage({
             <ReadingText>{detailedContent.advice}</ReadingText>
           </Reading>
 
-          {/* 解き終えた画面（ResultCard）と同じく、検索やシェアから来た人にもほかのタイプを見せる。 */}
+          {/* 検索や共有のリンクから来た来訪者にも、ほかのタイプを見せる。 */}
           <OtherTypesNav
             quizSlug={slug}
             currentResultId={result.id}
@@ -260,7 +236,6 @@ export default async function PlayQuizResultPage({
             placement="resultPage"
           />
 
-          {/* 読み終えた人への、2つ目の診断への誘い */}
           <div className={styles.cta2Section}>
             <Link
               href={`/play/${slug}`}

@@ -1,9 +1,10 @@
 import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+import type { ComponentProps } from "react";
 import ResultPageShell from "../ResultPageShell";
 import type { QuizDefinition, QuizResult } from "../../types";
 
-// 依存コンポーネントをモックしてテストを安定させる
+// パンくず・共有・関連の中身はそれぞれのテストが確かめるので、ここでは渡した値だけを出す部品に替える
 vi.mock("@/components/Breadcrumb", () => ({
   default: ({ items }: { items: Array<{ label: string; href?: string }> }) => (
     <nav aria-label="パンくずリスト">
@@ -65,34 +66,44 @@ const mockResult: QuizResult = {
   color: "#ff5733",
 };
 
+type ShellProps = ComponentProps<typeof ResultPageShell>;
+
 function renderShell(
-  result: QuizResult = mockResult,
-  swatch?: string,
+  props: Partial<ShellProps> = {},
 ): ReturnType<typeof render> {
   return render(
     <ResultPageShell
       quiz={mockQuiz}
-      result={result}
+      result={mockResult}
       shareText="シェアテキスト"
       shareUrl="https://example.com/result"
-      swatch={swatch}
+      ctaText="あなたはどのタイプ? 診断してみよう"
+      {...props}
     >
-      <div>子コンテンツ</div>
+      {props.children ?? <div>子コンテンツ</div>}
     </ResultPageShell>,
   );
 }
 
-test("ResultPageShell names the quiz right above the type name", () => {
+test("タイプ名のすぐ上で、何の診断の結果かを言う", () => {
   renderShell();
 
   const h1 = screen.getByRole("heading", { level: 1 });
   expect(h1.previousElementSibling).toHaveTextContent(/^テストクイズの結果$/);
 });
 
-test("ResultPageShell renders the type name as the h1, once, broken only between phrases", () => {
+test("診断が短い名前を持つときは、その名前で何の結果かを言う", () => {
+  renderShell({
+    quiz: { ...mockQuiz, meta: { ...mockQuiz.meta, shortTitle: "テスト診断" } },
+  });
+
+  const h1 = screen.getByRole("heading", { level: 1 });
+  expect(h1.previousElementSibling).toHaveTextContent(/^テスト診断の結果$/);
+});
+
+test("タイプ名を h1 に1度だけ出し、文節のあいだの <wbr> のほかに字を分ける要素を持たない", () => {
   const { container } = renderShell({
-    ...mockResult,
-    title: "締切3分前に本気出す炎の司令塔",
+    result: { ...mockResult, title: "締切3分前に本気出す炎の司令塔" },
   });
 
   const h1 = screen.getByRole("heading", { level: 1 });
@@ -100,7 +111,6 @@ test("ResultPageShell renders the type name as the h1, once, broken only between
   // 見出しの中は文の字と折り所の <wbr> だけで、字を分ける要素を持たない（DESIGN.md §4）
   expect(h1.querySelectorAll("wbr").length).toBeGreaterThan(0);
   expect([...h1.children].every((child) => child.tagName === "WBR")).toBe(true);
-  // 同じタイプ名を2度出さない
   expect(
     container.textContent?.split("締切3分前に本気出す炎の司令塔").length,
   ).toBe(2);
@@ -108,11 +118,13 @@ test("ResultPageShell renders the type name as the h1, once, broken only between
   expect(screen.queryByText("🎯")).not.toBeInTheDocument();
 });
 
-test("ResultPageShell adds the reading right after the h1, outside it", () => {
+test("読みにくい語を持つタイプは、読みを h1 の外のすぐ下に添える", () => {
   renderShell({
-    ...mockResult,
-    title: "花鳥風月タイプ",
-    reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
+    result: {
+      ...mockResult,
+      title: "花鳥風月タイプ",
+      reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
+    },
   });
 
   const h1 = screen.getByRole("heading", { level: 1 });
@@ -120,8 +132,22 @@ test("ResultPageShell adds the reading right after the h1, outside it", () => {
   expect(h1.nextElementSibling).toHaveTextContent(/^かちょうふうげつ$/);
 });
 
-test("ResultPageShell shows the result color as a swatch without text only when given", () => {
-  const { unmount } = renderShell(mockResult, "#0d5661");
+test("名前に読みを添えた形のタイプは、h1 を名前だけにし、読みをすぐ下に添える", () => {
+  renderShell({
+    result: {
+      ...mockResult,
+      title: "藍色(あいいろ)",
+      nameParts: { name: "藍色", reading: "あいいろ" },
+    },
+  });
+
+  const h1 = screen.getByRole("heading", { level: 1 });
+  expect(h1).toHaveTextContent(/^藍色$/);
+  expect(h1.nextElementSibling).toHaveTextContent(/^あいいろ$/);
+});
+
+test("結果の色を渡したときだけ、字を持たない色見本を出す", () => {
+  const { unmount } = renderShell({ swatch: "#0d5661" });
 
   const swatch = screen.getByRole("heading", { level: 1 })
     .nextElementSibling as HTMLElement;
@@ -130,128 +156,83 @@ test("ResultPageShell shows the result color as a swatch without text only when 
   expect(swatch).toHaveAttribute("aria-hidden", "true");
   unmount();
 
-  const { container } = renderShell(mockResult);
+  const { container } = renderShell();
   expect(
     screen.getByRole("heading", { level: 1 }).nextElementSibling,
   ).toBeNull();
   expect(container.querySelector("figure")).toBeNull();
 });
 
-test("ResultPageShell renders children", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div data-testid="child-content">子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("タイプ名のあとに、添えた段落・説明・診断への誘いをこの順に置き、そのあとにルートの中身を続ける", () => {
+  const { container } = renderShell({
+    lead: "キャッチコピー",
+    description: "タイプの説明",
+    children: <div data-testid="child-content">子コンテンツ</div>,
+  });
 
-  expect(screen.getByTestId("child-content")).toBeInTheDocument();
-  expect(screen.getByText("子コンテンツ")).toBeInTheDocument();
+  const order = [
+    screen.getByText("キャッチコピー"),
+    screen.getByText("タイプの説明"),
+    screen.getByRole("link", { name: "あなたはどのタイプ? 診断してみよう" }),
+    screen.getByText("全5問 / 登録不要"),
+    screen.getByTestId("child-content"),
+  ];
+  for (let i = 1; i < order.length; i++) {
+    expect(
+      order[i - 1].compareDocumentPosition(order[i]) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  }
+  expect(
+    screen.getByRole("link", { name: "あなたはどのタイプ? 診断してみよう" }),
+  ).toHaveAttribute("href", "/play/test-quiz");
+  expect(container.querySelector("[data-inverted]")).not.toBeNull();
 });
 
-test("ResultPageShell renders ShareButtons with correct props", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("共有の区画を1つだけ置き、見出し「この結果を共有」が区画の名前になる", () => {
+  renderShell();
 
-  const shareButtons = screen.getByTestId("share-buttons");
-  expect(shareButtons).toBeInTheDocument();
-  expect(screen.getByText("シェアテキスト")).toBeInTheDocument();
+  const share = screen.getByRole("region", { name: "この結果を共有" });
+  expect(within(share).getByTestId("share-buttons")).toHaveTextContent(
+    "シェアテキスト",
+  );
   // 共有のタイトルに診断の名前が渡る
-  expect(shareButtons).toHaveTextContent("テストクイズ");
+  expect(within(share).getByTestId("share-buttons")).toHaveTextContent(
+    "テストクイズ",
+  );
+  expect(screen.getAllByTestId("share-buttons")).toHaveLength(1);
 });
 
-test("ResultPageShell renders afterShare content when provided", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-      afterShare={<div data-testid="after-share">シェア後コンテンツ</div>}
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("afterShare を渡したときだけ、共有の区画のあとに置く", () => {
+  const { unmount } = renderShell({
+    afterShare: <div data-testid="after-share">シェア後コンテンツ</div>,
+  });
 
-  expect(screen.getByTestId("after-share")).toBeInTheDocument();
-  expect(screen.getByText("シェア後コンテンツ")).toBeInTheDocument();
+  const share = screen.getByRole("region", { name: "この結果を共有" });
+  const afterShare = screen.getByTestId("after-share");
+  expect(
+    share.compareDocumentPosition(afterShare) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  unmount();
+
+  renderShell();
+  expect(screen.queryByTestId("after-share")).toBeNull();
 });
 
-test("ResultPageShell does not render afterShare when not provided", () => {
-  const { container } = render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
-
-  // afterShareが未指定のとき余分なDOM要素が存在しない
-  expect(container.querySelector("[data-testid='after-share']")).toBeNull();
-});
-
-test("ResultPageShell renders breadcrumb with correct items", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("パンくずに、ホーム・遊び・診断・結果を並べる", () => {
+  renderShell();
 
   const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
-  expect(breadcrumb).toBeInTheDocument();
-  // Breadcrumb内のアイテムをwithinで検証して重複テキストの問題を回避
   expect(breadcrumb).toHaveTextContent("ホーム");
   expect(within(breadcrumb).getByText("遊び")).toBeInTheDocument();
   expect(breadcrumb).toHaveTextContent("テストクイズ");
   expect(breadcrumb).toHaveTextContent("結果");
 });
 
-test("ResultPageShell renders RelatedQuizzes with current slug", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
+test("関連の診断とおすすめに、いまの診断の slug を渡す", () => {
+  renderShell();
 
   expect(screen.getByText("related-test-quiz")).toBeInTheDocument();
-});
-
-test("ResultPageShell renders RecommendedContent with current slug", () => {
-  render(
-    <ResultPageShell
-      quiz={mockQuiz}
-      result={mockResult}
-      shareText="シェアテキスト"
-      shareUrl="https://example.com/result"
-    >
-      <div>子コンテンツ</div>
-    </ResultPageShell>,
-  );
-
   expect(screen.getByText("recommended-test-quiz")).toBeInTheDocument();
 });

@@ -3,7 +3,7 @@
  * - generateStaticParams が全8タイプのresultIdを返すこと
  * - generateMetadata が正しいメタデータを返すこと
  * - 相性機能（CompatibilityDisplay, InviteFriendButton）のコードが含まれないこと
- * - CTA1テキストがモバイル(375px)で1行に収まる文字数であること
+ * - 誘いの文言（CTA_TEXT）が 375px の画面で1行に収まる字数であること
  */
 
 import { describe, it, expect } from "vitest";
@@ -87,7 +87,7 @@ describe("UnexpectedCompatibilityResultPage", () => {
   });
 
   describe("CTA_TEXT", () => {
-    it("CTA1テキストが18文字以下でモバイル(375px)で1行に収まる長さである", () => {
+    it("誘いの文言が18字以下で、375px の画面で1行に収まる長さである", () => {
       // yoji-personalityのCTAテキスト「あなたはどの四字熟語? 診断してみよう」は17文字。
       // unexpected-compatibilityも同等の長さに揃える。
       expect(CTA_TEXT.length).toBeLessThanOrEqual(18);

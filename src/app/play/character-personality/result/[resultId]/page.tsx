@@ -1,21 +1,14 @@
 /**
- * /play/character-personality/result/[resultId] 専用ルート。
- * Next.jsのファイルシステムルーティングにより、
+ * character-personality の結果のページ。この診断の詳しい読みものを組む専用のルートで、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
  *
- * character-personality variant のみを対象とするため、
- * variant dispatch ロジックが不要でシンプルな実装になる。
- *
- * 相性機能: ?with=typeId パラメータを受け取り、
- * サーバーサイドで相性データを解決してCompatibilityDisplayに渡す。
- * music-personality の相性パターンを踏襲。
+ * ?with=typeId で友達のタイプを受け取ると、相性をサーバーで解決して CompatibilityDisplay に渡す。
  */
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
 import CharacterPersonalityContent from "@/play/quiz/_components/CharacterPersonalityContent";
 import InviteFriendButton from "@/play/quiz/_components/InviteFriendButton";
@@ -117,7 +110,6 @@ export default async function CharacterPersonalityResultPage({
 
   const dc = result.detailedContent;
   if (!dc || dc.variant !== "character-personality") notFound();
-  // variant が確認できたので CharacterPersonalityDetailedContent として型アサーション
   const characterDc = dc as CharacterPersonalityDetailedContent;
 
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
@@ -162,80 +154,49 @@ export default async function CharacterPersonalityResultPage({
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどのタイプ? 診断してみよう";
 
-  // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
-
   return (
     <ResultPageShell
       quiz={quiz}
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      lead={characterDc.catchphrase}
+      description={result.description}
+      ctaText={ctaText}
     >
-      {/* character-personality固有のJSX */}
-      <div className={styles.detailedSection}>
-        <p className={styles.catchphrase}>{characterDc.catchphrase}</p>
-
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
-
-        {/* CTA1 */}
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${SLUG}`}
-            className={styles.tryButton}
-            data-inverted
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
-
-        {/* キャラ解説〜すべてのタイプ: 共通コンポーネントで一括レンダリング */}
-        <CharacterPersonalityContent
-          content={characterDc}
-          resultId={resultId}
-          placement="resultPage"
-          afterCharacterMessage={
-            <>
-              {/* 相性紹介: withパラメータがある場合のみ表示 */}
-              {compatData && (
-                <CompatibilityDisplay
-                  quizSlug={SLUG}
-                  quizTitle={quiz.meta.title}
-                  compatibility={compatData.compatibility}
-                  myType={compatData.myType}
-                  friendType={compatData.friendType}
-                />
-              )}
-              {/* 友達招待ボタン */}
-              <InviteFriendButton
+      <CharacterPersonalityContent
+        content={characterDc}
+        resultId={resultId}
+        placement="resultPage"
+        afterCharacterMessage={
+          <>
+            {compatData && (
+              <CompatibilityDisplay
                 quizSlug={SLUG}
-                resultTypeId={resultId}
-                inviteText={INVITE_TEXT}
-                contentId={contentIdForQuiz(SLUG)}
+                quizTitle={quiz.meta.title}
+                compatibility={compatData.compatibility}
+                myType={compatData.myType}
+                friendType={compatData.friendType}
               />
-              {/* CTA2: すべてのタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
-              <div className={styles.cta2Section}>
-                <Link
-                  href={`/play/${SLUG}`}
-                  className={styles.cta2Link}
-                  data-text-box="inline"
-                >
-                  {ctaText}
-                </Link>
-              </div>
-            </>
-          }
-        />
-      </div>
+            )}
+            <InviteFriendButton
+              quizSlug={SLUG}
+              resultTypeId={resultId}
+              inviteText={INVITE_TEXT}
+              contentId={contentIdForQuiz(SLUG)}
+            />
+            <div className={styles.cta2Section}>
+              <Link
+                href={`/play/${SLUG}`}
+                className={styles.cta2Link}
+                data-text-box="inline"
+              >
+                {ctaText}
+              </Link>
+            </div>
+          </>
+        }
+      />
     </ResultPageShell>
   );
 }
