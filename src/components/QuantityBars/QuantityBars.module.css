@@ -86,10 +86,6 @@
   align-items: center;
 }
 
-.list[data-layout="inline"] .name {
-  grid-area: 1 / 1;
-}
-
 .list[data-layout="inline"] .track {
   grid-area: 1 / 2;
 }

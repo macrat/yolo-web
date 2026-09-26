@@ -1,7 +1,7 @@
 import { act } from "react";
 import { beforeAll, describe, expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import { hydrateRoot } from "react-dom/client";
+import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import { layoutQuantityBars } from "@/components/QuantityBars/layout";
@@ -140,12 +140,16 @@ describe("サーバーで描いた並びの水和", () => {
     const previousActEnvironment = actEnvironment.IS_REACT_ACT_ENVIRONMENT;
     actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
     const errors = vi.spyOn(console, "error").mockImplementation(() => {});
-    const root = await act(async () => hydrateRoot(container, element));
-    expect(errors).not.toHaveBeenCalled();
-    expect(list.dataset.layout).toBe("inline");
-    errors.mockRestore();
-    act(() => root.unmount());
-    container.remove();
-    actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+    let root: Root | undefined;
+    try {
+      root = await act(async () => hydrateRoot(container, element));
+      expect(errors).not.toHaveBeenCalled();
+      expect(list.dataset.layout).toBe("inline");
+    } finally {
+      errors.mockRestore();
+      if (root) act(() => root!.unmount());
+      container.remove();
+      actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+    }
   });
 });

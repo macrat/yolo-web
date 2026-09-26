@@ -1,7 +1,7 @@
 import { act, createRef } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import { hydrateRoot } from "react-dom/client";
+import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import ResultBox from "@/components/ResultBox";
 
@@ -88,15 +88,26 @@ describe("ResultBox", () => {
     expect(document.activeElement).toBe(ref.current);
   });
 
-  test("ブラウザで新しく描いたボックスは登場の動きを持つ", () => {
+  test("操作に応えて現れたと渡されたボックスだけが登場の動きを持つ", () => {
     render(
-      <ResultBox caption="結果">
+      <ResultBox caption="数えた結果" appear>
         <p>1</p>
       </ResultBox>,
     );
-    expect(screen.getByRole("region", { name: "結果" }).className).toMatch(
-      /appears/,
+    expect(
+      screen.getByRole("region", { name: "数えた結果" }).className,
+    ).toMatch(/appears/);
+  });
+
+  test("ブラウザで新しく描いても、渡されなければ登場の動きを持たない（リンクで移ってきたページ）", () => {
+    render(
+      <ResultBox caption="初めからある結果">
+        <p>1</p>
+      </ResultBox>,
     );
+    expect(
+      screen.getByRole("region", { name: "初めからある結果" }).className,
+    ).not.toMatch(/appears/);
   });
 
   test("サーバーの HTML に初めからあるボックスは、水和のあとも登場の動きを持たない", async () => {
@@ -108,23 +119,23 @@ describe("ResultBox", () => {
     const container = document.createElement("div");
     container.innerHTML = renderToString(element);
     document.body.appendChild(container);
-    expect(container.querySelector("section")!.className).not.toMatch(
-      /appears/,
-    );
-
     const actEnvironment = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
     const previousActEnvironment = actEnvironment.IS_REACT_ACT_ENVIRONMENT;
     actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
     const errors = vi.spyOn(console, "error").mockImplementation(() => {});
-    const root = await act(async () => hydrateRoot(container, element));
-    expect(errors).not.toHaveBeenCalled();
-    expect(container.querySelector("section")!.className).not.toMatch(
-      /appears/,
-    );
-    errors.mockRestore();
-    act(() => root.unmount());
-    container.remove();
-    actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+    let root: Root | undefined;
+    try {
+      root = await act(async () => hydrateRoot(container, element));
+      expect(errors).not.toHaveBeenCalled();
+      expect(container.querySelector("section")!.className).not.toMatch(
+        /appears/,
+      );
+    } finally {
+      errors.mockRestore();
+      if (root) act(() => root!.unmount());
+      container.remove();
+      actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+    }
   });
 
   test("横に送る枠は、中身がはみ出すときだけ Tab で止まり、名前を持つ", () => {

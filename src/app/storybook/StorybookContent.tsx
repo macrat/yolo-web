@@ -1376,13 +1376,14 @@ export default function StorybookContent({
         </ResultBox>
 
         <p className={styles.subsectionTitle}>
-          操作に応えて現れる結果（登場の動きを持つ。ページを開いたときにあるボックスは動かない）
+          操作に応えて現れる結果（appear
+          を渡し、登場の動きを持つ。ほかの見本は渡さないので動かない）
         </p>
         <Button onClick={() => setCountRuns((runs) => runs + 1)}>
           文字数を数える
         </Button>
         {countRuns > 0 && (
-          <ResultBox key={countRuns} caption="数えた文字数の結果">
+          <ResultBox key={countRuns} caption="数えた文字数の結果" appear>
             <p className={styles.resultNumber}>567文字</p>
           </ResultBox>
         )}

@@ -58,7 +58,8 @@
   overflow-x: auto;
 }
 
-/* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、送るのはボックスの側が持つ。 */
+/* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、送るのはボックスの側が持つ。
+ * pre は中身の幅を持ち（枠より狭いときは枠の幅）、行が長くなると幅が伸びる。 */
 .code {
   background: var(--paper-2);
 }
@@ -68,6 +69,8 @@
   padding: 0;
   background: none;
   overflow-x: visible;
+  width: max-content;
+  min-width: 100%;
 }
 
 .table .body table {

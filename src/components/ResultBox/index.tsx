@@ -4,12 +4,11 @@ import {
   useEffect,
   useId,
   useRef,
-  useState,
   type ComponentPropsWithRef,
   type ReactNode,
 } from "react";
 import PhrasedText from "@/components/PhrasedText";
-import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
+import { markScrollFrame, SCROLL_FRAME_LABELS } from "@/lib/scroll-frame";
 import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ResultBox.module.css";
 
@@ -26,13 +25,7 @@ export type ResultHeading = HeadingFontAttr & {
  * 幅に収まらない中身をボックスの中で横に送る。コードのときは、ボックスが --paper-2 の地を持ち、中の pre は
  * 枠と地を持たない。
  */
-type ResultContentKind = "code" | "table";
-
-/** 横に送れるときに、送る枠を読み上げで言う名前。 */
-const SCROLL_LABELS: Record<ResultContentKind, string> = {
-  code: "コード（横にスクロールできます）",
-  table: "表（横にスクロールできます）",
-};
+type ResultContentKind = keyof typeof SCROLL_FRAME_LABELS;
 
 /**
  * 結果の名前。読み上げはボックスを結果の見出しの名前の region として読むので、見出しか補助情報の行の
@@ -46,6 +39,11 @@ type ResultBoxProps = ResultName & {
   /** 結果を写すコピーのボタン。頭の行の右に置き、結果の長さに関わらずボックスの上端のそばで押せる。 */
   copyButton?: ReactNode;
   kind?: ResultContentKind;
+  /**
+   * 来訪者の操作に応えて現れた結果か。true のときだけ登場の動きを持つ。ページを開いたときや、ページに
+   * 移ってきたときに初めからある結果（初めの値で出した道具の結果など）には渡さない。
+   */
+  appear?: boolean;
   children: ReactNode;
 } & Omit<
     ComponentPropsWithRef<"section">,
@@ -53,26 +51,11 @@ type ResultBoxProps = ResultName & {
   >;
 
 /**
- * 横に送る枠のうち、中身がはみ出すものにだけ、キーボードで送れる止まりどころと名前を付ける。はみ出さない
- * ものには付けず、Tab で止まる所を増やさない。
- */
-function markScrollFrame(frame: HTMLElement, label: string): void {
-  if (frame.scrollWidth > frame.clientWidth) {
-    frame.tabIndex = 0;
-    frame.setAttribute("role", "region");
-    frame.setAttribute("aria-label", label);
-  } else {
-    frame.removeAttribute("tabindex");
-    frame.removeAttribute("role");
-    frame.removeAttribute("aria-label");
-  }
-}
-
-/**
  * 結果のボックス（DESIGN.md §5・§8）。操作が生んだ結果と、結果を写すコピーのボタンだけを囲む。
  *
- * 結果の登場の動き（§11）はこの部品だけが持ち、中の図や帯は一緒に出る。動くのは、操作に応えてブラウザで
- * 新しく描いたボックスだけで、ページを開いたときにサーバーの HTML に初めからあるボックスは動かさない。
+ * 結果の登場の動き（§11）はこの部品だけが持ち、中の図や帯は一緒に出る。登場は操作への応えなので、動くのは
+ * 呼び出し側が appear を渡したボックスだけである。操作を受けたかを知っているのは呼び出し側だけで、描かれ方
+ * （サーバーの HTML か、ブラウザで新しく描いたか）からは見分けられない。
  *
  * 結果に着いたときにフォーカスを移すなら、呼び出し側が ref と tabIndex={-1} を渡す。見た目の割り当てを
  * 持たせないため className を受けず、どの面でも同じ形になる（§12 位置の一定）。
@@ -82,31 +65,30 @@ export default function ResultBox({
   caption,
   copyButton,
   kind,
+  appear = false,
   children,
   ...rest
 }: ResultBoxProps) {
   const id = useId();
   const captionId = `${id}-caption`;
   const headingId = `${id}-heading`;
-  const isServerRendered = useIsServerRendered();
-  // 最初の描画で決めたまま保ち、水和で引き継いだボックスが水和のあとに動き出さないようにする。
-  const [appears] = useState(!isServerRendered);
   const bodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const body = bodyRef.current;
     if (!kind || !body) return;
-    const update = () => markScrollFrame(body, SCROLL_LABELS[kind]);
+    const update = () => markScrollFrame(body, SCROLL_FRAME_LABELS[kind]);
     update();
     if (typeof ResizeObserver === "undefined") return;
-    // 枠の幅と、中身の幅（入力で結果が変わったとき・字の大きさが変わったとき）が変わったら測り直す。
+    // 枠の幅と、中身の幅が変わったら測り直す。中身（コードの pre・表）は枠の幅に縮まず自分の中身の幅を
+    // 持つので、行が長くなったときや字の大きさが変わったときも大きさが変わり、ここで捉えられる。
     const observer = new ResizeObserver(update);
     observer.observe(body);
     for (const content of body.children) observer.observe(content);
     return () => observer.disconnect();
   }, [kind, children]);
 
-  const classes = [styles.box, kind && styles[kind], appears && styles.appears]
+  const classes = [styles.box, kind && styles[kind], appear && styles.appears]
     .filter(Boolean)
     .join(" ");
 
