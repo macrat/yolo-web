@@ -16,6 +16,7 @@
 
 import { useState, Fragment } from "react";
 import Panel from "@/components/Panel";
+import ListStack from "@/components/ListStack";
 import RadioGroup from "@/components/RadioGroup";
 import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
@@ -143,7 +144,7 @@ export default function KeigoReferenceTile({
         />
 
         {activeTab === "table" && (
-          <div className={styles.browse}>
+          <ListStack>
             <div className={styles.head}>
               <ListStatus
                 ref={statusRef}
@@ -257,7 +258,7 @@ export default function KeigoReferenceTile({
                 </ul>
               </>
             ) : null}
-          </div>
+          </ListStack>
         )}
 
         {/* よくある間違いタブコンテンツ */}

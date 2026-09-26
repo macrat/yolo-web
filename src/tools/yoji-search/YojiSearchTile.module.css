@@ -1,11 +1,3 @@
-/* 件数の行と操作の組を結果の上に置き、結果とのあいだを 24px あける（§5 の間隔）。ページ送りは結果の下だけに
- * 置き、その間隔はページ送りが持つ。 */
-.browse {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
-}
-
 .head {
   display: flex;
   flex-direction: column;

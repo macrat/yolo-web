@@ -16,6 +16,7 @@
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import Panel from "@/components/Panel";
+import ListStack from "@/components/ListStack";
 import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import ListControls from "@/components/ListControls";
@@ -230,7 +231,7 @@ export default function TraditionalColorPaletteTile({
           {liveSummary}
         </div>
 
-        <div className={styles.browse}>
+        <ListStack>
           <div className={styles.head}>
             <ListStatus
               ref={statusRef}
@@ -280,7 +281,7 @@ export default function TraditionalColorPaletteTile({
               })}
             </div>
           ) : null}
-        </div>
+        </ListStack>
 
         {/* 配色パターンの選択 */}
         <div className={styles.harmonySection}>

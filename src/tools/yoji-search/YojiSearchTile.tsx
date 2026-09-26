@@ -2,6 +2,7 @@
 
 import { Fragment, useState } from "react";
 import Panel from "@/components/Panel";
+import ListStack from "@/components/ListStack";
 import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
 import Pagination from "@/components/Pagination";
@@ -79,7 +80,7 @@ export default function YojiSearchTile({ as, className }: YojiSearchTileProps) {
 
   return (
     <Panel as={as} className={className}>
-      <div className={styles.browse}>
+      <ListStack>
         <div className={styles.head}>
           <ListStatus
             ref={statusRef}
@@ -165,7 +166,7 @@ export default function YojiSearchTile({ as, className }: YojiSearchTileProps) {
             />
           </div>
         ) : null}
-      </div>
+      </ListStack>
     </Panel>
   );
 }
