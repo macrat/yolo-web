@@ -86,7 +86,6 @@
 .shareSectionTitle {
   font-family: var(--font-heading);
   font-size: var(--text-step-1);
-  text-align: center;
   margin: 0 0 var(--space-16);
   color: var(--ink);
   line-height: var(--leading-heading);

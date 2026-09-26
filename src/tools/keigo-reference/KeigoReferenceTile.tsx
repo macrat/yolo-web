@@ -73,6 +73,28 @@ export interface KeigoReferenceTileProps {
 }
 
 /**
+ * 「・」で区切って並べた敬語の形。形ごとに折らないまとまりにし、行を折るのは「・」の後ろだけにする（§4）。
+ * 1つの形が1行に収まらないときだけ、形の中で折る（CSS の .forms）。
+ */
+function KeigoForms({ value }: { value: string }) {
+  const forms = value.split("・");
+  return (
+    <span className={styles.forms}>
+      {forms.map((form, i) => (
+        <Fragment key={i}>
+          {form}
+          {i < forms.length - 1 ? (
+            <>
+              ・<wbr />
+            </>
+          ) : null}
+        </Fragment>
+      ))}
+    </span>
+  );
+}
+
+/**
  * 行を開いたときに出る例文と注記。場面ごとに、言い方の名前の右に例文を置く。名前は補助情報の字で組み、
  * 例文と注記は本文の字で読ませる（§4）。
  */
@@ -196,9 +218,15 @@ export default function KeigoReferenceTile({
                               </button>
                             </th>
                             <td className={styles.kindCell}>{kind}</td>
-                            <td>{entry.sonkeigo}</td>
-                            <td>{entry.kenjogo}</td>
-                            <td>{entry.teineigo}</td>
+                            <td>
+                              <KeigoForms value={entry.sonkeigo} />
+                            </td>
+                            <td>
+                              <KeigoForms value={entry.kenjogo} />
+                            </td>
+                            <td>
+                              <KeigoForms value={entry.teineigo} />
+                            </td>
                           </tr>
                           {openEntryId === entry.id && (
                             <tr>
@@ -235,7 +263,7 @@ export default function KeigoReferenceTile({
                                     {label}
                                   </span>{" "}
                                   <span className={styles.mobileRowValue}>
-                                    {entry[key]}
+                                    <KeigoForms value={entry[key]} />
                                   </span>
                                 </span>
                               </Fragment>

@@ -1,6 +1,6 @@
 /* TraditionalColorPaletteTile.module.css
  * 色が出るのは、伝統色そのもの（色見本の地）だけ。UI は無彩のトークンで組む（§2）。
- * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。枠と内側の余白はルートの Panel が持つ。
+ * 枠と内側の余白はルートの Panel が持つ。
  */
 
 /* コンテンツ縦並び */
@@ -40,8 +40,12 @@
 }
 
 /* 色見本は1つを選ぶラジオボタンの行で、見本全体が押せる範囲になる（§6）。細い線で囲み、淡い色が背景に溶けない
- * ようにする（§2）。字を載せず、色だけを見せる。 */
+ * ようにする（§2）。字を載せず、色だけを見せる。
+ * hover の細い線は、見本の枠と一続きにならないよう、枠の内側に太い線の太さの --paper を挟んで引く（§6）。 */
 .swatch {
+  --hover-line:
+    inset 0 0 0 var(--rule-w) var(--paper),
+    inset 0 0 0 calc(var(--rule-w) + var(--rule-w-hair)) var(--rule-2);
   display: grid;
   place-items: center;
   aspect-ratio: 1;
@@ -49,7 +53,7 @@
   cursor: pointer;
 }
 
-.swatch:hover {
+.swatch:where(:hover, :active) {
   box-shadow: var(--hover-line);
 }
 
