@@ -24,14 +24,20 @@ vi.mock("@/play/quiz/_components/QuizContainer", () => ({
   default: ({
     quiz,
     referrerTypeId,
+    resultHeadings,
+    readingHeadings,
   }: {
     quiz: QuizDefinition;
     referrerTypeId?: string;
+    resultHeadings: Record<string, { phrases: string[] }>;
+    readingHeadings: Record<string, string[]>;
   }) => (
     <div
       data-testid="quiz-container"
       data-quiz-slug={quiz.meta.slug}
       data-referrer={referrerTypeId}
+      data-result-headings={JSON.stringify(resultHeadings)}
+      data-reading-headings={JSON.stringify(readingHeadings)}
     />
   ),
 }));
@@ -41,8 +47,20 @@ vi.mock("@/components/FaqSection", () => ({
 }));
 
 vi.mock("@/components/ShareButtons", () => ({
-  default: ({ url, title }: { url: string; title: string }) => (
-    <div data-testid="share-buttons" data-url={url} data-title={title} />
+  default: (props: {
+    url: string;
+    title: string;
+    text?: string;
+    contentType?: string;
+    contentId?: string;
+    surface?: string;
+  }) => (
+    <div
+      data-testid="share-buttons"
+      data-url={props.url}
+      data-title={props.title}
+      data-props={JSON.stringify(props)}
+    />
   ),
 }));
 
@@ -190,12 +208,113 @@ test("QuizPlayPageLayout renders RecommendedContent with current slug", async ()
   expect(recommendedContent).toHaveAttribute("data-slug", "test-quiz");
 });
 
-test("QuizPlayPageLayout renders share section heading", async () => {
+test("診断のページの末尾に、何を共有するかを言う「この診断を勧める」の見出しのページの共有がある", async () => {
   const component = await QuizPlayPageLayout({
     quiz: mockQuiz,
     slug: "test-quiz",
   });
   render(component);
 
-  expect(screen.getByText("この診断が楽しかったらシェア")).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { level: 2, name: "この診断を勧める" }),
+  ).toBeInTheDocument();
+});
+
+test("知識クイズのページの共有の見出しは「このクイズを勧める」", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: { ...mockQuiz, meta: { ...mockQuiz.meta, type: "knowledge" } },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  expect(
+    screen.getByRole("heading", { level: 2, name: "このクイズを勧める" }),
+  ).toBeInTheDocument();
+});
+
+test("ページの共有は、ページの URL を、quiz の contentType と接頭辞の無い slug で数え、surface を送らない", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: mockQuiz,
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const props = JSON.parse(
+    screen.getByTestId("share-buttons").getAttribute("data-props") ?? "{}",
+  );
+  expect(props).toEqual({
+    url: "/play/test-quiz",
+    title: "テストクイズ",
+    sns: ["x", "line", "hatena", "copy"],
+    contentType: "quiz",
+    contentId: "test-quiz",
+  });
+});
+
+test("結果の見出し（タイプ名）の文節の区切りを、サーバーで全タイプぶん作って渡す", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: {
+      ...mockQuiz,
+      results: [
+        {
+          id: "poet",
+          title: "締切3分前に本気出す炎の司令塔",
+          description: "説明",
+        },
+      ],
+    },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const headings = JSON.parse(
+    screen.getByTestId("quiz-container").getAttribute("data-result-headings") ??
+      "{}",
+  );
+  expect(headings.poet.phrases.join("")).toBe("締切3分前に本気出す炎の司令塔");
+  expect(headings.poet.phrases.length).toBeGreaterThan(1);
+});
+
+test("名前と読みを持つタイプの見出しの区切りは、名前だけで作る", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: {
+      ...mockQuiz,
+      results: [
+        {
+          id: "ai-iro",
+          title: "藍色(あいいろ)",
+          nameParts: { name: "藍色", reading: "あいいろ" },
+          description: "説明",
+        },
+      ],
+    },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const headings = JSON.parse(
+    screen.getByTestId("quiz-container").getAttribute("data-result-headings") ??
+      "{}",
+  );
+  expect(headings["ai-iro"].phrases.join("")).toBe("藍色");
+});
+
+test("解き終えた画面の読みものの小見出しの区切りを、サーバーで作って渡す", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: mockQuiz,
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const readingHeadings = JSON.parse(
+    screen
+      .getByTestId("quiz-container")
+      .getAttribute("data-reading-headings") ?? "{}",
+  );
+  expect(Object.keys(readingHeadings)).toEqual([
+    "このタイプの特徴",
+    "このタイプのあるある",
+    "このタイプの人へのアドバイス",
+  ]);
+  expect(readingHeadings["このタイプの特徴"].join("")).toBe("このタイプの特徴");
 });

@@ -1,26 +1,23 @@
 "use client";
 
 /**
- * FudaActions — 「札（結果画像）」の保存/共有アクション。
+ * 結果の札の画像を保存・共有するボタン。解き終えた画面の「この結果を共有」の区画に、文の共有のボタンと並べて置く。
+ * 札の画像の固定 URL を持つのが character-personality だけなので、この診断に限って置く。
  *
- * character-personality の結果面（本人向け ResultCard の包み=Tsutsumi 直下）に置く、
- * 「完走した本人が自分の札を持ち帰る」ための主アクション。
- * 札画像の固定 URL を持つのが character-personality だけなので、この診断に限って置く。
+ * 画像は固定 URL の Route Handler から取る:
+ *   GET /play/character-personality/result/<resultId>/fuda-image → image/png（ビルド時に描く）
+ * 結果のページの og:image と保存する画像は、同じ描き方の同じ画像である。
  *
- * 画像は固定 URL の Route Handler から取得する：
- *   GET /play/character-personality/result/<resultId>/fuda-image → image/png（SSGプリレンダ）
- * メタプレビュー（og:image）と保存画像は同一レンダラ＝単一の真実。
- *
- * 計測: 実際に完了したアクションだけを計上する。
- * - 共有: canShare({files}) 対応なら navigator.share({files}) 成功時に trackShare("web_share",…,"fuda")。
- *   非対応/未定義なら URL を clipboard コピーし、成功時 trackShare("clipboard",…,"fuda")。
- *   共有シートのキャンセル/失敗では計上しない。
- * - 保存: 既定は Blob→createObjectURL→アンカー download で保存し trackSave(…,"download","fuda")。
- *   アンカー download 非対応環境（iOS Safari 等）は navigator.share({files}) 経由の保存に寄せ、
- *   成功時 trackSave(…,"web_share_files","fuda")（ADR002 に指標解釈の注記あり）。
+ * 計測: 来訪者が終えた操作だけを数える。
+ * - 共有: canShare({files}) が真なら navigator.share({files}) を終えたときに trackShare("web_share",…,"fuda")。
+ *   できない端末では URL をコピーし、写せたときに trackShare("clipboard",…,"fuda")。
+ *   共有シートを閉じただけのときと失敗したときは数えない。
+ * - 保存: Blob を createObjectURL にしてアンカーの download で保存し trackSave(…,"download","fuda")。
+ *   アンカーの download が使えない端末（iOS の Safari など）は navigator.share({files}) で保存へ進み、
+ *   終えたときに trackSave(…,"web_share_files","fuda")（数の読み方は ADR002）。
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { trackSave, trackShare } from "@/lib/analytics";
 import { copyText } from "@/lib/clipboard";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
@@ -38,18 +35,10 @@ interface FudaActionsProps {
   quizSlug: string;
 }
 
-/** 札画像を共有/保存の対象とする診断の contentType（GA4）。 */
+/** 札の画像を保存・共有する診断の contentType（GA4）。 */
 const CONTENT_TYPE = "diagnosis";
 
-/** 見出し（この結果を札として持ち帰る）の id。ボタン群が aria-describedby で参照する。 */
-/** 知らせの文（用意中・コピー完了・エラー）の id。用意中はボタンが押せない理由として読ませる。 */
-const STATUS_ID = "fuda-actions-status";
-const LABEL_ID = "fuda-actions-label";
-
-/**
- * アンカーの download 属性が使えるか（＝Blob をファイルとして保存できるか）。
- * iOS Safari 等の非対応環境は false になり、navigator.share({files}) 経由へ寄せる。
- */
+/** アンカーの download 属性で、Blob をファイルとして保存できるか。 */
 function isAnchorDownloadSupported(): boolean {
   if (typeof document === "undefined") return false;
   return "download" in document.createElement("a");
@@ -61,9 +50,11 @@ export default function FudaActions({
   quizTitle,
   quizSlug,
 }: FudaActionsProps) {
-  // busy: 取得〜アクション完了までの間ボタンを無効化して多重押下を防ぐ。
+  // 画像を用意しているあいだ。二度押しで画像を2回取らないよう、押したボタンの処理を先に進めない。ボタンは
+  // 無効にしない。無効のボタンはフォーカスを受けないので、キーボードで押したときにフォーカスがページの頭に落ちる。
+  const busyRef = useRef(false);
   const [busy, setBusy] = useState(false);
-  // status: aria-live で読み上げる一時メッセージ（コピー完了/コピー失敗/エラー）。
+  // 知らせの文（コピーした・写せなかった・画像を用意できなかった）。
   const [status, setStatus] = useState<
     "idle" | "copied" | "copyFailed" | "error"
   >("idle");
@@ -77,13 +68,10 @@ export default function FudaActions({
   const shareText = `${quizTitle}の結果は「${resultTitle}」でした!`;
 
   /**
-   * 固定 URL から札 PNG を取得して File 化する。
-   * 取得失敗（!res.ok / ネットワーク）は例外を投げ、呼び出し側でエラー表示にする
-   * （握りつぶさない・UI は壊さない）。
+   * 固定 URL から札の PNG を取って File にする。取れなかったとき（!res.ok・通信の失敗）は例外を投げ、
+   * 呼び出し側が知らせの文で伝える。
    */
   const fetchFudaFile = useCallback(async (): Promise<File> => {
-    // 画像は character-personality 固有の Route Handler にのみ存在する（本コンポーネントは
-    // character-personality 限定）。slug ではなく固定パスで取得する。
     const res = await fetch(
       `/play/character-personality/result/${resultId}/fuda-image`,
     );
@@ -96,97 +84,101 @@ export default function FudaActions({
     });
   }, [resultId]);
 
-  const handleSave = useCallback(async () => {
-    if (busy) return;
-    setBusy(true);
-    setStatus("idle");
-    try {
-      const file = await fetchFudaFile();
+  /** 画像を用意するあいだを busy にして action を走らせる。用意しているあいだに押されたら何もしない。 */
+  const runExclusively = useCallback(
+    async (action: () => Promise<void>): Promise<void> => {
+      if (busyRef.current) return;
+      busyRef.current = true;
+      setBusy(true);
+      setStatus("idle");
+      try {
+        await action();
+      } catch {
+        setStatus("error");
+      } finally {
+        busyRef.current = false;
+        setBusy(false);
+      }
+    },
+    [],
+  );
 
-      if (isAnchorDownloadSupported()) {
-        // 既定：Blob をアンカー download で保存（irodori downloadImage と同型）。
-        const objectUrl = URL.createObjectURL(file);
-        try {
-          const a = document.createElement("a");
-          a.href = objectUrl;
-          a.download = file.name;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        } finally {
-          URL.revokeObjectURL(objectUrl);
+  const handleSave = useCallback(
+    () =>
+      runExclusively(async () => {
+        const file = await fetchFudaFile();
+
+        if (isAnchorDownloadSupported()) {
+          const objectUrl = URL.createObjectURL(file);
+          try {
+            const a = document.createElement("a");
+            a.href = objectUrl;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          } finally {
+            URL.revokeObjectURL(objectUrl);
+          }
+          trackSave(contentId, CONTENT_TYPE, "download", "fuda");
+          return;
         }
-        trackSave(contentId, CONTENT_TYPE, "download", "fuda");
-        return;
-      }
 
-      // download 非対応（iOS Safari 等）：共有シート経由の保存に寄せる。
-      if (navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: quizTitle,
-            text: shareText,
-            url: shareUrl,
-          });
-          // 成功（キャンセルは reject）時のみ計上する。
-          trackSave(contentId, CONTENT_TYPE, "web_share_files", "fuda");
-        } catch {
-          // ユーザーがキャンセル/失敗：計上しない。
+        // アンカーの download が使えない端末（iOS の Safari など）は、共有シートの「画像を保存」へ進む。
+        if (navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: quizTitle,
+              text: shareText,
+              url: shareUrl,
+            });
+            trackSave(contentId, CONTENT_TYPE, "web_share_files", "fuda");
+          } catch {
+            // 共有シートを閉じただけのときは数えない。
+          }
+          return;
         }
-        return;
-      }
 
-      // 保存手段が無い環境：正直にエラー表示（握りつぶさない）。
-      setStatus("error");
-    } catch {
-      setStatus("error");
-    } finally {
-      setBusy(false);
-    }
-  }, [busy, fetchFudaFile, contentId, quizTitle, shareText, shareUrl]);
+        setStatus("error");
+      }),
+    [runExclusively, fetchFudaFile, contentId, quizTitle, shareText, shareUrl],
+  );
 
-  const handleShare = useCallback(async () => {
-    if (busy) return;
-    setBusy(true);
-    setStatus("idle");
-    try {
-      const file = await fetchFudaFile();
+  const handleShare = useCallback(
+    () =>
+      runExclusively(async () => {
+        const file = await fetchFudaFile();
 
-      if (navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: quizTitle,
-            text: shareText,
-            url: shareUrl,
-          });
-          // 成功（キャンセルは reject）時のみ計上する。
-          trackShare("web_share", CONTENT_TYPE, contentId, "fuda");
-        } catch {
-          // ユーザーがキャンセル/失敗：計上しない。
+        if (navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: quizTitle,
+              text: shareText,
+              url: shareUrl,
+            });
+            trackShare("web_share", CONTENT_TYPE, contentId, "fuda");
+          } catch {
+            // 共有シートを閉じただけのときは数えない。
+          }
+          return;
         }
-        return;
-      }
 
-      // ファイル共有 非対応/未定義：URL を clipboard にコピーしてフォールバック。
-      if (await copyText(shareUrl)) {
-        setStatus("copied");
-        trackShare("clipboard", CONTENT_TYPE, contentId, "fuda");
-      } else {
-        // コピーも失敗：計上しない。写せなかったことを知らせる。
-        setStatus("copyFailed");
-      }
-    } catch {
-      setStatus("error");
-    } finally {
-      setBusy(false);
-    }
-  }, [busy, fetchFudaFile, contentId, quizTitle, shareText, shareUrl]);
+        // 画像を共有できない端末では、結果のページの URL をコピーする。
+        if (await copyText(shareUrl)) {
+          setStatus("copied");
+          trackShare("clipboard", CONTENT_TYPE, contentId, "fuda");
+        } else {
+          setStatus("copyFailed");
+        }
+      }),
+    [runExclusively, fetchFudaFile, contentId, quizTitle, shareText, shareUrl],
+  );
 
   // 知らせの文。1行に収まらないとき文のあいだで折るよう、文ごとに分けて持つ。
   const statusSentences: string[] = busy
-    ? ["札の画像を用意しています。"]
+    ? ["画像を用意しています。"]
     : status === "copied"
       ? ["リンクをコピーしました"]
       : status === "copyFailed"
@@ -197,31 +189,14 @@ export default function FudaActions({
 
   return (
     <div className={styles.wrapper}>
-      {/* 見出しをボタン群と aria-describedby で結びつけ、支援技術で「何をする札か」を伝える。 */}
-      <p id={LABEL_ID} className={styles.label}>
-        この結果を札として持ち帰る
-      </p>
       <div className={styles.buttons}>
-        <Button
-          variant="primary"
-          onClick={handleSave}
-          disabled={busy}
-          aria-busy={busy}
-          aria-describedby={busy ? `${LABEL_ID} ${STATUS_ID}` : LABEL_ID}
-        >
-          保存
+        <Button variant="primary" onClick={handleSave}>
+          画像を保存
         </Button>
-        <Button
-          onClick={handleShare}
-          disabled={busy}
-          aria-busy={busy}
-          aria-describedby={busy ? `${LABEL_ID} ${STATUS_ID}` : LABEL_ID}
-        >
-          共有
-        </Button>
+        <Button onClick={handleShare}>画像を共有</Button>
       </div>
-      {/* role="status" は暗黙で aria-live="polite" を持つため冗長指定はしない（ライブ領域は残す）。 */}
-      <div id={STATUS_ID} className={styles.status} role="status">
+      {/* role="status" は aria-live="polite" を持つので、知らせの文は読み上げにも伝わる。 */}
+      <div className={styles.status} role="status">
         {statusSentences.map((sentence) => (
           <span key={sentence} className={styles.sentence}>
             {sentence}

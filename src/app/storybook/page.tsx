@@ -3,6 +3,7 @@ import qrcode from "qrcode-generator";
 import StorybookContent, {
   type ImageSample,
   type PhrasedSample,
+  type SolvedScreenSample,
 } from "./StorybookContent";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import type { ItemListItem } from "@/components/ItemList";
@@ -14,6 +15,7 @@ import {
 import characterPersonalityQuiz from "@/play/quiz/data/character-personality";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
+import { solvedScreenReadingHeadings } from "@/play/quiz/readingHeadings";
 
 /** /storybook は開発者向けのコンポーネントカタログ。
  * 来訪者の目に触れる想定はないため `robots: noindex` を指定する。
@@ -56,6 +58,31 @@ const VOICE_OVER_TYPE_IDS = [
   "guardian-charger",
 ];
 
+/** character-personality の解き終えた画面の見本。24タイプの見出しと読みものの小見出しの区切りを、ここで作って渡す。 */
+function characterSolvedScreen(): SolvedScreenSample {
+  const { meta, results } = characterPersonalityQuiz;
+  return {
+    quizTitle: meta.title,
+    quizSlug: meta.slug,
+    results,
+    readingHeadings: Object.fromEntries(
+      solvedScreenReadingHeadings(characterPersonalityQuiz).map((text) => [
+        text,
+        splitIntoPhrases(text),
+      ]),
+    ),
+    headings: Object.fromEntries(
+      results.map((result) => {
+        const name = result.nameParts?.name ?? result.title;
+        return [
+          result.id,
+          { phrases: splitIntoPhrases(name), ...headingFontAttr(name) },
+        ];
+      }),
+    ),
+  };
+}
+
 const QR_CELL_SIZE = 4;
 const QR_MARGIN_CELLS = 4;
 
@@ -77,7 +104,7 @@ export default function StorybookPage() {
   // ビルドが失敗する。そのため server component である本ページで描画し、
   // ReactNode を prop として渡す（Next.js の server-in-client パターン）。
   // BrowsableList の見本の行も、辞典のデータを読むのでここで組む。見出しの区切りはサーバーだけで作れるので
-  // （@/lib/phrase-breaks）、結果のボックスと PhrasedText の見本の区切りもここで作って渡す。
+  // （@/lib/phrase-breaks）、結果のボックス・PhrasedText・解き終えた画面の見本の区切りもここで作って渡す。
   return (
     <StorybookContent
       relatedBlogPostsWithPosts={<RelatedBlogPosts slug="business-email" />}
@@ -87,6 +114,7 @@ export default function StorybookPage() {
       quizTitle={characterPersonalityQuiz.meta.title}
       voiceOverSamples={VOICE_OVER_TYPE_IDS.map(characterType)}
       qrCode={qrCodeSample()}
+      solvedScreen={characterSolvedScreen()}
     />
   );
 }

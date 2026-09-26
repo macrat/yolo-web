@@ -1,157 +1,77 @@
 /*
- * 結果カード（解き終えた画面に出す結果）。
- * 左寄せ・トークンのみ・bold 不使用・絵文字なし・影なし。
- * personality 型・icon/color 両方あるタイプは結果を包み（Tsutsumi）で見せる。
- * 角丸は 0px（--radius）。
- * リビールは 1 回・400ms 以下・prefers-reduced-motion 尊重（§11）。
+ * 解き終えた画面の結果（DESIGN.md §8 結果）。結果のボックス・結果を持ち帰る・共有する区画・詳しい読みもの・
+ * 「もう一度挑戦する」を縦に積む。ボックスの枠・余白・登場の動きは ResultBox が持ち、ここはボックスの中の
+ * 組み方と、区画の並べ方だけを持つ。
  */
 
 .card {
-  text-align: left;
-  animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 「あなたの結果」ラベル（小見出し・フォールバック用） */
-.resultLabel {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  margin: 0 0 0.25rem;
-}
-
-/* === 結果を包みで見せる（personality 型のみ） ===
- * この見出し部（器）は静かな到達ラベルだけを持つ。結果そのものは Tsutsumi（罫で
- * 明確に包まれた独立ビジュアル）が主役——器は賑やかにしない。 */
-.medalWrap {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin: 0 0 1rem;
-  /* リビールは 1 回・400ms（§11）。opacity 中心＋わずかな立ち上がり。 */
-  animation: medalReveal 0.4s ease both;
+  gap: var(--space-24);
 }
 
-/*
- * 到達の承認ラベル（静かな達成感。煽らない）。補助情報の文字で置く（§4）。
- * 語どうしは字で区切らず間隔で分ける。
- */
-.medalLabel {
+/* === 結果のボックスの中 === */
+
+.result {
   display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--space-16);
-  margin: 0;
-  color: var(--ink-2);
-  font-size: var(--text-small);
-}
-
-.title {
-  font-size: 1.5rem;
-  color: var(--ink);
-  margin: 0 0 0.5rem;
-  line-height: 1.4;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
 /* タイプ名の中の読みにくい語の読み方。タイプ名のすぐ下に補助情報として添える。 */
 .reading {
-  margin: 0 0 0.75rem;
   font-size: var(--text-small);
   color: var(--ink-2);
 }
 
+/* 伝統色診断の結果の色。字を載せない色見本で、細い線で地と分ける（§2・§5）。 */
+.swatch {
+  block-size: var(--space-64);
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 知識クイズの正解の数。§4 の主見出しの段で1行に組み、ボックスに収まらなければ収まる段まで下げる（§8）。
+ * 行間は本文と同じにする。 */
 .score {
-  font-size: 0.95rem;
-  color: var(--ink-2);
-  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  line-height: var(--leading-body);
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
 }
 
+.score[data-step="main"] {
+  font-size: var(--text-heading-main);
+}
+
+.score[data-step="section"] {
+  font-size: var(--text-heading-section);
+}
+
+.score[data-step="sub"] {
+  font-size: var(--text-heading-sub);
+}
+
+/* いちばん下の段でも収まらないときは折り返す。 */
+.score[data-step="body"] {
+  font-size: var(--text-body);
+  white-space: normal;
+}
+
+/* 結果の説明は文章なので、本文の幅で折り返す（§8）。 */
 .description {
-  font-size: 1rem;
-  line-height: 1.8;
-  margin: 0 0 1.5rem;
-  color: var(--ink);
-  max-width: 720px;
+  max-width: var(--measure);
 }
 
-/* おすすめリンク（任意）。縁の見えないコントロールで、字の左右の余白と、字を並びの左端に置く張り出しは
- * data-text-box（globals.css）が持つ。下線と訪問済みの色は a の既定に従う。 */
-.recommendation {
-  display: inline-flex;
-  align-items: center;
-  min-width: 44px;
-  min-height: 44px;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
+/* 同点の開示。主タイプと同じ強さのタイプを文で言い、そのタイプの結果のページへのリンクを並べる。 */
+.tied {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--measure);
 }
 
-/* 共有のボタンの並びは ShareButtons が持ち、ここは前後の内容とのあいだだけを持つ。 */
-.share {
-  margin-block: var(--space-24) var(--space-8);
-}
-
-/* もう一度挑戦ボタンの見え方は Button が持ち、ここは上の内容とのあいだだけを持つ。 */
-.retry {
-  margin-top: 0.5rem;
-}
-
-@keyframes medalReveal {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card {
-    animation: none;
-  }
-
-  .medalWrap {
-    animation: none;
-  }
-}
-
-/* === 真の残余同点の開示ブロック（word-sense-personality のみ） ===
- * 恣意的・不可視に配列順で割らず、主タイプと副タイプを同格に開示する静かな区画。
- * 罫（--rule）＋ --paper-2 の地。影なし・角丸 0・絵文字なし。色を持たない。 */
-.tiedDisclosure {
-  margin: 0 0 1.5rem;
-  padding: 1.1rem 1.25rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--paper-2);
-  max-width: 720px;
-}
-
-/* 同格開示の本文。型名は【】括弧＋墨（--ink）の組版で示し、色付き強調はしない。 */
-.tiedDisclosureText {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  margin: 0;
-}
-
-/* co-type の結果解説ページへのリンク群（.recommendation と同じ、縁の見えないリンク）。 */
 .tiedTypeLinks {
   list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -160,149 +80,28 @@
 .tiedTypeLink {
   display: inline-flex;
   align-items: center;
-  min-width: 44px;
   min-height: 44px;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  /* 型名は「ムササビ——座布団サイズで120m飛ぶ孤高の夢想家」のように長い。語中改行を抑える。 */
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 
-/* detailedContent セクション（全 variant 共通の親コンテナ） */
-.detailedSection {
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-/* セクション見出し。サイト共通の罫下線で静かに区切る
- *  */
-.detailedHeading {
-  font-size: 1.05rem;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* traits（持ち味）リスト */
-.traitsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
+/* === 結果を持ち帰る・共有する区画 ===
+ * ボックスのすぐ下にある小見出しは、ボックスの太い枠がすでに切れ目なので、上に線を持たない（§5）。 */
+.share {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
-.traitsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.625rem 0.875rem;
-  background: var(--paper-2);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
+.shareHeading {
+  font-size: var(--text-heading-sub);
 }
 
-/* 絵文字を使わない静かなマーカー（墨の中黒）。 */
-.traitsItem::before {
-  content: "・";
-  flex-shrink: 0;
-  color: var(--ink-2);
-}
-
-/* behaviors リスト */
-.behaviorsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.behaviorsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-/* advice カード（標準 variant）。地は characterIntro と同じ --paper-2。 */
-.adviceCard {
-  padding: 1.1rem 1.25rem;
-  border-radius: var(--radius);
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--ink);
-  margin-bottom: 0;
-  text-align: left;
-  background: var(--paper-2);
-}
-
-/* catchphrase（contrarian-fortune detailedSection 内） */
-.catchphrase {
-  font-size: 1rem;
-  font-style: italic;
-  color: var(--ink-2);
-  text-align: left;
-  margin-bottom: 1.5rem;
-  line-height: 1.7;
-}
-
-/* catchphraseBeforeDescription（description の前に表示する一言）。
- * variant 別の派手な装飾線は廃し、静かなリード文として左寄せで置く。 */
-.catchphraseBeforeDescription {
-  font-size: 1.1rem;
-  color: var(--ink-2);
-  text-align: left;
-  margin: 0 0 1rem;
-  line-height: 1.7;
-}
-
-/* humorMetrics テーブル（contrarian-fortune） */
-.humorMetricsTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 0;
-  font-size: 0.9rem;
-}
-
-.humorMetricsTable th,
-.humorMetricsTable td {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--rule);
-  text-align: left;
-}
-
-.humorMetricsTable th {
-  background: var(--paper-2);
-  font-weight: 600;
-  width: 50%;
-}
-
-/* characterIntro（character-fortune）。淡い面に置く */
-.characterIntro {
-  font-size: 1rem;
-  line-height: 1.8;
-  text-align: left;
-  color: var(--ink);
-  margin-bottom: 1.5rem;
-  padding: 1.1rem 1.25rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-
-/* characterMessage（character-fortune） */
-.characterMessage {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  text-align: left;
-  margin-bottom: 0;
+/* おすすめのリンク。縁の見えないコントロールで、字の左右の余白と、字を並びの左端に置く張り出しは
+ * data-text-box（globals.css）が持つ。 */
+.recommendation {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 44px;
 }

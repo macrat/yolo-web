@@ -81,8 +81,8 @@ function renderActions() {
     />,
   );
   return {
-    saveButton: screen.getByRole("button", { name: "保存" }),
-    shareButton: screen.getByRole("button", { name: "共有" }),
+    saveButton: screen.getByRole("button", { name: "画像を保存" }),
+    shareButton: screen.getByRole("button", { name: "画像を共有" }),
   };
 }
 
@@ -287,5 +287,63 @@ describe("FudaActions fetch 失敗", () => {
     expect(findEventParams("share")).toBeUndefined();
     // ボタンは再度押せる状態に戻っている（busy 解除）。
     expect(saveButton).not.toBeDisabled();
+  });
+});
+
+describe("FudaActions 画像を用意しているあいだ", () => {
+  test("ボタンを無効にせず、押したボタンにフォーカスが残る（キーボードで押してもページの頭に落ちない）", async () => {
+    let resolveFetch: (value: unknown) => void = () => {};
+    mockFetch.mockReturnValue(
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      }),
+    );
+    mockCanShare.mockReturnValue(true);
+    mockShare.mockResolvedValue(undefined);
+
+    const { shareButton } = renderActions();
+    shareButton.focus();
+    fireEvent.click(shareButton);
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "画像を用意しています。",
+      ),
+    );
+    expect(shareButton).toBeEnabled();
+    expect(document.activeElement).toBe(shareButton);
+
+    resolveFetch({
+      ok: true,
+      blob: async () => new Blob(["png-bytes"], { type: "image/png" }),
+    });
+    await waitFor(() => expect(mockShare).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(""),
+    );
+    expect(document.activeElement).toBe(shareButton);
+  });
+
+  test("用意しているあいだにもう一度押しても、画像を2回取らない", async () => {
+    let resolveFetch: (value: unknown) => void = () => {};
+    mockFetch.mockReturnValue(
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      }),
+    );
+    mockCanShare.mockReturnValue(true);
+    mockShare.mockResolvedValue(undefined);
+
+    const { saveButton, shareButton } = renderActions();
+    fireEvent.click(shareButton);
+    fireEvent.click(shareButton);
+    fireEvent.click(saveButton);
+
+    resolveFetch({
+      ok: true,
+      blob: async () => new Blob(["png-bytes"], { type: "image/png" }),
+    });
+    await waitFor(() => expect(mockShare).toHaveBeenCalledTimes(1));
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 });

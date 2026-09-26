@@ -10,6 +10,10 @@ import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
+import type { ResultHeading } from "@/components/ResultBox";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
+import { solvedScreenReadingHeadings } from "@/play/quiz/readingHeadings";
 // プレイ層のスタイルを参照する
 import styles from "@/app/play/[slug]/page.module.css";
 
@@ -27,9 +31,12 @@ interface QuizPlayPageLayoutProps {
  *   2. h1 と短い説明。ファーストビューを本体に空けるため短く組む
  *   3. クイズ本体（QuizContainer）
  *   4. FAQ（FAQPage の JSON-LD を持つ）
- *   5. シェア
+ *   5. このクイズ・診断を人に勧めるページの共有。結果の共有は、解き終えた画面の結果のすぐ下にある
  *   6. 同じ分類のクイズ・診断（RelatedQuizzes）
  *   7. ほかの分類のおすすめ（RecommendedContent）
+ *
+ * 解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品が描くデータから作る
+ * 見出しなので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（DESIGN.md §4）。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -40,6 +47,24 @@ export default async function QuizPlayPageLayout({
   const jsonLd = meta ? generatePlayJsonLd(meta) : null;
 
   const resultNextContents = toPlayListItems(getResultNextContents(slug));
+  // 見出しは名前だけで組み、読みは解き終えた画面が見出しの下に添える。
+  const resultHeadings: Record<string, ResultHeading> = Object.fromEntries(
+    quiz.results.map((result) => {
+      const name = result.nameParts?.name ?? result.title;
+      return [
+        result.id,
+        { phrases: splitIntoPhrases(name), ...headingFontAttr(name) },
+      ];
+    }),
+  );
+  const readingHeadings: Record<string, string[]> = Object.fromEntries(
+    solvedScreenReadingHeadings(quiz).map((text) => [
+      text,
+      splitIntoPhrases(text),
+    ]),
+  );
+  const recommendHeading =
+    quiz.meta.type === "knowledge" ? "このクイズを勧める" : "この診断を勧める";
 
   return (
     <article className={styles.layout}>
@@ -70,16 +95,16 @@ export default async function QuizPlayPageLayout({
         quiz={quiz}
         referrerTypeId={referrerTypeId}
         recommendedContents={resultNextContents}
+        resultHeadings={resultHeadings}
+        readingHeadings={readingHeadings}
       />
 
       {/* 4. FAQ（FAQPage JSON-LD 内蔵）。faq が空のとき FaqSection は null を返す */}
       <FaqSection faq={quiz.meta.faq} />
 
-      {/* 5. シェア */}
+      {/* 5. ページの共有 */}
       <section className={styles.shareSection}>
-        <h2 className={styles.shareSectionTitle}>
-          この診断が楽しかったらシェア
-        </h2>
+        <h2 className={styles.shareSectionTitle}>{recommendHeading}</h2>
         <ShareButtons
           url={"/play/" + slug}
           title={quiz.meta.title}

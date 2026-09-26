@@ -1,69 +1,53 @@
 /*
- * クイズ共通プレイ画面（/play/[slug]・/play/music-personality）の章立てスタイル。
+ * クイズ・診断のページ（/play/[slug]・/play/music-personality）の組み方。
  *
- * 「文脈確認 → 本体（主役）→ 二次情報」の
- * 左寄せ構成。器（背景・囲み）は持たず、地（--paper）にそのまま置く。
- * トークンのみ使用。bold 不使用・影なし・角丸0基調。
+ * パンくずと h1 で何のページかを確かめてから本体に入り、補助の情報は本体の下に置く。器は背景も囲みも持たず、
+ * 地（--paper）にそのまま置く。
  */
 
-/* ページ全体のラッパー。最大 --max-width でセンタリングせず、左寄せの読み幅で運用する。 */
+/* ページの中身。幅と左右の余白はコンテナが決めるので、器は自分の左右の余白を持たず、コンテンツ幅の左端から
+ * 組む（DESIGN.md §5「コンテンツ幅の左端は、どのページでも同じ位置」）。 */
 .layout {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding-block: var(--space-24);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-16);
 }
-
-/* === ゾーン1: 文脈確認（パンくず・h1・短説明）=== */
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-8);
 }
 
-/* h1: SEO 用に保持しつつ視覚的に小さく。 */
+/* h1 は、本体をファーストビューに入れるため小さく組む。 */
 .title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--ink);
-  margin: 0;
-  line-height: 1.4;
 }
 
-/* 短説明: 1〜2 文。読む面は --measure に絞る（DESIGN.md §5） */
+@media (min-width: 48rem) {
+  .title {
+    font-size: 1.25rem;
+  }
+}
+
+/* 短い説明は1〜2文。本文の幅で折り返す（§5）。 */
 .shortDescription {
   font-size: 0.9rem;
   color: var(--ink-2);
   line-height: 1.7;
-  margin: 0;
   max-width: var(--measure);
 }
 
-/* === ゾーン3: 補助情報（本体より下に二次配置）=== */
-
-/* シェアセクション */
+/* このクイズ・診断を人に勧めるページの共有。上に細い罫線を引いて、上の内容と分ける（§5）。 */
 .shareSection {
   max-width: var(--measure);
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  padding-top: var(--space-24);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .shareSectionTitle {
-  font-size: 0.95rem;
-  margin: 0 0 0.75rem;
-  color: var(--ink-2);
-}
-
-/* モバイル対応 */
-@media (max-width: 768px) {
-  .layout {
-    padding: 1rem 0.75rem;
-    gap: 1rem;
-  }
-
-  .title {
-    font-size: 1.1rem;
-  }
+  font-size: var(--text-heading-sub);
+  margin-bottom: var(--space-8);
 }

@@ -28,7 +28,9 @@ import LinkIndex, {
   type LinkIndexItem,
 } from "@/components/LinkIndex";
 import Section from "@/components/Section";
-import ResultBox from "@/components/ResultBox";
+import ResultBox, { type ResultHeading } from "@/components/ResultBox";
+import ResultCard from "@/play/quiz/_components/ResultCard";
+import type { QuizResult } from "@/play/quiz/types";
 import PhrasedText from "@/components/PhrasedText";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
@@ -131,6 +133,7 @@ const TOC_ITEMS = [
   { id: "result-box", label: "24. ResultBox" },
   { id: "quantity-bars", label: "25. QuantityBars" },
   { id: "phrased-text", label: "26. PhrasedText" },
+  { id: "solved-screen", label: "27. 解き終えた画面（ResultCard）" },
 ];
 
 // LinkIndex の見本。順を持たない分類（多い順・数を添える）と、見えない値で区切る索引。
@@ -288,6 +291,15 @@ export interface PhrasedSample {
   description: string;
 }
 
+/** 診断の解き終えた画面の見本。見出しの区切りは、サーバーの page.tsx が全タイプぶん作る。 */
+export interface SolvedScreenSample {
+  quizTitle: string;
+  quizSlug: string;
+  results: QuizResult[];
+  headings: Readonly<Record<string, ResultHeading>>;
+  readingHeadings: Readonly<Record<string, readonly string[]>>;
+}
+
 /** 画像の結果の見本。size は画像の一辺の px。 */
 export interface ImageSample {
   src: string;
@@ -366,6 +378,8 @@ interface StorybookContentProps {
   /** iOS の VoiceOver で見出しの読み方を聞き比べるタイプ名 */
   voiceOverSamples: PhrasedSample[];
   qrCode: ImageSample;
+  /** 解き終えた画面の見本の診断。タイプを1つずつ選んで開く。 */
+  solvedScreen: SolvedScreenSample;
 }
 
 export default function StorybookContent({
@@ -376,6 +390,7 @@ export default function StorybookContent({
   quizTitle,
   voiceOverSamples,
   qrCode,
+  solvedScreen,
 }: StorybookContentProps) {
   // Checkbox・Radio controlled state
   const [checkboxOn, setCheckboxOn] = useState(false);
@@ -391,6 +406,11 @@ export default function StorybookContent({
   const [paginationPage, setPaginationPage] = useState(1);
   // useCopyToClipboard demo
   const { copy, copiedKey } = useCopyToClipboard();
+  // 解き終えた画面の見本で開いているタイプ
+  const [solvedTypeId, setSolvedTypeId] = useState(solvedScreen.results[0].id);
+  const solvedResult =
+    solvedScreen.results.find((result) => result.id === solvedTypeId) ??
+    solvedScreen.results[0];
 
   return (
     <>
@@ -1539,6 +1559,45 @@ export default function StorybookContent({
             })}
           </div>
         ))}
+      </Section>
+
+      <Section id="solved-screen">
+        <h2 className={styles.sectionTitle}>
+          27. 解き終えた画面（ResultCard）
+        </h2>
+        <p>
+          {solvedScreen.quizTitle}
+          を解き終えたときの画面。タイプを選ぶと、そのタイプの結果・結果を共有する区画・詳しい読みものを、解き終えた画面と同じ部品で開く。
+        </p>
+        <Field label="開くタイプ">
+          {(control) => (
+            <Select
+              {...control}
+              value={solvedTypeId}
+              onChange={(event) => setSolvedTypeId(event.target.value)}
+            >
+              {solvedScreen.results.map((result) => (
+                <option key={result.id} value={result.id}>
+                  {result.title}
+                </option>
+              ))}
+            </Select>
+          )}
+        </Field>
+        <div className={styles.solvedScreen}>
+          <ResultCard
+            key={solvedResult.id}
+            result={solvedResult}
+            heading={solvedScreen.headings[solvedResult.id]}
+            readingHeadings={solvedScreen.readingHeadings}
+            quizType="personality"
+            quizTitle={solvedScreen.quizTitle}
+            quizSlug={solvedScreen.quizSlug}
+            onRetry={() => {}}
+            detailedContent={solvedResult.detailedContent}
+            allResults={solvedScreen.results}
+          />
+        </div>
       </Section>
     </>
   );

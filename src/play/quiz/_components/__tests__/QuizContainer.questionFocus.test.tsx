@@ -85,7 +85,9 @@ function makeTwoQuestionPersonalityQuiz(): QuizDefinition {
 
 /** intro→playing へ遷移する（"はじめる" を押す）。 */
 async function startQuiz(quiz: QuizDefinition) {
-  render(<QuizContainer quiz={quiz} />);
+  render(
+    <QuizContainer quiz={quiz} resultHeadings={{}} readingHeadings={{}} />,
+  );
   const startBtn = screen.getByRole("button", { name: "はじめる" });
   await act(async () => {
     startBtn.click();

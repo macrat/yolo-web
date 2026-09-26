@@ -19,6 +19,7 @@ import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-
 import { getEstimatedTime } from "./introBadges";
 import Button from "@/components/Button";
 import type { ItemListItem } from "@/components/ItemList";
+import type { ResultHeading } from "@/components/ResultBox";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
@@ -35,6 +36,10 @@ type QuizContainerProps = {
    * 結果の下に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、サーバーで行にしてから受け取る。
    */
   recommendedContents?: ItemListItem[];
+  /** 結果の見出し（タイプ名）の文節の区切りと書体の属性。結果の id ごとに、サーバーで作ってから受け取る。 */
+  resultHeadings: Readonly<Record<string, ResultHeading>>;
+  /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ってから受け取る。 */
+  readingHeadings: Readonly<Record<string, readonly string[]>>;
 };
 
 /**
@@ -45,44 +50,24 @@ export default function QuizContainer({
   quiz,
   referrerTypeId,
   recommendedContents,
+  resultHeadings,
+  readingHeadings,
 }: QuizContainerProps) {
   const [phase, setPhase] = useState<QuizPhase>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
 
-  // 結果リビール（完走→結果で注意を誘導する / a11y）。
-  // result phase の外側 wrapper への参照。phase が "result" になった時に
-  // ここへスクロール＋フォーカスを移し、視界を「遊ぶ前の h1・説明文」から
-  // 「自分の結果」へ移す。ResultCard 自体は自動スクロール副作用で汚さない
-  // （ResultCard 単体テスト・他文脈の安定のため）。
-  const resultRegionRef = useRef<HTMLDivElement>(null);
+  // 結果のボックス。解き終えたら、画面をボックスの上端まで即時に送り（DESIGN.md §11）、フォーカスを移して
+  // 読み上げにも結果に着いたことを伝える。結果の画面に進めるのは最後の設問に答えたときだけなので、ページを
+  // 開いただけでは送らない。
+  const resultBoxRef = useRef<HTMLElement>(null);
 
-  // result phase 到達時に結果領域へスクロールし、フォーカスを移す。
-  // - phase 依存の useEffect。result phase は完走時のみ到達するため直リンク誤発火はしない。
-  // - prefers-reduced-motion: reduce では smooth を使わず即時スクロールする。
-  // - フォーカス移動により、スクリーンリーダ利用者にも結果到達（region）が伝わる。
-  // - jsdom 等 scrollIntoView / matchMedia 未定義環境ではガードして no-op にする。
   useEffect(() => {
     if (phase !== "result") return;
-    const region = resultRegionRef.current;
-    if (!region) return;
-
-    const prefersReducedMotion =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (typeof region.scrollIntoView === "function") {
-      region.scrollIntoView({
-        // reduce 指定時は即時（"auto"）、それ以外は穏当な smooth
-        behavior: prefersReducedMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    }
-    // tabIndex={-1} の region へプログラム的にフォーカスを移す。
-    // preventScroll で focus() 既定のスクロールを抑止し、見え方を上の
-    // scrollIntoView（smooth）に委ねる。preventScroll なしだと focus() の即時
-    // スクロールが smooth を打ち消してジャンプに化ける。
-    region.focus({ preventScroll: true });
+    const box = resultBoxRef.current;
+    if (!box) return;
+    box.scrollIntoView?.({ behavior: "instant", block: "start" });
+    box.focus({ preventScroll: true });
   }, [phase]);
 
   const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
@@ -232,42 +217,28 @@ export default function QuizContainer({
           .filter((r): r is QuizResult => r !== undefined)
       : [];
 
-  // result region の読み上げラベルは quizType で出し分ける。この wrapper は
-  // 全 quizType 共通のため固定文言だと knowledge クイズでも「診断結果」と読まれて
-  // しまう（知識クイズは「診断」でなく「クイズ」）。
-  const resultRegionLabel =
-    quiz.meta.type === "personality" ? "診断結果" : "クイズ結果";
-
   return (
-    <div
-      className={styles.resultPhase}
-      // 完走→結果のリビール対象領域。プログラム的フォーカスの受け皿
-      // （tabIndex={-1}）＋スクリーンリーダ向けに結果領域であることを伝える。
-      ref={resultRegionRef}
-      tabIndex={-1}
-      role="region"
-      aria-label={resultRegionLabel}
-    >
-      {/* 結果本体（主役）。器は静かに、成果物（ResultCard内の Tsutsumi）だけが主役。 */}
-      <div className={styles.stage}>
-        <ResultCard
-          result={result}
-          quizType={quiz.meta.type}
-          quizTitle={quiz.meta.title}
-          quizSlug={quiz.meta.slug}
-          score={score}
-          totalQuestions={
-            quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
-          }
-          onRetry={handleRetry}
-          detailedContent={result.detailedContent}
-          resultPageLabels={quiz.meta.resultPageLabels}
-          referrerTypeId={referrerTypeId}
-          allResults={quiz.results}
-          coTypes={coTypes}
-        />
-      </div>
-      {/* 回遊導線・追加コンテンツは本体の外に二次配置（入れ子回避） */}
+    <div className={styles.resultPhase}>
+      <ResultCard
+        result={result}
+        heading={resultHeadings[result.id]}
+        readingHeadings={readingHeadings}
+        quizType={quiz.meta.type}
+        quizTitle={quiz.meta.title}
+        quizSlug={quiz.meta.slug}
+        score={score}
+        totalQuestions={
+          quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
+        }
+        onRetry={handleRetry}
+        detailedContent={result.detailedContent}
+        resultPageLabels={quiz.meta.resultPageLabels}
+        referrerTypeId={referrerTypeId}
+        allResults={quiz.results}
+        coTypes={coTypes}
+        resultBoxRef={resultBoxRef}
+        appear
+      />
       {recommendedContents && recommendedContents.length > 0 && (
         <ResultNextContent items={recommendedContents} />
       )}

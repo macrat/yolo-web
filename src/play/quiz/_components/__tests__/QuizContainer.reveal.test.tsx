@@ -1,9 +1,9 @@
 /**
- * QuizContainer — 結果リビール（a11y 回帰ガード）。
+ * QuizContainer — 結果に着いたとき。
  *
- * 完走（result phase 到達）で result region に role="region" / tabIndex=-1 /
- * 種別別の aria-label（personality→「診断結果」・knowledge→「クイズ結果」）が付き、
- * scrollIntoView と focus（preventScroll: true）が呼ばれることを検証する。
+ * 最後の設問に答えると、結果のボックスまで画面を即時に送り（DESIGN.md §11）、ボックスにフォーカスを移す。
+ * 結果は操作に応えて現れたものなので、ボックスに登場の動き（appear）を渡す。結果の見出しには、サーバーで
+ * 作った区切りのうち、その結果のものを渡す。
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
@@ -44,9 +44,25 @@ vi.mock("@/components/Button", () => ({
   ),
 }));
 
-// ResultCard は重量級なので軽量化（本テストは result region の a11y を観察するのが目的）。
+// ResultCard は、結果のボックスにあたる要素だけを描く軽い形にし、受け取った値を属性で見せる。
 vi.mock("../ResultCard", () => ({
-  default: () => <div data-testid="result-card" />,
+  default: ({
+    resultBoxRef,
+    heading,
+    appear,
+  }: {
+    resultBoxRef: React.Ref<HTMLElement>;
+    heading: { phrases: string[] };
+    appear?: boolean;
+  }) => (
+    <section
+      ref={resultBoxRef}
+      tabIndex={-1}
+      data-testid="result-box"
+      data-phrases={heading.phrases.join("|")}
+      data-appear={String(Boolean(appear))}
+    />
+  ),
 }));
 vi.mock("../ResultExtraLoader", () => ({
   default: () => null,
@@ -119,7 +135,16 @@ function makeKnowledgeQuiz(): QuizDefinition {
 
 /** quiz をプレイして結果まで遷移する（level_end 発火まで待つ） */
 async function playToLevelEnd(quiz: QuizDefinition) {
-  render(<QuizContainer quiz={quiz} />);
+  const resultHeadings = Object.fromEntries(
+    quiz.results.map((result) => [result.id, { phrases: [...result.title] }]),
+  );
+  render(
+    <QuizContainer
+      quiz={quiz}
+      resultHeadings={resultHeadings}
+      readingHeadings={{}}
+    />,
+  );
   // "はじめる" を押して playing へ
   const startBtn = screen.getByRole("button", { name: "はじめる" });
   await act(async () => {
@@ -149,7 +174,7 @@ async function playToLevelEnd(quiz: QuizDefinition) {
   expect(levelEndCalls.length).toBeGreaterThan(0);
 }
 
-describe("QuizContainer — 結果リビール（a11y 回帰ガード）", () => {
+describe("QuizContainer — 結果に着いたとき", () => {
   let scrollIntoViewSpy: ReturnType<typeof vi.fn>;
   let focusSpy: ReturnType<typeof vi.spyOn>;
   // jsdom に元から scrollIntoView が無い場合の復元用（元記述子を退避）。
@@ -183,20 +208,44 @@ describe("QuizContainer — 結果リビール（a11y 回帰ガード）", () =>
     }
   });
 
-  test("personality 完走: result region に role/tabIndex/aria-label=診断結果 が付き、scrollIntoView と focus(preventScroll) が呼ばれる", async () => {
-    // playToLevelEnd は render→完走までを行う。
+  test("結果のボックスまで画面を即時に送り、ボックスにフォーカスを移す", async () => {
     await playToLevelEnd(makePersonalityQuiz());
-    const region = screen.getByRole("region");
-    expect(region).toHaveAttribute("tabindex", "-1");
-    expect(region).toHaveAttribute("aria-label", "診断結果");
-    expect(scrollIntoViewSpy).toHaveBeenCalled();
-    // focus は既定スクロール抑止（preventScroll: true）で呼ばれる。
+    const box = screen.getByTestId("result-box");
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    expect(scrollIntoViewSpy.mock.contexts[0]).toBe(box);
+    expect(scrollIntoViewSpy).toHaveBeenCalledWith({
+      behavior: "instant",
+      block: "start",
+    });
     expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+    expect(document.activeElement).toBe(box);
   });
 
-  test("knowledge 完走: result region の aria-label が「クイズ結果」になる", async () => {
+  test("結果のボックスに登場の動きと、その結果の見出しの区切りを渡す", async () => {
+    await playToLevelEnd(makePersonalityQuiz());
+    const box = screen.getByTestId("result-box");
+    expect(box).toHaveAttribute("data-appear", "true");
+    expect(["タ|イ|プ|A", "タ|イ|プ|B"]).toContain(
+      box.getAttribute("data-phrases"),
+    );
+  });
+
+  test("知識クイズでも、結果のボックスへ送ってフォーカスを移す", async () => {
     await playToLevelEnd(makeKnowledgeQuiz());
-    const region = screen.getByRole("region");
-    expect(region).toHaveAttribute("aria-label", "クイズ結果");
+    const box = screen.getByTestId("result-box");
+    expect(box).toHaveAttribute("data-phrases", "L|e|v|e|l| |1");
+    expect(document.activeElement).toBe(box);
+  });
+
+  test("開始の画面では画面を送らない", () => {
+    const quiz = makePersonalityQuiz();
+    render(
+      <QuizContainer
+        quiz={quiz}
+        resultHeadings={{ "type-a": { phrases: ["タイプA"] } }}
+        readingHeadings={{}}
+      />,
+    );
+    expect(scrollIntoViewSpy).not.toHaveBeenCalled();
   });
 });

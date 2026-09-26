@@ -1,7 +1,7 @@
 import { expect, test, vi, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import React from "react";
-import ResultCard from "../ResultCard";
+import React, { type ComponentProps } from "react";
+import ResultCardComponent from "../ResultCard";
 import type {
   QuizResult,
   QuizResultDetailedContent,
@@ -383,6 +383,27 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+/**
+ * 見出しの区切りはサーバーで作って渡すものなので、テストでは結果の名前を1つの区切りとして渡し、読みものの
+ * 小見出しの区切りは渡さない（受け取っていない小見出しは1つの文節として組まれる）。
+ */
+function ResultCard(
+  props: Omit<
+    ComponentProps<typeof ResultCardComponent>,
+    "heading" | "readingHeadings"
+  >,
+) {
+  return (
+    <ResultCardComponent
+      heading={{
+        phrases: [props.result.nameParts?.name ?? props.result.title],
+      }}
+      readingHeadings={{}}
+      {...props}
+    />
+  );
+}
+
 const baseResult: QuizResult = {
   id: "type-a",
   title: "テスト結果",
@@ -392,7 +413,7 @@ const baseResult: QuizResult = {
 
 /**
  * 色をインラインスタイルで持つ要素。色見本（主題が色の項目）を除く。
- * タイプやクイズの色は装飾に使わず、結果の包みも和色を data-color で選ぶので、ほかに色を入れる要素は無い（DESIGN.md §2）。
+ * タイプやクイズの色は装飾に使わないので、色が結果そのもの（伝統色診断）の色見本のほかに色を入れる要素は無い（DESIGN.md §2）。
  */
 function inlineColoredElements(container: HTMLElement): HTMLElement[] {
   return Array.from(container.querySelectorAll<HTMLElement>("[style]")).filter(
@@ -410,56 +431,56 @@ const defaultProps = {
   onRetry: vi.fn(),
 };
 
-describe("ResultCard - 結果を包み（Tsutsumi）で見せる（personality 型のみ）", () => {
-  // 適用条件: quizType === "personality" かつ result.icon と result.color が両方存在。
-  const tsutsumiResult: QuizResult = {
+describe("ResultCard - 結果のボックス", () => {
+  const typeResult: QuizResult = {
     id: "type-a",
-    title: "包みのタイプ",
-    description: "包みの説明です。",
+    title: "炎の詩人",
+    description: "炎の詩人の説明です。",
     icon: "🦊",
     color: "#c0392b",
   };
 
-  test("personality + icon + color のとき結果が包み（Tsutsumi）で表示される（診断完了ラベル・タイプ名・絵文字なし）", () => {
+  test("結果は、タイプ名の見出しを名前に持つ region で、補助情報が何の結果かを言う", () => {
+    render(<ResultCard {...defaultProps} result={typeResult} />);
+    const box = screen.getByRole("region", { name: "炎の詩人" });
+    expect(box.tagName).toBe("SECTION");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "炎の詩人" }),
+    ).toBeInTheDocument();
+    expect(box).toHaveTextContent("テストクイズの結果");
+    expect(box).toHaveTextContent("炎の詩人の説明です。");
+  });
+
+  test("タイプ名はサーバーで作った区切りのあいだに <wbr> を置いて組み、読み上げの名前はタイトルと同じ", () => {
+    render(
+      <ResultCardComponent
+        {...defaultProps}
+        result={{ ...typeResult, title: "締切3分前に本気出す炎の司令塔" }}
+        heading={{ phrases: ["締切3分前に", "本気出す", "炎の司令塔"] }}
+        readingHeadings={{}}
+      />,
+    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading.querySelectorAll("wbr")).toHaveLength(2);
+    expect(heading).toHaveAccessibleName("締切3分前に本気出す炎の司令塔");
+  });
+
+  test("包み・印・記号面・「診断完了」・絵文字を持たない", () => {
     const { container } = render(
-      <ResultCard {...defaultProps} result={tsutsumiResult} />,
+      <ResultCard {...defaultProps} result={typeResult} />,
     );
-    // 到達の承認ラベル（包み表示時のみ）
-    expect(screen.getByText("診断完了")).toBeInTheDocument();
-    // タイプ名は包みの核として表示される（複数箇所に出現しうるため queryAllByText で存在だけ確認）
-    expect(screen.queryAllByText("包みのタイプ").length).toBeGreaterThan(0);
-    // Tsutsumi（包み）が figure として描画され、和色8色のいずれかに決定的に写像される
-    const tsutsumi = container.querySelector("figure[data-color]");
-    expect(tsutsumi).not.toBeNull();
-    expect([
-      "kurenai",
-      "kaki",
-      "yamabuki",
-      "moegi",
-      "tokiwa",
-      "ai",
-      "fuji",
-      "suou",
-    ]).toContain(tsutsumi?.getAttribute("data-color"));
-    // 絵文字（result.icon）は装飾として描画しない（DESIGN.md §5 絵文字を置かない）
+    expect(container.querySelector("figure")).toBeNull();
+    expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
     expect(screen.queryByText("🦊")).not.toBeInTheDocument();
+    expect(inlineColoredElements(container)).toEqual([]);
   });
 
-  test("包みで見せる結果タイトルは見出し(h2)で描画される（SRの見出しナビで結果に到達できる・WCAG 1.3.1）", () => {
-    render(<ResultCard {...defaultProps} result={tsutsumiResult} />);
-    const heading = screen.getByRole("heading", {
-      level: 2,
-      name: "包みのタイプ",
-    });
-    expect(heading.tagName).toBe("H2");
-  });
-
-  test("読み方を持つタイプは、見出しを名前だけにし、読み方をそのすぐ後ろに添える", () => {
+  test("読み方を持つタイプは、見出しを名前だけにし、読み方を名前のすぐ下に添える", () => {
     render(
       <ResultCard
         {...defaultProps}
         result={{
-          ...tsutsumiResult,
+          ...typeResult,
           title: "花鳥風月タイプ",
           reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
         }}
@@ -469,59 +490,115 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（personality �
       level: 2,
       name: "花鳥風月タイプ",
     });
-    expect(heading.nextElementSibling).toHaveTextContent("かちょうふうげつ");
+    const reading = screen.getByText("かちょうふうげつ");
+    expect(
+      heading.compareDocumentPosition(reading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      reading.compareDocumentPosition(
+        screen.getByText("炎の詩人の説明です。"),
+      ) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
-  test("包みで見せないときも、読み方を見出しのすぐ後ろに添える", () => {
+  test("名前と読みを持つタイプ（伝統色）は、見出しを名前だけにし、読みを名前のすぐ下に添える", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={{
+          ...typeResult,
+          title: "藍色(あいいろ)",
+          nameParts: { name: "藍色", reading: "あいいろ" },
+        }}
+      />,
+    );
+    expect(screen.getByRole("region", { name: "藍色" })).toHaveTextContent(
+      "あいいろ",
+    );
+    expect(screen.getByText("あいいろ").tagName).toBe("P");
+  });
+
+  test("appear を渡したときだけ、ボックスが登場の動きを持つ", () => {
+    const { rerender } = render(
+      <ResultCard {...defaultProps} result={typeResult} />,
+    );
+    const box = screen.getByRole("region", { name: "炎の詩人" });
+    expect(box.className).not.toMatch(/appears/);
+    rerender(<ResultCard {...defaultProps} result={typeResult} appear />);
+    expect(box.className).toMatch(/appears/);
+  });
+
+  test("結果のボックスへの参照を渡すと、ボックスがフォーカスを受けられる", () => {
+    const ref = React.createRef<HTMLElement>();
+    render(
+      <ResultCard {...defaultProps} result={typeResult} resultBoxRef={ref} />,
+    );
+    expect(ref.current).toBe(screen.getByRole("region", { name: "炎の詩人" }));
+    expect(ref.current).toHaveAttribute("tabindex", "-1");
+  });
+
+  test("知識クイズは、段位の名前の見出しと、単位を書いた正解の数を出す", () => {
     render(
       <ResultCard
         {...defaultProps}
         quizType="knowledge"
-        result={{
-          ...tsutsumiResult,
-          title: "花鳥風月タイプ",
-          reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
-        }}
+        quizTitle="漢字力診断"
+        result={{ ...typeResult, title: "漢字マスター" }}
+        score={8}
+        totalQuestions={10}
       />,
     );
-    const heading = screen.getByRole("heading", {
-      level: 2,
-      name: "花鳥風月タイプ",
-    });
-    expect(heading.nextElementSibling).toHaveTextContent("かちょうふうげつ");
+    const box = screen.getByRole("region", { name: "漢字マスター" });
+    expect(box).toHaveTextContent("漢字力診断の結果");
+    expect(screen.getByText("10問中8問正解")).toBeInTheDocument();
   });
+});
 
-  test("color 欠落時は抑制ヘッダにフォールバック（診断完了ラベル・象徴を出さない）", () => {
-    // baseResult は icon はあるが color なし
+describe("ResultCard - 結果を共有する区画", () => {
+  const characterContent = {
+    variant: "character-personality",
+    catchphrase: "キャッチコピー",
+  } as unknown as ComponentProps<typeof ResultCard>["detailedContent"];
+
+  test("ボックスのすぐ後ろに「この結果を共有」の区画が1つだけあり、共有のボタンを持つ", () => {
     render(<ResultCard {...defaultProps} />);
-    expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
-    // フォールバック時は象徴アイコンを出さない
-    expect(screen.queryByText("🧪")).not.toBeInTheDocument();
-    // タイプ名と「あなたの結果」ラベルは表示される
-    expect(screen.getByText("テスト結果")).toBeInTheDocument();
-    expect(screen.getByText("あなたの結果")).toBeInTheDocument();
+    const box = screen.getByRole("region", { name: "テスト結果" });
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    expect(box.nextElementSibling).toBe(share);
+    expect(share).toContainElement(screen.getByTestId("share-buttons"));
+    expect(screen.getAllByTestId("share-buttons")).toHaveLength(1);
   });
 
-  test("knowledge 型は icon/color があっても包みを出さずフォールバックする", () => {
+  test("character-personality では、札の画像の保存と共有も同じ区画に置く", () => {
     render(
       <ResultCard
         {...defaultProps}
-        quizType="knowledge"
-        result={tsutsumiResult}
+        quizSlug="character-personality"
+        detailedContent={characterContent}
       />,
     );
-    expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
-    expect(screen.getByText("包みのタイプ")).toBeInTheDocument();
-    expect(screen.getByText("あなたの結果")).toBeInTheDocument();
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    expect(
+      screen.getByRole("button", { name: "画像を保存" }),
+    ).toBeInTheDocument();
+    expect(share).toContainElement(
+      screen.getByRole("button", { name: "画像を保存" }),
+    );
+  });
+
+  test("ほかの診断では、札の画像のボタンを置かない", () => {
+    render(<ResultCard {...defaultProps} />);
+    expect(
+      screen.queryByRole("button", { name: "画像を保存" }),
+    ).not.toBeInTheDocument();
   });
 });
 
 describe("ResultCard - detailedContent未設定", () => {
-  test("detailedContentがundefinedの場合、detailedSectionが表示されないこと", () => {
-    const { container } = render(<ResultCard {...defaultProps} />);
-    // detailedSectionクラスの要素が存在しないことを確認
-    // (CSSモジュールのためdata-testidで確認)
-    expect(container.querySelector(".detailedSection")).toBeNull();
+  test("detailedContentがundefinedの場合、詳しい読みものの小見出しを持たないこと（小見出しは「この結果を共有」だけ）", () => {
+    render(<ResultCard {...defaultProps} />);
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(1);
     // ただし基本コンテンツは表示される
     expect(screen.getByText("テスト結果")).toBeInTheDocument();
     expect(screen.getByText("テスト用の結果説明です。")).toBeInTheDocument();
@@ -779,30 +856,66 @@ describe("ResultCard - character-fortune variant", () => {
 });
 
 describe("ResultCard - DOM順序", () => {
-  test("detailedSection が ShareButtons より先に表示されること", () => {
+  test("結果のボックス・結果の共有・詳しい読みもの・もう一度挑戦するの順に並ぶこと", () => {
     const domOrderContent: QuizResultDetailedContent = {
       traits: ["特徴1"],
       behaviors: ["あるある1"],
       advice: "アドバイス",
     };
 
-    const { container } = render(
-      <ResultCard {...defaultProps} detailedContent={domOrderContent} />,
+    render(<ResultCard {...defaultProps} detailedContent={domOrderContent} />);
+
+    const order = [
+      screen.getByRole("region", { name: "テスト結果" }),
+      screen.getByTestId("share-buttons"),
+      screen.getByText("あるある1"),
+      screen.getByRole("button", { name: "もう一度挑戦する" }),
+    ];
+    for (let i = 1; i < order.length; i++) {
+      expect(
+        order[i - 1].compareDocumentPosition(order[i]) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    }
+  });
+
+  test("読みものの小見出しは、受け取った文節の区切りのあいだに <wbr> を置いた h3 で組む", () => {
+    const content: QuizResultDetailedContent = {
+      traits: ["特徴1"],
+      behaviors: ["あるある1"],
+      advice: "アドバイス",
+    };
+    render(
+      <ResultCardComponent
+        {...defaultProps}
+        heading={{ phrases: ["テスト結果"] }}
+        readingHeadings={{
+          このタイプのあるある: ["この", "タイプの", "あるある"],
+        }}
+        detailedContent={content}
+      />,
     );
+    const heading = screen.getByRole("heading", {
+      level: 3,
+      name: "このタイプのあるある",
+    });
+    expect(heading.querySelectorAll("wbr")).toHaveLength(2);
+  });
 
-    const shareButtons = container.querySelector(
-      "[data-testid='share-buttons']",
-    );
-    const behaviorsItem = screen.getByText("あるある1").closest("li");
-
-    expect(shareButtons).toBeInTheDocument();
-    expect(behaviorsItem).toBeInTheDocument();
-
-    if (shareButtons && behaviorsItem) {
-      // behaviorsItemがshareButtonsより前に現れることを確認
-      const position = shareButtons.compareDocumentPosition(behaviorsItem);
-      // Node.DOCUMENT_POSITION_PRECEDING = 2 (behaviorsItemがshareButtonsより前)
-      expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  test("詳しい読みものは、あるあるを箇条書き、アドバイスを段落で組み、地や枠のカードを持たない", () => {
+    const content: QuizResultDetailedContent = {
+      traits: ["特徴1"],
+      behaviors: ["あるある1", "あるある2"],
+      advice: "アドバイス",
+    };
+    render(<ResultCard {...defaultProps} detailedContent={content} />);
+    expect(screen.getByText("あるある1").tagName).toBe("LI");
+    expect(screen.getByText("アドバイス").tagName).toBe("P");
+    for (const element of [
+      screen.getByText("あるある1"),
+      screen.getByText("アドバイス"),
+    ]) {
+      expect(element.className).not.toMatch(/card|item/i);
     }
   });
 });
@@ -953,12 +1066,6 @@ describe("ResultCard - animal-personality variant", () => {
     const { container } = render(<ResultCard {...animalProps} />);
     expect(inlineColoredElements(container)).toEqual([]);
   });
-
-  test("AnimalPersonalityContent の wrapper クラスが存在すること", () => {
-    const { container } = render(<ResultCard {...animalProps} />);
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
 });
 
 describe("ResultCard - catchphrase に色を入れない", () => {
@@ -992,8 +1099,8 @@ describe("ResultCard - catchphrase に色を入れない", () => {
     icon: "🎪",
   };
 
-  test("animal-personality: catchphraseBeforeDescription がインラインスタイルを持たないこと", () => {
-    const { container } = render(
+  test("animal-personality: キャッチコピーがインラインスタイルを持たないこと", () => {
+    render(
       <ResultCard
         result={animalResult}
         quizType="personality"
@@ -1003,15 +1110,13 @@ describe("ResultCard - catchphrase に色を入れない", () => {
         detailedContent={animalContent}
       />,
     );
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
-    );
-    expect(catchphraseEl).not.toBeNull();
-    expect(catchphraseEl?.getAttribute("style")).toBeNull();
+    expect(
+      screen.getByText("動物キャッチコピー").getAttribute("style"),
+    ).toBeNull();
   });
 
-  test("music-personality: catchphraseBeforeDescription がインラインスタイルを持たないこと", () => {
-    const { container } = render(
+  test("music-personality: キャッチコピーがインラインスタイルを持たないこと", () => {
+    render(
       <ResultCard
         result={musicResult}
         quizType="personality"
@@ -1021,11 +1126,9 @@ describe("ResultCard - catchphrase に色を入れない", () => {
         detailedContent={musicContent}
       />,
     );
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
-    );
-    expect(catchphraseEl).not.toBeNull();
-    expect(catchphraseEl?.getAttribute("style")).toBeNull();
+    expect(
+      screen.getByText("音楽キャッチコピー").getAttribute("style"),
+    ).toBeNull();
   });
 });
 
@@ -1172,12 +1275,17 @@ describe("ResultCard - traditional-color variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
+  test("結果の色を、結果のボックスの中の色見本で見せ、ほかの要素には色を入れないこと", () => {
     const { container } = render(<ResultCard {...traditionalColorProps} />);
-    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
-    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
-    const tsutsumi = container.querySelector("figure[data-color]");
-    expect(tsutsumi).not.toBeNull();
+    const box = screen.getByRole("region", {
+      name: traditionalColorProps.result.title,
+    });
+    const swatch = box.querySelector("[data-swatch]");
+    expect(swatch).toHaveAttribute(
+      "data-swatch",
+      traditionalColorProps.result.color,
+    );
+    expect(swatch).toBeEmptyDOMElement();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 
@@ -1241,28 +1349,21 @@ describe("ResultCard - yoji-personality variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
+  test("タイプの色を、色見本にもどの要素のインラインスタイルにも入れないこと", () => {
     const { container } = render(<ResultCard {...yojiProps} />);
-    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
-    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
-    const tsutsumi = container.querySelector("figure[data-color]");
-    expect(tsutsumi).not.toBeNull();
+    expect(container.querySelector("[data-swatch]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 
-  test("result.color が未設定の場合、catchphraseBeforeDescription がインラインスタイルを持たないこと", () => {
+  test("result.color が未設定の場合、キャッチコピーがインラインスタイルを持たないこと", () => {
     const yojiResultNoColor: QuizResult = {
       ...yojiResult,
       color: undefined,
     };
-    const { container } = render(
-      <ResultCard {...yojiProps} result={yojiResultNoColor} />,
-    );
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
-    );
-    expect(catchphraseEl).not.toBeNull();
-    expect(catchphraseEl?.getAttribute("style")).toBeNull();
+    render(<ResultCard {...yojiProps} result={yojiResultNoColor} />);
+    expect(
+      screen.getByText("四方を見渡す、あなたの眼力。").getAttribute("style"),
+    ).toBeNull();
   });
 });
 
@@ -1333,12 +1434,9 @@ describe("ResultCard - unexpected-compatibility variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
+  test("タイプの色を、色見本にもどの要素のインラインスタイルにも入れないこと", () => {
     const { container } = render(<ResultCard {...unexpectedProps} />);
-    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
-    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
-    const tsutsumi = container.querySelector("figure[data-color]");
-    expect(tsutsumi).not.toBeNull();
+    expect(container.querySelector("[data-swatch]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 });
@@ -1479,12 +1577,9 @@ describe("ResultCard - impossible-advice variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
+  test("タイプの色を、色見本にもどの要素のインラインスタイルにも入れないこと", () => {
     const { container } = render(<ResultCard {...impossibleProps} />);
-    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
-    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
-    const tsutsumi = container.querySelector("figure[data-color]");
-    expect(tsutsumi).not.toBeNull();
+    expect(container.querySelector("[data-swatch]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 });
@@ -1525,22 +1620,18 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
     );
   });
 
-  test("coTypes が未指定のときは開示ブロックを描画しない（単独勝者）", () => {
-    const { container } = render(<ResultCard {...wordSenseProps} />);
+  test("coTypes が未指定のときは同点を言わない（単独勝者）", () => {
+    render(<ResultCard {...wordSenseProps} />);
     expect(
-      screen.queryByLabelText("同じくらい強く出た型"),
+      screen.queryByText(/同じくらい強く出ています/),
     ).not.toBeInTheDocument();
-    expect(container.querySelector("[class*='tiedDisclosure']")).toBeNull();
   });
 
-  test("coTypes が空配列のときも開示ブロックを描画しない", () => {
-    const { container } = render(
-      <ResultCard {...wordSenseProps} coTypes={[]} />,
-    );
+  test("coTypes が空配列のときも同点を言わない", () => {
+    render(<ResultCard {...wordSenseProps} coTypes={[]} />);
     expect(
-      screen.queryByLabelText("同じくらい強く出た型"),
+      screen.queryByText(/同じくらい強く出ています/),
     ).not.toBeInTheDocument();
-    expect(container.querySelector("[class*='tiedDisclosure']")).toBeNull();
   });
 
   test("2 型同点（coTypes 1 件）: 主タイプと副タイプを同格に列挙し、副タイプの結果解説へリンクする", () => {
@@ -1554,9 +1645,11 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
     ];
     render(<ResultCard {...wordSenseProps} coTypes={coTypes} />);
 
-    // 開示ブロックの region が存在する
-    const region = screen.getByLabelText("同じくらい強く出た型");
-    expect(region).toBeInTheDocument();
+    // 同点は、結果のボックスの中で言う
+    const region = screen.getByText(/同じくらい強く出ています/);
+    expect(
+      screen.getByRole("region", { name: "一字千金タイプ" }),
+    ).toContainElement(region);
 
     // 同格コピー: 主・副の両型名を含み「同じくらい強く出ています」と述べる（X>Y を暗示しない）
     expect(region.textContent).toContain("一字千金（いちじせんきん）タイプ");
@@ -1592,7 +1685,7 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
     ];
     render(<ResultCard {...wordSenseProps} coTypes={coTypes} />);
 
-    const region = screen.getByLabelText("同じくらい強く出た型");
+    const region = screen.getByText(/同じくらい強く出ています/);
     expect(region.textContent).toContain("一字千金（いちじせんきん）タイプ");
     expect(region.textContent).toContain("花鳥風月（かちょうふうげつ）タイプ");
     expect(region.textContent).toContain("理路整然（りろせいぜん）タイプ");
