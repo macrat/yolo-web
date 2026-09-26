@@ -20,7 +20,7 @@ import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import DisclosureRow from "@/tools/_components/DisclosureRow";
-import { useListBrowseState } from "@/tools/_lib/useListBrowseState";
+import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
 import {
   KEIGO_LIST_ITEMS,
   KEIGO_LIST_SPEC,

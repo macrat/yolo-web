@@ -23,7 +23,10 @@
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 語の後ろに読みと意味を続け、残りの幅が狭ければ次の行に回して、1字ずつ折れる細い列にしない。 */
+/* 難易度（補助情報）は、四字熟語辞典の一覧の行（ItemList）と同じ位置に置く（§7）。狭い画面では語と読みの下・意味の
+ * 上、広い画面では1行目の右端。語の後ろに読みを続け、残りの幅が狭ければ読みを次の行に回して、1字ずつ折れる細い
+ * 列にしない。読み・難易度・意味は読み上げの説明として1つの要素に包まれるので、その要素を display: contents に
+ * して、字を語と同じ並びに置く。 */
 .resultHead {
   display: flex;
   flex-wrap: wrap;
@@ -32,23 +35,45 @@
 }
 
 .yojiText {
+  grid-area: name;
+  min-width: 0;
   font-weight: 700;
 }
 
 .resultDescription {
-  flex: 1 1 12em;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: var(--space-8);
+  display: contents;
   color: var(--ink-2);
   font-size: var(--text-small);
 }
 
-.meaning {
-  flex: 1 1 12em;
+.reading {
+  grid-area: reading;
   min-width: 0;
+}
+
+.facts {
+  grid-area: facts;
+  flex-basis: 100%;
+}
+
+.meaning {
+  grid-area: meaning;
+  flex-basis: 100%;
+  min-width: 0;
+}
+
+/* 広い画面では、意味を読みに続けて1行目に置き、残りの幅で折り返す。難易度は、意味の長さによらず1行目の右端に
+ * 揃う。 */
+@media (min-width: 45rem) {
+  .resultHead {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "name reading meaning facts";
+  }
+
+  .facts {
+    margin-inline-start: var(--space-8);
+  }
 }
 
 .detailPanel {

@@ -6,7 +6,7 @@ import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
 import Pagination from "@/components/Pagination";
 import DisclosureRow from "@/tools/_components/DisclosureRow";
-import { useListBrowseState } from "@/tools/_lib/useListBrowseState";
+import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
 import {
   YOJI_CATEGORY_LABELS,
   YOJI_DIFFICULTY_LABELS,
@@ -52,7 +52,9 @@ function YojiDetail({ entry }: { entry: YojiEntry }) {
 
 /**
  * 四字熟語を探す道具。件数の行・名前の欄・畳める絞り込みと並び順の組・結果の行・ページ送りを縦に並べる
- * （DESIGN.md §7「件数と備え」）。結果の行は開閉する行で、開くと例文と分類が出る（§8）。
+ * （DESIGN.md §7「件数と備え」）。結果の行は開閉する行で、閉じた行は語・読み・難易度・意味を見せ、開くと例文と
+ * 分類が出る（§8）。難易度は四字熟語辞典の一覧の行と同じ語と位置の補助情報で、やさしい順が何の順かを行で
+ * 確かめられる（§7）。
  *
  * 絞り込み・並び順・ページは URL のクエリに持ち、詳細を開いて戻っても同じ状態で出る。
  */
@@ -133,7 +135,7 @@ export default function YojiSearchTile({
         {slice.items.length > 0 ? (
           <div>
             <ul className={styles.resultList}>
-              {slice.items.map(({ entry }) => (
+              {slice.items.map(({ entry, facts = [] }) => (
                 <li key={entry.yoji} className={styles.resultItem}>
                   <DisclosureRow
                     open={openYoji === entry.yoji}
@@ -149,6 +151,9 @@ export default function YojiSearchTile({
                     description={
                       <>
                         <span className={styles.reading}>{entry.reading}</span>{" "}
+                        <span className={styles.facts}>
+                          {facts.map((fact) => fact.text).join(" ")}
+                        </span>{" "}
                         <span className={styles.meaning}>{entry.meaning}</span>
                       </>
                     }

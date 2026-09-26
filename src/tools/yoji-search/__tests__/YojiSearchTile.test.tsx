@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import YojiSearchTile from "../YojiSearchTile";
+import { YOJI_DIFFICULTY_LABELS } from "@/dictionary/_lib/types";
 import { YOJI_SEARCH_ITEMS } from "../logic";
 
 // 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
@@ -117,14 +118,31 @@ describe("YojiSearchTile", () => {
     expect(rowButtons()[0]).toBe(rowButton(YOJI_SEARCH_ITEMS[50].name));
   });
 
-  it("行の読み上げの名前は語だけで、読みと意味は説明になる", () => {
+  it("行の読み上げの名前は語だけで、読み・難易度・意味は説明になる", () => {
     render(<YojiSearchTile />);
     const { entry } = YOJI_SEARCH_ITEMS[0];
     const button = rowButton(entry.yoji);
     expect(button).toHaveAccessibleName(entry.yoji);
     expect(button).toHaveAccessibleDescription(
-      `${entry.reading} ${entry.meaning}`,
+      `${entry.reading} ${YOJI_DIFFICULTY_LABELS[entry.difficulty]} ${entry.meaning}`,
     );
+  });
+
+  it("やさしい順では、閉じた行に見えている難易度の順に並ぶ", () => {
+    // 初級から中級へ移るところを含むページ。
+    const firstIntermediate = YOJI_SEARCH_ITEMS.filter(
+      ({ entry }) => entry.difficulty === 1,
+    ).length;
+    const page = Math.ceil((firstIntermediate + 1) / 50);
+    visit(`?sort=easy&page=${page}`);
+    render(<YojiSearchTile />);
+    const labels = Object.values(YOJI_DIFFICULTY_LABELS);
+    const shown = rowButtons().map((button) =>
+      labels.findIndex((label) => within(button).queryByText(label) !== null),
+    );
+    expect(shown).not.toContain(-1);
+    expect(new Set(shown).size).toBeGreaterThan(1);
+    expect(shown).toEqual([...shown].sort((a, b) => a - b));
   });
 
   it("行を押すと詳細が開き、もう一度押すと閉じる。開く行は1つだけ", () => {

@@ -30,7 +30,7 @@ import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
-import { useListBrowseState } from "@/tools/_lib/useListBrowseState";
+import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
