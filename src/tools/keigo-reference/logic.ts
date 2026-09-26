@@ -1,3 +1,5 @@
+import type { BrowseItem, BrowseSpec } from "@/lib/list-browse";
+
 // Keigo category types
 export type KeigoCategory = "basic" | "business" | "service";
 
@@ -1203,39 +1205,6 @@ export function getEntriesByCategory(category: KeigoCategory): KeigoEntry[] {
   return KEIGO_ENTRIES.filter((entry) => entry.category === category);
 }
 
-export function searchEntries(query: string): KeigoEntry[] {
-  if (!query.trim()) return KEIGO_ENTRIES;
-  const q = query.trim().toLowerCase();
-  return KEIGO_ENTRIES.filter(
-    (entry) =>
-      entry.casual.toLowerCase().includes(q) ||
-      entry.sonkeigo.toLowerCase().includes(q) ||
-      entry.kenjogo.toLowerCase().includes(q) ||
-      entry.teineigo.toLowerCase().includes(q),
-  );
-}
-
-export function filterEntries(
-  query: string,
-  category: KeigoCategory | "all",
-): KeigoEntry[] {
-  let entries = KEIGO_ENTRIES;
-  if (category !== "all") {
-    entries = entries.filter((entry) => entry.category === category);
-  }
-  if (query.trim()) {
-    const q = query.trim().toLowerCase();
-    entries = entries.filter(
-      (entry) =>
-        entry.casual.toLowerCase().includes(q) ||
-        entry.sonkeigo.toLowerCase().includes(q) ||
-        entry.kenjogo.toLowerCase().includes(q) ||
-        entry.teineigo.toLowerCase().includes(q),
-    );
-  }
-  return entries;
-}
-
 export function getCommonMistakes(): CommonMistake[] {
   return COMMON_MISTAKES;
 }
@@ -1243,3 +1212,40 @@ export function getCommonMistakes(): CommonMistake[] {
 export function getMistakesByType(type: MistakeType): CommonMistake[] {
   return COMMON_MISTAKES.filter((m) => m.mistakeType === type);
 }
+
+// --- 一覧の絞り込みと並び順 ---
+
+const CATEGORY_NAMES = KEIGO_CATEGORIES.map((category) => category.name);
+
+/**
+ * 絞り込みと並び順の選択肢。種別は分類。普通語は読みを持たず五十音順に並べられないので、並び順は分類順だけで、
+ * 並び順を変える組を出さない（DESIGN.md §7）。分類の中は、データの順のまま。
+ */
+export const KEIGO_LIST_SPEC: BrowseSpec = {
+  kinds: KEIGO_CATEGORIES.map((category) => ({
+    value: category.id,
+    label: category.name,
+  })),
+  filterGroups: [],
+  sorts: [
+    {
+      value: "category",
+      label: "分類順",
+      keys: [{ by: "kind", order: CATEGORY_NAMES }],
+    },
+  ],
+};
+
+/** 早見表の行。絞り込みと並べ替えに使う値と、行に見せる敬語。 */
+export interface KeigoListItem extends BrowseItem {
+  entry: KeigoEntry;
+}
+
+/** 全件を早見表の行にしたもの。名前の絞り込みは、普通語に一致を見て、尊敬語・謙譲語・丁寧語も探す。 */
+export const KEIGO_LIST_ITEMS: KeigoListItem[] = KEIGO_ENTRIES.map((entry) => ({
+  name: entry.casual,
+  kind: KEIGO_CATEGORIES.find((category) => category.id === entry.category)
+    ?.name,
+  searchTexts: [entry.sonkeigo, entry.kenjogo, entry.teineigo],
+  entry,
+}));

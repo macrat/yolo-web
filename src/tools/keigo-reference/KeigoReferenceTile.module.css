@@ -1,93 +1,78 @@
 /* KeigoReferenceTile.module.css
  * Panel がルート要素のため .container クラスは不要（Panel.module.css に委譲）。
- *
- * 組み方:
- * - font-weight の最大値は 600（700以上は禁止）
- * - 角丸は --radius（0）に統一・フォーム境界線は --rule-strong
- * - 「よくある間違い」の 誤/正 は色分けしない。誤は墨（--ink）、
- *   正は--accentで「持ち帰るべき正答」だけを強調する。
- *   誤/正の区別は文言ラベル「誤:」「正:」が担う。
+ * 「よくある間違い」の誤/正は色分けせず、文言のラベル「誤:」「正:」が区別を担う。
  */
 
 /* タイル内レイアウト（Panel のパディング内側） */
 .inner {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-24);
 }
 
-/* 検索バー: 操作側 flexShrink:0・膨張側 flex:1（AP-P21 スクロール競合防止）。分類の組は見出しの分だけ背が
- * 高いので、下端で揃えてラジオボタンの行と検索の欄を同じ高さに置く。 */
-.searchBar {
+/* 件数の行と操作の組を早見表の上に置き、早見表とのあいだを 24px あける（§5 の間隔）。 */
+.browse {
   display: flex;
-  gap: 0.75rem;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--space-24);
 }
 
-.searchInputWrapper {
-  flex: 1;
-  min-width: 200px;
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-/* 分類の組は検索の欄に押し縮められず、並びに収まらなければ次の行に回る。行の幅を超えるときだけ、
- * 選択肢を組の中で折り返す。 */
-.categoryControl {
-  flex-shrink: 0;
-  max-width: 100%;
-}
-
-/* C-3: ライブリージョンサマリ */
-.resultCount {
-  font-size: 0.875rem;
-  color: var(--ink-2);
-  min-height: 1.25rem;
-  flex-shrink: 0;
-}
-
-/* デスクトップテーブル */
+/* 広い画面の表（§5）。外枠を持たず、見出し行は太字で、行どうし・列どうしを細い罫線で区切る。
+ * セルの上下の余白を、先頭のセルの開閉のボタンが 44px の中で字を置く位置と揃え、行の字の1行目を並べる。 */
 .table {
+  --row-line: calc(var(--text-body) * var(--leading-body));
   width: 100%;
   border-collapse: collapse;
 }
 
-.th {
-  font-size: 0.875rem;
-  font-weight: 600;
-  background-color: var(--paper-2);
-  border-bottom: 2px solid var(--rule-strong);
-  padding: 0.6rem 0.75rem;
-  text-align: left;
+.table th,
+.table td {
+  padding: max(0px, (44px - var(--row-line)) / 2) var(--space-8);
+  border: var(--rule-w-hair) solid var(--rule-2);
   color: var(--ink);
-}
-
-.tableRow {
-  border-bottom: 1px solid var(--rule);
-}
-
-.td {
-  padding: 0.6rem 0.75rem;
-  font-size: 0.9rem;
-  color: var(--ink);
+  line-height: var(--row-line);
+  text-align: start;
   vertical-align: top;
 }
 
-/* 先頭の th scope="row" セルのスタイル（td と同等だが th 要素） */
-.casualTh {
-  font-weight: inherit;
+.table thead th {
+  font-weight: 700;
+  border-top: none;
 }
 
-.casualCell {
-  font-weight: 600;
+.table tr > :first-child {
+  border-left: none;
+}
+
+.table tr > :last-child {
+  border-right: none;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: none;
+}
+
+/* 先頭のセルは普通語の開閉のボタンを持つ。セルの余白はボタンが押せる範囲の内側に持つ。 */
+.table .casualCell {
+  padding: 0;
+}
+
+.kindCell {
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  white-space: nowrap;
 }
 
 /*
- * <th scope="row"> 内の実 <button> で、その行の例文を開閉する。<tr> に role="button" を付けると
- * ARIA in HTML 仕様に違反するため、この設計にする。
- * 例文は次の行に出るので details で組めず、アコーディオン（§6）と同じ三角（DisclosureTriangle）を button に
- * 置く。縁の見えないコントロールなので、三角を並びの左端に揃え、字の左右の余白と張り出しは
- * data-text-box（globals.css）が持つ。hover の線とフォーカスのリングは globals.css の既定に従う。
+ * <th scope="row"> の中のボタンで、その行の例文を開閉する。例文は次の行に出るので details で組めず、
+ * アコーディオン（§6）と同じ三角（DisclosureTriangle）をボタンに置く。ボタンはセルの左端から始め、三角を
+ * ほかのセルの字と同じく左右の余白の内側に置く。hover の線とフォーカスのリングは globals.css の既定に従う。
  */
 .expandButton {
   display: flex;
@@ -95,13 +80,14 @@
   gap: var(--space-8);
   min-height: 44px;
   padding-block: max(0px, (44px - 1lh) / 2);
+  padding-inline: var(--space-8);
   background: none;
   border: none;
   font: inherit;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   line-height: inherit;
 }
 
@@ -110,14 +96,6 @@
   padding: 0.75rem 1rem;
   background-color: var(--paper-2);
   border-radius: var(--radius);
-}
-
-.examplePanelRow {
-  background-color: var(--paper-2);
-}
-
-.examplePanelRow td {
-  padding: 0 0.75rem 0.75rem;
 }
 
 .exampleItem {
@@ -200,75 +178,58 @@
   line-height: 1.5;
 }
 
-/* 検索結果なし */
-.noResults {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  text-align: center;
-  padding: 2rem 0;
-}
-
-/* 狭い画面の一覧（広い画面では表を出すので隠す）。1行1項目で、行どうしを細い線で区切る（§7）。 */
-.mobileCards {
+/* 狭い画面の行（広い画面では表を出すので隠す）。1行1項目で、行どうしを細い線で区切る。 */
+.mobileRows {
   display: none;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.mobileCard {
-  border-bottom: var(--rule-w-hair) solid var(--rule-2);
+.mobileRow + .mobileRow {
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 開閉の行を行の幅いっぱいに広げ、hover の線とフォーカスのリングを行の単位に出す。 */
-.mobileCard .mobileCardSummary {
-  width: auto;
-}
-
-.mobileCardTitle {
+.mobileRowTitle {
   display: block;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--ink);
-  margin-bottom: 0.4rem;
+  font-weight: 700;
 }
 
-.mobileCardRow {
+.mobileRowDetails {
+  display: block;
+}
+
+.mobileRowKind {
+  display: block;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+/* 敬語の形の名前の右に語を置き、語の幅が足りなければ名前の下へ回して、1字ずつ折れる細い列にしない。 */
+.mobileRowForm {
   display: flex;
-  gap: 0.4rem;
-  font-size: 0.875rem;
-  color: var(--ink);
-  line-height: 1.5;
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
+  font-size: var(--text-small);
 }
 
-.mobileCardLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
+.mobileRowLabel {
   color: var(--ink-2);
   min-width: 3.5rem;
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .searchBar {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.mobileRowValue {
+  flex: 1 1 8em;
+  min-width: 0;
+}
 
-  .searchInputWrapper {
-    min-width: unset;
-  }
-
-  .categoryControl {
-    width: 100%;
-  }
-
-  /* モバイルではテーブル非表示・カード表示 */
+@media (width < 45rem) {
   .desktopTable {
     display: none;
   }
 
-  .mobileCards {
+  .mobileRows {
     display: block;
   }
 }

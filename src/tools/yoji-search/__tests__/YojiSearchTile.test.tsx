@@ -1,136 +1,142 @@
-import { describe, it, expect } from "vitest";
-import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import YojiSearchTile from "../YojiSearchTile";
+import { YOJI_SEARCH_ITEMS } from "../logic";
 
-/** 結果の並びの行（開閉の行）の数。 */
-function countResultRows(): number {
-  return document.querySelectorAll("li details > summary").length;
+// 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
+function countLine(): HTMLElement {
+  const line = document.querySelector<HTMLElement>('p[tabindex="-1"]');
+  if (!line) throw new Error("件数の行がありません");
+  return line;
 }
 
-/** 四字熟語の結果の行の開閉の行を返す。 */
-function getResultSummary(yoji: string): HTMLElement {
-  const summary = within(document.body)
-    .getByText(yoji, { selector: "summary *" })
-    .closest("summary");
-  if (!summary) throw new Error(`${yoji} の行が無い`);
-  return summary as HTMLElement;
+/** 結果の行の開閉のボタン。 */
+function rowButtons(): HTMLElement[] {
+  return Array.from(
+    document.querySelectorAll<HTMLElement>("li > button[aria-expanded]"),
+  );
 }
+
+function rowButton(yoji: string): HTMLElement {
+  return screen.getByRole("button", { name: yoji });
+}
+
+function visit(search: string) {
+  window.history.replaceState(null, "", `/tools/yoji-search${search}`);
+}
+
+beforeEach(() => {
+  // jsdom はスクロールを持たない。ページを送ったあとに件数の行を画面に出す処理だけを受け止める。
+  Element.prototype.scrollIntoView = vi.fn();
+});
+
+afterEach(() => {
+  visit("");
+});
 
 describe("YojiSearchTile", () => {
-  it("renders search input", () => {
+  it("全400語のうち1ページ目の50語を並べ、「もっと見る」ではなくページ送りを持つ", () => {
     render(<YojiSearchTile />);
-    expect(
-      screen.getByPlaceholderText("四字熟語・読み・意味で検索..."),
-    ).toBeInTheDocument();
-  });
-
-  it("shows a browsable list by default (browse-first, no blank screen)", () => {
-    render(<YojiSearchTile />);
-    // total count is shown above the list
-    expect(screen.getByRole("status")).toHaveTextContent(/\d+語を収録/);
-    // the old blank "search first" guide screen is gone
-    expect(
-      screen.queryByText("キーワードやカテゴリで四字熟語を検索できます"),
-    ).not.toBeInTheDocument();
-    // idioms are rendered immediately so 一覧-intent visitors see content
-    expect(countResultRows()).toBeGreaterThan(0);
-    // the list is paged, and a "もっと見る" button lets browse-all visitors
-    // reach every entry (not a dead end)
-    expect(
-      screen.getByRole("button", { name: /もっと見る/ }),
-    ).toBeInTheDocument();
-  });
-
-  it("reveals more entries when もっと見る is clicked", async () => {
-    const user = userEvent.setup();
-    render(<YojiSearchTile />);
-
-    const before = countResultRows();
-    await user.click(screen.getByRole("button", { name: /もっと見る/ }));
-    const after = countResultRows();
-
-    expect(after).toBeGreaterThan(before);
-  });
-
-  it("hides もっと見る when a query narrows results below one page", async () => {
-    const user = userEvent.setup();
-    render(<YojiSearchTile />);
-
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
-    await user.type(input, "一期一会");
-
+    expect(countLine()).toHaveTextContent("全400語のうち1〜50語目");
+    expect(rowButtons()).toHaveLength(50);
     expect(
       screen.queryByRole("button", { name: /もっと見る/ }),
     ).not.toBeInTheDocument();
-  });
-
-  it("resets to one page when filters change after もっと見る", async () => {
-    const user = userEvent.setup();
-    render(<YojiSearchTile />);
-
-    const firstPage = countResultRows();
-    await user.click(screen.getByRole("button", { name: /もっと見る/ }));
-    expect(countResultRows()).toBeGreaterThan(firstPage);
-
-    // changing the query, then clearing it, returns to a single page of results
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
-    await user.type(input, "一");
-    await user.clear(input);
-
-    expect(countResultRows()).toBe(firstPage);
-  });
-
-  it("filters results when typing a query", async () => {
-    const user = userEvent.setup();
-    render(<YojiSearchTile />);
-
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
-    await user.type(input, "一期一会");
-
-    expect(getResultSummary("一期一会")).toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveTextContent(/\d+語中 \d+件/);
-  });
-
-  it("shows empty state when no results match", async () => {
-    const user = userEvent.setup();
-    render(<YojiSearchTile />);
-
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
-    await user.type(input, "zzznonexistent");
-
     expect(
-      screen.getByText("条件に合う四字熟語が見つかりません"),
+      screen.getByRole("navigation", { name: "ページナビゲーション" }),
     ).toBeInTheDocument();
   });
 
-  it("expands detail panel on click", async () => {
-    const user = userEvent.setup();
+  it("名前の欄は語・読み・意味・例文で探せることをラベルで言う", () => {
     render(<YojiSearchTile />);
+    expect(
+      screen.getByRole("searchbox", { name: "語・読み・意味・例文で探す" }),
+    ).toBeInTheDocument();
+  });
 
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
-    await user.type(input, "一期一会");
+  it("打った字で絞り込み、該当件数を件数の行に出し、URL の q に書く", async () => {
+    render(<YojiSearchTile />);
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "一期一会" },
+    });
+    expect(countLine()).toHaveTextContent(/^\d+語（全400語）$/);
+    expect(rowButtons()[0]).toBe(rowButton("一期一会"));
+    await act(() => new Promise((resolve) => setTimeout(resolve, 350)));
+    expect(new URLSearchParams(window.location.search).get("q")).toBe(
+      "一期一会",
+    );
+  });
 
-    await user.click(getResultSummary("一期一会"));
+  it("当たらないときは件数の行が言い、「絞り込みを外す」で名前の欄へ戻る", () => {
+    render(<YojiSearchTile />);
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "zzznonexistent" },
+    });
+    expect(countLine()).toHaveTextContent(
+      "条件に合う語はありません（全400語）",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "絞り込みを外す" }));
+    expect(countLine()).toHaveTextContent("全400語のうち1〜50語目");
+    expect(screen.getByRole("searchbox")).toHaveFocus();
+  });
 
-    // 絞り込みの組の見出しと同じ語なので、詳細の見出し（dt）に絞って探す。
+  it("カテゴリ・難易度・出典の組を畳み、ラベルがいまの選択を言う", () => {
+    render(<YojiSearchTile />);
+    const toggle = screen.getByRole("button", {
+      name: "絞り込みと並び順（すべて、読みの五十音順）",
+    });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(screen.getByRole("radio", { name: "人生" }));
+    fireEvent.click(screen.getByRole("radio", { name: "初級" }));
+    fireEvent.click(screen.getByRole("radio", { name: "やさしい順" }));
+    expect(toggle).toHaveTextContent(
+      "絞り込みと並び順（人生、初級、やさしい順）",
+    );
+    const params = new URLSearchParams(window.location.search);
+    expect(params.get("kind")).toBe("life");
+    expect(params.get("level")).toBe("1");
+    expect(params.get("sort")).toBe("easy");
+  });
+
+  it("URL のクエリの状態で出す", () => {
+    visit("?kind=life&origin=日本");
+    render(<YojiSearchTile />);
+    const expected = YOJI_SEARCH_ITEMS.filter(
+      ({ entry }) => entry.category === "life" && entry.origin === "日本",
+    ).length;
+    expect(countLine()).toHaveTextContent(`${expected}語（全400語）`);
+    expect(screen.getByRole("radio", { name: "日本" })).toBeChecked();
+  });
+
+  it("ページを送ると、URL の page に書き、件数の行へフォーカスを移す", () => {
+    render(<YojiSearchTile />);
+    fireEvent.click(screen.getByRole("button", { name: "次へ（ページ2）" }));
+    expect(new URLSearchParams(window.location.search).get("page")).toBe("2");
+    expect(countLine()).toHaveTextContent("全400語のうち51〜100語目");
+    expect(countLine()).toHaveFocus();
+    expect(rowButtons()[0]).toBe(rowButton(YOJI_SEARCH_ITEMS[50].name));
+  });
+
+  it("行の読み上げの名前は語だけで、読みと意味は説明になる", () => {
+    render(<YojiSearchTile />);
+    const { entry } = YOJI_SEARCH_ITEMS[0];
+    const button = rowButton(entry.yoji);
+    expect(button).toHaveAccessibleName(entry.yoji);
+    expect(button).toHaveAccessibleDescription(
+      `${entry.reading} ${entry.meaning}`,
+    );
+  });
+
+  it("行を押すと詳細が開き、もう一度押すと閉じる。開く行は1つだけ", () => {
+    render(<YojiSearchTile />);
+    const [first, second] = rowButtons();
+    fireEvent.click(first);
+    expect(first).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("例文", { selector: "dt" })).toBeInTheDocument();
-    expect(
-      screen.getByText("カテゴリ", { selector: "dt" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("難易度", { selector: "dt" })).toBeInTheDocument();
-  });
-
-  it("collapses detail panel on second click", async () => {
-    const user = userEvent.setup();
-    render(<YojiSearchTile />);
-
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
-    await user.type(input, "一期一会");
-
-    await user.click(getResultSummary("一期一会"));
-    await user.click(getResultSummary("一期一会"));
-
-    expect(screen.queryByText("例文")).not.toBeInTheDocument();
+    fireEvent.click(second);
+    expect(first).toHaveAttribute("aria-expanded", "false");
+    expect(second).toHaveAttribute("aria-expanded", "true");
+    fireEvent.click(second);
+    expect(screen.queryByText("例文", { selector: "dt" })).toBeNull();
   });
 });

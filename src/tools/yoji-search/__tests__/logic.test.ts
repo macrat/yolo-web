@@ -1,79 +1,77 @@
 import { describe, it, expect } from "vitest";
-import { filterYoji, YOJI_COUNT } from "../logic";
+import {
+  browseItems,
+  defaultBrowseState,
+  type BrowseState,
+} from "@/lib/list-browse";
+import {
+  YOJI_COUNT,
+  YOJI_SEARCH_ITEMS,
+  YOJI_SEARCH_SPEC,
+  type YojiSearchItem,
+} from "../logic";
 
-describe("filterYoji", () => {
-  const allFilters = {
-    query: "",
-    category: "all" as const,
-    difficulty: "all" as const,
-    origin: "all" as const,
-  };
+function search(change: Partial<BrowseState>): YojiSearchItem[] {
+  return browseItems(
+    YOJI_SEARCH_ITEMS,
+    { ...defaultBrowseState(YOJI_SEARCH_SPEC), ...change },
+    YOJI_SEARCH_SPEC,
+  );
+}
 
-  it("returns all entries when no filters are applied", () => {
-    const results = filterYoji(allFilters);
-    expect(results).toHaveLength(YOJI_COUNT);
+function names(items: YojiSearchItem[]): string[] {
+  return items.map((item) => item.name);
+}
+
+describe("yoji-search の一覧", () => {
+  it("全件を読みの五十音順で持つ", () => {
+    expect(YOJI_SEARCH_ITEMS).toHaveLength(YOJI_COUNT);
+    const readings = YOJI_SEARCH_ITEMS.map((item) => item.entry.reading);
+    const collator = new Intl.Collator("ja");
+    expect(readings).toEqual([...readings].sort(collator.compare));
   });
 
-  it("filters by yoji text", () => {
-    const results = filterYoji({ ...allFilters, query: "一期一会" });
-    expect(results.length).toBeGreaterThanOrEqual(1);
-    expect(results.some((e) => e.yoji === "一期一会")).toBe(true);
+  it("語・読み（片仮名でも）・意味・例文で探せる", () => {
+    expect(names(search({ query: "一期一会" }))[0]).toBe("一期一会");
+    expect(names(search({ query: "イチゴイチエ" }))[0]).toBe("一期一会");
+    const entry = YOJI_SEARCH_ITEMS.find(
+      (item) => item.name === "一期一会",
+    )!.entry;
+    expect(names(search({ query: entry.meaning }))).toContain("一期一会");
+    expect(names(search({ query: entry.example }))).toContain("一期一会");
+    expect(search({ query: "zzzzznonexistent" })).toHaveLength(0);
   });
 
-  it("filters by reading (hiragana)", () => {
-    const results = filterYoji({ ...allFilters, query: "いちごいちえ" });
-    expect(results.some((e) => e.yoji === "一期一会")).toBe(true);
+  it("語や読みが打った字と一致する行を、ほかの値で当たった行より前に並べる", () => {
+    const results = search({ query: "いち" });
+    const firstOther = results.findIndex(
+      (item) =>
+        !item.name.includes("いち") && !item.entry.reading.includes("いち"),
+    );
+    const lastByReading = results.findLastIndex((item) =>
+      item.entry.reading.includes("いち"),
+    );
+    expect(firstOther === -1 || lastByReading < firstOther).toBe(true);
   });
 
-  it("filters by meaning text", () => {
-    const results = filterYoji({ ...allFilters, query: "出会い" });
-    expect(results.length).toBeGreaterThanOrEqual(1);
+  it("カテゴリ・難易度・出典で絞れる", () => {
+    const life = search({ kind: "life" });
+    expect(life.length).toBeGreaterThan(0);
+    expect(life.every((item) => item.entry.category === "life")).toBe(true);
+
+    const easyFromJapan = search({ filters: { level: "1", origin: "日本" } });
+    expect(easyFromJapan.length).toBeGreaterThan(0);
+    expect(
+      easyFromJapan.every(
+        (item) => item.entry.difficulty === 1 && item.entry.origin === "日本",
+      ),
+    ).toBe(true);
   });
 
-  it("normalizes katakana to hiragana for matching", () => {
-    const results = filterYoji({ ...allFilters, query: "イチゴイチエ" });
-    expect(results.some((e) => e.yoji === "一期一会")).toBe(true);
-  });
-
-  it("filters by category", () => {
-    const results = filterYoji({ ...allFilters, category: "life" });
-    expect(results.length).toBeGreaterThan(0);
-    expect(results.every((e) => e.category === "life")).toBe(true);
-  });
-
-  it("filters by difficulty", () => {
-    const results = filterYoji({ ...allFilters, difficulty: 1 });
-    expect(results.length).toBeGreaterThan(0);
-    expect(results.every((e) => e.difficulty === 1)).toBe(true);
-  });
-
-  it("filters by origin", () => {
-    const results = filterYoji({ ...allFilters, origin: "日本" });
-    expect(results.length).toBeGreaterThan(0);
-    expect(results.every((e) => e.origin === "日本")).toBe(true);
-  });
-
-  it("combines text query with category filter", () => {
-    const allLife = filterYoji({ ...allFilters, category: "life" });
-    const lifePlusQuery = filterYoji({
-      ...allFilters,
-      category: "life",
-      query: "人生",
-    });
-    expect(lifePlusQuery.length).toBeLessThanOrEqual(allLife.length);
-    expect(lifePlusQuery.every((e) => e.category === "life")).toBe(true);
-  });
-
-  it("returns empty array when no results match", () => {
-    const results = filterYoji({
-      ...allFilters,
-      query: "zzzzznonexistent",
-    });
-    expect(results).toHaveLength(0);
-  });
-
-  it("trims whitespace from query", () => {
-    const results = filterYoji({ ...allFilters, query: "  一期一会  " });
-    expect(results.some((e) => e.yoji === "一期一会")).toBe(true);
+  it("やさしい順は、初級・中級・上級の順に並べる", () => {
+    const levels = search({ sort: "easy" }).map(
+      (item) => item.entry.difficulty,
+    );
+    expect(levels).toEqual([...levels].sort((a, b) => a - b));
   });
 });

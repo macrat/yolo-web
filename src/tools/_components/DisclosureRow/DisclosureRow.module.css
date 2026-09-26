@@ -1,0 +1,23 @@
+/* 開閉の行は 44px 以上で、行の幅いっぱいを押せる範囲にする（§6）。左は data-text-box="inline" が字の箱の
+ * 余白の分だけ張り出すので、その分を幅に足して右端をコンテンツ幅の右端に揃える。ラベルが折り返しても、三角は
+ * 1行目の字の中央に並ぶ。 */
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: calc(100% + var(--text-box-pad));
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  line-height: var(--leading-body);
+  text-align: start;
+  cursor: pointer;
+}
+
+.head {
+  flex: 1;
+  min-width: 0;
+}

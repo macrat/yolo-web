@@ -13,18 +13,19 @@
   width: 100%;
 }
 
-/* --- 検索フィールド --- */
+/* --- 色の格子の絞り込み --- */
 
-.searchField {
+/* 件数の行と操作の組を色の格子の上に置き、格子とのあいだを 24px あける（§5 の間隔）。 */
+.browse {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--space-24);
 }
 
-.label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--ink-2);
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
 /* --- スウォッチグリッド --- */
@@ -77,13 +78,6 @@
 
 .swatch:hover .swatchTooltip {
   opacity: 1;
-}
-
-.emptyMessage {
-  padding: 1rem;
-  text-align: center;
-  color: var(--ink-2);
-  font-size: 0.875rem;
 }
 
 /* --- 配色パターンセクション --- */

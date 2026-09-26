@@ -1,124 +1,86 @@
-.inner {
+/* 件数の行と操作の組を結果の上に置き、結果とのあいだを 24px あける（§5 の間隔）。ページ送りは結果の下だけに
+ * 置き、その間隔はページ送りが持つ。 */
+.browse {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-24);
 }
 
-.searchBar {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.searchInputWrapper {
-  flex: 1;
-  min-width: 200px;
-}
-
-/* 絞り込みの組を縦に積み、難易度と出典の組は幅があれば横に並べる。 */
-.filters {
+.head {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
 }
 
-.subFilters {
-  display: flex;
-  gap: var(--space-16) var(--space-32);
-  flex-wrap: wrap;
-}
-
-.resultCount {
-  color: var(--ink-2);
-  font-size: 0.875rem;
-  margin: 0;
-}
-
-.emptyState {
-  color: var(--ink-2);
-  text-align: center;
-  padding: 2rem 0;
-}
-
-/* 結果は1行1項目の並びで、行どうしを細い線で区切る（§7）。各行はアコーディオンで、開くと詳細が出る（§6）。 */
+/* 結果は1行1項目の並びで、行どうしを細い線で区切る。各行は開閉する行で、開くと詳細が出る（§6・§8）。 */
 .resultList {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.resultItem {
-  border-bottom: var(--rule-w-hair) solid var(--rule-2);
+.resultItem + .resultItem {
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.resultItem:last-child {
-  border-bottom: none;
-}
-
-/* 開閉の行を行の幅いっぱいに広げ、hover の線とフォーカスのリングを行の単位に出す。 */
-.resultItem .resultSummary {
-  width: auto;
-}
-
+/* 語の後ろに読みと意味を続け、残りの幅が狭ければ次の行に回して、1字ずつ折れる細い列にしない。 */
 .resultHead {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--space-8);
+  column-gap: var(--space-8);
 }
 
 .yojiText {
-  font-size: 1.125rem;
-  font-weight: 600;
-  flex-shrink: 0;
+  font-weight: 700;
 }
 
-.reading {
+.resultDescription {
+  flex: 1 1 12em;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-8);
   color: var(--ink-2);
-  font-size: 0.875rem;
-  flex-shrink: 0;
+  font-size: var(--text-small);
 }
 
-/* 意味は語とよみの後ろに続け、残りの幅が狭ければ次の行に回して、1字ずつ折れる細い列にしない。 */
 .meaning {
-  color: var(--ink-2);
-  font-size: 0.875rem;
   flex: 1 1 12em;
   min-width: 0;
 }
 
 .detailPanel {
-  padding: 0.75rem 1rem 1rem;
+  padding: var(--space-8) var(--space-16) var(--space-16);
+  margin-block-end: var(--space-16);
   background-color: var(--paper-2);
-  margin: 0 0 0.75rem;
 }
 
 .detailList {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
+/* 見出しの右に値を置き、値の幅が足りなければ見出しの下へ回して、1字ずつ折れる細い列にしない。 */
 .detailRow {
   display: flex;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
   align-items: baseline;
 }
 
 .detailLabel {
   color: var(--ink-2);
-  font-size: 0.875rem;
+  font-size: var(--text-small);
   flex-shrink: 0;
   min-width: 5em;
 }
 
 .detailValue {
+  flex: 1 1 12em;
+  min-width: 0;
   margin: 0;
-  line-height: 1.7;
-}
-
-/* 続きを出すボタン。結果の並びの下に、字の幅で置く。 */
-.moreButton {
-  align-self: flex-start;
 }

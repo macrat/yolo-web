@@ -11,7 +11,9 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { hexToOklch } from "@/lib/hexToOklch";
 import TraditionalColorPaletteTile from "../TraditionalColorPaletteTile";
+import { PALETTE_ITEMS } from "../palette-list";
 
 // =========================================================
 // navigator.clipboard モック
@@ -28,7 +30,27 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.useRealTimers();
+  // 絞り込みと並び順は URL のクエリに持つので、テストごとにクエリの無い URL へ戻す。
+  window.history.replaceState(null, "", "/tools/traditional-color-palette");
 });
+
+// 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
+function countLine(): HTMLElement {
+  const line = document.querySelector<HTMLElement>('p[tabindex="-1"]');
+  if (!line) throw new Error("件数の行がありません");
+  return line;
+}
+
+function searchBox(): HTMLElement {
+  return screen.getByRole("searchbox", { name: "色名・ローマ字で探す" });
+}
+
+function swatchSlugs(): string[] {
+  return Array.from(
+    document.querySelectorAll<HTMLElement>("[data-swatch-slug]"),
+    (swatch) => swatch.dataset.swatchSlug ?? "",
+  );
+}
 
 // =========================================================
 // CSS トークン検証（新タイル CSS）
@@ -354,53 +376,63 @@ describe("clipboard 不在時の silent fail", () => {
 });
 
 // =========================================================
-// 検索機能
+// 件数・名前の欄・色の系統・並び順
 // =========================================================
-describe("検索機能", () => {
-  it("検索するとスウォッチが絞り込まれる", async () => {
+describe("色の格子の件数と備え", () => {
+  it("件数の行が全体の数を言い、色の系統と並び順の組を畳む", () => {
     render(<TraditionalColorPaletteTile />);
-    const searchInput = screen.getByLabelText(/色を検索/);
-    const allSwatches = document.querySelectorAll("[data-swatch-slug]");
-    const allCount = allSwatches.length;
-
-    await act(async () => {
-      fireEvent.change(searchInput, { target: { value: "鴇" } });
-    });
-
-    const filteredSwatches = document.querySelectorAll("[data-swatch-slug]");
-    expect(filteredSwatches.length).toBeLessThanOrEqual(allCount);
-    expect(filteredSwatches.length).toBeGreaterThan(0);
+    expect(countLine()).toHaveTextContent("全250色");
+    expect(swatchSlugs()).toHaveLength(250);
+    expect(
+      screen.getByRole("button", {
+        name: "絞り込みと並び順（すべて、色み順）",
+      }),
+    ).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("マッチしない検索語では空メッセージが表示される", async () => {
+  it("名前の欄で絞り込み、件数の行が該当件数を言う", () => {
     render(<TraditionalColorPaletteTile />);
-    const searchInput = screen.getByLabelText(/色を検索/);
-    await act(async () => {
-      fireEvent.change(searchInput, {
-        target: { value: "存在しない色xyzxyz" },
-      });
-    });
-    expect(screen.getByText(/見つかりませんでした/)).toBeInTheDocument();
+    fireEvent.change(searchBox(), { target: { value: "鴇" } });
+    expect(swatchSlugs()[0]).toBe("toki");
+    expect(countLine()).toHaveTextContent(
+      `${swatchSlugs().length}色（全250色）`,
+    );
   });
-});
 
-// =========================================================
-// カテゴリフィルタ
-// =========================================================
-describe("カテゴリフィルタ", () => {
-  it("赤系タブをクリックするとスウォッチが絞り込まれる", async () => {
+  it("当たらないときは件数の行が言い、「絞り込みを外す」で名前の欄へ戻る", () => {
     render(<TraditionalColorPaletteTile />);
-    const allSwatches = document.querySelectorAll("[data-swatch-slug]");
-    const allCount = allSwatches.length;
-
-    const redOption = screen.getByRole("radio", { name: /赤系/ });
-    await act(async () => {
-      fireEvent.click(redOption);
+    fireEvent.change(searchBox(), {
+      target: { value: "存在しない色xyzxyz" },
     });
+    expect(countLine()).toHaveTextContent(
+      "条件に合う色はありません（全250色）",
+    );
+    expect(swatchSlugs()).toHaveLength(0);
+    fireEvent.click(screen.getByRole("button", { name: "絞り込みを外す" }));
+    expect(swatchSlugs()).toHaveLength(250);
+    expect(searchBox()).toHaveFocus();
+  });
 
-    const filteredSwatches = document.querySelectorAll("[data-swatch-slug]");
-    expect(filteredSwatches.length).toBeGreaterThan(0);
-    expect(filteredSwatches.length).toBeLessThan(allCount);
+  it("色の系統で絞り込み、URL の kind に書く", () => {
+    render(<TraditionalColorPaletteTile />);
+    fireEvent.click(screen.getByRole("radio", { name: "赤系" }));
+    expect(swatchSlugs().length).toBeGreaterThan(0);
+    expect(swatchSlugs().length).toBeLessThan(250);
+    expect(new URLSearchParams(window.location.search).get("kind")).toBe("red");
+  });
+
+  it("URL のクエリの並び順で出す", () => {
+    window.history.replaceState(
+      null,
+      "",
+      "/tools/traditional-color-palette?sort=light",
+    );
+    render(<TraditionalColorPaletteTile />);
+    expect(screen.getByRole("radio", { name: "明るい順" })).toBeChecked();
+    const lightest = PALETTE_ITEMS.reduce((a, b) =>
+      hexToOklch(b.color.hex).l > hexToOklch(a.color.hex).l ? b : a,
+    );
+    expect(swatchSlugs()[0]).toBe(lightest.color.slug);
   });
 });
 
@@ -447,6 +479,6 @@ describe("伝統色詳細ページリンク", () => {
 describe("独立レンダリング（ToolPageLayout 非依存）", () => {
   it("コンポーネントが独立してレンダリングされる", () => {
     render(<TraditionalColorPaletteTile />);
-    expect(screen.getByLabelText(/色を検索/)).toBeInTheDocument();
+    expect(searchBox()).toBeInTheDocument();
   });
 });

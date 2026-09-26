@@ -1,13 +1,31 @@
 import { describe, test, expect } from "vitest";
 import {
+  browseItems,
+  defaultBrowseState,
+  type BrowseState,
+} from "@/lib/list-browse";
+import {
   getAllEntries,
   getKeigoCategories,
   getEntriesByCategory,
-  searchEntries,
-  filterEntries,
   getCommonMistakes,
   getMistakesByType,
+  KEIGO_LIST_ITEMS,
+  KEIGO_LIST_SPEC,
+  type KeigoListItem,
 } from "../logic";
+
+function search(change: Partial<BrowseState>): KeigoListItem[] {
+  return browseItems(
+    KEIGO_LIST_ITEMS,
+    { ...defaultBrowseState(KEIGO_LIST_SPEC), ...change },
+    KEIGO_LIST_SPEC,
+  );
+}
+
+function casuals(items: KeigoListItem[]): string[] {
+  return items.map((item) => item.entry.casual);
+}
 
 describe("getAllEntries", () => {
   test("returns 50 or more entries", () => {
@@ -71,66 +89,48 @@ describe("getEntriesByCategory", () => {
   });
 });
 
-describe("searchEntries", () => {
-  test("finds by casual form", () => {
-    const results = searchEntries("言う");
-    expect(results.some((e) => e.casual === "言う")).toBe(true);
+describe("早見表の一覧", () => {
+  test("普通語と、尊敬語・謙譲語・丁寧語で探せる", () => {
+    expect(casuals(search({ query: "言う" }))[0]).toBe("言う");
+    expect(casuals(search({ query: "おっしゃる" }))).toContain("言う");
+    expect(casuals(search({ query: "申す" }))).toContain("言う");
+    expect(casuals(search({ query: "行きます" }))).toContain("行く");
+    expect(search({ query: "XXXXXX" })).toHaveLength(0);
   });
 
-  test("finds by sonkeigo form", () => {
-    const results = searchEntries("おっしゃる");
-    expect(results.some((e) => e.casual === "言う")).toBe(true);
+  test("普通語で当たった行を、敬語の形で当たった行より前に並べる", () => {
+    const results = search({ query: "言" });
+    const firstByForm = results.findIndex(
+      (item) => !item.entry.casual.includes("言"),
+    );
+    const lastByCasual = results.findLastIndex((item) =>
+      item.entry.casual.includes("言"),
+    );
+    expect(firstByForm === -1 || lastByCasual < firstByForm).toBe(true);
   });
 
-  test("finds by kenjogo form", () => {
-    const results = searchEntries("申す");
-    expect(results.some((e) => e.casual === "言う")).toBe(true);
+  test("分類で絞れる", () => {
+    const business = search({ kind: "business" });
+    expect(business.length).toBeGreaterThan(0);
+    expect(business.every((item) => item.entry.category === "business")).toBe(
+      true,
+    );
   });
 
-  test("finds by teineigo form", () => {
-    const results = searchEntries("行きます");
-    expect(results.some((e) => e.casual === "行く")).toBe(true);
+  test("並び順は分類順だけで、分類の中はデータの順のまま", () => {
+    expect(KEIGO_LIST_SPEC.sorts.map((sort) => sort.label)).toEqual(["分類順"]);
+    const order = getKeigoCategories().map((category) => category.id);
+    const expected = order.flatMap((category) =>
+      getEntriesByCategory(category).map((entry) => entry.id),
+    );
+    expect(search({}).map((item) => item.entry.id)).toEqual(expected);
   });
 
-  test("finds by partial match", () => {
-    const results = searchEntries("言");
-    expect(results.some((e) => e.casual === "言う")).toBe(true);
-  });
-
-  test("returns all entries for empty query", () => {
-    expect(searchEntries("")).toEqual(getAllEntries());
-    expect(searchEntries("  ")).toEqual(getAllEntries());
-  });
-
-  test("returns empty array for non-matching query", () => {
-    expect(searchEntries("XXXXXX")).toHaveLength(0);
-  });
-});
-
-describe("filterEntries", () => {
-  test("returns all entries with category 'all' and empty query", () => {
-    expect(filterEntries("", "all")).toEqual(getAllEntries());
-  });
-
-  test("filters by category only when query is empty", () => {
-    const basicEntries = filterEntries("", "basic");
-    expect(basicEntries.length).toBeGreaterThan(0);
-    for (const entry of basicEntries) {
-      expect(entry.category).toBe("basic");
-    }
-  });
-
-  test("filters by query only when category is 'all'", () => {
-    const results = filterEntries("言う", "all");
-    expect(results.some((e) => e.casual === "言う")).toBe(true);
-  });
-
-  test("filters by both category and query", () => {
-    const results = filterEntries("確認", "business");
-    expect(results.length).toBeGreaterThan(0);
-    for (const entry of results) {
-      expect(entry.category).toBe("business");
-    }
+  test("行の種別は分類の名前", () => {
+    const names = getKeigoCategories().map((category) => category.name);
+    expect(KEIGO_LIST_ITEMS.every((item) => names.includes(item.kind!))).toBe(
+      true,
+    );
   });
 });
 

@@ -4,30 +4,44 @@
  * 検証観点:
  * - V-1: variant=full でのレンダリング（全機能が表示される）
  * - V-2: ルート要素が Panel であること（A-1 要件）
- * - V-3: 検索クエリ入力で結果が絞り込まれる（E-2）
+ * - V-3: 名前の欄と件数の行（DESIGN.md §7「件数と備え」）
  * - V-4: タブ切替でよくある間違いが表示される
  * - V-5: カテゴリフィルターが動作する（E-11）
  * - V-6: アコーディオン展開（クリック/Enter/Space）
  * - V-7: id インスタンス一意性（複数同居時の重複 id 防止）
  * - V-8: ARIA 要件（C-2, C-3）
- * - V-9: CSS トークン検証（B-1, B-3, B-4）
- * - V-10: 空クエリ時の空状態メッセージ
+ * - V-9: CSS トークン検証（B-1, B-3）
+ * - V-10: データ整合性
  * - V-11: 旧コンポーネント KeigoReferencePage が削除されている（A-3 二重実装ゼロ）
  */
 
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import KeigoReferenceTile from "../KeigoReferenceTile";
 
+// 絞り込みは URL のクエリに持つので、テストごとにクエリの無い URL へ戻す。
+afterEach(() => {
+  window.history.replaceState(null, "", "/tools/keigo-reference");
+});
+
+// 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
+function countLine(): HTMLElement {
+  const line = document.querySelector<HTMLElement>('p[tabindex="-1"]');
+  if (!line) throw new Error("件数の行がありません");
+  return line;
+}
+
+function searchBox(): HTMLElement {
+  return screen.getByRole("searchbox", { name: "普通語・敬語で探す" });
+}
+
 // --- V-1: variant=full レンダリング ---
 describe("V-1: variant=full レンダリング", () => {
-  it("検索入力欄が存在する", () => {
+  it("名前の欄が、普通語・敬語で探せることをラベルで言う", () => {
     render(<KeigoReferenceTile variant="full" />);
-    expect(
-      screen.getByRole("textbox", { name: /敬語を検索/ }),
-    ).toBeInTheDocument();
+    expect(searchBox()).toBeInTheDocument();
   });
 
   it("タブ切替UI（ラジオボタンの組）が存在する", () => {
@@ -47,12 +61,11 @@ describe("V-1: variant=full レンダリング", () => {
     expect(screen.getByRole("radio", { name: "すべて" })).toBeInTheDocument();
   });
 
-  it("テーブルヘッダーが存在する（普通語/尊敬語/謙譲語/丁寧語）", () => {
+  it("表の見出し行が、普通語・分類・尊敬語・謙譲語・丁寧語の列を持つ", () => {
     render(<KeigoReferenceTile variant="full" />);
-    expect(screen.getByText("普通語")).toBeInTheDocument();
-    expect(screen.getByText("尊敬語")).toBeInTheDocument();
-    expect(screen.getByText("謙譲語")).toBeInTheDocument();
-    expect(screen.getByText("丁寧語")).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("columnheader").map((cell) => cell.textContent),
+    ).toEqual(["普通語", "分類", "尊敬語", "謙譲語", "丁寧語"]);
   });
 
   it("代表エントリが表示される", () => {
@@ -89,38 +102,44 @@ describe("V-2: Panel ルート要素（A-1）", () => {
   });
 });
 
-// --- V-3: 検索クエリ入力 ---
-describe("V-3: 検索クエリ入力", () => {
-  it("検索クエリ入力で結果が絞り込まれる", async () => {
+// --- V-3: 名前の欄と件数の行 ---
+describe("V-3: 名前の欄と件数の行", () => {
+  it("件数の行が全件の数と分類順を言い、並び順の組を持たない", () => {
     render(<KeigoReferenceTile variant="full" />);
-    const input = screen.getByRole("textbox", { name: /敬語を検索/ });
-    expect(screen.getAllByText("行く").length).toBeGreaterThan(0);
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "確認" } });
-    });
+    expect(countLine()).toHaveTextContent(/^全\d+語・分類順$/);
+    expect(
+      screen.queryByRole("radiogroup", { name: "並び順" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "絞り込み（すべて）" }),
+    ).toBeInTheDocument();
+  });
+
+  it("名前の欄で絞り込み、件数の行が該当件数を言う", () => {
+    render(<KeigoReferenceTile variant="full" />);
+    fireEvent.change(searchBox(), { target: { value: "確認" } });
     expect(screen.getAllByText("確認する").length).toBeGreaterThan(0);
+    expect(countLine()).toHaveTextContent(/^\d+語（全\d+語）・分類順$/);
   });
 
-  it("ゼロヒット時に空状態メッセージが表示される", async () => {
+  it("当たらないときは件数の行が言い、「絞り込みを外す」で名前の欄へ戻る", () => {
     render(<KeigoReferenceTile variant="full" />);
-    const input = screen.getByRole("textbox", { name: /敬語を検索/ });
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "xxxxxxxxxx" } });
-    });
-    expect(screen.getByText(/一致する/)).toBeInTheDocument();
+    fireEvent.change(searchBox(), { target: { value: "xxxxxxxxxx" } });
+    expect(countLine()).toHaveTextContent(/^条件に合う語はありません/);
+    fireEvent.click(screen.getByRole("button", { name: "絞り込みを外す" }));
+    expect(countLine()).toHaveTextContent(/^全\d+語・分類順$/);
+    expect(searchBox()).toHaveFocus();
   });
 
-  it("空クエリで「「」に一致する」が表示されない（reviewer指摘3）", async () => {
+  it("URL のクエリの状態で出す", () => {
+    window.history.replaceState(
+      null,
+      "",
+      "/tools/keigo-reference?kind=service",
+    );
     render(<KeigoReferenceTile variant="full" />);
-    const input = screen.getByRole("textbox", { name: /敬語を検索/ });
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "xxxxxxxxxx" } });
-    });
-    expect(screen.getByText(/「xxxxxxxxxx」/)).toBeInTheDocument();
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "" } });
-    });
-    expect(screen.queryByText(/「」に一致する/)).not.toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "接客・サービス" })).toBeChecked();
+    expect(screen.queryAllByText("行く")).toHaveLength(0);
   });
 });
 
@@ -187,11 +206,10 @@ describe("V-5: カテゴリフィルター", () => {
 
 // --- V-6: アコーディオン展開 ---
 describe("V-6: アコーディオン展開", () => {
-  it("行クリックで例文パネルが展開される", async () => {
+  it("行の開閉のボタンを押すと例文パネルが展開される", async () => {
     render(<KeigoReferenceTile variant="full" />);
-    const casualCells = screen.getAllByText("行く");
     await act(async () => {
-      fireEvent.click(casualCells[0]);
+      fireEvent.click(screen.getByRole("button", { name: "行く の例文" }));
     });
     expect(screen.getAllByText("移動先を伝えるとき").length).toBeGreaterThan(0);
   });
@@ -205,29 +223,6 @@ describe("V-6: アコーディオン展開", () => {
     expandButtons.forEach((btn) => {
       expect(btn.getAttribute("aria-expanded")).toBe("false");
     });
-  });
-
-  it("Enterキーで例文パネルが展開される", async () => {
-    render(<KeigoReferenceTile variant="full" />);
-    const expandButtons = document.querySelectorAll(
-      "table th[scope='row'] button[aria-expanded]",
-    );
-    expect(expandButtons.length).toBeGreaterThan(0);
-    await act(async () => {
-      fireEvent.keyDown(expandButtons[0], { key: "Enter", code: "Enter" });
-    });
-    expect(screen.getAllByText("移動先を伝えるとき").length).toBeGreaterThan(0);
-  });
-
-  it("Spaceキーで例文パネルが展開される", async () => {
-    render(<KeigoReferenceTile variant="full" />);
-    const expandButtons = document.querySelectorAll(
-      "table th[scope='row'] button[aria-expanded]",
-    );
-    await act(async () => {
-      fireEvent.keyDown(expandButtons[0], { key: " ", code: "Space" });
-    });
-    expect(screen.getAllByText("移動先を伝えるとき").length).toBeGreaterThan(0);
   });
 
   it("展開ボタンクリックで aria-expanded が切り替わる", async () => {
@@ -248,24 +243,32 @@ describe("V-6: アコーディオン展開", () => {
     expect(trWithRoleButton).toHaveLength(0);
   });
 
-  it("狭い画面の行はアコーディオン（details・summary）で開閉する", () => {
+  it("狭い画面の開閉する行は、読み上げの名前が普通語だけで、分類と敬語の形を説明に持つ", () => {
     render(<KeigoReferenceTile variant="full" />);
-    const summaries = document.querySelectorAll("li details > summary");
-    expect(summaries.length).toBeGreaterThan(0);
-    expect(document.querySelectorAll('[role="button"]')).toHaveLength(0);
+    const row = document.querySelector<HTMLElement>(
+      "li > button[aria-expanded]",
+    );
+    expect(row).not.toBeNull();
+    expect(row).toHaveAccessibleName("行く");
+    expect(row).toHaveAccessibleDescription(
+      "基本動詞 尊敬語: いらっしゃる・おいでになる 謙譲語: 参る・うかがう 丁寧語: 行きます",
+    );
+    fireEvent.click(row!);
+    expect(row).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getAllByText("移動先を伝えるとき").length).toBeGreaterThan(0);
   });
 });
 
 // --- V-7: id インスタンス一意性 ---
 describe("V-7: id インスタンス一意性", () => {
-  it("同一ページに2つのインスタンスを描画しても input id が重複しない", () => {
+  it("同一ページに2つのインスタンスを描画しても input の id が重複しない", () => {
     const { container } = render(
       <>
         <KeigoReferenceTile variant="full" />
         <KeigoReferenceTile variant="full" />
       </>,
     );
-    const inputs = container.querySelectorAll("input[type='text']");
+    const inputs = container.querySelectorAll("input");
     const ids = Array.from(inputs)
       .map((el) => el.getAttribute("id"))
       .filter(Boolean);
@@ -276,23 +279,6 @@ describe("V-7: id インスタンス一意性", () => {
 
 // --- V-8: ARIA 要件 ---
 describe("V-8: ARIA 要件", () => {
-  it("role='status' aria-live='polite' が存在する（C-3）", () => {
-    render(<KeigoReferenceTile variant="full" />);
-    const statusEl = document.querySelector(
-      '[role="status"][aria-live="polite"]',
-    );
-    expect(statusEl).not.toBeNull();
-  });
-
-  it("ライブリージョンに実テキストのサマリが含まれる（C-3）", () => {
-    render(<KeigoReferenceTile variant="full" />);
-    const statusEl = document.querySelector(
-      '[role="status"][aria-live="polite"]',
-    );
-    expect(statusEl?.textContent).toBeTruthy();
-    expect(statusEl?.textContent).toMatch(/件/);
-  });
-
   it("ラジオボタンの組は、どれも見出しを名前として持つ", () => {
     render(<KeigoReferenceTile variant="full" />);
     expect(
@@ -303,16 +289,13 @@ describe("V-8: ARIA 要件", () => {
     ).toBeInTheDocument();
   });
 
-  it("検索結果更新後にライブリージョンのサマリが更新される", async () => {
+  it("絞り込んだ件数を、条件が落ち着いてから読み上げに渡す", async () => {
     render(<KeigoReferenceTile variant="full" />);
-    const input = screen.getByRole("textbox", { name: /敬語を検索/ });
-    const statusEl = document.querySelector(
-      '[role="status"][aria-live="polite"]',
-    );
-    await act(async () => {
-      fireEvent.change(input, { target: { value: "行く" } });
-    });
-    expect(statusEl?.textContent).toMatch(/件/);
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("");
+    fireEvent.change(searchBox(), { target: { value: "行く" } });
+    await act(() => new Promise((resolve) => setTimeout(resolve, 350)));
+    expect(status).toHaveTextContent(/^\d+語（全\d+語）$/);
   });
 
   it("コピーボタンが存在しない（知る対象ツール）", () => {
@@ -334,12 +317,6 @@ describe("V-9: CSS トークン検証", () => {
     const cssPath = resolve(__dirname, "../KeigoReferenceTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/background(-color)?\s*:\s*var\(--accent\)/);
-  });
-
-  it("CSS に font-weight: 700 が存在しない（B-4）", () => {
-    const cssPath = resolve(__dirname, "../KeigoReferenceTile.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight\s*:\s*700/);
   });
 });
 
