@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "vitest";
 import { act, renderHook } from "@testing-library/react";
-import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
 import type { BrowseItem, BrowseSpec } from "@/lib/list-browse";
 
 const PATH = "/tools/sample";

@@ -1,26 +1,16 @@
 "use client";
 
 /**
- * TraditionalColorPaletteTile — 伝統色カラーパレットの単一正典タイル（cycle-228 T-19）
+ * TraditionalColorPaletteTile — 伝統色のカラーパレットのタイル。ルートが <Panel>（DESIGN.md §5 のボックス）で
+ * 自己完結する。
  *
- * ## 設計原則
+ * 件数の行・名前の欄・畳める色の系統と並び順の組・色の格子・配色パターンのラジオボタンの組・配色の結果を
+ * 縦に並べる。色の格子の絞り込みと並び順は palette-list.ts の選択肢で、URL のクエリに持つ（§7「件数と備え」）。
+ * 配色の計算は logic.ts の computeHarmony・getAchromaticPalette が持つ。
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **1ツール1実装**: variant="full" のみ（このツールは検索＋参照系で full 1種のみが適切）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- * - **logic.ts 共有エンジン**: computeHarmony / findNearestColor が配色の唯一のロジック源。色の格子の絞り込みと
- *   並び順は palette-list.ts の選択肢で、URL のクエリに持つ（DESIGN.md §7「件数と備え」）。
- *
- * ## variant
- *
- * - `"full"` (唯一のバリエーション): 件数の行＋名前の欄＋畳める色の系統と並び順の組＋スウォッチグリッド
- *   ＋配色パターンのラジオボタンの組＋色詳細カード＋コピー HEX/RGB/HSL
- *   このツールはすべての機能が一体で意味をなすため、full 以外のバリエーションは設けない。
- *
- * ## アクセシビリティ（C-3 準拠）
- *
- * - 選んだ色の配色は role="status" の div のサマリテキストで伝える
- * - スウォッチボタンは aria-label（色名とカラーコード）を持つ
+ * - 色見本のボタンは字を載せず色だけを見せ（§2）、読み上げの名前に色の名前とカラーコードを持つ。見える名前と
+ *   カラーコードは、選んだあとの配色の結果が出す。
+ * - 選んだ色の配色は、見えない role="status" の文でも読み上げに伝える。
  */
 
 import { useState, useMemo, useCallback } from "react";
@@ -30,7 +20,7 @@ import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
-import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -83,8 +73,6 @@ export interface TraditionalColorPaletteTileProps {
 }
 
 export default function TraditionalColorPaletteTile({
-  // variant は将来の拡張に備えた props 定義だが現時点では "full" のみのため使用しない
-  variant: _variant = "full", // eslint-disable-line @typescript-eslint/no-unused-vars
   as = "section",
   className,
 }: TraditionalColorPaletteTileProps = {}) {
@@ -109,8 +97,7 @@ export default function TraditionalColorPaletteTile({
     unit: "色",
   });
 
-  // A-6: クリップボードコピーフック（hex/rgb/hsl の各色コードをコピー可能にする）
-  // 複数カード・複数コードタイプを "slug-codeType" キーで識別する
+  // 色コードのコピー。どのカードのどのコードをコピーしたかを "slug-codeType" の鍵で見分ける。
   const { copy, copiedKey } = useCopyToClipboard();
 
   // 有彩色の配色計算
@@ -133,7 +120,7 @@ export default function TraditionalColorPaletteTile({
     setSelectedColor(color);
   }, []);
 
-  // ライブリージョン用のサマリテキスト（C-3: 実テキストノードのサマリ）
+  // 選んだ色の配色を読み上げに伝える文。
   const liveSummary = useMemo(() => {
     if (!selectedColor) return "";
     if (isAchromatic(selectedColor)) {
@@ -163,7 +150,7 @@ export default function TraditionalColorPaletteTile({
 
     return (
       <div key={cardKey} className={styles.paletteCard}>
-        {/* 色見本: 伝統色の実色を動的背景色で表示（機能なので --accent 直塗り禁止とは別物） */}
+        {/* 色見本。地の色が伝統色そのもの（§2）。 */}
         <div
           className={styles.paletteColorSwatch}
           style={{ backgroundColor: hexValue }}
@@ -230,8 +217,6 @@ export default function TraditionalColorPaletteTile({
     );
   };
 
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       <div className={styles.inner}>
@@ -290,11 +275,7 @@ export default function TraditionalColorPaletteTile({
                     onClick={() => handleColorSelect(color)}
                     aria-label={`${color.name} (${color.hex})`}
                     data-swatch-slug={color.slug}
-                  >
-                    <span className={styles.swatchTooltip}>
-                      {color.name} {color.hex}
-                    </span>
-                  </button>
+                  />
                 );
               })}
             </div>

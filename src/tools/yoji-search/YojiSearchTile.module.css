@@ -23,10 +23,10 @@
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 難易度（補助情報）は、四字熟語辞典の一覧の行（ItemList）と同じ位置に置く（§7）。狭い画面では語と読みの下・意味の
- * 上、広い画面では1行目の右端。語の後ろに読みを続け、残りの幅が狭ければ読みを次の行に回して、1字ずつ折れる細い
- * 列にしない。読み・難易度・意味は読み上げの説明として1つの要素に包まれるので、その要素を display: contents に
- * して、字を語と同じ並びに置く。 */
+/* 語・読み・カテゴリと難易度・意味を、四字熟語辞典の一覧の行（ItemList）と同じ位置と字で組む（§7）。狭い画面では
+ * 語と読みの下にカテゴリと難易度、その下に意味。語の後ろに読みを続け、残りの幅が狭ければ読みを次の行に回して、
+ * 1字ずつ折れる細い列にしない。読み・カテゴリと難易度・意味は読み上げの説明として1つの要素に包まれるので、
+ * その要素を display: contents にして、字を語と同じ並びに置く。 */
 .resultHead {
   display: flex;
   flex-wrap: wrap;
@@ -42,6 +42,10 @@
 
 .resultDescription {
   display: contents;
+}
+
+.reading,
+.meta {
   color: var(--ink-2);
   font-size: var(--text-small);
 }
@@ -51,9 +55,13 @@
   min-width: 0;
 }
 
-.facts {
-  grid-area: facts;
+/* カテゴリと難易度は字で区切らず間隔で分ける（ItemList と同じ）。 */
+.meta {
+  grid-area: meta;
   flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
 }
 
 .meaning {
@@ -62,24 +70,19 @@
   min-width: 0;
 }
 
-/* 広い画面では、意味を読みに続けて1行目に置き、残りの幅で折り返す。難易度は、意味の長さによらず1行目の右端に
- * 揃う。 */
+/* 広い画面では、カテゴリと難易度を1行目の右端に置き、意味を読みに続けて1行目の残りの幅で折り返す。行の高さを
+ * 1行に保ち、1画面に入る行の数を減らさない。 */
 @media (min-width: 45rem) {
   .resultHead {
     display: grid;
     grid-template-columns: auto auto minmax(0, 1fr) auto;
-    grid-template-areas: "name reading meaning facts";
+    grid-template-areas: "name reading meaning meta";
   }
 
-  .facts {
+  .meta {
+    justify-content: flex-end;
     margin-inline-start: var(--space-8);
   }
-}
-
-.detailPanel {
-  padding: var(--space-8) var(--space-16) var(--space-16);
-  margin-block-end: var(--space-16);
-  background-color: var(--paper-2);
 }
 
 .detailList {
@@ -101,7 +104,7 @@
   color: var(--ink-2);
   font-size: var(--text-small);
   flex-shrink: 0;
-  min-width: 5em;
+  min-width: 3em;
 }
 
 .detailValue {

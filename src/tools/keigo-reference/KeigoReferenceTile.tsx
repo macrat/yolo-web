@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KeigoReferenceTile — 敬語早見表の単一正典タイル。ルートが <Panel>（DESIGN.md §5 のボックス）で自己完結する。
+ * KeigoReferenceTile — 敬語早見表のタイル。ルートが <Panel>（DESIGN.md §5 のボックス）で自己完結する。
  *
  * 表示する内容（敬語早見表・よくある間違い）を切り替える。早見表は、件数の行・名前の欄・畳める分類の組と、
  * 広い画面の表・狭い画面の開閉する行を縦に並べる（§7「件数と備え」・§8）。絞り込みは URL のクエリに持つ。
@@ -10,7 +10,8 @@
  *   表の列と行の字に出し、何の順かが見えるようにする。
  * - 表の <tr> に role="button" を付けると表の構造が壊れるので、先頭のセル <th scope="row"> の中の
  *   <button aria-expanded> で開閉する。
- * - 狭い画面の開閉する行は、読み上げの名前を普通語だけにし、分類と敬語の形を説明として読ませる。
+ * - 表の開閉のボタンと狭い画面の開閉する行は、どちらも読み上げの名前を普通語だけにする。開閉の状態は
+ *   aria-expanded が伝える。狭い画面の行は、分類と敬語の形を説明として読ませる。
  */
 
 import { useState, Fragment } from "react";
@@ -20,7 +21,7 @@ import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import DisclosureRow from "@/tools/_components/DisclosureRow";
-import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
 import {
   KEIGO_LIST_ITEMS,
   KEIGO_LIST_SPEC,
@@ -52,6 +53,15 @@ const KEIGO_FORMS = [
   ["丁寧語", "teineigo"],
 ] as const satisfies ReadonlyArray<readonly [string, keyof KeigoEntry]>;
 
+/** 開いた行の例文に、場面ごとに並べる言い方。 */
+const EXAMPLE_FORMS = [
+  ["普通", "casual"],
+  ["尊敬語", "sonkeigo"],
+  ["謙譲語", "kenjogo"],
+] as const satisfies ReadonlyArray<
+  readonly [string, keyof KeigoEntry["examples"][number]]
+>;
+
 const [SORT] = KEIGO_LIST_SPEC.sorts;
 
 /** variant prop: 表示バリエーションの設定差。別実装ではない。 */
@@ -69,34 +79,32 @@ export interface KeigoReferenceTileProps {
   className?: string;
 }
 
-/** 行を開いたときに出る例文と注記。 */
+/**
+ * 行を開いたときに出る例文と注記。場面ごとに、言い方の名前の右に例文を置く。名前は補助情報の字で組み、
+ * 例文と注記は本文の字で読ませる（§4）。
+ */
 function EntryExamples({ entry }: { entry: KeigoEntry }) {
   return (
-    <div className={styles.examplePanel}>
-      {entry.examples.map((ex, i) => (
-        <div key={i} className={styles.exampleItem}>
-          <div className={styles.exampleContext}>{ex.context}</div>
-          <div className={styles.exampleLine}>
-            <span className={styles.exampleLabel}>普通:</span>
-            {ex.casual}
-          </div>
-          <div className={styles.exampleLine}>
-            <span className={styles.exampleLabel}>尊敬語:</span>
-            {ex.sonkeigo}
-          </div>
-          <div className={styles.exampleLine}>
-            <span className={styles.exampleLabel}>謙譲語:</span>
-            {ex.kenjogo}
-          </div>
+    <div className={styles.examples}>
+      {entry.examples.map((example, i) => (
+        <div key={i}>
+          <p className={styles.exampleContext}>{example.context}</p>
+          <dl className={styles.exampleLines}>
+            {EXAMPLE_FORMS.map(([label, key]) => (
+              <div key={key} className={styles.exampleLine}>
+                <dt className={styles.exampleLabel}>{label}</dt>
+                <dd className={styles.exampleText}>{example[key]}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       ))}
-      {entry.notes && <div className={styles.noteText}>{entry.notes}</div>}
+      {entry.notes ? <p className={styles.note}>{entry.notes}</p> : null}
     </div>
   );
 }
 
 export default function KeigoReferenceTile({
-  variant = "full",
   as = "section",
   className,
 }: KeigoReferenceTileProps = {}) {
@@ -123,10 +131,6 @@ export default function KeigoReferenceTile({
     setOpenEntryId((current) => (current === id ? null : id));
   };
 
-  // variant は現在 full のみ。将来の拡張に備えて variant 変数を参照しておく。
-  void variant;
-
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       <div className={styles.inner}>
@@ -193,7 +197,6 @@ export default function KeigoReferenceTile({
                                 className={styles.expandButton}
                                 onClick={() => toggleEntry(entry.id)}
                                 aria-expanded={openEntryId === entry.id}
-                                aria-label={`${entry.casual} の例文`}
                               >
                                 <DisclosureTriangle />
                                 {entry.casual}
@@ -224,6 +227,7 @@ export default function KeigoReferenceTile({
                       <DisclosureRow
                         open={openEntryId === entry.id}
                         onToggle={() => toggleEntry(entry.id)}
+                        headClassName={styles.mobileRowHead}
                         nameClassName={styles.mobileRowTitle}
                         descriptionClassName={styles.mobileRowDetails}
                         name={entry.casual}
@@ -235,7 +239,7 @@ export default function KeigoReferenceTile({
                                 {" "}
                                 <span className={styles.mobileRowForm}>
                                   <span className={styles.mobileRowLabel}>
-                                    {label}:
+                                    {label}
                                   </span>{" "}
                                   <span className={styles.mobileRowValue}>
                                     {entry[key]}

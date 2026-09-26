@@ -13,27 +13,23 @@ interface ToolPageLayoutProps {
 }
 
 /**
- * ToolPageLayout — ツールページの器。
+ * ToolPageLayout — 道具のページの器。
  *
- * 確定提示方式（タイル＝ツール本体を主役＝ファーストビューに描画し、
- * 補助情報を下に二次配置）を実装する。
+ * 道具（タイル）を主役としてページの頭のすぐ下に置き、補助の情報をその下に並べる。
  *
- * 要素並び順:
+ * 要素の並び:
  *   1. パンくず（Breadcrumb。BreadcrumbList JSON-LD 内蔵）
- *   2. コンパクトな h1（meta.name）+ 短説明（meta.shortDescription）
- *   3. ツール本体（children＝主役・ファーストビュー）
- *   4. howItWorks（meta.howItWorks）— ここから下は二次的
- *   5. プライバシーノート（固定文言）
+ *   2. h1（meta.name）と短い説明（meta.shortDescription）
+ *   3. 道具の本体（children）
+ *   4. このツールについて（meta.howItWorks）
+ *   5. プライバシーの注記（固定の文言）
  *   6. FAQ（FaqSection。meta.faq。FAQPage JSON-LD 内蔵）
  *   7. シェア（ShareButtons）
  *   8. 関連ツール（RelatedTools）
  *   9. 関連ブログ（RelatedBlogPosts）
  *
- * 制約:
- * - WebApplication JSON-LD はこの器に入れない（page.tsx 側に残す）
- * - 道具箱への追加導線は作らない（Phase 10 の責務）
- * - N-2: children が null/空要素でも howItWorks 以降のレイアウトが破綻しない
- * - 色はトークン（--paper/--ink/--rule/--accent 等）だけで組む。ツール名は見出しの書体で組む（§3）。
+ * WebApplication JSON-LD は道具ごとに違うので、この器ではなく各ページの page.tsx が出す。
+ * children が空でも、4 から下の並びは崩れない。
  */
 export default function ToolPageLayout({
   meta,
@@ -50,18 +46,14 @@ export default function ToolPageLayout({
         ]}
       />
 
-      {/* 2. コンパクトな h1 + 短説明（ファーストビューを占有しない） */}
+      {/* 2. h1 と短い説明 */}
       <header className={styles.header}>
         <h1 className={styles.title}>{meta.name}</h1>
         <p className={styles.shortDescription}>{meta.shortDescription}</p>
       </header>
 
-      {/* 3. ツール本体（children＝主役・ファーストビュー）
-       *    N-2: children が null/空でも <section> 自体は残るが、
-       *    後続セクションのレイアウトは影響を受けない。
-       *    TileInteractionTracker が同一の <section> を描画しつつ
-       *    「最初の操作」計測（tile_first_interaction, surface:"detail"）を
-       *    担う。DOM 構造は <section> 1つのまま */}
+      {/* 3. 道具の本体。TileInteractionTracker が <section> を1つ描き、その中の最初の操作
+       *    （tile_first_interaction, surface:"detail"）を計測する。 */}
       <TileInteractionTracker
         itemId={meta.slug}
         className={styles.content}
@@ -70,7 +62,7 @@ export default function ToolPageLayout({
         {children}
       </TileInteractionTracker>
 
-      {/* 4. howItWorks — 二次的補助情報 */}
+      {/* 4. このツールについて */}
       <section
         className={styles.howItWorksSection}
         aria-label="このツールについて"
@@ -80,14 +72,14 @@ export default function ToolPageLayout({
         <p className={styles.howItWorksText}>{meta.howItWorks}</p>
       </section>
 
-      {/* 5. プライバシーノート（固定文言） */}
+      {/* 5. プライバシーの注記 */}
       <p className={styles.privacyNote} role="note">
         {
           "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。"
         }
       </p>
 
-      {/* 6. FAQ（FAQPage JSON-LD 内蔵）。faq が undefined/空のとき FaqSection は null を返す */}
+      {/* 6. FAQ。faq が無いとき FaqSection は何も描かない */}
       <FaqSection faq={meta.faq} />
 
       {/* 7. シェア */}

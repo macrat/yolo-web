@@ -344,10 +344,16 @@ describe("ToolPageLayout", () => {
 
   // --- CSS 規約チェック ---
 
-  it("CSS: max-width が --max-width（最大幅）を使う（DESIGN.md §5）", () => {
+  it("CSS: 器は左右の余白と最大幅を持たず、コンテナのコンテンツ幅の左端から組む（DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--max-width)");
+    const layoutRules = css.match(/\.layout\s*\{[^}]*\}/g) ?? [];
+    expect(layoutRules.length).toBeGreaterThan(0);
+    for (const rule of layoutRules) {
+      expect(rule).not.toMatch(
+        /(?:padding|padding-inline|padding-left|padding-right|max-width|margin)\s*:/,
+      );
+    }
   });
 
   it("CSS: 長文テキストに --measure（読む面）制限が含まれる（DESIGN.md §5）", () => {

@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import YojiSearchTile from "../YojiSearchTile";
-import { YOJI_DIFFICULTY_LABELS } from "@/dictionary/_lib/types";
+import {
+  YOJI_CATEGORY_LABELS,
+  YOJI_DIFFICULTY_LABELS,
+} from "@/dictionary/_lib/types";
 import { YOJI_SEARCH_ITEMS } from "../logic";
 
 // 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
@@ -36,13 +39,10 @@ afterEach(() => {
 });
 
 describe("YojiSearchTile", () => {
-  it("全400語のうち1ページ目の50語を並べ、「もっと見る」ではなくページ送りを持つ", () => {
+  it("全400語のうち1ページ目の50語を並べ、結果の下にページ送りを持つ", () => {
     render(<YojiSearchTile />);
     expect(countLine()).toHaveTextContent("全400語のうち1〜50語目");
     expect(rowButtons()).toHaveLength(50);
-    expect(
-      screen.queryByRole("button", { name: /もっと見る/ }),
-    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("navigation", { name: "ページナビゲーション" }),
     ).toBeInTheDocument();
@@ -118,13 +118,13 @@ describe("YojiSearchTile", () => {
     expect(rowButtons()[0]).toBe(rowButton(YOJI_SEARCH_ITEMS[50].name));
   });
 
-  it("行の読み上げの名前は語だけで、読み・難易度・意味は説明になる", () => {
+  it("行の読み上げの名前は語だけで、読み・カテゴリ・難易度・意味は説明になる", () => {
     render(<YojiSearchTile />);
     const { entry } = YOJI_SEARCH_ITEMS[0];
     const button = rowButton(entry.yoji);
     expect(button).toHaveAccessibleName(entry.yoji);
     expect(button).toHaveAccessibleDescription(
-      `${entry.reading} ${YOJI_DIFFICULTY_LABELS[entry.difficulty]} ${entry.meaning}`,
+      `${entry.reading} ${YOJI_CATEGORY_LABELS[entry.category]} ${YOJI_DIFFICULTY_LABELS[entry.difficulty]} ${entry.meaning}`,
     );
   });
 
@@ -150,7 +150,9 @@ describe("YojiSearchTile", () => {
     const [first, second] = rowButtons();
     fireEvent.click(first);
     expect(first).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("例文", { selector: "dt" })).toBeInTheDocument();
+    expect(
+      Array.from(document.querySelectorAll("dt"), (dt) => dt.textContent),
+    ).toEqual(["例文", "出典", "構造"]);
     fireEvent.click(second);
     expect(first).toHaveAttribute("aria-expanded", "false");
     expect(second).toHaveAttribute("aria-expanded", "true");

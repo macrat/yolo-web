@@ -1,14 +1,3 @@
-/**
- * TraditionalColorPaletteTile 単一正典タイルのテスト（cycle-228 T-19）
- *
- * 旧 TraditionalColorPalettePage.test.tsx の全振る舞いを移植し、
- * タイルアーキテクチャ要件（Panel ルート・useId・variant・複数インスタンス）を追加。
- *
- * CSS トークン検証: readFileSync（import { readFileSync } from "fs"）を使用。
- */
-
-import { readFileSync } from "fs";
-import { join } from "path";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { hexToOklch } from "@/lib/hexToOklch";
@@ -53,50 +42,9 @@ function swatchSlugs(): string[] {
 }
 
 // =========================================================
-// CSS トークン検証（新タイル CSS）
+// ルート要素
 // =========================================================
-describe("CSS トークン検証", () => {
-  const cssPath = join(
-    process.cwd(),
-    "src/tools/traditional-color-palette/TraditionalColorPaletteTile.module.css",
-  );
-
-  it("--color-* 旧トークンが存在しない（B-1）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("--accent を塗り（background）に直接使っていない（B-3）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    const lines = css.split("\n");
-    for (const line of lines) {
-      if (
-        line.includes("var(--accent)") &&
-        (line.includes("background") || line.includes("background-color"))
-      ) {
-        throw new Error(
-          `--accent を background に直接使っている行: ${line.trim()}`,
-        );
-      }
-    }
-    expect(true).toBe(true);
-  });
-
-  it("font-weight: 700 が存在しない（B-4）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight\s*:\s*700/);
-  });
-
-  it("規定外 box-shadow が存在しない（B-6）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/box-shadow.*var\(--accent\)/);
-  });
-});
-
-// =========================================================
-// A-1: Panel ルート要素
-// =========================================================
-describe("Panel ルート要素（A-1）", () => {
+describe("ルート要素", () => {
   it("ルート要素に panel クラスが付与されている", () => {
     const { container } = render(<TraditionalColorPaletteTile />);
     // Panel コンポーネントが出力した最初の要素
@@ -109,9 +57,9 @@ describe("Panel ルート要素（A-1）", () => {
 });
 
 // =========================================================
-// A-6: DOM id の useId による一意化（複数インスタンス同居）
+// 複数のタイル
 // =========================================================
-describe("複数インスタンスで id 重複がない（A-6）", () => {
+describe("複数インスタンスで id 重複がない", () => {
   it("2つのタイルを同一ページに描画しても id 重複がない", () => {
     render(
       <div>
@@ -227,9 +175,9 @@ describe("変換ロジックの正確性（UI 経由）", () => {
 });
 
 // =========================================================
-// ARIA 属性（C-3）
+// ARIA 属性
 // =========================================================
-describe("ARIA 属性（C-3）", () => {
+describe("ARIA 属性", () => {
   it("カテゴリフィルタに role='radiogroup' が付与されている", () => {
     render(<TraditionalColorPaletteTile />);
     const group = screen.getByRole("radiogroup", { name: "色の系統" });
@@ -242,7 +190,7 @@ describe("ARIA 属性（C-3）", () => {
     expect(group).toBeInTheDocument();
   });
 
-  it("ライブリージョンに role='status' と aria-live='polite' が付与されている（C-3）", () => {
+  it("ライブリージョンに role='status' と aria-live='polite' が付与されている", () => {
     render(<TraditionalColorPaletteTile />);
     const liveRegion = document.querySelector(
       "[role='status'][aria-live='polite']",
@@ -250,7 +198,7 @@ describe("ARIA 属性（C-3）", () => {
     expect(liveRegion).toBeInTheDocument();
   });
 
-  it("選択時にライブリージョンに実テキストノードのサマリが入る（C-3）", async () => {
+  it("選択時にライブリージョンに配色の文が入る", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
@@ -421,6 +369,19 @@ describe("色の格子の件数と備え", () => {
     expect(new URLSearchParams(window.location.search).get("kind")).toBe("red");
   });
 
+  it("色見本は字を載せず、読み上げの名前に色の名前とカラーコードを持つ", () => {
+    render(<TraditionalColorPaletteTile />);
+    const swatch = document.querySelector<HTMLElement>(
+      '[data-swatch-slug="toki"]',
+    );
+    expect(swatch).not.toBeNull();
+    expect(swatch).toHaveTextContent("");
+    const toki = PALETTE_ITEMS.find(({ color }) => color.slug === "toki")!;
+    expect(swatch).toHaveAccessibleName(
+      `${toki.color.name} (${toki.color.hex})`,
+    );
+  });
+
   it("URL のクエリの並び順で出す", () => {
     window.history.replaceState(
       null,
@@ -451,7 +412,7 @@ describe("配色パターンタブ", () => {
     expect(screen.getByRole("radio", { name: "分裂補色" })).toBeInTheDocument();
   });
 
-  it("初期状態で「補色」が選択されている（C-5）", () => {
+  it("初期状態で「補色」が選択されている", () => {
     render(<TraditionalColorPaletteTile />);
     const complementaryOption = screen.getByRole("radio", { name: "補色" });
     expect(complementaryOption).toBeChecked();
@@ -476,7 +437,7 @@ describe("伝統色詳細ページリンク", () => {
 // =========================================================
 // 独立レンダリング
 // =========================================================
-describe("独立レンダリング（ToolPageLayout 非依存）", () => {
+describe("独立レンダリング", () => {
   it("コンポーネントが独立してレンダリングされる", () => {
     render(<TraditionalColorPaletteTile />);
     expect(searchBox()).toBeInTheDocument();

@@ -26,6 +26,8 @@ interface DisclosureRowProps {
  * `<summary>` にはそれに当たる ARIA の役割が無く、ブラウザによってはそれらの属性を名前と説明に使わないため。
  * 縁の見えないコントロールなので、三角を並びの左端に揃え、その左右 8px を押せる範囲に含める
  * （data-text-box="inline"）。
+ *
+ * 開いた中身は、語の字の位置から字下げして行の下に置き、次の行の区切りの線で閉じる。
  */
 export default function DisclosureRow({
   name,
@@ -65,7 +67,11 @@ export default function DisclosureRow({
           </span>
         </span>
       </button>
-      {open ? <div id={panelId}>{children}</div> : null}
+      {open ? (
+        <div id={panelId} className={styles.panel}>
+          {children}
+        </div>
+      ) : null}
     </>
   );
 }

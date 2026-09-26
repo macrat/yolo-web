@@ -1,13 +1,14 @@
 /* KeigoReferenceTile.module.css
- * Panel がルート要素のため .container クラスは不要（Panel.module.css に委譲）。
+ * 枠と内側の余白はルートの Panel（§5 のボックス）が持つ。
  * 「よくある間違い」の誤/正は色分けせず、文言のラベル「誤:」「正:」が区別を担う。
  */
 
-/* タイル内レイアウト（Panel のパディング内側） */
+/* 表示する内容の切り替えと、その下の中身を 16px あけて積む（§5 の間隔）。早見表の件数の行と操作の組のあいだと
+ * 同じ間隔にして、操作どうしを同じ並びに見せる。 */
 .inner {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
+  gap: var(--space-16);
 }
 
 /* 件数の行と操作の組を早見表の上に置き、早見表とのあいだを 24px あける（§5 の間隔）。 */
@@ -91,46 +92,47 @@
   line-height: inherit;
 }
 
-/* 例文パネル（アコーディオン） */
-.examplePanel {
-  padding: 0.75rem 1rem;
-  background-color: var(--paper-2);
-  border-radius: var(--radius);
-}
-
-.exampleItem {
-  margin-bottom: 0.5rem;
-}
-
-.exampleItem:last-child {
-  margin-bottom: 0;
+/* 開いた行の例文。場面どうしを 16px あけ、場面の名前・言い方の行・注記を上から積む（§5 の間隔）。 */
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
 .exampleContext {
-  font-size: 0.8rem;
-  font-weight: 600;
+  margin: 0;
   color: var(--ink-2);
-  margin-bottom: 0.25rem;
+  font-size: var(--text-small);
 }
 
+.exampleLines {
+  margin: 0;
+}
+
+/* 言い方の名前の右に例文を置き、例文の幅が足りなければ名前の下へ回して、1字ずつ折れる細い列にしない。
+ * 名前の幅を揃えて、例文の左端を行ごとに揃える。 */
 .exampleLine {
-  font-size: 0.875rem;
-  color: var(--ink);
-  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
+  align-items: baseline;
 }
 
 .exampleLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 3.5rem;
   color: var(--ink-2);
-  margin-right: 0.4rem;
+  font-size: var(--text-small);
 }
 
-.noteText {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  font-style: italic;
-  margin-top: 0.5rem;
+.exampleText {
+  flex: 1 1 12em;
+  min-width: 0;
+  margin: 0;
+}
+
+.note {
+  margin: 0;
 }
 
 /* よくある間違いタブ */
@@ -190,23 +192,34 @@
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
+/* 普通語の行の右端に分類を置き、その下に敬語の形を1つずつ並べる。普通語は短い語なので、分類を並べても語を
+ * 圧迫しない（§7 の広い画面の行と同じ位置）。収まらない幅では、分類は普通語の下へ回る。分類と敬語の形は読み上げの
+ * 説明として1つの要素に包まれるので、その要素を display: contents にして、字を普通語と同じ並びに置く。 */
+.mobileRowHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-16);
+}
+
 .mobileRowTitle {
-  display: block;
+  min-width: 0;
   font-weight: 700;
 }
 
 .mobileRowDetails {
-  display: block;
+  display: contents;
 }
 
 .mobileRowKind {
-  display: block;
+  margin-inline-start: auto;
   color: var(--ink-2);
   font-size: var(--text-small);
 }
 
 /* 敬語の形の名前の右に語を置き、語の幅が足りなければ名前の下へ回して、1字ずつ折れる細い列にしない。 */
 .mobileRowForm {
+  flex-basis: 100%;
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--space-8);

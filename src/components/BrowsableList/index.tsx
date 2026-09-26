@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import ListControls from "@/components/ListControls";
+import ListStack from "@/components/ListStack";
 import ListStatus from "@/components/ListStatus";
 import Pagination from "@/components/Pagination";
 import type {
@@ -12,7 +13,7 @@ import type {
   BrowseSpec,
   BrowseUnit,
 } from "@/lib/list-browse";
-import { useListBrowseState } from "./useListBrowseState";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
 import styles from "./BrowsableList.module.css";
 
 /** 一覧のページが操作を持つのは、範囲がこの件数を超えるとき（§7）。 */
@@ -129,7 +130,7 @@ export default function BrowsableList({
   const sortChoice = sorts.find((sort) => sort.value === state.sort);
 
   return (
-    <div className={styles.browsable}>
+    <ListStack>
       <div className={styles.head}>
         <ListStatus
           ref={statusRef}
@@ -197,6 +198,6 @@ export default function BrowsableList({
           )}
         </div>
       ) : null}
-    </div>
+    </ListStack>
   );
 }

@@ -1,7 +1,6 @@
 /* TraditionalColorPaletteTile.module.css
  * 色が出るのは、伝統色そのもの（色見本の地）だけ。UI は無彩のトークンで組む（§2）。
- * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。
- * Panel がルート要素なので container クラスは不要（Panel.module.css に委譲）
+ * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。枠と内側の余白はルートの Panel が持つ。
  */
 
 /* コンテンツ縦並び */
@@ -28,56 +27,34 @@
   gap: var(--space-16);
 }
 
-/* --- スウォッチグリッド --- */
+/* --- 色の格子 --- */
 
+/* 色見本の列の数は幅から決める。どの幅・どの文字サイズでも1つの見本が 44px 以上のタップターゲットになり
+ * （§6）、広い画面ほど1行に多くの色が並んで見比べやすい。見本どうしは 8px あける（§5）。 */
 .swatchGrid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 0.375rem;
+  grid-template-columns: repeat(auto-fill, minmax(max(44px, 3rem), 1fr));
+  gap: var(--space-8);
 }
 
+/* 色見本は細い線で囲み、淡い色が背景に溶けないようにする（§2）。字を載せず、色だけを見せる。 */
 .swatch {
+  position: relative;
   width: 100%;
   aspect-ratio: 1;
-  border: 2px solid var(--rule);
-  border-radius: var(--radius);
-  cursor: pointer;
-  position: relative;
-  background: transparent;
   padding: 0;
-  /* C-1: タッチターゲット確保（スウォッチは aspect-ratio=1 で自動サイズ） */
-  min-height: 28px;
+  border: var(--rule-w-hair) solid var(--rule-2);
+  cursor: pointer;
 }
 
 /* 選んだ色見本は、外に太い線の輪を持つ形で示す（§6）。輪は outline ではなく擬似要素に引き、
- * フォーカスの二重リング（outline）と同時に出せるようにする。 */
+ * フォーカスの二重リング（outline）と同時に出せるようにする。輪は見本どうしの間隔（8px）の中に収まる。 */
 .swatch[aria-pressed="true"]::after {
   content: "";
   position: absolute;
-  inset: calc(-2 * var(--rule-w));
+  inset: calc(-2 * var(--rule-w-hair) - var(--rule-w));
   border: var(--rule-w) solid var(--rule);
   pointer-events: none;
-}
-
-.swatchTooltip {
-  position: absolute;
-  bottom: calc(100% + 0.5rem);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.25rem 0.5rem;
-  background-color: var(--ink);
-  color: var(--paper);
-  font-size: 0.7rem;
-  border-radius: var(--radius);
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
-  z-index: 10;
-}
-
-.swatch:hover .swatchTooltip {
-  opacity: 1;
 }
 
 /* --- 配色パターンセクション --- */
@@ -185,17 +162,7 @@
 
 /* --- レスポンシブ --- */
 
-@media (max-width: 1024px) {
-  .swatchGrid {
-    grid-template-columns: repeat(8, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
-  .swatchGrid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
   .paletteResults {
     grid-template-columns: 1fr;
   }

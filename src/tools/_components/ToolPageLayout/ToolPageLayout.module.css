@@ -1,19 +1,18 @@
 /*
- * ToolPageLayout.module.css — 実務の器。
+ * ToolPageLayout.module.css — 道具のページの器。
  *
- * ツール詳細の共有レイアウト。確定提示方式（タイル＝主役・ファーストビュー）を実装。
- * ツールは正確さ・使いやすさが価値、器は静か。トークンのみ使用。
- * 最大幅 --max-width / 読む面 --measure / 影なし・角丸 0（DESIGN.md §5）。
+ * 道具（タイル）を主役として頭のすぐ下に置き、補助の情報をその下に並べる。器は静かに、トークンだけで組み、
+ * 影も角丸も持たない（DESIGN.md §5）。
  */
 
-/* ページ全体のラッパー。最大幅 --max-width でセンタリング（§5）。 */
+/* ページの中身。幅と左右の余白はコンテナが決めるので、器は自分の左右の余白を持たず、コンテンツ幅の左端から
+ * 組む（§5「コンテンツ幅の左端は、どのページでも同じ位置」）。パンくず・見出し・道具・補助の情報は、一覧の
+ * ページの頭と同じ 16px の間隔で積み、道具の最初の結果を画面の上のほうに置く。 */
 .layout {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-24) var(--space-16);
+  padding-block: var(--space-24);
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
+  gap: var(--space-16);
 }
 
 /* === ゾーン1: 文脈確認（パンくず・h1・短説明）=== */
@@ -32,7 +31,7 @@
   font-size: 1.5625rem; /* 25px（1.25 倍スケール帯） */
   color: var(--ink);
   margin: 0;
-  line-height: 1.4;
+  line-height: var(--leading-heading);
 }
 
 /* shortDescription: 1〜2文のコンパクトな短説明。文章として読ませるため 16px/1.9。 */
@@ -67,7 +66,7 @@
   font-size: 1.09375rem; /* 見出し階層の最小段（17.5px 目安） */
   color: var(--ink);
   margin: 0 0 var(--space-8);
-  line-height: 1.4;
+  line-height: var(--leading-heading);
 }
 
 .howItWorksText {
@@ -101,14 +100,13 @@
   text-align: center;
   margin: 0 0 var(--space-16);
   color: var(--ink);
-  line-height: 1.4;
+  line-height: var(--leading-heading);
 }
 
 /* モバイル対応（375px 先行） */
 @media (max-width: 768px) {
   .layout {
-    padding: var(--space-16) var(--space-16);
-    gap: var(--space-16);
+    padding-block: var(--space-16);
   }
 
   .title {

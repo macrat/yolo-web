@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Panel from "@/components/Panel";
 import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
 import Pagination from "@/components/Pagination";
 import DisclosureRow from "@/tools/_components/DisclosureRow";
-import { useListBrowseState } from "@/components/BrowsableList/useListBrowseState";
-import {
-  YOJI_CATEGORY_LABELS,
-  YOJI_DIFFICULTY_LABELS,
-  type YojiEntry,
-} from "@/dictionary/_lib/types";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
+import type { YojiEntry } from "@/dictionary/_lib/types";
 import {
   YOJI_SEARCH_ITEMS,
   YOJI_SEARCH_PER_PAGE,
@@ -29,12 +25,10 @@ export interface YojiSearchTileProps {
 
 const [LEVEL_GROUP, ORIGIN_GROUP] = YOJI_SEARCH_SPEC.filterGroups;
 
-/** 開いた行に見せる、四字熟語の詳細。 */
+/** 開いた行に見せる、四字熟語の詳細。閉じた行に見えている値（語・読み・カテゴリ・難易度・意味）は繰り返さない。 */
 function YojiDetail({ entry }: { entry: YojiEntry }) {
   const rows: Array<[string, string]> = [
     ["例文", entry.example],
-    ["カテゴリ", YOJI_CATEGORY_LABELS[entry.category]],
-    ["難易度", YOJI_DIFFICULTY_LABELS[entry.difficulty]],
     ["出典", entry.origin],
     ["構造", entry.structure],
   ];
@@ -52,19 +46,13 @@ function YojiDetail({ entry }: { entry: YojiEntry }) {
 
 /**
  * 四字熟語を探す道具。件数の行・名前の欄・畳める絞り込みと並び順の組・結果の行・ページ送りを縦に並べる
- * （DESIGN.md §7「件数と備え」）。結果の行は開閉する行で、閉じた行は語・読み・難易度・意味を見せ、開くと例文と
- * 分類が出る（§8）。難易度は四字熟語辞典の一覧の行と同じ語と位置の補助情報で、やさしい順が何の順かを行で
- * 確かめられる（§7）。
+ * （DESIGN.md §7「件数と備え」）。結果の行は開閉する行で、閉じた行は四字熟語辞典の一覧の行と同じ値を同じ位置に
+ * 見せる。語と読み、種別のカテゴリと補助情報の難易度、意味の順で、開くと例文・出典・構造が出る（§7・§8）。
+ * カテゴリで絞り込めることも、やさしい順が何の順かも、行で確かめられる。
  *
  * 絞り込み・並び順・ページは URL のクエリに持ち、詳細を開いて戻っても同じ状態で出る。
  */
-export default function YojiSearchTile({
-  variant: _variant = "full",
-  as,
-  className,
-}: YojiSearchTileProps) {
-  void _variant;
-
+export default function YojiSearchTile({ as, className }: YojiSearchTileProps) {
   const {
     state,
     slice,
@@ -135,7 +123,7 @@ export default function YojiSearchTile({
         {slice.items.length > 0 ? (
           <div>
             <ul className={styles.resultList}>
-              {slice.items.map(({ entry, facts = [] }) => (
+              {slice.items.map(({ entry, kind, facts = [] }) => (
                 <li key={entry.yoji} className={styles.resultItem}>
                   <DisclosureRow
                     open={openYoji === entry.yoji}
@@ -151,16 +139,20 @@ export default function YojiSearchTile({
                     description={
                       <>
                         <span className={styles.reading}>{entry.reading}</span>{" "}
-                        <span className={styles.facts}>
-                          {facts.map((fact) => fact.text).join(" ")}
+                        <span className={styles.meta}>
+                          <span>{kind}</span>
+                          {facts.map((fact) => (
+                            <Fragment key={fact.text}>
+                              {" "}
+                              <span>{fact.text}</span>
+                            </Fragment>
+                          ))}
                         </span>{" "}
                         <span className={styles.meaning}>{entry.meaning}</span>
                       </>
                     }
                   >
-                    <div className={styles.detailPanel}>
-                      <YojiDetail entry={entry} />
-                    </div>
+                    <YojiDetail entry={entry} />
                   </DisclosureRow>
                 </li>
               ))}

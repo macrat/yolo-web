@@ -21,3 +21,10 @@
   flex: 1;
   min-width: 0;
 }
+
+/* 開いた中身は、三角（20px）とその右の間隔のぶん字下げして語の字の左端に揃え、どの行の中身かを位置で示す。
+ * 下は次の行の区切りの線まで 16px あける（§5）。 */
+.panel {
+  padding-inline-start: calc(20px + var(--space-8));
+  padding-block-end: var(--space-16);
+}
