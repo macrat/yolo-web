@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import PlayQuizResultPage from "../page";
+import PlayQuizResultPage, { generateMetadata } from "../page";
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
@@ -52,6 +52,7 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
     quiz,
     children,
     afterShare,
+    shareText,
   }: {
     quiz: {
       meta: {
@@ -74,7 +75,7 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
       <p>{quiz.meta.shortDescription}</p>
       {children}
       {afterShare}
-      <div data-testid="share-buttons" />
+      <div data-testid="share-buttons">{shareText}</div>
     </div>
   ),
 }));
@@ -120,6 +121,28 @@ vi.mock("@/play/quiz/registry", () => ({
             title: "Xタイプ",
             description: "Xタイプの説明",
             icon: "X",
+          },
+        ],
+      },
+    ],
+    [
+      "reading-quiz",
+      {
+        meta: {
+          title: "言葉診断",
+          shortDescription: "言葉診断の短い説明",
+          type: "personality",
+          questionCount: 10,
+          accentColor: "#0000FF",
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-y",
+            title: "和顔愛語タイプ",
+            reading: { word: "和顔愛語", kana: "わがんあいご" },
+            description: "和顔愛語タイプの説明",
+            icon: "Y",
           },
         ],
       },
@@ -269,5 +292,38 @@ describe("PlayQuizResultPage detailedContent見出し", () => {
     expect(
       screen.getByText("このタイプの人へのアドバイス"),
     ).toBeInTheDocument();
+  });
+});
+
+describe("ページの題と共有の文", () => {
+  it("読みを持たないタイプは、題も共有の文も title のまま", async () => {
+    const params = Promise.resolve({
+      slug: "personality-quiz",
+      resultId: "result-x",
+    });
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe("Xタイプ | 性格診断の結果 | yolos.net");
+    render(await PlayQuizResultPage({ params }));
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      /^性格診断の結果は「Xタイプ」でした！あなたは\? #性格診断 #yolosnet$/,
+    );
+  });
+
+  it("読みを持つタイプは、題・og:title・共有の文で語の後ろに読みを添える", async () => {
+    const params = Promise.resolve({
+      slug: "reading-quiz",
+      resultId: "result-y",
+    });
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe(
+      "和顔愛語（わがんあいご）タイプ | 言葉診断の結果 | yolos.net",
+    );
+    expect(metadata.openGraph?.title).toBe(
+      "和顔愛語（わがんあいご）タイプ | 言葉診断の結果",
+    );
+    render(await PlayQuizResultPage({ params }));
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      "言葉診断の結果は「和顔愛語（わがんあいご）タイプ」でした！",
+    );
   });
 });

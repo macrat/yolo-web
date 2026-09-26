@@ -202,6 +202,26 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(texts).not.toContain("Sub Title");
   });
 
+  test("読みを渡すと品名のすぐ後ろに添え、省略時は描かない", async () => {
+    const { createOgpImageResponse } = await getModule();
+
+    await createOgpImageResponse({
+      title: "花鳥風月タイプ",
+      reading: "かちょうふうげつ",
+      subtitle: "あなたの言葉センス診断",
+    });
+    const texts = collectText(imageResponseCalls[0].element);
+    expect(texts.indexOf("かちょうふうげつ")).toBe(
+      texts.indexOf("花鳥風月タイプ") + 1,
+    );
+
+    imageResponseCalls = [];
+    await createOgpImageResponse({ title: "花鳥風月タイプ" });
+    expect(collectText(imageResponseCalls[0].element)).not.toContain(
+      "かちょうふうげつ",
+    );
+  });
+
   test("短い品名は大きく、長い品名は小さく組む（書記素数で段階選択）", async () => {
     const { createOgpImageResponse } = await getModule();
 
@@ -287,7 +307,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(typeof ogpImageModule.createOgpImageResponse).toBe("function");
   });
 
-  test("OgpImageConfig は title/subtitle のみ（accentColor/icon を持たない）", async () => {
+  test("OgpImageConfig は title/reading/subtitle のみ（accentColor/icon を持たない）", async () => {
     const { createOgpImageResponse } = await getModule();
     // 型レベルの契約: 余剰プロパティは TypeScript が弾く。ここでは実行時に title だけ・
     // subtitle 付きの両ケースが成立することを確認する（accentColor/icon は要らない）。

@@ -193,7 +193,7 @@ describe("OtherTypesNav", () => {
           {
             id: "poetic-sensory",
             title: "花鳥風月タイプ",
-            reading: "かちょうふうげつ",
+            reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
           },
           ...results.slice(1),
         ]}

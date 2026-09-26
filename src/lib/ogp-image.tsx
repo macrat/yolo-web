@@ -11,6 +11,8 @@ import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/utsuwaHex";
 export interface OgpImageConfig {
   /** 品名/ページ名（明朝で大きく組む）。 */
   title: string;
+  /** 品名の中の読みにくい語の読み方（省略可）。品名のすぐ下にゴシック INK_2 で小さく添える。 */
+  reading?: string;
   /** 副題/説明/カテゴリ（省略可・ゴシック INK_2）。 */
   subtitle?: string;
 }
@@ -214,7 +216,7 @@ function titleFontSize(graphemeCount: number): number {
 export async function createOgpImageResponse(
   config: OgpImageConfig,
 ): Promise<ImageResponse> {
-  const { title, subtitle } = config;
+  const { title, reading, subtitle } = config;
   const graphemeCount = [...title].length;
 
   const [gothicData, minchoData] = await Promise.all([
@@ -311,6 +313,20 @@ export async function createOgpImageResponse(
         >
           {title}
         </div>
+        {reading && reading.trim() !== "" ? (
+          <div
+            style={{
+              display: "flex",
+              fontFamily: gothicFamily,
+              fontSize: 30,
+              lineHeight: 1.55,
+              color: INK_2,
+              marginTop: "8px",
+            }}
+          >
+            {reading}
+          </div>
+        ) : null}
         {subtitle && subtitle.trim() !== "" ? (
           <div
             style={{

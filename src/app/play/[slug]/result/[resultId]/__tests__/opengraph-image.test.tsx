@@ -3,9 +3,10 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 // Track calls to ImageResponse for assertions
 let imageResponseCalls: Array<{ element: unknown; options: unknown }> = [];
 
-// Track calls to createOgpImageResponse（OgpImageConfig は title/subtitle だけを持つ）。
+// Track calls to createOgpImageResponse（OgpImageConfig は title/reading/subtitle だけを持つ）。
 let createOgpImageResponseCalls: Array<{
   title: string;
+  reading?: string;
   subtitle?: string;
 }> = [];
 
@@ -27,7 +28,7 @@ vi.mock("@/lib/ogp-image", () => ({
   ogpSize: { width: 1200, height: 630 },
   ogpContentType: "image/png",
   createOgpImageResponse: vi.fn(
-    (config: { title: string; subtitle?: string }) => {
+    (config: { title: string; reading?: string; subtitle?: string }) => {
       createOgpImageResponseCalls.push(config);
       imageResponseCalls.push({
         element: { props: config },
@@ -44,7 +45,7 @@ vi.mock("@/play/quiz/registry", () => ({
     [
       "test-quiz",
       {
-        // OGP 生成が読むのは meta.title と result.title/id だけ。
+        // OGP 生成が読むのは meta.title と result.title/reading/id だけ。
         meta: {
           slug: "test-quiz",
           title: "テストクイズ",
@@ -52,6 +53,11 @@ vi.mock("@/play/quiz/registry", () => ({
         results: [
           { id: "result-a", title: "タイプA" },
           { id: "result-b", title: "タイプB" },
+          {
+            id: "result-c",
+            title: "花鳥風月タイプ",
+            reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
+          },
         ],
       },
     ],
@@ -119,6 +125,23 @@ describe("QuizResultOpenGraphImage", () => {
       params: Promise.resolve({ slug: "test-quiz", resultId: "result-a" }),
     });
     expect(createOgpImageResponseCalls[0].title).toBe("タイプA");
+  });
+
+  test("読みを持つタイプは、タイトルを名前だけにし、読みを別に渡す", async () => {
+    const mod = await getModule();
+    await mod.default({
+      params: Promise.resolve({ slug: "test-quiz", resultId: "result-c" }),
+    });
+    expect(createOgpImageResponseCalls[0].title).toBe("花鳥風月タイプ");
+    expect(createOgpImageResponseCalls[0].reading).toBe("かちょうふうげつ");
+  });
+
+  test("読みを持たないタイプには読みを渡さない", async () => {
+    const mod = await getModule();
+    await mod.default({
+      params: Promise.resolve({ slug: "test-quiz", resultId: "result-a" }),
+    });
+    expect(createOgpImageResponseCalls[0].reading).toBeUndefined();
   });
 
   test("passes quiz title as subtitle to createOgpImageResponse", async () => {

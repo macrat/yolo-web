@@ -62,7 +62,7 @@ export default function OtherTypesNav({
     return {
       name: result.nameParts?.name ?? result.title,
       href: getPlayResultPath(quizSlug, result.id),
-      reading: result.nameParts?.reading ?? result.reading,
+      reading: result.nameParts?.reading ?? result.reading?.kana,
       facts: visitors ? [{ text: "あなたのタイプ" }] : undefined,
       factsId: visitors ? `${headingId}-visitor` : undefined,
       swatch: showSwatch ? result.color : undefined,

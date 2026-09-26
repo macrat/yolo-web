@@ -235,7 +235,7 @@ describe("word-sense-personality — results", () => {
     for (const result of wordSensePersonalityQuiz.results) {
       const [yoji, reading] = expected[result.id];
       expect(result.title).toBe(`${yoji}タイプ`);
-      expect(result.reading).toBe(reading);
+      expect(result.reading).toEqual({ word: yoji, kana: reading });
     }
   });
 

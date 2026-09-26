@@ -18,7 +18,7 @@ const headings = new Set([
   "Unix タイムスタンプ変換ツール",
   "JSON 整形ツール",
   "CSS グラデーション生成ツール",
-  "柔和温順（にゅうわおんじゅん）タイプ",
+  "カテゴリから探す（10）",
   "ツールを10個から30個に拡充しました: プログラマティックSEO戦略の実践",
   "Markdownが思い通りに表示されない：改行・表・エスケープを仕組みから直す",
   "締切3分前に5手先を読む炎の策士",
@@ -175,10 +175,10 @@ describe("splitIntoPhrases", () => {
         expect(parenDepth(text.slice(0, offset)), text).toBe(0);
       }
     }
-    expect(splitIntoPhrases("柔和温順（にゅうわおんじゅん）タイプ")).toEqual([
-      "柔和温順",
-      "（にゅうわおんじゅん）",
-      "タイプ",
+    expect(splitIntoPhrases("カテゴリから探す（10）")).toEqual([
+      "カテゴリから",
+      "探す",
+      "（10）",
     ]);
   });
 
@@ -194,9 +194,9 @@ describe("splitIntoPhrases", () => {
   });
 
   test("最初の文節の空白より後ろには語の切れ目の折り所を足さない", () => {
-    expect(
-      splitIntoPhrases("ムササビ -- 座布団サイズで120m飛ぶ孤高の夢想家")[0],
-    ).toBe("ムササビ -- 座布団サイズで");
+    expect(splitIntoPhrases("Unix タイムスタンプ変換ツール")).toEqual([
+      "Unix タイムスタンプ変換ツール",
+    ]);
   });
 
   test("最初の文節の語の切れ目は、前後に2字以上の同じ字の種類が続く所だけ", () => {

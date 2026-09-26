@@ -263,10 +263,11 @@ export type QuizResult = {
    */
   nameParts?: { name: string; reading: string };
   /**
-   * title の中の読みにくい語の読み方（「一字千金タイプ」の「いちじせんきん」）。
-   * 結果の画面では title の下に添え、タイプを並べる一覧では名前の後ろに置く（DESIGN.md §7）。
+   * title の中の読みにくい語（word）と、その読み方（kana）。「一字千金タイプ」なら「一字千金」と「いちじせんきん」。
+   * 見出しでは title の下に kana を添え、タイプを並べる一覧では名前の後ろに置く（DESIGN.md §7）。
+   * 見出しでない所でタイプ名を文として使うときは、`resultNameWithReading` で語の後ろに読みを丸括弧で添える。
    */
-  reading?: string;
+  reading?: { word: string; kana: string };
   description: string;
   /** Theme color hex (used for personality type) */
   color?: string;

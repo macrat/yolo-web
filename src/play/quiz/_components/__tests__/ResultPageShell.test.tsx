@@ -140,7 +140,7 @@ test("ResultPageShell keeps the h1 to the type name and adds the reading under t
       result={{
         ...mockResult,
         title: "花鳥風月タイプ",
-        reading: "かちょうふうげつ",
+        reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
       }}
       shareText="シェアテキスト"
       shareUrl="https://example.com/result"
@@ -168,7 +168,7 @@ test("ResultPageShell adds the reading right after the h1 in the fallback header
         ...mockResult,
         icon: undefined,
         title: "花鳥風月タイプ",
-        reading: "かちょうふうげつ",
+        reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
       }}
       shareText="シェアテキスト"
       shareUrl="https://example.com/result"

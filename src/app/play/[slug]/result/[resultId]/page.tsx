@@ -14,6 +14,7 @@ import { extractWithParam } from "./extractWithParam";
 import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
+import { resultNameWithReading } from "@/play/quiz/resultName";
 import styles from "./page.module.css";
 
 type Props = {
@@ -60,7 +61,7 @@ export async function generateMetadata({
   if (compatFriendTypeId) {
     const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
     const compat = getCompatibility(resultId, compatFriendTypeId);
-    title = `${result.title} x ${friendResult?.title ?? ""} - ${compat?.label ?? "相性結果"}`;
+    title = `${resultNameWithReading(result)} x ${friendResult ? resultNameWithReading(friendResult) : ""} - ${compat?.label ?? "相性結果"}`;
     description = compat?.description ?? result.description;
   } else {
     // 新しいtitle形式: 「結果タイトル | クイズ名の結果 | SITE_NAME」
@@ -68,10 +69,11 @@ export async function generateMetadata({
     // 超える場合はクイズ名部分を省略してフォールバック。
     // SITE_NAMEサフィックス（" | yolos.net" = 半角12文字）を含めた幅で判定する。
     const FULL_WIDTH_LIMIT = 60;
-    const candidateTitle = `${result.title} | ${quiz.meta.title}の結果`;
+    const resultName = resultNameWithReading(result);
+    const candidateTitle = `${resultName} | ${quiz.meta.title}の結果`;
     title =
       countCharWidth(`${candidateTitle} | ${SITE_NAME}`) > FULL_WIDTH_LIMIT
-        ? result.title
+        ? resultName
         : candidateTitle;
     description = result.description;
   }
@@ -149,12 +151,12 @@ export default async function PlayQuizResultPage({
         },
         myType: {
           id: myResult2.id,
-          title: myResult2.title,
+          title: resultNameWithReading(myResult2),
           icon: myResult2.icon,
         },
         friendType: {
           id: friendResult2.id,
-          title: friendResult2.title,
+          title: resultNameWithReading(friendResult2),
           icon: friendResult2.icon,
         },
       };
@@ -162,7 +164,7 @@ export default async function PlayQuizResultPage({
   }
 
   // 末尾に「あなたは?」を追加してシェアした友人の興味を引く
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
   // CTAテキストをクイズタイプに応じて出し分ける

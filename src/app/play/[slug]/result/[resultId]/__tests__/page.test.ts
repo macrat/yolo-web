@@ -17,10 +17,6 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     expect(pageSource).toContain("ResultPageShell");
   });
 
-  it("titleフォーマットが「result.title | quiz.meta.title の結果」形式になっている", () => {
-    expect(pageSource).toContain("result.title} | ${quiz.meta.title}の結果");
-  });
-
   it("detailedContentがある場合のみ追加セクションを表示するロジックがある", () => {
     expect(pageSource).toContain("detailedContent");
   });

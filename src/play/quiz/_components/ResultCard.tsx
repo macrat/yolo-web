@@ -31,6 +31,7 @@ import FudaActions from "./FudaActions";
 import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import OtherTypesNav from "./OtherTypesNav";
+import { resultNameWithReading } from "@/play/quiz/resultName";
 import Button from "@/components/Button";
 import styles from "./ResultCard.module.css";
 
@@ -127,7 +128,7 @@ function renderTiedTypesDisclosure(
   // 主タイプ＋副タイプを同格に並べる（配列順で上下をつけない）。主タイプが先頭なのは
   // 「今表示している結果カード＝主タイプ」という所在を保つためで、優劣の含意ではない。
   const tiedTitles = [mainResult, ...coTypes]
-    .map((type) => `【${type.title}】`)
+    .map((type) => `【${resultNameWithReading(type)}】`)
     .join("と");
 
   return (
@@ -147,7 +148,7 @@ function renderTiedTypesDisclosure(
               className={styles.tiedTypeLink}
               data-text-box="inline"
             >
-              {coType.title}の解説を見る
+              {resultNameWithReading(coType)}の解説を見る
             </Link>
           </li>
         ))}
@@ -410,7 +411,7 @@ export default function ResultCard({
   allResults,
   coTypes,
 }: ResultCardProps) {
-  const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quizTitle}の結果は「${resultNameWithReading(result)}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
   // catchphrase を description の前に表示する variant のリスト。
   // このリストに含まれる variant は detailedContent.catchphrase を持つことが保証される。
@@ -466,7 +467,7 @@ export default function ResultCard({
             // 結果へ到達できるようにする（WCAG 1.3.1）。ページ h1 は
             // QuizPlayPageLayout、結果内の詳細見出しは h3 のため h2 が階層上妥当。
             typeNameAs="h2"
-            reading={result.reading}
+            reading={result.reading?.kana}
             word={catchphrase ?? undefined}
             symbol={pickResultSymbol(result.title)}
             color={pickResultWairoColor(result.id)}
@@ -490,7 +491,9 @@ export default function ResultCard({
           {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは出さない（DESIGN.md §5） */}
           <p className={styles.resultLabel}>あなたの結果</p>
           <h2 className={styles.title}>{result.title}</h2>
-          {result.reading && <p className={styles.reading}>{result.reading}</p>}
+          {result.reading && (
+            <p className={styles.reading}>{result.reading.kana}</p>
+          )}
           {quizType === "knowledge" &&
             score !== undefined &&
             totalQuestions !== undefined && (

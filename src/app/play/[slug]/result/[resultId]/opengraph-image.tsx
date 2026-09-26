@@ -40,6 +40,7 @@ export default async function OpenGraphImage({ params }: Props) {
 
   return createOgpImageResponse({
     title: result?.title ?? "結果",
+    reading: result?.reading?.kana,
     subtitle: quiz?.meta.title,
   });
 }
