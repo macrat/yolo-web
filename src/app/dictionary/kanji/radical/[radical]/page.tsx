@@ -1,125 +1,32 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/Breadcrumb";
-import DictionaryEntryList, {
-  type DictionaryEntryItem,
-} from "@/dictionary/_components/DictionaryEntryList";
-import FacetIndex from "@/dictionary/_components/FacetIndex";
-import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { getKanjiByRadical, getKanjiRadicals } from "@/dictionary/_lib/kanji";
-import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
-import styles from "./page.module.css";
+import { notFound } from "next/navigation";
+import { getKanjiRadicals } from "@/dictionary/_lib/kanji";
+import {
+  isKanjiRadical,
+  kanjiListMetadata,
+  type KanjiListScope,
+} from "@/dictionary/_lib/kanji-list";
+import KanjiListView from "@/dictionary/_components/kanji/KanjiListView";
 
-/**
- * 漢字辞典・部首ファセット面。
- *
- * カードのグリッドやピル群を使わず、辞典の「引く体験」に揃える——絞り込んだ漢字は共有の品書き（DictionaryEntryList）で「漢字＋読み＋意味＋学年/画数」
- * として出し、ほかの部首への導線は罫の索引（FacetIndex）で置く。部首で絞ったので補助情報は
- * 学年と画数を添える。色・角丸・書体・余白はすべてトークン経由。
- */
-
-export function generateStaticParams() {
-  return getKanjiRadicals().map((r) => ({
-    radical: r,
-  }));
+interface Props {
+  params: Promise<{ radical: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ radical: string }>;
-}): Promise<Metadata> {
-  const { radical: rawRadical } = await params;
-  const radical = decodeURIComponent(rawRadical);
-  const title = `部首「${radical}」の漢字一覧 - 漢字辞典 | ${SITE_NAME}`;
-  const description = `部首「${radical}」を持つ漢字の一覧。読み方・意味・画数情報を確認できます。`;
-  const url = `${BASE_URL}/dictionary/kanji/radical/${encodeURIComponent(radical)}`;
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      url,
-      siteName: SITE_NAME,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    alternates: {
-      canonical: url,
-    },
-  };
+export function generateStaticParams(): Array<{ radical: string }> {
+  return getKanjiRadicals().map((radical) => ({ radical }));
 }
 
-export default async function KanjiRadicalPage({
-  params,
-}: {
-  params: Promise<{ radical: string }>;
-}) {
-  const { radical: rawRadical } = await params;
-  const radical = decodeURIComponent(rawRadical);
-  const allRadicals = getKanjiRadicals();
-  if (!allRadicals.includes(radical)) {
-    notFound();
-  }
+async function resolveScope(params: Props["params"]): Promise<KanjiListScope> {
+  const radical = decodeURIComponent((await params).radical);
+  if (!isKanjiRadical(radical)) notFound();
+  return { type: "radical", radical };
+}
 
-  const title = `部首「${radical}」の漢字`;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return kanjiListMetadata(await resolveScope(params), 1);
+}
 
-  const kanjiList = getKanjiByRadical(radical);
-
-  // 品書きの行（漢字＋読み＋意味＋学年/画数）。部首で絞ったので補助情報は学年と画数を添える。
-  const entries: DictionaryEntryItem[] = kanjiList.map((k) => ({
-    key: k.character,
-    name: k.character,
-    href: `/dictionary/kanji/${encodeURIComponent(k.character)}`,
-    reading: [...k.onYomi, ...k.kunYomi].join("・") || undefined,
-    note: k.meanings.join("・") || undefined,
-    facts: [KANJI_GRADE_LABELS[k.grade], `${k.strokeCount}画`],
-  }));
-
-  const radicalItems = allRadicals.map((r) => ({
-    slug: encodeURIComponent(r),
-    label: r,
-  }));
-
-  return (
-    <div className={styles.container}>
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "辞典", href: "/dictionary" },
-          { label: "漢字辞典", href: "/dictionary/kanji" },
-          { label: title },
-        ]}
-      />
-      <h1 className={styles.title} {...headingFontAttr(title)}>
-        {title}
-      </h1>
-      <p className={styles.count}>
-        <span className={styles.countNum}>
-          {kanjiList.length.toLocaleString("ja-JP")}
-        </span>
-        字を収録しています。
-      </p>
-
-      <DictionaryEntryList
-        items={entries}
-        ariaLabel={`部首「${radical}」の漢字一覧`}
-      />
-
-      <FacetIndex
-        heading="ほかの部首から探す"
-        items={radicalItems}
-        basePath="/dictionary/kanji/radical"
-        activeSlug={encodeURIComponent(radical)}
-        allHref="/dictionary/kanji"
-        ariaLabel="部首別に漢字を探す"
-      />
-    </div>
-  );
+/** /dictionary/kanji/radical/[radical] は1つの部首の漢字の一覧の1ページ目。 */
+export default async function KanjiRadicalPage({ params }: Props) {
+  return <KanjiListView scope={await resolveScope(params)} page={1} />;
 }
