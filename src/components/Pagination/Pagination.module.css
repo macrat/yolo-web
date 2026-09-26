@@ -16,8 +16,8 @@
  * 張り出しは data-text-box（globals.css）が持つ。1字の番号のように 44px に届かない箱は、字を左に置いたまま
  * 右へ広げる（§5）。link モードの下線と訪問済みの色は globals.css の a の既定に従う。 */
 .pageItem {
-  display: inline-flex;
-  align-items: center;
+  display: inline-grid;
+  align-content: center;
   min-width: 44px;
   min-height: 44px;
   font-variant-numeric: tabular-nums;
@@ -48,8 +48,31 @@ button.pageItem {
   visibility: hidden;
 }
 
-/* 省いたページの「...」。番号と同じ箱で組み、「...」が1つのページと2つのページで、後ろの番号と「次へ」の
- * 位置を変えない。 */
+/* 番号の並びの項目（番号と「...」）は、どれも最も広い中身の幅を取る。最も広い中身とは、総ページ数の番号を
+ * いまのページの太字で組んだものと「...」で、字の下の行に高さを持たせずに見えなく置く。字を1行目に置くのは、
+ * 項目のベースラインを字から取り、ほかの項目と高さを揃えるため。どの文字サイズでも、並ぶ番号の桁の数や「...」の
+ * 数、いまのページの位置がページごとに変わっても、並びの幅と「次へ」の位置は一覧の中で同じになる
+ * （§12 位置の一定）。 */
+.pageNumbers .pageItem::before,
+.pageNumbers .pageItem::after {
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.pageNumbers .pageItem::before {
+  grid-row: 2;
+  content: var(--page-item-ellipsis);
+  font-weight: 400;
+}
+
+.pageNumbers .pageItem::after {
+  grid-row: 3;
+  content: var(--page-item-widest-number);
+  font-weight: 700;
+}
+
+/* 省いたページの「...」。番号と同じ箱で組む。 */
 .ellipsis {
   color: var(--ink-2);
   user-select: none;

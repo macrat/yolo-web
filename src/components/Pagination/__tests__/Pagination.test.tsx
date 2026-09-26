@@ -119,6 +119,27 @@ describe("Pagination", () => {
         expect(ellipsis).toHaveAttribute("aria-hidden", "true");
       }
     });
+
+    test("番号の並びは、どのページでも総ページ数の番号と省略記号を最も広い中身として渡す", () => {
+      for (const currentPage of [1, 9, 10, 22]) {
+        const { unmount } = render(
+          <Pagination
+            currentPage={currentPage}
+            totalPages={22}
+            basePath="/blog"
+          />,
+        );
+        const numbers = screen.getByRole("link", { name: "ページ1" })
+          .parentElement?.parentElement as HTMLElement;
+        expect(
+          numbers.style.getPropertyValue("--page-item-widest-number"),
+        ).toBe('"22"');
+        expect(numbers.style.getPropertyValue("--page-item-ellipsis")).toBe(
+          '"..."',
+        );
+        unmount();
+      }
+    });
   });
 
   describe("モバイルインジケータの a11y", () => {

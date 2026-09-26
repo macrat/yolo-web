@@ -1,9 +1,10 @@
-import type { ReactNode, Ref } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import { generatePageNumbers } from "@/lib/pagination";
 import styles from "./Pagination.module.css";
 
 export const PREV_LABEL = "‹ 前へ";
 export const NEXT_LABEL = "次へ ›";
+const ELLIPSIS_LABEL = "...";
 
 /** 項目の中身。link モードと button モードで、同じ並びに別の要素を置く。 */
 export interface PaginationItem {
@@ -49,6 +50,11 @@ export default function PaginationNav({
   indicatorFocusable = false,
 }: PaginationNavProps) {
   const pageNumbers = generatePageNumbers(currentPage, totalPages);
+  // 番号の並びの項目は、どれも最も広い中身（総ページ数の番号と「...」）の幅を取る。
+  const widestItems = {
+    "--page-item-widest-number": `"${totalPages}"`,
+    "--page-item-ellipsis": `"${ELLIPSIS_LABEL}"`,
+  } as CSSProperties;
 
   return (
     <nav
@@ -68,7 +74,7 @@ export default function PaginationNav({
       )}
 
       {/* 広い画面: ページ番号の並び */}
-      <span className={styles.pageNumbers}>
+      <span className={styles.pageNumbers} style={widestItems}>
         {pageNumbers.map((entry, index) =>
           entry === "ellipsis" ? (
             <span
@@ -77,7 +83,7 @@ export default function PaginationNav({
               data-text-box="inline"
               aria-hidden="true"
             >
-              ...
+              {ELLIPSIS_LABEL}
             </span>
           ) : (
             <span key={entry}>
