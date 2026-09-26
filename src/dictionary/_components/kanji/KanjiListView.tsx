@@ -3,6 +3,7 @@ import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
 import ListPage from "@/components/ListPage";
 import {
+  KANJI_INDEX_SUMMARY,
   KANJI_LIST_PER_PAGE,
   kanjiIndexEntries,
   kanjiListBasePath,
@@ -52,7 +53,7 @@ export default function KanjiListView({ scope, page }: KanjiListViewProps) {
       }
     >
       <IndexAccordion
-        summary="学年・画数・部首から探す"
+        summary={KANJI_INDEX_SUMMARY}
         indexes={[
           { name: "学年", items: index.grades },
           { name: "画数", items: index.strokes },

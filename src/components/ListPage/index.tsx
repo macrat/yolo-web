@@ -5,7 +5,7 @@ import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ListPage.module.css";
 
 interface ListPageProps {
-  /** パンくず。サイトの上端のナビから直に着く一覧（ブログのトップ）は持たない。 */
+  /** パンくず。 */
   trail?: BreadcrumbItem[];
   /** 主見出し。 */
   heading: string;

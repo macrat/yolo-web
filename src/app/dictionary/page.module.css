@@ -1,6 +1,0 @@
-/* 件数の行と一覧のあいだは、ほかの一覧のページと同じく 24px あける（§5 の間隔）。 */
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
-}

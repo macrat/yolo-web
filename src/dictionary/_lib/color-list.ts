@@ -207,6 +207,9 @@ export function colorListItems(scope: ColorListScope): BrowseItem[] {
   return sortBrowseItems(items, colorListSorts(scope)[0]);
 }
 
+/** 一覧の上の索引を入れるアコーディオンのラベルを、語の切れ目で分けたもの（DESIGN.md §4）。 */
+export const COLOR_INDEX_SUMMARY = ["色みから", "探す"] as const;
+
 /** 一覧の上の索引に並べる色み（§7）。色みは色相の順を持つので、その順で並べ、数を添えない。 */
 export function colorIndexEntries(): LinkIndexItem[] {
   return colorListCategories().map((category) => ({

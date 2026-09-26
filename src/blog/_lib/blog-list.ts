@@ -199,6 +199,9 @@ export function blogListMetadata(scope: BlogListScope, page: number): Metadata {
   };
 }
 
+/** 一覧の上の索引を入れるアコーディオンのラベルを、語の切れ目で分けたもの（DESIGN.md §4）。 */
+export const BLOG_INDEX_SUMMARY = ["分類・", "タグから", "探す"] as const;
+
 /** 索引の1語。分類かタグと、それに属する記事の数。 */
 export interface BlogIndexEntry {
   label: string;

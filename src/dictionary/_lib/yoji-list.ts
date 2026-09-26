@@ -152,6 +152,9 @@ export function yojiListItems(scope: YojiListScope): BrowseItem[] {
   return sortBrowseItems(items, YOJI_LIST_SORTS[0]);
 }
 
+/** 一覧の上の索引を入れるアコーディオンのラベルを、語の切れ目で分けたもの（DESIGN.md §4）。 */
+export const YOJI_INDEX_SUMMARY = ["カテゴリから", "探す"] as const;
+
 /**
  * 一覧の上の索引に並べるカテゴリ（§7）。カテゴリは順を持たないので、語の多い順に並べ、語の後ろに語の数を添える。
  */

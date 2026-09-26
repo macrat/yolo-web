@@ -144,9 +144,8 @@ describe("generateWebSiteJsonLd", () => {
     });
   });
 
-  test("description reflects 診断中心コンセプト (cycle-277 決定(a))", () => {
-    // cycle-277 決定(a): WebSite JSON-LD は全ページに注入されるサイト自己定義
-    // であり、道具箱中心から診断中心（自分を知り、楽しむ）へ一本化した。
+  test("description は診断を中心に、自分を知り楽しむサイトだと言う", () => {
+    // WebSite JSON-LD は全ページに入るサイトの自己定義なので、サイトの中心（自分を知り、楽しむ）を言う。
     const result = generateWebSiteJsonLd() as Record<string, unknown>;
     const description = result.description as string;
     // 中心＝自分を知り、楽しむ体験（診断・占い）が含まれていること
@@ -494,8 +493,7 @@ describe("generateKanjiPageMetadata", () => {
     expect(result.title).toContain("yolos.net");
   });
 
-  // cycle-251: 「<漢字> 部首」検索のスニペット改善。title に「部首」、description が部首・画数で
-  // 直接答えていることを保証する（検索意図への回答が回帰しないように固定する）。
+  // 「<漢字> 部首」で検索する人に、title の「部首」と description の部首・画数で直に答える。
   test("titleに部首・画数の検索意図キーワードを前置する", () => {
     const result = generateKanjiPageMetadata(kanjiData);
     expect(result.title).toContain("部首");
@@ -515,8 +513,7 @@ describe("generateKanjiPageMetadata", () => {
     expect(result.description).toContain("胃袋");
   });
 
-  // meanings は全2136字が英語のみ（src/data/kanji-data.json 実測）。日本語の検索者に
-  // 英語の意味を羅列しない方針（cycle-251）が回帰しないことを保証する。
+  // meanings は英語の語なので、日本語で検索する人に見せる description には並べない。
   test("可視descriptionに英語meaningsを羅列しない", () => {
     const result = generateKanjiPageMetadata(kanjiData);
     expect(result.description).not.toContain("sack");
@@ -531,8 +528,8 @@ describe("generateKanjiPageMetadata", () => {
     expect(keywords).toContain("画数");
   });
 
-  // cycle-251: 元データの kunYomi には重複が混入する字がある（実測119字。例「生」）。
-  // 表示層で重複を除去し、スニペット・keywords に同じ読みを繰り返さないことを保証する。
+  // 元データの kunYomi は同じ読みを重ねて持つことがある（例「生」）。スニペットと keywords に
+  // 同じ読みを繰り返さない。
   test("重複した読みを description / keywords で除去する", () => {
     const withDupReadings = {
       character: "生",
@@ -631,10 +628,9 @@ describe("generateYojiPageMetadata", () => {
     expect(description.length).toBeLessThanOrEqual(130);
   });
 
-  // cycle-246 PM 最終判断で独自性訴求文言を「AIが見た人間のひとコマも。」（14字、句点含む）に変更。
-  // 「実用例文」を匂わせる文言（「用例:」「例文:」「例えば」「たとえば」「使用例」「掲載」
-  // など実用と誤読されうる表現）は禁止（AP-I04 期待外れ直帰の予防）。
-  // また difficulty は意味検索者に無関係のため含めない。
+  // 実用の例文を思わせる文言（「用例:」「例文:」「例えば」「たとえば」「使用例」「掲載」）を持たない。
+  // 実用の例文を期待して開いた人が、期待と違うと感じてすぐ離れないようにするため。
+  // difficulty は意味を調べる人に関係しないので含めない。
   test("descriptionに実用例文を匂わせる文言とdifficultyを含まない", () => {
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
@@ -646,12 +642,9 @@ describe("generateYojiPageMetadata", () => {
     expect(description).not.toContain("難易度");
   });
 
-  test("descriptionに独自性訴求の「AIが見た人間のひとコマ」が含まれる（cycle-246 PM 最終判断）", () => {
-    // cycle-117/118 で確立した AI 視点 example 全件掲載の独自性戦略を
-    // スニペット段階でも活かす。研究資料が抽出した核心「AI が人間を観察している」
-    // を平易な表現「AIが見た人間のひとコマ」で反映する。YojiDetail の
-    // 「AIが見た人間のひとコマ」セクション（cycle-246 M-1 是正で h2 を統一）が
-    // ページに表示済みの事実と整合する。
+  test("descriptionに独自性を伝える「AIが見た人間のひとコマ」が含まれる", () => {
+    // 全件にある AI の視点の例文を、スニペットの段階から伝える。YojiDetail の
+    // 「AIが見た人間のひとコマ」セクションと同じ語なので、予告したものがページにある。
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
     expect(description).toContain("AIが見た人間のひとコマ");
@@ -745,17 +738,13 @@ describe("generateYojiPageMetadata - all yoji-data entries (integration)", () =>
   // ブロックは「全件が上限を破らない」という構造的保証に特化する。
   const entries = yojiData as YojiEntry[];
 
-  test("yoji-data.json は 400 件以上含む（前提の固定）", () => {
-    // 件数が前提を満たすことを明示することで、以下のループテストが
-    // 意図せず空配列で pass してしまう退化を防ぐ。
+  test("yoji-data.json は 400 件以上含む", () => {
+    // 下の全件のテストが、空の配列で素通りしないようにする。
     expect(entries.length).toBeGreaterThanOrEqual(400);
   });
 
-  test("全 400 件の description が 130 字以内である", () => {
-    // 参考: 現時点の実測上限は base+AI で最大 90 字 / description 最大 100 字
-    //   （上限 130 字に対し 30 字の余裕）— src/lib/seo.ts L348-350 のコメントと整合。
-    //   本テストは上限 130 を直接アサートし、将来のラベル変更で余裕が削られた
-    //   場合でも来訪者影響（SERP 末尾切れ）の最後の砦として機能する。
+  test("全件の description が 130 字以内である", () => {
+    // 検索結果で説明の末尾が切れないよう、データやラベルが替わっても上限 130 字を守る。
     let maxLength = 0;
     let maxYoji = "";
     for (const entry of entries) {
@@ -767,8 +756,7 @@ describe("generateYojiPageMetadata - all yoji-data entries (integration)", () =>
         maxYoji = entry.yoji;
       }
     }
-    // 実測上限を expect で表面化する（assertion 失敗時に最長エントリの特定を容易にする）。
-    // 上限 130 字に対する余裕は seo.ts コメント（30 字）を超えない想定。
+    // 最も長い description を表に出し、失敗したときにどの語かを追えるようにする。
     expect(maxLength).toBeLessThanOrEqual(130);
     // maxYoji は失敗時のデバッグ補助。常に文字列であることのみ最小確認。
     expect(typeof maxYoji).toBe("string");
@@ -799,11 +787,10 @@ describe("generateYojiJsonLd", () => {
     expect(result.alternateName).toBe("いちごいちえ");
   });
 
-  test("sameAs は含まれない（cycle-246 是正: 独自性主張保護）", () => {
+  test("sameAs は含まれない", () => {
     // schema.org の sameAs は「同一性を曖昧さなく示す参照ページ」を意味するため、
-    // コトバンク等の外部辞書ページを sameAs に置くと「うちのページとコトバンクは
-    // 同じものを指す」と機械可読に宣言する構造になる。cycle-117/118 で確立した
-    // AI 視点 example による独自性戦略を打ち消す方向のため、sameAs は撤去した。
+    // コトバンク等の外部辞書ページを sameAs に置くと「このページとコトバンクは
+    // 同じものを指す」と機械可読に宣言することになり、AI の視点の例文による独自性を打ち消す。
     const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
     expect(result.sameAs).toBeUndefined();
   });
@@ -1009,21 +996,17 @@ describe("generateFaqPageJsonLd", () => {
   });
 });
 
-describe("JSON-LD external sameAs/isBasedOn/citation guard (cycle-246 再発防止)", () => {
-  // cycle-246 で `generateYojiJsonLd` に外部辞書 URL (コトバンク) を sameAs で一旦採用した
-  // 失敗の構造的再発防止。schema.org の sameAs / isBasedOn / citation は
-  // 「うちのページと当該 URL が同一実体・派生関係・参照関係にある」と機械可読に主張する
-  // プロパティで、外部 URL（自サイト以外）を入れることは「外部の独自付加価値を持つページに
-  // 自サイトを紐付ける＝サイトの目的（PV 獲得＝来訪者に最高の価値）と矛盾する」構造になる。
-  // 教訓を振り返りに書くだけでは「絶対にありえない選択肢」の再発を防げないため、
-  // テストで CI に強制させる。
+describe("JSON-LD external sameAs/isBasedOn/citation guard", () => {
+  // schema.org の sameAs / isBasedOn / citation は「このページと当該 URL が同一実体・派生関係・
+  // 参照関係にある」と機械可読に主張するプロパティである。外部 URL（自サイト以外）を入れると、
+  // 外部の独自の付加価値を持つページに自サイトを紐付けることになり、来訪者に独自の価値を
+  // 届けるサイトの目的と矛盾する。どの JSON-LD にも外部 URL が入らないことを確かめる。
 
   /**
    * 規制対象プロパティ。意味論的に「同一性宣言・派生関係宣言・参照宣言」をまとめて扱う。
    * - sameAs: 同一実体の別 URL を宣言する
    * - isBasedOn: 派生元の URL を宣言する
    * - citation: 参照先の URL を宣言する
-   * 規制対象を勝手に拡大しないこと（cycle-246 仕様）。
    */
   const RESTRICTED_PROPS = ["sameAs", "isBasedOn", "citation"] as const;
 
@@ -1228,10 +1211,9 @@ describe("JSON-LD external sameAs/isBasedOn/citation guard (cycle-246 再発防�
     expect(findExternalRefViolations(result)).toEqual([]);
   });
 
-  // -- 真の再発防止: yoji-data 全 400 件で違反ゼロ --
-  // cycle-246 の失敗は `generateYojiJsonLd` に sourceUrl (コトバンク) を sameAs として
-  // 注入したこと。実データ全件で sourceUrl が JSON-LD に漏れていないことを構造的に保証する。
-  test("generateYojiJsonLd: yoji-data.json 全 400 件で違反ゼロ", () => {
+  // 四字熟語のデータは出典の sourceUrl（コトバンク）を持つ。実データの全件で、それが JSON-LD に
+  // 入らないことを確かめる。
+  test("generateYojiJsonLd: yoji-data.json の全件で違反ゼロ", () => {
     const entries = yojiData as YojiEntry[];
     expect(entries.length).toBeGreaterThanOrEqual(400);
     for (const entry of entries) {

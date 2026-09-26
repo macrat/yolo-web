@@ -45,19 +45,17 @@ export type LinkIndexProps = LinkIndexContent & {
 };
 
 /**
- * 語の字。項目の数を添えるとき（「対立・闘い（26）」）は、括弧の前で折らないよう、数を語の最後の字と折れない
- * まとまりにする。リンクは flex の箱なので、字を1つの span に入れて1つの行の箱として折り返させる。
+ * 語の字。項目の数を添えるとき（「対立・闘い（26）」）は、語と数の括弧をそれぞれ1つのまとまりにし、そのあいだで
+ * だけ折る（DESIGN.md §4）。1行に収まらなければ、数は始め括弧の前で語から折れる（「対立・闘い／（26）」）。
+ * リンクは flex の箱なので、字を1つの span に入れて1つの行の箱として折り返させる。
  */
 function ItemLabel({ label, count }: Pick<LinkIndexItem, "label" | "count">) {
   if (count === undefined) return label;
-  const chars = Array.from(label);
-  const lastChar = chars.pop() ?? "";
   return (
-    <span>
-      {chars.join("")}
-      <span className={styles.joined}>
-        {lastChar}（{count}）
-      </span>
+    <span className={styles.counted}>
+      {label}
+      <wbr />
+      {`（${count}）`}
     </span>
   );
 }

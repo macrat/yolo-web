@@ -11,7 +11,7 @@ describe("IndexAccordion", () => {
   test("索引が1つなら、ラベルが語の数を言い、索引はラベルを名前に持つ", () => {
     const { container } = render(
       <IndexAccordion
-        summary="カテゴリから探す"
+        summary={["カテゴリから", "探す"]}
         index={categories}
         currentHref="/dictionary/yoji/category/life"
       />,
@@ -33,7 +33,7 @@ describe("IndexAccordion", () => {
   test("索引が2つ以上なら、索引ごとの見出しが語の数を言い、区切りを持つ索引を最後に置く", () => {
     render(
       <IndexAccordion
-        summary="学年・画数・部首から探す"
+        summary={["学年・", "画数・", "部首から", "探す"]}
         indexes={[
           {
             name: "学年",
@@ -85,20 +85,37 @@ describe("IndexAccordion", () => {
     ).toBeInTheDocument();
   });
 
-  test("語の数は名前の最後の字と1つのまとまりにし、名前はほかの語の切れ目でだけ折る", () => {
+  test("名前は渡された語の切れ目と、語の数の始め括弧の前でだけ折れる", () => {
     const { container } = render(
       <IndexAccordion
-        summary="カテゴリから探す"
+        summary={["カテゴリから", "探す"]}
         index={categories}
         currentHref="/dictionary/yoji"
       />,
     );
-    const summary = container.querySelector("summary");
-    expect(summary?.querySelectorAll("wbr")).toHaveLength(2);
-    const joined = [...(summary?.querySelectorAll("span") ?? [])].find(
-      (span) => span.textContent === "す（2）",
+    const name = container.querySelector("summary wbr")?.parentElement;
+    expect(
+      [...(name?.childNodes ?? [])].map((node) =>
+        node.nodeName === "WBR" ? "|" : node.textContent,
+      ),
+    ).toEqual(["カテゴリから", "|", "探す", "|", "（2）"]);
+  });
+
+  test("索引の見出しは、名前の語と語の数のあいだでだけ折れる", () => {
+    render(
+      <IndexAccordion
+        summary={["分類・", "タグから", "探す"]}
+        indexes={[{ name: "分類", items: categories }]}
+        currentHref="/blog"
+      />,
     );
-    expect(joined).toBeDefined();
-    expect(joined?.previousSibling?.textContent).toBe("探");
+    const heading = screen.getByRole("heading", {
+      name: "分類（2）",
+      hidden: true,
+    });
+    expect(heading.querySelectorAll("wbr")).toHaveLength(1);
+    expect(heading.querySelector("wbr")?.previousSibling?.textContent).toBe(
+      "分類",
+    );
   });
 });

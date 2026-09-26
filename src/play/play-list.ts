@@ -95,7 +95,10 @@ export function playListPageParams(): Array<{ page: string }> {
   return listPageStaticParams(allPlayContents.length, PLAY_LIST_PER_PAGE);
 }
 
-const PLAY_LIST_DESCRIPTION = `占い・診断・クイズ・パズルなど、AIが作った全${allPlayContents.length}種のコンテンツを一覧できます。気になるものを選んで、その場で試せます。`;
+/**
+ * 検索結果と SNS のカードに出る説明。種別の語で何が並ぶかを言い、運勢は「占い」で探す人にも届くよう括弧で添える。
+ */
+const PLAY_LIST_DESCRIPTION = `運勢（占い）・診断・クイズ・パズル。AIが作った全${allPlayContents.length}種の遊びを一覧できます。登録なしで、その場で結果まで見られます。`;
 
 /** 遊びの一覧のページの metadata。2ページ目からも自分を canonical にする。 */
 export function playListMetadata(page: number): Metadata {

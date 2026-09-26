@@ -9,14 +9,14 @@ import styles from "./IndexAccordion.module.css";
 
 /** 語をそのまま並べる索引。 */
 export interface IndexAccordionIndex {
-  /** 索引の名前（「学年」「タグ」）。語の数を添えて索引の見出しになる。 */
+  /** 索引の名前（「学年」「タグ」）。1語で言い、語の数を添えて索引の見出しになる。 */
   name: string;
   items: LinkIndexItem[];
 }
 
 /** 並びの値ごとに区切りの見出しを立てる索引。 */
 export interface IndexAccordionGroupedIndex {
-  /** 索引の名前（「部首」）。語の数を添えて索引の見出しになる。 */
+  /** 索引の名前（「部首」）。1語で言い、語の数を添えて索引の見出しになる。 */
   name: string;
   groups: LinkIndexGroup[];
   /** 語がどれも漢字1字で、字の形を見て選ぶ索引か（LinkIndex の singleCharacters）。 */
@@ -35,8 +35,11 @@ type IndexAccordionContent =
     };
 
 export type IndexAccordionProps = IndexAccordionContent & {
-  /** アコーディオンのラベル（「カテゴリから探す」）。何から探せるかを言う。 */
-  summary: string;
+  /**
+   * アコーディオンのラベルを語の切れ目で分けたもの（["カテゴリから", "探す"]）。何から探せるかを言い、
+   * 1行に収まらないときはこの切れ目でだけ折る（DESIGN.md §4）。
+   */
+  summary: readonly string[];
   /** いま開いているページの一覧の元のパス。一致する語を現在地にする。 */
   currentHref: string;
 };
@@ -45,21 +48,18 @@ function withCount(name: string, count: number): string {
   return `${name}（${count}）`;
 }
 
-const wordSegmenter = new Intl.Segmenter("ja", { granularity: "word" });
-
 /**
- * ラベルと索引の見出しの名前。語の切れ目でだけ折る（DESIGN.md §4）。語の数を添えるとき（「部首（198）」）は、
- * 括弧の前で折らないよう、数を名前の最後の字と折れないまとまりにする。名前の最後の語と数が1行に収まらない
- * ときだけ、本文から継ぐ overflow-wrap がその語の中で折る。
+ * ラベルと索引の見出しの名前。語と、添えた数の括弧をそれぞれ1つのまとまりにし、そのあいだでだけ折る
+ * （DESIGN.md §4）。数は始め括弧の前で名前から折れる（「部首／（198）」）。1語が幅に収まらないときだけ、
+ * 本文から継ぐ overflow-wrap がその語の中で折る。
  */
-function IndexName({ name, count }: { name: string; count?: number }) {
-  const words = Array.from(
-    wordSegmenter.segment(name),
-    ({ segment }) => segment,
-  );
-  const lastWordChars =
-    count === undefined ? [] : Array.from(words.pop() ?? "");
-  const lastChar = lastWordChars.pop() ?? "";
+function IndexName({
+  words,
+  count,
+}: {
+  words: readonly string[];
+  count?: number;
+}) {
   return (
     <span className={styles.name}>
       {words.map((word, i) => (
@@ -70,11 +70,8 @@ function IndexName({ name, count }: { name: string; count?: number }) {
       ))}
       {count === undefined ? null : (
         <>
-          {words.length > 0 ? <wbr /> : null}
-          {lastWordChars.join("")}
-          <span className={styles.joined}>
-            {lastChar}（{count}）
-          </span>
+          <wbr />
+          {`（${count}）`}
         </>
       )}
     </span>
@@ -101,7 +98,7 @@ export default function IndexAccordion(props: IndexAccordionProps) {
       <Accordion
         summary={
           <span id={labelId}>
-            <IndexName name={props.summary} count={props.index.length} />
+            <IndexName words={props.summary} count={props.index.length} />
           </span>
         }
       >
@@ -123,7 +120,7 @@ export default function IndexAccordion(props: IndexAccordionProps) {
   );
 
   return (
-    <Accordion summary={<IndexName name={props.summary} />}>
+    <Accordion summary={<IndexName words={props.summary} />}>
       <div
         className={
           groupedIndex?.singleCharacters
@@ -140,7 +137,7 @@ export default function IndexAccordion(props: IndexAccordionProps) {
                 className={styles.heading}
                 {...headingFontAttr(withCount(index.name, index.items.length))}
               >
-                <IndexName name={index.name} count={index.items.length} />
+                <IndexName words={[index.name]} count={index.items.length} />
               </h2>
               <LinkIndex
                 labelledBy={headingId}
@@ -156,7 +153,7 @@ export default function IndexAccordion(props: IndexAccordionProps) {
               className={styles.heading}
               {...headingFontAttr(withCount(groupedIndex.name, groupedCount))}
             >
-              <IndexName name={groupedIndex.name} count={groupedCount} />
+              <IndexName words={[groupedIndex.name]} count={groupedCount} />
             </h2>
             <LinkIndex
               singleCharacters={groupedIndex.singleCharacters}

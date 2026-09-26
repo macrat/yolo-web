@@ -1,3 +1,5 @@
+import { getAllEntries } from "./data";
+
 /** ユーモア辞書全体のメタ情報 */
 export interface HumorDictMeta {
   /** サイトマップ・OGP等で使用するコンテンツ初回公開日時 (ISO 8601, JST) */
@@ -18,6 +20,5 @@ export const humorDictMeta: HumorDictMeta = {
   publishedAt: "2026-03-16T00:00:00+09:00",
   updatedAt: "2026-03-16T00:00:00+09:00",
   title: "ユーモア辞典",
-  description:
-    "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
+  description: `身近な言葉${getAllEntries().length}語を、AIがまじめな顔で定義し直したユーモア辞典。本当の意味ではありません。`,
 };

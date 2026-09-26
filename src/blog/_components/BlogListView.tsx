@@ -3,6 +3,7 @@ import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
 import ListPage from "@/components/ListPage";
 import {
+  BLOG_INDEX_SUMMARY,
   BLOG_LIST_PER_PAGE,
   BLOG_SORTS,
   blogIndexEntries,
@@ -52,7 +53,7 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
       description={blogListDescription(scope)}
     >
       <IndexAccordion
-        summary="分類・タグから探す"
+        summary={BLOG_INDEX_SUMMARY}
         indexes={[
           { name: "分類", items: index.categories },
           { name: "タグ", items: index.tags },

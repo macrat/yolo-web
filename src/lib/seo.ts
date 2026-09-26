@@ -297,10 +297,8 @@ interface YojiMetaForSeo {
   sourceUrl: string;
 }
 
-/** description に任意追記する残余要素（origin/structure）の上限。
- * 現行ラベル群はすべて 12 字以下のため事実上の上限はハードリミット
- * （{@link YOJI_DESCRIPTION_HARD_LIMIT}）のみが効く。25 という値は将来
- * ラベルを追加・差し替えた際に description が肥大化しないようにする予防的ガード。 */
+/** description に任意に足す要素（origin/structure）1つの長さの上限。ラベルを足したり替えたりしても、
+ * description が長くなりすぎないようにする。 */
 const YOJI_DESCRIPTION_OPTIONAL_MAX = 25;
 
 /** description の絶対上限。これを超える場合は任意要素を採用しない。 */
@@ -376,10 +374,7 @@ function buildYojiOriginOrStructureSuffix(
  */
 function buildYojiDescription(yoji: YojiMetaForSeo): string {
   const base = `「${yoji.yoji}」(${yoji.reading})の意味は、${yoji.meaning}。`;
-  // AI 文言は独自性訴求の固定要素として常に付与する。
-  // 全 400 件で実測（src/data/yoji-data.json をループして算出）:
-  //   base+AI で最大 90 字、suffix まで含めて description 最大 100 字
-  //   （上限 {@link YOJI_DESCRIPTION_HARD_LIMIT}=130 字に対し 30 字の余裕）。
+  // AI の視点の文言は、独自性を伝える固定の要素としていつも付ける。長さの上限は、任意の要素を足すときだけ見る。
   const withAi = `${base}${YOJI_AI_EXAMPLE_LABEL}`;
   const originOrStructure = buildYojiOriginOrStructureSuffix(
     withAi.length,

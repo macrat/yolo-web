@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import ListPage from "@/components/ListPage";
+import ListStack from "@/components/ListStack";
 import ListStatus from "@/components/ListStatus";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllKanji } from "@/dictionary/_lib/kanji";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
 import { getAllColors } from "@/dictionary/_lib/colors";
 import { getAllEntries as getAllHumorEntries } from "@/humor-dict/data";
-import styles from "./page.module.css";
 
 const kanjiCount = getAllKanji().length;
 const yojiCount = getAllYoji().length;
@@ -89,9 +89,9 @@ export default function DictionaryPage() {
     <ListPage
       trail={[{ label: "ホーム", href: "/" }, { label: "辞典" }]}
       heading="辞典"
-      description="漢字・四字熟語・日本の伝統色、それにAIが作ったユーモア辞典。気になる言葉や色を引いて、読み方や意味、由来を確かめてください。"
+      description="漢字・四字熟語・日本の伝統色を引ける辞典と、AIが作ったユーモア辞典です。"
     >
-      <div className={styles.list}>
+      <ListStack>
         <ListStatus
           total={DICTIONARIES.length}
           matched={DICTIONARIES.length}
@@ -100,7 +100,7 @@ export default function DictionaryPage() {
           announcement=""
         />
         <ItemList label="辞典の一覧" items={DICTIONARIES} />
-      </div>
+      </ListStack>
     </ListPage>
   );
 }

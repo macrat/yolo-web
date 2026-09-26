@@ -3,6 +3,7 @@ import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
 import ListPage from "@/components/ListPage";
 import {
+  YOJI_INDEX_SUMMARY,
   YOJI_LIST_PER_PAGE,
   YOJI_LIST_SORTS,
   yojiIndexEntries,
@@ -51,7 +52,7 @@ export default function YojiListView({ scope, page }: YojiListViewProps) {
       }
     >
       <IndexAccordion
-        summary="カテゴリから探す"
+        summary={YOJI_INDEX_SUMMARY}
         index={yojiIndexEntries()}
         currentHref={basePath}
       />

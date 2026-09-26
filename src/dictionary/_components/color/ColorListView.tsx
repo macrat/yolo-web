@@ -3,6 +3,7 @@ import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
 import ListPage from "@/components/ListPage";
 import {
+  COLOR_INDEX_SUMMARY,
   COLOR_LIST_PER_PAGE,
   colorIndexEntries,
   colorListBasePath,
@@ -46,12 +47,12 @@ export default function ColorListView({ scope, page }: ColorListViewProps) {
       heading={heading}
       description={
         scope.type === "all"
-          ? "色名のローマ字とカラーコードを引けます。"
+          ? "色見本とカラーコードを並べ、色のページでは RGB・HSL もコピーできます。"
           : undefined
       }
     >
       <IndexAccordion
-        summary="色みから探す"
+        summary={COLOR_INDEX_SUMMARY}
         index={colorIndexEntries()}
         currentHref={basePath}
       />
