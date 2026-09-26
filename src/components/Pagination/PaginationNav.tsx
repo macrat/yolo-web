@@ -73,7 +73,8 @@ export default function PaginationNav({
           entry === "ellipsis" ? (
             <span
               key={`ellipsis-${index}`}
-              className={styles.ellipsis}
+              className={`${styles.pageItem} ${styles.ellipsis}`}
+              data-text-box="inline"
               aria-hidden="true"
             >
               ...

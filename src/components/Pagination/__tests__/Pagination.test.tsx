@@ -106,6 +106,19 @@ describe("Pagination", () => {
       const ellipses = screen.getAllByText("...");
       expect(ellipses.length).toBeGreaterThanOrEqual(1);
     });
+
+    test("省略記号は番号と同じ箱の決まりで組み、読み上げない", () => {
+      render(<Pagination currentPage={5} totalPages={10} basePath="/blog" />);
+      const number = screen.getByRole("link", { name: "ページ4" });
+      for (const ellipsis of screen.getAllByText("...")) {
+        expect(ellipsis).toHaveAttribute(
+          "data-text-box",
+          number.getAttribute("data-text-box"),
+        );
+        expect(ellipsis.className).toContain(number.className.split(" ")[0]);
+        expect(ellipsis).toHaveAttribute("aria-hidden", "true");
+      }
+    });
   });
 
   describe("モバイルインジケータの a11y", () => {

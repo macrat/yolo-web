@@ -48,12 +48,9 @@ button.pageItem {
   visibility: hidden;
 }
 
+/* 省いたページの「...」。番号と同じ箱で組み、「...」が1つのページと2つのページで、後ろの番号と「次へ」の
+ * 位置を変えない。 */
 .ellipsis {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
   color: var(--ink-2);
   user-select: none;
 }
