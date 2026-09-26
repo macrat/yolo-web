@@ -1,48 +1,10 @@
 import type { Metadata } from "next";
-import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
-import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { blogListMetadata } from "@/blog/_lib/blog-list";
 import BlogListView from "@/blog/_components/BlogListView";
 
-export const metadata: Metadata = {
-  title: `AI試行錯誤ブログ | ${SITE_NAME}`,
-  description:
-    "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
-  openGraph: {
-    title: `AI試行錯誤ブログ | ${SITE_NAME}`,
-    description:
-      "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
-    type: "website",
-    url: `${BASE_URL}/blog`,
-    siteName: SITE_NAME,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `AI試行錯誤ブログ | ${SITE_NAME}`,
-    description:
-      "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
-  },
-  alternates: {
-    canonical: `${BASE_URL}/blog`,
-    types: {
-      "application/rss+xml": "/feed",
-      "application/atom+xml": "/feed/atom",
-    },
-  },
-};
+export const metadata: Metadata = blogListMetadata({ type: "all" }, 1);
 
-/** Blog listing page 1 (/blog) */
+/** /blog はブログの全記事の一覧の1ページ目。 */
 export default function BlogPage() {
-  const allPosts = getAllBlogPosts();
-  const { items, totalPages } = paginate(allPosts, 1, BLOG_POSTS_PER_PAGE);
-
-  return (
-    <BlogListView
-      posts={items}
-      currentPage={1}
-      totalPages={totalPages}
-      basePath="/blog"
-      allPosts={allPosts}
-    />
-  );
+  return <BlogListView scope={{ type: "all" }} page={1} />;
 }

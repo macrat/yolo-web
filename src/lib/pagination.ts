@@ -1,71 +1,15 @@
 /**
  * Pagination utility functions and constants.
  *
- * Provides pure functions for paginating item arrays and
- * generating page number lists with ellipsis markers.
+ * Provides a pure function for generating page number lists
+ * with ellipsis markers.
  */
-
-/** Number of blog posts displayed per page */
-export const BLOG_POSTS_PER_PAGE = 12;
 
 /** Number of tools displayed per page */
 export const TOOLS_PER_PAGE = 24;
 
-/** Represents the result of paginating a list of items */
-export interface PaginationResult<T> {
-  /** Items for the current page */
-  items: T[];
-  /** Current page number (1-based) */
-  currentPage: number;
-  /** Total number of pages */
-  totalPages: number;
-  /** Total number of items across all pages */
-  totalItems: number;
-  /** Whether there is a next page */
-  hasNextPage: boolean;
-  /** Whether there is a previous page */
-  hasPrevPage: boolean;
-}
-
 /** Sentinel value representing an ellipsis in a page number list */
 export type PageNumberEntry = number | "ellipsis";
-
-/**
- * Paginate an array of items.
- *
- * @param items - The full list of items to paginate
- * @param page - The 1-based page number to retrieve
- * @param perPage - The number of items per page
- * @returns A PaginationResult containing the items for the requested page
- *
- * If the page number is out of range, it is clamped to the valid range
- * (minimum 1, maximum totalPages). If the items array is empty,
- * page 1 is returned with an empty items array.
- */
-export function paginate<T>(
-  items: T[],
-  page: number,
-  perPage: number,
-): PaginationResult<T> {
-  const totalItems = items.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
-
-  // Clamp page to valid range
-  const currentPage = Math.max(1, Math.min(page, totalPages));
-
-  const startIndex = (currentPage - 1) * perPage;
-  const endIndex = startIndex + perPage;
-  const pageItems = items.slice(startIndex, endIndex);
-
-  return {
-    items: pageItems,
-    currentPage,
-    totalPages,
-    totalItems,
-    hasNextPage: currentPage < totalPages,
-    hasPrevPage: currentPage > 1,
-  };
-}
 
 /** Number of entries a page number list holds when not every page fits */
 const PAGE_NUMBER_SLOTS = 7;

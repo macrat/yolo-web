@@ -1,147 +1,138 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
+import Accordion from "@/components/Accordion";
+import Breadcrumb from "@/components/Breadcrumb";
+import BrowsableList from "@/components/BrowsableList";
+import LinkIndex from "@/components/LinkIndex";
+import Section from "@/components/Section";
+import { formatDate } from "@/lib/date";
 import {
-  CATEGORY_DESCRIPTIONS,
-  ALL_CATEGORIES,
+  generateBreadcrumbJsonLd,
+  safeJsonLdStringify,
+  type BreadcrumbItem,
+} from "@/lib/seo";
+import type { BrowseItem, BrowseSort } from "@/lib/list-browse";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
+import {
   CATEGORY_LABELS,
   SERIES_LABELS,
-  getTagsWithMinPosts,
+  type BlogPostMeta,
 } from "@/blog/_lib/blog";
-import BlogFilterableList from "./BlogFilterableList";
-import { calculateNewSlugs } from "./newSlugsHelper";
+import {
+  BLOG_LIST_PER_PAGE,
+  blogIndexEntries,
+  blogListBasePath,
+  blogListDescription,
+  blogListHeading,
+  blogListPosts,
+  blogListTitle,
+  type BlogListScope,
+} from "@/blog/_lib/blog-list";
 import styles from "./BlogListView.module.css";
 
-interface TagHeader {
-  tag: string;
-  description: string;
+/** 並び順。既定は新しい順で、初めから順に読みたい人が古い順を選ぶ（§7）。 */
+const BLOG_SORTS: BrowseSort[] = [
+  { value: "newest", label: "新しい順", directions: ["desc"] },
+  { value: "oldest", label: "古い順" },
+];
+
+function blogItem(post: BlogPostMeta): BrowseItem {
+  const publishedAt = Date.parse(post.published_at);
+  const seriesLabel = post.series ? SERIES_LABELS[post.series] : undefined;
+  return {
+    name: post.title,
+    slug: post.slug,
+    description: post.description,
+    kind: CATEGORY_LABELS[post.category],
+    facts: [
+      { text: formatDate(post.published_at), dateTime: post.published_at },
+      { text: `${post.readingTime}分で読める` },
+    ],
+    searchTexts: [
+      post.description,
+      ...post.tags,
+      ...(seriesLabel ? [seriesLabel] : []),
+    ],
+    sortKeys: { newest: [publishedAt], oldest: [publishedAt] },
+  };
 }
 
 interface BlogListViewProps {
-  /** 現在のページに表示する記事（ページネーション済み） */
-  posts: BlogPostMeta[];
-  /** 現在の 1-based ページ番号 */
-  currentPage: number;
-  /** 総ページ数 */
-  totalPages: number;
-  /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
-  basePath: string;
-  /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
-  activeCategory?: BlogCategory;
-  /**
-   * 全記事（ページネーション前）。
-   * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
-   * タグページでは省略可（省略時は件数バッジなし）。
-   */
-  allPosts?: BlogPostMeta[];
-  /**
-   * タグページ専用ヘッダー情報。
-   * 設定されている場合はカテゴリナビではなくタグヘッダーを表示する。
-   */
-  tagHeader?: TagHeader;
+  scope: BlogListScope;
+  /** パスが示すページ。 */
+  page: number;
 }
 
 /**
- * ブログ一覧ページのビュー (Server Component)。
+ * ブログの一覧のページ（`/blog`・分類・タグ）。見出しと説明の下に、分類とタグの索引を閉じたアコーディオンで置き、
+ * その下に範囲の記事の一覧を置く（DESIGN.md §7）。
  *
- * ページヘッダー（タイトル・説明文）とフィルター付き記事一覧を表示する。
- * useSearchParams を使う BlogFilterableList は Suspense でラップする（Next.js 要件）。
- *
- * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため、
- * Server Component のここで計算して newSlugs として渡す。
- * newSlugs の計算ロジックは newSlugsHelper.ts に分離（テスト容易性のため）。
- *
- * CATEGORY_LABELS / ALL_CATEGORIES / SERIES_LABELS は node:fs を使う blog.ts から
- * インポートしているため、Client Component（BlogFilterableList）には直接インポートできない。
- * Server Component からシリアライズ可能な形（plain object / array）で props として渡す。
- *
- * 6 ルートすべてから呼ばれる共通 Server Component:
- * - /blog（全記事 page=1）
- * - /blog/page/[page]（全記事 page=N）
- * - /blog/category/[category]（カテゴリ絞り込み page=1）
- * - /blog/category/[category]/page/[page]（カテゴリ絞り込み page=N）
- * - /blog/tag/[tag]（タグ絞り込み page=1）
- * - /blog/tag/[tag]/page/[page]（タグ絞り込み page=N）
+ * 分類は行の種別として出るが、一覧の上に分類の索引を置くので、種別の組は置かない。分類で見たい来訪者は
+ * 索引から分類のページへ移る。
  */
-export default function BlogListView({
-  posts,
-  currentPage,
-  totalPages,
-  basePath,
-  activeCategory,
-  allPosts = [],
-  tagHeader,
-}: BlogListViewProps) {
-  // eslint-disable-next-line react-hooks/purity
-  const now = Date.now();
-  // 「新着」マーク判定: allPosts 全件を対象（タグページでは posts を代替として使う）
-  const newSlugsBase = allPosts.length > 0 ? allPosts : posts;
-  const newSlugs = calculateNewSlugs(newSlugsBase, now);
-
-  // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
-  // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。
-  // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
-  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(cycle-184/B-389): X1 採用時に一括削除
-  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
-
-  const headerDescription = activeCategory
-    ? CATEGORY_DESCRIPTIONS[activeCategory]
-    : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
-
-  // カテゴリ一覧をシリアライズ可能な形に変換して Client Component に渡す
-  const categories = ALL_CATEGORIES.map((cat) => ({
-    value: cat,
-    label: CATEGORY_LABELS[cat],
-  }));
+export default function BlogListView({ scope, page }: BlogListViewProps) {
+  const heading = blogListHeading(scope);
+  const basePath = blogListBasePath(scope);
+  const index = blogIndexEntries();
+  const trail: BreadcrumbItem[] = [
+    { label: "ホーム", href: "/" },
+    { label: "ブログ", href: "/blog" },
+    { label: heading },
+  ];
 
   return (
-    <div className={styles.page}>
-      <div className={styles.intro}>
-        {tagHeader ? (
-          <>
-            <p className={styles.tagBreadcrumb}>
-              <Link
-                href="/blog"
-                className={styles.tagBreadcrumbLink}
-                data-text-box="inline"
-              >
-                ブログ
-              </Link>
-              <span
-                className={styles.tagBreadcrumbSeparator}
-                aria-hidden="true"
-              >
-                /
-              </span>
-              タグ
-            </p>
-            <h1 className={styles.title}>{tagHeader.tag}</h1>
-            <p className={styles.description}>{tagHeader.description}</p>
-          </>
-        ) : (
-          <>
-            <h1 className={styles.title}>AI試行錯誤ブログ</h1>
-            <p className={styles.description}>{headerDescription}</p>
-          </>
-        )}
-      </div>
-
-      <Suspense>
-        <BlogFilterableList
-          posts={posts}
-          currentPage={currentPage}
-          totalPages={totalPages}
+    <Section>
+      <div className={styles.view}>
+        {scope.type === "tag" ? <Breadcrumb items={trail} /> : null}
+        {scope.type === "category" ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: safeJsonLdStringify(generateBreadcrumbJsonLd(trail)),
+            }}
+          />
+        ) : null}
+        <div className={styles.intro}>
+          <h1 className={styles.title} {...headingFontAttr(heading)}>
+            {heading}
+          </h1>
+          <p className={styles.description}>{blogListDescription(scope)}</p>
+        </div>
+        <Accordion summary="分類・タグから探す">
+          <div className={styles.index}>
+            <div className={styles.indexPart}>
+              <h2 id="blog-index-categories" className={styles.indexHeading}>
+                分類（{index.categories.length}）
+              </h2>
+              <LinkIndex
+                labelledBy="blog-index-categories"
+                items={index.categories}
+                currentHref={basePath}
+              />
+            </div>
+            <div className={styles.indexPart}>
+              <h2 id="blog-index-tags" className={styles.indexHeading}>
+                タグ（{index.tags.length}）
+              </h2>
+              <LinkIndex
+                labelledBy="blog-index-tags"
+                items={index.tags}
+                currentHref={basePath}
+              />
+            </div>
+          </div>
+        </Accordion>
+        <BrowsableList
+          items={blogListPosts(scope).map(blogItem)}
+          hrefPrefix="/blog/"
+          label="記事の一覧"
+          unit="件"
+          searchLabel="題名・説明・タグ・連載名で探す"
+          sorts={BLOG_SORTS}
+          perPage={BLOG_LIST_PER_PAGE}
           basePath={basePath}
-          activeCategory={activeCategory}
-          allPosts={allPosts}
-          tagHeader={tagHeader}
-          newSlugs={newSlugs}
-          categories={categories}
-          categoryLabels={CATEGORY_LABELS}
-          seriesLabels={SERIES_LABELS}
-          linkableTags={linkableTags} // TODO(cycle-184/B-389): X1 採用時に削除
+          page={page}
+          pageTitle={blogListTitle(scope)}
         />
-      </Suspense>
-    </div>
+      </div>
+    </Section>
   );
 }

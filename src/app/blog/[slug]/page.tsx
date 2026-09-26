@@ -9,6 +9,7 @@ import {
   getSeriesPosts,
   getTagsWithMinPosts,
   CATEGORY_LABELS,
+  MIN_POSTS_FOR_TAG_PAGE,
 } from "@/blog/_lib/blog";
 import {
   generateBlogPostMetadata,
@@ -55,10 +56,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const relatedPosts = getRelatedPosts(post, allPosts);
 
-  // TODO(B-389): X1 採用時に削除（タグ UI 完全廃止）
-  // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。
-  // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
-  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(B-389): X1 採用時に一括削除
+  // 一覧のページを持つタグだけをリンクにする。
   const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
 
   const jsonLd = generateBlogPostJsonLd({
@@ -78,6 +76,10 @@ export default async function BlogPostPage({ params }: Props) {
           items={[
             { label: "ホーム", href: "/" },
             { label: "ブログ", href: "/blog" },
+            {
+              label: CATEGORY_LABELS[post.category],
+              href: `/blog/category/${post.category}`,
+            },
             { label: post.title },
           ]}
         />
@@ -98,7 +100,6 @@ export default async function BlogPostPage({ params }: Props) {
           )}
           <span>{post.readingTime}分で読める</span>
         </div>
-        {/* TODO(B-389): X1 採用時に削除 */}
         <TagList tags={post.tags} linkableTags={linkableTags} />
       </header>
 

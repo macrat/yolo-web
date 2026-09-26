@@ -1,85 +1,39 @@
 import type { Metadata } from "next";
-import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
-import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import {
+  BLOG_LIST_PER_PAGE,
+  blogListMetadata,
+  blogListPageParams,
+  blogListPosts,
+} from "@/blog/_lib/blog-list";
+import { listPageFromParam } from "@/lib/list-pages";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
   params: Promise<{ page: string }>;
 }
 
-/** Only allow statically generated page numbers; return 404 for others */
+const SCOPE = { type: "all" } as const;
+
 export const dynamicParams = false;
 
-/**
- * Generate params for pages 2 through totalPages.
- * Page 1 is handled by /blog (the parent page.tsx) with a redirect from /blog/page/1.
- */
-export function generateStaticParams() {
-  const allPosts = getAllBlogPosts();
-  const { totalPages } = paginate(allPosts, 1, BLOG_POSTS_PER_PAGE);
+export function generateStaticParams(): Array<{ page: string }> {
+  return blogListPageParams(SCOPE);
+}
 
-  // Generate params for pages 2..totalPages
-  const params: { page: string }[] = [];
-  for (let i = 2; i <= totalPages; i++) {
-    params.push({ page: String(i) });
-  }
-  return params;
+async function resolvePage(params: Props["params"]): Promise<number> {
+  const { page } = await params;
+  return listPageFromParam(
+    page,
+    blogListPosts(SCOPE).length,
+    BLOG_LIST_PER_PAGE,
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { page } = await params;
-  const pageNum = Number(page);
-
-  return {
-    title: `AI試行錯誤ブログ（${pageNum}ページ目） | ${SITE_NAME}`,
-    description:
-      "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
-    openGraph: {
-      title: `AI試行錯誤ブログ（${pageNum}ページ目） | ${SITE_NAME}`,
-      description:
-        "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
-      type: "website",
-      url: `${BASE_URL}/blog/page/${pageNum}`,
-      siteName: SITE_NAME,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `AI試行錯誤ブログ（${pageNum}ページ目） | ${SITE_NAME}`,
-      description:
-        "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
-    },
-    alternates: {
-      canonical: `${BASE_URL}/blog/page/${pageNum}`,
-      types: {
-        "application/rss+xml": "/feed",
-        "application/atom+xml": "/feed/atom",
-      },
-    },
-  };
+  return blogListMetadata(SCOPE, await resolvePage(params));
 }
 
-/** Blog listing pages 2+ (/blog/page/[page]) */
+/** /blog/page/[page] はブログの全記事の一覧の2ページ目から。 */
 export default async function BlogPaginatedPage({ params }: Props) {
-  const { page } = await params;
-  const pageNum = Number(page);
-
-  // dynamicParams=false + generateStaticParams(2..totalPages) means only valid page params
-  // are routed here in production builds. Others are rejected by Next.js as 404 before render.
-  const allPosts = getAllBlogPosts();
-  const { items, totalPages } = paginate(
-    allPosts,
-    pageNum,
-    BLOG_POSTS_PER_PAGE,
-  );
-
-  return (
-    <BlogListView
-      posts={items}
-      currentPage={pageNum}
-      totalPages={totalPages}
-      basePath="/blog"
-      allPosts={allPosts}
-    />
-  );
+  return <BlogListView scope={SCOPE} page={await resolvePage(params)} />;
 }

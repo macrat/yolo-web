@@ -1,60 +1,36 @@
-/*
- * ブログ一覧ページのビュー。
- * 矩形パネルで包まず、ほかの一覧のトップ（/tools, /dictionary/humor 等）と同じ
- * 「.page（--max-width）+ .intro（--measure）」の型で組む。全トークン経由・直書きなし。
- */
-
-/* ページ全体: 操作面の最大幅 --max-width。中央寄せは器の配置で、中は左揃え（§5）。 */
-.page {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-32) var(--space-24) var(--space-64);
+/* ブログの一覧のページ。パンくず・見出しと説明・索引のアコーディオン・一覧を上から積む（§5 の間隔）。 */
+.view {
   display: flex;
   flex-direction: column;
-  gap: var(--space-32);
+  gap: var(--space-16);
 }
 
-/* 名乗り（読む面）: 一行の長さを --measure に絞る（§5）。 */
-.intro {
+/* 見出しはコンテンツ幅いっぱい、説明は本文の幅で折り返す（§5）。 */
+.title {
+  margin-block-end: var(--space-8);
+}
+
+.description {
   max-width: var(--measure);
 }
 
-/* 店号（h1）。書体と大きさは globals.css の見出しの規則が与える。ここは余白のみ調整。 */
-.title {
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-}
-
-/* 説明: 文章として読ませるので 16px / line-height 1.9。 */
-.description {
-  margin: 0;
-  color: var(--ink);
-  line-height: 1.9;
-}
-
-/* タグページのパンくず。JSON-LD は route 側が出すので、Breadcrumb 部品を使わず同じ見え方で置く（§5・§6）。 */
-.tagBreadcrumb {
+/* アコーディオンの中の2つの索引。ラベルとのあいだと、索引どうしのあいだをあける。 */
+.index {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0 0 var(--space-8);
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  line-height: 1.5;
-  color: var(--ink-2);
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-block-start: var(--space-8);
 }
 
-/* パンくずのリンクは縁の見えないコントロール。タップの標的は 44px 以上で、字の左右の余白と、字を並びの
- * 左端に置く張り出しは data-text-box（globals.css）が持つ。下線と訪問済みの色は globals.css の a の既定に従う。 */
-.tagBreadcrumbLink {
-  display: inline-flex;
-  align-items: center;
-  min-width: 44px;
-  min-height: 44px;
+/* 2つ目の索引の見出しは、セクションの中の小見出しとして上に細い罫線を引く（§5）。最初の索引の上は
+ * アコーディオンのラベルが区切る。 */
+.indexPart + .indexPart {
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 区切りの「/」。リンクの箱の後ろに間隔をあけ、リングと hover の線を「/」に掛けない。 */
-.tagBreadcrumbSeparator {
-  margin-inline: var(--space-8);
-  user-select: none;
+/* 索引の見出しは、区切りを持つ索引の区切りの見出しと同じ段で組む。 */
+.indexHeading {
+  margin-block-end: var(--space-8);
+  font-size: var(--text-step-1);
 }

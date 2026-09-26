@@ -195,11 +195,8 @@ describe("静的metadataページのSEO検証", () => {
 
 describe("動的metadataページのSEO検証", () => {
   test("/blog/page/[page]: SEO必須項目が存在する", async () => {
-    const { getAllBlogPosts } = await import("@/blog/_lib/blog");
-    const { paginate, BLOG_POSTS_PER_PAGE } = await import("@/lib/pagination");
-    const allPosts = getAllBlogPosts();
-    const { totalPages } = paginate(allPosts, 1, BLOG_POSTS_PER_PAGE);
-    if (totalPages < 2) return; // 2ページ目がなければスキップ
+    const { blogListPageParams } = await import("@/blog/_lib/blog-list");
+    if (blogListPageParams({ type: "all" }).length === 0) return; // 2ページ目がなければスキップ
 
     const { generateMetadata } = await import("@/app/blog/page/[page]/page");
     const meta = await generateMetadata({
@@ -226,21 +223,14 @@ describe("動的metadataページのSEO検証", () => {
   });
 
   test("/blog/category/[category]/page/[page]: SEO必須項目が存在する", async () => {
-    const { getAllBlogPosts, ALL_CATEGORIES } =
-      await import("@/blog/_lib/blog");
-    const { paginate, BLOG_POSTS_PER_PAGE } = await import("@/lib/pagination");
+    const { ALL_CATEGORIES } = await import("@/blog/_lib/blog");
+    const { blogListPageParams } = await import("@/blog/_lib/blog-list");
 
     // 2ページ以上あるカテゴリを探す
-    let targetCategory: string | null = null;
-    for (const category of ALL_CATEGORIES) {
-      const allPosts = getAllBlogPosts();
-      const categoryPosts = allPosts.filter((p) => p.category === category);
-      const { totalPages } = paginate(categoryPosts, 1, BLOG_POSTS_PER_PAGE);
-      if (totalPages >= 2) {
-        targetCategory = category;
-        break;
-      }
-    }
+    const targetCategory = ALL_CATEGORIES.find(
+      (category) =>
+        blogListPageParams({ type: "category", category }).length > 0,
+    );
     if (!targetCategory) return; // 2ページ以上のカテゴリがなければスキップ
 
     const { generateMetadata } =
