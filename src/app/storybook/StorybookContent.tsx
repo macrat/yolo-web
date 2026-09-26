@@ -363,7 +363,7 @@ interface StorybookContentProps {
   nameResult: PhrasedSample;
   /** 名前を持つ結果の見本の診断名 */
   quizTitle: string;
-  /** T9 で VoiceOver の読み上げを比べるタイプ名 */
+  /** iOS の VoiceOver で見出しの読み方を聞き比べるタイプ名 */
   voiceOverSamples: PhrasedSample[];
   qrCode: ImageSample;
 }
@@ -379,6 +379,8 @@ export default function StorybookContent({
 }: StorybookContentProps) {
   // Checkbox・Radio controlled state
   const [checkboxOn, setCheckboxOn] = useState(false);
+  // 操作に応えて現れる結果のボックスの見本
+  const [countRuns, setCountRuns] = useState(0);
   const [radioValue, setRadioValue] = useState("new");
   // Controlled input state
   const [controlledText, setControlledText] = useState("controlled value");
@@ -1372,6 +1374,18 @@ export default function StorybookContent({
             <p>{nameResult.description}</p>
           </div>
         </ResultBox>
+
+        <p className={styles.subsectionTitle}>
+          操作に応えて現れる結果（登場の動きを持つ。ページを開いたときにあるボックスは動かない）
+        </p>
+        <Button onClick={() => setCountRuns((runs) => runs + 1)}>
+          文字数を数える
+        </Button>
+        {countRuns > 0 && (
+          <ResultBox key={countRuns} caption="数えた文字数の結果">
+            <p className={styles.resultNumber}>567文字</p>
+          </ResultBox>
+        )}
 
         <p className={styles.subsectionTitle}>数字</p>
         <ResultBox caption="文字数の結果">

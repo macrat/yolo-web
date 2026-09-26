@@ -1,6 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef, useSyncExternalStore } from "react";
+import { useLayoutEffect, useRef } from "react";
+import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
 import { layoutQuantityBars } from "./layout";
 import styles from "./QuantityBars.module.css";
 
@@ -29,23 +30,13 @@ type QuantityBarsProps = QuantityBarsName & {
   max?: number;
 };
 
-const subscribeNever = () => () => {};
-
-/** 描いている木がサーバーで描いた HTML を引き継ぐところか。引き継いだあとと、ブラウザだけで描くときは false。 */
-function useIsServerRendered(): boolean {
-  return useSyncExternalStore(
-    subscribeNever,
-    () => false,
-    () => true,
-  );
-}
-
 const LAYOUT_SCRIPT = `(${layoutQuantityBars.toString()})(document.currentScript.previousElementSibling)`;
 
 /**
  * 並べた量の帯（DESIGN.md §5 量の帯）。並びは本文の幅いっぱいに置き、名前・帯・値・「今回」の列の幅を
  * どの行も同じにして、帯を同じ位置から同じ長さの枠で並べる。1行の組みで枠が並びの幅の半分に届かなければ、
- * 並び全体を2行の組み（名前と値の行の下に、並びの幅いっぱいの枠）にする。
+ * 並び全体を2行の組み（名前と値の行の下に、並びの幅いっぱいの枠）にする。測れないとき（JavaScript が
+ * 動かないとき）も、どの幅と字の大きさでも読める2行の組みで描く。
  *
  * 組みは最初の描画の前に決める。ブラウザで描くときは描く前に測り、サーバーで描いた HTML では並びの直後の
  * スクリプトが測る。そのあとは、並びの幅か字の大きさが変わったときに組み直す。
@@ -87,8 +78,11 @@ export default function QuantityBars({
   return (
     <div className={styles.bars}>
       <span ref={gaugeRef} className={styles.gauge} aria-hidden="true" />
+      {/* サーバーで描いた HTML では並びの直後のスクリプトが組み（data-layout）を付けるので、水和のときの
+          属性がクライアントの props と違う。 */}
       <ul
         ref={listRef}
+        suppressHydrationWarning
         role="list"
         className={
           hasCurrent ? `${styles.list} ${styles.withCurrent}` : styles.list

@@ -1,5 +1,7 @@
-import { beforeAll, describe, expect, test } from "vitest";
+import { act } from "react";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import { layoutQuantityBars } from "@/components/QuantityBars/layout";
@@ -114,9 +116,36 @@ describe("layoutQuantityBars", () => {
     expect(list.dataset.layout).toBe("inline");
   });
 
-  test("枠が並びの幅の半分に届かないなら、並び全体を2行の組みにする", () => {
+  test("枠が並びの幅の半分に届かないなら、組みの属性を外して並び全体を2行の組みにする", () => {
     const list = listOf(119);
+    list.dataset.layout = "inline";
     layoutQuantityBars(list);
-    expect(list.dataset.layout).toBe("stacked");
+    expect(list.dataset.layout).toBeUndefined();
+  });
+});
+
+describe("サーバーで描いた並びの水和", () => {
+  test("並びの直後のスクリプトが組みを付けた HTML を、エラーを出さずに引き継ぐ", async () => {
+    const element = <QuantityBars label="分布" items={distribution} />;
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(element);
+    document.body.appendChild(container);
+    const list = container.querySelector("ul")!;
+    Object.defineProperty(list, "clientWidth", { value: 1000 });
+    // jsdom は innerHTML で入れたスクリプトを動かさないので、スクリプトと同じ関数で組みを付ける。
+    layoutQuantityBars(list);
+    expect(list.dataset.layout).toBe("inline");
+
+    const actEnvironment = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
+    const previousActEnvironment = actEnvironment.IS_REACT_ACT_ENVIRONMENT;
+    actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const root = await act(async () => hydrateRoot(container, element));
+    expect(errors).not.toHaveBeenCalled();
+    expect(list.dataset.layout).toBe("inline");
+    errors.mockRestore();
+    act(() => root.unmount());
+    container.remove();
+    actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
   });
 });

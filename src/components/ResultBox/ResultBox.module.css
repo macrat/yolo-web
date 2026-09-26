@@ -2,10 +2,14 @@
 .box {
   border: var(--rule-w) solid var(--rule);
   padding: var(--box-padding);
+}
+
+/* 結果の登場（§11）。操作に応えて新しく現れたボックスだけが、1回だけ、250〜400ms で出る。動きで気分が
+ * 悪くなる来訪者には即時に出す。 */
+.appears {
   animation: appear 300ms ease-out both;
 }
 
-/* 結果の登場（§11）。1回だけ、250〜400ms。動きで気分が悪くなる来訪者には即時に出す。 */
 @keyframes appear {
   from {
     opacity: 0;
@@ -16,15 +20,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .box {
+  .appears {
     animation: none;
   }
 }
 
-/* 頭の行。結果の名前を左に、コピーのボタンを右に置く。名前が折り返しても、ボタンは頭の行の上に揃う。 */
+/* 頭の行。結果の名前を左に、コピーのボタンを右に置く。ボタンの字は、名前の1行目の字と同じ高さに並ぶ。 */
 .head {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: var(--space-16);
   margin-block-end: var(--space-16);
 }
@@ -48,7 +52,13 @@
   flex-shrink: 0;
 }
 
-/* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、ボックスの中で横に送る。 */
+/* コードと表の結果は、ボックスの幅に収まらない中身をボックスの中で横に送る。 */
+.code .body,
+.table .body {
+  overflow-x: auto;
+}
+
+/* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、送るのはボックスの側が持つ。 */
 .code {
   background: var(--paper-2);
 }
@@ -57,11 +67,7 @@
   border: none;
   padding: 0;
   background: none;
-}
-
-/* 表の結果は、ボックスの幅に収まらない列をボックスの中で横に送る。 */
-.table .body {
-  overflow-x: auto;
+  overflow-x: visible;
 }
 
 .table .body table {

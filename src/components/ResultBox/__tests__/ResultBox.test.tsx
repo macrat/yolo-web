@@ -1,6 +1,8 @@
-import { createRef } from "react";
-import { describe, expect, test } from "vitest";
+import { act, createRef } from "react";
+import { describe, expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+import { hydrateRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import ResultBox from "@/components/ResultBox";
 
 const phrases = ["先頭を", "走りながら", "「全員来てるか！」と"];
@@ -84,5 +86,82 @@ describe("ResultBox", () => {
     expect(ref.current).toBe(screen.getByRole("region", { name: "結果" }));
     ref.current?.focus();
     expect(document.activeElement).toBe(ref.current);
+  });
+
+  test("ブラウザで新しく描いたボックスは登場の動きを持つ", () => {
+    render(
+      <ResultBox caption="結果">
+        <p>1</p>
+      </ResultBox>,
+    );
+    expect(screen.getByRole("region", { name: "結果" }).className).toMatch(
+      /appears/,
+    );
+  });
+
+  test("サーバーの HTML に初めからあるボックスは、水和のあとも登場の動きを持たない", async () => {
+    const element = (
+      <ResultBox caption="結果">
+        <p>1</p>
+      </ResultBox>
+    );
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(element);
+    document.body.appendChild(container);
+    expect(container.querySelector("section")!.className).not.toMatch(
+      /appears/,
+    );
+
+    const actEnvironment = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
+    const previousActEnvironment = actEnvironment.IS_REACT_ACT_ENVIRONMENT;
+    actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const root = await act(async () => hydrateRoot(container, element));
+    expect(errors).not.toHaveBeenCalled();
+    expect(container.querySelector("section")!.className).not.toMatch(
+      /appears/,
+    );
+    errors.mockRestore();
+    act(() => root.unmount());
+    container.remove();
+    actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+  });
+
+  test("横に送る枠は、中身がはみ出すときだけ Tab で止まり、名前を持つ", () => {
+    const scrollWidth = vi
+      .spyOn(HTMLElement.prototype, "scrollWidth", "get")
+      .mockReturnValue(500);
+    const clientWidth = vi
+      .spyOn(HTMLElement.prototype, "clientWidth", "get")
+      .mockReturnValue(300);
+    render(
+      <ResultBox caption="整形した JSON" kind="code">
+        <pre>code</pre>
+      </ResultBox>,
+    );
+    const frame = screen.getByRole("region", {
+      name: "コード（横にスクロールできます）",
+    });
+    expect(frame.tabIndex).toBe(0);
+    expect(frame).toContainElement(screen.getByText("code"));
+    scrollWidth.mockRestore();
+    clientWidth.mockRestore();
+  });
+
+  test("中身がはみ出さない表の枠は、Tab で止まらず名前も持たない", () => {
+    render(
+      <ResultBox caption="年齢の計算の結果" kind="table">
+        <table>
+          <tbody>
+            <tr>
+              <td>34歳</td>
+            </tr>
+          </tbody>
+        </table>
+      </ResultBox>,
+    );
+    const frame = screen.getByRole("table").parentElement!;
+    expect(frame.hasAttribute("tabindex")).toBe(false);
+    expect(frame.hasAttribute("aria-label")).toBe(false);
   });
 });

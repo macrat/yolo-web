@@ -48,7 +48,7 @@ function characterType(id: string): PhrasedSample {
   };
 }
 
-/** T9 で iOS の VoiceOver に読ませて比べるタイプ。区切りの位置と括弧・記号の型が互いに違う。 */
+/** iOS の VoiceOver で見出しの読み方を聞き比べるタイプ。区切りの位置と括弧・記号の型が互いに違う。 */
 const VOICE_OVER_TYPE_IDS = [
   "blazing-warden",
   "contrarian-professor",

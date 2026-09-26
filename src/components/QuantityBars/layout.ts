@@ -1,6 +1,6 @@
 /**
  * 並べた量の帯の組みを、並びの幅と字の列の幅から決める（DESIGN.md §5 量の帯）。1行の組みで枠が並びの幅の
- * 半分以上あれば 1行の組み（data-layout="inline"）、届かなければ並び全体を2行の組み（"stacked"）にする。
+ * 半分以上あれば 1行の組み（data-layout="inline"）にし、届かなければ属性を外して並び全体を2行の組みにする。
  *
  * 字の列の幅は、各列のいちばん広い字の幅で、どちらの組みで描かれていても同じに測れるよう、セルの幅でなく
  * 字そのものの幅を Range で測る。1行の組みの枠は、並びの幅から字の列と列のあいだを除いた残りである。
@@ -27,5 +27,9 @@ export function layoutQuantityBars(list: HTMLElement | null): void {
   // 字の列のそれぞれと帯のあいだに、列のあいだが1つずつある。
   const text = columns.reduce((sum, width) => sum + width + gap, 0);
   const width = list.clientWidth;
-  list.dataset.layout = width - text >= width / 2 ? "inline" : "stacked";
+  if (width - text >= width / 2) {
+    list.dataset.layout = "inline";
+  } else {
+    delete list.dataset.layout;
+  }
 }
