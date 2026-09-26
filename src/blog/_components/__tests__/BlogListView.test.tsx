@@ -172,12 +172,12 @@ describe("BlogListView", () => {
     ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
-  test("/blog は見出しを「AI試行錯誤」と「ブログ」の切れ目で折れるようにする", () => {
+  test("/blog は見出しを「AI」「試行錯誤」「ブログ」の切れ目で折れるようにする", () => {
     visit("/blog");
     render(<BlogListView scope={{ type: "all" }} page={1} />);
 
     const h1 = screen.getByRole("heading", { level: 1 });
-    expect(h1.innerHTML).toBe("AI試行錯誤<wbr>ブログ");
+    expect(h1.innerHTML).toBe("AI<wbr>試行錯誤<wbr>ブログ");
   });
 
   test("名前の欄は分類の名前でも探せる", () => {

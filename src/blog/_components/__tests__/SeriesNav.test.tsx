@@ -160,7 +160,7 @@ describe("SeriesNav", () => {
     expect(container.innerHTML).toBe("");
   });
 
-  test("returns null when seriesPosts has only 1 post (R1)", () => {
+  test("returns null when seriesPosts has only 1 post (a series of one has nothing to navigate)", () => {
     const singlePost = [mockPosts[0]];
     const { container } = render(
       <SeriesNav

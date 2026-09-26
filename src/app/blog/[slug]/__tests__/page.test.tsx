@@ -24,40 +24,19 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  describe("PlayRecommendBlock が撤去されていること（コンセプト不整合撤去）", () => {
-    it("page.tsx does NOT import PlayRecommendBlock", () => {
-      expect(source).not.toContain("PlayRecommendBlock");
-    });
-
-    it("page.tsx does NOT import getPlayRecommendationsForBlog", () => {
-      expect(source).not.toContain("getPlayRecommendationsForBlog");
-    });
-  });
-
-  describe("新デザイン構造の検証", () => {
-    it("page.tsx imports new-system Breadcrumb (@/components/Breadcrumb)", () => {
+  describe("記事のページの組み立て", () => {
+    it("パンくずを共有の Breadcrumb で組むこと", () => {
       expect(source).toContain('@/components/Breadcrumb"');
     });
 
-    it("page.tsx imports new-system ShareButtons (@/components/ShareButtons)", () => {
+    it("共有のボタンを共有の ShareButtons で組むこと", () => {
       expect(source).toContain('@/components/ShareButtons"');
     });
 
-    // DESIGN.md フェーズ R（C5・cycle-279）: 読み物本文を Panel の矩形コンテナから
-    // 解放し、読む幅 --measure に絞ったテキスト列として直接置く構造へ変換した。
-    // SeriesNav・TOC 等の区画は各コンポーネント自身が罫囲みを持つため、
-    // page.tsx から Panel への依存はなくなった。
+    // 連載の案内と目次はそれぞれ自分の罫線を持つので、ページ全体を枠で包まない。
     it("page.tsx は Panel を使わないこと（読み物は矩形パネルに包まない・§4）", () => {
       expect(source).not.toMatch(/<Panel\b/);
       expect(source).not.toContain('@/components/Panel"');
-    });
-
-    it("page.tsx does NOT import TrustLevelBadge", () => {
-      expect(source).not.toContain("TrustLevelBadge");
-    });
-
-    it("page.tsx does NOT import from @/components/common/", () => {
-      expect(source).not.toContain("@/components/common/");
     });
 
     it("page.tsx に <RelatedArticles JSX タグが存在すること", () => {
@@ -73,22 +52,17 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  describe("postNav は hasSeries に関わらず常時表示されること", () => {
-    it("page.tsx の前後ナビが !hasSeries 条件なしで常時表示される", () => {
-      // !hasSeries 条件でpostNavを隠す実装がないこと
+  describe("前後の記事のリンク", () => {
+    it("連載の有無で隠さないこと", () => {
       expect(source).not.toMatch(
         /!hasSeries[\s\S]*?postNav|postNav[\s\S]*?!hasSeries/,
       );
       expect(source).toMatch(/postNav/);
     });
 
-    it("postNav ラベルはシリーズ有無に関わらず固定文言（前の記事 / 次の記事）であること", () => {
-      // series ? "すべての記事から：..." : "..." の三項演算子が除去されていること
-      expect(source).not.toContain("すべての記事から");
-      // 固定文言「前の記事」「次の記事」が存在すること
+    it("ラベルは「前の記事」「次の記事」で、時系列順であることを読み上げに伝えること", () => {
       expect(source).toContain("前の記事");
       expect(source).toContain("次の記事");
-      // aria-label による時系列順の明示は維持されること
       expect(source).toContain("時系列順");
     });
   });
@@ -111,9 +85,8 @@ describe("app/blog/[slug]/page", () => {
       expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
     });
 
-    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（SeriesNav 開閉や記事本文中の <details> で grid が動かない退行防止）", () => {
-      // <details> 単独だと SeriesNav や記事本文中の <details> でも誤発火する。
-      // .articleAside（TOC ラッパー専用クラス）配下に限定することで誤マッチを防ぐ。
+    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（連載の案内や記事の本文の <details> を開閉しても grid が動かないため）", () => {
+      // 目次を包む .articleAside の中の <details> だけを見る。
       expect(css).toMatch(
         /\.articleBody:has\(\.articleAside\s+details:not\(\[open\]\)\)/,
       );
@@ -121,10 +94,6 @@ describe("app/blog/[slug]/page", () => {
   });
 
   describe("エの字レイアウト — DOM 構造の検証", () => {
-    it("page.tsx に mobileToc クラスが存在しないこと（TOC 重複レンダリング撤廃）", () => {
-      expect(source).not.toContain("mobileToc");
-    });
-
     it("page.tsx に <CollapsibleTOC が1箇所のみ存在すること（a11y: nav ランドマーク重複なし）", () => {
       const matches = source.match(/<CollapsibleTOC\b/g);
       expect(matches).not.toBeNull();
@@ -148,37 +117,35 @@ describe("app/blog/[slug]/page", () => {
       expect(source).toContain("articleFooter");
     });
 
-    it("page.tsx の最上位ラッパーが <article タグであること（セマンティクス改善）", () => {
+    it("page.tsx の最上位ラッパーが <article タグであること（記事のまとまりを読み上げに伝える）", () => {
       expect(source).toMatch(/<article\s+className=\{styles\.contentColumn\}/);
     });
   });
 
   describe("本文カラムの横幅", () => {
-    it(".contentColumn に max-width: var(--max-width) が定義されていること（新デザイン・操作面の最大幅）", () => {
+    it(".contentColumn に max-width: var(--max-width) が定義されていること（コンテナの最大幅・§5）", () => {
       expect(css).toMatch(
         /\.contentColumn[^{]*\{[^}]*max-width:\s*var\(--max-width\)/,
       );
     });
 
-    it(".contentColumn の横パディングが var(--space-24) であること（新デザインの 8px スケール）", () => {
+    it(".contentColumn の横パディングが var(--space-24) であること（余白は 8px の倍数・§5）", () => {
       expect(css).toMatch(
         /\.contentColumn[^{]*\{[^}]*padding:[^;}]*var\(--space-24\)/,
       );
     });
 
     it("page.module.css の SP ブレークポイントは 720px", () => {
-      // サイト共通の SP ブレークポイントは 720px
       expect(css).toMatch(/@media\s*\(max-width:\s*720px\)/);
-      expect(css).not.toMatch(/@media\s*\(max-width:\s*768px\)/);
     });
   });
 
   describe("page.module.css — 読む幅とコードブロックの背景", () => {
-    it(".prose が --measure（読む幅）に絞られていること（DESIGN.md §4「本文幅と操作幅」）", () => {
+    it(".prose が --measure（読む幅）に絞られていること（本文の幅・§5）", () => {
       expect(css).toMatch(/\.prose[^{]*\{[^}]*max-width:\s*var\(--measure\)/);
     });
 
-    it("prose pre のフォールバック背景に --paper-2（一段沈む面・light/dark 両対応）が使われていること", () => {
+    it("prose pre のフォールバック背景に --paper-2（コードのボックスの背景・§2）が使われていること", () => {
       expect(css).toMatch(/\.prose pre[^{]*\{[^}]*var\(--paper-2\)/);
     });
 

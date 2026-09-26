@@ -85,7 +85,7 @@ describe("RelatedArticles", () => {
     expect(screen.getByText("2026-01-30")).toBeInTheDocument();
   });
 
-  test("公開日が機械可読な <time dateTime> 要素として描画されること（意味的日付の退行防止）", () => {
+  test("公開日が機械可読な <time dateTime> 要素として描画されること（検索エンジンと読み上げに日付を伝える）", () => {
     render(<RelatedArticles posts={mockPosts} />);
     const timeElements = Array.from(document.querySelectorAll("time"));
     expect(timeElements.length).toBeGreaterThanOrEqual(3);

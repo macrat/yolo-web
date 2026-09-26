@@ -33,7 +33,7 @@ export type BlogListScope =
 export const BLOG_LIST_PER_PAGE = 50;
 
 /** ブログの名前を、意味の切れ目で分けたもの。 */
-const BLOG_TITLE_PHRASES = ["AI試行錯誤", "ブログ"];
+const BLOG_TITLE_PHRASES = ["AI", "試行錯誤", "ブログ"];
 
 const BLOG_TITLE = BLOG_TITLE_PHRASES.join("");
 

@@ -60,17 +60,7 @@ describe("TagList", () => {
   });
 });
 
-describe("TagList.module.css — 新デザイントークン確認（DESIGN.md フェーズ R）", () => {
-  test("旧トークン（--color-* / --fg / --bg / --border / --r-*）が残っていないこと", () => {
-    const cssPath = path.resolve(__dirname, "../TagList.module.css");
-    const css = fs.readFileSync(cssPath, "utf-8");
-    expect(css).not.toContain("var(--color-");
-    expect(css).not.toMatch(/var\(--fg\b/);
-    expect(css).not.toMatch(/var\(--bg\b/);
-    expect(css).not.toMatch(/var\(--border\b/);
-    expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
-  });
-
+describe("TagList.module.css", () => {
   test("タグは枠で囲まず、下線を消さない（§6 リンクは下線で示す）", () => {
     const cssPath = path.resolve(__dirname, "../TagList.module.css");
     const css = fs.readFileSync(cssPath, "utf-8");

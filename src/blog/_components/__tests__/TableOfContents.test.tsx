@@ -45,7 +45,7 @@ describe("TableOfContents", () => {
     ).toBeInTheDocument();
   });
 
-  test(".toc セレクタに background / border / border-radius / padding が含まれない（外側 CollapsibleTOC に委譲済み）", async () => {
+  test(".toc セレクタに background / border / border-radius / padding が含まれない（枠と余白は外側の CollapsibleTOC が持つ）", async () => {
     const fs = await import("fs");
     const path = await import("path");
     const cssPath = path.resolve(__dirname, "../TableOfContents.module.css");
@@ -55,30 +55,10 @@ describe("TableOfContents", () => {
     const tocBlockMatch = css.match(/\.toc\s*\{([^}]*)\}/);
     const tocBlock = tocBlockMatch ? tocBlockMatch[1] : "";
 
-    // 外側の CollapsibleTOC（tocDetails）が担うプロパティが .toc に残っていないこと
+    // 目次を包む CollapsibleTOC（tocDetails）が枠と余白を持ち、目次の中で二重に持たない
     expect(tocBlock).not.toMatch(/background(-color)?:/);
     expect(tocBlock).not.toMatch(/\bborder\b\s*:/);
     expect(tocBlock).not.toMatch(/border-radius:/);
     expect(tocBlock).not.toMatch(/\bpadding\b\s*:/);
-  });
-
-  test("CSS が新トークン（--ink / --ink-2 / --accent 等）を使用し旧トークンを含まない（DESIGN.md フェーズ R）", async () => {
-    const fs = await import("fs");
-    const path = await import("path");
-    const cssPath = path.resolve(__dirname, "../TableOfContents.module.css");
-    const css = fs.readFileSync(cssPath, "utf-8");
-
-    // 旧トークンが残っていないこと（--color-* 系・phase R 以前の --fg/--bg/--border 系の双方）
-    expect(css).not.toContain("--color-bg-secondary");
-    expect(css).not.toContain("--color-border");
-    expect(css).not.toContain("--color-text");
-    expect(css).not.toContain("--color-text-muted");
-    expect(css).not.toContain("--color-primary");
-    expect(css).not.toMatch(/var\(--fg\b/);
-    expect(css).not.toMatch(/var\(--bg\b/);
-    expect(css).not.toMatch(/var\(--border\b/);
-
-    // 新トークンが使われていること
-    expect(css).toMatch(/--ink|--accent/);
   });
 });

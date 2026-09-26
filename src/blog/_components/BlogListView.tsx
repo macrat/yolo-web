@@ -72,6 +72,7 @@ interface BlogListViewProps {
  */
 export default function BlogListView({ scope, page }: BlogListViewProps) {
   const heading = blogListHeading(scope);
+  const headingPhrases = blogListHeadingPhrases(scope);
   const basePath = blogListBasePath(scope);
   const index = blogIndexEntries();
   const trail: BreadcrumbItem[] = [
@@ -85,8 +86,15 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
       <div className={styles.view}>
         {scope.type === "all" ? null : <Breadcrumb items={trail} />}
         <div>
-          <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {blogListHeadingPhrases(scope).map((phrase, i) => (
+          <h1
+            className={
+              headingPhrases.length > 1
+                ? `${styles.title} ${styles.phrased}`
+                : styles.title
+            }
+            {...headingFontAttr(heading)}
+          >
+            {headingPhrases.map((phrase, i) => (
               <Fragment key={phrase}>
                 {i > 0 ? <wbr /> : null}
                 {phrase}
