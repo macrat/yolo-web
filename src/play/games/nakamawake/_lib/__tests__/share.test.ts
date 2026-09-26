@@ -1,6 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { generateShareText } from "../share";
-import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { NakamawakeGameState, NakamawakePuzzle } from "../types";
 
 const samplePuzzle: NakamawakePuzzle = {
@@ -42,13 +41,6 @@ const samplePuzzle: NakamawakePuzzle = {
     },
   ],
 };
-
-beforeEach(() => {
-  // Mock window.location.origin
-  vi.stubGlobal("window", {
-    location: { origin: "https://example.com" },
-  });
-});
 
 describe("generateShareText", () => {
   test("generates correct text for a won game with no mistakes", () => {
@@ -113,8 +105,10 @@ describe("generateShareText", () => {
     expect(text).toContain("\u{1F7E6}\u{1F7E6}\u{1F7E6}\u{1F7E6}");
     // Row 4: difficulty 4 (purple)
     expect(text).toContain("\u{1F7EA}\u{1F7EA}\u{1F7EA}\u{1F7EA}");
-    expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
-    expect(text).toContain("https://example.com/play/nakamawake");
+    expect(text.split("\n").at(-1)).toBe(
+      "#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet",
+    );
+    expect(text).not.toContain("http");
   });
 
   test("generates correct text for a won game with mistakes", () => {
@@ -320,36 +314,5 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u30CA\u30AB\u30DE\u30EF\u30B1 #15 \u30DF\u30B91\u56DE",
     );
-  });
-});
-
-describe("generateTwitterShareUrl", () => {
-  test("generates correct Twitter intent URL without pageUrl", () => {
-    const text = "Test share text";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toBe(
-      "https://twitter.com/intent/tweet?text=Test%20share%20text",
-    );
-  });
-
-  test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/play/nakamawake";
-    const text = `\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\n\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}\n${pageUrl}`;
-    const url = generateTwitterShareUrl(text, pageUrl);
-    // text param should not contain the page URL
-    expect(url).toContain(
-      `text=${encodeURIComponent("\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\n\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}")}`,
-    );
-    // url param should contain the page URL
-    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
-  });
-
-  test("encodes special characters without pageUrl", () => {
-    const text =
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\nhttps://example.com";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toContain("https://twitter.com/intent/tweet?text=");
-    // Should be properly encoded
-    expect(url).toContain(encodeURIComponent(text));
   });
 });

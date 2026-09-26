@@ -141,6 +141,9 @@ describe("FudaActions 共有", () => {
       content_id: "quiz-character-personality",
       surface: "fuda",
     });
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /^リンクをコピーしました$/,
+    );
   });
 
   test("共有シートのキャンセル（reject）では計上しない", async () => {

@@ -102,7 +102,7 @@ export default function ResultModal({
         url="/play/kanji-kanaru"
         title={"\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB"}
         text={shareText}
-        sns={["x", "copy"]}
+        sns={["x", "line", "copy"]}
         contentType="game"
         contentId="kanji-kanaru"
       />

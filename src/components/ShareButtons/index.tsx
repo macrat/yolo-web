@@ -1,8 +1,15 @@
 "use client";
 
-import { useState, useCallback, useEffect, type ReactNode } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import Button from "@/components/Button";
 import { trackShare, type ShareSurface } from "@/lib/analytics";
+import { copyText } from "@/lib/clipboard";
 import { SHARE_LABELS } from "@/lib/share-labels";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import styles from "./ShareButtons.module.css";
@@ -22,11 +29,10 @@ interface ShareButtonsProps {
   /** 共有するページのタイトル。端末の共有シートとはてなブックマークに渡す */
   title: string;
   /**
-   * 結果を共有するときの文（例: 「〇〇診断の結果は「△△」でした!」）。渡すと、共有するものがページから
-   * 結果に替わる。端末が共有シートを開けるなら、共有シートのボタン1つに任せる。共有シートが
-   * ほかの共有先をすべて含むからである。コピーは、文と URL を写す「結果をコピー」になる。
-   * 最後の行が共有する URL なら、その行を除いて使う。URL は共有先ごとの形で、この部品が1つだけ付ける。
-   * 省くとページを共有し、文は title から組む。
+   * 結果を共有するときの文（例: 「〇〇診断の結果は「△△」でした!」）。URL を含めない。URL は共有先ごとの形で、
+   * この部品が付ける。渡すと、共有するものがページから結果に替わる。端末が共有シートを開けるなら、
+   * 共有シートのボタン1つに任せる。共有シートがほかの共有先をすべて含むからである。コピーは、文と URL を写す
+   * 「結果をコピー」になる。省くとページを共有し、文は title から組む。
    */
   text?: string;
   /** 表示するボタン一覧。並びはいつも X・LINE・はてブ・コピーの順。省略時は全ボタンを表示 */
@@ -52,11 +58,6 @@ function toFullUrl(url: string): string {
   return /^https?:\/\//.test(url) ? url : `${window.location.origin}${url}`;
 }
 
-function withoutTrailingUrl(text: string, fullUrl: string): string {
-  const urlLine = `\n${fullUrl}`;
-  return text.endsWith(urlLine) ? text.slice(0, -urlLine.length) : text;
-}
-
 /**
  * 共有のボタンの並び。どのボタンも、押すと共有先のページが開くか、共有シートが開くか、文と URL が
  * コピーされる、プライマリでないボタン（DESIGN.md §6）なので、共通の Button で組む。共有先はロゴや色
@@ -73,9 +74,11 @@ export default function ShareButtons({
   children,
 }: ShareButtonsProps) {
   const canWebShare = useCanWebShare();
-  // 押すたびに増える番号。0 のあいだは「コピーしました」を出さない。押し直すと番号が変わってタイマーを
+  // 写せるたびに増える番号。0 のあいだは「コピーしました」を出さない。押し直すと番号が変わってタイマーを
   // 掛け直すので、先のタイマーが後の知らせを早く消さない。外したときもタイマーを止める。
   const [copiedCount, setCopiedCount] = useState(0);
+  // 写せなかった知らせは、読み終える前に消えないよう、次にコピーを押すまで残す。
+  const [copyFailed, setCopyFailed] = useState(false);
 
   useEffect(() => {
     if (copiedCount === 0) return;
@@ -88,8 +91,7 @@ export default function ShareButtons({
     fullUrl: string;
     body: string;
   } => {
-    const fullUrl = toFullUrl(url);
-    return { fullUrl, body: withoutTrailingUrl(text ?? title, fullUrl) };
+    return { fullUrl: toFullUrl(url), body: text ?? title };
   }, [url, text, title]);
 
   const track = useCallback(
@@ -134,22 +136,29 @@ export default function ShareButtons({
     track("hatena");
   }, [title, getShareTarget, track]);
 
-  const handleCopy = useCallback(async (): Promise<void> => {
-    const { fullUrl, body } = getShareTarget();
-    try {
-      await navigator.clipboard.writeText(body + "\n" + fullUrl);
-      setCopiedCount((count) => count + 1);
-      track("clipboard");
-    } catch {
-      // クリップボード API が利用できない場合はサイレントに失敗
-    }
-  }, [getShareTarget, track]);
+  const handleCopy = useCallback(
+    async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
+      const { fullUrl, body } = getShareTarget();
+      setCopyFailed(false);
+      // 写すための欄は、押したボタンの並びに置く。結果のダイアログの中でも、その欄を選べる。
+      if (
+        await copyText(body + "\n" + fullUrl, event.currentTarget.parentElement)
+      ) {
+        setCopiedCount((count) => count + 1);
+        track("clipboard");
+      } else {
+        setCopiedCount(0);
+        setCopyFailed(true);
+      }
+    },
+    [getShareTarget, track],
+  );
 
   interface ShareAction {
     key: SnsType;
     label: string;
     ariaLabel?: string;
-    onClick: () => void | Promise<void>;
+    onClick: (event: MouseEvent<HTMLButtonElement>) => void | Promise<void>;
   }
 
   const actions: ShareAction[] = [
@@ -194,9 +203,13 @@ export default function ShareButtons({
         )}
         {children}
       </div>
-      {/* コピー完了フィードバック。aria-live="polite" でスクリーンリーダーに通知。 */}
-      <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copiedCount > 0 ? "コピーしました" : ""}
+      {/* コピーの知らせ。aria-live="polite" で読み上げにも伝える。 */}
+      <div className={styles.copyMessage} role="status" aria-live="polite">
+        {copyFailed
+          ? "コピーできませんでした。ほかの共有先をお使いください"
+          : copiedCount > 0
+            ? "コピーしました"
+            : ""}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { generateShareText } from "../share";
-import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { GameState, KanjiEntry } from "../types";
 
 const targetKanji: KanjiEntry = {
@@ -14,12 +13,6 @@ const targetKanji: KanjiEntry = {
   meanings: ["mountain"],
   examples: ["\u5C71\u8108"],
 };
-
-beforeEach(() => {
-  vi.stubGlobal("window", {
-    location: { origin: "https://example.com" },
-  });
-});
 
 describe("generateShareText", () => {
   test("generates correct text for a won game with difficulty label", () => {
@@ -64,8 +57,10 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}",
     );
-    expect(text).toContain("#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet");
-    expect(text).toContain("https://example.com/play/kanji-kanaru");
+    expect(text.split("\n").at(-1)).toBe(
+      "#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet",
+    );
+    expect(text).not.toContain("http");
   });
 
   test("generates correct text for a lost game", () => {
@@ -210,25 +205,5 @@ describe("generateShareText", () => {
 
     const text = generateShareText(state);
     expect(text).toContain("(\u4E2D\u7D1A)");
-  });
-});
-
-describe("generateTwitterShareUrl", () => {
-  test("generates correct Twitter intent URL without pageUrl", () => {
-    const text = "Test share text";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toBe(
-      "https://twitter.com/intent/tweet?text=Test%20share%20text",
-    );
-  });
-
-  test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/play/kanji-kanaru";
-    const text = `\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n${pageUrl}`;
-    const url = generateTwitterShareUrl(text, pageUrl);
-    expect(url).toContain(
-      `text=${encodeURIComponent("\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}")}`,
-    );
-    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
   });
 });

@@ -87,6 +87,9 @@ describe("InviteFriendButton 計測", () => {
       content_id: "quiz-character-personality",
       surface: "invite",
     });
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /^リンクをコピーしました$/,
+    );
   });
 
   test("share 取消 → clipboard も失敗したら何も計上しない", async () => {

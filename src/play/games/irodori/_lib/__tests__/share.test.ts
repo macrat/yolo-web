@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import { generateShareText } from "../share";
-import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { IrodoriGameState } from "../types";
 
 const mockGameState: IrodoriGameState = {
@@ -59,9 +58,10 @@ describe("generateShareText", () => {
     expect(text).toContain("\u30E9\u30F3\u30AF");
   });
 
-  test("includes URL path", () => {
+  test("ends with the hashtags and leaves the URL to the share buttons", () => {
     const text = generateShareText(mockGameState);
-    expect(text).toContain("/play/irodori");
+    expect(text.split("\n").at(-1)).toBe("#\u30A4\u30ED\u30C9\u30EA #yolosnet");
+    expect(text).not.toContain("http");
   });
 
   test("includes emoji row", () => {
@@ -73,24 +73,5 @@ describe("generateShareText", () => {
   test("includes hashtags", () => {
     const text = generateShareText(mockGameState);
     expect(text).toContain("#\u30A4\u30ED\u30C9\u30EA #yolosnet");
-  });
-});
-
-describe("generateTwitterShareUrl", () => {
-  test("generates valid URL with encoded text without pageUrl", () => {
-    const url = generateTwitterShareUrl("Hello World");
-    expect(url).toBe("https://twitter.com/intent/tweet?text=Hello%20World");
-  });
-
-  test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/play/irodori";
-    const text = `\u30A4\u30ED\u30C9\u30EA #1 \u30B9\u30B3\u30A2: 87/100\n\u{1F7E9}\u{1F7E9}\u{1F7E8}\n${pageUrl}`;
-    const url = generateTwitterShareUrl(text, pageUrl);
-    // text param should not contain the page URL
-    expect(url).toContain(
-      `text=${encodeURIComponent("\u30A4\u30ED\u30C9\u30EA #1 \u30B9\u30B3\u30A2: 87/100\n\u{1F7E9}\u{1F7E9}\u{1F7E8}")}`,
-    );
-    // url param should contain the page URL
-    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
   });
 });

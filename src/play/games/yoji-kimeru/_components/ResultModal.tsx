@@ -89,7 +89,7 @@ export default function ResultModal({
         url="/play/yoji-kimeru"
         title="四字キメル"
         text={shareText}
-        sns={["x", "copy"]}
+        sns={["x", "line", "copy"]}
         contentType="game"
         contentId="yoji-kimeru"
       />

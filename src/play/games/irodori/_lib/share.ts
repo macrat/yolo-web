@@ -3,12 +3,12 @@ import { calculateTotalScore, getRank, getScoreEmoji } from "./engine";
 
 /**
  * Generate the share text for a completed game.
+ * The page URL is not part of the text; ShareButtons adds it for each share target.
  *
  * Format:
  *   イロドリ #42 スコア: 87/100 (Aランク)
  *   🟩🟩🟨🟧🟥
  *   #イロドリ #yolosnet
- *   https://.../play/irodori
  */
 export function generateShareText(state: IrodoriGameState): string {
   const scores = state.rounds.map((r) => r.score ?? 0);
@@ -17,10 +17,7 @@ export function generateShareText(state: IrodoriGameState): string {
 
   const emojiRow = scores.map((s) => getScoreEmoji(s)).join("");
 
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/play/irodori`;
-
-  return `\u30A4\u30ED\u30C9\u30EA #${state.puzzleNumber} \u30B9\u30B3\u30A2: ${totalScore}/100 (${rank}\u30E9\u30F3\u30AF)\n${emojiRow}\n#\u30A4\u30ED\u30C9\u30EA #yolosnet\n${url}`;
+  return `\u30A4\u30ED\u30C9\u30EA #${state.puzzleNumber} \u30B9\u30B3\u30A2: ${totalScore}/100 (${rank}\u30E9\u30F3\u30AF)\n${emojiRow}\n#\u30A4\u30ED\u30C9\u30EA #yolosnet`;
 }
 
 /**

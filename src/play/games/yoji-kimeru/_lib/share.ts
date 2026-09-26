@@ -23,6 +23,7 @@ function charFeedbackToEmoji(fb: CharFeedback): string {
 
 /**
  * Generate the share text for a completed game.
+ * The page URL is not part of the text; ShareButtons adds it for each share target.
  *
  * Format:
  *   四字キメル #42 (中級) 3/6
@@ -30,7 +31,6 @@ function charFeedbackToEmoji(fb: CharFeedback): string {
  *   🟩🟩🟨🟩
  *   🟩🟩🟩🟩
  *   #四字キメル #yolosnet
- *   https://.../play/yoji-kimeru
  */
 export function generateShareText(
   state: YojiGameState,
@@ -43,8 +43,5 @@ export function generateShareText(
     g.charFeedbacks.map(charFeedbackToEmoji).join(""),
   );
 
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/play/yoji-kimeru`;
-
-  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet\n${url}`;
+  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet`;
 }

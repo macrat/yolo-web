@@ -185,7 +185,7 @@ export default function FudaActions({
   const statusMessage = busy
     ? "札の画像を用意しています。"
     : status === "copied"
-      ? "リンクをコピーしました!"
+      ? "リンクをコピーしました"
       : status === "error"
         ? "画像を用意できませんでした。時間をおいて再度お試しください。"
         : "";

@@ -16,7 +16,7 @@
 }
 
 /* コピーの知らせ。出たり消えたりしても下の要素が動かないよう、1行分の高さをいつも取る。 */
-.copiedMessage {
+.copyMessage {
   min-height: 1lh;
   font-size: var(--text-small);
   color: var(--ink);

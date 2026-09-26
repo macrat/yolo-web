@@ -3,6 +3,7 @@ import { getDifficultyEmoji } from "./engine";
 
 /**
  * Generate the share text for a completed game.
+ * The page URL is not part of the text; ShareButtons adds it for each share target.
  *
  * Format:
  *   ナカマワケ #42 ミス2回
@@ -11,7 +12,6 @@ import { getDifficultyEmoji } from "./engine";
  *   🟦🟦🟦🟦
  *   🟪🟪🟪🟪
  *   #ナカマワケ #yolosnet
- *   https://.../play/nakamawake
  */
 export function generateShareText(state: NakamawakeGameState): string {
   const result =
@@ -33,8 +33,5 @@ export function generateShareText(state: NakamawakeGameState): string {
     })
     .filter(Boolean);
 
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/play/nakamawake`;
-
-  return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet\n${url}`;
+  return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet`;
 }

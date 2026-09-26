@@ -32,9 +32,22 @@ function stubWebShare(share: (data: unknown) => Promise<void>): void {
   });
 }
 
+/** jsdom は execCommand を持たないので、この文書にだけ置く（afterEach で外す）。 */
+function stubExecCommand(
+  impl: (command: string) => boolean,
+): ReturnType<typeof vi.fn> {
+  const execCommand = vi.fn(impl);
+  Object.defineProperty(document, "execCommand", {
+    value: execCommand,
+    configurable: true,
+    writable: true,
+  });
+  return execCommand;
+}
+
 beforeEach(() => {
   // vi.stubGlobal を使うことで vi.unstubAllGlobals() による確実な teardown を保証し、
-  // Object.defineProperty によるグローバル汚染を回避する（既存パターン: common/ShareButtons.test.tsx）
+  // Object.defineProperty によるグローバル汚染を回避する
   vi.stubGlobal("open", mockWindowOpen);
   vi.stubGlobal("navigator", {
     ...navigator,
@@ -48,6 +61,8 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+  delete (document as { execCommand?: unknown }).execCommand;
   mockWindowOpen.mockClear();
   mockClipboardWriteText.mockClear();
   gtagSpy.mockClear();
@@ -201,6 +216,50 @@ describe("ShareButtons", () => {
     });
   });
 
+  describe("クリップボードの API で写せない端末", () => {
+    test("API に拒まれても、押したボタンの並びに置いた欄を選んで写し、「コピーしました」を出す", async () => {
+      mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+      let copiedFrom: Element | null = null;
+      const execCommand = stubExecCommand(() => {
+        copiedFrom = document.querySelector("textarea")?.parentElement ?? null;
+        return true;
+      });
+      render(<ShareButtons url="/blog/test" title="テスト記事" />);
+      const copy = screen.getByRole("button", { name: "URLをコピー" });
+      fireEvent.click(copy);
+      await waitFor(() =>
+        expect(screen.getByRole("status")).toHaveTextContent("コピーしました"),
+      );
+      expect(execCommand).toHaveBeenCalledWith("copy");
+      expect(copiedFrom).toBe(copy.parentElement);
+    });
+
+    test("どの方法でも写せなければ、写せなかったことと代わりの手を知らせ、次に押すまで残す", async () => {
+      vi.useFakeTimers();
+      try {
+        mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+        stubExecCommand(() => false);
+        render(<ShareButtons url="/blog/test" title="テスト記事" />);
+        await act(async () => {
+          fireEvent.click(screen.getByRole("button", { name: "URLをコピー" }));
+        });
+        const message = "コピーできませんでした。ほかの共有先をお使いください";
+        expect(screen.getByRole("status")).toHaveTextContent(message);
+        await act(async () => {
+          vi.advanceTimersByTime(5000);
+        });
+        expect(screen.getByRole("status")).toHaveTextContent(message);
+        mockClipboardWriteText.mockResolvedValue(undefined);
+        await act(async () => {
+          fireEvent.click(screen.getByRole("button", { name: "URLをコピー" }));
+        });
+        expect(screen.getByRole("status")).toHaveTextContent("コピーしました");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+
   describe("アクセシビリティ", () => {
     // 声で操作する来訪者が、見えている文言で押せる（WCAG 2.5.3）
     test("どのボタンも、読み上げ名が見える文言で始まる", () => {
@@ -226,8 +285,7 @@ describe("ShareButtons", () => {
   });
   describe("結果の共有", () => {
     const quizText = "診断Xの結果は「タイプA」でした! #診断X #yolosnet";
-    const gameText =
-      "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet\nhttps://example.com/play/game-y";
+    const gameText = "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet";
 
     test("文を渡すと、X・LINE・コピーに文と URL を渡し、コピーは「結果をコピー」になる", async () => {
       mockClipboardWriteText.mockResolvedValue(undefined);
@@ -268,24 +326,28 @@ describe("ShareButtons", () => {
       );
     });
 
-    test("文の最後の行が共有する URL なら、その行を除いて URL を1つだけ付ける", async () => {
+    test("複数行の文も、X・LINE・コピーに URL を1つだけ付けて渡す", async () => {
       mockClipboardWriteText.mockResolvedValue(undefined);
       render(
         <ShareButtons
           url="/play/game-y"
           title="ゲームY"
           text={gameText}
-          sns={["x", "copy"]}
+          sns={["x", "line", "copy"]}
         />,
       );
       fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
+      fireEvent.click(screen.getByRole("button", { name: /^LINE でシェア/ }));
       fireEvent.click(screen.getByRole("button", { name: "結果をコピー" }));
-      const body = "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet";
-      expect(mockWindowOpen.mock.calls[0][0]).toBe(
-        `https://twitter.com/intent/tweet?text=${encodeURIComponent(body)}&url=${encodeURIComponent("https://example.com/play/game-y")}`,
-      );
+      const pageUrl = "https://example.com/play/game-y";
+      expect(mockWindowOpen.mock.calls.map((c) => c[0])).toEqual([
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(gameText)}&url=${encodeURIComponent(pageUrl)}`,
+        `https://line.me/R/share?text=${encodeURIComponent(`${gameText}\n${pageUrl}`)}`,
+      ]);
       await waitFor(() =>
-        expect(mockClipboardWriteText).toHaveBeenCalledWith(gameText),
+        expect(mockClipboardWriteText).toHaveBeenCalledWith(
+          `${gameText}\n${pageUrl}`,
+        ),
       );
     });
 
@@ -297,7 +359,7 @@ describe("ShareButtons", () => {
           url="/play/game-y"
           title="ゲームY"
           text={gameText}
-          sns={["x", "copy"]}
+          sns={["x", "line", "copy"]}
         >
           <button type="button">画像を保存</button>
         </ShareButtons>,
@@ -310,7 +372,7 @@ describe("ShareButtons", () => {
       await waitFor(() =>
         expect(share).toHaveBeenCalledWith({
           title: "ゲームY",
-          text: "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet",
+          text: gameText,
           url: "https://example.com/play/game-y",
         }),
       );
@@ -403,6 +465,11 @@ describe("ShareButtons", () => {
           { method: "line", ...expected },
           { method: "clipboard", ...expected },
         ]);
+        if (!("surface" in expected)) {
+          for (const params of sent) {
+            expect(params).not.toHaveProperty("surface");
+          }
+        }
       });
 
       test(`${name}: 共有シートで共有を終えたときだけ web_share を送る`, async () => {
@@ -427,6 +494,9 @@ describe("ShareButtons", () => {
         fireEvent.click(button);
         await waitFor(() => expect(findShareParams()).toBeDefined());
         expect(findShareParams()).toEqual({ method: "web_share", ...expected });
+        if (!("surface" in expected)) {
+          expect(findShareParams()).not.toHaveProperty("surface");
+        }
       });
     }
 
@@ -446,6 +516,7 @@ describe("ShareButtons", () => {
         item_id: "x",
         content_id: "x",
       });
+      expect(findShareParams()).not.toHaveProperty("surface");
     });
 
     test("contentType と contentId がそろわなければ送らない", () => {
@@ -456,6 +527,7 @@ describe("ShareButtons", () => {
 
     test("コピーに失敗したら送らない", async () => {
       mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+      stubExecCommand(() => false);
       render(
         <ShareButtons
           url="/play/x"

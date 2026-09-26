@@ -86,7 +86,7 @@ export default function ResultModal({
         url="/play/nakamawake"
         title={"\u30CA\u30AB\u30DE\u30EF\u30B1"}
         text={shareText}
-        sns={["x", "copy"]}
+        sns={["x", "line", "copy"]}
         contentType="game"
         contentId="nakamawake"
       />

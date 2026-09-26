@@ -75,7 +75,7 @@ export default function ResultModal({
         url="/play/irodori"
         title={"\u30A4\u30ED\u30C9\u30EA"}
         text={shareText}
-        sns={["x", "copy"]}
+        sns={["x", "line", "copy"]}
         contentType="game"
         contentId="irodori"
       >

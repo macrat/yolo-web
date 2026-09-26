@@ -72,7 +72,7 @@ export default function InviteFriendButton({
       <p className={styles.label}>友達との相性を調べてみよう</p>
       <Button onClick={handleInvite}>友達に診断を送る</Button>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "リンクをコピーしました!" : ""}
+        {copied ? "リンクをコピーしました" : ""}
       </div>
     </div>
   );
