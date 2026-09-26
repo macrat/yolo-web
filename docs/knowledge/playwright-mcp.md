@@ -29,7 +29,7 @@ CLAUDE.md の規約どおり、Playwright / GA を使うサブエージェント
 
 ## クラウドのコンテナでは MCP のブラウザが起動しない
 
-claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出しが `Browser "chrome-for-testing" is not installed` で失敗する。入っているのは `/opt/pw-browsers/chromium` の Chromium だけで、コンテナの決まりにより `playwright install` でブラウザを足すこともできない。このときは、リポジトリの `playwright` ライブラリで `chromium.launch({ executablePath: "/opt/pw-browsers/chromium" })` とするスクリプトを `tmp/` に書き、`node` で動かして操作とスクリーンショットを行う。このスクリプトでも、解決しない Promise や無限の待ちは使わない。
+claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出しが `Browser "chrome-for-testing" is not installed` で失敗する。入っているのは `/opt/pw-browsers/chromium` の Chromium だけで、コンテナの決まりにより `playwright install` でブラウザを足すこともできない。このときは、リポジトリの `playwright` ライブラリで `chromium.launch({ executablePath: "/opt/pw-browsers/chromium" })` とするスクリプトを `tmp/` に書き、`node` で動かして操作とスクリーンショットを行う。このスクリプトでも、解決しない Promise や無限の待ちは使わない。文字サイズ 200% は CDP の `Page.setFontSizes` で既定の文字サイズを 32px にして作る（`html { font-size }` を書き足す方法では `rem` のメディアクエリが動かない）。全画面のスクリーンショット（`fullPage: true`）を撮るとこの設定が既定の 16px に戻るので、撮ったあとに測るときは設定し直す。
 
 ## 本番ビルドの実機検証の段取り
 
