@@ -1,6 +1,6 @@
 /*
  * 診断の結果のページ（/play/{slug}/result/[resultId]）のうち、専用のルートを持たない診断の中身。
- * タイプ名の説明・診断への誘い・詳しい読みもの（小見出し・段落・箇条書き）を組む。
+ * タイプ名の説明と診断への誘いを組む。詳しい読みもの（特徴・あるある・アドバイス）は ResultReading が組む。
  */
 
 /* ============================================================
@@ -28,36 +28,6 @@
   margin-block-start: var(--space-8);
   font-size: var(--text-small);
   color: var(--ink-2);
-}
-
-/* ============================================================
-   詳しい読みもの（特徴・あるある・アドバイス）
-   ============================================================ */
-
-.detailedSection {
-  margin-block-start: var(--space-32);
-}
-
-/* セクションの中の小見出し。上の細い罫線で、前の内容と分ける（§5）。 */
-.subheading {
-  margin: var(--space-32) 0 var(--space-16);
-  padding-block-start: var(--space-16);
-  border-block-start: var(--rule-w-hair) solid var(--rule-2);
-  font-size: var(--text-heading-sub);
-}
-
-.list {
-  margin: 0;
-  padding-inline-start: 1.5em;
-  list-style: disc;
-}
-
-.list li + li {
-  margin-block-start: var(--space-8);
-}
-
-.paragraph {
-  margin: 0;
 }
 
 /* 読み終えた人への、2つ目の誘い。 */

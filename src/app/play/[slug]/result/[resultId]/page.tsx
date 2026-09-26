@@ -14,9 +14,13 @@ import { extractWithParam } from "./extractWithParam";
 import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
-import PhrasedText from "@/components/PhrasedText";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "@/play/quiz/_components/ResultReading";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { resultNameWithReading } from "@/play/quiz/resultName";
 import styles from "./page.module.css";
 
@@ -227,38 +231,26 @@ export default async function PlayQuizResultPage({
 
       {/* 詳しい読みものは、variant を持たない標準の形のときだけ組む。variant を持つ診断は専用のルートが描く。 */}
       {detailedContent && !detailedContent.variant && (
-        <div className={styles.detailedSection}>
-          <PhrasedText
-            as="h2"
-            phrases={splitIntoPhrases(traitsHeading)}
-            className={styles.subheading}
-            {...headingFontAttr(traitsHeading)}
-          />
-          <ul className={styles.list}>
-            {detailedContent.traits.map((trait, i) => (
-              <li key={i}>{trait}</li>
-            ))}
-          </ul>
+        <>
+          <Reading>
+            <ReadingHeading
+              placement="resultPage"
+              phrases={splitIntoPhrases(traitsHeading)}
+            />
+            <ReadingList items={detailedContent.traits} />
 
-          <PhrasedText
-            as="h2"
-            phrases={splitIntoPhrases(behaviorsHeading)}
-            className={styles.subheading}
-            {...headingFontAttr(behaviorsHeading)}
-          />
-          <ul className={styles.list}>
-            {detailedContent.behaviors.map((behavior, i) => (
-              <li key={i}>{behavior}</li>
-            ))}
-          </ul>
+            <ReadingHeading
+              placement="resultPage"
+              phrases={splitIntoPhrases(behaviorsHeading)}
+            />
+            <ReadingList items={detailedContent.behaviors} />
 
-          <PhrasedText
-            as="h2"
-            phrases={splitIntoPhrases(adviceHeading)}
-            className={styles.subheading}
-            {...headingFontAttr(adviceHeading)}
-          />
-          <p className={styles.paragraph}>{detailedContent.advice}</p>
+            <ReadingHeading
+              placement="resultPage"
+              phrases={splitIntoPhrases(adviceHeading)}
+            />
+            <ReadingText>{detailedContent.advice}</ReadingText>
+          </Reading>
 
           {/* 解き終えた画面（ResultCard）と同じく、検索やシェアから来た人にもほかのタイプを見せる。 */}
           <OtherTypesNav
@@ -278,7 +270,7 @@ export default async function PlayQuizResultPage({
               {ctaText}
             </Link>
           </div>
-        </div>
+        </>
       )}
     </ResultPageShell>
   );

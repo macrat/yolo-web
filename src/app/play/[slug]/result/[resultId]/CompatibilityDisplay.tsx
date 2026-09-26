@@ -11,10 +11,8 @@ interface CompatibilityDisplayProps {
 }
 
 /**
- * Client component that renders the compatibility section
- * on the static result page when ?with= parameter is present.
- *
- * All data is resolved server-side in page.tsx and passed as required props.
+ * 結果のページに ?with= で友達のタイプが渡されたときの相性の区画。データは page.tsx がサーバーで解決して渡す。
+ * 結果のページではタイプ名が h1 なので、相性の見出しはその下の h2 になる。
  */
 export default function CompatibilityDisplay({
   quizSlug,
@@ -30,6 +28,7 @@ export default function CompatibilityDisplay({
       compatibility={compatibility}
       quizTitle={quizTitle}
       quizSlug={quizSlug}
+      placement="resultPage"
     />
   );
 }

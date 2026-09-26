@@ -17,10 +17,14 @@ describe("CompatibilityDisplay", () => {
       />,
     );
 
-    expect(screen.getByText("最高の相性")).toBeInTheDocument();
+    // 結果のページではタイプ名が h1 なので、相性の見出しはその下の h2
+    expect(
+      screen.getByRole("heading", { level: 2, name: "最高の相性" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("相性の説明")).toBeInTheDocument();
-    expect(screen.getByText("タイプA")).toBeInTheDocument();
-    expect(screen.getByText("タイプB")).toBeInTheDocument();
+    expect(
+      screen.getByText("あなたは「タイプA」、友達は「タイプB」。"),
+    ).toBeInTheDocument();
   });
 
   it("renders compatibility section for music-personality quiz", () => {
@@ -37,8 +41,11 @@ describe("CompatibilityDisplay", () => {
       />,
     );
 
-    expect(screen.getByText("リズムの相性")).toBeInTheDocument();
-    expect(screen.getByText("ロックタイプ")).toBeInTheDocument();
-    expect(screen.getByText("ジャズタイプ")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "リズムの相性" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("あなたは「ロックタイプ」、友達は「ジャズタイプ」。"),
+    ).toBeInTheDocument();
   });
 });

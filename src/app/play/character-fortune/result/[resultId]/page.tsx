@@ -13,9 +13,13 @@ import Link from "next/link";
 import ShareButtons from "@/components/ShareButtons";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
-import PhrasedText from "@/components/PhrasedText";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "@/play/quiz/_components/ResultReading";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
@@ -108,17 +112,13 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           </p>
         </div>
 
-        <PhrasedText
-          as="h2"
-          phrases={splitIntoPhrases(cf.behaviorsHeading)}
-          className={styles.subheading}
-          {...headingFontAttr(cf.behaviorsHeading)}
-        />
-        <ul className={styles.list}>
-          {cf.behaviors.map((behavior, i) => (
-            <li key={i}>{behavior}</li>
-          ))}
-        </ul>
+        <Reading>
+          <ReadingHeading
+            placement="resultPage"
+            phrases={splitIntoPhrases(cf.behaviorsHeading)}
+          />
+          <ReadingList items={cf.behaviors} />
+        </Reading>
 
         {/* あるあるを読んで「自分のことだ」と思った所で共有できるよう、読みものの途中にも置く。 */}
         <div className={styles.midShareSection}>
@@ -133,24 +133,22 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           />
         </div>
 
-        <PhrasedText
-          as="h2"
-          phrases={splitIntoPhrases(cf.characterMessageHeading)}
-          className={styles.subheading}
-          {...headingFontAttr(cf.characterMessageHeading)}
-        />
-        <p className={styles.paragraph}>{cf.characterMessage}</p>
+        <Reading>
+          <ReadingHeading
+            placement="resultPage"
+            phrases={splitIntoPhrases(cf.characterMessageHeading)}
+          />
+          <ReadingText>{cf.characterMessage}</ReadingText>
 
-        <PhrasedText
-          as="h2"
-          phrases={splitIntoPhrases(THIRD_PARTY_HEADING)}
-          className={styles.subheading}
-          {...headingFontAttr(THIRD_PARTY_HEADING)}
-        />
-        <p className={styles.paragraph}>{cf.thirdPartyNote}</p>
+          <ReadingHeading
+            placement="resultPage"
+            phrases={splitIntoPhrases(THIRD_PARTY_HEADING)}
+          />
+          <ReadingText>{cf.thirdPartyNote}</ReadingText>
+        </Reading>
 
         <div className={styles.compatibilitySection}>
-          <p className={styles.paragraph}>{cf.compatibilityPrompt}</p>
+          <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
           <Link
             href={`/play/${SLUG}`}
             className={styles.tryLink}
