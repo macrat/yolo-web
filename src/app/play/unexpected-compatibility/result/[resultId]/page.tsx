@@ -95,12 +95,6 @@ export default async function UnexpectedCompatibilityResultPage({
   // variant が確認できたので UnexpectedCompatibilityDetailedContent として型アサーション
   const ucDc = dc as UnexpectedCompatibilityDetailedContent;
 
-  // result.color はタイプ固有色（OGP 画像で使用）。
-  // ページ本文では可視装飾に使わず（新デザインは共通アクセントに統一）、
-  // UnexpectedCompatibilityContent の必須 prop 契約を満たす dead/compat 値として渡す（N3）。
-  // フォールバックは quiz.meta.accentColor を使用する。
-  const resultColor = result.color ?? quiz.meta.accentColor;
-
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #斜め上の相性診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
@@ -148,8 +142,7 @@ export default async function UnexpectedCompatibilityResultPage({
           resultId={resultId}
           detailedContent={ucDc}
           allResults={quiz.results}
-          headingLevel={2}
-          resultColor={resultColor}
+          placement="resultPage"
           afterLifeAdvice={
             /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>

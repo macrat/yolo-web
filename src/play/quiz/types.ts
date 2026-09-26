@@ -258,8 +258,8 @@ export type QuizResult = {
   id: string;
   title: string;
   /**
-   * title が名前の後ろに読みを添えた形（「藍色(あいいろ)」）のタイプの、名前と読み。タイプを並べる一覧は、
-   * 読みをリンクの外に置くためにこれを使う（DESIGN.md §7）。
+   * title が名前に読みを添えた形（「藍色(あいいろ)」「一字千金（いちじせんきん）タイプ」）のタイプの、名前と読み。
+   * タイプを並べる一覧は、読みをリンクの外に置くためにこれを使う（DESIGN.md §7）。
    */
   nameParts?: { name: string; reading: string };
   description: string;
@@ -308,7 +308,7 @@ export interface QuizMeta {
 
   /**
    * FAQ: Q&A形式の配列
-   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
+   * FAQPage JSON-LD のデータソースである。
    * answerはプレーンテキストのみ（HTML・特殊記法不可）。
    */
   faq?: Array<{

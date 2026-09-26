@@ -1,13 +1,13 @@
 /**
- * Tests for review fixes applied to yoji-personality data:
+ * Accuracy tests for yoji-personality data:
  *
- * MUST-1: rinkiohen の origin に正しい人名「蕭淵明伝」が使われていること
- *         （誤り: 蕭穎達伝）
+ * - rinkiohen の origin に正しい人名「蕭淵明伝」が使われていること
+ *   （「蕭穎達伝」ではない）
  *
- * MUST-2: FAQ テキストにフィールド名（kanjiBreakdown / origin）が露出していないこと
+ * - FAQ テキストにフィールド名（kanjiBreakdown / origin）が露出していないこと
  *
- * SHOULD-1/2: catchphrase の句点統一
- *             全8タイプの catchphrase が句点（。）で終わること
+ * - catchphrase の句点統一
+ *   全8タイプの catchphrase が句点（。）で終わること
  */
 import { describe, it, expect } from "vitest";
 import type { YojiPersonalityDetailedContent } from "../../types";
@@ -16,7 +16,7 @@ import yojiPersonalityQuiz from "../yoji-personality";
 const allResults = yojiPersonalityQuiz.results;
 const rinkiohen = allResults.find((r) => r.id === "rinkiohen")!;
 
-describe("MUST-1: rinkiohen origin の人名正確性", () => {
+describe("rinkiohen origin の人名正確性", () => {
   it("origin に「蕭淵明伝」が含まれていること", () => {
     const { origin } =
       rinkiohen.detailedContent as YojiPersonalityDetailedContent;
@@ -30,7 +30,7 @@ describe("MUST-1: rinkiohen origin の人名正確性", () => {
   });
 });
 
-describe("MUST-2: FAQ テキストにフィールド名が露出していないこと", () => {
+describe("FAQ テキストにフィールド名が露出していないこと", () => {
   it("FAQ の answer に「kanjiBreakdown」が含まれていないこと", () => {
     for (const faq of yojiPersonalityQuiz.meta.faq ?? []) {
       expect(faq.answer).not.toContain("kanjiBreakdown");
@@ -45,7 +45,7 @@ describe("MUST-2: FAQ テキストにフィールド名が露出していない�
   });
 });
 
-describe("SHOULD-1/2: catchphrase の句点統一", () => {
+describe("catchphrase の句点統一", () => {
   const ALL_IDS = [
     "shoshikantetsu",
     "tenshinranman",

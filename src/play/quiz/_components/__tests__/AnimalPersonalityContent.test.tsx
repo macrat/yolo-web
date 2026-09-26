@@ -63,7 +63,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの強み")).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの弱み")).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この動物に似た行動パターン")).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("今日試してほしいこと")).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(
@@ -125,13 +125,13 @@ describe("AnimalPersonalityContent - 基本レンダリング", () => {
   });
 });
 
-describe("AnimalPersonalityContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("AnimalPersonalityContent - placement による見出しの階層", () => {
+  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
     const { container } = render(
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -141,12 +141,12 @@ describe("AnimalPersonalityContent - headingLevel prop", () => {
     expect(h3s.length).toBe(0);
   });
 
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
+  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
     const { container } = render(
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={3}
+        placement="solvedScreen"
       />,
     );
     const h3s = container.querySelectorAll("h3");
@@ -165,7 +165,7 @@ describe("AnimalPersonalityContent - afterTodayAction スロット", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
         afterTodayAction={afterContent}
       />,
     );
@@ -179,7 +179,7 @@ describe("AnimalPersonalityContent - afterTodayAction スロット", () => {
         <AnimalPersonalityContent
           content={sampleContent}
           resultId="nihon-zaru"
-          headingLevel={2}
+          placement="resultPage"
         />,
       );
     }).not.toThrow();
@@ -192,7 +192,7 @@ describe("AnimalPersonalityContent - wrapper クラス", () => {
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
@@ -206,7 +206,7 @@ describe("AnimalPersonalityContent - インラインスタイル不使用（CSS�
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     // CSS変数はCSSクラス側で管理するため、インラインスタイルを使用しない
@@ -221,7 +221,7 @@ describe("AnimalPersonalityContent - インラインスタイル不使用（CSS�
       <AnimalPersonalityContent
         content={sampleContent}
         resultId="nihon-zaru"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     // CSS変数はCSSクラス側で管理するため、インラインスタイルを使用しない

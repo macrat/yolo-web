@@ -1,13 +1,13 @@
 /**
- * Tests for review-requested fixes on traditional-color data.
+ * Accuracy tests for traditional-color data.
  *
- * MUST-1: 山吹色 colorMeaning should not contain「戦国武将が好んだ色」
- * MUST-2: 紺色 colorMeaning should not contain「武士道の精神」or「江戸好み」
- *          and should contain correct historical info about 勝色
- * MUST-3: 春 season count must be 3 or fewer (山吹色 should be 秋)
- * SHOULD-1: colorAdvice should use first-person tone from the color's perspective
- *            (at least 6 out of 8 should contain 私 or わたし or be speaking as the color)
- * MAY: 藍色 scenery should not contain「暗青色」
+ * - 山吹色 colorMeaning should not contain「戦国武将が好んだ色」
+ * - 紺色 colorMeaning should not contain「武士道の精神」or「江戸好み」
+ *   and should contain correct historical info about 勝色
+ * - 春 season count must be 3 or fewer (山吹色 should be 秋)
+ * - colorAdvice should use first-person tone from the color's perspective
+ *   (at least 6 out of 8 should contain 私 or わたし or be speaking as the color)
+ * - 藍色 scenery should not contain「暗青色」
  */
 import { describe, it, expect } from "vitest";
 import type { TraditionalColorDetailedContent } from "../../types";
@@ -25,7 +25,7 @@ function getDC(id: string): TraditionalColorDetailedContent {
   return getResult(id).detailedContent as TraditionalColorDetailedContent;
 }
 
-describe("MUST-1: 山吹色 colorMeaning historical accuracy", () => {
+describe("山吹色 colorMeaning historical accuracy", () => {
   it("should not contain「戦国武将が好んだ色」(unsubstantiated claim)", () => {
     const dc = getDC("yamabuki");
     expect(dc.colorMeaning).not.toContain("戦国武将が好んだ色");
@@ -38,7 +38,7 @@ describe("MUST-1: 山吹色 colorMeaning historical accuracy", () => {
   });
 });
 
-describe("MUST-2: 紺色 colorMeaning historical accuracy", () => {
+describe("紺色 colorMeaning historical accuracy", () => {
   it("should not contain「武士道の精神」(inaccurate framing)", () => {
     const dc = getDC("kon");
     expect(dc.colorMeaning).not.toContain("武士道の精神");
@@ -56,7 +56,7 @@ describe("MUST-2: 紺色 colorMeaning historical accuracy", () => {
   });
 });
 
-describe("MUST-3: Season distribution — spring count must be 3 or fewer", () => {
+describe("Season distribution — spring count must be 3 or fewer", () => {
   it("spring (春) count is 3 or fewer", () => {
     const springCount = allResults.filter(
       (r) =>
@@ -74,7 +74,7 @@ describe("MUST-3: Season distribution — spring count must be 3 or fewer", () =
   });
 });
 
-describe("SHOULD-1: colorAdvice should use first-person tone from the color", () => {
+describe("colorAdvice should use first-person tone from the color", () => {
   /**
    * At least 6 out of 8 colorAdvice texts should speak in first person
    * (色が擬人化して語りかけるトーン), using 私 or similar first-person indicators.
@@ -110,7 +110,7 @@ describe("山吹色 scenery: 秋の風景として植物学的に正確である
   });
 });
 
-describe("MAY: 藍色 scenery should not contain「暗青色」", () => {
+describe("藍色 scenery should not contain「暗青色」", () => {
   it("scenery should not use「暗青色」", () => {
     const dc = getDC("ai");
     expect(dc.scenery).not.toContain("暗青色");

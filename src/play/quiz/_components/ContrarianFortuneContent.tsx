@@ -18,7 +18,10 @@
 import type React from "react";
 import type { ContrarianFortuneDetailedContent } from "@/play/quiz/types";
 import type { QuizResult } from "@/play/quiz/types";
-import OtherTypesNav from "./OtherTypesNav";
+import OtherTypesNav, {
+  type ResultPlacement,
+  SECTION_HEADING,
+} from "./OtherTypesNav";
 import styles from "./ContrarianFortuneContent.module.css";
 
 interface ContrarianFortuneContentProps {
@@ -30,14 +33,8 @@ interface ContrarianFortuneContentProps {
   detailedContent: ContrarianFortuneDetailedContent;
   /** 全タイプの配列（他のタイプに並べる） */
   allResults: QuizResult[];
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
-  /**
-   * 結果タイプのテーマカラー（--type-color CSS変数に注入）。
-   * 新デザインでは装飾には参照しないが、caller signature 互換のため受け取りは残す
-   * （page.tsx の引数を壊さないための dead 注入）。
-   */
-  resultColor: string;
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  placement: ResultPlacement;
   /** thirdPartyNote後・他のタイプ前にページ固有要素（CTA等）を挿入するスロット */
   afterThirdPartyNote?: React.ReactNode;
 }
@@ -47,22 +44,14 @@ export default function ContrarianFortuneContent({
   resultId,
   detailedContent,
   allResults,
-  headingLevel,
-  resultColor,
+  placement,
   afterThirdPartyNote,
 }: ContrarianFortuneContentProps) {
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
+  const Heading = SECTION_HEADING[placement];
 
   return (
-    // 新デザインでは --type-color を装飾に使わない（共通アクセントに統一）。
-    // ただし page.tsx の caller signature 互換のため、resultColor の受け取りと
-    // --type-color の注入自体は残す（dead 注入だが互換目的）。
-    <div
-      className={styles.wrapper}
-      style={{ "--type-color": resultColor } as React.CSSProperties}
-    >
-      {/* coreSentence セクション: 逆張りフレームの核心一文（中心解説・アクセント面） */}
+    <div className={styles.wrapper}>
+      {/* coreSentence セクション: 逆張りフレームの核心一文（中心解説） */}
       <div className={styles.coreSentenceCard}>
         {detailedContent.coreSentence}
       </div>
@@ -113,7 +102,7 @@ export default function ContrarianFortuneContent({
         quizSlug={quizSlug}
         currentResultId={resultId}
         results={allResults}
-        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
+        placement={placement}
       />
     </div>
   );

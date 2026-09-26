@@ -124,7 +124,7 @@ describe("Q5-pre: coreSentence must use second person (あなた) or omit subjec
   });
 });
 
-describe("Q5: calmchaos must have humorous behaviors (review feedback 1-1)", () => {
+describe("Q5: calmchaos must have humorous behaviors", () => {
   /**
    * calmchaosのbehaviorsは「優秀な人物の描写」でなく「笑えるシーン」であること。
    * 具体的に笑えるシーンを示すキーワードが少なくとも2つのbehaviorに含まれるべき。
@@ -160,7 +160,7 @@ describe("Q5: calmchaos must have humorous behaviors (review feedback 1-1)", () 
   });
 });
 
-describe("Q6: mundaneoracle and inversefortune must not share duplicate content (review feedback 1-2)", () => {
+describe("Q6: mundaneoracle and inversefortune must not share duplicate content", () => {
   /**
    * 「地味だけど好き」という表現がmundaneoracleとinversefortuneの両方に存在することを禁止。
    * inversefortuneのthirdPartyNoteには「みんなと違う選択」軸の表現が必要。

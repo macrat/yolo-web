@@ -7,12 +7,13 @@
  *
  * 共通化対象:
  * - archetypeBreakdown / behaviors / characterMessage / 他のタイプ（OtherTypesNav） の4セクション
- * - CSS変数 --type-color をインラインスタイルで注入（YojiPersonalityContent と同じパターン）
  * - referrerTypeId による相性セクション / 招待ボタン（ResultCard向け）
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
  * - ShareButtons / もう一度挑戦するボタン
+ *
+ * タイプごとの色は装飾に使わず、共通のトークンで組む。色がタイプの中身ではないため（DESIGN.md §2）。
  */
 
 "use client";
@@ -26,7 +27,10 @@ import characterPersonalityQuiz, {
 } from "@/play/quiz/data/character-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import OtherTypesNav from "./OtherTypesNav";
+import OtherTypesNav, {
+  type ResultPlacement,
+  SECTION_HEADING,
+} from "./OtherTypesNav";
 import styles from "./CharacterPersonalityContent.module.css";
 
 const QUIZ_SLUG = "character-personality";
@@ -51,10 +55,8 @@ interface CharacterPersonalityContentProps {
   content: CharacterPersonalityDetailedContent;
   /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 結果タイプのテーマカラー（--type-color CSS変数に注入） */
-  resultColor: string;
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  placement: ResultPlacement;
   /**
    * 相性診断用の referrer タイプID。
    * ResultCard から渡される場合、内部で相性セクション・招待ボタンを生成する。
@@ -181,13 +183,11 @@ function CompatibilityArea({
 export default function CharacterPersonalityContent({
   content,
   resultId,
-  resultColor,
-  headingLevel,
+  placement,
   referrerTypeId,
   afterCharacterMessage,
 }: CharacterPersonalityContentProps) {
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
+  const Heading = SECTION_HEADING[placement];
 
   // afterCharacterMessage が外部から渡された場合はそちらを優先する。
   // 渡されない場合（ResultCard からの呼び出し）は referrerTypeId を使って内部で生成する。
@@ -199,13 +199,7 @@ export default function CharacterPersonalityContent({
     );
 
   return (
-    // 新デザインでは --type-color を装飾に使わない（共通アクセントに統一）。
-    // ただし page.tsx / ResultCard など caller の signature 互換を壊さないため、
-    // resultColor の受け取りと --type-color の注入自体は残す（dead 注入だが互換目的）。
-    <div
-      className={styles.wrapper}
-      style={{ "--type-color": resultColor } as React.CSSProperties}
-    >
+    <div className={styles.wrapper}>
       {/* archetypeBreakdown セクション: 2つのアーキタイプの融合解説 */}
       <Heading className={styles.sectionHeading}>このキャラの成り立ち</Heading>
       <div className={styles.archetypeBreakdownCard}>
@@ -237,7 +231,7 @@ export default function CharacterPersonalityContent({
         quizSlug={QUIZ_SLUG}
         currentResultId={resultId}
         results={allTypes}
-        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
+        placement={placement}
       />
     </div>
   );

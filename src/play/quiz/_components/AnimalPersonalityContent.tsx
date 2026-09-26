@@ -19,7 +19,10 @@
 import type React from "react";
 import type { AnimalPersonalityDetailedContent } from "@/play/quiz/types";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
-import OtherTypesNav from "./OtherTypesNav";
+import OtherTypesNav, {
+  type ResultPlacement,
+  SECTION_HEADING,
+} from "./OtherTypesNav";
 import styles from "./AnimalPersonalityContent.module.css";
 
 interface AnimalPersonalityContentProps {
@@ -27,8 +30,8 @@ interface AnimalPersonalityContentProps {
   content: AnimalPersonalityDetailedContent;
   /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  placement: ResultPlacement;
   /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionと他のタイプの間に表示） */
   afterTodayAction?: React.ReactNode;
 }
@@ -36,19 +39,15 @@ interface AnimalPersonalityContentProps {
 export default function AnimalPersonalityContent({
   content,
   resultId,
-  headingLevel,
+  placement,
   afterTodayAction,
 }: AnimalPersonalityContentProps) {
   const quiz = animalPersonalityQuiz;
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
+  const Heading = SECTION_HEADING[placement];
 
   return (
-    // 新デザインではタイプごとのアクセント色（旧 --animal-accent-color）を撤廃し、
-    // wrapper は左寄せ宣言のみ持つ。装飾は共通 --accent / --accent-soft / --accent-strong に統一。
     <div className={styles.wrapper}>
-      {/* strengths セクション: 旧版は ✨ 絵文字＋緑ティントだったが、
-          新デザインでは他リストと同じ「アクセント縦線マーカー＋枠線カード」に統一する。 */}
+      {/* strengths セクション */}
       <Heading className={styles.sectionHeading}>このタイプの強み</Heading>
       <ul className={styles.itemList}>
         {content.strengths.map((s, i) => (
@@ -58,8 +57,7 @@ export default function AnimalPersonalityContent({
         ))}
       </ul>
 
-      {/* weaknesses セクション: 旧版は 😅 絵文字＋クリームティントだったが、
-          新デザインでは他リストと同質感に統一する。 */}
+      {/* weaknesses セクション */}
       <Heading className={styles.sectionHeading}>このタイプの弱み</Heading>
       <ul className={styles.itemList}>
         {content.weaknesses.map((w, i) => (
@@ -69,7 +67,7 @@ export default function AnimalPersonalityContent({
         ))}
       </ul>
 
-      {/* behaviors セクション: 旧版は 💡 絵文字だったが、絵文字は撤去。 */}
+      {/* behaviors セクション */}
       <Heading className={styles.sectionHeading}>
         この動物に似た行動パターン
       </Heading>
@@ -81,8 +79,7 @@ export default function AnimalPersonalityContent({
         ))}
       </ul>
 
-      {/* todayAction セクション: ResultCard adviceCard 相当の淡いアクセント面で
-          「呼びかけ」のトーンを静かに強調する（中央寄せはしない）。 */}
+      {/* todayAction セクション: 呼びかけなので、リストと分けて --paper-2 の地に置く */}
       <Heading className={styles.sectionHeading}>今日試してほしいこと</Heading>
       <div className={styles.todayActionCard}>{content.todayAction}</div>
 
@@ -93,7 +90,7 @@ export default function AnimalPersonalityContent({
         quizSlug={quiz.meta.slug}
         currentResultId={resultId}
         results={quiz.results}
-        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
+        placement={placement}
       />
     </div>
   );

@@ -118,6 +118,35 @@ describe("OtherTypesNav", () => {
     );
   });
 
+  test("解き終えた画面では、いまのタイプの行だけに「あなたのタイプ」とリンクの外で添えること", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={results}
+        placement="solvedScreen"
+      />,
+    );
+    const label = screen.getByText("あなたのタイプ");
+    expect(label.closest("a")).toBeNull();
+    expect(label.closest("li")).toContainElement(
+      screen.getByRole("link", { name: "タイプB" }),
+    );
+    expect(screen.getAllByText("あなたのタイプ")).toHaveLength(1);
+  });
+
+  test("結果のページでは、いまのタイプは現在地で示し、「あなたのタイプ」と添えないこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={results}
+        placement="resultPage"
+      />,
+    );
+    expect(screen.queryByText("あなたのタイプ")).toBeNull();
+  });
+
   test("名前と読みに分けたタイプは、名前だけをリンクにし、読みをリンクの外に置くこと", () => {
     render(
       <OtherTypesNav

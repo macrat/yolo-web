@@ -1,9 +1,9 @@
 /**
  * word-sense-personality（言葉センス診断）の全8結果 detailedContent の品質テスト。
  *
- * cycle-247 / B-323: 実測で勝っている診断系の結果ページが検索露出ゼロだった取りこぼしを
- * 是正するため、8結果すべてに標準形式 detailedContent（traits / behaviors / advice）を付与し
- * robots:index 可能化した。本テストはその品質（存在・項目数・非空・重複なし）を恒久ロックする。
+ * 結果のページは detailedContent を持つときだけ検索に載せる（robots:index）。8結果すべてが標準形式の
+ * detailedContent（traits / behaviors / advice）を持ち、その品質（存在・項目数・非空・重複なし）を
+ * 恒久ロックする。
  *
  * 8結果すべて標準形式（QuizResultDetailedContent: variant なし）を用いる。
  */

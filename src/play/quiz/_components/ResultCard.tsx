@@ -95,8 +95,6 @@ type ResultCardProps = {
   detailedContent?: DetailedContent;
   /** 結果ページのセクション見出しカスタマイズ */
   resultPageLabels?: QuizMeta["resultPageLabels"];
-  /** クイズのアクセントカラー（見出し色やcharacterIntro背景に使用） */
-  accentColor?: string;
   /** 相性診断用の referrer タイプID（animal-personality variantで使用） */
   referrerTypeId?: string;
   /**
@@ -166,7 +164,6 @@ function renderTiedTypesDisclosure(
 function renderStandardContent(
   content: QuizResultDetailedContent,
   labels?: QuizMeta["resultPageLabels"],
-  accentColor?: string,
   allResults?: QuizResult[],
   quizSlug?: string,
   resultId?: string,
@@ -174,10 +171,6 @@ function renderStandardContent(
   const traitsHeading = labels?.traitsHeading ?? "このタイプの特徴";
   const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
   const adviceHeading = labels?.adviceHeading ?? "このタイプの人へのアドバイス";
-
-  // 標準 variant の見出し・アドバイスは共通アクセント（--accent）で組む
-  // （クイズごとの派手色を使わない）。accentColor は variant 別サブコンポーネントだけが使う。
-  void accentColor;
 
   return (
     <>
@@ -267,8 +260,6 @@ function buildAnimalPersonalityAfterTodayAction(
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
 ): React.ReactNode {
-  // クイズごとの任意 hex（accentColor）を器/成果物の色に使わない。見出し・面はすべて
-  // 標準トークン（--accent・--paper-2）で組む。
   return (
     <>
       <p className={styles.characterIntro}>{content.characterIntro}</p>
@@ -293,9 +284,7 @@ function renderDetailedContent(
   resultId: string,
   quizSlug: string,
   labels?: QuizMeta["resultPageLabels"],
-  accentColor?: string,
   referrerTypeId?: string,
-  resultColor?: string,
   allResults?: QuizResult[],
 ): React.ReactNode {
   // Standard variant (variant === undefined)
@@ -303,7 +292,6 @@ function renderDetailedContent(
     return renderStandardContent(
       content,
       labels,
-      accentColor,
       allResults,
       quizSlug,
       resultId,
@@ -318,8 +306,7 @@ function renderDetailedContent(
           resultId={resultId}
           detailedContent={content}
           allResults={allResults ?? []}
-          headingLevel={3}
-          resultColor={resultColor ?? ""}
+          placement="solvedScreen"
         />
       );
     }
@@ -333,7 +320,7 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          headingLevel={3}
+          placement="solvedScreen"
           afterTodayAction={buildAnimalPersonalityAfterTodayAction(
             resultId,
             referrerTypeId,
@@ -347,7 +334,7 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          headingLevel={3}
+          placement="solvedScreen"
           referrerTypeId={referrerTypeId}
         />
       );
@@ -358,8 +345,7 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          resultColor={resultColor ?? ""}
-          headingLevel={3}
+          placement="solvedScreen"
           // ResultCard内では相性データがないため afterColorAdvice は省略
         />
       );
@@ -367,12 +353,7 @@ function renderDetailedContent(
     case "yoji-personality": {
       const Comp = YojiPersonalityContent;
       return (
-        <Comp
-          content={content}
-          resultId={resultId}
-          resultColor={resultColor ?? ""}
-          headingLevel={3}
-        />
+        <Comp content={content} resultId={resultId} placement="solvedScreen" />
       );
     }
     case "character-personality": {
@@ -381,8 +362,7 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          resultColor={resultColor ?? ""}
-          headingLevel={3}
+          placement="solvedScreen"
           referrerTypeId={referrerTypeId}
         />
       );
@@ -395,8 +375,7 @@ function renderDetailedContent(
           resultId={resultId}
           detailedContent={content}
           allResults={allResults ?? []}
-          headingLevel={3}
-          resultColor={resultColor ?? ""}
+          placement="solvedScreen"
           // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
         />
       );
@@ -409,8 +388,7 @@ function renderDetailedContent(
           resultId={resultId}
           detailedContent={content}
           allResults={allResults ?? []}
-          headingLevel={3}
-          resultColor={resultColor ?? ""}
+          placement="solvedScreen"
           // ResultCard内では afterPracticalTip スロットは不要
         />
       );
@@ -433,7 +411,6 @@ export default function ResultCard({
   onRetry,
   detailedContent,
   resultPageLabels,
-  accentColor,
   referrerTypeId,
   allResults,
   coTypes,
@@ -471,10 +448,10 @@ export default function ResultCard({
         ).catchphrase
       : null;
 
-  // 勲章 first-view（personality 型のみ）。
+  // 結果の包み（personality 型のみ）。
   // 適用条件は「personality 型 かつ 結果自身の象徴 icon と固有色 color が両方存在」。
-  // これ以外（knowledge 型、icon/color 欠落）は現行の抑制ヘッダにフォールバックする
-  // （knowledge 系には勲章を一律に適用しない。ResultCard は複数の personality
+  // これ以外（knowledge 型、icon/color 欠落）は抑制ヘッダにフォールバックする
+  // （knowledge 系には包みを一律に適用しない。ResultCard は複数の personality
   //  診断で共有されるため、特定診断に依存しない汎用の文言・構造にする）。
   const showMedal =
     quizType === "personality" && Boolean(result.icon) && Boolean(result.color);
@@ -558,9 +535,7 @@ export default function ResultCard({
             result.id,
             quizSlug,
             resultPageLabels,
-            accentColor,
             referrerTypeId,
-            result.color,
             allResults,
           )}
         </div>

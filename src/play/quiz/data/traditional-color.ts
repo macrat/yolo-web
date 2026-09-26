@@ -158,9 +158,9 @@ const traditionalColorQuiz: QuizDefinition = {
         {
           id: "q4-b",
           text: "明るい",
-          // 若草色の像（新緑の快活さ・明るさ）を独立 primary で表現。これにより
+          // 若草色の像（新緑の快活さ・明るさ）を独立 primary で表現する。これにより
           // 若草色を最大化する正直回答者が q4-a(桜色 primary)から分岐でき、
-          // 桜色の影に永久敗北する dead type を解消する（cycle-297）。
+          // 若草色が桜色の影に隠れて誰にも出ないタイプにならない。
           points: { yamabuki: 2, wakakusa: 2, shu: 1 },
         },
         {

@@ -64,12 +64,12 @@ function isSkippableSymbolChar(grapheme: string): boolean {
 /**
  * 結果タイプ名から、包み（Tsutsumi）の記号面に立てる1字を取り出す。
  *
- * DESIGN.md §4「包み」の symbol は「絵文字ではなく漢字/かな1字の『顔』になる字」。
- * クイズデータの `result.icon` は絵文字（§8-6 禁止）なので使わず、タイプ名の
+ * 包み（Tsutsumi）の symbol は、絵文字ではなく漢字/かな1字の『顔』になる字。
+ * クイズデータの `result.icon` は絵文字（DESIGN.md §5 で置かない）なので使わず、タイプ名の
  * 先頭書記素（サロゲートペア対応）を使う。ただし開き括弧・引用符・空白類が先頭に
  * ある場合はそれを飛ばし、最初の意味のある書記素に着地させる（画面 Tsutsumi と
  * 札画像 fuda-image の共有ソース）。全字がスキップ対象という異常時は、空を返さず
- * 従来どおり先頭書記素へフォールバックする。
+ * 先頭書記素へフォールバックする。
  */
 export function pickResultSymbol(title: string): string {
   const graphemes = [...title.trim()];

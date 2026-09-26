@@ -20,8 +20,8 @@
  * - CompatibilityDisplay, InviteFriendButton, searchParams は一切使用しない。
  * - シェアリンク経由で第三者が見ることを主目的とするシンプルな結果ページ。
  *
- * 新デザイン体系（DESIGN.md）でインライン結果（ResultCard）とトーン統一:
- * - catchphrase: 共通アクセントの淡い面に置く（旧タイプカラー薄背景ヒーローは撤去）
+ * 解き終えた画面（ResultCard）と同じ組み方にそろえる:
+ * - catchphrase: --paper-2 の地に置く。タイプごとの色は敷かない（DESIGN.md §2）
  * - DescriptionExpander: 長いdescriptionは折りたたみ
  * - CTA1: プライマリの反転で示す主要 CTA
  * - ContrarianFortuneContent: 共通コンポーネントでコアコンテンツを一括レンダリング
@@ -102,10 +102,6 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
   // variant が確認できたので ContrarianFortuneDetailedContent として型アサーション
   const cfDc = dc as ContrarianFortuneDetailedContent;
 
-  // result.color は OGP 画像でも使用するタイプ固有色。
-  // フォールバックは quiz.meta.accentColor を使用する。
-  const resultColor = result.color ?? quiz.meta.accentColor;
-
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #逆張り運勢診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
@@ -122,14 +118,9 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
       shareText={shareText}
       shareUrl={shareUrl}
     >
-      {/* contrarian-fortune固有のJSX。
-       * 可視の per-quiz 色注入（旧 --type-color ヒーロー）は撤去し、インライン結果
-       * （ResultCard）とトーン統一する（共通 --accent ベース・無彩左寄せ）。 */}
+      {/* contrarian-fortune固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。 */}
       <div className={styles.detailedSection}>
-        {/*
-         * キャッチコピー: 結果のコアメッセージ。
-         * 旧デザインのタイプカラー薄背景ヒーローは撤去し、共通アクセントの淡い面に置く。
-         */}
+        {/* キャッチコピー: 結果のコアメッセージ。--paper-2 の地に置く。 */}
         <div className={styles.catchphraseCard}>
           <p className={styles.catchphrase}>{cfDc.catchphrase}</p>
         </div>
@@ -160,8 +151,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           resultId={resultId}
           detailedContent={cfDc}
           allResults={quiz.results}
-          headingLevel={2}
-          resultColor={resultColor}
+          placement="resultPage"
           afterThirdPartyNote={
             /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>

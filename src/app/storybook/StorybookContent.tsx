@@ -148,7 +148,7 @@ const LINK_INDEX_STROKES: LinkIndexGroup[] = [
   },
 ];
 
-// ItemList の見本。説明・種別・日付を持つ行、読みを持つ行、全件で種別が同じ行、色見本を持つ行。
+// ItemList の見本。説明・種別・日付を持つ行、読みを持つ行、全件で種別が同じ行、色見本を持つ行、診断のタイプの行。
 const ITEM_LIST_DESCRIBED: ItemListItem[] = [
   {
     name: "文字数カウント",
@@ -242,6 +242,29 @@ const ITEM_LIST_SWATCHES: ItemListItem[] = [
     reading: "shironeri",
     facts: [{ text: "#fcfaf2" }],
     swatch: "#fcfaf2",
+  },
+];
+
+// 解き終えた画面の他のタイプ。来訪者のタイプ（2行目）は、補助情報の位置に「あなたのタイプ」と添える。
+const ITEM_LIST_TYPES: ItemListItem[] = [
+  {
+    name: "藍色",
+    href: "/play/traditional-color/result/ai",
+    reading: "あいいろ",
+    swatch: "#0d5661",
+  },
+  {
+    name: "朱色",
+    href: "/play/traditional-color/result/shu",
+    reading: "しゅいろ",
+    facts: [{ text: "あなたのタイプ" }],
+    swatch: "#ab3b3a",
+  },
+  {
+    name: "若草色",
+    href: "/play/traditional-color/result/wakakusa",
+    reading: "わかくさいろ",
+    swatch: "#C3D825",
   },
 ];
 
@@ -1155,6 +1178,29 @@ export default function StorybookContent({
         </h3>
         <ItemList labelledBy="item-list-swatches" items={ITEM_LIST_SWATCHES} />
 
+        <h3 id="item-list-visitor-item" className={styles.subsectionTitle}>
+          来訪者自身の結果にあたる行（2行目。太字で下線を残し、「あなたのタイプ」と添える）
+        </h3>
+        <ItemList
+          labelledBy="item-list-visitor-item"
+          items={ITEM_LIST_TYPES}
+          currentItemHref="/play/traditional-color/result/shu"
+        />
+
+        <h3 id="item-list-types-current" className={styles.subsectionTitle}>
+          同じ一覧で2行目が現在地（太字で下線を持たない）
+        </h3>
+        <ItemList
+          labelledBy="item-list-types-current"
+          items={ITEM_LIST_TYPES.map(({ name, href, reading, swatch }) => ({
+            name,
+            href,
+            reading,
+            swatch,
+          }))}
+          currentHref="/play/traditional-color/result/shu"
+        />
+
         <h3 id="item-list-series" className={styles.subsectionTitle}>
           順に読む一覧（行の頭に番号・3行目が現在地）
         </h3>
@@ -1189,11 +1235,11 @@ export default function StorybookContent({
           currentHref="/blog/tag/設計パターン"
         />
 
-        <h3 id="link-index-strokes" className={styles.subsectionTitle}>
+        <h3 className={styles.subsectionTitle}>
           同じ部首の漢字（12字）— 画数の区切りの見出しつき
         </h3>
         <LinkIndex
-          labelledBy="link-index-strokes"
+          singleCharacters
           groups={LINK_INDEX_STROKES}
           groupHeadingLevel={4}
         />

@@ -4,9 +4,6 @@
  * 完走（result phase 到達）で result region に role="region" / tabIndex=-1 /
  * 種別別の aria-label（personality→「診断結果」・knowledge→「クイズ結果」）が付き、
  * scrollIntoView と focus（preventScroll: true）が呼ばれることを検証する。
- *
- * A/B 実験 quiz_result_visual_v1 とは独立した恒久テスト。同実験の撤去
- * （cycle-279 C1）に伴い、旧 QuizContainer.test.tsx から本ファイルへ退避した。
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
@@ -193,11 +190,11 @@ describe("QuizContainer — 結果リビール（a11y 回帰ガード）", () =>
     expect(region).toHaveAttribute("tabindex", "-1");
     expect(region).toHaveAttribute("aria-label", "診断結果");
     expect(scrollIntoViewSpy).toHaveBeenCalled();
-    // N1: focus は既定スクロール抑止（preventScroll: true）で呼ばれる。
+    // focus は既定スクロール抑止（preventScroll: true）で呼ばれる。
     expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
   });
 
-  test("knowledge 完走: result region の aria-label が「クイズ結果」になる（N2）", async () => {
+  test("knowledge 完走: result region の aria-label が「クイズ結果」になる", async () => {
     await playToLevelEnd(makeKnowledgeQuiz());
     const region = screen.getByRole("region");
     expect(region).toHaveAttribute("aria-label", "クイズ結果");

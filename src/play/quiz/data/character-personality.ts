@@ -17,8 +17,7 @@ export { compatibilityMatrix };
  * Character Personality Quiz (あなたに似たキャラ診断)
  *
  * 6-archetype model → 主軸 × 副軸 で 24 タイプを決める専用判定
- * (cycle-295 で 4軸/直接配点方式から再設計。判定は
- *  determineCharacterPersonalityResult / scoring.ts の汎用 determineResult は使わない)。
+ * (判定は determineCharacterPersonalityResult。scoring.ts の汎用 determineResult は使わない)。
  *
  * 6 base archetypes:
  *   commander(司令塔・行動) / professor(博士・分析) / dreamer(夢想家・内省)
@@ -568,7 +567,7 @@ function tallyArchetypes(
 /**
  * Determine the character-personality result type from quiz answers.
  *
- * count ベースの軸判定(design.md §B-mech / cycle-295):
+ * count ベースの軸判定(docs/cycles/cycle-295/design.md §B-mech):
  *   1. 主signal被選択回数 count と 配点合計 score を集計。
  *   2. (count, score) の辞書式順で軸を決める(count が主・score が同点タイブレーク)。
  *      なお同点はアーキタイプ正準 index(ARCHETYPE_IDS の順)で決定的に決着。

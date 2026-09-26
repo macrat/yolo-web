@@ -27,7 +27,10 @@ import musicPersonalityQuiz, {
 } from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import OtherTypesNav from "./OtherTypesNav";
+import OtherTypesNav, {
+  type ResultPlacement,
+  SECTION_HEADING,
+} from "./OtherTypesNav";
 import styles from "./MusicPersonalityContent.module.css";
 
 interface MusicPersonalityContentProps {
@@ -35,8 +38,8 @@ interface MusicPersonalityContentProps {
   content: MusicPersonalityDetailedContent;
   /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  placement: ResultPlacement;
   /**
    * 相性診断用の referrer タイプID。
    * ResultCard から渡される場合、内部で相性セクション・招待ボタンを生成する。
@@ -103,13 +106,12 @@ function buildAfterTodayAction(
 export default function MusicPersonalityContent({
   content,
   resultId,
-  headingLevel,
+  placement,
   referrerTypeId,
   afterTodayAction,
 }: MusicPersonalityContentProps) {
   const quiz = musicPersonalityQuiz;
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
+  const Heading = SECTION_HEADING[placement];
 
   // afterTodayAction が外部から渡された場合はそちらを優先。
   // 渡されない場合（ResultCard からの呼び出し）は referrerTypeId を使って内部で生成する。
@@ -119,11 +121,8 @@ export default function MusicPersonalityContent({
       : buildAfterTodayAction(resultId, referrerTypeId);
 
   return (
-    // 新デザインではタイプごとのアクセント色（旧 --music-accent-color / --music-accent-bg）を撤廃し、
-    // wrapper は左寄せ宣言のみ持つ。装飾は共通 --accent / --accent-soft / --accent-strong に統一。
     <div className={styles.wrapper}>
-      {/* strengths セクション: 旧版は 🎵 絵文字＋紫ティントだったが、
-          新デザインでは他リストと同じ「アクセント縦線マーカー＋枠線カード」に統一する。 */}
+      {/* strengths セクション */}
       <Heading className={styles.sectionHeading}>
         このタイプの音楽的な強み
       </Heading>
@@ -135,8 +134,7 @@ export default function MusicPersonalityContent({
         ))}
       </ul>
 
-      {/* weaknesses セクション: 旧版は 🎧 絵文字＋クリームティントだったが、
-          新デザインでは他リストと同質感に統一する。 */}
+      {/* weaknesses セクション */}
       <Heading className={styles.sectionHeading}>
         このタイプの音楽的な弱み
       </Heading>
@@ -148,7 +146,7 @@ export default function MusicPersonalityContent({
         ))}
       </ul>
 
-      {/* behaviors セクション: 旧版は 🎤 絵文字だったが、絵文字は撤去。 */}
+      {/* behaviors セクション */}
       <Heading className={styles.sectionHeading}>
         このタイプの音楽あるある
       </Heading>
@@ -160,8 +158,7 @@ export default function MusicPersonalityContent({
         ))}
       </ul>
 
-      {/* todayAction セクション: ResultCard adviceCard 相当の淡いアクセント面で
-          「呼びかけ」のトーンを静かに強調する（中央寄せ・font-weight 500 は捨てる）。 */}
+      {/* todayAction セクション: 呼びかけなので、リストと分けて --paper-2 の地に置く */}
       <Heading className={styles.sectionHeading}>
         今日の音楽ライフのヒント
       </Heading>
@@ -174,7 +171,7 @@ export default function MusicPersonalityContent({
         quizSlug={quiz.meta.slug}
         currentResultId={resultId}
         results={quiz.results}
-        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
+        placement={placement}
       />
     </div>
   );

@@ -4,8 +4,8 @@
  * テスト対象:
  * - entityEssence / whyCompatible / behaviors / lifeAdvice の4セクション表示
  * - 他のタイプ（OtherTypesNav）
- * - headingLevel prop（h2/h3）
- * - resultColor の CSS変数注入（--type-color）
+ * - 置く面（placement）による見出しの階層（h2/h3）
+ * - タイプの色を wrapper に入れないこと
  * - afterLifeAdvice スロット
  * - 現在タイプのハイライト（aria-current）
  */
@@ -74,7 +74,6 @@ const sampleAllResults: QuizResult[] = [
   },
 ];
 
-const sampleColor = "#0891b2";
 const sampleQuizSlug = "unexpected-compatibility";
 
 describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
@@ -85,8 +84,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この存在の本質")).toBeInTheDocument();
@@ -104,8 +102,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("なぜ相性が良いのか")).toBeInTheDocument();
@@ -123,8 +120,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この存在と共鳴する日常")).toBeInTheDocument();
@@ -147,8 +143,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この存在から学べること")).toBeInTheDocument();
@@ -166,8 +161,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(
@@ -179,16 +173,15 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
   });
 });
 
-describe("UnexpectedCompatibilityContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("UnexpectedCompatibilityContent - placement による見出しの階層", () => {
+  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
     const { container } = render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -198,15 +191,14 @@ describe("UnexpectedCompatibilityContent - headingLevel prop", () => {
     expect(h3s.length).toBe(0);
   });
 
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
+  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
     const { container } = render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={3}
-        resultColor={sampleColor}
+        placement="solvedScreen"
       />,
     );
     const h3s = container.querySelectorAll("h3");
@@ -227,8 +219,7 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
         afterLifeAdvice={afterContent}
       />,
     );
@@ -244,15 +235,14 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
           resultId="vendingmachine"
           detailedContent={sampleContent}
           allResults={sampleAllResults}
-          headingLevel={2}
-          resultColor={sampleColor}
+          placement="resultPage"
         />,
       );
     }).not.toThrow();
   });
 });
 
-describe("UnexpectedCompatibilityContent - wrapper クラスと --type-color CSS変数", () => {
+describe("UnexpectedCompatibilityContent - wrapper", () => {
   it("wrapperクラスを持つ最外層要素が存在すること", () => {
     const { container } = render(
       <UnexpectedCompatibilityContent
@@ -260,30 +250,28 @@ describe("UnexpectedCompatibilityContent - wrapper クラスと --type-color CSS
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
     expect(wrapper).not.toBeNull();
   });
 
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
+  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
     const { container } = render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector(
       "[class*='wrapper']",
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
+    expect(wrapper.getAttribute("style")).toBeNull();
   });
 });
 
@@ -295,8 +283,7 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /自動販売機/ });
@@ -310,23 +297,21 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const otherLink = screen.getByRole("link", { name: /古い掛け時計/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("解き終えた画面（h3）では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
+  it("解き終えた画面では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
     render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
         resultId="oldclock"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={3}
-        resultColor="#92400e"
+        placement="solvedScreen"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /古い掛け時計/ });
@@ -344,8 +329,7 @@ describe("UnexpectedCompatibilityContent - リンクのhref", () => {
         resultId="vendingmachine"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const clockLink = screen.getByRole("link", { name: /古い掛け時計/ });

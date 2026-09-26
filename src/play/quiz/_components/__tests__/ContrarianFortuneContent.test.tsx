@@ -5,8 +5,8 @@
  * - coreSentence / behaviors / persona / thirdPartyNote の4セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
  * - 他のタイプ（OtherTypesNav）
- * - headingLevel prop（h2/h3）
- * - resultColor の CSS変数注入（--type-color。caller 互換のため受け取りのみ）
+ * - 置く面（placement）による見出しの階層（h2/h3）
+ * - タイプの色を wrapper に入れないこと
  * - afterThirdPartyNote スロット
  * - 現在タイプのハイライト（aria-current）
  */
@@ -83,7 +83,6 @@ const sampleAllResults: QuizResult[] = [
   },
 ];
 
-const sampleColor = "#7c3aed";
 const sampleQuizSlug = "contrarian-fortune";
 
 describe("ContrarianFortuneContent - 基本レンダリング", () => {
@@ -94,8 +93,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(
@@ -112,8 +110,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("あるある行動")).toBeInTheDocument();
@@ -132,8 +129,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの人物像")).toBeInTheDocument();
@@ -151,8 +147,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(
@@ -172,8 +167,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(
@@ -193,8 +187,7 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(container.querySelector("table")).toBeNull();
@@ -207,8 +200,7 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
         resultId="antitrend"
         detailedContent={sampleContentWithMetrics}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     expect(screen.getByRole("table")).toBeInTheDocument();
@@ -219,16 +211,15 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
   });
 });
 
-describe("ContrarianFortuneContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("ContrarianFortuneContent - placement による見出しの階層", () => {
+  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
     const { container } = render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -238,15 +229,14 @@ describe("ContrarianFortuneContent - headingLevel prop", () => {
     expect(h3s.length).toBe(0);
   });
 
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
+  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
     const { container } = render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={3}
-        resultColor={sampleColor}
+        placement="solvedScreen"
       />,
     );
     const h3s = container.querySelectorAll("h3");
@@ -267,8 +257,7 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
         afterThirdPartyNote={afterContent}
       />,
     );
@@ -286,15 +275,14 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
           resultId="antitrend"
           detailedContent={sampleContent}
           allResults={sampleAllResults}
-          headingLevel={2}
-          resultColor={sampleColor}
+          placement="resultPage"
         />,
       );
     }).not.toThrow();
   });
 });
 
-describe("ContrarianFortuneContent - wrapper クラスと --type-color CSS変数", () => {
+describe("ContrarianFortuneContent - wrapper", () => {
   it("wrapperクラスを持つ最外層要素が存在すること", () => {
     const { container } = render(
       <ContrarianFortuneContent
@@ -302,30 +290,28 @@ describe("ContrarianFortuneContent - wrapper クラスと --type-color CSS変数
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
     expect(wrapper).not.toBeNull();
   });
 
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
+  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
     const { container } = render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector(
       "[class*='wrapper']",
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
+    expect(wrapper.getAttribute("style")).toBeNull();
   });
 });
 
@@ -337,8 +323,7 @@ describe("ContrarianFortuneContent - aria-current", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /逆張りマスター/ });
@@ -352,23 +337,21 @@ describe("ContrarianFortuneContent - aria-current", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const otherLink = screen.getByRole("link", { name: /マイウェイ型/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("解き終えた画面（h3）では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
+  it("解き終えた画面では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
         resultId="unique"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={3}
-        resultColor="#0891b2"
+        placement="solvedScreen"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /マイウェイ型/ });
@@ -386,8 +369,7 @@ describe("ContrarianFortuneContent - リンクのhref", () => {
         resultId="antitrend"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
-        headingLevel={2}
-        resultColor={sampleColor}
+        placement="resultPage"
       />,
     );
     const uniqueLink = screen.getByRole("link", { name: /マイウェイ型/ });

@@ -42,7 +42,7 @@ import wordSensePersonalityQuiz from "../word-sense-personality";
 // character-personality, unexpected-compatibility, and impossible-advice are excluded:
 // they use variant-specific DetailedContent formats with dedicated result components
 // that do not use resultPageLabels.
-// word-sense-personality は標準形式 detailedContent（cycle-247 で 8 結果に付与）を使うため
+// word-sense-personality は標準形式 detailedContent を使うため
 // この規約（差別化・三人称の resultPageLabels）の対象に含める。
 const quizzesWithDetailedContent = [
   { quiz: animalPersonalityQuiz, name: "animal-personality" },

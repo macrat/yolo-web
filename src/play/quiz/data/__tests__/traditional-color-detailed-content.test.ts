@@ -1,7 +1,7 @@
 /**
  * Tests for detailedContent on all 8 traditional-color results.
  *
- * After the redesign, all 8 results use the TraditionalColorDetailedContent format:
+ * All 8 results use the TraditionalColorDetailedContent format:
  *   - variant: "traditional-color"
  *   - catchphrase: 15-30 chars
  *   - colorMeaning: 80-150 chars

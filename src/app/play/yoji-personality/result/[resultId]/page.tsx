@@ -86,10 +86,6 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
   // variant が確認できたので YojiPersonalityDetailedContent として型アサーション
   const yojiDc = dc as YojiPersonalityDetailedContent;
 
-  // result.color は OGP 画像でも使用するタイプ固有色。
-  // フォールバックは quiz.meta.accentColor（深紅色）を使用する。
-  const resultColor = result.color ?? quiz.meta.accentColor;
-
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #四字熟語診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどの四字熟語? 診断してみよう";
@@ -108,8 +104,7 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
     >
       {/* yoji-personality固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: description の前の静かなリード文（インライン ResultCard と
-            トーン統一。旧デザインの colorHero＝タイプ色を敷いたヒーローは撤去した）。 */}
+        {/* キャッチコピー: description の前の静かなリード文（解き終えた画面の ResultCard と同じ組み方）。 */}
         <p className={styles.catchphrase}>{yojiDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
@@ -136,8 +131,7 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
         <YojiPersonalityContent
           content={yojiDc}
           resultId={resultId}
-          resultColor={resultColor}
-          headingLevel={2}
+          placement="resultPage"
           afterMotto={
             /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>

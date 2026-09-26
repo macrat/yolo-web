@@ -1,11 +1,11 @@
 /**
- * QuizContainer — 設問送りのフォーカス管理と a11y 命名（F2 / F3 回帰ガード）。
+ * QuizContainer — 設問送りのフォーカス管理と a11y 命名の回帰ガード。
  *
- * F2（WCAG 2.4.3 / 4.1.3）:
+ * 設問送りのフォーカス（WCAG 2.4.3 / 4.1.3）:
  *  - 設問文が見出し（h2）であること。
  *  - playing phase で設問が切り替わると、新設問の h2 へフォーカスが移ること
  *    （前設問の回答ボタンから <body> へ focus が落ちないこと）。
- * F3（WCAG 4.1.2）:
+ * 進捗の名前（WCAG 4.1.2）:
  *  - ProgressBar の progressbar 要素に安定したアクセシブル名があること。
  *
  * 結果リビール（QuizContainer.reveal.test.tsx）とは独立した恒久テスト。
@@ -103,21 +103,21 @@ async function clickFirstChoice() {
   });
 }
 
-describe("QuizContainer — 設問送りのフォーカス管理 / a11y 命名（F2 / F3）", () => {
-  test("F2(b): 設問文は見出し（h2）である", async () => {
+describe("QuizContainer — 設問送りのフォーカス管理 / a11y 命名", () => {
+  test("設問文は見出し（h2）である", async () => {
     await startQuiz(makeTwoQuestionPersonalityQuiz());
     const heading = screen.getByRole("heading", { level: 2, name: "問1" });
     expect(heading.tagName).toBe("H2");
     expect(heading).toHaveAttribute("tabindex", "-1");
   });
 
-  test("F2(a): 初回マウントで設問見出しへフォーカスが入る", async () => {
+  test("初回マウントで設問見出しへフォーカスが入る", async () => {
     await startQuiz(makeTwoQuestionPersonalityQuiz());
     const heading = screen.getByRole("heading", { level: 2, name: "問1" });
     expect(document.activeElement).toBe(heading);
   });
 
-  test("F2(a): 設問が切り替わると新設問の h2 へフォーカスが移る", async () => {
+  test("設問が切り替わると新設問の h2 へフォーカスが移る", async () => {
     await startQuiz(makeTwoQuestionPersonalityQuiz());
     // 設問1の選択肢を押して設問2へ送る（personality は即時遷移）。
     await clickFirstChoice();
@@ -127,7 +127,7 @@ describe("QuizContainer — 設問送りのフォーカス管理 / a11y 命名�
     expect(document.activeElement).not.toBe(document.body);
   });
 
-  test("F3: ProgressBar にアクセシブル名がある", async () => {
+  test("ProgressBar にアクセシブル名がある", async () => {
     await startQuiz(makeTwoQuestionPersonalityQuiz());
     const progressbar = screen.getByRole("progressbar", { name: "設問の進捗" });
     expect(progressbar).toHaveAttribute("aria-valuenow", "1");

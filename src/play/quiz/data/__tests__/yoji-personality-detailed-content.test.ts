@@ -1,7 +1,7 @@
 /**
  * Tests for detailedContent on all 8 yoji-personality results.
  *
- * After the redesign, all 8 results use the YojiPersonalityDetailedContent format:
+ * All 8 results use the YojiPersonalityDetailedContent format:
  *   - variant: "yoji-personality"
  *   - catchphrase: 15-30 chars
  *   - kanjiBreakdown: 80-150 chars

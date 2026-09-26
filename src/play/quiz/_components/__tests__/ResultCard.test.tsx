@@ -23,8 +23,7 @@ import type {
 // vi.mock ファクトリ内での特定のモジュールパスに対するマッピングを使う。
 vi.mock("next/dynamic", async () => {
   // AnimalPersonalityContent / MusicPersonalityContent / TraditionalColorContent
-  // を事前にインポートして同期キャッシュ
-  // YojiPersonalityContent はまだ存在しないため、モック関数で代替する
+  // を事前にインポートして同期キャッシュする。ほかの *Content は data-testid を持つスタブで代替する。
   const animal =
     await import("@/play/quiz/_components/AnimalPersonalityContent");
   const music = await import("@/play/quiz/_components/MusicPersonalityContent");
@@ -54,7 +53,7 @@ vi.mock("next/dynamic", async () => {
           Record<string, unknown>
         >;
       } else if (loaderStr.includes("YojiPersonalityContent")) {
-        // YojiPersonalityContent はまだ存在しないため data-testid を持つスタブで代替
+        // YojiPersonalityContent を data-testid を持つスタブで代替
         cachedComp = (props: Record<string, unknown>) =>
           React.createElement(
             "div",
@@ -391,6 +390,18 @@ const baseResult: QuizResult = {
   icon: "🧪",
 };
 
+/**
+ * 色をインラインスタイルで持つ要素。色見本（主題が色の項目）を除く。
+ * タイプやクイズの色は装飾に使わず、結果の包みも和色を data-color で選ぶので、ほかに色を入れる要素は無い（DESIGN.md §2）。
+ */
+function inlineColoredElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>("[style]")).filter(
+    (el) =>
+      /color|background/i.test(el.getAttribute("style") ?? "") &&
+      !el.className.includes("swatch"),
+  );
+}
+
 const defaultProps = {
   result: baseResult,
   quizType: "personality" as const,
@@ -430,11 +441,11 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・persona
       "fuji",
       "suou",
     ]).toContain(tsutsumi?.getAttribute("data-color"));
-    // 絵文字（result.icon）は装飾として描画しない（DESIGN.md §8-6 絵文字禁止）
+    // 絵文字（result.icon）は装飾として描画しない（DESIGN.md §5 絵文字を置かない）
     expect(screen.queryByText("🦊")).not.toBeInTheDocument();
   });
 
-  test("F5: 勲章表示の結果タイトルは見出し(h2)で描画される（SRの見出しナビで結果に到達できる・WCAG 1.3.1）", () => {
+  test("包みで見せる結果タイトルは見出し(h2)で描画される（SRの見出しナビで結果に到達できる・WCAG 1.3.1）", () => {
     render(<ResultCard {...defaultProps} result={medalResult} />);
     const heading = screen.getByRole("heading", {
       level: 2,
@@ -449,7 +460,7 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・persona
     expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
     // フォールバック時は象徴アイコンを出さない
     expect(screen.queryByText("🧪")).not.toBeInTheDocument();
-    // タイプ名と「あなたの結果」ラベルは従来どおり表示される
+    // タイプ名と「あなたの結果」ラベルは表示される
     expect(screen.getByText("テスト結果")).toBeInTheDocument();
     expect(screen.getByText("あなたの結果")).toBeInTheDocument();
   });
@@ -499,10 +510,7 @@ describe("ResultCard - Standard variant", () => {
 
   test("traits（持ち味）が表示されること", () => {
     render(<ResultCard {...defaultProps} detailedContent={standardContent} />);
-    // cycle-146 は traits が第三者向け分析文体（体言止め）だったため本人向け ResultCard では
-    // 非表示としていた（「本人文体へ書き換え後に表示追加」を将来作業として明記）。
-    // cycle-250 で標準形式診断（word-sense / science-thinking）の traits が本人向け文体で
-    // 揃ったため、静的結果ページと同じく ResultCard でも持ち味を表示する（本人＝完了者の所在）。
+    // 診断を遊んだ本人にも持ち味を届けるため、結果のページと同じく traits を表示する。
     expect(screen.getByText("特徴1")).toBeInTheDocument();
     expect(screen.getByText("特徴2")).toBeInTheDocument();
   });
@@ -904,69 +912,19 @@ describe("ResultCard - animal-personality variant", () => {
     expect(screen.getByText("ホンドタヌキ")).toBeInTheDocument();
   });
 
-  test("accentColorが指定された場合、セクション見出しにCSS変数が使われること（inline style非使用）", () => {
-    const { container } = render(
-      <ResultCard {...animalProps} accentColor="#15803d" />,
-    );
-    // detailedHeadingのcolorはCSS変数 var(--animal-accent-color) を使う
-    // inline styleで直接 #15803d が設定されていないことを確認
-    const headings = container.querySelectorAll("h3");
-    headings.forEach((heading) => {
-      // inline styleのcolorに直接カラーコードが設定されていないこと
-      expect(heading.style.color).not.toBe("#15803d");
-    });
-  });
-
-  test("accentColorが指定された場合、todayActionCardにCSS変数が使われること（inline style非使用）", () => {
-    const { container } = render(
-      <ResultCard {...animalProps} accentColor="#15803d" />,
-    );
-    // todayActionCardのbackgroundColorはCSS変数 var(--animal-accent-bg) を使う
-    // inline styleで直接 #15803d の透過色が設定されていないことを確認
-    const todayActionCards = container.querySelectorAll(
-      "[class*='todayActionCard']",
-    );
-    todayActionCards.forEach((card) => {
-      const el = card as HTMLElement;
-      // inline styleのbackgroundColorに直接透過色が設定されていないこと
-      expect(el.style.backgroundColor).not.toContain("#15803d");
-    });
+  test("タイプやクイズの色を、どの要素にもインラインスタイルで入れないこと", () => {
+    const { container } = render(<ResultCard {...animalProps} />);
+    expect(inlineColoredElements(container)).toEqual([]);
   });
 
   test("AnimalPersonalityContent の wrapper クラスが存在すること", () => {
-    const { container } = render(
-      <ResultCard {...animalProps} accentColor="#15803d" />,
-    );
-    // AnimalPersonalityContent コンポーネントのwrapperクラスを持つ要素が存在すること
-    // CSS変数はCSSファイルで管理するためinline styleではなくクラスの存在を確認
-    // 共通コンポーネント化により animalPersonalityWrapper → wrapper に変更
+    const { container } = render(<ResultCard {...animalProps} />);
     const wrapper = container.querySelector("[class*='wrapper']");
     expect(wrapper).not.toBeNull();
   });
-
-  test("catchphraseBeforeDescription に inline style が設定されないこと（CSS変数はCSSファイルのフォールバック値で制御）", () => {
-    const { container } = render(
-      <ResultCard {...animalProps} accentColor="#15803d" />,
-    );
-    // catchphraseBeforeDescriptionクラスを持つ要素が存在すること
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
-    );
-    expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // inline style で CSS変数が渡されていないこと
-      // ResultCard.module.css にフォールバック値（#15803d / #4ade80）が定義されているため
-      // inline style は不要
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-      expect(el.style.getPropertyValue("--catchphrase-accent-color-dark")).toBe(
-        "",
-      );
-    }
-  });
 });
 
-describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分け）", () => {
+describe("ResultCard - catchphrase に色を入れない", () => {
   const animalContent: AnimalPersonalityDetailedContent = {
     variant: "animal-personality",
     catchphrase: "動物キャッチコピー",
@@ -997,7 +955,7 @@ describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分
     icon: "🎪",
   };
 
-  test("animal-personality: catchphraseBeforeDescription に --catchphrase-accent-color が設定されていないこと（CSSファイルのフォールバック値で緑色を使用）", () => {
+  test("animal-personality: catchphraseBeforeDescription がインラインスタイルを持たないこと", () => {
     const { container } = render(
       <ResultCard
         result={animalResult}
@@ -1006,21 +964,16 @@ describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分
         quizSlug="animal-personality"
         onRetry={vi.fn()}
         detailedContent={animalContent}
-        accentColor="#15803d"
       />,
     );
     const catchphraseEl = container.querySelector(
       "[class*='catchphraseBeforeDescription']",
     );
     expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // animal-personalityではCSS変数は設定しない（CSSファイルの緑色フォールバックを使用）
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(catchphraseEl?.getAttribute("style")).toBeNull();
   });
 
-  test("music-personality: catchphraseBeforeDescription に装飾色のCSS変数を設定しないこと（新デザイン体系・cycle-253）", () => {
+  test("music-personality: catchphraseBeforeDescription がインラインスタイルを持たないこと", () => {
     const { container } = render(
       <ResultCard
         result={musicResult}
@@ -1029,18 +982,13 @@ describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分
         quizSlug="music-personality"
         onRetry={vi.fn()}
         detailedContent={musicContent}
-        accentColor="#7c3aed"
       />,
     );
     const catchphraseEl = container.querySelector(
       "[class*='catchphraseBeforeDescription']",
     );
     expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // DESIGN.md §2.4: 色は機能のためだけに使う。variant 別の装飾色は廃止した。
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(catchphraseEl?.getAttribute("style")).toBeNull();
   });
 });
 
@@ -1187,20 +1135,13 @@ describe("ResultCard - traditional-color variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
+  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
     const { container } = render(<ResultCard {...traditionalColorProps} />);
     // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
     // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
     const tsutsumi = container.querySelector("figure[data-color]");
     expect(tsutsumi).not.toBeNull();
-    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
-    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
-    const anyLegacyColorVar = Array.from(
-      container.querySelectorAll<HTMLElement>("*"),
-    ).some(
-      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
-    );
-    expect(anyLegacyColorVar).toBe(false);
+    expect(inlineColoredElements(container)).toEqual([]);
   });
 
   test("全タイプ一覧が表示されること", () => {
@@ -1263,23 +1204,16 @@ describe("ResultCard - yoji-personality variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
+  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
     const { container } = render(<ResultCard {...yojiProps} />);
     // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
     // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
     const tsutsumi = container.querySelector("figure[data-color]");
     expect(tsutsumi).not.toBeNull();
-    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
-    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
-    const anyLegacyColorVar = Array.from(
-      container.querySelectorAll<HTMLElement>("*"),
-    ).some(
-      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
-    );
-    expect(anyLegacyColorVar).toBe(false);
+    expect(inlineColoredElements(container)).toEqual([]);
   });
 
-  test("result.color が未設定の場合、catchphraseBeforeDescription に --catchphrase-accent-color が設定されないこと", () => {
+  test("result.color が未設定の場合、catchphraseBeforeDescription がインラインスタイルを持たないこと", () => {
     const yojiResultNoColor: QuizResult = {
       ...yojiResult,
       color: undefined,
@@ -1291,10 +1225,7 @@ describe("ResultCard - yoji-personality variant", () => {
       "[class*='catchphraseBeforeDescription']",
     );
     expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(catchphraseEl?.getAttribute("style")).toBeNull();
   });
 });
 
@@ -1365,20 +1296,13 @@ describe("ResultCard - unexpected-compatibility variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
+  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
     const { container } = render(<ResultCard {...unexpectedProps} />);
     // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
     // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
     const tsutsumi = container.querySelector("figure[data-color]");
     expect(tsutsumi).not.toBeNull();
-    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
-    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
-    const anyLegacyColorVar = Array.from(
-      container.querySelectorAll<HTMLElement>("*"),
-    ).some(
-      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
-    );
-    expect(anyLegacyColorVar).toBe(false);
+    expect(inlineColoredElements(container)).toEqual([]);
   });
 });
 
@@ -1518,24 +1442,17 @@ describe("ResultCard - impossible-advice variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
+  test("結果は包み（Tsutsumi）で表示され、タイプの色をどの要素にもインラインスタイルで入れないこと", () => {
     const { container } = render(<ResultCard {...impossibleProps} />);
     // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
     // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
     const tsutsumi = container.querySelector("figure[data-color]");
     expect(tsutsumi).not.toBeNull();
-    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
-    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
-    const anyLegacyColorVar = Array.from(
-      container.querySelectorAll<HTMLElement>("*"),
-    ).some(
-      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
-    );
-    expect(anyLegacyColorVar).toBe(false);
+    expect(inlineColoredElements(container)).toEqual([]);
   });
 });
 
-describe("ResultCard - 真の残余同点の開示ブロック（P2b・cycle-303）", () => {
+describe("ResultCard - 真の残余同点の開示ブロック", () => {
   // word-sense-personality の同点時のみ QuizContainer が coTypes を渡す。
   // 主タイプ（result）は determineResult の決定的勝者、coTypes は同点を分け合う副タイプ。
   const wordSenseResult: QuizResult = {
@@ -1551,7 +1468,7 @@ describe("ResultCard - 真の残余同点の開示ブロック（P2b・cycle-303
     onRetry: vi.fn(),
   };
 
-  test("coTypes が未指定のときは開示ブロックを描画しない（単独勝者＝従来体験）", () => {
+  test("coTypes が未指定のときは開示ブロックを描画しない（単独勝者）", () => {
     const { container } = render(<ResultCard {...wordSenseProps} />);
     expect(
       screen.queryByLabelText("同じくらい強く出た型"),

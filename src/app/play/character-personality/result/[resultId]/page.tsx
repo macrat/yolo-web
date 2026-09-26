@@ -130,10 +130,6 @@ export default async function CharacterPersonalityResultPage({
   // variant が確認できたので CharacterPersonalityDetailedContent として型アサーション
   const characterDc = dc as CharacterPersonalityDetailedContent;
 
-  // result.color は OGP 画像でも使用するタイプ固有色。
-  // フォールバックは quiz.meta.accentColor を使用する。
-  const resultColor = result.color ?? quiz.meta.accentColor;
-
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const withParam =
     typeof resolvedSearchParams?.with === "string"
@@ -190,8 +186,7 @@ export default async function CharacterPersonalityResultPage({
     >
       {/* character-personality固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: description の前の静かなリード文（インライン ResultCard と
-            トーン統一。旧デザインの colorHero＝タイプ色を敷いたヒーローは撤去した）。 */}
+        {/* キャッチコピー: description の前の静かなリード文（解き終えた画面の ResultCard と同じ組み方）。 */}
         <p className={styles.catchphrase}>{characterDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
@@ -218,8 +213,7 @@ export default async function CharacterPersonalityResultPage({
         <CharacterPersonalityContent
           content={characterDc}
           resultId={resultId}
-          resultColor={resultColor}
-          headingLevel={2}
+          placement="resultPage"
           afterCharacterMessage={
             <>
               {/* 相性紹介: withパラメータがある場合のみ表示 */}

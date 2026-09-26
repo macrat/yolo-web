@@ -1,10 +1,9 @@
 /**
  * science-thinking（理系思考タイプ診断）の全10結果 detailedContent の品質テスト。
  *
- * cycle-250 / B-518（B-323 の具体化）: 診断系で結果体験（detailedContent）を欠く最上位だった
- * science-thinking の10結果すべてに標準形式 detailedContent（traits / behaviors / advice）を付与し、
- * 結果到達者の体験を厚くするとともに cycle-249 の OtherTypesNav 回遊導線を自動有効化した。
- * 本テストはその品質（存在・標準形式・項目数・非空・型をまたぐコピペなし）を恒久ロックする。
+ * 10結果すべてが標準形式 detailedContent（traits / behaviors / advice）を持ち、結果到達者の体験と
+ * 他のタイプ（OtherTypesNav）への回遊を支える。本テストはその品質（存在・標準形式・項目数・非空・
+ * 型をまたぐコピペなし）を恒久ロックする。
  *
  * 10結果すべて標準形式（QuizResultDetailedContent: variant なし）を用いる。
  */

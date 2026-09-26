@@ -4,7 +4,6 @@ import QuizPlayPageLayout from "../QuizPlayPageLayout";
 import type { QuizDefinition } from "../../types";
 
 // Server Componentの依存コンポーネントをモックする。
-// 新デザイン体系では @/components/* の新版を使う（@/components/common/* ではない）。
 vi.mock("@/components/Breadcrumb", () => ({
   default: ({ items }: { items: Array<{ label: string; href?: string }> }) => (
     <nav aria-label="パンくずリスト">
@@ -128,17 +127,6 @@ test("QuizPlayPageLayout renders breadcrumb with correct items", async () => {
   expect(breadcrumb).toHaveTextContent("ホーム");
   expect(within(breadcrumb).getByText("遊び")).toBeInTheDocument();
   expect(breadcrumb).toHaveTextContent("テストクイズ");
-});
-
-test("QuizPlayPageLayout does not render TrustLevelBadge (撤去済み・cycle-253)", async () => {
-  const component = await QuizPlayPageLayout({
-    quiz: mockQuiz,
-    slug: "test-quiz",
-  });
-  render(component);
-
-  // 新デザイン体系では TrustLevelBadge を撤去している（trustLevel フィールド自体も cycle-279 C1 で型・データごと完全削除）
-  expect(screen.queryByTestId("trust-level-badge")).not.toBeInTheDocument();
 });
 
 test("QuizPlayPageLayout renders QuizContainer with quiz and referrerTypeId", async () => {

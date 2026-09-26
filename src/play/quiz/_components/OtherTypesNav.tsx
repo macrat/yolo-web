@@ -10,17 +10,28 @@ type OtherTypesNavResult = Pick<
   "id" | "title" | "nameParts" | "color"
 >;
 
+/**
+ * 診断の結果を置く面。結果のページ（resultPage）と、解き終えた画面（solvedScreen。ResultCard の中）がある。
+ * 結果のページではセクションの見出しが h1 の次の h2 に、解き終えた画面では結果の見出し h2 の下の h3 になる。
+ */
+export type ResultPlacement = "resultPage" | "solvedScreen";
+
+/** 結果を置く面ごとの、セクションの見出しの要素。 */
+export const SECTION_HEADING: Readonly<Record<ResultPlacement, "h2" | "h3">> = {
+  resultPage: "h2",
+  solvedScreen: "h3",
+};
+
 interface OtherTypesNavProps {
   quizSlug: string;
   currentResultId: string;
   /** 診断の全タイプ。この順に並べる。 */
   results: readonly OtherTypesNavResult[];
   /**
-   * 置く面。結果のページ（resultPage）では、見出しは h2 で、いまのタイプは開いているページなので現在地になる。
-   * 解き終えた画面（solvedScreen）では、見出しは結果（h2）の中の h3 で、いまのタイプの行は開いているページでなく
-   * 結果のページへ移るので、来訪者のタイプとして太字にし、下線は残す。
+   * 置く面。結果のページでは、いまのタイプは開いているページなので現在地になる。解き終えた画面では、いまのタイプの行は
+   * 開いているページでなく結果のページへ移るので、来訪者のタイプとして太字にし、下線を残して「あなたのタイプ」と添える。
    */
-  placement: "resultPage" | "solvedScreen";
+  placement: ResultPlacement;
   /** タイプの色がタイプそのもの（伝統色）であるときに、行の先頭に色見本を置く。 */
   showSwatch?: boolean;
 }
@@ -43,11 +54,17 @@ export default function OtherTypesNav({
   // 1タイプしか無い診断では、ほかに眺めるタイプが無い。
   if (results.length < 2) return null;
 
-  const Heading = placement === "resultPage" ? "h2" : "h3";
+  const onResultPage = placement === "resultPage";
+  const Heading = SECTION_HEADING[placement];
   const items: ItemListItem[] = results.map((result) => ({
     name: result.nameParts?.name ?? result.title,
     href: getPlayResultPath(quizSlug, result.id),
     reading: result.nameParts?.reading,
+    // 解き終えた画面では、来訪者のタイプの行だけが太字である理由を、字でも読み上げでも伝える。
+    facts:
+      !onResultPage && result.id === currentResultId
+        ? [{ text: "あなたのタイプ" }]
+        : undefined,
     swatch: showSwatch ? result.color : undefined,
   }));
   const currentResultHref = getPlayResultPath(quizSlug, currentResultId);
@@ -60,10 +77,8 @@ export default function OtherTypesNav({
       <ItemList
         labelledBy={headingId}
         items={items}
-        currentHref={placement === "resultPage" ? currentResultHref : undefined}
-        currentItemHref={
-          placement === "solvedScreen" ? currentResultHref : undefined
-        }
+        currentHref={onResultPage ? currentResultHref : undefined}
+        currentItemHref={onResultPage ? undefined : currentResultHref}
       />
     </section>
   );

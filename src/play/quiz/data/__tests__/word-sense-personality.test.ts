@@ -117,7 +117,7 @@ describe("word-sense-personality — questions", () => {
     }
   });
 
-  // cycle-303 P2a（結果先行の再設計・redesign-v2.md A-3）で配点構造が変わった。
+  // 配点の構造（docs/cycles/cycle-303/redesign-v2.md A-3）:
   //   - pure（強度3）: 他タイプの声を帯びない単一 voice。エントリは1つ（主 signal のみ、値3）。
   //   - blended（強度2）: 主が明確だが文が近傍タイプの性質を帯びる。エントリは2つ（主2＋副1）。
   // 「固定影結合を作らない・副点は文が実際に帯びる性質からのみ」という設計原則の構造ガード。
@@ -218,6 +218,24 @@ describe("word-sense-personality — results", () => {
       ).toBeGreaterThan(0);
       expect(result.color, `Missing color for ${result.id}`).toBeTruthy();
       expect(result.icon, `Missing icon for ${result.id}`).toBeTruthy();
+    }
+  });
+
+  it("each title keeps the reading and nameParts splits it into name and reading", () => {
+    const expected: Record<string, [string, string]> = {
+      "elegant-precise": ["一字千金", "いちじせんきん"],
+      "warm-empathy": ["和顔愛語", "わがんあいご"],
+      "creative-playful": ["奇想天外", "きそうてんがい"],
+      "logical-clear": ["理路整然", "りろせいぜん"],
+      "poetic-sensory": ["花鳥風月", "かちょうふうげつ"],
+      "bold-impact": ["疾風迅雷", "しっぷうじんらい"],
+      "humor-wit": ["抱腹絶倒", "ほうふくぜっとう"],
+      "gentle-indirect": ["柔和温順", "にゅうわおんじゅん"],
+    };
+    for (const result of wordSensePersonalityQuiz.results) {
+      const [yoji, reading] = expected[result.id];
+      expect(result.title).toBe(`${yoji}（${reading}）タイプ`);
+      expect(result.nameParts).toEqual({ name: `${yoji}タイプ`, reading });
     }
   });
 

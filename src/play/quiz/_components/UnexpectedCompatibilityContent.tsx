@@ -18,7 +18,10 @@
 import type React from "react";
 import type { UnexpectedCompatibilityDetailedContent } from "@/play/quiz/types";
 import type { QuizResult } from "@/play/quiz/types";
-import OtherTypesNav from "./OtherTypesNav";
+import OtherTypesNav, {
+  type ResultPlacement,
+  SECTION_HEADING,
+} from "./OtherTypesNav";
 import styles from "./UnexpectedCompatibilityContent.module.css";
 
 interface UnexpectedCompatibilityContentProps {
@@ -30,14 +33,8 @@ interface UnexpectedCompatibilityContentProps {
   detailedContent: UnexpectedCompatibilityDetailedContent;
   /** 全タイプの配列（他のタイプに並べる） */
   allResults: QuizResult[];
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
-  /**
-   * 結果タイプのテーマカラー（--type-color CSS変数に注入）。
-   * 新デザインでは装飾には参照しないが、caller signature 互換のため受け取りは残す
-   * （page.tsx / ResultCard の引数を壊さないための dead 注入）。
-   */
-  resultColor: string;
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  placement: ResultPlacement;
   /** lifeAdvice後・他のタイプ前にページ固有要素（CTA等）を挿入するスロット */
   afterLifeAdvice?: React.ReactNode;
 }
@@ -47,21 +44,13 @@ export default function UnexpectedCompatibilityContent({
   resultId,
   detailedContent,
   allResults,
-  headingLevel,
-  resultColor,
+  placement,
   afterLifeAdvice,
 }: UnexpectedCompatibilityContentProps) {
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
+  const Heading = SECTION_HEADING[placement];
 
   return (
-    // 新デザインでは --type-color を装飾に使わない（共通アクセントに統一）。
-    // ただし page.tsx / ResultCard など caller の signature 互換を壊さないため、
-    // resultColor の受け取りと --type-color の注入自体は残す（dead 注入だが互換目的）。
-    <div
-      className={styles.wrapper}
-      style={{ "--type-color": resultColor } as React.CSSProperties}
-    >
+    <div className={styles.wrapper}>
       {/* entityEssence セクション: 存在の本質を哲学的・ユーモラスに解説（中心解説） */}
       <Heading className={styles.sectionHeading}>この存在の本質</Heading>
       <div className={styles.entityEssenceCard}>
@@ -99,7 +88,7 @@ export default function UnexpectedCompatibilityContent({
         quizSlug={quizSlug}
         currentResultId={resultId}
         results={allResults}
-        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
+        placement={placement}
       />
     </div>
   );

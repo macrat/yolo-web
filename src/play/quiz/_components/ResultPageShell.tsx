@@ -45,14 +45,12 @@ export default function ResultPageShell({
 }: ResultPageShellProps) {
   const slug = quiz.meta.slug;
 
-  // MUST-2（§7 トーン統一）: 単独結果ページのヘッダを、インライン ResultCard の
-  // 勲章と同じ視覚（象徴タイル＋固有名）に揃える。シェア/検索で着地した第三者にも
-  // 「結果＝勲章」の印象を割らずに届ける（DESIGN.md §7「インライン結果と単独結果
-  //  ページの視覚トーンを統一」）。
-  // 適用条件はインラインと同じ「personality 型 かつ result.icon・result.color が両方存在」。
-  // それ以外（knowledge 型・欠落）は現行の素の icon+title にフォールバックする。
+  // 単独結果ページのヘッダを、解き終えた画面（ResultCard）の包みと同じ視覚（象徴タイル＋固有名）に
+  // 揃える。シェアや検索で着いた第三者にも、本人が見たのと同じ姿で結果を届ける。
+  // 適用条件は ResultCard と同じ「personality 型 かつ result.icon・result.color が両方存在」。
+  // それ以外（knowledge 型・欠落）は title だけの見出しにフォールバックする。
   // 重要: 単独ページには「診断完了」の文字を付けない。第三者は診断を完走していないため、
-  //   完了主張は偽になる。単独ページの勲章＝(象徴タイル＋固有名) のみ。
+  //   完了主張は偽になる。単独ページの包みは (象徴タイル＋固有名) のみ。
   const showMedal =
     quiz.meta.type === "personality" &&
     Boolean(result.icon) &&
@@ -74,11 +72,11 @@ export default function ResultPageShell({
         <p className={styles.quizContext}>{quiz.meta.shortDescription}</p>
 
         {showMedal ? (
-          // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
-          // h1 は SEO/見出し構造のため維持するが控えめに（器は静か）。結果そのものは
-          // Tsutsumi が主役——第三者向けページでもインライン結果と同じ視覚トーンで届ける
-          // （§7 トーン統一）。固有色は quiz データの任意 hex を捨て、id から和色8色へ
-          // 決定的に写像する（§2）。symbol は絵文字ではなくタイプ名の先頭1字（§8-6）。
+          // 結果を包み（Tsutsumi）で見せる。
+          // h1 は SEO/見出し構造のため置くが控えめに（器は静か）。結果そのものは
+          // Tsutsumi が主役——第三者向けページでも解き終えた画面と同じ視覚で届ける。
+          // 固有色は quiz データの任意 hex を使わず、id から和色8色へ決定的に写像する。
+          // symbol は絵文字ではなくタイプ名の先頭1字（DESIGN.md §5）。
           // 重要: 単独ページには「診断完了」の完了主張は付けない（第三者は完走していない）。
           <div className={styles.medalWrap}>
             <h1 className={styles.medalHeading}>{result.title}</h1>

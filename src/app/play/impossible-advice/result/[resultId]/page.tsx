@@ -93,10 +93,6 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
   // variant が確認できたので ImpossibleAdviceDetailedContent として型アサーション
   const iaDc = dc as ImpossibleAdviceDetailedContent;
 
-  // result.color は OGP 画像でも使用するタイプ固有色。
-  // フォールバックは quiz.meta.accentColor を使用する。
-  const resultColor = result.color ?? quiz.meta.accentColor;
-
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #達成困難アドバイス診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
@@ -113,14 +109,9 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
       shareText={shareText}
       shareUrl={shareUrl}
     >
-      {/* impossible-advice固有のJSX。
-       * 可視の per-quiz 色注入（旧 --type-color ヒーロー）は撤去し、インライン結果
-       * （ResultCard）とトーン統一する（共通 --accent ベース・無彩左寄せ）。 */}
+      {/* impossible-advice固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。 */}
       <div className={styles.detailedSection}>
-        {/*
-         * キャッチコピー: 結果のコアメッセージ。
-         * 旧デザインのタイプカラー薄背景ヒーローは撤去し、共通アクセントの淡い面に置く。
-         */}
+        {/* キャッチコピー: 結果のコアメッセージ。--paper-2 の地に置く。 */}
         <div className={styles.catchphraseCard}>
           <p className={styles.catchphrase}>{iaDc.catchphrase}</p>
         </div>
@@ -151,8 +142,7 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
           resultId={resultId}
           detailedContent={iaDc}
           allResults={quiz.results}
-          headingLevel={2}
-          resultColor={resultColor}
+          placement="resultPage"
           afterPracticalTip={
             /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>

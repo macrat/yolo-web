@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * FudaActions — 「札（結果画像）」の保存/共有アクション（DESIGN.md §4「札」/§7「見せたくなる結果」）。
+ * FudaActions — 「札（結果画像）」の保存/共有アクション。
  *
- * character-personality の結果面（本人向け ResultCard の勲章=Tsutsumi 直下）に置く、
- * 「完走した本人が自分の札を持ち帰る」ための主アクション（cycle-280 設計 §3 / PM判断5）。
- * 適用は character-personality に限定する（他 personality 診断への展開は効果測定後）。
+ * character-personality の結果面（本人向け ResultCard の包み=Tsutsumi 直下）に置く、
+ * 「完走した本人が自分の札を持ち帰る」ための主アクション。
+ * 札画像の固定 URL を持つのが character-personality だけなので、この診断に限って置く。
  *
- * 画像は固定 URL の Route Handler（タスクB）から取得する：
+ * 画像は固定 URL の Route Handler から取得する：
  *   GET /play/character-personality/result/<resultId>/fuda-image → image/png（SSGプリレンダ）
  * メタプレビュー（og:image）と保存画像は同一レンダラ＝単一の真実。
  *
- * 計測（B-551）: 実際に完了したアクションだけを計上する。
+ * 計測: 実際に完了したアクションだけを計上する。
  * - 共有: canShare({files}) 対応なら navigator.share({files}) 成功時に trackShare("web_share",…,"fuda")。
  *   非対応/未定義なら URL を clipboard コピーし、成功時 trackShare("clipboard",…,"fuda")。
  *   共有シートのキャンセル/失敗では計上しない。

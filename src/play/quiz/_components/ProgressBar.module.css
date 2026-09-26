@@ -1,6 +1,6 @@
 /*
  * クイズ設問の進捗バー。
- * トラックは罫線の器、塗りは --accent 一色の細いバー（面を色で塗り込めない・薄い機能表示に限る）。
+ * トラックは罫線の器、塗りは --ink の細いバー（UI は無彩。DESIGN.md §2）。
  */
 
 .wrapper {
@@ -28,10 +28,10 @@
   overflow: hidden;
 }
 
-/* 塗りは --accent。 */
+/* 塗りは文字と同じ --ink（§2 の選択の塗りと同じ扱い）。 */
 .fill {
   height: 100%;
-  background-color: var(--accent);
+  background-color: var(--ink);
   transition: width 0.3s ease;
 }
 

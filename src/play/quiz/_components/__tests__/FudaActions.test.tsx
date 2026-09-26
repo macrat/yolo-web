@@ -1,7 +1,7 @@
 /**
- * FudaActions（札の保存/共有）— 分岐ロジックと GA4 計測の回帰ガード（cycle-280 タスクC）。
+ * FudaActions（札の保存/共有）— 分岐ロジックと GA4 計測の回帰ガード。
  *
- * 検証の核心（「実際に完了したアクションだけ計上する」B-551）:
+ * 検証の核心（「実際に完了したアクションだけ計上する」）:
  * - 共有: canShare({files}) true → navigator.share({files}) 成功時に trackShare("web_share",…,"fuda")。
  * - 共有: canShare false/未定義 → clipboard コピー成功時に trackShare("clipboard",…,"fuda")。
  * - 共有: 共有シートのキャンセル（reject）では計上しない。

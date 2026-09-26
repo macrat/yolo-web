@@ -50,14 +50,14 @@ export default function QuizContainer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
 
-  // 結果リビール（A：完走→結果で注意を誘導する / a11y）。
+  // 結果リビール（完走→結果で注意を誘導する / a11y）。
   // result phase の外側 wrapper への参照。phase が "result" になった時に
   // ここへスクロール＋フォーカスを移し、視界を「遊ぶ前の h1・説明文」から
   // 「自分の結果」へ移す。ResultCard 自体は自動スクロール副作用で汚さない
-  // （ResultCard 単体テスト・他文脈の安定のため／タスク指示 A）。
+  // （ResultCard 単体テスト・他文脈の安定のため）。
   const resultRegionRef = useRef<HTMLDivElement>(null);
 
-  // A：result phase 到達時に結果領域へスクロールし、フォーカスを移す。
+  // result phase 到達時に結果領域へスクロールし、フォーカスを移す。
   // - phase 依存の useEffect。result phase は完走時のみ到達するため直リンク誤発火はしない。
   // - prefers-reduced-motion: reduce では smooth を使わず即時スクロールする。
   // - フォーカス移動により、スクリーンリーダ利用者にも結果到達（region）が伝わる。
@@ -79,7 +79,7 @@ export default function QuizContainer({
       });
     }
     // tabIndex={-1} の region へプログラム的にフォーカスを移す。
-    // N1: preventScroll で focus() 既定のスクロールを抑止し、見え方を上の
+    // preventScroll で focus() 既定のスクロールを抑止し、見え方を上の
     // scrollIntoView（smooth）に委ねる。preventScroll なしだと focus() の即時
     // スクロールが smooth を打ち消してジャンプに化ける。
     region.focus({ preventScroll: true });
@@ -220,11 +220,10 @@ export default function QuizContainer({
 
   // 真の残余同点の正直な開示。
   // word-sense-personality は構造的に約20%の同点が残る。主タイプ（result）は
-  // determineResult の決定的勝者（シェア/再受験の再現性を保つ）だが、同点を
-  // 「隠して配列順で割る」のをやめ、同点を分け合う副タイプ（co-types）を同格で開示する。
-  // scope は word-sense-personality のみ（1診断ずつ・他診断の結果 UX は変えない）。
-  // 単独勝者（同点なし）のときは co-types が空配列になり、ResultCard は開示ブロックを
-  // 出さない（＝約8割の従来体験そのまま）。
+  // determineResult の決定的勝者（シェア/再受験の再現性を保つ）で、同点を配列順で割って
+  // 隠さず、同点を分け合う副タイプ（co-types）を同格で開示する。
+  // 開示の文（ResultCard）が「言葉の感覚」を言うので、対象は word-sense-personality だけ。
+  // 単独勝者（同点なし）のときは co-types が空配列になり、ResultCard は開示ブロックを出さない。
   const coTypes: QuizResult[] =
     quiz.meta.slug === "word-sense-personality"
       ? getTiedTypeIds(quiz, answers)
@@ -233,7 +232,7 @@ export default function QuizContainer({
           .filter((r): r is QuizResult => r !== undefined)
       : [];
 
-  // N2: result region の読み上げラベルは quizType で出し分ける。この wrapper は
+  // result region の読み上げラベルは quizType で出し分ける。この wrapper は
   // 全 quizType 共通のため固定文言だと knowledge クイズでも「診断結果」と読まれて
   // しまう（知識クイズは「診断」でなく「クイズ」）。
   const resultRegionLabel =
@@ -242,16 +241,14 @@ export default function QuizContainer({
   return (
     <div
       className={styles.resultPhase}
-      // A：完走→結果のリビール対象領域。プログラム的フォーカスの受け皿
+      // 完走→結果のリビール対象領域。プログラム的フォーカスの受け皿
       // （tabIndex={-1}）＋スクリーンリーダ向けに結果領域であることを伝える。
       ref={resultRegionRef}
       tabIndex={-1}
       role="region"
       aria-label={resultRegionLabel}
     >
-      {/* 結果本体（主役）。器は静かに、成果物（ResultCard内の Tsutsumi）だけが主役。
-       * detailedContent の variant 別サブコンポーネントは quiz.meta.accentColor を受け取るが、
-       * ResultCard 自身の chrome（見出し・標準セクション・ボタン）は --accent を使う。 */}
+      {/* 結果本体（主役）。器は静かに、成果物（ResultCard内の Tsutsumi）だけが主役。 */}
       <div className={styles.stage}>
         <ResultCard
           result={result}
@@ -265,7 +262,6 @@ export default function QuizContainer({
           onRetry={handleRetry}
           detailedContent={result.detailedContent}
           resultPageLabels={quiz.meta.resultPageLabels}
-          accentColor={quiz.meta.accentColor}
           referrerTypeId={referrerTypeId}
           allResults={quiz.results}
           coTypes={coTypes}

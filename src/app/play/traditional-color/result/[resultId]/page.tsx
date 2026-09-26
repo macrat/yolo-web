@@ -86,10 +86,6 @@ export default async function TraditionalColorResultPage({ params }: Props) {
   // variant が確認できたので TraditionalColorDetailedContent として型アサーション
   const colorDc = dc as TraditionalColorDetailedContent;
 
-  // result.color は OGP 画像でも使用するタイプ固有色。
-  // フォールバックは quiz.meta.accentColor（藍色）を使用する。
-  const resultColor = result.color ?? quiz.meta.accentColor;
-
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #伝統色診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどの伝統色? 診断してみよう";
@@ -106,16 +102,10 @@ export default async function TraditionalColorResultPage({ params }: Props) {
       shareText={shareText}
       shareUrl={shareUrl}
     >
-      {/* traditional-color固有のJSX。
-       * 可視の per-quiz 色注入（旧 --type-color ヒーロー）は撤去し、インライン結果
-       * （ResultCard）とトーン統一する（共通 --accent ベース・無彩左寄せ）。
-       * 伝統色そのものの色見本（色ドット）は本文 TraditionalColorContent 側が
-       * 情報として保持しており、ここでは触らない。 */}
+      {/* traditional-color固有のJSX。解き終えた画面（ResultCard）と同じく、無彩で左に揃える。
+       * 伝統色そのものは、TraditionalColorContent の他のタイプの行が色見本で見せる。 */}
       <div className={styles.detailedSection}>
-        {/*
-         * キャッチコピー: 結果のコアメッセージ。
-         * 旧デザインのタイプカラー薄背景ヒーローは撤去し、共通アクセントの淡い面に置く。
-         */}
+        {/* キャッチコピー: 結果のコアメッセージ。--paper-2 の地に置く。 */}
         <div className={styles.catchphraseCard}>
           <p className={styles.catchphrase}>{colorDc.catchphrase}</p>
         </div>
@@ -144,8 +134,7 @@ export default async function TraditionalColorResultPage({ params }: Props) {
         <TraditionalColorContent
           content={colorDc}
           resultId={resultId}
-          resultColor={resultColor}
-          headingLevel={2}
+          placement="resultPage"
           afterColorAdvice={
             /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>

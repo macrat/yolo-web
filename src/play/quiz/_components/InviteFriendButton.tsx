@@ -14,9 +14,7 @@ interface InviteFriendButtonProps {
   inviteText: string;
   /**
    * Canonical content id (via `contentIdForQuiz`) for GA4 share tracking
-   * (cycle-280 B-551, surface="invite"). Optional and additive: callers that
-   * do not pass it keep the prior no-tracking behaviour, so wiring can be
-   * rolled out per surface without regressing untracked invite buttons.
+   * (surface="invite"). When omitted, the invite is not tracked.
    */
   contentId?: string;
 }
@@ -46,7 +44,7 @@ export default function InviteFriendButton({
         await navigator.share({ title: text, url });
         // Count only a completed share, not a cancellation: navigator.share
         // rejects when the user dismisses the sheet, so reaching this line
-        // means the share succeeded (B-551 success-only tracking).
+        // means the share succeeded.
         if (contentId) {
           trackShare("web_share", "diagnosis", contentId, "invite");
         }

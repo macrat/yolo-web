@@ -1,15 +1,13 @@
 /**
  * Tests for detailedContent on all 24 character-personality results.
  *
- * All 24 (#1-#24, batch1/2/3) now use the CharacterPersonalityDetailedContent variant format.
- * Batch2 (#11-#20) completed its migration; there are no remaining standard-format items.
+ * All 24 (#1-#24, batch1/2/3) use the CharacterPersonalityDetailedContent variant format.
  *
  * Common tests (all 24): every result must have detailedContent with behaviors.
- * Standard-format tests: none currently (standardFormatResults is empty — kept as a guard
- *   in case a future result ships without the variant field).
+ * Standard-format tests: a guard that stays empty unless a result ships without the variant field.
  * Variant-format tests (all 24): variant, catchphrase (15-30), archetypeBreakdown (80-150),
- *   characterMessage (50-200) must be present and within range. batch2 was previously excluded
- *   here (stale assumption), which let over-length archetypeBreakdown slip through (cycle-296).
+ *   characterMessage (50-200) must be present and within range. Every batch is covered, so an
+ *   over-length archetypeBreakdown in any batch fails here.
  */
 import { describe, it, expect } from "vitest";
 import { resultsBatch1 } from "../character-personality-results-batch1";

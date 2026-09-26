@@ -5,20 +5,23 @@
  * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
  *
  * 共通化対象:
- * - colorMeaning / scenery+season / behaviors / colorAdvice / 他のタイプ（OtherTypesNav。伝統色そのものを色見本で添える） の5セクション
- * - CSS変数 --type-color をインラインスタイルで注入（タイプごとに色が異なるため）
- * - ダークモード対応（opacity/border調整による汎用的コントラスト確保）
+ * - colorMeaning / scenery+season / behaviors / colorAdvice / 他のタイプ（OtherTypesNav） の5セクション
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
  * - 相性セクション / CTA（afterColorAdvice スロットとして注入）
  * - ShareButtons / もう一度挑戦するボタン
+ *
+ * 伝統色はタイプの中身なので、他のタイプの行に色見本で見せる。見出しや地などの飾りには使わない（DESIGN.md §2）。
  */
 
 import type React from "react";
 import type { TraditionalColorDetailedContent } from "@/play/quiz/types";
 import traditionalColorQuiz from "@/play/quiz/data/traditional-color";
-import OtherTypesNav from "./OtherTypesNav";
+import OtherTypesNav, {
+  type ResultPlacement,
+  SECTION_HEADING,
+} from "./OtherTypesNav";
 import styles from "./TraditionalColorContent.module.css";
 
 interface TraditionalColorContentProps {
@@ -26,10 +29,8 @@ interface TraditionalColorContentProps {
   content: TraditionalColorDetailedContent;
   /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
   resultId: string;
-  /** 結果タイプのテーマカラー（--type-color CSS変数に注入） */
-  resultColor: string;
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
+  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、他のタイプでのいまのタイプの示し方が決まる。 */
+  placement: ResultPlacement;
   /** colorAdvice後・他のタイプ前にページ固有要素（CTA等）を挿入するスロット */
   afterColorAdvice?: React.ReactNode;
 }
@@ -37,22 +38,14 @@ interface TraditionalColorContentProps {
 export default function TraditionalColorContent({
   content,
   resultId,
-  resultColor,
-  headingLevel,
+  placement,
   afterColorAdvice,
 }: TraditionalColorContentProps) {
   const quiz = traditionalColorQuiz;
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
+  const Heading = SECTION_HEADING[placement];
 
   return (
-    // 新デザインでは装飾としてのタイプ色（--type-color）は使わず、共通アクセント（--accent 系）に統一する。
-    // ただし caller signature 互換のため wrapper では --type-color の受け取り口を引き続き残す
-    // （dead 注入だが page.tsx / ResultCard 側の caller を壊さないため維持）。
-    <div
-      className={styles.wrapper}
-      style={{ "--type-color": resultColor } as React.CSSProperties}
-    >
+    <div className={styles.wrapper}>
       {/* colorMeaning セクション: 色の文化的背景 */}
       <Heading className={styles.sectionHeading}>この色の物語</Heading>
       <div className={styles.colorMeaningCard}>{content.colorMeaning}</div>
@@ -85,7 +78,7 @@ export default function TraditionalColorContent({
         quizSlug={quiz.meta.slug}
         currentResultId={resultId}
         results={quiz.results}
-        placement={headingLevel === 2 ? "resultPage" : "solvedScreen"}
+        placement={placement}
         showSwatch
       />
     </div>

@@ -64,7 +64,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの音楽的な強み")).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの音楽的な弱み")).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの音楽あるある")).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("今日の音楽ライフのヒント")).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(
@@ -128,13 +128,13 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
   });
 });
 
-describe("MusicPersonalityContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("MusicPersonalityContent - placement による見出しの階層", () => {
+  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -144,12 +144,12 @@ describe("MusicPersonalityContent - headingLevel prop", () => {
     expect(h3s.length).toBe(0);
   });
 
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
+  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={3}
+        placement="solvedScreen"
       />,
     );
     const h3s = container.querySelectorAll("h3");
@@ -168,7 +168,7 @@ describe("MusicPersonalityContent - afterTodayAction スロット", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
         afterTodayAction={afterContent}
       />,
     );
@@ -182,7 +182,7 @@ describe("MusicPersonalityContent - afterTodayAction スロット", () => {
         <MusicPersonalityContent
           content={sampleContent}
           resultId="festival-pioneer"
-          headingLevel={2}
+          placement="resultPage"
         />,
       );
     }).not.toThrow();
@@ -195,7 +195,7 @@ describe("MusicPersonalityContent - wrapper クラス", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
@@ -203,15 +203,14 @@ describe("MusicPersonalityContent - wrapper クラス", () => {
   });
 });
 
-// 新デザインでは独自トークン --music-accent-color / --music-accent-bg を全廃し、
-// インラインスタイルでの色注入も行わない。CSS は共通 --accent 系のみを参照する。
+// タイプごとの色をインラインスタイルで入れない（DESIGN.md §2）。
 describe("MusicPersonalityContent - インラインスタイル不使用", () => {
   it("sectionHeadingにインラインスタイルが設定されていないこと", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const headings = container.querySelectorAll("[class*='sectionHeading']");
@@ -225,7 +224,7 @@ describe("MusicPersonalityContent - インラインスタイル不使用", () =>
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const card = container.querySelector("[class*='todayActionCard']");
@@ -240,7 +239,7 @@ describe("MusicPersonalityContent - 全タイプリンク", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const links = container.querySelectorAll(
@@ -250,12 +249,12 @@ describe("MusicPersonalityContent - 全タイプリンク", () => {
   });
 
   it("他のタイプの絵文字アイコン（r.icon）が描画されないこと", () => {
-    // 新デザインでは r.icon の描画を撤去。各タイプの区別はタイトル文言で行う。
+    // 絵文字を置かない（DESIGN.md §5）。各タイプはタイトルの文言で見分ける。
     render(
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     // モックデータの icon: "🎪" / "📢" がリスト中に出ないこと

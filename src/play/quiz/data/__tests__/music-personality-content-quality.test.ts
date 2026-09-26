@@ -2,7 +2,7 @@
  * Quality regression tests for music-personality types 5-8 (bgm-craftsman, karaoke-healer,
  * midnight-shuffle, lyrics-dweller).
  *
- * These tests verify the 4 quality issues reported in the review:
+ * These tests verify:
  *
  * 1. behaviors must not duplicate content from strengths/weaknesses
  * 2. catchphrase must follow the concise style of types 1-4 (no句点, 15-25 chars)
@@ -43,10 +43,10 @@ function sharesSubstring(
 }
 
 // ---------------------------------------------------------------------------
-// Problem 1: behaviors must not duplicate strengths/weaknesses
+// behaviors must not duplicate strengths/weaknesses
 // ---------------------------------------------------------------------------
 
-describe("Problem 1: behaviors must not duplicate strengths/weaknesses content", () => {
+describe("behaviors must not duplicate strengths/weaknesses content", () => {
   const DUPLICATE_THRESHOLD = 10; // chars
 
   it("bgm-craftsman: no behavior should share 10+ chars with any strength or weakness", () => {
@@ -105,10 +105,10 @@ describe("Problem 1: behaviors must not duplicate strengths/weaknesses content",
 });
 
 // ---------------------------------------------------------------------------
-// Problem 2: catchphrase style — no句点, 15-25 chars, concise
+// catchphrase style — no句点, 15-25 chars, concise
 // ---------------------------------------------------------------------------
 
-describe("Problem 2: catchphrase style — concise, no sentence-ending punctuation, 15-25 chars", () => {
+describe("catchphrase style — concise, no sentence-ending punctuation, 15-25 chars", () => {
   const LATER_TYPE_IDS = [
     "bgm-craftsman",
     "karaoke-healer",
@@ -140,10 +140,10 @@ describe("Problem 2: catchphrase style — concise, no sentence-ending punctuati
 });
 
 // ---------------------------------------------------------------------------
-// Problem 3: karaoke-healer strength 1 — ability-focused phrasing
+// karaoke-healer strength 1 — ability-focused phrasing
 // ---------------------------------------------------------------------------
 
-describe("Problem 3: karaoke-healer strength 1 should be ability-focused", () => {
+describe("karaoke-healer strength 1 should be ability-focused", () => {
   it('strength 1 should contain "できる" or "力がある" or "上手" to express an ability', () => {
     const dc = getDC("karaoke-healer");
     const strength1 = dc.strengths[0];
@@ -156,10 +156,10 @@ describe("Problem 3: karaoke-healer strength 1 should be ability-focused", () =>
 });
 
 // ---------------------------------------------------------------------------
-// Problem 4: midnight-shuffle weakness 2 — self-deprecating humor
+// midnight-shuffle weakness 2 — self-deprecating humor
 // ---------------------------------------------------------------------------
 
-describe("Problem 4: midnight-shuffle weakness 2 should be self-deprecating humor", () => {
+describe("midnight-shuffle weakness 2 should be self-deprecating humor", () => {
   it("weakness 2 should not be a neutral description about language expression", () => {
     const dc = getDC("midnight-shuffle");
     const weakness2 = dc.weaknesses[1];

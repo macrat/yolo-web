@@ -5,8 +5,8 @@
  * - archetypeBreakdown / behaviors / characterMessage の3セクション表示
  * - 相性機能エリア（referrerTypeId あり/なし、API成功/失敗）
  * - 他のタイプ（OtherTypesNav）
- * - headingLevel prop
- * - resultColor の CSS変数注入
+ * - 置く面（placement）による見出しの階層（h2/h3）
+ * - タイプの色を wrapper に入れないこと
  * - afterCharacterMessage スロット
  */
 
@@ -109,16 +109,13 @@ const sampleContent: CharacterPersonalityDetailedContent = {
 };
 
 const sampleResultId = "blazing-strategist";
-const sampleResultColor = "#ef4444";
-
 describe("CharacterPersonalityContent - 基本レンダリング", () => {
   it("archetypeBreakdownセクションが表示されること", () => {
     render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このキャラの成り立ち")).toBeInTheDocument();
@@ -134,8 +131,7 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("このキャラの日常")).toBeInTheDocument();
@@ -154,8 +150,7 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("キャラからのメッセージ")).toBeInTheDocument();
@@ -171,8 +166,7 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(
@@ -184,14 +178,13 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
   });
 });
 
-describe("CharacterPersonalityContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("CharacterPersonalityContent - placement による見出しの階層", () => {
+  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
     const { container } = render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -201,13 +194,12 @@ describe("CharacterPersonalityContent - headingLevel prop", () => {
     expect(h3s.length).toBe(0);
   });
 
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
+  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
     const { container } = render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={3}
+        placement="solvedScreen"
       />,
     );
     const h3s = container.querySelectorAll("h3");
@@ -223,30 +215,26 @@ describe("CharacterPersonalityContent - wrapper と CSS変数", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
     expect(wrapper).not.toBeNull();
   });
 
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
+  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
     const { container } = render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector(
       "[class*='wrapper']",
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(
-      sampleResultColor,
-    );
+    expect(wrapper.getAttribute("style")).toBeNull();
   });
 });
 
@@ -259,8 +247,7 @@ describe("CharacterPersonalityContent - afterCharacterMessage スロット", () 
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         afterCharacterMessage={afterContent}
       />,
     );
@@ -276,8 +263,7 @@ describe("CharacterPersonalityContent - afterCharacterMessage スロット", () 
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         referrerTypeId="blazing-poet"
         afterCharacterMessage={afterContent}
       />,
@@ -292,8 +278,7 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId なし）"
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(
@@ -322,8 +307,7 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -354,8 +338,7 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId="blazing-strategist"
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -379,8 +362,7 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -403,8 +385,7 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -430,8 +411,7 @@ describe("CharacterPersonalityContent - 相性機能（ローディング中）"
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -452,8 +432,7 @@ describe("CharacterPersonalityContent - 全タイプリンク", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const links = container.querySelectorAll(

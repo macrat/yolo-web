@@ -32,7 +32,7 @@ export default function QuestionCard({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
 
-  // F2（WCAG 2.4.3 / 4.1.3）: 設問切替時のフォーカス管理。
+  // 設問切替時のフォーカス管理（WCAG 2.4.3 / 4.1.3）。
   // QuizContainer は playing phase で key={question.id} により QuestionCard を
   // 再マウントする。何もしないと前設問の回答ボタンにあった focus が <body> に
   // 落ち、キーボード/SR 利用者は「設問が変わったこと」も現在位置も失う。

@@ -46,8 +46,7 @@ export default function CompatibilitySection({
   return (
     <div className={styles.section}>
       <p className={styles.heading}>友達との相性結果</p>
-      {/* 新デザイン体系では絵文字（icon）を装飾に使わない（DESIGN.md §8-6）。
-          各タイプの区別はタイトル文言だけで行う。 */}
+      {/* 絵文字（icon）は置かない（DESIGN.md §5）。各タイプはタイトルの文言だけで見分ける。 */}
       <div className={styles.typeIcons}>
         <div className={styles.typeBox}>
           <span className={styles.typeName}>{myType.title}</span>

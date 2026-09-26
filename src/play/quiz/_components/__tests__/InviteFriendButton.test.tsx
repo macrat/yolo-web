@@ -1,11 +1,11 @@
 /**
- * InviteFriendButton（相性招待）— GA4 計測是正の回帰ガード（cycle-280 B-551, surface="invite"）。
+ * InviteFriendButton（相性招待）— GA4 計測の回帰ガード（surface="invite"）。
  *
  * 検証の核心（「実際に完了したアクションのみ計上」）:
  * - navigator.share が成功したときだけ web_share を計上する（キャンセル＝reject では撃たない）。
  * - share 取消 → clipboard フォールバックが成功したときだけ clipboard を計上する。
  * - clipboard も失敗したら何も計上しない。
- * - contentId 未指定（既存の未計測面）では additive に無計測のまま（後方互換）。
+ * - contentId 未指定の面では計上しない。
  *
  * analytics.ts は window.gtag を直接呼ぶので、gtag を spy に差し替えて送出 payload を検査する。
  */
@@ -54,7 +54,7 @@ function renderButton(contentId?: string) {
   return screen.getByRole("button", { name: "友達に診断を送る" });
 }
 
-describe("InviteFriendButton 計測是正", () => {
+describe("InviteFriendButton 計測", () => {
   test("navigator.share 成功時のみ web_share を invite surface で計上する", async () => {
     mockShare.mockResolvedValue(undefined);
     fireEvent.click(renderButton("quiz-character-personality"));
@@ -101,7 +101,7 @@ describe("InviteFriendButton 計測是正", () => {
     expect(findShareParams()).toBeUndefined();
   });
 
-  test("contentId 未指定なら計上しない（後方互換の additive 挙動）", async () => {
+  test("contentId 未指定なら計上しない", async () => {
     mockShare.mockResolvedValue(undefined);
     fireEvent.click(renderButton());
 

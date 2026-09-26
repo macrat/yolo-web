@@ -200,7 +200,7 @@ export default async function AnimalPersonalityResultPage({
         <AnimalPersonalityContent
           content={dc}
           resultId={resultId}
-          headingLevel={2}
+          placement="resultPage"
           afterTodayAction={
             <>
               {/* 相性紹介: withパラメータがある場合のみ表示 */}

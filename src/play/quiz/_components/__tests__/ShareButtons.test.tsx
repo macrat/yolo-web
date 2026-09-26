@@ -47,7 +47,7 @@ function stubNavigator(share?: (data: unknown) => Promise<void>): void {
   });
 }
 
-describe("ShareButtons（quiz）計測是正", () => {
+describe("ShareButtons（quiz）計測", () => {
   describe("web_share（成功時のみ計上）", () => {
     test("共有シートが成功したときだけ share を計上し、content_id/surface が乗る", async () => {
       const share = vi.fn().mockResolvedValue(undefined);
@@ -75,7 +75,7 @@ describe("ShareButtons（quiz）計測是正", () => {
       });
     });
 
-    test("共有シートがキャンセルされたら share を一切計上しない（誤計上の是正）", async () => {
+    test("共有シートがキャンセルされたら share を一切計上しない", async () => {
       const share = vi.fn().mockRejectedValue(new Error("cancelled"));
       stubNavigator(share);
       render(
@@ -143,7 +143,7 @@ describe("ShareButtons（quiz）計測是正", () => {
     });
   });
 
-  describe("後方互換・非汚染", () => {
+  describe("surface を持たない面と計上しない条件", () => {
     test("surface 未指定（fortune 等の面）では surface キーを送らない", () => {
       mockWindowOpen.mockReturnValue(null);
       stubNavigator();
@@ -160,7 +160,7 @@ describe("ShareButtons（quiz）計測是正", () => {
       const params = findShareParams();
       expect(params).toBeDefined();
       expect(params).not.toHaveProperty("surface");
-      // item_id は温存（後方互換）
+      // item_id は surface の有無にかかわらず乗る
       expect(params).toMatchObject({ item_id: "fortune-daily" });
     });
 

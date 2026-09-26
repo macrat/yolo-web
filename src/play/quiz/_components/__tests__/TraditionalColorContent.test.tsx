@@ -63,16 +63,13 @@ const sampleContent: TraditionalColorDetailedContent = {
   colorAdvice: "あなたの深い知性が周囲を照らしている。",
 };
 
-const sampleColor = "#0d5661";
-
 describe("TraditionalColorContent - 基本レンダリング", () => {
   it("colorMeaningセクションが表示されること", () => {
     render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この色の物語")).toBeInTheDocument();
@@ -88,8 +85,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この色が映える風景")).toBeInTheDocument();
@@ -102,8 +98,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この色が現れる場面")).toBeInTheDocument();
@@ -116,8 +111,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(screen.getByText("この色からのひとこと")).toBeInTheDocument();
@@ -131,8 +125,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     expect(
@@ -144,14 +137,13 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
   });
 });
 
-describe("TraditionalColorContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("TraditionalColorContent - placement による見出しの階層", () => {
+  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -161,13 +153,12 @@ describe("TraditionalColorContent - headingLevel prop", () => {
     expect(h3s.length).toBe(0);
   });
 
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
+  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={3}
+        placement="solvedScreen"
       />,
     );
     const h3s = container.querySelectorAll("h3");
@@ -186,8 +177,7 @@ describe("TraditionalColorContent - afterColorAdvice スロット", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
         afterColorAdvice={afterContent}
       />,
     );
@@ -201,43 +191,39 @@ describe("TraditionalColorContent - afterColorAdvice スロット", () => {
         <TraditionalColorContent
           content={sampleContent}
           resultId="ai"
-          resultColor={sampleColor}
-          headingLevel={2}
+          placement="resultPage"
         />,
       );
     }).not.toThrow();
   });
 });
 
-describe("TraditionalColorContent - wrapper クラスと --type-color CSS変数", () => {
+describe("TraditionalColorContent - wrapper", () => {
   it("wrapperクラスを持つ最外層要素が存在すること", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
     expect(wrapper).not.toBeNull();
   });
 
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
+  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const wrapper = container.querySelector(
       "[class*='wrapper']",
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
-    // CSS変数 --type-color がインラインスタイルで設定されていること
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
+    expect(wrapper.getAttribute("style")).toBeNull();
   });
 });
 
@@ -247,8 +233,7 @@ describe("TraditionalColorContent - 他のタイプの色見本", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const rows = container.querySelectorAll("li");
@@ -266,8 +251,7 @@ describe("TraditionalColorContent - aria-current", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     // 藍色(あいいろ)のリンクは aria-current="page" を持つ
@@ -280,21 +264,19 @@ describe("TraditionalColorContent - aria-current", () => {
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
+        placement="resultPage"
       />,
     );
     const otherLink = screen.getByRole("link", { name: /朱色/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("解き終えた画面（h3）では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
+  it("解き終えた画面では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
     render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="shu"
-        resultColor="#ab3b3a"
-        headingLevel={3}
+        placement="solvedScreen"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /朱色/ });
