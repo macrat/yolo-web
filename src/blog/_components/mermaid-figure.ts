@@ -154,7 +154,7 @@ export interface FigurePlan {
  * 図を描く倍率を決める。naturalWidth は図の元の幅、available はコンテンツ幅、smallestText は図の中のいちばん
  * 小さい字の元の大きさ、minText は字の下限（px）。
  * 収まる図は元の大きさで描く。収まらない図は、字が下限を下回らない所まで縮め、それでも収まらなければ下限の
- * 大きさのまま横に送る。元から下限より小さい字を持つ図は、下限まで大きくする。
+ * 大きさのまま横に送る。元の大きさより大きくはしない（字の大きさは図を描く設定が決める）。
  */
 export function planFigure(
   naturalWidth: number,
@@ -163,7 +163,7 @@ export function planFigure(
   minText: number,
 ): FigurePlan {
   const fitScale = available / naturalWidth;
-  const floor = minText / smallestText;
+  const floor = Math.min(1, minText / smallestText);
   const scale = Math.max(Math.min(1, fitScale), floor);
   return { scale, fits: scale <= fitScale };
 }
@@ -173,22 +173,22 @@ export type FigureStart = "left" | "right" | "top" | "bottom";
 
 /**
  * 図の始まりの位置を、図の元の文から決める。流れ図は向きの指定（TB・TD は上、BT は下、RL は右、LR は左）の
- * 端から描き始まる。順序図・gantt など、流れ図でない図は左から始まる。
+ * 端から描き始まり、向きを書かない流れ図は上から描かれる。順序図・gantt など、流れ図でない図は左から始まる。
  */
 export function figureStart(source: string): FigureStart {
-  const header = /^\s*(?:flowchart|graph)\s+(TB|TD|BT|RL|LR)\b/im.exec(
+  const header = /^\s*(?:flowchart|graph)\b[ \t]*(TB|TD|BT|RL|LR)?/im.exec(
     source.replace(/^\s*%%.*$/gm, ""),
   );
-  switch (header?.[1].toUpperCase()) {
-    case "TB":
-    case "TD":
-      return "top";
+  if (!header) return "left";
+  switch (header[1]?.toUpperCase()) {
     case "BT":
       return "bottom";
     case "RL":
       return "right";
-    default:
+    case "LR":
       return "left";
+    default:
+      return "top";
   }
 }
 
@@ -209,7 +209,7 @@ export function startScrollLeft(
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
-export const GANTT_TICK_INTERVALS: readonly (readonly [string, number])[] = [
+const GANTT_TICK_INTERVALS: readonly (readonly [string, number])[] = [
   ["1minute", MINUTE],
   ["5minute", 5 * MINUTE],
   ["10minute", 10 * MINUTE],
@@ -286,9 +286,10 @@ const GANTT_WIDEN_STEP = 1.25;
  * gantt を描き直す組み方を決める。gantt は渡された幅に時間の軸を詰めて描くので、次の順に1つずつ決め、決めた
  * 組み方で描き直してから次へ進む。
  * 1. 左の余白は区分の名前の右端から gap の所まで、右の余白は軸の右の端からはみ出す字（最後の目盛りの字の半分・
- *    帯の外に置かれた名前）が収まる所までにする。図の幅は変えない。
+ *    帯の右に置かれた名前）が収まる所までにする。図の幅は変えないので、図の右の外に出る名前は、軸を細くして
+ *    図の中に入れる。
  * 2. 目盛りの字が重なるときは、重ならない所まで目盛りを間引く。
- * 3. それでも目盛りの字が重なるか、帯の名前が区分の名前に掛かるか図の外に出るときだけ、時間の軸を広げる。
+ * 3. それでも目盛りの字が重なるか、帯の名前が区分の名前に掛かるときだけ、時間の軸を広げる。
  *    長さを持つ帯の名前は、その帯の中に収まる所まで一度に広げる。
  * 時間の軸は、目盛りの字を2つ並べられる幅より細くしない。組み方が変わらなければ null。
  */
@@ -351,9 +352,7 @@ export function planGantt(
     return withAxis(leftPadding, rightPadding, axis, true);
   }
   const crowded = measure.labels.filter(
-    (label) =>
-      label.left < measure.sectionRight + gap / 2 ||
-      label.right > layout.useWidth,
+    (label) => label.left < measure.sectionRight + gap / 2,
   );
   if (ticksCrowd || crowded.length > 0) {
     let stretch = GANTT_WIDEN_STEP;
@@ -371,4 +370,101 @@ export function planGantt(
     );
   }
   return null;
+}
+
+/** 行の頭に置かない字（§4 の禁則。閉じ括弧・句読点・！？・…・中点・小書きの仮名・長音符・繰り返し記号）。 */
+const LINE_START_FORBIDDEN =
+  /^[)）\]］」』】〕〉》〙〗、。，．,.!！?？…‥・：:；;ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿーｰ々〻ゝゞヽヾ]/;
+
+/** 行の終わりに置かない字（開き括弧）。 */
+const LINE_END_FORBIDDEN = /[(（\[［「『【〔〈《〘〖]$/;
+
+/** 語の中の字（英数字と、ファイル名や命令の名前をつなぐ記号）。 */
+const WORD_CHARACTER = /[A-Za-z0-9_.\-/<>]/;
+
+/** 折り返した文の行の、読みにくい折れの数。 */
+export interface LineProblems {
+  /** 1字だけの行。 */
+  single: number;
+  /** 行の頭か終わりの禁則の破れ。 */
+  forbidden: number;
+  /** 英数字の語の中の折れ（ファイル名・命令の名前が割れる）。 */
+  splitWords: number;
+}
+
+/**
+ * 1つの文（改行で区切った1かたまり）を折り返した行を調べる。1行だけの文は、折れが無いので数えない。
+ */
+export function lineProblems(lines: readonly string[]): LineProblems {
+  const problems: LineProblems = { single: 0, forbidden: 0, splitWords: 0 };
+  if (lines.length < 2) return problems;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (Array.from(line).length === 1) problems.single++;
+    if (
+      (i > 0 && LINE_START_FORBIDDEN.test(line)) ||
+      (i < lines.length - 1 && LINE_END_FORBIDDEN.test(line))
+    ) {
+      problems.forbidden++;
+    }
+    if (i > 0) {
+      const before = lines[i - 1].slice(-1);
+      const after = lines[i].charAt(0);
+      if (WORD_CHARACTER.test(before) && WORD_CHARACTER.test(after)) {
+        problems.splitWords++;
+      }
+    }
+  }
+  return problems;
+}
+
+/** 箱の中の文の折り返しの幅を1つ試して描いた結果。 */
+export interface WrapTrial {
+  /** 折り返しの幅。 */
+  wrap: number;
+  /** その幅で描いた図が、コンテンツ幅に収まるか（planFigure の fits）。 */
+  fits: boolean;
+  /** 図の元の幅。 */
+  width: number;
+  /** 読みにくい折れ（1字だけの行・禁則の破れ・語の中の折れ）と、字の重なりの数の合計。 */
+  flaws: number;
+}
+
+/**
+ * 描いて試した組み方から、図を描く組み方を選ぶ。読みにくい折れと重なりの無いものだけを候補にし（どれにもあるときは
+ * いちばん少ないものを候補にする）、収まるものがあれば、そのうち折り返しの幅がいちばん広いものにする（語を割らな
+ * い）。収まるものが無ければ、元の幅がいちばん狭くなるものにする（横に送る量を減らす）。同じなら先に試したもの。
+ */
+export function chooseWrap<T extends WrapTrial>(trials: readonly T[]): T {
+  const fewest = Math.min(...trials.map((trial) => trial.flaws));
+  const clean = trials.filter((trial) => trial.flaws === fewest);
+  const fitting = clean.filter((trial) => trial.fits);
+  if (fitting.length > 0) {
+    return fitting.reduce((best, trial) =>
+      trial.wrap > best.wrap ? trial : best,
+    );
+  }
+  return clean.reduce((best, trial) =>
+    trial.width < best.width ? trial : best,
+  );
+}
+
+/**
+ * 流れ図の箱の中の文の折り返しの幅の候補を、箱の文の長さから決める。広い順。widths は、折り返さずに描いたときの
+ * 文のかたまり（書き手の改行で区切ったもの）の幅。どの候補も、それより短いかたまりを1行のまま残し、長いかたまり
+ * だけを折る幅にする（文の長さと関係の無い幅で折ると、最後の1字だけが次の行に落ちやすい）。いちばん狭い候補は
+ * min で、max 以上の候補は持たない。
+ */
+export function wrapCandidates(
+  widths: readonly number[],
+  min: number,
+  max: number,
+): number[] {
+  const candidates = new Set<number>();
+  for (const width of widths) {
+    const wrap = Math.ceil(width) + 1;
+    if (wrap > min && wrap < max) candidates.add(wrap);
+  }
+  candidates.add(min);
+  return [...candidates].sort((a, b) => b - a);
 }
