@@ -1,29 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FocusEvent } from "react";
+import { flushSync } from "react-dom";
 import Button from "@/components/Button";
 import CopyButton from "@/components/CopyButton";
 import Field from "@/components/Field";
 import ResultBox from "@/components/ResultBox";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
+import { revealFocusedFrame, revealResult } from "@/lib/reveal";
 import { formatJson, minifyJson, validateJson, type IndentType } from "./logic";
 import styles from "./JsonFormatterTile.module.css";
-
-/**
- * 道具の組み方。
- * - "full": 整形・圧縮・検証の3つの操作を持つ。
- * - "format-only": 整形だけを持つ。
- */
-export type JsonFormatterTileVariant = "full" | "format-only";
 
 /** 操作が生んだ結果。整形と圧縮はコード、検証は文で出す。 */
 type JsonResult =
   { kind: "format" | "minify"; code: string } | { kind: "valid" };
 
 const RESULT_CAPTIONS: Record<JsonResult["kind"], string> = {
-  format: "整形した JSON",
-  minify: "圧縮した JSON",
+  format: "整形したJSON",
+  minify: "圧縮したJSON",
   valid: "検証の結果",
 };
 
@@ -35,26 +30,34 @@ const RESULT_ANNOUNCEMENTS: Record<JsonResult["kind"], string> = {
 };
 
 const EMPTY_INPUT_ERROR = "JSONを入力してください。";
+const INVALID_JSON_ERROR = "JSONの形式が正しくありません。";
 
 /**
- * JSON.parse の英語のエラーを、何行目の何文字目かを添えた日本語の文にする。英語の生のエラーは来訪者に
- * 見せない。
+ * 数と、それに続く単位の字をつなぎ、あいだで折らない（「3行目」を「3行／目」に、「3文字目付近」を「3文字目付／近」に
+ * しない。§4）。字のあいだに幅の無い WORD JOINER を挟む。エラーの文は Field が字で受けるので、折り方を字の側で決める。
+ */
+function keepTogether(text: string): string {
+  return [...text].join("\u2060");
+}
+
+/**
+ * JSON.parse の英語のエラーを、どこが誤りかを添えた日本語の文にする。英語の生のエラーは来訪者に見せない。
+ * 位置を言わないエンジン（Safari の JavaScriptCore）では、位置を添えずに言う。
  */
 function toJapaneseJsonError(rawError: string): string {
   const lineColMatch = rawError.match(/line\s+(\d+)\s+column\s+(\d+)/i);
   if (lineColMatch) {
-    return `JSONの形式が正しくありません。（${lineColMatch[1]}行目、${lineColMatch[2]}文字目付近）`;
+    const line = keepTogether(`${lineColMatch[1]}行目`);
+    const column = keepTogether(`${lineColMatch[2]}文字目付近`);
+    return `${INVALID_JSON_ERROR}（${line}、${column}）`;
   }
-  const posMatch = rawError.match(/position\s+(\d+)/i);
-  if (posMatch) {
-    return `JSONの形式が正しくありません。（位置 ${posMatch[1]} 付近）`;
+  const positionMatch = rawError.match(/position\s+(\d+)/i);
+  if (positionMatch) {
+    // エンジンの位置は0から数えるので、来訪者が数える1からの数にする。
+    const column = keepTogether(`${Number(positionMatch[1]) + 1}文字目付近`);
+    return `${INVALID_JSON_ERROR}（先頭から${column}）`;
   }
-  return "JSONの形式が正しくありません。";
-}
-
-export interface JsonFormatterTileProps {
-  /** 道具の組み方（既定: "full"） */
-  variant?: JsonFormatterTileVariant;
+  return INVALID_JSON_ERROR;
 }
 
 /**
@@ -62,12 +65,13 @@ export interface JsonFormatterTileProps {
  * 結果は、結果のボックスがそのままコードのボックスになり、写すコピーのボタンをボックスの頭の行に持つ。
  * 数百行の結果でも、来訪者は結果の頭でそのまま写せる。
  *
- * 結果が出たとき、コピーのボタン（検証の結果ではボックス）が画面の外にあれば、それが画面に入るまで即時に
- * 送る（§8・§11）。
+ * 整形した JSON は字下げが中身なので、折り返さずボックスの中で横に送る（§5）。圧縮した JSON は改行を持たない
+ * 1続きの文字列なので、ボックスの幅で、どの字のあいだでも折り返し、送らずに終わりまで読める。
+ *
+ * 結果が画面に入りきらないときは、操作の並びを画面の上に置き、その下に結果を見せる（§8）。キーボードでコードの区画に
+ * 着いたときは、ボックスの頭とフォーカスのリングの上の辺から見せる。
  */
-export default function JsonFormatterTile({
-  variant = "full",
-}: JsonFormatterTileProps = {}) {
+export default function JsonFormatterTile() {
   const [input, setInput] = useState("");
   const [indent, setIndent] = useState<IndentType>("2");
   const [error, setError] = useState("");
@@ -75,34 +79,34 @@ export default function JsonFormatterTile({
   // 操作ごとに増やし、結果のボックスを新しく出し直して登場の動きと読み上げを毎回起こす。
   const [run, setRun] = useState(0);
 
+  const operationsRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLElement>(null);
-  const copyRef = useRef<HTMLDivElement>(null);
 
-  const showResult = useCallback((next: JsonResult) => {
+  function showResult(next: JsonResult): void {
     setError("");
     setResult(next);
     setRun((previous) => previous + 1);
-  }, []);
+  }
 
-  const showError = useCallback((message: string) => {
+  function showError(message: string): void {
+    // 同じ誤りのまま押し直したときも、エラーの文を入れ直して読み上げに言い直させる。文を消した形を先に
+    // 描き切ってから入れるので、画面は一度も文の無い形を見せない。
+    flushSync(() => setError(""));
     setError(message);
     setResult(null);
-  }, []);
+  }
 
-  const runOperation = useCallback(
-    (operate: (text: string) => JsonResult) => {
-      if (!input.trim()) {
-        showError(EMPTY_INPUT_ERROR);
-        return;
-      }
-      try {
-        showResult(operate(input));
-      } catch (e) {
-        showError(toJapaneseJsonError(e instanceof Error ? e.message : ""));
-      }
-    },
-    [input, showError, showResult],
-  );
+  function runOperation(operate: (text: string) => JsonResult): void {
+    if (!input.trim()) {
+      showError(EMPTY_INPUT_ERROR);
+      return;
+    }
+    try {
+      showResult(operate(input));
+    } catch (e) {
+      showError(toJapaneseJsonError(e instanceof Error ? e.message : ""));
+    }
+  }
 
   const handleFormat = () =>
     runOperation((text) => ({
@@ -120,18 +124,19 @@ export default function JsonFormatterTile({
       return { kind: "valid" };
     });
 
-  useEffect(() => {
-    if (run === 0) return;
-    const target = copyRef.current ?? resultRef.current;
-    if (!target) return;
-    const viewport = window.visualViewport;
-    const visibleBottom = viewport
-      ? viewport.offsetTop + viewport.height
-      : window.innerHeight;
-    const overflow = target.getBoundingClientRect().bottom - visibleBottom;
-    if (overflow > 0) {
-      window.scrollBy({ top: Math.ceil(overflow), behavior: "instant" });
+  // キーボードでコードの区画に着いたら、ボックスの頭とリングの上の辺から見せる。マウスで押して着いたとき
+  // （字を選ぶときなど）は、押した所を動かさない。
+  function handleResultFocus(event: FocusEvent<HTMLElement>): void {
+    const target = event.target;
+    if (target === event.currentTarget || !target.matches(":focus-visible")) {
+      return;
     }
+    revealFocusedFrame(event.currentTarget);
+  }
+
+  useEffect(() => {
+    if (run === 0 || !operationsRef.current || !resultRef.current) return;
+    revealResult(operationsRef.current, resultRef.current);
   }, [run]);
 
   return (
@@ -150,7 +155,7 @@ export default function JsonFormatterTile({
         )}
       </Field>
 
-      <div className={styles.controls}>
+      <div ref={operationsRef} className={styles.controls}>
         <Field label="インデント">
           {(control) => (
             <Select
@@ -168,12 +173,8 @@ export default function JsonFormatterTile({
           <Button variant="primary" onClick={handleFormat}>
             整形
           </Button>
-          {variant === "full" && (
-            <>
-              <Button onClick={handleMinify}>圧縮</Button>
-              <Button onClick={handleValidate}>検証</Button>
-            </>
-          )}
+          <Button onClick={handleMinify}>圧縮</Button>
+          <Button onClick={handleValidate}>検証</Button>
         </div>
       </div>
 
@@ -198,19 +199,22 @@ export default function JsonFormatterTile({
             caption={RESULT_CAPTIONS[result.kind]}
             kind="code"
             appear
+            onFocus={handleResultFocus}
             copyButton={
-              <div ref={copyRef}>
-                <CopyButton
-                  text={result.code}
-                  target={RESULT_CAPTIONS[result.kind]}
-                  align="end"
-                />
-              </div>
+              <CopyButton
+                text={result.code}
+                target={RESULT_CAPTIONS[result.kind]}
+                align="end"
+              />
             }
           >
-            <pre>
-              <code>{result.code}</code>
-            </pre>
+            {result.kind === "format" ? (
+              <pre>
+                <code>{result.code}</code>
+              </pre>
+            ) : (
+              <code className={styles.continuous}>{result.code}</code>
+            )}
           </ResultBox>
         ))}
     </div>

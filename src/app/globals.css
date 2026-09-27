@@ -340,8 +340,9 @@ hr {
   padding: 0 0.25em;
 }
 
-/* コードのボックス。折り返さず、ボックスの中で横に送る。 */
+/* コードのボックス。折り返さず、ボックスの中で横に送る。タブは2字の幅で、字下げの深い行も狭い画面に収まる。 */
 :where(pre) {
+  tab-size: 2;
   background: var(--paper-2);
   border: var(--rule-w) solid var(--rule);
   padding: var(--box-padding);

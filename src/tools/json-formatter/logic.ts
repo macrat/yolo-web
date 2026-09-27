@@ -1,7 +1,6 @@
 export interface JsonValidationResult {
   valid: boolean;
   error?: string;
-  position?: number;
 }
 
 export type IndentType = "2" | "4" | "tab";
@@ -32,14 +31,9 @@ export function validateJson(input: string): JsonValidationResult {
     JSON.parse(input);
     return { valid: true };
   } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    // Try to extract position from error message
-    const posMatch = message.match(/position\s+(\d+)/i);
-    const position = posMatch ? parseInt(posMatch[1], 10) : undefined;
     return {
       valid: false,
-      error: message,
-      position,
+      error: e instanceof Error ? e.message : String(e),
     };
   }
 }
