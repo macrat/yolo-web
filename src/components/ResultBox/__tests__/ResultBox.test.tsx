@@ -21,6 +21,36 @@ describe("ResultBox", () => {
     );
   });
 
+  test("見出しの読み方は、見出しのすぐ下の頭の行に置き、見出しの名前には入れない", () => {
+    render(
+      <ResultBox
+        caption="日本の伝統色診断の結果"
+        heading={{ phrases: ["藍色"], reading: "あいいろ" }}
+      >
+        <p>説明</p>
+      </ResultBox>,
+    );
+    const heading = screen.getByRole("heading", { level: 2, name: "藍色" });
+    const reading = screen.getByText("あいいろ");
+    expect(heading.nextElementSibling).toBe(reading);
+    expect(
+      reading.compareDocumentPosition(screen.getByText("説明")) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(screen.getByRole("region", { name: "藍色" })).toBeInTheDocument();
+  });
+
+  test("読み方を渡さなければ、見出しのあとに読みの行を持たない", () => {
+    render(
+      <ResultBox heading={{ phrases }}>
+        <p>説明</p>
+      </ResultBox>,
+    );
+    expect(
+      screen.getByRole("heading", { level: 2 }).nextElementSibling,
+    ).toBeNull();
+  });
+
   test("見出しを持たない結果は、補助情報の行を名前に持つ", () => {
     render(
       <ResultBox caption="文字数の結果">

@@ -3,6 +3,11 @@
   color: var(--ink);
 }
 
+/* 読みものの上のあいだは、置く側が決める。最初の小見出し・段落・箇条書きは上の余白を持たない。 */
+.reading > :first-child {
+  margin-top: 0;
+}
+
 /* セクションの中の小見出し。上の細い罫線で前の内容と分ける。 */
 .heading {
   margin: var(--space-32) 0 0;

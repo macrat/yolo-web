@@ -18,6 +18,11 @@ export type ResultHeading = HeadingFontAttr & {
   phrases: readonly string[];
   /** 見出しの要素の段（既定: 2） */
   level?: 2 | 3;
+  /**
+   * 見出しの名前の読み方（伝統色の「藍色」に「あいいろ」など）。見出しのすぐ下に補助情報として添え、見出しと
+   * 1つの組に見せる。見出しの名前（読み上げの名前）には入れない。
+   */
+  reading?: string;
 };
 
 /**
@@ -94,15 +99,18 @@ export default function ResultBox({
 
   let headingElement: ReactNode = null;
   if (heading) {
-    const { phrases, level = 2, ...fontAttr } = heading;
+    const { phrases, level = 2, reading, ...fontAttr } = heading;
     headingElement = (
-      <PhrasedText
-        as={`h${level}`}
-        id={headingId}
-        phrases={phrases}
-        className={styles.heading}
-        {...fontAttr}
-      />
+      <>
+        <PhrasedText
+          as={`h${level}`}
+          id={headingId}
+          phrases={phrases}
+          className={styles.heading}
+          {...fontAttr}
+        />
+        {reading !== undefined && <p className={styles.reading}>{reading}</p>}
+      </>
     );
   }
 

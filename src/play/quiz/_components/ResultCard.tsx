@@ -517,11 +517,10 @@ export default function ResultCard({
         ref={resultBoxRef}
         tabIndex={resultBoxRef ? -1 : undefined}
         caption={`${quizName}の結果`}
-        heading={heading}
+        heading={reading === undefined ? heading : { ...heading, reading }}
         appear={appear}
       >
         <div className={styles.result}>
-          {reading && <p className={styles.reading}>{reading}</p>}
           {resultColor && (
             <div
               className={styles.swatch}

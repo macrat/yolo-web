@@ -53,6 +53,13 @@
   font-size: var(--text-heading-section);
 }
 
+/* 見出しの名前の読み方。補助情報の大きさで見出しのすぐ下に置き、見出しとのあいだを、頭の行と中身のあいだ
+ * （16px）より狭くして、見出しと1つの組に見せる。 */
+.reading {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
 .copy {
   flex-shrink: 0;
 }
