@@ -564,6 +564,65 @@ describe("ShareButtons ほかの操作の知らせ", () => {
     );
   });
 
+  test("コピーに失敗したあとにほかの操作の知らせが出て空に戻ると、行は空になり、前の知らせに戻らない", async () => {
+    mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+    stubExecCommand(() => false);
+    const { rerender } = render(
+      <ShareButtons url="/blog/test" title="テスト記事" notice={[]} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /URLをコピー/ }));
+    await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "コピーできませんでした。",
+      );
+    });
+    rerender(
+      <ShareButtons
+        url="/blog/test"
+        title="テスト記事"
+        notice={["画像を用意しています。"]}
+      />,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /^画像を用意しています。$/,
+    );
+    rerender(<ShareButtons url="/blog/test" title="テスト記事" notice={[]} />);
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+  });
+
+  test("コピーしてすぐにほかの操作を終えても、「コピーしました」に戻らない", async () => {
+    mockClipboardWriteText.mockResolvedValue(undefined);
+    const { rerender } = render(
+      <ShareButtons url="/blog/test" title="テスト記事" notice={[]} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /URLをコピー/ }));
+    await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveTextContent("コピーしました");
+    });
+    rerender(
+      <ShareButtons
+        url="/blog/test"
+        title="テスト記事"
+        notice={["画像を用意しています。"]}
+      />,
+    );
+    rerender(<ShareButtons url="/blog/test" title="テスト記事" notice={[]} />);
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+  });
+
+  test("知らせは文で比べるので、同じ文の新しい並びを渡しても、コピーの知らせを押しのけない", async () => {
+    mockClipboardWriteText.mockResolvedValue(undefined);
+    const { rerender } = render(
+      <ShareButtons url="/blog/test" title="テスト記事" notice={[]} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /URLをコピー/ }));
+    await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveTextContent("コピーしました");
+    });
+    rerender(<ShareButtons url="/blog/test" title="テスト記事" notice={[]} />);
+    expect(screen.getByRole("status")).toHaveTextContent("コピーしました");
+  });
+
   test("知らせが変わったときと、コピーを押したときのうち、あとのほうを出す", async () => {
     mockClipboardWriteText.mockResolvedValue(undefined);
     const notice = ["リンクをコピーしました"];

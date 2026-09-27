@@ -7,14 +7,18 @@ import "server-only";
 import type { ResultHeading } from "@/components/ResultBox";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
-import { solvedScreenReadingHeadings } from "./readingHeadings";
+import {
+  DEFAULT_READING_HEADING_PHRASES,
+  solvedScreenReadingHeadings,
+} from "./readingHeadings";
+import { resultHeadingName } from "./resultName";
 import type { QuizDefinition } from "./types";
 
 export interface SolvedScreenHeadings {
   /** 結果の id ごとの、タイプ名の見出しの区切りと書体の属性。 */
   resultHeadings: Record<string, ResultHeading>;
   /** 小見出しの文ごとの、文節の区切り。 */
-  readingHeadings: Record<string, string[]>;
+  readingHeadings: Record<string, readonly string[]>;
 }
 
 export function solvedScreenHeadings(
@@ -24,17 +28,18 @@ export function solvedScreenHeadings(
     // 見出しは名前だけで組み、読みは解き終えた画面が見出しのすぐ下に添える。
     resultHeadings: Object.fromEntries(
       quiz.results.map((result) => {
-        const name = result.nameParts?.name ?? result.title;
+        const { name } = resultHeadingName(result);
         return [
           result.id,
           { phrases: splitIntoPhrases(name), ...headingFontAttr(name) },
         ];
       }),
     ),
+    // 既定の小見出しは書き手が分けた区切りを使い、データから来る小見出しだけをここで分ける。
     readingHeadings: Object.fromEntries(
       solvedScreenReadingHeadings(quiz).map((text) => [
         text,
-        splitIntoPhrases(text),
+        DEFAULT_READING_HEADING_PHRASES[text] ?? splitIntoPhrases(text),
       ]),
     ),
   };

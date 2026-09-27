@@ -46,8 +46,10 @@ interface ShareButtonsProps {
   /** 共有のボタンと同じ並びの最後に置く、結果を持ち帰るほかの操作（画像の保存など） */
   children?: ReactNode;
   /**
-   * 同じ区画に並べた、結果を持ち帰るほかの操作の知らせ（文ごとに分けたもの）。区画の知らせの行を1つにするため、
-   * コピーの知らせと同じ行に出す。知らせが変わったときと、コピーを押したときのうち、あとのほうを出す。
+   * 同じ区画に並べた、結果を持ち帰るほかの操作の知らせ（文ごとに分けたもの。無いときは空の並び）。区画の知らせの
+   * 行を1つにするため、コピーの知らせと同じ行に出す。行が出すのは、知らせの中身が変わったときと、コピーを押した
+   * ときのうち、あとのほうである。知らせの中身が変わったら、空になったときも含めて、その知らせだけを出し、前の
+   * コピーの知らせには戻らない。変わったかは文で比べるので、描くたびに新しい並びを渡してもよい。
    */
   notice?: readonly string[];
 }
@@ -85,12 +87,16 @@ export default function ShareButtons({
   const [copiedCount, setCopiedCount] = useState(0);
   // 写せなかった知らせは、読み終える前に消えないよう、次にコピーを押すまで残す。
   const [copyFailed, setCopyFailed] = useState(false);
-  // ほかの操作の知らせをコピーの知らせより前に出すか。知らせが変わると出し、コピーを押すと下げる。
+  // 知らせの行が、ほかの操作の知らせを出しているか。知らせの中身が変わると出して前のコピーの知らせを下ろし、
+  // コピーを押すと下げる。
+  const noticeText = notice?.join("\n");
   const [showsNotice, setShowsNotice] = useState(false);
-  const [shownNotice, setShownNotice] = useState(notice);
-  if (notice !== shownNotice) {
-    setShownNotice(notice);
+  const [seenNoticeText, setSeenNoticeText] = useState(noticeText);
+  if (noticeText !== seenNoticeText) {
+    setSeenNoticeText(noticeText);
     setShowsNotice(true);
+    setCopyFailed(false);
+    setCopiedCount(0);
   }
 
   useEffect(() => {
@@ -218,9 +224,9 @@ export default function ShareButtons({
         {children}
       </div>
       {/* 知らせの行（コピーと、notice で受けたほかの操作の知らせ）。aria-live="polite" で読み上げにも伝える。 */}
-      <div className={styles.copyMessage} role="status" aria-live="polite">
-        {showsNotice && notice && notice.length > 0 ? (
-          notice.map((sentence) => (
+      <div className={styles.notice} role="status" aria-live="polite">
+        {showsNotice ? (
+          notice?.map((sentence) => (
             <span key={sentence} className={styles.sentence}>
               {sentence}
             </span>

@@ -32,7 +32,10 @@ import ResultBox, { type ResultHeading } from "@/components/ResultBox";
 import FudaActions from "./FudaActions";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import OtherTypesNav from "./OtherTypesNav";
-import { resultNameWithReading } from "@/play/quiz/resultName";
+import {
+  resultHeadingName,
+  resultNameWithReading,
+} from "@/play/quiz/resultName";
 import { standardReadingHeadings } from "@/play/quiz/readingHeadings";
 import {
   Reading,
@@ -503,7 +506,7 @@ export default function ResultCard({
   const [fudaNotice, setFudaNotice] = useState<string[]>([]);
   const catchphrase = catchphraseOf(detailedContent);
   // 見出しは名前だけにし、読みにくい名前の読みは見出しのすぐ下に添える（伝統色の「藍色」と「あいいろ」など）。
-  const reading = result.nameParts?.reading ?? result.reading?.kana;
+  const { reading } = resultHeadingName(result);
   // 伝統色診断は、結果の色が結果そのものなので、色見本で見せる（DESIGN.md §2）。
   const resultColor =
     detailedContent?.variant === "traditional-color" ? result.color : undefined;
@@ -545,7 +548,7 @@ export default function ResultCard({
           <FudaActions
             resultId={result.id}
             resultTitle={result.title}
-            quizTitle={quizName}
+            quizName={quizName}
             quizSlug={quizSlug}
             onNoticeChange={setFudaNotice}
           />

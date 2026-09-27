@@ -1,16 +1,37 @@
 import type { QuizDefinition, QuizMeta } from "./types";
 
 /**
- * 標準の形（variant を持たない）の詳しい読みものの小見出しの文。診断が resultPageLabels で言い替えないときは、
- * どの診断でも同じ文で言う。
+ * 標準の形（variant を持たない）の詳しい読みものの、既定の小見出し。コードに書いた決まった文なので、文節の
+ * 区切りも書き手が分けて持つ（PhrasedText の約束）。
+ */
+const DEFAULT_READING_HEADINGS = {
+  traits: ["この", "タイプの", "特徴"],
+  behaviors: ["この", "タイプの", "あるある"],
+  advice: ["この", "タイプの", "人への", "アドバイス"],
+} as const satisfies Record<string, readonly string[]>;
+
+/** 既定の小見出しの文から、書き手が分けた区切りを引く。 */
+export const DEFAULT_READING_HEADING_PHRASES: Readonly<
+  Record<string, readonly string[]>
+> = Object.fromEntries(
+  Object.values(DEFAULT_READING_HEADINGS).map((phrases) => [
+    phrases.join(""),
+    phrases,
+  ]),
+);
+
+/**
+ * 標準の形の詳しい読みものの小見出しの文。診断が resultPageLabels で言い替えないときは、どの診断でも同じ文で
+ * 言う。
  */
 export function standardReadingHeadings(
   labels?: QuizMeta["resultPageLabels"],
 ): { traits: string; behaviors: string; advice: string } {
   return {
-    traits: labels?.traitsHeading ?? "このタイプの特徴",
-    behaviors: labels?.behaviorsHeading ?? "このタイプのあるある",
-    advice: labels?.adviceHeading ?? "このタイプの人へのアドバイス",
+    traits: labels?.traitsHeading ?? DEFAULT_READING_HEADINGS.traits.join(""),
+    behaviors:
+      labels?.behaviorsHeading ?? DEFAULT_READING_HEADINGS.behaviors.join(""),
+    advice: labels?.adviceHeading ?? DEFAULT_READING_HEADINGS.advice.join(""),
   };
 }
 

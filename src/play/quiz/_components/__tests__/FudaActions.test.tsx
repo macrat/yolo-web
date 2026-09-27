@@ -26,7 +26,7 @@ function WithNotice() {
       <FudaActions
         resultId="blazing-strategist"
         resultTitle="炎の策士"
-        quizTitle="キャラ性格診断"
+        quizName="キャラ性格診断"
         quizSlug="character-personality"
         onNoticeChange={setNotice}
       />

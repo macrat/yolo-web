@@ -30,8 +30,8 @@ interface FudaActionsProps {
   resultId: string;
   /** 結果タイプ名（共有テキストに使う）。 */
   resultTitle: string;
-  /** 診断のタイトル（共有タイトル/テキストに使う）。 */
-  quizTitle: string;
+  /** 診断の名前（短い名前があればそれ）。共有シートの題と共有の文で言う。 */
+  quizName: string;
   /** 診断の slug（content_id と共有 URL の生成に使う。character-personality を想定）。 */
   quizSlug: string;
   /** 知らせの文（文ごとに分けたもの）が変わったときに呼ぶ。知らせが無いときは空の並びを渡す。 */
@@ -50,7 +50,7 @@ function isAnchorDownloadSupported(): boolean {
 export default function FudaActions({
   resultId,
   resultTitle,
-  quizTitle,
+  quizName,
   quizSlug,
   onNoticeChange,
 }: FudaActionsProps) {
@@ -69,7 +69,7 @@ export default function FudaActions({
     typeof window !== "undefined"
       ? `${window.location.origin}/play/${quizSlug}/result/${resultId}`
       : `/play/${quizSlug}/result/${resultId}`;
-  const shareText = `${quizTitle}の結果は「${resultTitle}」でした!`;
+  const shareText = `${quizName}の結果は「${resultTitle}」でした!`;
 
   /**
    * 固定 URL から札の PNG を取って File にする。取れなかったとき（!res.ok・通信の失敗）は例外を投げ、
@@ -133,7 +133,7 @@ export default function FudaActions({
           try {
             await navigator.share({
               files: [file],
-              title: quizTitle,
+              title: quizName,
               text: shareText,
               url: shareUrl,
             });
@@ -146,7 +146,7 @@ export default function FudaActions({
 
         setStatus("error");
       }),
-    [runExclusively, fetchFudaFile, contentId, quizTitle, shareText, shareUrl],
+    [runExclusively, fetchFudaFile, contentId, quizName, shareText, shareUrl],
   );
 
   const handleShare = useCallback(
@@ -158,7 +158,7 @@ export default function FudaActions({
           try {
             await navigator.share({
               files: [file],
-              title: quizTitle,
+              title: quizName,
               text: shareText,
               url: shareUrl,
             });
@@ -177,7 +177,7 @@ export default function FudaActions({
           setStatus("copyFailed");
         }
       }),
-    [runExclusively, fetchFudaFile, contentId, quizTitle, shareText, shareUrl],
+    [runExclusively, fetchFudaFile, contentId, quizName, shareText, shareUrl],
   );
 
   // 知らせの文。1行に収まらないとき文のあいだで折るよう、文ごとに分けて持つ。

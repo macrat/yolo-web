@@ -15,8 +15,9 @@
   row-gap: var(--space-8);
 }
 
-/* コピーの知らせ。出たり消えたりしても下の要素が動かないよう、1行分の高さをいつも取る。 */
-.copyMessage {
+/* 知らせの行（コピーと、同じ区画のほかの操作の知らせ）。出たり消えたりしても下の要素が動かないよう、1行分の
+ * 高さをいつも取る。 */
+.notice {
   min-height: 1lh;
   font-size: var(--text-small);
   color: var(--ink);

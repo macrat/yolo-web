@@ -3,6 +3,7 @@ import { useId } from "react";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import { getPlayResultPath } from "@/play/paths";
 import type { QuizResult } from "@/play/quiz/types";
+import { resultHeadingName } from "@/play/quiz/resultName";
 import styles from "./OtherTypesNav.module.css";
 
 type OtherTypesNavResult = Pick<
@@ -59,10 +60,11 @@ export default function OtherTypesNav({
   const items: ItemListItem[] = results.map((result) => {
     // 解き終えた画面では、来訪者のタイプの行だけが太字である理由を字で添え、リンクの説明にもして読み上げでも伝える。
     const visitors = !onResultPage && result.id === currentResultId;
+    const { name, reading } = resultHeadingName(result);
     return {
-      name: result.nameParts?.name ?? result.title,
+      name,
       href: getPlayResultPath(quizSlug, result.id),
-      reading: result.nameParts?.reading ?? result.reading?.kana,
+      reading,
       facts: visitors ? [{ text: "あなたのタイプ" }] : undefined,
       factsId: visitors ? `${headingId}-visitor` : undefined,
       swatch: showSwatch ? result.color : undefined,
