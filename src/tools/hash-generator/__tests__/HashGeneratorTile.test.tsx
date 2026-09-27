@@ -9,7 +9,6 @@ import {
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import HashGeneratorTile from "../HashGeneratorTile";
-import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
 import { meta } from "../meta";
 
 // ============================================================
@@ -171,7 +170,7 @@ describe("HashGeneratorTile", () => {
     });
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: new RegExp(COPIED_LABEL) }),
+        screen.getByRole("button", { name: /コピー済み/ }),
       ).toBeInTheDocument();
     });
   });

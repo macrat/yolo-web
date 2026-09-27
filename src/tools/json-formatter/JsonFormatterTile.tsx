@@ -42,10 +42,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { formatJson, minifyJson, validateJson, type IndentType } from "./logic";
 import styles from "./JsonFormatterTile.module.css";
 
@@ -116,9 +113,6 @@ export default function JsonFormatterTile({
   // role="status" aria-live="polite" 領域に実テキストとして配置する
   const [statusSummary, setStatusSummary] = useState("");
 
-  // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // ---------- ハンドラ ----------
 
   const handleFormat = useCallback(() => {
@@ -181,11 +175,6 @@ export default function JsonFormatterTile({
       setOutput("");
     }
   }, [input]);
-
-  const handleCopy = useCallback(async () => {
-    if (!output) return;
-    await copy(output);
-  }, [output, copy]);
 
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
@@ -254,15 +243,12 @@ export default function JsonFormatterTile({
             <label htmlFor={outputId} className={styles.panelLabel}>
               出力
             </label>
-            {/* コピーボタン: 出力が空のとき disabled */}
-            <Button
-              onClick={() => void handleCopy()}
-              type="button"
+            <CopyButton
+              text={output}
+              target="出力"
+              align="end"
               disabled={!output}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
           {/* C-3: role="status" aria-live="polite" で動的通知。
               実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。

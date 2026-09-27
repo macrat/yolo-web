@@ -13,7 +13,7 @@
  * - V-9: checkbox の label と input の関連（htmlFor/id が正しく機能する）
  * - V-10: 出力 readOnly + role=status サマリ（C-3 準拠）
  * - V-11: コピーボタン disabled/enabled 状態
- * - V-12: コピー後ラベル変化（COPIED_LABEL）
+ * - V-12: コピー後ラベル変化（コピー済み）
  * - V-13: オプション checkbox OFF で対象文字種が変換されない
  * - V-14: デフォルト variant は full と同等
  */
@@ -276,7 +276,7 @@ describe("V-10: 出力 readOnly + role=status サマリ", () => {
 describe("V-11: コピーボタン disabled/enabled 状態", () => {
   it("入力が空のときコピーボタンが disabled", () => {
     render(<FullwidthConverterTile variant="full" />);
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     expect(copyBtn).toBeDisabled();
   });
 
@@ -284,24 +284,24 @@ describe("V-11: コピーボタン disabled/enabled 状態", () => {
     render(<FullwidthConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト") as HTMLTextAreaElement;
     fireEvent.change(input, { target: { value: "ABC" } });
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     expect(copyBtn).not.toBeDisabled();
   });
 });
 
 // --- V-12: コピー後ラベル変化 ---
-describe("V-12: コピー後ラベル変化（COPIED_LABEL）", () => {
-  it("コピー後に「コピーしました」と表示される", async () => {
+describe("V-12: コピー後ラベル変化（コピー済み）", () => {
+  it("コピー後に「コピー済み」と表示される", async () => {
     render(<FullwidthConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト") as HTMLTextAreaElement;
     fireEvent.change(input, { target: { value: "ABC" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: "コピーしました" }),
+        screen.getByRole("button", { name: "変換結果をコピー済み" }),
       ).toBeInTheDocument();
     });
   });

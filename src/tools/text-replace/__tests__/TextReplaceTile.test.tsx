@@ -68,7 +68,9 @@ describe("V-1: variant=full 基本レンダリング", () => {
   it("コピーボタンが存在する", () => {
     render(<TextReplaceTile variant="full" />);
     // 初期は disabled だが存在する
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -198,7 +200,9 @@ describe("V-4: 正規表現エラー日本語化", () => {
       target: { value: "[invalid" },
     });
     fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
-    expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).toBeDisabled();
   });
 });
 
@@ -254,7 +258,9 @@ describe("V-6: id インスタンス一意性", () => {
 describe("V-7: コピーボタン disabled 制御", () => {
   it("初期状態（出力空）でコピーボタンが disabled", () => {
     render(<TextReplaceTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).toBeDisabled();
   });
 
   it("置換結果がある場合コピーボタンは有効", () => {
@@ -268,7 +274,9 @@ describe("V-7: コピーボタン disabled 制御", () => {
     fireEvent.change(screen.getByLabelText("置換文字列"), {
       target: { value: "A" },
     });
-    expect(screen.getByRole("button", { name: "コピー" })).not.toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).not.toBeDisabled();
   });
 });
 
@@ -289,13 +297,13 @@ describe("V-8: コピー動作", () => {
     fireEvent.change(screen.getByLabelText("置換文字列"), {
       target: { value: "A" },
     });
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "置換結果をコピー" });
     await act(async () => {
       fireEvent.click(copyBtn);
     });
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: "コピーしました" }),
+        screen.getByRole("button", { name: "置換結果をコピー済み" }),
       ).toBeInTheDocument();
     });
   });
@@ -316,7 +324,7 @@ describe("V-8: コピー動作", () => {
       target: { value: "a" },
     });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "置換結果をコピー" });
     await expect(
       act(async () => {
         fireEvent.click(copyBtn);

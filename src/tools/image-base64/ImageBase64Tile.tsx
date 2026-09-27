@@ -45,10 +45,7 @@ import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import FileDropZone from "@/components/FileDropZone";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   fileToBase64,
   parseBase64Image,
@@ -122,9 +119,6 @@ export default function ImageBase64Tile({
   const [decodeInput, setDecodeInput] = useState("");
   const [parsedImage, setParsedImage] = useState<ParsedImage | null>(null);
   const [decodeError, setDecodeError] = useState("");
-
-  // コピーフック（Base64 と Data URI を別キーで管理）
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // ---------- 世代カウンタ（D-4: アンマウント後 setState 防止・連続ドロップ対策） ----------
   // FileReader は非同期コールバックベースのため、アンマウント後や
@@ -288,9 +282,11 @@ export default function ImageBase64Tile({
                   >
                     Base64
                   </label>
-                  <Button onClick={() => copy(base64Result.base64, "base64")}>
-                    {copiedKey === "base64" ? COPIED_LABEL : "コピー"}
-                  </Button>
+                  <CopyButton
+                    text={base64Result.base64}
+                    target="Base64"
+                    align="end"
+                  />
                 </div>
                 {/* A-1: Textarea "mono" バリアント。role=status は textarea に直付与しない（C-3 禁止パターン）。 */}
                 <Textarea
@@ -311,9 +307,11 @@ export default function ImageBase64Tile({
                   >
                     Data URI
                   </label>
-                  <Button onClick={() => copy(base64Result.dataUri, "datauri")}>
-                    {copiedKey === "datauri" ? COPIED_LABEL : "コピー"}
-                  </Button>
+                  <CopyButton
+                    text={base64Result.dataUri}
+                    target="Data URI"
+                    align="end"
+                  />
                 </div>
                 <Textarea
                   id={dataUriOutputId}

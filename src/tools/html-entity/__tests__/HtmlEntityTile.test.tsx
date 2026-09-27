@@ -214,7 +214,7 @@ describe("V-11: コピーボタンの文言変化", () => {
     expect(copyButton).toHaveTextContent("コピー");
   });
 
-  it("コピー後は 'コピーしました' が表示される", async () => {
+  it("コピー後は 'コピー済み' が表示される", async () => {
     mockWriteText.mockResolvedValue(undefined);
     render(<HtmlEntityTile variant="full" />);
     fireEvent.change(screen.getByLabelText("テキスト入力"), {
@@ -224,7 +224,7 @@ describe("V-11: コピーボタンの文言変化", () => {
     await act(async () => {
       fireEvent.click(copyButton);
     });
-    expect(copyButton).toHaveTextContent("コピーしました");
+    expect(copyButton).toHaveTextContent("コピー済み");
   });
 });
 

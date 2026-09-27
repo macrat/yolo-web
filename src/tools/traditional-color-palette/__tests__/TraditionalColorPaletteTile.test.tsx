@@ -252,7 +252,7 @@ describe("コピー文言変化", () => {
     expect(hexCopyButtons.length).toBeGreaterThan(0);
   });
 
-  it("コピーボタンをクリックすると COPIED_LABEL に文言が変わる", async () => {
+  it("コピーボタンをクリックすると「コピー済み」に文言が変わる", async () => {
     vi.useFakeTimers();
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
@@ -266,7 +266,7 @@ describe("コピー文言変化", () => {
       fireEvent.click(hexCopyButtons[0]);
     });
     expect(
-      screen.getByRole("button", { name: /コピーしました/ }),
+      screen.getByRole("button", { name: /コピー済み/ }),
     ).toBeInTheDocument();
   });
 });
@@ -297,28 +297,19 @@ describe("コピーボタン状態", () => {
     expect(sharedButtons.length).toBeGreaterThan(0);
   });
 
-  it("カード描画時、各コピーボタンに有効な aria-label が付いている", async () => {
+  it("カード描画時、各コピーボタンはどの色のどのコードを写すかを名前で言う", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
       fireEvent.click(swatches[0] as HTMLElement);
     });
-    const hexButtons = screen.queryAllByRole("button", {
-      name: /HEX.*コピー|HEXをコピー/,
-    });
-    const rgbButtons = screen.queryAllByRole("button", {
-      name: /RGB.*コピー|RGBをコピー/,
-    });
-    const hslButtons = screen.queryAllByRole("button", {
-      name: /HSL.*コピー|HSLをコピー/,
-    });
-    expect(hexButtons.length).toBeGreaterThan(0);
-    expect(rgbButtons.length).toBeGreaterThan(0);
-    expect(hslButtons.length).toBeGreaterThan(0);
-    [...hexButtons, ...rgbButtons, ...hslButtons].forEach((btn) => {
-      expect(btn).toHaveAttribute("aria-label");
-      expect(btn.getAttribute("aria-label")).not.toBe("");
-    });
+    for (const code of ["HEX", "RGB", "HSL"]) {
+      expect(
+        screen.queryAllByRole("button", {
+          name: new RegExp(`^\\S+の${code}をコピー$`),
+        }).length,
+      ).toBeGreaterThan(0);
+    }
   });
 });
 

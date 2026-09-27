@@ -50,14 +50,10 @@
 import { useId, useMemo, useSyncExternalStore } from "react";
 import { useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import Prose from "@/components/Prose";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { renderMarkdown } from "./logic";
 import styles from "./MarkdownPreviewTile.module.css";
 
@@ -134,9 +130,6 @@ export default function MarkdownPreviewTile({
   // SSR/hydration 安全: useSyncExternalStore でマウント後フラグを取得（useEffect 不要）
   const isMounted = useMounted();
 
-  // HTML コピーボタン（useCopyToClipboard フック使用）
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // ---------- リアルタイム変換（共有エンジン logic.ts を使用） ----------
   // isMounted が false（SSR 時・初回レンダリング）は renderMarkdown を呼ばない。
   // sanitizeHtml（DOMParser）はブラウザ専用のため SSR 時に呼ばれない構造を維持する。
@@ -188,14 +181,13 @@ export default function MarkdownPreviewTile({
         <div className={styles.panel}>
           <div className={styles.panelHeader}>
             <span className={styles.panelLabel}>プレビュー</span>
-            {/* HTML コピーボタン。出力が空のときは disabled */}
-            <Button
+            <CopyButton
+              text={result.html}
+              target="HTML"
+              showTarget
+              align="end"
               disabled={!canCopy}
-              onClick={() => copy(result.html)}
-              aria-label={copiedKey ? COPIED_LABEL : "HTMLをコピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "HTMLをコピー"}
-            </Button>
+            />
           </div>
 
           {/* C-3: role="status" にはサマリのみ配置（視覚上は非表示）。

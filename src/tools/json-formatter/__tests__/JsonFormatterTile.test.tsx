@@ -1,27 +1,23 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import JsonFormatterTile from "../JsonFormatterTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("JsonFormatterTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // ---------- 基本レンダリング ----------
 
   // E-1: デフォルト (variant="full") でレンダリングできる
@@ -175,7 +171,7 @@ describe("JsonFormatterTile", () => {
   // E-7: 出力が空のときコピーボタンが disabled
   test("copy button is disabled when output is empty", () => {
     render(<JsonFormatterTile />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).toBeDisabled();
   });
 
@@ -185,30 +181,30 @@ describe("JsonFormatterTile", () => {
     const input = screen.getByLabelText("入力");
     fireEvent.change(input, { target: { value: '{"a":1}' } });
     fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).not.toBeDisabled();
   });
 
-  // E-6: コピー前は "コピー" が表示される
+  // E-6: 押す前は「コピー」
   test("copy button label is コピー when not copied", () => {
-    mockHook.copiedKey = null;
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"a":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
-  });
-
-  // E-6: コピー後は COPIED_LABEL ("コピーしました") が表示される
-  test("copy button label changes to COPIED_LABEL when copiedKey is set", () => {
-    mockHook.copiedKey = true;
     render(<JsonFormatterTile />);
     const input = screen.getByLabelText("入力");
     fireEvent.change(input, { target: { value: '{"a":1}' } });
     fireEvent.click(screen.getByRole("button", { name: "整形" }));
     expect(
-      screen.getByRole("button", { name: "コピーしました" }),
+      screen.getByRole("button", { name: "出力をコピー" }),
     ).toBeInTheDocument();
+  });
+
+  test("押すと結果を写し、ボタンが「コピー済み」になる", async () => {
+    render(<JsonFormatterTile />);
+    const input = screen.getByLabelText("入力");
+    fireEvent.change(input, { target: { value: '{"a":1}' } });
+    fireEvent.click(screen.getByRole("button", { name: "整形" }));
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
+    fireEvent.click(copyButton);
+    await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+    expect(writeText).toHaveBeenCalledTimes(1);
   });
 
   // ---------- variant="format-only" の機能 ----------

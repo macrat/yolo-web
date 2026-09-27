@@ -36,10 +36,7 @@ import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   generatePassword,
   evaluateStrength,
@@ -143,10 +140,6 @@ export default function PasswordGeneratorTile({
     }
   }, []);
 
-  // useCopyToClipboard フック（AP-I11: タイマー cleanup はフック内で実装済み）
-  const { copy, copiedKey } = useCopyToClipboard();
-  const isCopied = Boolean(copiedKey);
-
   // 強度: options 変更のたびに動的に再計算（全文字種 OFF 時も正しく weak を返す）
   const strength = evaluateStrength(options);
 
@@ -158,12 +151,6 @@ export default function PasswordGeneratorTile({
     const pw = generatePassword(options);
     setPassword(pw);
   }, [options]);
-
-  /** コピーハンドラ */
-  const handleCopy = useCallback(async () => {
-    if (!password) return;
-    await copy(password);
-  }, [copy, password]);
 
   /** オプション更新ヘルパー */
   const updateOption = useCallback(
@@ -273,11 +260,13 @@ export default function PasswordGeneratorTile({
           {/* 秘密情報配慮: aria-live は付与しない */}
           <code className={styles.passwordCode}>{password}</code>
 
-          <div className={styles.copyButtonWrap}>
-            <Button variant="default" disabled={!password} onClick={handleCopy}>
-              {isCopied ? COPIED_LABEL : "コピー"}
-            </Button>
-          </div>
+          <CopyButton
+            text={password}
+            target="パスワード"
+            align="end"
+            disabled={!password}
+            className={styles.copyButton}
+          />
         </div>
       </div>
     </Panel>

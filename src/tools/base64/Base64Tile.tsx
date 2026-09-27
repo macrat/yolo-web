@@ -45,15 +45,11 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { encodeBase64, decodeBase64, toUrlSafe } from "./logic";
 import styles from "./Base64Tile.module.css";
 
@@ -106,8 +102,6 @@ export default function Base64Tile({
   const [dynamicDirection, setDynamicDirection] = useState<Direction>("encode");
   const [urlSafe, setUrlSafe] = useState(false);
   const [input, setInput] = useState(defaultInput);
-
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 実際に使う方向: fixed があればそれを使い、なければ state を使う
   const direction = fixedDirection ?? dynamicDirection;
@@ -162,11 +156,6 @@ export default function Base64Tile({
 
   function handleInputChange(e: { target: { value: string } }) {
     setInput(e.target.value);
-  }
-
-  async function handleCopy() {
-    if (!output) return;
-    await copy(output);
   }
 
   // ---------- Render ----------
@@ -228,15 +217,12 @@ export default function Base64Tile({
           <label htmlFor={outputId} className={styles.fieldLabel}>
             {outputLabel}
           </label>
-          {/* コピーボタン */}
-          <Button
-            variant="default"
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="出力"
+            align="end"
             disabled={!output}
-            aria-label="出力をコピー"
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
         {/* C-3 準拠: readOnly textarea は role="status" 対象外。

@@ -41,15 +41,11 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   removeLineBreaks,
   type RemoveMode,
@@ -113,8 +109,6 @@ export default function LineBreakRemoverTile({
     useState<SmartPdfJoinStyle>("remove");
   const [input, setInput] = useState("");
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
 
@@ -145,11 +139,6 @@ export default function LineBreakRemoverTile({
   function handleModeChange(newMode: string): void {
     // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(newMode as RemoveMode);
-  }
-
-  async function handleCopy(): Promise<void> {
-    if (!hasOutput) return;
-    await copy(result.output);
   }
 
   // ---------- Render ----------
@@ -214,14 +203,12 @@ export default function LineBreakRemoverTile({
             <label htmlFor={outputId} className={styles.panelLabel}>
               変換結果
             </label>
-            {/* コピーボタン */}
-            <Button
-              onClick={handleCopy}
+            <CopyButton
+              text={result.output}
+              target="変換結果"
+              align="end"
               disabled={!hasOutput}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
           {/* C-3 準拠: readOnly textarea は role="status" 対象外。
               別途サマリ div を置いてスクリーンリーダーへ通知する。

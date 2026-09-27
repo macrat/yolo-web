@@ -334,7 +334,7 @@ describe("CronParserTile - コピーボタン", () => {
     expect(copyBtn).toBeInTheDocument();
   });
 
-  it("ビルダーモードのコピーボタンをクリックするとコピーしましたに変わる", async () => {
+  it("ビルダーモードのコピーボタンをクリックすると「コピー済み」に変わる", async () => {
     await act(async () => {
       render(<CronParserTile variant="builder" />);
     });
@@ -344,7 +344,7 @@ describe("CronParserTile - コピーボタン", () => {
     });
     await waitFor(() => {
       expect(
-        screen.queryByRole("button", { name: /コピーしました/i }),
+        screen.queryByRole("button", { name: /コピー済み/i }),
       ).toBeInTheDocument();
     });
   });

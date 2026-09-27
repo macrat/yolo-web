@@ -245,7 +245,7 @@ describe("ARIA", () => {
 // コピー
 // =========================================================
 describe("コピー機能", () => {
-  it("コピーボタンが COPIED_LABEL に変化する", async () => {
+  it("コピーボタンが「コピー済み」に変化する", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: false });
     render(<PasswordGeneratorTile />);
 
@@ -262,14 +262,14 @@ describe("コピー機能", () => {
     });
 
     expect(
-      screen.getByRole("button", { name: /コピーしました/ }),
+      screen.getByRole("button", { name: /コピー済み/ }),
     ).toBeInTheDocument();
 
     act(() => {
       vi.advanceTimersByTime(2000);
     });
     expect(
-      screen.getByRole("button", { name: /^コピー$/ }),
+      screen.getByRole("button", { name: "パスワードをコピー" }),
     ).toBeInTheDocument();
   });
 
@@ -295,7 +295,7 @@ describe("コピー機能", () => {
     expect(copyBtn).not.toBeDisabled();
   });
 
-  it("navigator.clipboard が存在しない環境でエラーがスローされない", async () => {
+  it("どの写し方でも写せない端末では、エラーを出さずに「コピー失敗」を出す", async () => {
     vi.stubGlobal("navigator", {
       ...navigator,
       clipboard: undefined,
@@ -307,11 +307,11 @@ describe("コピー機能", () => {
       fireEvent.click(screen.getByRole("button", { name: /パスワード生成/ }));
     });
 
-    await expect(async () => {
-      await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: /^コピー$/ }));
-      });
-    }).not.toThrow();
+    const copyBtn = screen.getByRole("button", { name: "パスワードをコピー" });
+    await act(async () => {
+      fireEvent.click(copyBtn);
+    });
+    expect(copyBtn).toHaveAccessibleName("パスワードをコピー失敗");
   });
 });
 

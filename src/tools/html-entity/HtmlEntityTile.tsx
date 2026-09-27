@@ -40,14 +40,10 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { convertEntity, type EntityMode } from "./logic";
 import styles from "./HtmlEntityTile.module.css";
 
@@ -109,8 +105,6 @@ export default function HtmlEntityTile({
   const [dynamicMode, setDynamicMode] = useState<EntityMode>("encode");
   const [input, setInput] = useState(defaultInput);
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使う方向: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
 
@@ -136,11 +130,6 @@ export default function HtmlEntityTile({
 
   function handleInputChange(e: { target: { value: string } }) {
     setInput(e.target.value);
-  }
-
-  async function handleCopy() {
-    if (!output) return;
-    await copy(output);
   }
 
   // ---------- Render ----------
@@ -188,17 +177,12 @@ export default function HtmlEntityTile({
           <label htmlFor={outputId} className={styles.label}>
             {mode === "encode" ? "エンコード結果" : "デコード結果"}
           </label>
-          {/* コピーボタン */}
-          <Button
-            variant="default"
+          <CopyButton
+            text={output}
+            target={mode === "encode" ? "エンコード結果" : "デコード結果"}
+            align="end"
             disabled={!output}
-            onClick={() => void handleCopy()}
-            aria-label={
-              copiedKey ? COPIED_LABEL : "結果をクリップボードにコピー"
-            }
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
         {/* C-3 準拠: readOnly textarea は role="status" 対象外。

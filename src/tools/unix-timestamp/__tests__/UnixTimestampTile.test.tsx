@@ -19,7 +19,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import UnixTimestampTile from "../UnixTimestampTile";
 import { timestampToDate } from "../logic";
-import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
 
 // navigator.clipboard のモック
 const writeTextMock = vi.fn().mockResolvedValue(undefined);
@@ -344,19 +343,17 @@ describe("いまの時刻を止める・動かす", () => {
     }
   });
 
-  test("いまの時刻のコピーを押すと「コピーしました」に変わる", async () => {
+  test("いまの時刻のコピーを押すと「コピー済み」に変わる", async () => {
     await renderAt("2024-01-01T00:00:00Z");
     const copy = screen.getByRole("button", {
       name: "現在のタイムスタンプをコピー",
     });
-    expect(copy).toHaveTextContent(/^コピー$/);
 
     await act(async () => {
       fireEvent.click(copy);
     });
 
-    expect(copy).toHaveAccessibleName(COPIED_LABEL);
-    expect(copy).toHaveTextContent(COPIED_LABEL);
+    expect(copy).toHaveAccessibleName("現在のタイムスタンプをコピー済み");
   });
 });
 
@@ -498,7 +495,7 @@ describe("ARIA 属性", () => {
 });
 
 describe("コピーの文言の変化", () => {
-  test("変換後にコピーボタンを押すとCOPIED_LABELに変わること", async () => {
+  test("変換後にコピーボタンを押すと「コピー済み」に変わること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
     fireEvent.change(input, { target: { value: "1704067200" } });
@@ -509,7 +506,7 @@ describe("コピーの文言の変化", () => {
     const isoButton = screen.getByRole("button", { name: "ISO 8601をコピー" });
     fireEvent.click(isoButton);
     await waitFor(() => {
-      expect(isoButton).toHaveTextContent(COPIED_LABEL);
+      expect(isoButton).toHaveTextContent("コピー済み");
     });
   });
 });

@@ -223,7 +223,7 @@ describe("E-6: コピーボタンの文言変化 (複数ターゲット)", () =>
     });
   });
 
-  it("コピー後は対応する HEX ボタンが 'コピーしました' に変わる", async () => {
+  it("コピー後は対応する HEX ボタンが 'コピー済み' に変わる", async () => {
     mockWriteText.mockResolvedValue(undefined);
     render(<ColorConverterTile />);
     const input = screen.getByLabelText(/HEX値/);
@@ -234,7 +234,7 @@ describe("E-6: コピーボタンの文言変化 (複数ターゲット)", () =>
     await act(async () => {
       fireEvent.click(hexCopyButton);
     });
-    expect(hexCopyButton).toHaveTextContent("コピーしました");
+    expect(hexCopyButton).toHaveTextContent("コピー済み");
   });
 });
 

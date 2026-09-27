@@ -30,15 +30,11 @@
 
 import { useId, useState, useMemo, useCallback } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Select from "@/components/Select";
 import Input from "@/components/Input";
 import Textarea from "@/components/Textarea";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   getCategories,
   getTemplatesByCategory,
@@ -56,11 +52,6 @@ const categoryOptions = categories.map((cat) => ({
   label: cat.name,
   value: cat.id,
 }));
-
-// コピーターゲットのキー（T-4b: 3ターゲット確定）
-const COPY_KEY_SUBJECT = "subject";
-const COPY_KEY_BODY = "body";
-const COPY_KEY_ALL = "all";
 
 /** variant prop: 表示バリエーションの設定差。別実装ではない。 */
 export type BusinessEmailTileVariant = "full";
@@ -100,9 +91,6 @@ export default function BusinessEmailTile({
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
   const [statusSummary, setStatusSummary] = useState("");
-
-  // T-4b: コピーあり確定。key-based tracking で3つのコピーターゲットを識別する
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // ---------- 派生状態 ----------
   const templatesInCategory = useMemo(
@@ -179,24 +167,6 @@ export default function BusinessEmailTile({
     // C-3: フィールド入力のたびにサマリを更新してスクリーンリーダーに通知
     setStatusSummary("入力内容を更新しました");
   }, []);
-
-  const handleCopySubject = useCallback(async () => {
-    if (!generated.subject) return;
-    await copy(generated.subject, COPY_KEY_SUBJECT);
-    setStatusSummary("件名をコピーしました");
-  }, [generated.subject, copy]);
-
-  const handleCopyBody = useCallback(async () => {
-    if (!generated.body) return;
-    await copy(generated.body, COPY_KEY_BODY);
-    setStatusSummary("本文をコピーしました");
-  }, [generated.body, copy]);
-
-  const handleCopyAll = useCallback(async () => {
-    const fullText = `件名: ${generated.subject}\n\n${generated.body}`;
-    await copy(fullText, COPY_KEY_ALL);
-    setStatusSummary("メール全文をコピーしました");
-  }, [generated.subject, generated.body, copy]);
 
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）（A-1）
@@ -303,16 +273,12 @@ export default function BusinessEmailTile({
             <label htmlFor={previewSubjectId} className={styles.label}>
               件名プレビュー
             </label>
-            {/* T-4b: 件名コピーボタン — 空のとき disabled */}
-            <Button
-              onClick={handleCopySubject}
+            <CopyButton
+              text={generated.subject}
+              target="件名"
+              align="end"
               disabled={!generated.subject}
-              aria-label={
-                copiedKey === COPY_KEY_SUBJECT ? COPIED_LABEL : "件名をコピー"
-              }
-            >
-              {copiedKey === COPY_KEY_SUBJECT ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
           <Input
             id={previewSubjectId}
@@ -330,16 +296,12 @@ export default function BusinessEmailTile({
             <label htmlFor={previewBodyId} className={styles.label}>
               本文プレビュー
             </label>
-            {/* T-4b: 本文コピーボタン — 空のとき disabled */}
-            <Button
-              onClick={handleCopyBody}
+            <CopyButton
+              text={generated.body}
+              target="本文"
+              align="end"
               disabled={!generated.body}
-              aria-label={
-                copiedKey === COPY_KEY_BODY ? COPIED_LABEL : "本文をコピー"
-              }
-            >
-              {copiedKey === COPY_KEY_BODY ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
           {/* 共通部品 Textarea コンポーネント再利用（readOnly 出力欄） */}
           <Textarea
@@ -352,17 +314,14 @@ export default function BusinessEmailTile({
           <p className={styles.charCount}>{bodyCharCount}文字</p>
         </div>
 
-        {/* 全文コピーボタン */}
-        <Button
+        <CopyButton
+          text={`件名: ${generated.subject}\n\n${generated.body}`}
+          target="メール全文"
+          showTarget
           variant="primary"
-          onClick={handleCopyAll}
-          aria-label={
-            copiedKey === COPY_KEY_ALL ? COPIED_LABEL : "メール全文をコピー"
-          }
+          align="stretch"
           className={styles.copyAllButton}
-        >
-          {copiedKey === COPY_KEY_ALL ? COPIED_LABEL : "メール全文をコピー"}
-        </Button>
+        />
       </div>
     </Panel>
   );

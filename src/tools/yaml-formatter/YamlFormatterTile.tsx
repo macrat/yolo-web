@@ -35,10 +35,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { formatYaml, validateYaml, yamlToJson, jsonToYaml } from "./logic";
 import styles from "./YamlFormatterTile.module.css";
 
@@ -143,8 +140,6 @@ export default function YamlFormatterTile({
   // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
   const [statusSummary, setStatusSummary] = useState("");
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
 
@@ -216,11 +211,6 @@ export default function YamlFormatterTile({
       setOutput("");
     }
   }, [input]);
-
-  const handleCopy = useCallback(async () => {
-    if (!output) return;
-    await copy(output);
-  }, [output, copy]);
 
   const getPlaceholder = (): string => {
     switch (mode) {
@@ -310,15 +300,12 @@ export default function YamlFormatterTile({
             <label htmlFor={outputId} className={styles.panelLabel}>
               出力
             </label>
-            {/* コピーボタン。出力が空のとき disabled。 */}
-            <Button
-              onClick={handleCopy}
-              type="button"
+            <CopyButton
+              text={output}
+              target="出力"
+              align="end"
               disabled={!output}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
           {/* C-3: role="status" aria-live="polite" で動的通知。
               実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。

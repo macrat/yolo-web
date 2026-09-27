@@ -34,10 +34,10 @@ describe("renderMarkdown", () => {
     expect(r.html).toContain("<table>");
   });
 
-  test("表を記事と同じ横に送れる枠で包み、セルの語の切れ目に <wbr> を置く", () => {
+  test("表を記事と同じ横に送れる枠で包み、セルは折り所を持たない（通常の禁則で折る）", () => {
     const r = renderMarkdown("| 列 |\n|---|\n| 新しい値の参照 |");
     expect(r.html).toContain('<div class="table-scroll"><table>');
-    expect(r.html).toContain("<td>新しい<wbr>値<wbr>の<wbr>参照</td>");
+    expect(r.html).toContain("<td>新しい値の参照</td>");
   });
 
   test("注記を記事と同じ組み方にし、1行目に種類の語を置く", () => {
@@ -248,9 +248,9 @@ describe("sanitizeHtml", () => {
     expect(output).toContain("<p>text</p>");
   });
 
-  test("XSS: keeps only the classes of alerts and table frames", () => {
+  test("XSS: keeps only the classes of alerts and table frames (not the article-only table-phrased)", () => {
     const input =
-      '<div class="table-scroll evil"><p class="markdown-alert-title other">t</p></div><div class="evil">x</div>';
+      '<div class="table-scroll table-phrased evil"><p class="markdown-alert-title other">t</p></div><div class="evil">x</div>';
     expect(sanitizeHtml(input)).toBe(
       '<div class="table-scroll"><p class="markdown-alert-title">t</p></div><div>x</div>',
     );

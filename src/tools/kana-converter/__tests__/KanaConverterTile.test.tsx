@@ -22,7 +22,7 @@
  * - V-18: ラジオボタンの組に aria-label が設定されている（C-2）
  * - V-19: CSS トークン検証（--color-* 不使用・--accent 直塗りなし・bold なし）
  * - V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる（旧 E-6 相当）
- * - V-21: コピー後に COPIED_LABEL が表示される（ラベル遷移）
+ * - V-21: コピー後に「コピー済み」が表示される（ラベル遷移）
  * - V-22: clipboard 不在時の silent fail（旧 E-8 相当）
  */
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
@@ -269,7 +269,9 @@ describe("V-14: ライブリージョン（C-3）", () => {
 describe("V-15: コピーボタン empty 時 disabled", () => {
   it("空入力時はコピーボタンが disabled", () => {
     render(<KanaConverterTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "変換結果をコピー" }),
+    ).toBeDisabled();
   });
 });
 
@@ -279,7 +281,9 @@ describe("V-16: コピーボタン出力あり時有効", () => {
     render(<KanaConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "あ" } });
-    expect(screen.getByRole("button", { name: "コピー" })).not.toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "変換結果をコピー" }),
+    ).not.toBeDisabled();
   });
 });
 
@@ -347,7 +351,7 @@ describe("V-20: コピーボタンクリックで出力値が書き込まれる"
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "あいうえお" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
@@ -360,7 +364,7 @@ describe("V-20: コピーボタンクリックで出力値が書き込まれる"
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "さくら" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
@@ -369,19 +373,19 @@ describe("V-20: コピーボタンクリックで出力値が書き込まれる"
   });
 });
 
-// --- V-21: コピー後に COPIED_LABEL が表示される（ラベル遷移） ---
-describe("V-21: コピー後 COPIED_LABEL に遷移する", () => {
-  it("コピーボタンクリック後に「コピーしました」と表示される", async () => {
+// --- V-21: コピー後に「コピー済み」が表示される（ラベル遷移） ---
+describe("V-21: コピー後 「コピー済み」に遷移する", () => {
+  it("コピーボタンクリック後に「コピー済み」と表示される", async () => {
     render(<KanaConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "あ" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: "コピーしました" }),
+        screen.getByRole("button", { name: "変換結果をコピー済み" }),
       ).toBeInTheDocument();
     });
   });
@@ -402,7 +406,7 @@ describe("V-22: clipboard 不在時の silent fail", () => {
     fireEvent.change(input, { target: { value: "あ" } });
 
     await expect(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "コピー" }));
+      fireEvent.click(screen.getByRole("button", { name: "変換結果をコピー" }));
     }).not.toThrow();
 
     Object.defineProperty(navigator, "clipboard", {

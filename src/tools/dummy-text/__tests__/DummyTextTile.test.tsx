@@ -1,27 +1,23 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import DummyTextTile from "../DummyTextTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("DummyTextTile — variant='full'", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // E-1: 基本レンダリング
   test("renders without crashing", () => {
     render(<DummyTextTile variant="full" />);
@@ -113,26 +109,26 @@ describe("DummyTextTile — variant='full'", () => {
     expect(allText.length).toBeGreaterThan(0);
   });
 
-  // E-6: コピー文言変化 — コピー前は "コピー" が表示される
+  // E-6: 押す前は「コピー」
   test("copy button label is コピー before copying", () => {
-    mockHook.copiedKey = null;
-    render(<DummyTextTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
-  });
-
-  // E-6: コピー文言変化 — コピー後は COPIED_LABEL が表示される
-  test("copy button label changes to COPIED_LABEL when copiedKey is set", () => {
-    mockHook.copiedKey = true;
     render(<DummyTextTile variant="full" />);
     expect(
-      screen.getByRole("button", { name: "コピーしました" }),
+      screen.getByRole("button", { name: "生成結果をコピー" }),
     ).toBeInTheDocument();
+  });
+
+  test("押すと結果を写し、ボタンが「コピー済み」になる", async () => {
+    render(<DummyTextTile variant="full" />);
+    const copyButton = screen.getByRole("button", { name: "生成結果をコピー" });
+    fireEvent.click(copyButton);
+    await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+    expect(writeText).toHaveBeenCalledTimes(1);
   });
 
   // E-7: 出力が空のときコピーボタンが disabled にならない（常に何か生成する）
   test("copy button is not disabled when output is non-empty", () => {
     render(<DummyTextTile variant="full" />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "生成結果をコピー" });
     expect(copyButton).not.toBeDisabled();
   });
 
@@ -256,11 +252,6 @@ describe("DummyTextTile — variant='full'", () => {
 });
 
 describe("DummyTextTile — variant='lorem' (固定)", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // 固定 variant では言語選択 ラジオボタンの組が非表示
   test("does not show language ラジオボタンの組", () => {
     render(<DummyTextTile variant="lorem" />);
@@ -284,16 +275,13 @@ describe("DummyTextTile — variant='lorem' (固定)", () => {
   // 固定 variant でもコピーボタンが存在する
   test("shows copy button", () => {
     render(<DummyTextTile variant="lorem" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "生成結果をコピー" }),
+    ).toBeInTheDocument();
   });
 });
 
 describe("DummyTextTile — variant='japanese' (固定)", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // 固定 variant では言語選択 ラジオボタンの組が非表示
   test("does not show language ラジオボタンの組", () => {
     render(<DummyTextTile variant="japanese" />);
@@ -316,11 +304,6 @@ describe("DummyTextTile — variant='japanese' (固定)", () => {
 });
 
 describe("DummyTextTile — 複数インスタンス id 一意性（A-6）", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // 複数インスタンスを同一ページに描画しても DOM id が重複しない
   test("no duplicate DOM ids when multiple instances are rendered", () => {
     const { container: c1 } = render(<DummyTextTile variant="full" />);

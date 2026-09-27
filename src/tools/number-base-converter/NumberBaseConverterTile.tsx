@@ -32,14 +32,10 @@
 import { useState, useMemo, useId } from "react";
 import Panel from "@/components/Panel";
 import { convertBase, formatBinary, formatHex, type NumberBase } from "./logic";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import Input from "@/components/Input";
 import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
-import Button from "@/components/Button";
 import styles from "./NumberBaseConverterTile.module.css";
 
 /** 入力基数の選択肢（variant=full 用） */
@@ -97,9 +93,6 @@ export default function NumberBaseConverterTile({
   // full の場合のみ基数を state で管理。bin-hex は 2 に固定。
   const [fromBaseStr, setFromBaseStr] = useState<string>("10");
   const [input, setInput] = useState("");
-
-  // T-4b: 複数ターゲット: 各基数カードを key で識別する
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 実際に使う基数: bin-hex は2進数固定、full はセレクト値を使用
   const fromBase = (isBinHex ? 2 : parseInt(fromBaseStr, 10)) as NumberBase;
@@ -213,8 +206,6 @@ export default function NumberBaseConverterTile({
       {!isBinHex && (
         <div className={styles.resultGrid}>
           {cards.map((card) => {
-            const isCopied = copiedKey === card.key;
-            const hasValue = !!card.copyValue;
             return (
               <div key={card.key} className={styles.resultCard}>
                 <div className={styles.resultCardLabel}>{card.label}</div>
@@ -225,17 +216,11 @@ export default function NumberBaseConverterTile({
                   {card.displayValue || "—"}
                 </div>
                 <div className={styles.resultCardActions}>
-                  <Button
-                    onClick={async () => {
-                      if (hasValue) {
-                        await copy(card.copyValue, card.key);
-                      }
-                    }}
-                    disabled={!hasValue}
-                    aria-label={isCopied ? COPIED_LABEL : "コピー"}
-                  >
-                    {isCopied ? COPIED_LABEL : "コピー"}
-                  </Button>
+                  <CopyButton
+                    text={card.copyValue}
+                    target={card.label}
+                    disabled={!card.copyValue}
+                  />
                 </div>
               </div>
             );
@@ -247,23 +232,16 @@ export default function NumberBaseConverterTile({
       {isBinHex &&
         (() => {
           const hexCard = cards.find((c) => c.key === "hexadecimal")!;
-          const isCopied = copiedKey === hexCard.key;
-          const hasValue = !!hexCard.copyValue;
           return (
             <div className={styles.hexResult}>
               <div className={styles.hexResultHeader}>
                 <span className={styles.hexResultLabel}>{hexCard.label}</span>
-                <Button
-                  onClick={async () => {
-                    if (hasValue) {
-                      await copy(hexCard.copyValue, hexCard.key);
-                    }
-                  }}
-                  disabled={!hasValue}
-                  aria-label={isCopied ? COPIED_LABEL : "コピー"}
-                >
-                  {isCopied ? COPIED_LABEL : "コピー"}
-                </Button>
+                <CopyButton
+                  text={hexCard.copyValue}
+                  target={hexCard.label}
+                  align="end"
+                  disabled={!hexCard.copyValue}
+                />
               </div>
               <div
                 className={styles.hexResultValue}

@@ -57,10 +57,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   generateHash,
   HASH_ALGORITHMS,
@@ -115,9 +112,6 @@ export default function HashGeneratorTile({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // C-3: ライブリージョン用サマリテキスト（実テキストノード）
   const [statusSummary, setStatusSummary] = useState("");
-
-  // useCopyToClipboard（AP-I11: タイマー cleanup はフック内で実装済み）
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // ---------- race condition ガード ----------
   // 各 handleGenerate 呼び出しに世代番号を付与し、
@@ -241,17 +235,11 @@ export default function HashGeneratorTile({
             <div key={result.algorithm} className={styles.resultRow}>
               <span className={styles.algoLabel}>{result.algorithm}</span>
               <code className={styles.hashValue}>{result.hash}</code>
-              <Button
-                onClick={() => void copy(result.hash, result.algorithm)}
+              <CopyButton
+                text={result.hash}
+                target={`${result.algorithm}のハッシュ値`}
                 disabled={!result.hash}
-                aria-label={
-                  copiedKey === result.algorithm
-                    ? `${result.algorithm}のハッシュ値: ${COPIED_LABEL}`
-                    : `${result.algorithm}のハッシュ値をコピー`
-                }
-              >
-                {copiedKey === result.algorithm ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
           ))}
         </div>

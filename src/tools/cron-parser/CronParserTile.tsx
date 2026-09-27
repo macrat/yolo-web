@@ -41,12 +41,8 @@
  * - RadioGroup: モード切替（full のみ）
  * - ErrorMessage: エラー表示
  * - Input: cron式入力・ビルダー各フィールド
- * - Button: 解析・プリセット・コピー
- * - useCopyToClipboard: ビルダー出力のコピー
- *
- * ## タイマー
- *
- * D-4: 直接 setTimeout/setInterval は使わない（useCopyToClipboard に委譲）。
+ * - Button: 解析・プリセット
+ * - CopyButton: ビルダーが生成した式のコピー
  */
 
 import { useId, useState, useCallback } from "react";
@@ -55,10 +51,7 @@ import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   parseCron,
   getNextExecutions,
@@ -204,9 +197,6 @@ export default function CronParserTile({
 
   /** C-3 ライブリージョン用サマリテキスト */
   const [liveSummary, setLiveSummary] = useState("");
-
-  /** ビルダー出力のコピー用フック（T-4b 更新: ビルダー生成式は持ち帰り対象） */
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // --- ビルダーモード ---
   const [bMinute, setBMinute] = useState("*");
@@ -559,9 +549,7 @@ export default function CronParserTile({
           {/* 生成されたCron式 */}
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>生成されたCron式</h2>
-            {/* A-6: コピーボタン（T-4b 更新方針: ビルダー生成式は持ち帰り対象）
-             * useCopyToClipboard フック + COPIED_LABEL で統一実装。
-             * 生成式が無効（バリデーション失敗）のときはコピーボタンを disabled にする（E-7）。*/}
+            {/* 生成式が無効のあいだは、写すものが無いのでコピーを押せない。 */}
             <div className={styles.builtExpressionRow}>
               <code
                 className={styles.builtExpression}
@@ -569,15 +557,12 @@ export default function CronParserTile({
               >
                 {builtExpression}
               </code>
-              {/* aria-label をコピー状態に合わせて動的に変える（スクリーンリーダーに正確な状態を伝える）。*/}
-              <Button
-                variant="default"
-                onClick={() => copy(builtExpression)}
+              <CopyButton
+                text={builtExpression}
+                target="生成されたCron式"
+                align="end"
                 disabled={!builtResult.valid}
-                aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-              >
-                {copiedKey ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             {/* 生成式の説明 */}
             {builtResult.valid && (

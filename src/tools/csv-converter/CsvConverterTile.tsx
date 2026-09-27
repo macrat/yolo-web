@@ -31,10 +31,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { convert, type DataFormat } from "./logic";
 import styles from "./CsvConverterTile.module.css";
 
@@ -120,9 +117,6 @@ export default function CsvConverterTile({
   // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
   const [statusSummary, setStatusSummary] = useState("");
 
-  // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // ---------- ハンドラ ----------
   const handleConvert = useCallback(() => {
     setError("");
@@ -143,11 +137,6 @@ export default function CsvConverterTile({
       setOutput("");
     }
   }, [input, fromFormat, toFormat]);
-
-  const handleCopy = useCallback(async () => {
-    if (!output) return;
-    await copy(output);
-  }, [output, copy]);
 
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
@@ -224,15 +213,12 @@ export default function CsvConverterTile({
             <label htmlFor={outputId} className={styles.panelLabel}>
               変換結果
             </label>
-            {/* T-4b: コピーボタンあり確定。出力が空のとき disabled */}
-            <Button
-              onClick={handleCopy}
-              type="button"
+            <CopyButton
+              text={output}
+              target="変換結果"
+              align="end"
               disabled={!output}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
           {/* C-3: role="status" aria-live="polite" で動的通知。
               実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。

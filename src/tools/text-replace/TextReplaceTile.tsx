@@ -38,15 +38,11 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import Textarea from "@/components/Textarea";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { replaceText, type ReplaceOptions } from "./logic";
 import styles from "./TextReplaceTile.module.css";
 
@@ -107,8 +103,6 @@ export default function TextReplaceTile({
     globalReplace: true,
   });
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // ---------- リアルタイム変換（共有エンジン logic.ts を使用・再実装禁止） ----------
   const result = useMemo(
     () => replaceText(input, search, replacement, options),
@@ -128,10 +122,6 @@ export default function TextReplaceTile({
   const output = result.error ? "" : result.output;
 
   // ---------- ハンドラ ----------
-  async function handleCopy() {
-    if (!output) return;
-    await copy(output);
-  }
 
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
@@ -242,14 +232,12 @@ export default function TextReplaceTile({
           <label htmlFor={outputId} className={styles.fieldLabel}>
             置換結果
           </label>
-          {/* コピーボタン（出力空のとき disabled） */}
-          <Button
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="置換結果"
+            align="end"
             disabled={!output}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
         {/*

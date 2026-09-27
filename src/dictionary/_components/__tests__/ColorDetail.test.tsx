@@ -64,18 +64,13 @@ describe("ColorDetail のカラーコードのコピー", () => {
   test("写せたら、押したボタンだけが「コピー済み」になる", async () => {
     writeText.mockResolvedValue(undefined);
     render(<ColorDetail color={toki} titleFontAttr={{}} />);
-    fireEvent.click(
-      screen.getByRole("button", { name: `${toki.hex}をコピー` }),
-    );
-    await waitFor(() =>
-      expect(
-        screen.getByRole("button", { name: `${toki.hex}をコピー` }),
-      ).toHaveTextContent("コピー済み"),
-    );
+    const hexButton = screen.getByRole("button", { name: "HEXをコピー" });
+    fireEvent.click(hexButton);
+    await waitFor(() => expect(hexButton).toHaveTextContent("コピー済み"));
     expect(writeText).toHaveBeenCalledWith(toki.hex);
     expect(
-      screen.getAllByRole("button", { name: /をコピー$/ })[1],
-    ).toHaveTextContent(/^コピー$/);
+      screen.getByRole("button", { name: "RGBをコピー" }),
+    ).toBeInTheDocument();
   });
 
   test("どの写し方でも写せなければ、押したボタンに「コピー失敗」を出す", async () => {
@@ -86,13 +81,8 @@ describe("ColorDetail のカラーコードのコピー", () => {
       writable: true,
     });
     render(<ColorDetail color={toki} titleFontAttr={{}} />);
-    fireEvent.click(
-      screen.getByRole("button", { name: `${toki.hex}をコピー` }),
-    );
-    await waitFor(() =>
-      expect(
-        screen.getByRole("button", { name: `${toki.hex}をコピー` }),
-      ).toHaveTextContent("コピー失敗"),
-    );
+    const hexButton = screen.getByRole("button", { name: "HEXをコピー" });
+    fireEvent.click(hexButton);
+    await waitFor(() => expect(hexButton).toHaveTextContent("コピー失敗"));
   });
 });

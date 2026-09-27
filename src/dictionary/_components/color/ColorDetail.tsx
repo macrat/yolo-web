@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Button from "@/components/Button";
-import { useCopyToClipboard } from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import ItemList from "@/components/ItemList";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
@@ -17,25 +16,6 @@ interface ColorDetailProps {
   color: ColorEntry;
   /** 見出し（色名）を組むための属性。字の表をクライアントに入れないよう、サーバーのページが判定して渡す。 */
   titleFontAttr: HeadingFontAttr;
-}
-
-/** 「コピー済み」を出しておくミリ秒数。 */
-const COPIED_DISPLAY_MS = 1500;
-
-/**
- * カラーコードを写すボタン。写せたら 1.5 秒「コピー済み」、写せなかったら次に押すまで「コピー失敗」を出す。
- * どちらも「コピー」と同じ字数に近い語にして、狭い画面でボタンの列が広がって値の列を押し縮めないようにする。
- */
-function CopyButton({ text }: { text: string }) {
-  const { copy, copiedKey, failedKey } = useCopyToClipboard({
-    resetDelay: COPIED_DISPLAY_MS,
-  });
-
-  return (
-    <Button onClick={() => copy(text)} aria-label={`${text}をコピー`}>
-      {copiedKey ? "コピー済み" : failedKey ? "コピー失敗" : "コピー"}
-    </Button>
-  );
 }
 
 export default function ColorDetail({
@@ -100,21 +80,21 @@ export default function ColorDetail({
               <th>HEX</th>
               <td className={styles.codeValue}>{color.hex}</td>
               <td className={styles.codeAction}>
-                <CopyButton text={color.hex} />
+                <CopyButton text={color.hex} target="HEX" align="end" />
               </td>
             </tr>
             <tr>
               <th>RGB</th>
               <td className={styles.codeValue}>{rgbText}</td>
               <td className={styles.codeAction}>
-                <CopyButton text={rgbText} />
+                <CopyButton text={rgbText} target="RGB" align="end" />
               </td>
             </tr>
             <tr>
               <th>HSL</th>
               <td className={styles.codeValue}>{hslText}</td>
               <td className={styles.codeAction}>
-                <CopyButton text={hslText} />
+                <CopyButton text={hslText} target="HSL" align="end" />
               </td>
             </tr>
           </tbody>

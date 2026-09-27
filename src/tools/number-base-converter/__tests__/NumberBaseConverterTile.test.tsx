@@ -134,20 +134,20 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     expect(statusRegion).toHaveAttribute("aria-live", "polite");
   });
 
-  // T-full-10: コピーボタン - クリック後に「コピーしました」
-  test("T-full-10: copy button shows COPIED_LABEL after click", async () => {
+  // T-full-10: コピーボタン - クリック後に「コピー済み」
+  test("T-full-10: copy button shows コピー済み after click", async () => {
     render(<NumberBaseConverterTile variant="full" />);
 
     const input = screen.getByLabelText("変換する数値");
     fireEvent.change(input, { target: { value: "255" } });
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     expect(copyButtons.length).toBeGreaterThan(0);
     fireEvent.click(copyButtons[0]);
 
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: "コピーしました" }),
+        screen.getByRole("button", { name: /をコピー済み$/ }),
       ).toBeInTheDocument();
     });
   });
@@ -156,7 +156,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
   test("T-full-11: copy buttons are disabled when input is empty", () => {
     render(<NumberBaseConverterTile variant="full" />);
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     copyButtons.forEach((btn) => {
       expect(btn).toBeDisabled();
     });
@@ -169,7 +169,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     const input = screen.getByLabelText("変換する数値");
     fireEvent.change(input, { target: { value: "10" } });
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     copyButtons.forEach((btn) => {
       expect(btn).not.toBeDisabled();
     });
@@ -188,7 +188,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     const input = screen.getByLabelText("変換する数値");
     fireEvent.change(input, { target: { value: "10" } });
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     expect(() => fireEvent.click(copyButtons[0])).not.toThrow();
 
     Object.defineProperty(globalThis, "navigator", {
@@ -287,7 +287,7 @@ describe("NumberBaseConverterTile (variant=bin-hex)", () => {
     const input = screen.getByLabelText("変換する数値（2進数）");
     fireEvent.change(input, { target: { value: "11111111" } });
 
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: /をコピー$/ });
     expect(copyButton).not.toBeDisabled();
   });
 

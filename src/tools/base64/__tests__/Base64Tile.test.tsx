@@ -338,7 +338,7 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
     fireEvent.click(copyButton);
 
     await waitFor(() => {
-      expect(copyButton).toHaveTextContent("コピーしました");
+      expect(copyButton).toHaveTextContent("コピー済み");
     });
   });
 

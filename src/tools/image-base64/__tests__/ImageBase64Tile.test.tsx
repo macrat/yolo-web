@@ -274,7 +274,7 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   // E-6: コピー文言変化
   // -------------------------------------------------------
-  it("E-6: コピーボタン押下後に「コピーしました」に文言が変化する", async () => {
+  it("E-6: コピーボタン押下後に「コピー済み」に文言が変化する", async () => {
     render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
@@ -287,17 +287,17 @@ describe("ImageBase64Tile", () => {
     });
 
     await waitFor(() => {
-      const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+      const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
       expect(copyButtons.length).toBeGreaterThanOrEqual(1);
     });
 
-    const [firstCopyBtn] = screen.getAllByRole("button", { name: "コピー" });
+    const [firstCopyBtn] = screen.getAllByRole("button", { name: /をコピー$/ });
     await act(async () => {
       fireEvent.click(firstCopyBtn);
     });
 
     expect(
-      screen.getByRole("button", { name: "コピーしました" }),
+      screen.getByRole("button", { name: "Base64をコピー済み" }),
     ).toBeInTheDocument();
   });
 
@@ -308,7 +308,7 @@ describe("ImageBase64Tile", () => {
     render(<ImageBase64Tile />);
     // エンコード結果がない状態ではコピーボタンは存在しない
     expect(
-      screen.queryByRole("button", { name: "コピー" }),
+      screen.queryByRole("button", { name: /をコピー$/ }),
     ).not.toBeInTheDocument();
   });
 
@@ -337,11 +337,11 @@ describe("ImageBase64Tile", () => {
     });
 
     await waitFor(() => {
-      const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+      const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
       expect(copyButtons.length).toBeGreaterThanOrEqual(1);
     });
 
-    const [firstCopyBtn] = screen.getAllByRole("button", { name: "コピー" });
+    const [firstCopyBtn] = screen.getAllByRole("button", { name: /をコピー$/ });
 
     await expect(
       act(async () => {

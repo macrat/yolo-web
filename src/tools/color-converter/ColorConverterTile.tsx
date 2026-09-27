@@ -42,10 +42,7 @@ import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   parseHex,
   parseRgb,
@@ -138,8 +135,6 @@ export default function ColorConverterTile({
   const [dynamicMode, setDynamicMode] = useState<InputMode>("hex");
   const [inputText, setInputText] = useState(defaultInput);
   const [result, setResult] = useState<ColorResult | null>(null);
-
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const inputMode = fixedMode ?? dynamicMode;
@@ -305,42 +300,21 @@ export default function ColorConverterTile({
             <div className={styles.resultCard}>
               <div className={styles.resultCardLabel}>HEX</div>
               <div className={styles.resultCardValue}>{hexValue}</div>
-              <Button
-                variant="default"
-                disabled={!hexValue}
-                onClick={() => void copy(hexValue, "hex")}
-                aria-label="HEXをコピー"
-              >
-                {copiedKey === "hex" ? COPIED_LABEL : "コピー"}
-              </Button>
+              <CopyButton text={hexValue} target="HEX" disabled={!hexValue} />
             </div>
 
             {/* RGB カード */}
             <div className={styles.resultCard}>
               <div className={styles.resultCardLabel}>RGB</div>
               <div className={styles.resultCardValue}>{rgbValue}</div>
-              <Button
-                variant="default"
-                disabled={!rgbValue}
-                onClick={() => void copy(rgbValue, "rgb")}
-                aria-label="RGBをコピー"
-              >
-                {copiedKey === "rgb" ? COPIED_LABEL : "コピー"}
-              </Button>
+              <CopyButton text={rgbValue} target="RGB" disabled={!rgbValue} />
             </div>
 
             {/* HSL カード */}
             <div className={styles.resultCard}>
               <div className={styles.resultCardLabel}>HSL</div>
               <div className={styles.resultCardValue}>{hslValue}</div>
-              <Button
-                variant="default"
-                disabled={!hslValue}
-                onClick={() => void copy(hslValue, "hsl")}
-                aria-label="HSLをコピー"
-              >
-                {copiedKey === "hsl" ? COPIED_LABEL : "コピー"}
-              </Button>
+              <CopyButton text={hslValue} target="HSL" disabled={!hslValue} />
             </div>
           </div>
         </>

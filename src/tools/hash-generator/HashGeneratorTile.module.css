@@ -64,7 +64,9 @@
 }
 
 /* 各ハッシュ結果行 */
+/* コピーのボタンは、値の右に置く広い画面では右端に、値の下に置く狭い画面では左端にそろえる。 */
 .resultRow {
+  --copy-button-align: end;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -95,6 +97,7 @@
 
 @media (max-width: 640px) {
   .resultRow {
+    --copy-button-align: start;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.4rem;

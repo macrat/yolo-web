@@ -32,14 +32,10 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import Input from "@/components/Input";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   generateText,
   countGeneratedWords,
@@ -94,8 +90,6 @@ export default function DummyTextTile({
   const [paragraphs, setParagraphs] = useState(3);
   const [sentencesPerParagraph, setSentencesPerParagraph] = useState(5);
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使う言語: fixed があればそれを使い、なければ state を使う
   const language = fixedLanguage ?? dynamicLanguage;
 
@@ -137,11 +131,6 @@ export default function DummyTextTile({
     if (!isNaN(v) && v >= 1 && v <= 20) {
       setSentencesPerParagraph(v);
     }
-  }
-
-  async function handleCopy(): Promise<void> {
-    if (!output) return;
-    await copy(output);
   }
 
   // ---------- Render ----------
@@ -212,14 +201,12 @@ export default function DummyTextTile({
           <label htmlFor={outputId} className={styles.outputLabel}>
             生成結果
           </label>
-          {/* T-4b: コピーボタンあり確定。出力が空のとき disabled（通常は空にならない） */}
-          <Button
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="生成結果"
+            align="end"
             disabled={!output}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
         {/* C-3 準拠: readOnly textarea は role="status" 対象外。

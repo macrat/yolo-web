@@ -17,10 +17,7 @@ import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import RadioGroup from "@/components/RadioGroup";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   getCurrentTimestamp,
   timestampToDate,
@@ -90,8 +87,6 @@ export default function UnixTimestampTile({
     milliseconds: number;
   } | null>(null);
   const [dateStatusSummary, setDateStatusSummary] = useState("");
-
-  const { copy, copiedKey } = useCopyToClipboard();
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
@@ -205,19 +200,13 @@ export default function UnixTimestampTile({
           >
             {ticking ? "止める" : "動かす"}
           </Button>
-          <Button
-            disabled={!mounted || currentTs === 0}
-            onClick={() => copy(String(currentTs), "current")}
-            aria-label={
-              copiedKey === "current"
-                ? COPIED_LABEL
-                : ticking
-                  ? "現在のタイムスタンプをコピー"
-                  : `${valueAt} のタイムスタンプをコピー`
+          <CopyButton
+            text={String(currentTs)}
+            target={
+              ticking ? "現在のタイムスタンプ" : `${valueAt} のタイムスタンプ`
             }
-          >
-            {copiedKey === "current" ? COPIED_LABEL : "コピー"}
-          </Button>
+            disabled={!mounted || currentTs === 0}
+          />
         </div>
       </div>
 
@@ -269,67 +258,54 @@ export default function UnixTimestampTile({
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>ローカル時刻</span>
               <code className={styles.resultValue}>{tsResult.localString}</code>
-              <Button
+              <CopyButton
+                text={tsResult.localString}
+                target="ローカル時刻"
+                align="end"
                 disabled={!tsResult.localString}
-                onClick={() => copy(tsResult.localString, "local")}
-                aria-label={
-                  copiedKey === "local" ? COPIED_LABEL : "ローカル時刻をコピー"
-                }
-              >
-                {copiedKey === "local" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>UTC</span>
               <code className={styles.resultValue}>{tsResult.utcString}</code>
-              <Button
+              <CopyButton
+                text={tsResult.utcString}
+                target="UTC"
+                align="end"
                 disabled={!tsResult.utcString}
-                onClick={() => copy(tsResult.utcString, "utc")}
-                aria-label={copiedKey === "utc" ? COPIED_LABEL : "UTCをコピー"}
-              >
-                {copiedKey === "utc" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>ISO 8601</span>
               <code className={styles.resultValue}>{tsResult.isoString}</code>
-              <Button
+              <CopyButton
+                text={tsResult.isoString}
+                target="ISO 8601"
+                align="end"
                 disabled={!tsResult.isoString}
-                onClick={() => copy(tsResult.isoString, "iso")}
-                aria-label={
-                  copiedKey === "iso" ? COPIED_LABEL : "ISO 8601をコピー"
-                }
-              >
-                {copiedKey === "iso" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>秒</span>
               <code className={styles.resultValue}>{tsResult.seconds}</code>
-              <Button
+              <CopyButton
+                text={String(tsResult.seconds)}
+                target="秒"
+                align="end"
                 disabled={tsResult.seconds === undefined}
-                onClick={() => copy(String(tsResult.seconds), "tsSeconds")}
-                aria-label={
-                  copiedKey === "tsSeconds" ? COPIED_LABEL : "秒をコピー"
-                }
-              >
-                {copiedKey === "tsSeconds" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>ミリ秒</span>
               <code className={styles.resultValue}>
                 {tsResult.milliseconds}
               </code>
-              <Button
+              <CopyButton
+                text={String(tsResult.milliseconds)}
+                target="ミリ秒"
+                align="end"
                 disabled={tsResult.milliseconds === undefined}
-                onClick={() => copy(String(tsResult.milliseconds), "tsMs")}
-                aria-label={
-                  copiedKey === "tsMs" ? COPIED_LABEL : "ミリ秒をコピー"
-                }
-              >
-                {copiedKey === "tsMs" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
           </div>
         )}
@@ -452,30 +428,24 @@ export default function UnixTimestampTile({
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>秒</span>
               <code className={styles.resultValue}>{dateResult.seconds}</code>
-              <Button
+              <CopyButton
+                text={String(dateResult.seconds)}
+                target="秒"
+                align="end"
                 disabled={dateResult.seconds === undefined}
-                onClick={() => copy(String(dateResult.seconds), "dateSec")}
-                aria-label={
-                  copiedKey === "dateSec" ? COPIED_LABEL : "秒をコピー"
-                }
-              >
-                {copiedKey === "dateSec" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             <div className={styles.resultRow}>
               <span className={styles.resultLabel}>ミリ秒</span>
               <code className={styles.resultValue}>
                 {dateResult.milliseconds}
               </code>
-              <Button
+              <CopyButton
+                text={String(dateResult.milliseconds)}
+                target="ミリ秒"
+                align="end"
                 disabled={dateResult.milliseconds === undefined}
-                onClick={() => copy(String(dateResult.milliseconds), "dateMs")}
-                aria-label={
-                  copiedKey === "dateMs" ? COPIED_LABEL : "ミリ秒をコピー"
-                }
-              >
-                {copiedKey === "dateMs" ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
           </div>
         )}

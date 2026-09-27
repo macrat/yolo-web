@@ -17,30 +17,26 @@
  * - V-13: navigator.clipboard 不在環境でクラッシュしない
  * - V-14: 変換後に形式変更すると旧結果がクリアされない（ユーザーが再度「変換」ボタンを押すまで）
  */
-import { describe, test, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import CsvConverterTile from "../CsvConverterTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("CsvConverterTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // V-1: 基本レンダリング
   describe("V-1: variant=full でのレンダリング", () => {
     it("renders without crashing", () => {
@@ -170,7 +166,9 @@ describe("CsvConverterTile", () => {
     it("出力が空のときコピーボタンが disabled", () => {
       render(<CsvConverterTile variant="full" />);
       // 初期状態（サンプルデータ）でも出力欄は空。変換前は disabled。
-      const copyButton = screen.getByRole("button", { name: "コピー" });
+      const copyButton = screen.getByRole("button", {
+        name: "変換結果をコピー",
+      });
       expect(copyButton).toBeDisabled();
     });
   });
@@ -188,33 +186,36 @@ describe("CsvConverterTile", () => {
       fireEvent.change(toSelect, { target: { value: "json" } });
 
       fireEvent.click(screen.getByRole("button", { name: "変換" }));
-      const copyButton = screen.getByRole("button", { name: "コピー" });
+      const copyButton = screen.getByRole("button", {
+        name: "変換結果をコピー",
+      });
       expect(copyButton).not.toBeDisabled();
     });
   });
 
   // V-10: コピーボタン文言変化
   describe("V-10: コピーボタン文言変化", () => {
-    it("コピー前は 'コピー' が表示される（copiedKey=null）", () => {
-      mockHook.copiedKey = null;
+    it("コピー前は 'コピー' が表示される", () => {
       render(<CsvConverterTile variant="full" />);
       const input = screen.getByLabelText("入力データ");
       fireEvent.change(input, { target: { value: "a,b\n1,2" } });
       fireEvent.click(screen.getByRole("button", { name: "変換" }));
       expect(
-        screen.getByRole("button", { name: "コピー" }),
+        screen.getByRole("button", { name: "変換結果をコピー" }),
       ).toBeInTheDocument();
     });
 
-    it("コピー後は COPIED_LABEL が表示される（copiedKey 設定済み）", () => {
-      mockHook.copiedKey = true;
+    it("押すと結果を写し、ボタンが「コピー済み」になる", async () => {
       render(<CsvConverterTile variant="full" />);
       const input = screen.getByLabelText("入力データ");
       fireEvent.change(input, { target: { value: "a,b\n1,2" } });
       fireEvent.click(screen.getByRole("button", { name: "変換" }));
-      expect(
-        screen.getByRole("button", { name: "コピーしました" }),
-      ).toBeInTheDocument();
+      const copyButton = screen.getByRole("button", {
+        name: "変換結果をコピー",
+      });
+      fireEvent.click(copyButton);
+      await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+      expect(writeText).toHaveBeenCalledTimes(1);
     });
   });
 

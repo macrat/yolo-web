@@ -1,28 +1,24 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
-
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
-
 import MarkdownPreviewTile from "../MarkdownPreviewTile";
 
-describe("MarkdownPreviewTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+describe("MarkdownPreviewTile", () => {
   // --- 基本レンダリング ---
 
   // E-1: クラッシュなしにレンダリングできる
@@ -163,13 +159,17 @@ describe("MarkdownPreviewTile", () => {
 
   // --- HTML コピーボタン ---
 
-  // E-6: コピー後は COPIED_LABEL が表示される
-  test("copy button label changes to COPIED_LABEL when copiedKey is set", () => {
-    mockHook.copiedKey = true;
+  // E-6: 押すと HTML を写し、ボタンが「コピー済み」になる
+  test("copy button copies the HTML and shows コピー済み", async () => {
     render(<MarkdownPreviewTile />);
-    expect(
-      screen.getByRole("button", { name: "コピーしました" }),
-    ).toBeInTheDocument();
+    const input = screen.getByLabelText("Markdown入力");
+    fireEvent.change(input, { target: { value: "# テスト" } });
+    const copyButton = screen.getByRole("button", { name: "HTMLをコピー" });
+    fireEvent.click(copyButton);
+    await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("テスト</h1>"),
+    );
   });
 
   // E-7: 入力が空のときコピーボタンが disabled になる

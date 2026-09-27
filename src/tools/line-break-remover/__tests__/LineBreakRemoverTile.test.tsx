@@ -21,7 +21,6 @@ import { join } from "path";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import LineBreakRemoverTile from "../LineBreakRemoverTile";
-import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
 
 // navigator.clipboard のモック
 const mockWriteText = vi.fn().mockResolvedValue(undefined);
@@ -317,7 +316,7 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
 
   it("空入力時はコピーボタンが disabled", () => {
     render(<LineBreakRemoverTile variant="full" />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "変換結果をコピー" });
     expect(copyButton).toBeDisabled();
   });
 
@@ -325,21 +324,23 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
     render(<LineBreakRemoverTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "abc\ndef" } });
-    expect(screen.getByRole("button", { name: "コピー" })).not.toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "変換結果をコピー" }),
+    ).not.toBeDisabled();
   });
 
-  it("コピーボタンクリック後に COPIED_LABEL に変化する", async () => {
+  it("コピーボタンクリック後に 「コピー済み」に変化する", async () => {
     render(<LineBreakRemoverTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "abc\ndef" } });
 
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "変換結果をコピー" });
     await act(async () => {
       fireEvent.click(copyButton);
     });
 
     expect(
-      screen.getByRole("button", { name: COPIED_LABEL }),
+      screen.getByRole("button", { name: "変換結果をコピー済み" }),
     ).toBeInTheDocument();
   });
 });
@@ -390,7 +391,9 @@ describe("V-12: clipboard 不在時の silent fail", () => {
 
     await expect(async () => {
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "コピー" }));
+        fireEvent.click(
+          screen.getByRole("button", { name: "変換結果をコピー" }),
+        );
       });
     }).not.toThrow();
 

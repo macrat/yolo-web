@@ -14,30 +14,27 @@
  * - T-10: CSS トークン検証
  * - T-11: 12テンプレート全体の回帰テスト
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import BusinessEmailTile from "../BusinessEmailTile";
 import { generateEmail, getAllTemplates } from "../logic";
 
-// useCopyToClipboard をモック（clipboard API 不在環境対策）
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("BusinessEmailTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // T-1: 基本レンダリング
   describe("T-1: 基本レンダリング（variant=full）", () => {
     it("クラッシュせずにレンダリングされる", () => {
@@ -166,12 +163,39 @@ describe("BusinessEmailTile", () => {
       expect(copyAllBtn).not.toBeDisabled();
     });
 
-    it("copiedKey='subject' のとき件名コピーボタンが COPIED_LABEL になる", () => {
-      mockHook.copiedKey = "subject";
+    it("件名のコピーを押すと件名を写し、そのボタンだけが「コピー済み」になる", async () => {
       render(<BusinessEmailTile variant="full" />);
+      const subjectCopyBtn = screen.getByRole("button", {
+        name: "件名をコピー",
+      });
+      const subject = (
+        screen.getByLabelText("件名プレビュー") as HTMLInputElement
+      ).value;
+      fireEvent.click(subjectCopyBtn);
+      await waitFor(() =>
+        expect(subjectCopyBtn).toHaveTextContent("コピー済み"),
+      );
+      expect(writeText).toHaveBeenCalledWith(subject);
       expect(
-        screen.getByRole("button", { name: "コピーしました" }),
+        screen.getByRole("button", { name: "本文をコピー" }),
       ).toBeInTheDocument();
+    });
+
+    it("全文のコピーは、押す前の面で何を写すかを言い、件名と本文をまとめて写す", async () => {
+      render(<BusinessEmailTile variant="full" />);
+      const copyAllBtn = screen.getByRole("button", {
+        name: "メール全文をコピー",
+      });
+      expect(copyAllBtn).toHaveTextContent(/^メール全文をコピー$/);
+      const subject = (
+        screen.getByLabelText("件名プレビュー") as HTMLInputElement
+      ).value;
+      const body = (
+        screen.getByLabelText("本文プレビュー") as HTMLTextAreaElement
+      ).value;
+      fireEvent.click(copyAllBtn);
+      await waitFor(() => expect(copyAllBtn).toHaveTextContent("コピー済み"));
+      expect(writeText).toHaveBeenCalledWith(`件名: ${subject}\n\n${body}`);
     });
   });
 

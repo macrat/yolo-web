@@ -28,15 +28,11 @@ import {
 import Link from "next/link";
 import Panel from "@/components/Panel";
 import ListStack from "@/components/ListStack";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import ListControls from "@/components/ListControls";
 import ListStatus from "@/components/ListStatus";
 import { useListBrowseState } from "@/components/hooks/useListBrowseState";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { getAllColors } from "@/dictionary/_lib/colors";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import {
@@ -122,9 +118,6 @@ export default function TraditionalColorPaletteTile({
     spec: PALETTE_SPEC,
     unit: "色",
   });
-
-  // 色コードのコピー。どのカードのどのコードをコピーしたかを "slug-codeType" の鍵で見分ける。
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 有彩色の配色計算
   const harmonyResult = useMemo(() => {
@@ -216,11 +209,6 @@ export default function TraditionalColorPaletteTile({
     const hslValue = formatHsl(color.hsl);
     const cardKey = `${color.slug}-${index}`;
 
-    // コピーキー: "slug-codeType" で複数カード・複数コードタイプを識別
-    const hexKey = `${color.slug}-hex`;
-    const rgbKey = `${color.slug}-rgb`;
-    const hslKey = `${color.slug}-hsl`;
-
     return (
       <div key={cardKey} className={styles.paletteCard}>
         {/* 色見本。地の色が伝統色そのもの（§2）。 */}
@@ -245,49 +233,37 @@ export default function TraditionalColorPaletteTile({
         </div>
         <div className={styles.paletteColorRomaji}>{color.romaji}</div>
 
-        {/* HEX コピーボタン付き */}
+        {/* HEX */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>HEX</span>
           <span className={styles.colorCodeValue}>{hexValue}</span>
-          <Button
-            variant="default"
-            onClick={() => void copy(hexValue, hexKey)}
-            aria-label={
-              copiedKey === hexKey ? COPIED_LABEL : `HEX ${hexValue} をコピー`
-            }
-          >
-            {copiedKey === hexKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          <CopyButton
+            text={hexValue}
+            target={`${color.name}のHEX`}
+            align="end"
+          />
         </div>
 
         {/* RGB */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>RGB</span>
           <span className={styles.colorCodeValue}>{rgbValue}</span>
-          <Button
-            variant="default"
-            onClick={() => void copy(rgbValue, rgbKey)}
-            aria-label={
-              copiedKey === rgbKey ? COPIED_LABEL : `RGB ${rgbValue} をコピー`
-            }
-          >
-            {copiedKey === rgbKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          <CopyButton
+            text={rgbValue}
+            target={`${color.name}のRGB`}
+            align="end"
+          />
         </div>
 
         {/* HSL */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>HSL</span>
           <span className={styles.colorCodeValue}>{hslValue}</span>
-          <Button
-            variant="default"
-            onClick={() => void copy(hslValue, hslKey)}
-            aria-label={
-              copiedKey === hslKey ? COPIED_LABEL : `HSL ${hslValue} をコピー`
-            }
-          >
-            {copiedKey === hslKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          <CopyButton
+            text={hslValue}
+            target={`${color.name}のHSL`}
+            align="end"
+          />
         </div>
       </div>
     );

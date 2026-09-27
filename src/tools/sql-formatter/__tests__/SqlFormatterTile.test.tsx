@@ -14,23 +14,24 @@
  * - V-10: エラー表示（日本語化）
  */
 
-import { describe, it, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import SqlFormatterTile from "../SqlFormatterTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("V-1: variant=full のレンダリング", () => {
   it("入力欄と出力欄が存在する", () => {
@@ -59,7 +60,9 @@ describe("V-1: variant=full のレンダリング", () => {
 
   it("コピーボタンが表示される", () => {
     render(<SqlFormatterTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "出力をコピー" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -176,14 +179,9 @@ describe("V-6: ARIA アクセシビリティ", () => {
 });
 
 describe("V-7: コピーボタン", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   it("出力が空のときコピーボタンが disabled", () => {
     render(<SqlFormatterTile variant="full" />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).toBeDisabled();
   });
 
@@ -194,21 +192,21 @@ describe("V-7: コピーボタン", () => {
       target: { value: "select id from users" },
     });
     fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).not.toBeDisabled();
   });
 
-  it("コピー済み状態では COPIED_LABEL が表示される", () => {
-    mockHook.copiedKey = true;
+  it("押すと結果を写し、ボタンが「コピー済み」になる", async () => {
     render(<SqlFormatterTile variant="full" />);
     const input = screen.getByLabelText("SQL入力");
     fireEvent.change(input, {
       target: { value: "select id from users" },
     });
     fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(
-      screen.getByRole("button", { name: "コピーしました" }),
-    ).toBeInTheDocument();
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
+    fireEvent.click(copyButton);
+    await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+    expect(writeText).toHaveBeenCalledTimes(1);
   });
 });
 

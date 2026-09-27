@@ -34,13 +34,9 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { convertKana, type KanaConvertMode } from "./logic";
 import styles from "./KanaConverterTile.module.css";
 
@@ -101,8 +97,6 @@ export default function KanaConverterTile({
   );
   const [input, setInput] = useState(defaultInput);
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
 
@@ -124,11 +118,6 @@ export default function KanaConverterTile({
 
   function handleInputChange(e: { target: { value: string } }): void {
     setInput(e.target.value);
-  }
-
-  async function handleCopy(): Promise<void> {
-    if (!hasOutput) return;
-    await copy(output);
   }
 
   // ---------- Render ----------
@@ -167,15 +156,12 @@ export default function KanaConverterTile({
           <label htmlFor={outputId} className={styles.fieldLabel}>
             変換結果
           </label>
-          {/* コピーボタン */}
-          <Button
-            variant="default"
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="変換結果"
+            align="end"
             disabled={!hasOutput}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
         {/* C-3 準拠: readOnly textarea は role="status" 対象外。
