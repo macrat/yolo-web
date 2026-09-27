@@ -118,7 +118,9 @@ describe("GuessInput", () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
     render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={true} />);
 
-    expect(screen.getByRole("button")).toHaveTextContent("送信中...");
+    expect(
+      screen.getByRole("button", { name: "送信中……" }),
+    ).toBeInTheDocument();
   });
 
   test("does not call onSubmit when submitting is true", async () => {

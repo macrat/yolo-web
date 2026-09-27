@@ -33,7 +33,12 @@ import {
   saveHistory,
   loadTodayGame,
 } from "@/play/games/yoji-kimeru/_lib/storage";
-import { reserveSavedRows } from "@/play/games/yoji-kimeru/_lib/savedRows";
+import {
+  BOARD_ROWS_PROPERTY,
+  HINT_LINES_PROPERTY,
+  SAVED_ROWS_STYLE_ID,
+  reserveSavedRows,
+} from "@/play/games/yoji-kimeru/_lib/savedRows";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
@@ -53,8 +58,16 @@ const DEFAULT_DIFFICULTY: Difficulty = "intermediate";
 const LOAD_FAILED_MESSAGE =
   "問題を読み込めませんでした。時間をおいて、もう一度読み込んでください";
 
-/** サーバーの HTML で本体の直後に置き、端末に記録した今日の回の行の高さを最初の描画の前に取っておく。 */
-const RESERVE_SAVED_ROWS_SCRIPT = `(${reserveSavedRows.toString()})(document.currentScript.previousElementSibling, ${JSON.stringify(DIFFICULTY_KEY)}, ${JSON.stringify(HISTORY_KEY_PREFIX)}, ${JSON.stringify(
+/** サーバーの HTML で本体の前に置き、端末に記録した今日の回の行の高さを、本体を描く前に取っておく。 */
+const RESERVE_SAVED_ROWS_SCRIPT = `(${reserveSavedRows.toString()})(${[
+  SAVED_ROWS_STYLE_ID,
+  BOARD_ROWS_PROPERTY,
+  HINT_LINES_PROPERTY,
+  DIFFICULTY_KEY,
+  HISTORY_KEY_PREFIX,
+]
+  .map((value) => JSON.stringify(value))
+  .join(", ")}, ${JSON.stringify(
   Array.from({ length: MAX_GUESSES + 1 }, (_, count) => hintLineCount(count)),
 )}, ${MAX_GUESSES})`;
 
@@ -174,7 +187,6 @@ export default function GameContainer({
   const [resultAppears, setResultAppears] = useState(false);
 
   const isServerRendered = useIsServerRendered();
-  const gameRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLInputElement>(null);
   /** 推測が盤に加わったあと、入力欄が画面の外なら画面に入れる。 */
   const revealFieldRef = useRef(false);
@@ -253,8 +265,7 @@ export default function GameContainer({
   // 難易度に替えたときに、前の回の行の高さが残らない。
   useLayoutEffect(() => {
     if (loading) return;
-    gameRef.current?.style.removeProperty("--board-rows");
-    gameRef.current?.style.removeProperty("--hint-lines");
+    document.getElementById(SAVED_ROWS_STYLE_ID)?.remove();
   }, [loading]);
 
   // 送った推測も、判定を待たずに1回として数える（盤の行・ヒント・残りの回数）。
@@ -376,8 +387,13 @@ export default function GameContainer({
 
   return (
     <>
-      {/* サーバーの HTML では直後のスクリプトが行の高さを書き込むので、水和のときの属性が props と違う。 */}
-      <div ref={gameRef} className={styles.game} suppressHydrationWarning>
+      {isServerRendered && (
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: RESERVE_SAVED_ROWS_SCRIPT }}
+        />
+      )}
+      <div className={styles.game}>
         <HintBar guessCount={guessCount} hint={loading ? null : puzzleData} />
         <GameBoard
           guesses={gameState.guesses}
@@ -422,12 +438,6 @@ export default function GameContainer({
           </p>
         </div>
       </div>
-      {isServerRendered && (
-        <script
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: RESERVE_SAVED_ROWS_SCRIPT }}
-        />
-      )}
     </>
   );
 }

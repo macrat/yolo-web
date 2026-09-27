@@ -32,13 +32,6 @@ const LATER_HINTS = [
   { after: 5, name: "分類" },
 ] as const;
 
-/**
- * ヒントの帯。難易度と読みの字数は初めから出し、3回目のあとに読みの最初の字、4回目のあとに出典、5回目の
- * あとに分類を1行ずつ足す。次に出るヒントを最後の行で言う。
- *
- * どの行も1つのヒントだけを持ち、行の中で折れない短い文にする。問題を読み込む前と後で行の数が変わらず、
- * 読み込んだときに下のものが動かない。
- */
 /** その回数の推測のあとに出る、ヒントの帯の行の数。 */
 export function hintLineCount(guessCount: number): number {
   const shown = LATER_HINTS.filter(({ after }) => guessCount >= after).length;
@@ -46,6 +39,13 @@ export function hintLineCount(guessCount: number): number {
   return 1 + shown + next;
 }
 
+/**
+ * ヒントの帯。難易度と読みの字数は初めから出し、3回目のあとに読みの最初の字、4回目のあとに出典、5回目の
+ * あとに分類を1行ずつ足す。次に出るヒントを最後の行で言う。
+ *
+ * どの行も1つのヒントだけを持ち、行の中で折れない短い文にする。問題を読み込む前と後で行の数が変わらず、
+ * 読み込んだときに下のものが動かない。
+ */
 export default function HintBar({ guessCount, hint }: HintBarProps) {
   const next = LATER_HINTS.find(({ after }) => guessCount < after);
 

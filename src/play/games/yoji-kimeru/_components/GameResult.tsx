@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { Fragment, useEffect, useId, useRef } from "react";
 import ResultBox from "@/components/ResultBox";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import ShareButtons from "@/components/ShareButtons";
@@ -69,6 +69,19 @@ export default function GameResult({
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
       : 0;
+  // 成績の名前は文節の切れ目（<wbr>）で折る（§4 表のセル）。名前は決まった文なので、切れ目もここに書く。
+  const records: { label: string[]; value: string }[] = [
+    { label: ["遊んだ", "回数"], value: `${stats.gamesPlayed}回` },
+    { label: ["正解した", "割合"], value: `${winRate}%` },
+    {
+      label: ["続けて", "正解した", "日数"],
+      value: `${stats.currentStreak}日`,
+    },
+    {
+      label: ["いちばん", "長く", "続けて", "正解した", "日数"],
+      value: `${stats.maxStreak}日`,
+    },
+  ];
   const distribution: QuantityBar[] = stats.guessDistribution.map(
     (count, i) => ({
       name: `${i + 1}回目`,
@@ -100,22 +113,19 @@ export default function GameResult({
           </h3>
           <table className={styles.statsTable} aria-labelledby={statsHeadingId}>
             <tbody>
-              <tr>
-                <th scope="row">遊んだ回数</th>
-                <td>{stats.gamesPlayed}回</td>
-              </tr>
-              <tr>
-                <th scope="row">正解した割合</th>
-                <td>{winRate}%</td>
-              </tr>
-              <tr>
-                <th scope="row">続けて正解した日数</th>
-                <td>{stats.currentStreak}日</td>
-              </tr>
-              <tr>
-                <th scope="row">いちばん長く続けて正解した日数</th>
-                <td>{stats.maxStreak}日</td>
-              </tr>
+              {records.map(({ label, value }) => (
+                <tr key={label.join("")}>
+                  <th scope="row">
+                    {label.map((phrase, k) => (
+                      <Fragment key={k}>
+                        {k > 0 && <wbr />}
+                        {phrase}
+                      </Fragment>
+                    ))}
+                  </th>
+                  <td>{value}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <h3 id={distributionHeadingId} className={styles.resultHeading}>

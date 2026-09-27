@@ -12,9 +12,13 @@
 
 /* ===== ヒントの帯 ===== */
 /* 1行に1つのヒント。行の中で折れない短い文なので、読み込みの前後で行の数が変わらない。途中まで遊んだ来訪者が
- * 開き直したときは、記録の行の数（--hint-lines）の高さを、記録を戻すまで取っておく。 */
+ * 開き直したときは、記録の行の数（--yoji-kimeru-hint-lines）の高さを記録を戻すまで取っておき、次に出るヒントの
+ * 行をその下端に置く。記録を戻して間の行が入っても、最後の行は動かない。 */
 .hints {
-  min-height: calc(var(--hint-lines, 2) * 1lh);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(var(--yoji-kimeru-hint-lines, 2) * 1lh);
   font-size: var(--text-small);
   color: var(--ink);
 }
@@ -31,7 +35,8 @@
 /* ===== 盤 ===== */
 /* 4つの字のマスの大きさがこの盤の中身なので、幅はマスが決め、コンテンツ幅に広げない（§5「画像・色見本は
  * コンテンツが決める」と同じ考え方）。マスは太い線で区切る。途中まで遊んだ来訪者が開き直したときは、記録の
- * 行の数（--board-rows）の高さを、記録を戻すまで取っておく。 */
+ * 行の数（--yoji-kimeru-board-rows）の高さを記録を戻すまで取っておき、次の推測を入れる空の行をその下端に置く。
+ * 記録を戻して上に行が入っても、空の行は動かない。 */
 .board {
   --row-height: calc(
     var(--char-size) * var(--char-leading) + var(--mark-size) *
@@ -43,7 +48,10 @@
   --mark-leading: 1.2;
   display: flex;
   flex-direction: column;
-  min-height: calc(var(--board-rows, 1) * var(--row-height) + var(--rule-w));
+  justify-content: flex-end;
+  min-height: calc(
+    var(--yoji-kimeru-board-rows, 1) * var(--row-height) + var(--rule-w)
+  );
   width: 280px;
   border-top: var(--rule-w) solid var(--rule);
   border-left: var(--rule-w) solid var(--rule);
@@ -148,6 +156,20 @@
   flex: none;
 }
 
+/* 送信のボタンの面の字。2つを同じ升に重ね、升の幅を広いほうの字で決める。見せない面は場所だけを取る。 */
+.submitFaces {
+  display: grid;
+}
+
+.submitFaces > * {
+  grid-area: 1 / 1;
+}
+
+.submitFaces > [hidden] {
+  display: block;
+  visibility: hidden;
+}
+
 /* ===== くわしい遊び方 ===== */
 /* 開閉の行と中身は、本体の幅いっぱいを使って折り返す。 */
 .howToPlayAccordion {
@@ -232,6 +254,16 @@
 
 .statsTable {
   width: 100%;
+}
+
+/* 成績の名前は文節の切れ目で折る（§4 表のセル）。列は文節が割れない幅まで広がる。 */
+.statsTable th {
+  word-break: keep-all;
+}
+
+/* 値は数と単位の組で、あいだで折らない（§8）。値の列はいつもその幅を取る。 */
+.statsTable td {
+  white-space: nowrap;
 }
 
 .share {
