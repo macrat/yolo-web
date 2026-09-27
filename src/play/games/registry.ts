@@ -207,7 +207,6 @@ const gameEntries: GameMeta[] = [
       keywords: [
         "色彩感覚テスト",
         "カラーIQ",
-        "色覚テスト 無料",
         "color sense test",
         "色当てゲーム",
         "色彩チャレンジ",

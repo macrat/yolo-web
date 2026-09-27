@@ -25,6 +25,22 @@
   margin-bottom: var(--space-16);
 }
 
+/* 文字を大きくして表がボックスに収まらないときだけ、枠を付けてその中で横に送る（§4・§5）。 */
+.tableFrame {
+  overflow-x: auto;
+}
+
+.tableFrame[data-scrolls] {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+}
+
+/* 表の見出しのセルは語の中で折らず、文節の切れ目（<wbr>）でだけ折る（§4 表のセル）。列は文節が割れない
+ * 幅まで広がる。 */
+.table th {
+  word-break: keep-all;
+}
+
 /* 表の行は見本の高さで決まるので、字と見本を行の中央で並べる。 */
 .rounds :is(th, td) {
   vertical-align: middle;
@@ -42,13 +58,20 @@
   color: var(--ink-2);
 }
 
-/* 点数と回数は数字の桁をそろえ、右揃えにする（§3）。 */
+/* 点数と回数は数字の桁をそろえ、右揃えにする（§3）。数と単位の組で、あいだで折らない（§8）。 */
 .score {
   text-align: right;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .names {
   max-width: var(--measure);
   margin-top: var(--space-16);
+}
+
+/* 色の名前は語の中で折らない。名前だけで1行に収まらないときだけ、その中で折る。 */
+.colorName {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }

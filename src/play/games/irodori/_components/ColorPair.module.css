@@ -1,18 +1,22 @@
-/* お題と作る色の見本の並び。どちらもコンテンツ幅の左端から並べ、同じ大きさにする（DESIGN.md §5）。 */
+/* お題と作る色の見本の並び。どちらもコンテンツ幅の左端から並べ、同じ大きさにする（DESIGN.md §5）。
+ * ラベルの行と見本の行を2つの列で共にし、ラベルが折れて高さが違っても、2つの見本の上端がそろう。 */
 .pair {
-  display: flex;
-  gap: var(--space-16);
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  justify-content: start;
+  column-gap: var(--space-16);
+  row-gap: var(--space-8);
 }
 
 .item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+  display: contents;
 }
 
-/* 見本の名前は1行のラベルなので、見出しと同じ詰めた行間で組み、見本をラベルに近づける。 */
+/* 見本の名前は1行のラベルなので、見出しと同じ詰めた行間で組む。語の中では折らない（§4）。 */
 .label {
   line-height: var(--leading-heading);
+  word-break: keep-all;
 }
 
 /* 見本の大きさは色が決める（§5「色見本はコンテンツが決める」）。狭い画面では、見本の下のスライダーと決定の

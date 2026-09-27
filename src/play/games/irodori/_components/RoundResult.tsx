@@ -21,11 +21,14 @@ export default function RoundResult({ round, id }: Props) {
         <p>
           お題は伝統色の「
           {round.target.slug ? (
-            <Link href={`/dictionary/colors/${round.target.slug}`}>
+            <Link
+              href={`/dictionary/colors/${round.target.slug}`}
+              className={styles.colorName}
+            >
               {round.target.name}
             </Link>
           ) : (
-            round.target.name
+            <span className={styles.colorName}>{round.target.name}</span>
           )}
           」でした
         </p>

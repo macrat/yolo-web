@@ -11,3 +11,9 @@
   line-height: var(--leading-body);
   font-variant-numeric: tabular-nums;
 }
+
+/* 色の名前は語の中で折らない。名前だけで1行に収まらないときだけ、その中で折る。 */
+.colorName {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}

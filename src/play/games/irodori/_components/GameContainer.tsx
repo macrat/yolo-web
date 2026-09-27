@@ -290,11 +290,13 @@ export default function GameContainer({
 
   return (
     <>
-      <ProgressBar
-        current={Math.min(gameState.currentRound + 1, ROUNDS_PER_GAME)}
-        total={ROUNDS_PER_GAME}
-        label="問の進み具合"
-      />
+      {!completed && (
+        <ProgressBar
+          current={gameState.currentRound + 1}
+          total={ROUNDS_PER_GAME}
+          label="問の進み具合"
+        />
+      )}
       <div className={styles.stack}>
         {!completed && round && (
           <div className={styles.board}>

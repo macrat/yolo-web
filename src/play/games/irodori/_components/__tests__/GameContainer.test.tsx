@@ -111,6 +111,8 @@ describe("イロドリの盤", () => {
     }
     const box = screen.getByRole("region", { name: "今日の合計点" });
     expect(box).toHaveFocus();
+    // 結果に着いたら、進み具合の帯は外す（クイズの結果の画面と同じ）。
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "決定" }),
     ).not.toBeInTheDocument();
