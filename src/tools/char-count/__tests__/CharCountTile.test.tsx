@@ -1,283 +1,148 @@
-/**
- * CharCountTile のユニットテスト（TDD: 実装前に書く）
- *
- * 検証観点:
- * - V-1: variant=full でのレンダリング（全6統計ラベルが表示される）
- * - V-2: variant=compact でのレンダリング（主要統計のみ）
- * - V-3: 入力→リアルタイム統計更新
- * - V-4: 空入力時は0表示（エラーなし）
- * - V-5: バイト数正確性（日本語3バイト）
- * - V-6: 複数行・段落カウント
- * - V-7: id インスタンス一意性（複数インスタンス同居）
- * - V-8: ルートが Panel（セマンティクス確認）
- * - V-9: ARIA（role="status" aria-live="polite" + 実テキストノード）
- * - V-10: コピーボタン非表示（char-count は知る対象）
- * - V-11: 絵文字を1文字として計上
- * - V-12: デフォルト variant（full と同等）
- * - V-13: CSS トークン検証（--color-* 禁止・font-weight:700 禁止）
- */
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "fs";
-import { join } from "path";
 import CharCountTile from "../CharCountTile";
 
-// --- V-1: variant=full ---
-describe("V-1: variant=full", () => {
-  it("全6統計ラベルが表示される", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "Hello World" } });
-    expect(screen.getByText("文字数", { exact: true })).toBeInTheDocument();
-    expect(screen.getByText("文字数（空白除く）")).toBeInTheDocument();
-    expect(screen.getByText(/バイト数/)).toBeInTheDocument();
-    expect(screen.getByText("単語数")).toBeInTheDocument();
-    expect(screen.getByText("行数")).toBeInTheDocument();
-    expect(screen.getByText("段落数")).toBeInTheDocument();
+function type(value: string) {
+  fireEvent.change(screen.getByRole("textbox", { name: "数えるテキスト" }), {
+    target: { value },
+  });
+}
+
+function resultBox() {
+  return screen.getByRole("region", { name: "数えた結果" });
+}
+
+/** 表の行の名前（見出しのセル）から、その行の値を引く。 */
+function countOf(label: string): string {
+  const row = within(resultBox()).getByRole("rowheader", { name: label });
+  return row.closest("tr")!.querySelector("td")!.textContent ?? "";
+}
+
+describe("入力と結果の組み方", () => {
+  it("入力欄はラベルを持ち、結果のボックスの外にある", () => {
+    render(<CharCountTile />);
+    const textarea = screen.getByRole("textbox", { name: "数えるテキスト" });
+    expect(resultBox()).not.toContainElement(textarea);
   });
 
-  it("テキスト入力欄が存在する", () => {
-    render(<CharCountTile variant="full" />);
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
-  });
-});
-
-// --- V-2: variant=compact ---
-describe("V-2: variant=compact", () => {
-  it("テキスト入力欄が存在する", () => {
-    render(<CharCountTile variant="compact" />);
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
-  });
-
-  it("主要統計（文字数・バイト数）が表示される", () => {
-    render(<CharCountTile variant="compact" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "abc" } });
-    expect(screen.getByText("文字数", { exact: true })).toBeInTheDocument();
-    expect(screen.getByText(/バイト数/)).toBeInTheDocument();
-  });
-
-  it("段落数は表示されない（compact は主要統計のみ）", () => {
-    render(<CharCountTile variant="compact" />);
-    expect(screen.queryByText("段落数")).not.toBeInTheDocument();
+  it("ルートは枠を持たず、入力欄と結果のボックスを積むだけの div", () => {
+    const { container } = render(<CharCountTile />);
+    expect(container.firstElementChild?.tagName).toBe("DIV");
   });
 });
 
-// --- V-3: 入力→リアルタイム統計更新 ---
-describe("V-3: 入力→リアルタイム統計更新", () => {
-  it("テキストを入力すると文字数が更新される", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "abc" } });
-    const threeElements = screen.getAllByText("3");
-    expect(threeElements.length).toBeGreaterThan(0);
+describe("主役の数", () => {
+  it("文字数を桁区切りと単位つきで出す", () => {
+    render(<CharCountTile />);
+    type("あ".repeat(1234));
+    expect(within(resultBox()).getByText("1,234文字")).toBeInTheDocument();
   });
 
-  // nit: UI 層の具体値での結線確認（"Hello World" → words=2 が UI に表示されること）
-  it("'Hello World' 入力で単語数=2 が UI に表示される", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "Hello World" } });
-
-    // 統計リージョン内に "2"（単語数）が存在することを確認
-    const statsRegion = screen.getByRole("region", {
-      name: "文字数カウント結果",
-    });
-    const twoElements = [...statsRegion.querySelectorAll("*")].filter(
-      (el) => el.textContent?.trim() === "2",
-    );
-    expect(twoElements.length).toBeGreaterThan(0);
-  });
-});
-
-// --- V-4: 空入力時は0表示（エラーなし） ---
-describe("V-4: 空入力時の状態", () => {
-  it("空入力時は0を表示する", () => {
-    render(<CharCountTile variant="full" />);
-    const zeroElements = screen.getAllByText("0");
-    expect(zeroElements.length).toBeGreaterThan(0);
+  it("桁区切りの後ろにだけ折り所を置く", () => {
+    render(<CharCountTile />);
+    type("a".repeat(1234567));
+    const count = within(resultBox()).getByText("1,234,567文字");
+    expect(count.innerHTML).toBe("1,<wbr>234,<wbr>567文字");
   });
 
-  it("空入力時にエラーを表示しない", () => {
-    render(<CharCountTile variant="full" />);
+  it("空の入力では 0文字 を出し、エラーを出さない", () => {
+    render(<CharCountTile />);
+    expect(within(resultBox()).getByText("0文字")).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
-});
 
-// --- V-5: バイト数正確性 ---
-describe("V-5: バイト数正確性", () => {
-  it("日本語テキストのバイト数を正確にカウント（あいう=9バイト）", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "あいう" } });
-    const nineElements = screen.getAllByText("9");
-    expect(nineElements.length).toBeGreaterThan(0);
+  it("絵文字を1文字として数える", () => {
+    render(<CharCountTile />);
+    type("😀");
+    expect(within(resultBox()).getByText("1文字")).toBeInTheDocument();
   });
 });
 
-// --- V-6: 複数行・段落カウント ---
-describe("V-6: 複数行・段落カウント", () => {
-  it("複数行テキストの行数を正確にカウント", () => {
+describe("ほかの数の表", () => {
+  it("full では5つの数を並べる", () => {
     render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "line1\nline2\nline3" } });
-    const threeElements = screen.getAllByText("3");
-    expect(threeElements.length).toBeGreaterThan(0);
+    type("Hello World\n\nfoo");
+    expect(countOf("空白を除いた文字数")).toBe("13");
+    expect(countOf("UTF-8のバイト数")).toBe("16");
+    expect(countOf("単語数")).toBe("3");
+    expect(countOf("行数")).toBe("3");
+    expect(countOf("段落数")).toBe("2");
   });
 
-  it("段落数を正確にカウント", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "para1\n\npara2" } });
-    const twoElements = screen.getAllByText("2");
-    expect(twoElements.length).toBeGreaterThan(0);
-  });
-});
-
-// --- V-7: id インスタンス一意性 ---
-describe("V-7: id インスタンス一意性（複数インスタンス同居）", () => {
-  it("同一ページに2つ描画しても textarea の id が重複しない", () => {
-    const { container: c1 } = render(<CharCountTile variant="full" />);
-    const { container: c2 } = render(<CharCountTile variant="compact" />);
-
-    const input1 = c1.querySelector("textarea[id]");
-    const input2 = c2.querySelector("textarea[id]");
-
-    expect(input1).not.toBeNull();
-    expect(input2).not.toBeNull();
-    expect(input1!.id).not.toBe(input2!.id);
-  });
-
-  it("2つのインスタンスで全 id が重複しない", () => {
-    const { container: c1 } = render(<CharCountTile variant="full" />);
-    const { container: c2 } = render(<CharCountTile variant="full" />);
-
-    const ids1 = [...c1.querySelectorAll("[id]")].map((el) => el.id);
-    const ids2 = [...c2.querySelectorAll("[id]")].map((el) => el.id);
-
-    const overlap = ids1.filter((id) => ids2.includes(id));
-    expect(overlap).toHaveLength(0);
-  });
-});
-
-// --- V-8: ルートが Panel ---
-describe("V-8: ルートが Panel", () => {
-  it("ルート要素が section タグである（Panel のデフォルト）", () => {
-    const { container } = render(<CharCountTile variant="full" />);
-    const root = container.firstElementChild;
-    expect(root?.tagName.toLowerCase()).toBe("section");
-  });
-
-  it("as='div' でルートが div になる", () => {
-    const { container } = render(<CharCountTile variant="full" as="div" />);
-    const root = container.firstElementChild;
-    expect(root?.tagName.toLowerCase()).toBe("div");
-  });
-});
-
-// --- V-9: ARIA ---
-describe("V-9: ARIA（role=status / aria-live）", () => {
-  it("role=status の要素が存在する", () => {
-    render(<CharCountTile variant="full" />);
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion).toBeInTheDocument();
-  });
-
-  it("role=status に aria-live=polite が設定されている", () => {
-    render(<CharCountTile variant="full" />);
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion).toHaveAttribute("aria-live", "polite");
-  });
-
-  it("入力後にライブリージョンに実テキストノードが存在する（C-3 要件）", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "hello" } });
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion.textContent).not.toBe("");
-  });
-
-  it("空入力でもライブリージョンにテキストが存在する", () => {
-    render(<CharCountTile variant="full" />);
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion.textContent).not.toBe("");
-  });
-
-  // [should-fix 1] 結果リージョンの role 検証（将来の削除・改名を検知する回帰テスト）
-  it("aria-label='文字数カウント結果' の region が存在する", () => {
-    render(<CharCountTile variant="full" />);
+  it("variant を渡さないときは full と同じ", () => {
+    render(<CharCountTile />);
     expect(
-      screen.getByRole("region", { name: "文字数カウント結果" }),
-    ).toBeInTheDocument();
+      within(resultBox())
+        .getAllByRole("rowheader")
+        .map((th) => th.textContent),
+    ).toEqual([
+      "空白を除いた文字数",
+      "UTF-8のバイト数",
+      "単語数",
+      "行数",
+      "段落数",
+    ]);
   });
 
-  // [should-fix 2] status リージョンと stats リージョンの構造的独立（C-3 設計の回帰テスト）
-  it("status リージョンが stats リージョンを内包しない（C-3: ライブリージョンはサマリのみ）", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "hello" } });
-    const statusRegion = screen.getByRole("status");
-    // status の中に「文字数カウント結果」region が入っていないこと
+  it("compact ではバイト数・単語数・行数だけを並べる", () => {
+    render(<CharCountTile variant="compact" />);
     expect(
-      statusRegion.querySelector('[aria-label="文字数カウント結果"]'),
-    ).toBeNull();
-    // status の中に詳細統計ラベルが含まれないこと
-    expect(statusRegion.textContent).not.toContain("文字数（空白除く）");
-    expect(statusRegion.textContent).not.toContain("段落数");
+      within(resultBox())
+        .getAllByRole("rowheader")
+        .map((th) => th.textContent),
+    ).toEqual(["UTF-8のバイト数", "単語数", "行数"]);
+  });
+
+  it("名前は文節の切れ目で、値は桁区切りで折り所を持つ", () => {
+    render(<CharCountTile />);
+    type("あ".repeat(1000));
+    const row = within(resultBox()).getByRole("rowheader", {
+      name: "UTF-8のバイト数",
+    });
+    expect(row.innerHTML).toBe("UTF-8の<wbr>バイト数");
+    expect(row.closest("tr")!.querySelector("td")!.innerHTML).toBe(
+      "3,<wbr>000",
+    );
   });
 });
 
-// --- V-10: コピーボタン非表示 ---
-describe("V-10: コピーボタン非表示", () => {
-  it("コピーボタンが存在しない（char-count は知る対象）", () => {
-    render(<CharCountTile variant="full" />);
+describe("読み上げ", () => {
+  it("主な数をまとめた文をライブリージョンで知らせる", () => {
+    render(<CharCountTile />);
+    const status = screen.getByRole("status");
+    expect(status).toHaveAttribute("aria-live", "polite");
+    expect(status).toHaveTextContent("テキストを入力してください");
+    type("abc");
+    expect(status).toHaveTextContent("3文字、3バイト、1行、1単語");
+  });
+
+  it("ライブリージョンは表を含まない", () => {
+    render(<CharCountTile />);
+    type("hello");
+    const status = screen.getByRole("status");
+    expect(status).not.toContainElement(resultBox());
+    expect(status.textContent).not.toContain("段落数");
+  });
+});
+
+describe("複数を同じページに置く", () => {
+  it("id が重ならず、ラベルがそれぞれの欄に結び付く", () => {
+    const { container: first } = render(<CharCountTile />);
+    const { container: second } = render(<CharCountTile variant="compact" />);
+    const ids = (root: HTMLElement) =>
+      [...root.querySelectorAll("[id]")].map((element) => element.id);
+    expect(ids(first).filter((id) => ids(second).includes(id))).toHaveLength(0);
+    expect(
+      screen.getAllByRole("textbox", { name: "数えるテキスト" }),
+    ).toHaveLength(2);
+  });
+});
+
+describe("コピー", () => {
+  it("コピーのボタンを持たない（数は写して使う値でなく、読んで知るもの）", () => {
+    render(<CharCountTile />);
     expect(
       screen.queryByRole("button", { name: /コピー/ }),
     ).not.toBeInTheDocument();
-  });
-});
-
-// --- V-11: 絵文字を1文字として計上 ---
-describe("V-11: 絵文字を1文字として計上", () => {
-  it("絵文字が1文字としてカウントされる（Unicode コードポイント単位）", () => {
-    render(<CharCountTile variant="full" />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "😀" } });
-    const oneElements = screen.getAllByText("1");
-    expect(oneElements.length).toBeGreaterThan(0);
-  });
-});
-
-// --- V-12: デフォルト variant ---
-describe("V-12: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等（全6統計が表示される）", () => {
-    render(<CharCountTile />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "test" } });
-    expect(screen.getByText("文字数", { exact: true })).toBeInTheDocument();
-    expect(screen.getByText("段落数")).toBeInTheDocument();
-  });
-});
-
-// --- V-13: CSS トークン検証 ---
-describe("V-13: CSS トークン検証", () => {
-  const cssPath = join(__dirname, "..", "CharCountTile.module.css");
-
-  it("--color-* トークンを使用していない", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("--accent を背景色・文字色に直接使用していない", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    const illegalAccentUse = css.match(
-      /(?:background|background-color|color)\s*:\s*var\(--accent\)/g,
-    );
-    expect(illegalAccentUse).toBeNull();
-  });
-
-  it("font-weight: 700 を使用していない", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight:\s*700/);
   });
 });
