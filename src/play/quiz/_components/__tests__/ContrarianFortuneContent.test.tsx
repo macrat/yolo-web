@@ -191,6 +191,7 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
       />,
     );
     expect(container.querySelector("table")).toBeNull();
+    expect(screen.queryByText("このタイプを数字で見ると")).toBeNull();
   });
 
   it("humorMetricsが存在する場合、テーブルが表示されること", () => {
@@ -204,6 +205,10 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
       />,
     );
     expect(screen.getByRole("table")).toBeInTheDocument();
+    // 表は自分の小見出しの下に置き、「一緒にいると」の区画の中身に見せない
+    expect(
+      screen.getByRole("heading", { name: "このタイプを数字で見ると" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("逆張り指数")).toBeInTheDocument();
     expect(screen.getByText("98%")).toBeInTheDocument();
     expect(screen.getByText("流行回避率")).toBeInTheDocument();

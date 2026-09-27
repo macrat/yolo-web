@@ -1,7 +1,7 @@
 /**
  * 逆張り運勢診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * 核心の一文・あるある行動・人物像・一緒にいるとどうなるか・笑いの指標（あるタイプだけ）・すべてのタイプを
+ * 核心の一文・あるある行動・人物像・一緒にいるとどうなるか・数字で見た笑いの指標（あるタイプだけ）・すべてのタイプを
  * 並べる。キャッチコピー・共有・「もう一度挑戦する」は呼び出し側が置き、結果のページの案内は
  * afterThirdPartyNote で差し込む。
  */
@@ -62,16 +62,22 @@ export default function ContrarianFortuneContent({
       <ReadingText>{detailedContent.thirdPartyNote}</ReadingText>
 
       {humorMetrics.length > 0 && (
-        <table className={styles.metrics}>
-          <tbody>
-            {humorMetrics.map((metric) => (
-              <tr key={metric.label}>
-                <th scope="row">{metric.label}</th>
-                <td>{metric.value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          <ReadingHeading
+            placement={placement}
+            phrases={["この", "タイプを", "数字で", "見ると"]}
+          />
+          <table className={styles.metrics}>
+            <tbody>
+              {humorMetrics.map((metric) => (
+                <tr key={metric.label}>
+                  <th scope="row">{metric.label}</th>
+                  <td>{metric.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
 
       {afterThirdPartyNote}

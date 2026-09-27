@@ -11,7 +11,7 @@ import styles from "./ResultReading.module.css";
 interface ReadingHeadingProps {
   /** 置く面。解き終えた画面では結果の見出しの下の h3、結果のページでは h1 の下の h2 になる。 */
   placement: ResultPlacement;
-  /** 見出しの文を文節で分けた並び（§4）。あいだにだけ折り所を置く。 */
+  /** 見出しの文を文節で分けた並び（§4）。作り方は PhrasedText の phrases と同じ。 */
   phrases: readonly string[];
   id?: string;
 }

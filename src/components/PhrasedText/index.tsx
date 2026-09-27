@@ -6,7 +6,11 @@ type PhrasedTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 interface PhrasedTextOwnProps<T extends PhrasedTag> {
   /** 組む見出しの要素。 */
   as: T;
-  /** 見出しの文を折り所で分けた並び。サーバーで splitIntoPhrases（@/lib/phrase-breaks）が作ったものを渡す。 */
+  /**
+   * 見出しの文を折り所で分けた並び。データから来る文は、サーバーで splitIntoPhrases（@/lib/phrase-breaks）が
+   * 作ったものを渡す。コードに書いた決まった文は、書き手が文節で分けた並びをそのまま書く（BudouX が語を割る
+   * 文でも正しく分けられる）。手で書く並びも splitIntoPhrases と同じ禁則を満たし、followsPhraseRules で確かめる。
+   */
   phrases: readonly string[];
   className?: string;
 }

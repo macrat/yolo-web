@@ -48,6 +48,7 @@ function CharacterFortuneResultExtra({
       return (
         <>
           <CompatibilitySection
+            placement="solvedScreen"
             myType={{
               id: myResult.id,
               title: myResult.title,

@@ -1,4 +1,4 @@
-/* レーダー（DESIGN.md §5 図）。地は紙のまま、格子と軸は細い線、多角形と頂点の点は --ink で描く。 */
+/* レーダー（DESIGN.md §5 図）。地は紙のまま、格子と軸は細い線、多角形は --ink の太い線で描き、角を丸めない。 */
 .figure {
   position: relative;
   max-width: 20rem;
@@ -30,11 +30,7 @@
   fill: none;
   stroke: var(--ink);
   stroke-width: var(--rule-w);
-  stroke-linejoin: round;
-}
-
-.dot {
-  fill: var(--ink);
+  stroke-linejoin: miter;
 }
 
 .label {

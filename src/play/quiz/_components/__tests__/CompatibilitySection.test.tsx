@@ -15,8 +15,9 @@ const props = {
 };
 
 describe("CompatibilitySection", () => {
-  test("相性の名前を見出しにし、2人のタイプと説明を続ける", () => {
-    render(<CompatibilitySection {...props} />);
+  test("解き終えた画面では、来訪者と友達の立場で2人のタイプを言い、相性の名前を h3 にする", () => {
+    render(<CompatibilitySection {...props} placement="solvedScreen" />);
+    expect(screen.getByText("友達との相性")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 3, name: "静と動の名コンビ" }),
     ).toBeInTheDocument();
@@ -29,10 +30,22 @@ describe("CompatibilitySection", () => {
     );
   });
 
-  test("結果のページでは、相性の名前の見出しが h2 になる", () => {
-    render(<CompatibilitySection {...props} placement="resultPage" />);
+  test("結果のページでは、立場を言わずに2人のタイプを並べ、相性の名前を区切りどおりの h2 にする", () => {
+    render(
+      <CompatibilitySection
+        {...props}
+        placement="resultPage"
+        labelHeading={{ phrases: ["静と動の", "名コンビ"] }}
+      />,
+    );
     expect(
-      screen.getByRole("heading", { level: 2, name: "静と動の名コンビ" }),
+      screen.getByText("「タイプA」と「タイプB」の相性"),
     ).toBeInTheDocument();
+    expect(screen.queryByText(/あなた|友達との/)).toBeNull();
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "静と動の名コンビ",
+    });
+    expect(heading.querySelectorAll("wbr")).toHaveLength(1);
   });
 });

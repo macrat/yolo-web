@@ -137,6 +137,7 @@ function CompatibilityArea({
   return (
     <>
       <CompatibilitySection
+        placement="solvedScreen"
         myType={{
           id: resultId,
           title: compatibilityData.myType.title,

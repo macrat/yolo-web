@@ -22,9 +22,31 @@ describe("CompatibilityDisplay", () => {
       screen.getByRole("heading", { level: 2, name: "最高の相性" }),
     ).toBeInTheDocument();
     expect(screen.getByText("相性の説明")).toBeInTheDocument();
+    // 開くのは共有を受け取った人なので、2人のタイプを立場を言わずに並べる
     expect(
-      screen.getByText("あなたは「タイプA」、友達は「タイプB」。"),
+      screen.getByText("「タイプA」と「タイプB」の相性"),
     ).toBeInTheDocument();
+    expect(screen.queryByText(/あなたは/)).toBeNull();
+  });
+
+  it("相性の名前の見出しを、サーバーで作った文節の区切りで組む", () => {
+    render(
+      <CompatibilityDisplay
+        quizSlug="animal-personality"
+        quizTitle="日本の固有種診断"
+        compatibility={{
+          label: "静かな書斎と賑やかな寄席",
+          description: "説明",
+        }}
+        myType={{ id: "a", title: "A" }}
+        friendType={{ id: "b", title: "B" }}
+      />,
+    );
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "静かな書斎と賑やかな寄席",
+    });
+    expect(heading.querySelectorAll("wbr").length).toBeGreaterThan(0);
   });
 
   it("renders compatibility section for music-personality quiz", () => {
@@ -45,7 +67,7 @@ describe("CompatibilityDisplay", () => {
       screen.getByRole("heading", { level: 2, name: "リズムの相性" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("あなたは「ロックタイプ」、友達は「ジャズタイプ」。"),
+      screen.getByText("「ロックタイプ」と「ジャズタイプ」の相性"),
     ).toBeInTheDocument();
   });
 });

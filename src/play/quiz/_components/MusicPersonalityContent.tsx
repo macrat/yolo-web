@@ -56,6 +56,7 @@ function buildAfterTodayAction(
       return (
         <>
           <CompatibilitySection
+            placement="solvedScreen"
             myType={{
               id: myResult.id,
               title: myResult.title,
