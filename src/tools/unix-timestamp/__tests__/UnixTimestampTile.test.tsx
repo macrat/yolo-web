@@ -522,7 +522,7 @@ describe("変換前のコピーボタン", () => {
   test("日時変換前は日時変換結果コピーボタンが存在しないこと", () => {
     render(<UnixTimestampTile />);
     expect(
-      screen.queryByRole("button", { name: "ミリ秒をコピー" }),
+      screen.queryByRole("button", { name: "日時から求めたミリ秒をコピー" }),
     ).not.toBeInTheDocument();
   });
 });
@@ -574,11 +574,33 @@ describe("コピーの対象", () => {
       screen.getByRole("button", { name: "ISO 8601をコピー" }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: "秒をコピー" }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("button", { name: "秒をコピー" }),
+    ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: "ミリ秒をコピー" }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("button", { name: "ミリ秒をコピー" }),
+    ).toBeInTheDocument();
+  });
+
+  test("日時から求めた秒・ミリ秒のコピーのボタンは、タイムスタンプから求めたものと名前で分かれること", async () => {
+    render(<UnixTimestampTile />);
+    const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
+    fireEvent.change(input, { target: { value: "1704067200" } });
+    fireEvent.click(screen.getAllByRole("button", { name: "変換" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "変換" })[1]);
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "日時から求めた秒をコピー" }),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.getByRole("button", { name: "日時から求めたミリ秒をコピー" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "秒をコピー" })).toHaveLength(
+      1,
+    );
+    expect(
+      screen.getAllByRole("button", { name: "ミリ秒をコピー" }),
+    ).toHaveLength(1);
   });
 });
 

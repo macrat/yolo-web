@@ -435,7 +435,7 @@ export default function UnixTimestampTile({
               <code className={styles.resultValue}>{dateResult.seconds}</code>
               <CopyButton
                 text={String(dateResult.seconds)}
-                target="秒"
+                target="日時から求めた秒"
                 align="end"
                 className={styles.resultCopy}
                 disabled={dateResult.seconds === undefined}
@@ -448,7 +448,7 @@ export default function UnixTimestampTile({
               </code>
               <CopyButton
                 text={String(dateResult.milliseconds)}
-                target="ミリ秒"
+                target="日時から求めたミリ秒"
                 align="end"
                 className={styles.resultCopy}
                 disabled={dateResult.milliseconds === undefined}

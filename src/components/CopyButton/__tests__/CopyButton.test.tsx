@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import CopyButton, { COPY_FACES } from "@/components/CopyButton";
-import { DEFAULT_RESET_DELAY_MS } from "@/components/hooks/useCopyToClipboard";
+import { COPIED_DISPLAY_MS } from "@/components/hooks/useCopyToClipboard";
 
 const writeText = vi.fn();
 
@@ -66,12 +66,12 @@ describe("CopyButton", () => {
     expect(liveRegion(container)).toHaveTextContent("HEXをコピーしました");
 
     act(() => {
-      vi.advanceTimersByTime(DEFAULT_RESET_DELAY_MS);
+      vi.advanceTimersByTime(COPIED_DISPLAY_MS);
     });
     expect(button).toHaveTextContent(COPY_FACES.idle);
   });
 
-  test("面の字が替わってもボタンの名前は変えず、知らせはライブリージョンだけが言う", async () => {
+  test("「コピー済み」のあいだはボタンの名前を変えず、知らせはライブリージョンだけが言う", async () => {
     render(<CopyButton text="#ee827c" target="HEX" />);
     const button = screen.getByRole("button", { name: "HEXをコピー" });
 
@@ -94,7 +94,7 @@ describe("CopyButton", () => {
     expect(second).not.toBe(first);
   });
 
-  test("写せなかったら面が「コピー失敗」になり、写せなかったことを知らせ、次に押すまで残す", async () => {
+  test("写せなかったら面が「コピー失敗」になり、名前もそれを含み、写せなかったことを知らせ、次に押すまで残す", async () => {
     refuseEveryCopy();
     const { container } = render(<CopyButton text="#ee827c" target="HEX" />);
     const button = screen.getByRole("button", { name: "HEXをコピー" });
@@ -102,18 +102,20 @@ describe("CopyButton", () => {
     await press(button);
 
     expect(button).toHaveTextContent(COPY_FACES.failed);
+    expect(button).toHaveAccessibleName("HEXのコピー失敗");
     expect(liveRegion(container)).toHaveTextContent(
       "HEXをコピーできませんでした",
     );
 
     act(() => {
-      vi.advanceTimersByTime(DEFAULT_RESET_DELAY_MS * 3);
+      vi.advanceTimersByTime(COPIED_DISPLAY_MS * 3);
     });
     expect(button).toHaveTextContent(COPY_FACES.failed);
 
     writeText.mockResolvedValue(undefined);
     await press(button);
     expect(button).toHaveTextContent(COPY_FACES.copied);
+    expect(button).toHaveAccessibleName("HEXをコピー");
     expect(liveRegion(container)).toHaveTextContent("HEXをコピーしました");
   });
 

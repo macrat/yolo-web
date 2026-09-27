@@ -96,14 +96,15 @@
 
 /* ---- 結果テーブル ---- */
 .resultTable {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
 }
 
 /* 結果の1行。項目の名前とコピーのボタンを1行目に並べ、値はその下に行の幅いっぱいで組む。値に行の幅を
- * そのまま渡し、数字が桁の途中で折れないようにする（§8）。名前とボタンが1行に収まらない幅では、ボタンを
- * 次の行の右端に送る。 */
+ * そのまま渡し、数字が桁の途中で折れないようにする（§8）。表が、いちばん長い名前とボタンを1行に並べられない
+ * ほど狭いときは、どの行もボタンを次の行の右端に送り、表の中でボタンの位置をそろえる。 */
 .resultRow {
   display: flex;
   flex-wrap: wrap;
@@ -126,8 +127,16 @@
   flex: 1 0 auto;
 }
 
+@container (max-width: 13em) {
+  .resultCopy {
+    flex-basis: 100%;
+  }
+}
+
+/* 値の字は名前の字と同じ左端から始める。行の地と同じ地の code に、字の外の余白は要らない。 */
 .resultValue {
   order: 3;
+  padding-inline: 0;
   flex-basis: 100%;
   min-width: 0;
   font-family: var(--font-mono);
