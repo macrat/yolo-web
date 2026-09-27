@@ -66,7 +66,7 @@ export function getAllWords(puzzle: NakamawakePuzzle): string[] {
 }
 
 /**
- * グループの難易度を言う字（「難易度1」〜「難易度4」）。凡例・解けたグループ・結果・共有の文で同じ数を使う。
+ * 組の難易度を言う字（「難易度1」〜「難易度4」）。凡例・当てた組・結果・共有の文で同じ数を使う。
  */
 export function difficultyLabel(
   difficulty: NakamawakeGroup["difficulty"],

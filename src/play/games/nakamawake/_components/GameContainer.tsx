@@ -21,6 +21,7 @@ import {
   isOneAway,
   shuffleArray,
   getAllWords,
+  difficultyLabel,
 } from "@/play/games/nakamawake/_lib/engine";
 import { formatDateJST } from "@/play/games/nakamawake/_lib/daily";
 import {
@@ -146,7 +147,8 @@ export default function GameContainer({
     initialState(puzzle, puzzleNumber, todayStr),
   );
   const [stats, setStats] = useState<NakamawakeGameStats | null>(null);
-  // 端末の記録を読み、語を並べ替えるまでは、語の格子を見せない。サーバーの並びが一瞬見えてから替わらないため。
+  // 端末の記録を読み、語を並べ替えるまでは、語の格子・残りのミスの字・操作を場所を取ったまま見せない。
+  // サーバーの並びと初めの回の字が一瞬見えてから、端末の回に替わらないため。
   const [isReady, setIsReady] = useState(false);
   // この回の最後のチェックで解き終えたか。開いたときにすでに解き終えていた結果は、登場の動きを持たない。
   const [finishedByPlay, setFinishedByPlay] = useState(false);
@@ -273,7 +275,9 @@ export default function GameContainer({
         guessHistory,
         status: solvedGroups.length === 4 ? "won" : "playing",
       };
-      setFeedback("正解です");
+      setFeedback(
+        `正解です。${matchedGroup.name}（${difficultyLabel(matchedGroup.difficulty)}）`,
+      );
     } else {
       const mistakes = gameState.mistakes + 1;
       next = {
@@ -370,7 +374,9 @@ export default function GameContainer({
           <CrossCategoryBanner items={crossCategoryItems} />
         </>
       ) : (
-        <>
+        <div
+          className={isReady ? styles.play : `${styles.play} ${styles.pending}`}
+        >
           <div ref={statusRef} className={styles.status} role="status">
             <p>あと{remaining}回間違えると終わり</p>
             {feedback && <p>{feedback}</p>}
@@ -382,7 +388,7 @@ export default function GameContainer({
             canCheck={gameState.selectedWords.length === 4}
             checkRef={checkRef}
           />
-        </>
+        </div>
       )}
       <HowToPlay />
       <p className={styles.date}>

@@ -3,6 +3,7 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import GameContainer from "../GameContainer";
 import type { NakamawakePuzzle } from "@/play/games/nakamawake/_lib/types";
 import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { trackContentEnd } from "@/lib/analytics";
 import { canSetInZenAntique } from "@/lib/zen-antique-charset";
 
 vi.mock("@/play/games/shared/_lib/revealControl", () => ({
@@ -62,6 +63,7 @@ beforeAll(() => {
 beforeEach(() => {
   window.localStorage.clear();
   vi.mocked(revealControl).mockClear();
+  vi.mocked(trackContentEnd).mockClear();
 });
 
 describe("遊んでいるあいだ", () => {
@@ -91,7 +93,7 @@ describe("遊んでいるあいだ", () => {
     expect(context).toHaveAttribute("aria-pressed", "true");
   });
 
-  test("当てた組を、難易度の字と一緒に盤の上に出す", () => {
+  test("当てた組を難易度の字と一緒に語の格子の上に出し、その組の名前と難易度を知らせる", () => {
     renderGame();
     choose(["りんご", "みかん", "ぶどう", "もも"]);
     check();
@@ -99,7 +101,9 @@ describe("遊んでいるあいだ", () => {
     expect(solved).toHaveTextContent("果物");
     expect(solved).toHaveTextContent("難易度1");
     expect(solved).toHaveTextContent("りんご、みかん、ぶどう、もも");
-    expect(screen.getByRole("status")).toHaveTextContent("正解です");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "正解です。果物（難易度1）",
+    );
   });
 
   test("間違えると残りの数が減り、3つが同じ組ならそう知らせる", () => {
@@ -120,6 +124,59 @@ describe("遊んでいるあいだ", () => {
     expect(control).toBe(screen.getByRole("status"));
     const grid = screen.getByRole("group", { name: "言葉の格子" });
     expect(context).toBe(within(grid).getAllByRole("button")[0]);
+  });
+
+  test("キーボードでチェックすると、フォーカスが語の格子の最初の語へ移る", () => {
+    renderGame();
+    choose(["りんご", "いぬ", "あか", "はる"]);
+    const checkButton = screen.getByRole("button", { name: "チェック" });
+    checkButton.focus();
+    fireEvent.click(checkButton);
+    const grid = screen.getByRole("group", { name: "言葉の格子" });
+    expect(within(grid).getAllByRole("button")[0]).toHaveFocus();
+  });
+
+  test("マウスでチェックしたときは、フォーカスを語の格子へ移さない", () => {
+    renderGame();
+    choose(["りんご", "いぬ", "あか", "はる"]);
+    check();
+    const grid = screen.getByRole("group", { name: "言葉の格子" });
+    expect(grid).not.toContainElement(document.activeElement as HTMLElement);
+  });
+});
+
+describe("途中まで遊んだ回を開き直したとき", () => {
+  test("当てた組・残りの語・残りのミスの数を戻す", () => {
+    window.localStorage.setItem(
+      "nakamawake-history",
+      JSON.stringify({
+        [TODAY]: {
+          solvedGroups: [2],
+          mistakes: 2,
+          status: "playing",
+          guessHistory: [
+            { words: ["りんご", "いぬ", "あか", "はる"], correct: false },
+            { words: puzzle.groups[1].words, correct: true },
+            { words: ["りんご", "ねこ", "あお", "なつ"], correct: false },
+          ],
+        },
+      }),
+    );
+    renderGame();
+    const solved = screen.getByRole("list", { name: "当てた組" });
+    expect(within(solved).getAllByRole("listitem")).toHaveLength(1);
+    expect(solved).toHaveTextContent("動物難易度2");
+    const grid = screen.getByRole("group", { name: "言葉の格子" });
+    const words = within(grid)
+      .getAllByRole("button")
+      .map((button) => button.textContent);
+    expect(words).toHaveLength(12);
+    expect(words).not.toContain("いぬ");
+    expect(words).toContain("りんご");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "あと2回間違えると終わり",
+    );
+    expect(trackContentEnd).not.toHaveBeenCalled();
   });
 });
 
@@ -142,6 +199,12 @@ describe("解き終えたとき", () => {
     expect(result).toHaveTextContent("ナカマワケ #226 の結果");
     expect(result).toHaveTextContent("ミス1回");
     expect(result).toHaveFocus();
+  });
+
+  test("解き終えたことを1回だけ記録する", () => {
+    winWithOneMistake();
+    expect(trackContentEnd).toHaveBeenCalledTimes(1);
+    expect(trackContentEnd).toHaveBeenCalledWith("nakamawake", "game", true);
   });
 
   test("成績の分布をミスの数ごとに並べ、今回の行に「今回」を置く", () => {
@@ -168,6 +231,10 @@ describe("解き終えたとき", () => {
       check();
     }
     const result = screen.getByRole("region", { name: "4回間違えて終了" });
+    expect(result).toHaveTextContent("1組正解");
+    expect(result).not.toHaveTextContent("ミス4回");
+    expect(trackContentEnd).toHaveBeenCalledTimes(1);
+    expect(trackContentEnd).toHaveBeenCalledWith("nakamawake", "game", false);
     const missed = within(result).getByRole("region", {
       name: "当てられなかった組",
     });
@@ -203,6 +270,7 @@ describe("解き終えたとき", () => {
     expect(screen.getByRole("list", { name: "当てた組" })).toHaveTextContent(
       "難易度4",
     );
+    expect(trackContentEnd).not.toHaveBeenCalled();
   });
 });
 
@@ -215,6 +283,7 @@ test("見出しの書体で組む決まった字が、どれも Zen Antique に�
     "ミスの数ごとの回数",
     "この結果を共有",
     "ミス0回",
+    "1組正解",
   ]) {
     expect(canSetInZenAntique(text), text).toBe(true);
   }

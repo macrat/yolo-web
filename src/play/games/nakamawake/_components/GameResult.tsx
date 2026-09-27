@@ -26,8 +26,9 @@ const LOST_HEADING = ["4回", "間違えて", "終了"];
 const MISTAKE_LABELS = ["0ミス", "1ミス", "2ミス", "3ミス", "4ミス"];
 
 /**
- * 解き終えた回の結果（DESIGN.md §8）。その回の結果（ミスの数と、当てられなかった組）と、それで更新された
- * これまでの成績を、盤のすぐ下の結果のボックスに置く。
+ * 解き終えた回の結果（DESIGN.md §8）。その回の結果（勝った回はミスの数、負けた回は当てた組の数と、
+ * 当てられなかった組）と、それで更新されたこれまでの成績を、盤のすぐ下の結果のボックスに置く。
+ * 負けた回はいつもミスが4回で見出しが言うので、主見出しの段の数は当てた組の数にする。
  */
 export default function GameResult({ gameState, stats, appear, ref }: Props) {
   const missedId = useId();
@@ -54,7 +55,11 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
       appear={appear}
     >
       <div className={styles.result}>
-        <p className={styles.score}>ミス{gameState.mistakes}回</p>
+        <p className={styles.score}>
+          {isWon
+            ? `ミス${gameState.mistakes}回`
+            : `${gameState.solvedGroups.length}組正解`}
+        </p>
         {missedGroups.length > 0 && (
           <section className={styles.part} aria-labelledby={missedId}>
             <h3 id={missedId} className={styles.subheading}>

@@ -94,16 +94,13 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state);
-    expect(text).toContain(
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!",
+    expect(text).toBe(
+      [
+        "ナカマワケ #1 4組すべて正解（間違い0回）",
+        "当てた順（難易度）: 1→2→3→4",
+        "#ナカマワケ #yolosnet",
+      ].join("\n"),
     );
-    // 当てた順に、その組の難易度の数を並べる
-    expect(text.split("\n").slice(1, 5)).toEqual([
-      "1 1 1 1",
-      "2 2 2 2",
-      "3 3 3 3",
-      "4 4 4 4",
-    ]);
     // 絵文字を持たない
     expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
     expect(text.split("\n").at(-1)).toBe(
@@ -180,9 +177,8 @@ describe("generateShareText", () => {
       ],
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain(
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #42 \u30DF\u30B92\u56DE",
+    expect(generateShareText(state).split("\n")[0]).toBe(
+      "ナカマワケ #42 4組すべて正解（間違い2回）",
     );
   });
 
@@ -245,12 +241,14 @@ describe("generateShareText", () => {
       ],
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain("\u30CA\u30AB\u30DE\u30EF\u30B1 #10 X");
-    // 当てた1組（難易度1）の行だけを並べる
-    expect(text.split("\n")[1]).toBe("1 1 1 1");
-    expect(text.split("\n")).toHaveLength(3);
-    expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
+    // 当てた1組（難易度1）だけを並べる
+    expect(generateShareText(state)).toBe(
+      [
+        "ナカマワケ #10 4回間違えて終了（1組正解）",
+        "当てた順（難易度）: 1",
+        "#ナカマワケ #yolosnet",
+      ].join("\n"),
+    );
   });
 
   test("includes puzzle number in header", () => {
@@ -312,15 +310,53 @@ describe("generateShareText", () => {
       ],
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain(
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #15 \u30DF\u30B91\u56DE",
+    expect(generateShareText(state).split("\n")[0]).toBe(
+      "ナカマワケ #15 4組すべて正解（間違い1回）",
     );
   });
 });
 
+describe("generateShareText solve order", () => {
+  test("lists the solved groups' difficulty in the order they were solved", () => {
+    const [easy, medium, hard, hardest] = samplePuzzle.groups;
+    const state: NakamawakeGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 226,
+      puzzle: samplePuzzle,
+      solvedGroups: [easy, hard, medium, hardest],
+      mistakes: 1,
+      status: "won",
+      selectedWords: [],
+      remainingWords: [],
+      guessHistory: [],
+    };
+
+    expect(generateShareText(state).split("\n")[1]).toBe(
+      "当てた順（難易度）: 1→3→2→4",
+    );
+  });
+
+  test("does not use wording that is not on the screen", () => {
+    const state: NakamawakeGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 226,
+      puzzle: samplePuzzle,
+      solvedGroups: [samplePuzzle.groups[1]],
+      mistakes: 4,
+      status: "lost",
+      selectedWords: [],
+      remainingWords: [],
+      guessHistory: [],
+    };
+
+    const text = generateShareText(state);
+    expect(text).not.toMatch(/\bX\b/);
+    expect(text).not.toContain("パーフェクト");
+  });
+});
+
 describe("generateShareText with no solved group", () => {
-  test("has no empty line between the header and the hashtags", () => {
+  test("has no order line and no empty line", () => {
     const state: NakamawakeGameState = {
       puzzleDate: "2026-03-01",
       puzzleNumber: 7,
@@ -339,7 +375,7 @@ describe("generateShareText with no solved group", () => {
     };
 
     expect(generateShareText(state)).toBe(
-      "ナカマワケ #7 X\n#ナカマワケ #yolosnet",
+      "ナカマワケ #7 4回間違えて終了（0組正解）\n#ナカマワケ #yolosnet",
     );
   });
 });
