@@ -1,55 +1,31 @@
-/* Base64Tile スタイル
- *
- * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- */
-
-/* 方向のラジオボタンの組と、その下の並びのあいだをあける */
-.controls {
-  margin-bottom: 1rem;
+/* 向き・形式・入力欄・結果を縦に積み、あいだを 16px あける（§5）。 */
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-/* URL-safe オプション行 */
-.optionRow {
+/* URL-safe のチェックボックスと、その説明。説明は収まらなければ次の行に回る。 */
+.option {
   display: flex;
-  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  column-gap: var(--space-8);
 }
 
 .optionDesc {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  line-height: 1.5;
-}
-
-/* 入力/出力フィールド */
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
-}
-
-.field:last-child {
-  margin-bottom: 0;
-}
-
-.fieldLabel {
-  font-size: 0.85rem;
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
   color: var(--ink-2);
 }
 
-/* 出力ヘッダー: ラベルとコピーボタンを横並び */
-.outputHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
-.statusSummary {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  min-height: 1.2em;
+/* 1続きの文字列の結果（§8）。本文の大きさで本文の幅に組み、通常の禁則で折る。1行に収まらない英数字の
+ * 続きだけを語の中で折る。デコードしたテキストの改行と空白は、そのまま見せる。 */
+.output {
+  max-width: var(--measure);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

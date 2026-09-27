@@ -1,61 +1,46 @@
 "use client";
 
 /**
- * Base64Tile — Base64エンコード/デコードの単一正典タイル
+ * Base64Tile — Base64 のエンコードとデコードのタイル（DESIGN.md §8）。
  *
- * ## 設計原則
- *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **1ツール n タイル = variant**: full / encode / decode は同一コンポーネントの
- *   設定差で表現。別実装を作らない（分裂ゼロ）。
- * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合・aria-describedby 誤結合が起きない。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- * - **logic.ts 共有エンジン**: encodeBase64 / decodeBase64 / toUrlSafe が唯一のロジック源。
+ * 道具箱と詳細ページは、同じこの部品を描く。full / encode / decode は同じ部品の設定の違いで、別の実装を持たない。
+ * 変換は logic.ts の encodeBase64 / decodeBase64 / toUrlSafe だけが行う。
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向のラジオボタンを表示し
- *   encode / decode をユーザーが切り替えられる。URL-safe のチェックボックスは encode 時のみ表示。
- * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。URL-safe のチェックボックスを表示。
- * - `"decode"`: 方向を decode に固定し、ラジオボタンの組と URL-safe のチェックボックスを出さない。
+ * - `"full"`（既定）: 変換の向きのラジオボタンを出し、来訪者がエンコードとデコードを切り替える。
+ * - `"encode"`: 向きをエンコードに決め、ラジオボタンを出さない。
+ * - `"decode"`: 向きをデコードに決め、ラジオボタンを出さない。
  *
- * ## URL-safe のチェックボックスの表示ルール
+ * URL-safe のチェックボックスは、エンコードの向きのときだけ出す。デコードはどちらの形も読むので、デコードの
+ * 向きで出すと、押しても結果が変わらないコントロールになる。
  *
- * decode 時に URL-safe のチェックボックスを表示すると「操作しても出力が変わらない」死んだコントロールに
- * なるため、encode 方向の時のみ表示する（full では動的に、encode/decode では静的に制御）。
+ * ## 組み方
  *
- * ## 使い方
+ * 入力と操作は囲まず、結果だけを結果のボックスに入れる。結果は1続きの文字列なので、本文の大きさで本文の幅に
+ * 組み、通常の禁則で折る。1行に収まらない英数字の続きだけを語の中で折る。コピーのボタンはボックスの頭の行に
+ * 置く。
  *
- * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
- * <Base64Tile variant="full" />
- * <Base64Tile variant="encode" />
- * <Base64Tile variant="decode" />
- * ```
+ * ## 読み上げ
  *
- * ## アクセシビリティ（C-3 準拠）
+ * 結果が出たことを、見えないライブリージョンの短い文で知らせる。デコードできない入力は、入力欄のエラーの
+ * 理由の文（role="alert"）が知らせる。
  *
- * - 出力 textarea は readOnly で表示専用
- * - role="status" aria-live="polite" の div にサマリテキストを置く
- *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
- * - URL-safe 説明文は useId ベースの id で aria-describedby に関連付ける
- *   （複数インスタンス同居時の誤結合防止）
+ * 同じページに複数を置いても、id は useId で1つずつ別になる。
  */
 
 import { useId, useMemo, useState } from "react";
-import Panel from "@/components/Panel";
 import RadioGroup from "@/components/RadioGroup";
+import Field from "@/components/Field";
 import Textarea from "@/components/Textarea";
-import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
 import CopyButton from "@/components/CopyButton";
+import ResultBox from "@/components/ResultBox";
 import { encodeBase64, decodeBase64, toUrlSafe } from "./logic";
 import styles from "./Base64Tile.module.css";
 
 type Direction = "encode" | "decode";
 
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
 export type Base64TileVariant = "full" | "encode" | "decode";
 
 const DIRECTION_OPTIONS: { label: string; value: Direction }[] = [
@@ -63,188 +48,134 @@ const DIRECTION_OPTIONS: { label: string; value: Direction }[] = [
   { label: "デコード", value: "decode" },
 ];
 
+/** 向きごとの、入力欄のラベル・結果の名前・コピーで写すもの。 */
+const DIRECTION_TEXT: Record<
+  Direction,
+  { inputLabel: string; caption: string; copyTarget: string; done: string }
+> = {
+  encode: {
+    inputLabel: "エンコードするテキスト",
+    caption: "エンコードしたBase64",
+    copyTarget: "Base64",
+    done: "エンコードしました",
+  },
+  decode: {
+    inputLabel: "デコードするBase64",
+    caption: "デコードしたテキスト",
+    copyTarget: "テキスト",
+    done: "デコードしました",
+  },
+};
+
+const DECODE_ERROR =
+  "Base64 として読めない文字列です。入力内容を確認してください。";
+
 export interface Base64TileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない、URL-safe のチェックボックスを表示
-   * - "decode": 方向を decode に固定、方向のラジオボタンと URL-safe のチェックボックスをどちらも出さない
-   */
+  /** 表示の違い（既定: "full"） */
   variant?: Base64TileVariant;
-  /** 初期入力値（デフォルト: ""） */
+  /** 初めの入力（既定: ""） */
   defaultInput?: string;
-  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
-  as?: "section" | "div" | "article" | "aside";
-  /** 追加クラス */
   className?: string;
+}
+
+function convert(
+  input: string,
+  direction: Direction,
+  urlSafe: boolean,
+): { output: string; failed: boolean } {
+  if (!input) return { output: "", failed: false };
+  if (direction === "encode") {
+    const encoded = encodeBase64(input).output;
+    return { output: urlSafe ? toUrlSafe(encoded) : encoded, failed: false };
+  }
+  const decoded = decodeBase64(input);
+  return decoded.success
+    ? { output: decoded.output, failed: false }
+    : { output: "", failed: true };
 }
 
 export default function Base64Tile({
   variant = "full",
   defaultInput = "",
-  as = "section",
   className,
 }: Base64TileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合・aria-describedby 誤結合防止） ----------
-  const uid = useId();
-  const inputId = `${uid}-input`;
-  const outputId = `${uid}-output`;
-  const urlSafeDescId = `${uid}-url-safe-desc`;
+  const urlSafeDescId = `${useId()}-url-safe-desc`;
 
-  // ---------- variant から初期方向を決定 ----------
-  // "full" は初期値 encode で、ユーザーが切り替え可能。
-  // "encode" / "decode" は固定（ユーザーが変更できない）。
-  const fixedDirection: Direction | null =
-    variant === "encode" ? "encode" : variant === "decode" ? "decode" : null;
-
-  // ---------- State ----------
-  // full の場合のみ方向を state で管理。encode/decode は固定。
-  const [dynamicDirection, setDynamicDirection] = useState<Direction>("encode");
+  const fixedDirection: Direction | null = variant === "full" ? null : variant;
+  const [chosenDirection, setChosenDirection] = useState<Direction>("encode");
+  const direction = fixedDirection ?? chosenDirection;
   const [urlSafe, setUrlSafe] = useState(false);
   const [input, setInput] = useState(defaultInput);
 
-  // 実際に使う方向: fixed があればそれを使い、なければ state を使う
-  const direction = fixedDirection ?? dynamicDirection;
+  const { output, failed } = useMemo(
+    () => convert(input, direction, urlSafe),
+    [input, direction, urlSafe],
+  );
+  const text = DIRECTION_TEXT[direction];
 
-  // URL-safe のチェックボックスを表示するのは encode 方向の時のみ
-  // decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため
-  const showUrlSafe = direction === "encode";
+  // 開いたときから出ている結果（初めの入力の結果）は登場の動きを持たない。一度消えたあとに来訪者の入力で
+  // 現れた結果だけが動く（§11）。
+  const [resultIsInitial, setResultIsInitial] = useState(() => output !== "");
+  if (resultIsInitial && output === "") setResultIsInitial(false);
 
-  // ---------- リアルタイム変換（共有エンジン logic.ts を使用） ----------
-  const conversionResult = useMemo(() => {
-    if (!input) return null;
-    if (direction === "encode") {
-      const r = encodeBase64(input);
-      if (!r.success) return r;
-      return {
-        success: true as const,
-        output: urlSafe ? toUrlSafe(r.output) : r.output,
-        error: undefined,
-      };
-    }
-    // デコード: logic.ts が URL-safe 文字とパディング欠損を自動正規化
-    return decodeBase64(input);
-  }, [input, direction, urlSafe]);
-
-  const output = conversionResult?.success ? conversionResult.output : "";
-  // エラー文言の日本語化（A-4: ErrorMessage には必ず日本語を渡す）
-  const errorMessage =
-    conversionResult?.success === false
-      ? "不正な Base64 文字列です。入力内容を確認してください。"
-      : "";
-
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
-  const statusSummary = useMemo(() => {
-    if (!input || conversionResult === null) return "";
-    if (conversionResult.success === false) return "変換エラー";
-    return direction === "encode" ? "エンコード完了" : "デコード完了";
-  }, [input, conversionResult, direction]);
-
-  // 入力・出力のラベルテキスト（方向によって変わる）
-  const inputLabel = direction === "encode" ? "テキスト入力" : "Base64入力";
-  const outputLabel = direction === "encode" ? "Base64出力" : "テキスト出力";
-  const inputPlaceholder =
-    direction === "encode"
-      ? "エンコードするテキストを入力..."
-      : "デコードするBase64文字列を入力（標準形・URL-safe形・パディングなし、いずれも対応）...";
-
-  // ---------- ハンドラ ----------
-  function handleDirectionChange(val: string) {
-    // fixedDirection がある場合はここに到達しない（ラジオボタンの組を出さない）
-    setDynamicDirection(val as Direction);
-  }
-
-  function handleInputChange(e: { target: { value: string } }) {
-    setInput(e.target.value);
-  }
-
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <Panel as={as} className={className}>
-      {/* コントロール行: 方向選択（full のみ表示） */}
+    <div className={[styles.tile, className].filter(Boolean).join(" ")}>
       {fixedDirection === null && (
-        <div className={styles.controls}>
-          {/* variant=full のみ方向のラジオボタンを出す。encode/decode は固定のため非表示。 */}
-          <RadioGroup
-            options={DIRECTION_OPTIONS}
-            value={dynamicDirection}
-            onChange={handleDirectionChange}
-            legend="変換の向き"
-          />
-        </div>
+        <RadioGroup
+          options={DIRECTION_OPTIONS}
+          value={chosenDirection}
+          onChange={(value) => setChosenDirection(value as Direction)}
+          legend="変換の向き"
+        />
       )}
 
-      {/* URL-safe オプション（encode 方向の時のみ表示）
-          decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため非表示 */}
-      {showUrlSafe && (
-        <div className={styles.optionRow}>
+      {direction === "encode" && (
+        <div className={styles.option}>
           <Checkbox
             label="URL-safe 形式で出力"
             checked={urlSafe}
             onChange={(e) => setUrlSafe(e.target.checked)}
             aria-describedby={urlSafeDescId}
           />
-          {/* useId ベースの id で aria-describedby に関連付け（複数インスタンス同居時の誤結合防止） */}
           <span id={urlSafeDescId} className={styles.optionDesc}>
-            （+ → -, / → _。JWT や URL クエリ向け）
+            （+ → -、/ → _。JWT や URL のクエリ向け）
           </span>
         </div>
       )}
 
-      {/* 入力欄 */}
-      <div className={styles.field}>
-        <label htmlFor={inputId} className={styles.fieldLabel}>
-          {inputLabel}
-        </label>
-        <Textarea
-          id={inputId}
-          variant="mono"
-          value={input}
-          onChange={handleInputChange}
-          placeholder={inputPlaceholder}
-          rows={6}
-          spellCheck={false}
-        />
-      </div>
-
-      {/* エラー表示（A-4 準拠: 日本語化済みメッセージを渡す） */}
-      {errorMessage && <ErrorMessage message={errorMessage} />}
-
-      {/* 出力欄 */}
-      <div className={styles.field}>
-        <div className={styles.outputHeader}>
-          <label htmlFor={outputId} className={styles.fieldLabel}>
-            {outputLabel}
-          </label>
-          <CopyButton
-            text={output}
-            target="出力"
-            align="end"
-            disabled={!output}
+      <Field label={text.inputLabel} error={failed ? DECODE_ERROR : undefined}>
+        {(control) => (
+          <Textarea
+            {...control}
+            variant="mono"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={
+              direction === "decode"
+                ? "標準形・URL-safe 形・パディングなしのどれも読めます"
+                : undefined
+            }
+            rows={6}
+            spellCheck={false}
           />
-        </div>
+        )}
+      </Field>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
-            別途サマリ div を置いてスクリーンリーダーへ通知する */}
-        <div
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-          className={styles.statusSummary}
+      <p role="status" aria-live="polite" className="visually-hidden">
+        {output ? text.done : ""}
+      </p>
+
+      {output && (
+        <ResultBox
+          caption={text.caption}
+          appear={!resultIsInitial}
+          copyButton={
+            <CopyButton text={output} target={text.copyTarget} align="end" />
+          }
         >
-          {statusSummary}
-        </div>
-
-        <Textarea
-          id={outputId}
-          variant="mono"
-          value={output}
-          readOnly
-          placeholder="結果がここに表示されます"
-          rows={6}
-        />
-      </div>
-    </Panel>
+          <p className={styles.output}>{output}</p>
+        </ResultBox>
+      )}
+    </div>
   );
 }
