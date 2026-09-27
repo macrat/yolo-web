@@ -1,70 +1,13 @@
-/* RoundResult（イロドリ）— 各ラウンドの結果。
- * 色見本の hex は成果物データ由来（お題/回答色そのもの）であり、器の色ではない。 */
-
-.resultArea {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: var(--space-16) 0;
-  padding: var(--space-16);
-  border-radius: var(--radius);
-  background: var(--paper-2);
+/* 決めた色への判定。スライダーのあった所に置き、見本の並びと次の問へ進むボタンから離す。 */
+.roundResult {
+  max-width: var(--measure);
+  margin-block: var(--space-16) var(--space-8);
 }
 
-.colorComparison {
-  display: flex;
-  gap: var(--space-16);
-  align-items: center;
-  margin-bottom: var(--space-8);
-}
-
-.colorColumn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.columnLabel {
-  font-size: 0.75rem;
-  color: var(--ink-2);
-}
-
-.colorPatch {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-@media (min-width: 480px) {
-  .colorPatch {
-    width: 100px;
-    height: 100px;
-  }
-}
-
-.scoreInfo {
-  text-align: center;
-}
-
-.scoreLine {
-  font-family: var(--font-body);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--ink);
+/* その問の点数。§4 のセクションの見出しの段で、行間は本文と同じにする。 */
+.score {
+  font-family: var(--font-heading);
+  font-size: var(--text-heading-section);
+  line-height: var(--leading-body);
   font-variant-numeric: tabular-nums;
-  margin-bottom: var(--space-8);
-}
-
-.deltaLine {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-}
-
-.colorName {
-  margin-top: var(--space-8);
-  font-size: 0.9rem;
-  color: var(--ink);
-  text-align: center;
 }

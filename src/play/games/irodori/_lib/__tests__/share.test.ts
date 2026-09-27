@@ -64,10 +64,10 @@ describe("generateShareText", () => {
     expect(text).not.toContain("http");
   });
 
-  test("includes emoji row", () => {
+  test("lists the five round scores on the second line, without emoji", () => {
     const text = generateShareText(mockGameState);
-    // Should contain color emoji blocks
-    expect(text).toMatch(/[\u{1F7E5}\u{1F7E7}\u{1F7E8}\u{1F7E9}]/u);
+    expect(text.split("\n")[1]).toBe("94 90 76 60 40");
+    expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   test("includes hashtags", () => {

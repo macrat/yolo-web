@@ -1,74 +1,54 @@
-/* FinalResult（イロドリ）— 最終結果。
- * 絵文字を持たず、tabular な数字＋文字だけの静かな到達表示にする。 */
-
-.finalResult {
-  text-align: center;
+/* 5問を終えた結果のボックスの中身。合計点・問ごとの点数・これまでの成績を、この順に積む。 */
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
 }
 
-.scoreHeading {
-  margin-bottom: var(--space-8);
-}
-
-.scoreValue {
-  font-family: var(--font-body);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--ink);
+/* 合計点は数字の結果なので、§4 の主見出しの段で組み、行間は本文と同じにする（§8）。「100点」でも
+ * 狭い画面の 200% のボックスに1行で収まる。 */
+.total {
+  font-family: var(--font-heading);
+  font-size: var(--text-heading-main);
+  line-height: var(--leading-body);
   font-variant-numeric: tabular-nums;
 }
 
-.scoreUnit {
-  font-size: 1rem;
-  color: var(--ink-2);
-  margin-left: 0.125rem;
+/* ボックスの中の小見出しは、前の内容と細い線で分ける（§5）。 */
+.part {
+  padding-top: var(--space-24);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.rankLine {
-  font-size: 1rem;
-  color: var(--ink-2);
+.partHeading {
+  font-size: var(--text-heading-sub);
   margin-bottom: var(--space-16);
 }
 
-.rankBadge {
-  font-weight: 700;
-  color: var(--accent);
-  margin-right: var(--space-8);
+/* 表の行は見本の高さで決まるので、字と見本を行の中央で並べる。 */
+.rounds :is(th, td) {
+  vertical-align: middle;
 }
 
-.roundsSummary {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-8);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-16);
+/* 表の中の色見本。色だけを見せ、細い線で囲む（§2）。 */
+.swatch {
+  width: var(--space-32);
+  height: var(--space-32);
+  border: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.roundItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.roundPatches {
-  display: flex;
-  gap: 2px;
-}
-
-.miniPatch {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-.roundScore {
-  font-size: 0.7rem;
-  font-weight: 600;
+.noAnswer {
+  font-size: var(--text-small);
   color: var(--ink-2);
 }
 
-.roundLabel {
-  font-size: 0.65rem;
-  color: var(--ink-2);
+/* 点数と回数は数字の桁をそろえ、右揃えにする（§3）。 */
+.score {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.names {
+  max-width: var(--measure);
+  margin-top: var(--space-16);
 }

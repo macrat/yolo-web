@@ -1,43 +1,38 @@
-/* GameContainer（イロドリ）— 進捗・操作ボタン。 */
-
-.progressBar {
+/* 進み具合の帯の下に続く区画。どの区画もコンテンツ幅の左端から積む（DESIGN.md §5）。 */
+.stack {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+/* 見本の並び・スライダー（または判定）・決定のボタン（または次の問へ進むボタン）。スライダーの行は押せる範囲の
+ * 44px の中に溝の上下の余白を持つので、区画どうしのあいだはその余白に任せ、狭い画面でも決定のボタンまでを
+ * 最初の画面に収める。 */
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.action {
+  margin-top: var(--space-8);
+}
+
+/* 結果を持ち帰る・共有する区画。ボックスのすぐ下の小見出しは、ボックスの太い枠がすでに切れ目なので、上に線を
+ * 持たない（§5）。 */
+.share {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-8);
-  margin: var(--space-8) 0;
+  max-width: var(--measure);
 }
 
-.progressDots {
-  display: flex;
-  gap: 0.35rem;
+.shareHeading {
+  font-size: var(--text-heading-sub);
 }
 
-.progressDot {
-  width: 10px;
-  height: 10px;
-  border-radius: var(--radius);
-  background: var(--rule);
-  transition: background-color 0.2s;
-}
-
-/* 完了は墨で示す。進捗チップは UI なので和色を使わない（DESIGN.md §1）。現在地は --accent。 */
-.progressDotCompleted {
-  background: var(--ink);
-}
-
-.progressDotCurrent {
-  background: var(--accent);
-}
-
-.progressText {
-  font-size: 0.85rem;
-  font-weight: 600;
+/* 問題の日付と番号。補助情報の大きさで組む（§4）。 */
+.date {
+  font-size: var(--text-small);
   color: var(--ink-2);
-}
-
-.submitArea {
-  display: flex;
-  justify-content: center;
-  margin: var(--space-16) 0;
 }

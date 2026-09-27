@@ -1,6 +1,0 @@
-/* ResultModal（イロドリ）— 結果表示。 */
-
-/* 統計を開くボタンの見え方は Button が持ち、ここは上の内容とのあいだだけを持つ。 */
-.statsAction {
-  margin-top: var(--space-16);
-}

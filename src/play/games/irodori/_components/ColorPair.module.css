@@ -1,0 +1,39 @@
+/* お題と作る色の見本の並び。どちらもコンテンツ幅の左端から並べ、同じ大きさにする（DESIGN.md §5）。 */
+.pair {
+  display: flex;
+  gap: var(--space-16);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* 見本の名前は1行のラベルなので、見出しと同じ詰めた行間で組み、見本をラベルに近づける。 */
+.label {
+  line-height: var(--leading-heading);
+}
+
+/* 見本の大きさは色が決める（§5「色見本はコンテンツが決める」）。狭い画面では、見本の下のスライダーと決定の
+ * ボタンが最初の画面に入る大きさにし、それより広い画面では見比べやすい大きさにする。淡い色が地に溶けないよう、
+ * 細い線で囲む（§2）。 */
+.swatch {
+  width: 80px;
+  height: 80px;
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+@media (min-width: 360px) {
+  .swatch {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (min-width: 480px) {
+  .swatch {
+    width: 140px;
+    height: 140px;
+  }
+}

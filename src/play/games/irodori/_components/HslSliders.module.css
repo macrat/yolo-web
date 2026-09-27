@@ -1,97 +1,76 @@
-/* HslSliders（イロドリ）— H/S/L スライダーと回答プレビュー。
- * スライダーの track グラデーションは操作対象そのもの（色相環・彩度・明度の連続量を
- * 視覚化する機能的な表示）であり、装飾のグラデーションではない。
- * つまみ（thumb）は角を持たない（§5）。 */
-
-.slidersArea {
-  display: flex;
-  gap: var(--space-16);
-  align-items: flex-start;
-  margin: var(--space-16) 0;
-}
-
+/* スライダーの並び。ラベル・スライダー・値の3列をどの行もそろえ、本文の幅を上限にする（DESIGN.md §5）。
+ * 本文の幅より広げると、ラベルから値まで目で横に追う距離が延びる。 */
 .sliders {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.sliderRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: var(--space-8);
+  column-gap: var(--space-8);
+  width: 100%;
+  max-width: var(--measure);
 }
 
-.sliderLabel {
-  width: 1.5rem;
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-align: center;
-  color: var(--ink-2);
+.row {
+  display: contents;
 }
 
+/* ラベルは本文の大きさで、スライダーの横に置く（§5）。 */
+.label {
+  color: var(--ink);
+}
+
+/* 押せる範囲は行の高さいっぱいの 44px（§6）。見える溝はその中の 16px で、溝に色の移り変わりを描く。
+ * 溝の色は、動かすと色がどう移るかを見せる中身で、飾りのグラデーションではない。淡い端が地に溶けない
+ * よう、色見本と同じ細い線で囲む（§2）。 */
 .slider {
-  flex: 1;
   -webkit-appearance: none;
   appearance: none;
-  height: 16px;
-  border-radius: var(--radius);
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  background: transparent;
   cursor: pointer;
 }
 
+.slider::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  height: 16px;
+  background: var(--track);
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.slider::-moz-range-track {
+  box-sizing: border-box;
+  height: 16px;
+  background: var(--track);
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* つまみは角を持たない四角で、太い線で囲む（§5）。溝の中央に置く。 */
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: var(--radius);
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  margin-top: calc((16px - 2 * var(--rule-w-hair) - 24px) / 2);
   background: var(--paper);
-  border: 2px solid var(--ink);
-  cursor: pointer;
+  border: var(--rule-w) solid var(--rule);
 }
 
 .slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: var(--radius);
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
   background: var(--paper);
-  border: 2px solid var(--ink);
-  cursor: pointer;
+  border: var(--rule-w) solid var(--rule);
 }
 
-.sliderValue {
-  width: 2.5rem;
+/* 値は数字の桁がそろう本文の書体で、行をまたいで右揃えにする（§3）。 */
+.value {
+  min-width: 3ch;
   text-align: right;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
-  color: var(--ink-2);
-}
-
-.previewArea {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.previewLabel {
-  font-size: 0.75rem;
-  color: var(--ink-2);
-}
-
-.previewPatch {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-  transition: background-color 0.05s ease;
-}
-
-@media (min-width: 480px) {
-  .previewPatch {
-    width: 100px;
-    height: 100px;
-  }
+  color: var(--ink);
 }

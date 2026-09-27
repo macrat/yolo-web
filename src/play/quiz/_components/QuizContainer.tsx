@@ -18,9 +18,9 @@ import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinkin
 import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-personality";
 import { getEstimatedTime } from "./introBadges";
 import Button from "@/components/Button";
+import ProgressBar from "@/components/ProgressBar";
 import type { ItemListItem } from "@/components/ItemList";
 import type { ResultHeading } from "@/components/ResultBox";
-import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
 import ResultNextContent from "./ResultNextContent";
@@ -175,7 +175,11 @@ export default function QuizContainer({
     const question = quiz.questions[currentIndex];
     return (
       <div className={styles.stage}>
-        <ProgressBar current={currentIndex + 1} total={quiz.questions.length} />
+        <ProgressBar
+          current={currentIndex + 1}
+          total={quiz.questions.length}
+          label="設問の進捗"
+        />
         <QuestionCard
           key={question.id}
           question={question}

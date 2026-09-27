@@ -171,13 +171,12 @@ export function getRankLabel(rank: IrodoriRank): string {
   }
 }
 
+/** Number of buckets in the total-score distribution (0-9, 10-19, ..., 90-100). */
+export const SCORE_BUCKET_COUNT = 10;
+
 /**
- * Get the score emoji block for share text.
+ * The distribution bucket a total score falls into. 100 shares the last bucket (90-100).
  */
-export function getScoreEmoji(score: number): string {
-  if (score >= 95) return "\uD83C\uDF1F"; // star (S rank)
-  if (score >= 85) return "\uD83D\uDFE9"; // green
-  if (score >= 70) return "\uD83D\uDFE8"; // yellow
-  if (score >= 50) return "\uD83D\uDFE7"; // orange
-  return "\uD83D\uDFE5"; // red
+export function scoreBucketIndex(totalScore: number): number {
+  return Math.min(Math.floor(totalScore / 10), SCORE_BUCKET_COUNT - 1);
 }
