@@ -51,9 +51,12 @@ interface CalculationResult {
   announcement: string;
 }
 
-/** 数を桁区切りの位置で分け、最後の組に単位を付ける（「13,」「253日」）。数を折るのは桁区切りの位置だけ（§8）。 */
+/**
+ * 数を桁区切りの位置で分け、最後の組に単位を付ける（「13,」「253日」）。数を折るのは桁区切りの位置だけ（§8）。
+ * 区切りは日本語の書き方で固定し、ブラウザの言語が何でも「46,290日」と書く（ドイツ語の「46.290」は小数に読める）。
+ */
 function numberWithUnit(value: number, unit: string): string[] {
-  const groups = value.toLocaleString().split(",");
+  const groups = value.toLocaleString("ja-JP").split(",");
   return groups.map((group, index) =>
     index < groups.length - 1 ? `${group},` : `${group}${unit}`,
   );
@@ -76,7 +79,7 @@ function buildResult(
   if (wareki) {
     rows.push({
       label: ["生まれ年", "（和暦）"],
-      value: [wareki.era, wareki.formatted.slice(wareki.era.length)],
+      value: [wareki.era, wareki.yearLabel],
     });
   }
   rows.push(

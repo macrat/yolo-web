@@ -44,15 +44,6 @@ describe("calculateAge", () => {
     expect(result.totalDays).toBe(1);
   });
 
-  it("handles leap year birthday (Feb 29) on Feb 28 of a common year", () => {
-    const birth = new Date(2000, 1, 29);
-    const target = new Date(2001, 1, 28);
-    const result = calculateAge(birth, target);
-    expect(result.years).toBe(1);
-    expect(result.months).toBe(0);
-    expect(result.days).toBe(0);
-  });
-
   it("handles leap day boundary for totalDays", () => {
     const birth = new Date(2024, 1, 28);
     const target = new Date(2024, 2, 1);
@@ -79,14 +70,6 @@ describe("calculateAge", () => {
     expect(result.totalMonths).toBe(3);
   });
 
-  it("handles future date (birth after target) using absolute value", () => {
-    const birth = new Date(2026, 0, 1);
-    const target = new Date(2025, 0, 1);
-    const result = calculateAge(birth, target);
-    expect(result.years).toBe(1);
-    expect(result.totalDays).toBe(365);
-  });
-
   it("keeps one day difference stable", () => {
     const birth = new Date(2026, 0, 1);
     const target = new Date(2026, 0, 2);
@@ -101,7 +84,7 @@ describe("toWareki", () => {
     expect(result).not.toBeNull();
     expect(result!.era).toBe("令和");
     expect(result!.year).toBe(8);
-    expect(result!.formatted).toBe("令和8年");
+    expect(result!.yearLabel).toBe("8年");
   });
 
   it("converts 2019-05-01 to Reiwa 1 (元年)", () => {
@@ -109,7 +92,7 @@ describe("toWareki", () => {
     expect(result).not.toBeNull();
     expect(result!.era).toBe("令和");
     expect(result!.year).toBe(1);
-    expect(result!.formatted).toBe("令和元年");
+    expect(result!.yearLabel).toBe("元年");
   });
 
   it("converts 2019-04-30 to Heisei 31 (day before Reiwa)", () => {
@@ -124,7 +107,7 @@ describe("toWareki", () => {
     expect(result).not.toBeNull();
     expect(result!.era).toBe("平成");
     expect(result!.year).toBe(30);
-    expect(result!.formatted).toBe("平成30年");
+    expect(result!.yearLabel).toBe("30年");
   });
 
   it("converts 1989-01-08 to Heisei 1 (boundary)", () => {
@@ -190,37 +173,6 @@ describe("toWareki", () => {
 });
 
 describe("getZodiac", () => {
-  it("returns 子 for 2020", () => {
-    expect(getZodiac(2020).kanji).toBe("子");
-  });
-
-  it("returns 丑 for 2021", () => {
-    expect(getZodiac(2021).kanji).toBe("丑");
-  });
-
-  it("returns 亥 for 2019", () => {
-    expect(getZodiac(2019).kanji).toBe("亥");
-  });
-
-  it("returns 辰 for 2024", () => {
-    expect(getZodiac(2024).kanji).toBe("辰");
-  });
-
-  it("returns 巳 for 2025", () => {
-    expect(getZodiac(2025).kanji).toBe("巳");
-  });
-
-  it("returns 午 for 2026", () => {
-    expect(getZodiac(2026).kanji).toBe("午");
-  });
-
-  it("cycles correctly for historical year", () => {
-    // 12-year cycle: 2020 = 子, so 2008 = 子
-    expect(getZodiac(2008).kanji).toBe("子");
-  });
-});
-
-describe("getZodiac reading", () => {
   it("returns kanji with reading for 子 (2020)", () => {
     expect(getZodiac(2020)).toEqual({ kanji: "子", reading: "ね" });
   });
@@ -387,7 +339,8 @@ describe("parseDate", () => {
   });
 });
 
-describe("calculateAge month and day borrow", () => {
+// 年齢計算ニ関スル法律・民法 143 条の数え方。年齢と月は応当日の当日から1つ進み、応当日の無い月は翌月の1日から進む。
+describe("calculateAge counts like the law", () => {
   const age = (
     birth: [number, number, number],
     target: [number, number, number],
@@ -400,57 +353,85 @@ describe("calculateAge month and day borrow", () => {
   };
 
   it.each([
-    [[2001, 1, 31], [2001, 3, 1], "0歳1ヶ月1日"],
-    [[2000, 1, 31], [2000, 3, 1], "0歳1ヶ月1日"],
-    [[2001, 1, 30], [2001, 3, 1], "0歳1ヶ月1日"],
-    [[2001, 1, 29], [2001, 3, 1], "0歳1ヶ月1日"],
-    [[2000, 1, 29], [2000, 3, 1], "0歳1ヶ月1日"],
-    [[2001, 1, 31], [2001, 3, 2], "0歳1ヶ月2日"],
-    [[1990, 1, 31], [2026, 3, 1], "36歳1ヶ月1日"],
-    [[2001, 1, 31], [2001, 2, 28], "0歳1ヶ月0日"],
-    [[2001, 1, 31], [2001, 2, 27], "0歳0ヶ月27日"],
-    [[2001, 1, 31], [2001, 3, 31], "0歳2ヶ月0日"],
+    [[2000, 2, 29], [2000, 3, 28], "0歳0ヶ月28日"],
+    [[2000, 2, 29], [2000, 3, 29], "0歳1ヶ月0日"],
+    [[2000, 2, 29], [2001, 1, 29], "0歳11ヶ月0日"],
+    [[2000, 2, 29], [2001, 2, 28], "0歳11ヶ月30日"],
+    [[2000, 2, 29], [2001, 3, 1], "1歳0ヶ月0日"],
+    [[2000, 2, 29], [2002, 2, 28], "1歳11ヶ月30日"],
+    [[2000, 2, 29], [2002, 3, 1], "2歳0ヶ月0日"],
+    [[2000, 2, 29], [2004, 2, 28], "3歳11ヶ月30日"],
+    [[2000, 2, 29], [2004, 2, 29], "4歳0ヶ月0日"],
+    [[2000, 2, 29], [2004, 3, 1], "4歳0ヶ月1日"],
   ] as const)(
-    "Jan 29–31 births into early March: %j → %j is %s",
+    "Feb 29 births over leap and common years: %j → %j is %s",
     (birth, target, expected) => {
       expect(age([...birth], [...target])).toBe(expected);
     },
   );
 
   it.each([
-    [[2000, 2, 29], [2001, 2, 28], "1歳0ヶ月0日"],
-    [[2000, 2, 29], [2001, 3, 1], "1歳0ヶ月1日"],
-    [[2000, 2, 29], [2004, 2, 28], "3歳11ヶ月30日"],
-    [[2000, 2, 29], [2004, 2, 29], "4歳0ヶ月0日"],
-    [[2000, 2, 29], [2000, 3, 29], "0歳1ヶ月0日"],
-  ] as const)("Feb 29 births: %j → %j is %s", (birth, target, expected) => {
-    expect(age([...birth], [...target])).toBe(expected);
-  });
+    [[2001, 1, 31], [2001, 2, 27], "0歳0ヶ月27日"],
+    [[2001, 1, 31], [2001, 2, 28], "0歳0ヶ月28日"],
+    [[2001, 1, 31], [2001, 3, 1], "0歳1ヶ月0日"],
+    [[2001, 1, 31], [2001, 3, 2], "0歳1ヶ月1日"],
+    [[2001, 1, 31], [2001, 3, 31], "0歳2ヶ月0日"],
+    [[2000, 1, 31], [2000, 2, 29], "0歳0ヶ月29日"],
+    [[2000, 1, 31], [2000, 3, 1], "0歳1ヶ月0日"],
+    [[2001, 1, 30], [2001, 3, 1], "0歳1ヶ月0日"],
+    [[2001, 1, 29], [2001, 3, 1], "0歳1ヶ月0日"],
+    [[2000, 1, 29], [2000, 3, 1], "0歳1ヶ月1日"],
+    [[1990, 1, 31], [2026, 3, 1], "36歳1ヶ月0日"],
+  ] as const)(
+    "Jan 29–31 births into February and early March: %j → %j is %s",
+    (birth, target, expected) => {
+      expect(age([...birth], [...target])).toBe(expected);
+    },
+  );
 
   it.each([
-    [[2001, 3, 31], [2001, 5, 1], "0歳1ヶ月1日"],
-    [[2001, 3, 31], [2001, 4, 30], "0歳1ヶ月0日"],
-    [[2001, 5, 31], [2001, 6, 30], "0歳1ヶ月0日"],
-    [[2001, 8, 31], [2001, 10, 1], "0歳1ヶ月1日"],
+    [[2001, 3, 31], [2001, 4, 30], "0歳0ヶ月30日"],
+    [[2001, 3, 31], [2001, 5, 1], "0歳1ヶ月0日"],
+    [[2001, 3, 31], [2001, 5, 31], "0歳2ヶ月0日"],
+    [[2001, 3, 31], [2001, 6, 30], "0歳2ヶ月30日"],
+    [[2001, 3, 31], [2002, 2, 28], "0歳10ヶ月28日"],
+    [[2001, 3, 31], [2002, 3, 1], "0歳11ヶ月0日"],
+    [[2001, 5, 31], [2001, 6, 30], "0歳0ヶ月30日"],
+    [[2001, 8, 31], [2001, 10, 1], "0歳1ヶ月0日"],
     [[2001, 12, 31], [2002, 1, 31], "0歳1ヶ月0日"],
-    [[2001, 12, 31], [2002, 3, 1], "0歳2ヶ月1日"],
+    [[2001, 12, 31], [2002, 3, 1], "0歳2ヶ月0日"],
     [[2001, 4, 30], [2001, 5, 31], "0歳1ヶ月1日"],
-  ] as const)("month-end births: %j → %j is %s", (birth, target, expected) => {
-    expect(age([...birth], [...target])).toBe(expected);
-  });
+  ] as const)(
+    "month-end births into short months: %j → %j is %s",
+    (birth, target, expected) => {
+      expect(age([...birth], [...target])).toBe(expected);
+    },
+  );
 
-  it("keeps days between 0 and 30 for every pair of dates in 2000–2001", () => {
+  it("moves forward one day at a time and stays consistent for births in 2000–2001", () => {
     const failures: string[] = [];
-    for (let b = 0; b < 731; b += 1) {
+    for (let b = 0; b < 731 && failures.length < 5; b += 1) {
       const birth = new Date(2000, 0, 1 + b);
-      for (let t = b; t < 731; t += 1) {
+      let previous = calculateAge(birth, birth);
+      for (let t = b + 1; t < b + 1200; t += 1) {
         const target = new Date(2000, 0, 1 + t);
         const r = calculateAge(birth, target);
-        if (r.days < 0 || r.days > 30) {
+        const next = `${formatDate(birth)} → ${formatDate(target)}`;
+        const stepsOneDay =
+          r.totalMonths === previous.totalMonths &&
+          r.days === previous.days + 1;
+        const startsMonth =
+          r.totalMonths === previous.totalMonths + 1 && r.days === 0;
+        if (r.days < 0 || r.days > 30) failures.push(`${next}: days ${r.days}`);
+        if (!stepsOneDay && !startsMonth)
           failures.push(
-            `${formatDate(birth)} → ${formatDate(target)}: ${r.days}`,
+            `${next}: went from ${JSON.stringify(previous)} to ${JSON.stringify(r)}`,
           );
-        }
+        if (r.totalDays !== t - b)
+          failures.push(`${next}: totalDays ${r.totalDays}`);
+        if (r.years * 12 + r.months !== r.totalMonths)
+          failures.push(`${next}: totalMonths ${r.totalMonths}`);
+        previous = r;
       }
     }
     expect(failures).toEqual([]);

@@ -20,24 +20,26 @@ function daysInMonth(year: number, month: number): number {
 }
 
 /**
- * 生まれた日から数えて monthCount か月目の応当日。その月に同じ日が無いときは、その月の末日にする
- * （1月31日生まれの1か月目は2月28日か29日、2月29日生まれの閏年でない年の応当日は2月28日）。民法の
- * 期間の数え方（最後の月に応当する日が無いときは、その月の末日に満了する）と同じ。
+ * 生まれた日から monthCount か月たった日（応当日）。年齢と月と日は、この日の当日から1つ進む。
+ *
+ * 年齢計算ニ関スル法律は、年齢を出生の日から数え、民法 143 条を準用する。民法 143 条2項では、期間は応当日の
+ * 前日が終わった時に満ち、最後の月に応当日が無いときは、その月の末日が終わった時に満ちる。この道具は満ちた
+ * 翌日を区切りの初日として数えるので、応当日のある月はその日、無い月は翌月の1日を区切りにする（1月31日
+ * 生まれの1か月目は3月1日、2月29日生まれの平年の誕生日は3月1日）。
  */
 function monthAnniversary(birth: Date, monthCount: number): Date {
   const year =
     birth.getFullYear() + Math.floor((birth.getMonth() + monthCount) / 12);
   const month = (birth.getMonth() + monthCount) % 12;
-  return new Date(
-    year,
-    month,
-    Math.min(birth.getDate(), daysInMonth(year, month)),
-  );
+  if (birth.getDate() > daysInMonth(year, month)) {
+    return new Date(year, month + 1, 1);
+  }
+  return new Date(year, month, birth.getDate());
 }
 
 /**
- * 2つの日付のあいだの年齢を、満了した月の数と、最後の月の応当日から数えた残りの日数で返す。
- * 日数は応当日から数えるので、月末に生まれた人でも負にならない。
+ * 生年月日から基準日までの年齢を、満ちた月の数と、最後の区切りの日から数えた残りの日数で返す。
+ * 生年月日は基準日と同じ日か、それより前の日であること（画面がそれより後の日をエラーで返す）。
  */
 export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
   const birth = new Date(
@@ -51,24 +53,16 @@ export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
     targetDate.getDate(),
   );
 
-  const totalDays = diffUtcCalendarDays(birth, target);
-
-  const [earlier, later] = birth <= target ? [birth, target] : [target, birth];
-
   let totalMonths =
-    (later.getFullYear() - earlier.getFullYear()) * 12 +
-    (later.getMonth() - earlier.getMonth());
-  if (monthAnniversary(earlier, totalMonths) > later) totalMonths--;
-  const days = diffUtcCalendarDays(
-    monthAnniversary(earlier, totalMonths),
-    later,
-  );
+    (target.getFullYear() - birth.getFullYear()) * 12 +
+    (target.getMonth() - birth.getMonth());
+  if (monthAnniversary(birth, totalMonths) > target) totalMonths--;
 
   return {
     years: Math.floor(totalMonths / 12),
     months: totalMonths % 12,
-    days,
-    totalDays,
+    days: diffUtcCalendarDays(monthAnniversary(birth, totalMonths), target),
+    totalDays: diffUtcCalendarDays(birth, target),
     totalMonths,
   };
 }
@@ -78,7 +72,8 @@ export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
 export interface WarekiInfo {
   era: string;
   year: number;
-  formatted: string;
+  /** 年の表記。1年目は「元年」、ほかは「2年」のように数字で書く。 */
+  yearLabel: string;
 }
 
 interface EraDefinition {
@@ -100,11 +95,10 @@ export function toWareki(date: Date): WarekiInfo | null {
     if (d >= era.startDate) {
       // Japanese era years follow calendar years, not anniversaries
       const eraYear = d.getFullYear() - era.startDate.getFullYear() + 1;
-      const yearStr = eraYear === 1 ? "元" : String(eraYear);
       return {
         era: era.name,
         year: eraYear,
-        formatted: `${era.name}${yearStr}年`,
+        yearLabel: eraYear === 1 ? "元年" : `${eraYear}年`,
       };
     }
   }

@@ -124,6 +124,31 @@ describe("AgeCalculatorTile", () => {
     expect(valueOf("干支")).toBe("午<wbr>（うま）");
   });
 
+  // ブラウザの言語が日本語でなくても、桁区切りは「,」で、そこに折り所を置く
+  test("groups digits the Japanese way whatever the browser language is", () => {
+    const original = Number.prototype.toLocaleString;
+    const spy = vi
+      .spyOn(Number.prototype, "toLocaleString")
+      .mockImplementation(function (
+        this: number,
+        locales?: Intl.LocalesArgument,
+        options?: Intl.NumberFormatOptions,
+      ) {
+        return original.call(this, locales ?? "de-DE", options);
+      });
+    try {
+      render(<AgeCalculatorTile />);
+      calculate("1900-01-01", "2026-09-27");
+      const valueOf = (label: string) =>
+        screen.getByRole("rowheader", { name: label }).nextElementSibling!
+          .innerHTML;
+      expect(valueOf("通算日数")).toBe("46,<wbr>290日");
+      expect(valueOf("通算月数")).toBe("1,<wbr>520ヶ月");
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
   // 変換ロジックの正確性
   test("calculates age correctly for known date", () => {
     render(<AgeCalculatorTile />);
