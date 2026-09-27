@@ -117,11 +117,7 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
         />
         <ReadingText>{cf.characterMessage}</ReadingText>
 
-        <ReadingHeading
-          placement="resultPage"
-          phrases={THIRD_PARTY_HEADING}
-          headingFont={headingFontAttr(THIRD_PARTY_HEADING.join(""))}
-        />
+        <ReadingHeading placement="resultPage" phrases={THIRD_PARTY_HEADING} />
         <ReadingText>{cf.thirdPartyNote}</ReadingText>
       </Reading>
 

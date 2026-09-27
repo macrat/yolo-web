@@ -162,6 +162,28 @@ vi.mock("@/play/quiz/registry", () => ({
       },
     ],
     [
+      "short-title-quiz",
+      {
+        meta: {
+          title: "あなたの性格を天気に例えると?",
+          shortTitle: "天気で性格診断",
+          shortDescription: "天気で性格診断の短い説明",
+          type: "personality",
+          questionCount: 8,
+          accentColor: "#0000FF",
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-s",
+            title: "晴れタイプ",
+            description: "晴れタイプの説明",
+            icon: "S",
+          },
+        ],
+      },
+    ],
+    [
       "personality-with-detailed",
       {
         meta: {
@@ -305,6 +327,17 @@ describe("ページの題と共有の文", () => {
     render(await PlayQuizResultPage({ params }));
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
       /^性格診断の結果は「Xタイプ」でした！あなたは\? #性格診断 #yolosnet$/,
+    );
+  });
+
+  it("短い名前を持つ診断は、共有の文で短い名前を言い、ハッシュタグは正式な名前から作る", async () => {
+    const params = Promise.resolve({
+      slug: "short-title-quiz",
+      resultId: "result-s",
+    });
+    render(await PlayQuizResultPage({ params }));
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      /^天気で性格診断の結果は「晴れタイプ」でした！あなたは\? #あなたの性格を天気に例えると\? #yolosnet$/,
     );
   });
 

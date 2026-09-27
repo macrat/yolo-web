@@ -43,16 +43,17 @@ export const DEFAULT_READING_HEADINGS = {
 } as const satisfies Record<string, readonly string[]>;
 
 /**
- * 読みものの小見出しの区切りと書体の属性。診断が言い替えた文はデータなので、サーバーで文節に区切る。
+ * 読みものの小見出しの区切りと書体の属性。診断が言い替えた文はデータなので、サーバーで文節に区切り、見出しの書体に
+ * 無い字を含むかを調べる。言い替えないときは、決まった文の並びをそのまま使う。
  */
 function readingHeading(
   label: string | undefined,
   fallback: readonly string[],
-): { phrases: readonly string[]; headingFont: HeadingFontAttr } {
-  const text = label ?? fallback.join("");
+): { phrases: readonly string[]; headingFont?: HeadingFontAttr } {
+  if (label === undefined) return { phrases: fallback };
   return {
-    phrases: label ? splitIntoPhrases(label) : fallback,
-    headingFont: headingFontAttr(text),
+    phrases: splitIntoPhrases(label),
+    headingFont: headingFontAttr(label),
   };
 }
 
