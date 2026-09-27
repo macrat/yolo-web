@@ -300,9 +300,7 @@ describe("V-12: コピー後ラベル変化（コピー済み）", () => {
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "変換結果をコピー済み" }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 });

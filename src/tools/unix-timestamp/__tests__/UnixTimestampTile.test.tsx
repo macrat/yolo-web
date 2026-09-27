@@ -353,7 +353,7 @@ describe("いまの時刻を止める・動かす", () => {
       fireEvent.click(copy);
     });
 
-    expect(copy).toHaveAccessibleName("現在のタイムスタンプをコピー済み");
+    expect(copy).toHaveTextContent("コピー済み");
   });
 });
 

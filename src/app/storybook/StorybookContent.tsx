@@ -13,10 +13,7 @@ import Select from "@/components/Select";
 import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import FileDropZone from "@/components/FileDropZone";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import Breadcrumb from "@/components/Breadcrumb";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
@@ -122,7 +119,7 @@ const TOC_ITEMS = [
   { id: "radio-group", label: "13. RadioGroup" },
   { id: "error-message", label: "14. ErrorMessage" },
   { id: "file-drop-zone", label: "15. FileDropZone" },
-  { id: "use-copy-to-clipboard", label: "16. useCopyToClipboard" },
+  { id: "copy-button", label: "16. CopyButton" },
   { id: "input-date", label: "17. Input (type=date)" },
   { id: "faq-section", label: "18. Accordion・FaqSection" },
   { id: "related-tools", label: "19. RelatedTools" },
@@ -406,8 +403,6 @@ export default function StorybookContent({
   const [longGroupValue, setLongGroupValue] = useState("hiragana-to-katakana");
   // Pagination button mode state
   const [paginationPage, setPaginationPage] = useState(1);
-  // useCopyToClipboard demo
-  const { copy, copiedKey } = useCopyToClipboard();
   // 解き終えた画面の見本で開いているタイプ
   const [solvedTypeId, setSolvedTypeId] = useState(solvedScreen.results[0].id);
   const solvedResult =
@@ -1106,44 +1101,53 @@ export default function StorybookContent({
         </Panel>
       </Section>
 
-      {/* === 16. useCopyToClipboard === */}
-      <Section id="use-copy-to-clipboard">
-        <h2 className={styles.sectionTitle}>16. useCopyToClipboard</h2>
+      {/* === 16. CopyButton === */}
+      <Section id="copy-button">
+        <h2 className={styles.sectionTitle}>16. CopyButton</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
-          <span className={styles.previewLabel}>
-            Preview: useCopyToClipboard
-          </span>
+          <span className={styles.previewLabel}>Preview: CopyButton</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            単一ターゲット（key 省略）
+            既定（字の始まりを並びの左端にそろえる）
           </h3>
+          <p>
+            押すと面が「コピー済み」になり、写せなかったときは次に押すまで「コピー失敗」を出す。面の字が替わっても、ボタンと後ろの字は動かない。
+          </p>
           <div
             style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
           >
-            <Button
-              variant="default"
-              onClick={() => copy("クリップボードにコピーされるテキスト")}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
-            <span
-              aria-live="polite"
-              style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}
-            >
-              {copiedKey ? COPIED_LABEL : ""}
-            </span>
+            <CopyButton text="クリップボードに写す文" target="見本の文" />
+            <span>後ろに続く字</span>
           </div>
+
+          <h3 className={styles.subsectionTitle}>
+            見出しの行の右に置く（align=&quot;end&quot;）
+          </h3>
           <div
             style={{
-              fontSize: "0.8rem",
-              color: "var(--ink-2)",
-              marginTop: "0.5rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            コピー内容: &quot;クリップボードにコピーされるテキスト&quot;（2
-            秒後にリセット）
+            <span>変換結果</span>
+            <CopyButton text="変換した文" target="変換結果" align="end" />
           </div>
+
+          <h3 className={styles.subsectionTitle}>
+            何を写すかを面に出す（showTarget・primary・align=&quot;stretch&quot;）
+          </h3>
+          <CopyButton
+            text={"件名: 見本\n\n本文の見本"}
+            target="メール全文"
+            showTarget
+            variant="primary"
+            align="stretch"
+          />
+
+          <h3 className={styles.subsectionTitle}>無効（写すものが無いとき）</h3>
+          <CopyButton text="" target="出力" disabled />
         </Panel>
       </Section>
 
@@ -1438,9 +1442,7 @@ export default function StorybookContent({
           caption="整形した JSON"
           kind="code"
           copyButton={
-            <Button onClick={() => copy(LONG_CODE, "code")}>
-              {copiedKey === "code" ? COPIED_LABEL : "コピー"}
-            </Button>
+            <CopyButton text={LONG_CODE} target="整形した JSON" align="end" />
           }
         >
           <pre>
@@ -1454,9 +1456,11 @@ export default function StorybookContent({
         <ResultBox
           caption="Base64 に変えた文"
           copyButton={
-            <Button onClick={() => copy(BASE64_SAMPLE, "base64")}>
-              {copiedKey === "base64" ? COPIED_LABEL : "コピー"}
-            </Button>
+            <CopyButton
+              text={BASE64_SAMPLE}
+              target="Base64 に変えた文"
+              align="end"
+            />
           }
         >
           <p className={styles.resultText}>{BASE64_SAMPLE}</p>

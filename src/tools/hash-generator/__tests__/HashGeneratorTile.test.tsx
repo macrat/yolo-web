@@ -169,9 +169,7 @@ describe("HashGeneratorTile", () => {
       fireEvent.click(sha256CopyButton);
     });
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /コピー済み/ }),
-      ).toBeInTheDocument();
+      expect(sha256CopyButton).toHaveTextContent("コピー済み");
     });
   });
 

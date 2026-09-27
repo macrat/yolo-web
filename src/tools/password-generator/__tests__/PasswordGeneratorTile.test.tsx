@@ -261,9 +261,7 @@ describe("コピー機能", () => {
       fireEvent.click(copyBtn);
     });
 
-    expect(
-      screen.getByRole("button", { name: /コピー済み/ }),
-    ).toBeInTheDocument();
+    expect(copyBtn).toHaveTextContent("コピー済み");
 
     act(() => {
       vi.advanceTimersByTime(2000);
@@ -311,7 +309,7 @@ describe("コピー機能", () => {
     await act(async () => {
       fireEvent.click(copyBtn);
     });
-    expect(copyBtn).toHaveAccessibleName("パスワードをコピー失敗");
+    expect(copyBtn).toHaveTextContent("コピー失敗");
   });
 });
 

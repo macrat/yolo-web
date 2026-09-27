@@ -265,9 +265,7 @@ describe("コピー文言変化", () => {
     await act(async () => {
       fireEvent.click(hexCopyButtons[0]);
     });
-    expect(
-      screen.getByRole("button", { name: /コピー済み/ }),
-    ).toBeInTheDocument();
+    expect(hexCopyButtons[0]).toHaveTextContent("コピー済み");
   });
 });
 

@@ -384,9 +384,7 @@ describe("V-21: コピー後 「コピー済み」に遷移する", () => {
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "変換結果をコピー済み" }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 });

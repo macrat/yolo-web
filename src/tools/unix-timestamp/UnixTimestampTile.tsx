@@ -262,6 +262,7 @@ export default function UnixTimestampTile({
                 text={tsResult.localString}
                 target="ローカル時刻"
                 align="end"
+                className={styles.resultCopy}
                 disabled={!tsResult.localString}
               />
             </div>
@@ -272,6 +273,7 @@ export default function UnixTimestampTile({
                 text={tsResult.utcString}
                 target="UTC"
                 align="end"
+                className={styles.resultCopy}
                 disabled={!tsResult.utcString}
               />
             </div>
@@ -282,6 +284,7 @@ export default function UnixTimestampTile({
                 text={tsResult.isoString}
                 target="ISO 8601"
                 align="end"
+                className={styles.resultCopy}
                 disabled={!tsResult.isoString}
               />
             </div>
@@ -292,6 +295,7 @@ export default function UnixTimestampTile({
                 text={String(tsResult.seconds)}
                 target="秒"
                 align="end"
+                className={styles.resultCopy}
                 disabled={tsResult.seconds === undefined}
               />
             </div>
@@ -304,6 +308,7 @@ export default function UnixTimestampTile({
                 text={String(tsResult.milliseconds)}
                 target="ミリ秒"
                 align="end"
+                className={styles.resultCopy}
                 disabled={tsResult.milliseconds === undefined}
               />
             </div>
@@ -432,6 +437,7 @@ export default function UnixTimestampTile({
                 text={String(dateResult.seconds)}
                 target="秒"
                 align="end"
+                className={styles.resultCopy}
                 disabled={dateResult.seconds === undefined}
               />
             </div>
@@ -444,6 +450,7 @@ export default function UnixTimestampTile({
                 text={String(dateResult.milliseconds)}
                 target="ミリ秒"
                 align="end"
+                className={styles.resultCopy}
                 disabled={dateResult.milliseconds === undefined}
               />
             </div>

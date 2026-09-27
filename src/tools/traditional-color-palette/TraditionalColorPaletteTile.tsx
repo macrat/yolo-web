@@ -241,6 +241,7 @@ export default function TraditionalColorPaletteTile({
             text={hexValue}
             target={`${color.name}のHEX`}
             align="end"
+            className={styles.colorCodeCopy}
           />
         </div>
 
@@ -252,6 +253,7 @@ export default function TraditionalColorPaletteTile({
             text={rgbValue}
             target={`${color.name}のRGB`}
             align="end"
+            className={styles.colorCodeCopy}
           />
         </div>
 
@@ -263,6 +265,7 @@ export default function TraditionalColorPaletteTile({
             text={hslValue}
             target={`${color.name}のHSL`}
             align="end"
+            className={styles.colorCodeCopy}
           />
         </div>
       </div>

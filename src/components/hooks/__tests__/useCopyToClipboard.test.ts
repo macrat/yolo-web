@@ -2,8 +2,6 @@ import { describe, expect, test, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import {
   useCopyToClipboard,
-  COPIED_LABEL,
-  COPY_FAILED_LABEL,
   DEFAULT_RESET_DELAY_MS,
 } from "../useCopyToClipboard";
 
@@ -51,6 +49,22 @@ describe("useCopyToClipboard", () => {
     });
 
     expect(mockWriteText).toHaveBeenCalledWith("テストテキスト");
+  });
+
+  test("copy は写せたかを返す", async () => {
+    const { result } = renderHook(() => useCopyToClipboard());
+    let copied: boolean | undefined;
+    await act(async () => {
+      copied = await result.current.copy("hello");
+    });
+    expect(copied).toBe(true);
+
+    mockWriteText.mockRejectedValueOnce(new Error("Clipboard unavailable"));
+    stubExecCommand(false);
+    await act(async () => {
+      copied = await result.current.copy("hello");
+    });
+    expect(copied).toBe(false);
   });
 
   test("key 省略時: copy 後に copiedKey が true になる（単一ターゲット=パターンA）", async () => {
@@ -250,14 +264,6 @@ describe("useCopyToClipboard", () => {
 });
 
 describe("定数エクスポート", () => {
-  test("COPIED_LABEL が文字列 'コピーしました' である", () => {
-    expect(COPIED_LABEL).toBe("コピーしました");
-  });
-
-  test("COPY_FAILED_LABEL が文字列 'コピーできませんでした' である", () => {
-    expect(COPY_FAILED_LABEL).toBe("コピーできませんでした");
-  });
-
   test("DEFAULT_RESET_DELAY_MS が 2000 である", () => {
     expect(DEFAULT_RESET_DELAY_MS).toBe(2000);
   });

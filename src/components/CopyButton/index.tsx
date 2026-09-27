@@ -1,12 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Button from "@/components/Button";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-  COPY_FAILED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import { useCopyToClipboard } from "@/components/hooks/useCopyToClipboard";
 import styles from "./CopyButton.module.css";
 
 /** ボタンの面に出す字。押す前・写した・写せなかった。 */
@@ -17,6 +13,13 @@ export const COPY_FACES = {
 } as const;
 
 type CopyState = keyof typeof COPY_FACES;
+
+/** 押したあとに読み上げで言う文。何を写したかを添えて言う。 */
+function announcementFor(target: string, copied: boolean): string {
+  return copied
+    ? `${target}をコピーしました`
+    : `${target}をコピーできませんでした`;
+}
 
 const COPY_STATES: readonly CopyState[] = ["idle", "copied", "failed"];
 
@@ -54,10 +57,15 @@ const ALIGN_CLASSES: Record<CopyButtonAlign, string | undefined> = {
 
 /**
  * 結果を写すコピーのボタン（DESIGN.md §6・§8）。押すと面の字が「コピー済み」に替わり、写せなかったときは次に
- * 押すまで「コピー失敗」を出す。読み上げには、何を写せたか・写せなかったかを文で知らせる。
+ * 押すまで「コピー失敗」を出す。
  *
  * 面の字が替わってもボタンのまわりが動かないよう、ボタンを置く場所は、どの面の字も入る大きさをいつも取って
  * おく。ボタンそのものは、いま出している字の大きさで、押せる範囲とリングが字に沿う。
+ *
+ * 読み上げに知らせる経路は、ライブリージョンの1つだけにする。ボタンの名前は「HEXをコピー」のまま変えない。
+ * フォーカスのあるボタンの名前が変わると、それも読み上げられ、同じことを2度聞くからである。名前は見える字の
+ * 「コピー」をいつも含み、面に付く「済み」「失敗」はボタンの状態で、それはライブリージョンが文で言う。
+ * 知らせは押すたびに要素ごと入れ直し、同じ文が続いても読まれる。
  */
 export default function CopyButton({
   text,
@@ -69,8 +77,8 @@ export default function CopyButton({
   className,
 }: CopyButtonProps) {
   const { copy, copiedKey, failedKey } = useCopyToClipboard();
+  const [announcement, setAnnouncement] = useState({ id: 0, message: "" });
   const state: CopyState = copiedKey ? "copied" : failedKey ? "failed" : "idle";
-  const faceNamesTarget = showTarget && state === "idle";
   // 何を写すかも出す面は、並びに収まらないとき「を」の後ろで折れ、それでも収まらない何を写すかの名前は、
   // その中で折れる。
   const renderFace = (faceState: CopyState): ReactNode =>
@@ -83,11 +91,14 @@ export default function CopyButton({
     ) : (
       COPY_FACES[faceState]
     );
-  const announcement = copiedKey
-    ? `${target}を${COPIED_LABEL}`
-    : failedKey
-      ? `${target}を${COPY_FAILED_LABEL}`
-      : "";
+
+  async function handleClick(): Promise<void> {
+    const copied = await copy(text);
+    setAnnouncement((previous) => ({
+      id: previous.id + 1,
+      message: announcementFor(target, copied),
+    }));
+  }
 
   const classes = [styles.copy, ALIGN_CLASSES[align], className]
     .filter(Boolean)
@@ -99,13 +110,9 @@ export default function CopyButton({
         variant={variant}
         className={styles.button}
         disabled={disabled}
-        onClick={() => void copy(text)}
+        onClick={() => void handleClick()}
+        aria-label={`${target}を${COPY_FACES.idle}`}
       >
-        {/* 名前は、何を写すかを面の字に添えたもの（「HEXをコピー」「HEXをコピー済み」）。見える字がいつも
-         * 名前に入る。 */}
-        {!faceNamesTarget && (
-          <span className="visually-hidden">{target}を</span>
-        )}
         <span className={styles.face}>{renderFace(state)}</span>
       </Button>
       {COPY_STATES.map((faceState) => (
@@ -121,8 +128,8 @@ export default function CopyButton({
           {renderFace(faceState)}
         </span>
       ))}
-      <span aria-live="polite" aria-atomic="true" className="visually-hidden">
-        {announcement}
+      <span aria-live="polite" className="visually-hidden">
+        <span key={announcement.id}>{announcement.message}</span>
       </span>
     </span>
   );

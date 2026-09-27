@@ -302,9 +302,7 @@ describe("V-8: コピー動作", () => {
       fireEvent.click(copyBtn);
     });
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "置換結果をコピー済み" }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 

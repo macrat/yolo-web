@@ -42,6 +42,11 @@ function liveRegion(container: HTMLElement): HTMLElement {
   return region;
 }
 
+/** 知らせの文を入れた要素。押すたびに入れ直される。 */
+function announcementNode(container: HTMLElement): Element | null {
+  return liveRegion(container).firstElementChild;
+}
+
 describe("CopyButton", () => {
   test("押す前は「コピー」で、名前は何を写すかを言う。読み上げの知らせは空", () => {
     const { container } = render(<CopyButton text="#ee827c" target="HEX" />);
@@ -50,21 +55,43 @@ describe("CopyButton", () => {
     expect(liveRegion(container)).toHaveTextContent(/^$/);
   });
 
-  test("写せたら面が「コピー済み」になり、何を写したかを読み上げに知らせ、しばらくして戻る", async () => {
+  test("写せたら面が「コピー済み」になり、何を写したかを知らせ、しばらくして面が戻る", async () => {
     const { container } = render(<CopyButton text="#ee827c" target="HEX" />);
     const button = screen.getByRole("button", { name: "HEXをコピー" });
 
     await press(button);
 
     expect(writeText).toHaveBeenCalledWith("#ee827c");
-    expect(button).toHaveAccessibleName("HEXをコピー済み");
+    expect(button).toHaveTextContent(COPY_FACES.copied);
     expect(liveRegion(container)).toHaveTextContent("HEXをコピーしました");
 
     act(() => {
       vi.advanceTimersByTime(DEFAULT_RESET_DELAY_MS);
     });
+    expect(button).toHaveTextContent(COPY_FACES.idle);
+  });
+
+  test("面の字が替わってもボタンの名前は変えず、知らせはライブリージョンだけが言う", async () => {
+    render(<CopyButton text="#ee827c" target="HEX" />);
+    const button = screen.getByRole("button", { name: "HEXをコピー" });
+
+    await press(button);
+
+    expect(button).toHaveTextContent(COPY_FACES.copied);
     expect(button).toHaveAccessibleName("HEXをコピー");
-    expect(liveRegion(container)).toHaveTextContent(/^$/);
+  });
+
+  test("「コピー済み」のあいだに押し直しても、知らせを入れ直して読ませる", async () => {
+    const { container } = render(<CopyButton text="#ee827c" target="HEX" />);
+    const button = screen.getByRole("button", { name: "HEXをコピー" });
+
+    await press(button);
+    const first = announcementNode(container);
+    await press(button);
+    const second = announcementNode(container);
+
+    expect(second).toHaveTextContent("HEXをコピーしました");
+    expect(second).not.toBe(first);
   });
 
   test("写せなかったら面が「コピー失敗」になり、写せなかったことを知らせ、次に押すまで残す", async () => {
@@ -74,7 +101,7 @@ describe("CopyButton", () => {
 
     await press(button);
 
-    expect(button).toHaveAccessibleName("HEXをコピー失敗");
+    expect(button).toHaveTextContent(COPY_FACES.failed);
     expect(liveRegion(container)).toHaveTextContent(
       "HEXをコピーできませんでした",
     );
@@ -82,11 +109,11 @@ describe("CopyButton", () => {
     act(() => {
       vi.advanceTimersByTime(DEFAULT_RESET_DELAY_MS * 3);
     });
-    expect(button).toHaveAccessibleName("HEXをコピー失敗");
+    expect(button).toHaveTextContent(COPY_FACES.failed);
 
     writeText.mockResolvedValue(undefined);
     await press(button);
-    expect(button).toHaveAccessibleName("HEXをコピー済み");
+    expect(button).toHaveTextContent(COPY_FACES.copied);
     expect(liveRegion(container)).toHaveTextContent("HEXをコピーしました");
   });
 
@@ -104,7 +131,7 @@ describe("CopyButton", () => {
     await press(button);
 
     expect(execCommand).toHaveBeenCalledWith("copy");
-    expect(button).toHaveAccessibleName("HEXをコピー済み");
+    expect(button).toHaveTextContent(COPY_FACES.copied);
   });
 
   test("showTarget のボタンは、押す前の面で何を写すかを言い、押したあとは短い面になる", async () => {
@@ -114,7 +141,7 @@ describe("CopyButton", () => {
 
     await press(button);
 
-    expect(button).toHaveAccessibleName("メール全文をコピー済み");
+    expect(button).toHaveTextContent(/^コピー済み$/);
   });
 
   test("面の字が替わっても大きさが変わらないよう、どの面の字も見えない箱で取っておく", () => {

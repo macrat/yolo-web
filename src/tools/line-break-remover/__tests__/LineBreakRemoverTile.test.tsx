@@ -339,9 +339,7 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
       fireEvent.click(copyButton);
     });
 
-    expect(
-      screen.getByRole("button", { name: "変換結果をコピー済み" }),
-    ).toBeInTheDocument();
+    expect(copyButton).toHaveTextContent("コピー済み");
   });
 });
 

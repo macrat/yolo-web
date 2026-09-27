@@ -3,12 +3,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { copyText } from "@/lib/clipboard";
 
-/** 写せたことを知らせる文。 */
-export const COPIED_LABEL = "コピーしました";
-
-/** どの写し方でも写せなかったことを知らせる文。 */
-export const COPY_FAILED_LABEL = "コピーできませんでした";
-
 /** 写せたことを出しておく既定のミリ秒数。options.resetDelay で替えられる。 */
 export const DEFAULT_RESET_DELAY_MS = 2000;
 
@@ -27,11 +21,11 @@ export interface UseCopyToClipboardOptions {
 
 export interface UseCopyToClipboardReturn {
   /**
-   * 文をクリップボードに写す。
+   * 文をクリップボードに写し、写せたかを返す。
    * @param text 写す文
    * @param key 写したものを見分けるキー。省くと `true`。
    */
-  copy: (text: string, key?: string | number) => Promise<void>;
+  copy: (text: string, key?: string | number) => Promise<boolean>;
   /** 直近に写せたもののキー。写してから resetDelay ミリ秒たつと null に戻る。 */
   copiedKey: CopiedKey;
   /** 直近に写せなかったもののキー。読み終える前に消さないよう、次に写そうとするまで残る。 */
@@ -65,7 +59,7 @@ export function useCopyToClipboard(
   }, []);
 
   const copy = useCallback(
-    async (text: string, key?: string | number): Promise<void> => {
+    async (text: string, key?: string | number): Promise<boolean> => {
       const resolvedKey: CopiedKey = key !== undefined ? key : true;
       // 前回のタイマーをキャンセルしてから、結果に応じて知らせを出し直す
       if (timerRef.current !== null) {
@@ -77,7 +71,7 @@ export function useCopyToClipboard(
       if (!(await copyText(text))) {
         setCopiedKey(null);
         setFailedKey(resolvedKey);
-        return;
+        return false;
       }
 
       setCopiedKey(resolvedKey);
@@ -85,6 +79,7 @@ export function useCopyToClipboard(
         setCopiedKey(null);
         timerRef.current = null;
       }, resetDelay);
+      return true;
     },
     [resetDelay],
   );

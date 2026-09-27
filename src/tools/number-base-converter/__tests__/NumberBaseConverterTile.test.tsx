@@ -146,9 +146,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     fireEvent.click(copyButtons[0]);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /をコピー済み$/ }),
-      ).toBeInTheDocument();
+      expect(copyButtons[0]).toHaveTextContent("コピー済み");
     });
   });
 

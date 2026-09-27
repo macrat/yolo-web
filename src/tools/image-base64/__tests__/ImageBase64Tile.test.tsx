@@ -296,9 +296,7 @@ describe("ImageBase64Tile", () => {
       fireEvent.click(firstCopyBtn);
     });
 
-    expect(
-      screen.getByRole("button", { name: "Base64をコピー済み" }),
-    ).toBeInTheDocument();
+    expect(firstCopyBtn).toHaveTextContent("コピー済み");
   });
 
   // -------------------------------------------------------

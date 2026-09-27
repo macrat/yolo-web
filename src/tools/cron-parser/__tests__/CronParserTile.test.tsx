@@ -343,9 +343,7 @@ describe("CronParserTile - コピーボタン", () => {
       fireEvent.click(copyBtn);
     });
     await waitFor(() => {
-      expect(
-        screen.queryByRole("button", { name: /コピー済み/i }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 
