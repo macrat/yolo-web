@@ -26,7 +26,7 @@ export default function Base64Page() {
         }}
       />
       <ToolErrorBoundary>
-        <Base64Tile variant="full" />
+        <Base64Tile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
