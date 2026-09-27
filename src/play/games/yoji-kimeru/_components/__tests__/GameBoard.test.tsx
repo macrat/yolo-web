@@ -16,24 +16,52 @@ const guesses: YojiGuessFeedback[] = [
 
 describe("GameBoard", () => {
   test("shows only the next row before the first guess", () => {
-    render(<GameBoard guesses={[]} showNextRow={true} addedRow={null} />);
+    render(
+      <GameBoard
+        guesses={[]}
+        pendingGuess={null}
+        showNextRow={true}
+        addedRow={null}
+      />,
+    );
     expect(screen.getAllByRole("row")).toHaveLength(1);
     expect(screen.getAllByRole("cell", { name: "空欄" })).toHaveLength(4);
   });
 
   test("shows the used rows and the next row while playing", () => {
-    render(<GameBoard guesses={guesses} showNextRow={true} addedRow={null} />);
+    render(
+      <GameBoard
+        guesses={guesses}
+        pendingGuess={null}
+        showNextRow={true}
+        addedRow={null}
+      />,
+    );
     expect(screen.getAllByRole("row")).toHaveLength(3);
   });
 
   test("shows only the used rows after the game ends", () => {
-    render(<GameBoard guesses={guesses} showNextRow={false} addedRow={null} />);
+    render(
+      <GameBoard
+        guesses={guesses}
+        pendingGuess={null}
+        showNextRow={false}
+        addedRow={null}
+      />,
+    );
     expect(screen.getAllByRole("row")).toHaveLength(2);
     expect(screen.queryByRole("cell", { name: "空欄" })).toBeNull();
   });
 
   test("puts the legend's mark under each guessed character", () => {
-    render(<GameBoard guesses={guesses} showNextRow={false} addedRow={null} />);
+    render(
+      <GameBoard
+        guesses={guesses}
+        pendingGuess={null}
+        showNextRow={false}
+        addedRow={null}
+      />,
+    );
     const secondRow = screen.getAllByRole("row")[1];
     const cells = within(secondRow).getAllByRole("cell");
     expect(cells.map((cell) => cell.textContent)).toEqual([
@@ -45,7 +73,14 @@ describe("GameBoard", () => {
   });
 
   test("reads each cell with the character and the legend's words", () => {
-    render(<GameBoard guesses={guesses} showNextRow={false} addedRow={null} />);
+    render(
+      <GameBoard
+        guesses={guesses}
+        pendingGuess={null}
+        showNextRow={false}
+        addedRow={null}
+      />,
+    );
     expect(
       screen.getByRole("cell", { name: "一: 正しい位置" }),
     ).toBeInTheDocument();
@@ -58,9 +93,31 @@ describe("GameBoard", () => {
   });
 
   test("gives the appearing motion only to the row the guess just added", () => {
-    render(<GameBoard guesses={guesses} showNextRow={true} addedRow={1} />);
+    render(
+      <GameBoard
+        guesses={guesses}
+        pendingGuess={null}
+        showNextRow={true}
+        addedRow={1}
+      />,
+    );
     const rows = screen.getAllByRole("row");
     expect(rows[0].className).not.toMatch(/rowAppears/);
     expect(rows[1].className).toMatch(/rowAppears/);
+  });
+  test("keeps the sent guess's row before its judgment returns", () => {
+    render(
+      <GameBoard
+        guesses={guesses}
+        pendingGuess="四面楚歌"
+        showNextRow={true}
+        addedRow={null}
+      />,
+    );
+    const rows = screen.getAllByRole("row");
+    expect(rows).toHaveLength(4);
+    expect(
+      within(rows[2]).getByRole("cell", { name: "四: 答え合わせ中" }),
+    ).toBeInTheDocument();
   });
 });

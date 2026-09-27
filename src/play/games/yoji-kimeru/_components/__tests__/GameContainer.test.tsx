@@ -8,9 +8,15 @@ import {
 } from "@testing-library/react";
 import GameContainer from "@/play/games/yoji-kimeru/_components/GameContainer";
 import type { EvaluateResponse } from "@/play/games/yoji-kimeru/_lib/types";
+import { trackContentEnd } from "@/lib/analytics";
 
 vi.mock("@/play/games/shared/_lib/revealControl", () => ({
   revealControl: vi.fn(),
+}));
+
+vi.mock("@/lib/analytics", () => ({
+  trackContentEnd: vi.fn(),
+  trackShare: vi.fn(),
 }));
 
 const puzzle = {
@@ -109,6 +115,45 @@ describe("GameContainer", () => {
     expect(screen.getByRole("cell", { name: "石: 正しい位置" })).toBeVisible();
   });
 
+  test("takes the sent guess's row at once, before the judgment returns", async () => {
+    let answerJudgment: (value: Response) => void = () => {};
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (url.startsWith("/api/yoji-kimeru/puzzle")) {
+          return new Response(JSON.stringify(puzzle));
+        }
+        return new Promise<Response>((resolve) => {
+          answerJudgment = resolve;
+        });
+      }),
+    );
+    render(<GameContainer crossCategoryItems={[]} />);
+    await screen.findByText(/#42/);
+
+    guess("花石風一");
+
+    expect(
+      await screen.findByRole("cell", { name: "花: 答え合わせ中" }),
+    ).toBeInTheDocument();
+    expect(boardRows()).toHaveLength(2);
+    answerJudgment(
+      new Response(
+        JSON.stringify({
+          feedback: {
+            guess: "花石風一",
+            charFeedbacks: ["absent", "correct", "absent", "present"],
+          },
+          isCorrect: false,
+        }),
+      ),
+    );
+    expect(
+      await screen.findByRole("cell", { name: "花: 含まれない" }),
+    ).toBeInTheDocument();
+    expect(boardRows()).toHaveLength(2);
+  });
+
   test("puts the result box where the field was after the last guess", async () => {
     mockFetch((g) => ({
       feedback: {
@@ -129,6 +174,8 @@ describe("GameContainer", () => {
     // 解き終えたあとは、使った行だけを見せる。
     expect(boardRows()).toHaveLength(1);
     await waitFor(() => expect(document.activeElement).toBe(box));
+    expect(trackContentEnd).toHaveBeenCalledTimes(1);
+    expect(trackContentEnd).toHaveBeenCalledWith("yoji-kimeru", "game", true);
   });
 
   test("restores a finished game without the appearing motion or focus", async () => {
@@ -163,5 +210,7 @@ describe("GameContainer", () => {
     const box = await screen.findByRole("region", { name: "一石二鳥" });
     expect(box.className).not.toMatch(/appears/);
     expect(document.activeElement).not.toBe(box);
+    // 解き終えた回を開き直しただけでは、遊び終えたことを送らない。
+    expect(trackContentEnd).not.toHaveBeenCalled();
   });
 });

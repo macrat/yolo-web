@@ -168,6 +168,8 @@ export default function GameContainer({
   );
   /** 来訪者の推測でいま盤に加わった行。その行の判定だけが現れる動きを持つ。 */
   const [addedRow, setAddedRow] = useState<number | null>(null);
+  /** 送って答え合わせを待っている推測。判定が返るまで、盤にその行の場所を取っておく。 */
+  const [pendingGuess, setPendingGuess] = useState<string | null>(null);
   /** 結果が来訪者の最後の推測に応えて現れたか。開き直したときの結果は動かさない。 */
   const [resultAppears, setResultAppears] = useState(false);
 
@@ -247,21 +249,6 @@ export default function GameContainer({
     [difficulty, initializeGame],
   );
 
-  // 解き終えたときに一度だけ、遊び終えたことを計測に送る。
-  const prevStatusRef = useRef(gameState.status);
-  const hasRecordedPlayRef = useRef(false);
-  useEffect(() => {
-    if (
-      !hasRecordedPlayRef.current &&
-      prevStatusRef.current === "playing" &&
-      (gameState.status === "won" || gameState.status === "lost")
-    ) {
-      trackContentEnd("yoji-kimeru", "game", gameState.status === "won");
-      hasRecordedPlayRef.current = true;
-    }
-    prevStatusRef.current = gameState.status;
-  }, [gameState.status]);
-
   // 記録を戻した行が描かれたら、サーバーの HTML のスクリプトが取っておいた高さを外す。描いたあと、ほかの
   // 難易度に替えたときに、前の回の行の高さが残らない。
   useLayoutEffect(() => {
@@ -270,7 +257,8 @@ export default function GameContainer({
     gameRef.current?.style.removeProperty("--hint-lines");
   }, [loading]);
 
-  const guessCount = gameState.guesses.length;
+  // 送った推測も、判定を待たずに1回として数える（盤の行・ヒント・残りの回数）。
+  const guessCount = gameState.guesses.length + (pendingGuess === null ? 0 : 1);
   useLayoutEffect(() => {
     if (!revealFieldRef.current) return;
     revealFieldRef.current = false;
@@ -299,6 +287,10 @@ export default function GameContainer({
       }
 
       setSubmitting(true);
+      // 判定を待たずに行と入力欄の位置を決める。判定が遅く返っても、送った操作の直後に盤が伸び、判定が付く
+      // ときには盤の下が動かない。
+      setPendingGuess(input);
+      revealFieldRef.current = true;
       try {
         const guessNumber = gameState.guesses.length + 1;
         const response = await fetchEvaluate(
@@ -334,11 +326,12 @@ export default function GameContainer({
         if (newStatus === "playing") {
           // 結果を出さない推測では、判定が現れる動きがこの操作への応えになる。
           setAddedRow(newGuesses.length - 1);
-          revealFieldRef.current = true;
         } else {
           // 結果が出る推測では、結果の登場だけが動く（DESIGN.md §11）。
           setAddedRow(null);
           setResultAppears(true);
+          // 遊び終えたことは、来訪者がその場で解き終えたときにだけ送る。解き終えた回を開き直したときは送らない。
+          trackContentEnd("yoji-kimeru", "game", newStatus === "won");
           const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);
           const yesterdayStr = formatDateJST(yesterday);
@@ -360,6 +353,7 @@ export default function GameContainer({
       } catch {
         return { kind: "unavailable" };
       } finally {
+        setPendingGuess(null);
         setSubmitting(false);
       }
     },
@@ -387,7 +381,8 @@ export default function GameContainer({
         <HintBar guessCount={guessCount} hint={loading ? null : puzzleData} />
         <GameBoard
           guesses={gameState.guesses}
-          showNextRow={playing}
+          pendingGuess={pendingGuess}
+          showNextRow={playing && guessCount < MAX_GUESSES}
           addedRow={addedRow}
         />
         {answer && !playing ? (
