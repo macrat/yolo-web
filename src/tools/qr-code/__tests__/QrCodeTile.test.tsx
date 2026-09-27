@@ -134,12 +134,21 @@ describe("QrCodeTile", () => {
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent(
-      "文が長すぎてQRコードに入りません。文を短くするか、エラー訂正レベルを下げてください。",
+      "文が長すぎてQRコードに入りません。このレベルで入るのは、半角英数なら2,331字、日本語なら777字までです。文を短くするか、エラー訂正レベルを下げてください。",
     );
     const textarea = screen.getByRole("textbox");
     expect(textarea).toHaveAttribute("aria-invalid", "true");
     expect(textarea).toHaveAccessibleDescription(alert.textContent!);
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
+  });
+
+  test("いちばん低いレベル（L）で長すぎるときは、レベルを下げるよう言わず、そのレベルで入る数を言う", async () => {
+    render(<QrCodeTile />);
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "L" } });
+    await type("TOO_LONG");
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "文が長すぎてQRコードに入りません。このレベルで入るのは、半角英数なら2,953字、日本語なら984字までです。文を短くしてください。",
+    );
   });
 
   test("画像を描けないときも、何が起きたかを字で言う", async () => {

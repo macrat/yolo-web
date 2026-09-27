@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
-import { generateQrCode } from "../logic";
+import qrcode from "qrcode-generator";
+import { generateQrCode, toUtf8Bytes } from "../logic";
 
 // jsdom はキャンバスを描けないので、描く先を差し替え、PNG を求めていることと描いた大きさを確かめる。
 function mockCanvas() {
@@ -64,6 +65,26 @@ describe("generateQrCode", () => {
     // 字のコードの下位8ビットだけを取ると5バイトになり、1型（21モジュール）に収まってしまう。
     const result = generateQrCode("こんにちは");
     expect(result).toMatchObject({ success: true, size: displaySize(25) });
+  });
+
+  test("ライブラリが文を UTF-8 のバイトの並びにする", () => {
+    expect(qrcode.stringToBytes).toBe(toUtf8Bytes);
+  });
+
+  test("ASCII は1字1バイトのまま", () => {
+    expect(toUtf8Bytes("QR-1 a~")).toEqual([
+      0x51, 0x52, 0x2d, 0x31, 0x20, 0x61, 0x7e,
+    ]);
+  });
+
+  test("日本語は1字3バイト", () => {
+    // あ U+3042 → E3 81 82、漢 U+6F22 → E6 BC A2
+    expect(toUtf8Bytes("あ漢")).toEqual([0xe3, 0x81, 0x82, 0xe6, 0xbc, 0xa2]);
+  });
+
+  test("サロゲートペアの絵文字は1字4バイト", () => {
+    // 🍣 U+1F363 → F0 9F 8D A3
+    expect(toUtf8Bytes("🍣")).toEqual([0xf0, 0x9f, 0x8d, 0xa3]);
   });
 
   test("容量を超える文は tooLong を返す", () => {

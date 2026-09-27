@@ -11,6 +11,7 @@ import {
   type ErrorCorrectionLevel,
   type QrCodeFailure,
 } from "./logic";
+import { maxChars } from "./capacity";
 import styles from "./QrCodeTile.module.css";
 
 /** 打ち終えてからQRコードを作るまでの間（ms）。打つたびに作り直して画像がちらつかないよう、手が止まるのを待つ。 */
@@ -19,19 +20,32 @@ const DEBOUNCE_MS = 300;
 /** 代替テキストに入れる文の長さの上限（字）。長い文は、ここで切って「…」を添える。 */
 const ALT_TEXT_LIMIT = 40;
 
-const FAILURE_MESSAGES: Record<QrCodeFailure, string> = {
-  tooLong:
-    "文が長すぎてQRコードに入りません。文を短くするか、エラー訂正レベルを下げてください。",
-  failed:
-    "QRコードの画像を描けませんでした。ページを読み込み直してから、もう一度試してください。",
-};
-
 const LEVELS: { value: ErrorCorrectionLevel; label: string }[] = [
   { value: "L", label: "低（L・7%）" },
   { value: "M", label: "中（M・15%）" },
   { value: "Q", label: "高（Q・25%）" },
   { value: "H", label: "最高（H・30%）" },
 ];
+
+/** いちばん多く入るレベル。これより下げて入る量を増やすことはできない。 */
+const LOWEST_LEVEL: ErrorCorrectionLevel = "L";
+
+/** 作れなかったことと、どう直すかを言う文。長すぎるときは、選んでいるレベルで入る字の数を添える。 */
+function failureMessage(
+  failure: QrCodeFailure,
+  level: ErrorCorrectionLevel,
+): string {
+  if (failure === "failed") {
+    return "QRコードの画像を描けませんでした。ページを読み込み直してから、もう一度試してください。";
+  }
+  const { ascii, japanese } = maxChars(level);
+  const limit = `このレベルで入るのは、半角英数なら${ascii.toLocaleString("ja-JP")}字、日本語なら${japanese.toLocaleString("ja-JP")}字までです。`;
+  const fix =
+    level === LOWEST_LEVEL
+      ? "文を短くしてください。"
+      : "文を短くするか、エラー訂正レベルを下げてください。";
+  return `文が長すぎてQRコードに入りません。${limit}${fix}`;
+}
 
 /** 作ったQRコード。text は、その画像が符号にした文。 */
 interface QrImage {
@@ -92,7 +106,7 @@ export default function QrCodeTile({ className }: QrCodeTileProps = {}) {
     <div className={[styles.tile, className].filter(Boolean).join(" ")}>
       <Field
         label="QRコードにする文字やURL"
-        error={failure ? FAILURE_MESSAGES[failure] : undefined}
+        error={failure ? failureMessage(failure, level) : undefined}
       >
         {(control) => (
           <Textarea

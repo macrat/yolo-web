@@ -20,8 +20,9 @@ export type QrCodeResult =
   | { success: false; error: QrCodeFailure };
 
 /**
- * 画面に見せる1モジュールの一辺の CSS px。短い URL の QR が 150px ほどになり、画面から読み取れる大きさで、
- * 保存のボタンと一緒に1画面に収まる。
+ * 画面に見せる1モジュールの一辺の CSS px。短い URL の QR（29モジュール）で一辺 148px、96dpi の画面でおよそ
+ * 39mm 四方になり、PC の画面に出した QR をスマートフォンのカメラで読める。等倍の画面でも1モジュールが整数の
+ * 画素に乗る。
  */
 const CELL_SIZE = 4;
 /**
@@ -32,10 +33,16 @@ const PNG_SCALE = 2;
 /** 周りの白い余白（クワイエットゾーン）のモジュールの数。読み取りに要る規格の最小の 4。 */
 const MARGIN_CELLS = 4;
 
+const utf8 = new TextEncoder();
+
+/** 文を UTF-8 のバイトの並びにする。 */
+export function toUtf8Bytes(text: string): number[] {
+  return Array.from(utf8.encode(text));
+}
+
 // 文を UTF-8 のバイトにして符号にする。ライブラリの既定は字のコードの下位8ビットだけを取るので、
 // 日本語の文が別の字の並びになり、読み取ると化ける。
-const utf8 = new TextEncoder();
-qrcode.stringToBytes = (s) => Array.from(utf8.encode(s));
+qrcode.stringToBytes = toUtf8Bytes;
 
 /**
  * QR を PNG に描く。renderTo2dContext は余白を持たないので、余白ぶん大きいキャンバスを白で塗り、
