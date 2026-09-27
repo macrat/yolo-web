@@ -13,6 +13,13 @@ export interface KanjiEntry {
 /** Difficulty level for the game. */
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 
+/** 難易度の名前。難易度を選ぶ組・入力欄のラベル・結果・共有の文が同じ語で言う。 */
+export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  beginner: "初級",
+  intermediate: "中級",
+  advanced: "上級",
+};
+
 /** Maximum grade included for each difficulty level. */
 export const DIFFICULTY_GRADE_MAX: Record<Difficulty, number> = {
   beginner: 2,

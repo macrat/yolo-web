@@ -1,6 +1,14 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { trackContentEnd } from "@/lib/analytics";
 import type {
   Difficulty,
@@ -10,7 +18,10 @@ import type {
   EvaluateResponse,
   HintsResponse,
 } from "@/play/games/kanji-kanaru/_lib/types";
-import { MAX_GUESSES } from "@/play/games/kanji-kanaru/_lib/types";
+import {
+  DIFFICULTY_LABELS,
+  MAX_GUESSES,
+} from "@/play/games/kanji-kanaru/_lib/types";
 import { formatDateJST } from "@/play/games/kanji-kanaru/_lib/daily";
 import {
   migrateToV2,
@@ -24,24 +35,24 @@ import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
-import { gameTitleRef } from "@/play/games/shared/_lib/gameTitle";
-import GameHeader from "./GameHeader";
+import { revealControl } from "@/play/games/shared/_lib/revealControl";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
 import GuessInput from "./GuessInput";
-import ResultModal from "./ResultModal";
-import StatsModal from "./StatsModal";
-import HowToPlayModal from "./HowToPlayModal";
-import styles from "./GameContainer.module.css";
+import GameResult from "./GameResult";
+import HowToPlay from "./HowToPlay";
+import DifficultySelector from "./DifficultySelector";
+import styles from "./styles/KanjiKanaru.module.css";
 
-const FIRST_VISIT_KEY = "kanji-kanaru-first-visit";
 const DIFFICULTY_KEY = "kanji-kanaru-difficulty";
+const LOADING_TEXT = "読み込んでいます";
+const INIT_FAILED_MESSAGE =
+  "問題を読み込めませんでした。時間をおいて、もう一度読み込んでください";
 
 /**
  * Load the saved difficulty from localStorage, defaulting to intermediate.
  */
 function loadDifficulty(): Difficulty {
-  if (typeof window === "undefined") return "intermediate";
   try {
     const saved = window.localStorage.getItem(DIFFICULTY_KEY);
     if (
@@ -52,7 +63,7 @@ function loadDifficulty(): Difficulty {
       return saved;
     }
   } catch {
-    // Silently fail
+    // localStorage が使えない端末では、既定の難易度で遊ぶ。
   }
   return "intermediate";
 }
@@ -61,11 +72,10 @@ function loadDifficulty(): Difficulty {
  * Save difficulty choice to localStorage.
  */
 function saveDifficulty(difficulty: Difficulty): void {
-  if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(DIFFICULTY_KEY, difficulty);
   } catch {
-    // Silently fail
+    // 保存できなくても、いまの回はそのまま遊べる。
   }
 }
 
@@ -100,14 +110,13 @@ async function fetchEvaluate(
     body: JSON.stringify({ guess, puzzleDate, difficulty, guessNumber }),
   });
   if (!res.ok) {
-    const errorBody = await res.json().catch(() => ({}));
-    throw new Error(
-      (errorBody as { error?: string }).error ??
-        `Evaluate API error: ${res.status}`,
-    );
+    throw new Error(`Evaluate API error: ${res.status}`);
   }
   return (await res.json()) as EvaluateResponse;
 }
+
+/** 推測を送ったあとに、画面をどこへ送るか。 */
+type PendingReveal = "input" | "result" | null;
 
 interface GameContainerProps {
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
@@ -115,40 +124,23 @@ interface GameContainerProps {
 }
 
 /**
- * Top-level client component that orchestrates the entire game state.
- * Fetches hints from the server API, manages guesses via the evaluate API,
- * and persists state to localStorage. The target kanji is never exposed
- * to the client until the game ends.
+ * ゲーム本体。ヒント・盤・入力欄（解き終えたら結果）・くわしい遊び方・難易度と日付を、上からこの順に置く。
+ *
+ * サーバーの HTML と読み込みのあいだも、初めての来訪者が読み込んだあとに見るのと同じ区画（空の次の行を持つ盤、
+ * 入力欄、くわしい遊び方、難易度と日付の行）を描き、読み込んだときに下のものが動かないようにする。
+ * 答えの漢字は、解き終えるまでサーバーからクライアントに渡らない。
  */
 export default function GameContainer({
   crossCategoryItems,
 }: GameContainerProps) {
-  // Run migration once on mount
-  useEffect(() => {
-    migrateToV2();
-  }, []);
-
+  const loadingTextId = useId();
   const todayStr = useMemo(() => formatDateJST(new Date()), []);
 
-  // Format the date string in Japanese for the header
-  const dateDisplayString = useMemo(() => {
-    const formatter = new Intl.DateTimeFormat("ja-JP", {
-      timeZone: "Asia/Tokyo",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    return formatter.format(new Date());
-  }, []);
-
-  const [difficulty, setDifficulty] = useState<Difficulty>(loadDifficulty);
+  const [difficulty, setDifficulty] = useState<Difficulty>("intermediate");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  // Hints data from API (separate from gameState to avoid needing targetKanji)
   const [hintsData, setHintsData] = useState<HintsResponse | null>(null);
-
   const [gameState, setGameState] = useState<GameState>({
     puzzleDate: todayStr,
     puzzleNumber: 0,
@@ -156,45 +148,41 @@ export default function GameContainer({
     guesses: [],
     status: "playing",
   });
+  const [stats, setStats] = useState<GameStats | null>(null);
+  // 推測を送った応えとして現れた行の番号と、最後の推測で解き終えたか。どちらも、開き直して戻した盤と結果には
+  // 立てない（登場の動きは操作への応えだけが持つ。DESIGN.md §11）。
+  const [appearingRow, setAppearingRow] = useState<number | undefined>();
+  const [finishedByGuess, setFinishedByGuess] = useState(false);
 
-  const [stats, setStats] = useState<GameStats>(() => loadStats(difficulty));
-  const [showResult, setShowResult] = useState(false);
-  const [showStats, setShowStats] = useState(false);
-  const [showHowToPlay, setShowHowToPlay] = useState(() => {
-    // Show HowToPlay on first visit
-    if (typeof window === "undefined") return false;
-    try {
-      const visited = window.localStorage.getItem(FIRST_VISIT_KEY);
-      if (!visited) {
-        window.localStorage.setItem(FIRST_VISIT_KEY, "1");
-        return true;
-      }
-    } catch {
-      // Silently fail if localStorage unavailable
-    }
-    return false;
-  });
+  const inputRowRef = useRef<HTMLDivElement>(null);
+  const resultBoxRef = useRef<HTMLElement>(null);
+  const pendingRevealRef = useRef<PendingReveal>(null);
 
   /**
-   * Initialize the game: fetch hints from API and restore saved state.
+   * 問題を読み込み、その難易度の今日の回を端末の記録から戻す。
    */
   const initializeGame = useCallback(
     async (diff: Difficulty) => {
       setLoading(true);
       setError(null);
+      setAppearingRow(undefined);
+      setFinishedByGuess(false);
+      setStats(loadStats(diff));
 
       try {
         const hints = await fetchHints(todayStr, diff);
-        setHintsData(hints);
-
-        // Try to restore from localStorage
         const saved = loadTodayGame(todayStr, diff);
+        let restored: GameState = {
+          puzzleDate: todayStr,
+          puzzleNumber: hints.puzzleNumber,
+          targetKanji: null,
+          guesses: [],
+          status: "playing",
+        };
         if (saved) {
-          // Restore from saved feedbacks (loadTodayGame already discards
-          // old saves without feedbacks, so saved.feedbacks is guaranteed)
           let targetKanji: KanjiEntry | null = null;
           if (saved.status === "won" || saved.status === "lost") {
-            // Re-evaluate the last guess to get targetKanji from API
+            // 答えの漢字は、最後の推測を答え合わせし直して受け取る。
             const lastResponse = await fetchEvaluate(
               saved.guesses[saved.guesses.length - 1],
               todayStr,
@@ -205,30 +193,17 @@ export default function GameContainer({
               targetKanji = lastResponse.targetKanji as KanjiEntry;
             }
           }
-
-          setGameState({
-            puzzleDate: todayStr,
-            puzzleNumber: hints.puzzleNumber,
+          restored = {
+            ...restored,
             targetKanji,
             guesses: saved.feedbacks!,
             status: saved.status,
-          });
-        } else {
-          // Fresh game
-          setGameState({
-            puzzleDate: todayStr,
-            puzzleNumber: hints.puzzleNumber,
-            targetKanji: null,
-            guesses: [],
-            status: "playing",
-          });
+          };
         }
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "\u30B2\u30FC\u30E0\u306E\u521D\u671F\u5316\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
-        );
+        setHintsData(hints);
+        setGameState(restored);
+      } catch {
+        setError(INIT_FAILED_MESSAGE);
       } finally {
         setLoading(false);
       }
@@ -236,87 +211,69 @@ export default function GameContainer({
     [todayStr],
   );
 
-  // Initialize on mount and when difficulty changes
+  // 保存した難易度は端末にしか無いので、サーバーの HTML と同じ既定の難易度で描いたあとに読んで始める。
   useEffect(() => {
-    void initializeGame(difficulty);
-  }, [difficulty, initializeGame]);
+    migrateToV2();
+    const saved = loadDifficulty();
+    setDifficulty(saved);
+    void initializeGame(saved);
+  }, [initializeGame]);
 
-  /**
-   * Handle difficulty change: save preference and re-initialize.
-   */
   const handleDifficultyChange = useCallback(
     (newDifficulty: Difficulty) => {
       if (newDifficulty === difficulty) return;
       saveDifficulty(newDifficulty);
       setDifficulty(newDifficulty);
-      setStats(loadStats(newDifficulty));
-      setShowResult(false);
+      void initializeGame(newDifficulty);
     },
-    [difficulty],
+    [difficulty, initializeGame],
   );
 
-  // Track the previous game status to detect transitions to won/lost
-  const prevStatusRef = useRef(gameState.status);
-  useEffect(() => {
-    if (prevStatusRef.current === "playing" && gameState.status !== "playing") {
-      // Delay a bit so the last feedback animation plays first
-      const timer = setTimeout(() => setShowResult(true), 600);
-      prevStatusRef.current = gameState.status;
-      return () => clearTimeout(timer);
+  // 推測を送ったあと、次の推測の入力欄か、解き終えた結果のボックスを画面に入れる。行が増えたのを描いた直後、
+  // 塗る前に送り、送りを即時にする（DESIGN.md §8・§11）。
+  useLayoutEffect(() => {
+    const pending = pendingRevealRef.current;
+    if (!pending) return;
+    pendingRevealRef.current = null;
+    if (pending === "input") {
+      if (inputRowRef.current) revealControl(inputRowRef.current);
+      return;
     }
-    prevStatusRef.current = gameState.status;
-  }, [gameState.status]);
-
-  // Track game completion (GA level_end) once when the game ends (won or lost).
-  const prevStatusForRecordRef = useRef(gameState.status);
-  const hasRecordedPlayRef = useRef(false);
-  useEffect(() => {
-    if (
-      !hasRecordedPlayRef.current &&
-      prevStatusForRecordRef.current === "playing" &&
-      (gameState.status === "won" || gameState.status === "lost")
-    ) {
-      trackContentEnd("kanji-kanaru", "game", gameState.status === "won");
-      hasRecordedPlayRef.current = true;
+    const box = resultBoxRef.current;
+    if (!box) return;
+    const viewport = window.visualViewport;
+    const top = viewport ? viewport.offsetTop : 0;
+    const bottom = viewport ? top + viewport.height : window.innerHeight;
+    const boxTop = box.getBoundingClientRect().top;
+    if (boxTop < top || boxTop >= bottom) {
+      box.scrollIntoView({ behavior: "instant", block: "start" });
     }
-    prevStatusForRecordRef.current = gameState.status;
-  }, [gameState.status]);
+    box.focus({ preventScroll: true });
+  }, [gameState.guesses.length]);
 
   /**
-   * Handle a guess submission.
-   * An invalid input is returned as "invalid" with the message to show on the
-   * field; a failed evaluation request is returned as "unavailable".
-   * Validates locally, then calls the server evaluate API.
+   * 推測を送る。入力の誤りは "invalid" と欄に出す文で、答え合わせの失敗は "unavailable" で返す。
    */
   const handleGuess = useCallback(
     async (input: string): Promise<GuessSubmitResult> => {
-      if (gameState.status !== "playing") return { kind: "accepted" };
-      if (submitting) return { kind: "accepted" };
-
-      // Validate: single character
-      if ([...input].length !== 1) {
-        return {
-          kind: "invalid",
-          message:
-            "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
-        };
+      if (gameState.status !== "playing" || submitting) {
+        return { kind: "accepted" };
       }
 
-      // Validate: is a joyo kanji (lightweight client-side check)
+      if ([...input].length !== 1) {
+        return { kind: "invalid", message: "漢字を1文字入力してください" };
+      }
       if (!JOYO_KANJI_SET.has(input)) {
         return {
           kind: "invalid",
-          message:
-            "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u5E38\u7528\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+          message: "常用漢字ではありません。常用漢字を1文字入力してください",
         };
       }
-
-      // Validate: not a duplicate
       if (gameState.guesses.some((g) => g.guess === input)) {
         return {
           kind: "invalid",
           message:
-            "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F\u3002\u307E\u3060\u5165\u529B\u3057\u3066\u3044\u306A\u3044\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+            "この漢字はすでに入力しました。まだ入力していない漢字を1文字入力してください",
         };
       }
 
@@ -331,30 +288,22 @@ export default function GameContainer({
         );
 
         const newGuesses = [...gameState.guesses, response.feedback];
-
-        // Determine new status from API response
-        const isLastGuess = guessNumber >= MAX_GUESSES;
         let newStatus: GameState["status"] = "playing";
         if (response.isCorrect) {
           newStatus = "won";
-        } else if (isLastGuess) {
+        } else if (guessNumber >= MAX_GUESSES) {
           newStatus = "lost";
         }
-
-        // Get targetKanji from API response (only on game end)
-        const targetKanji = response.targetKanji
-          ? (response.targetKanji as KanjiEntry)
-          : gameState.targetKanji;
 
         const newState: GameState = {
           ...gameState,
           guesses: newGuesses,
           status: newStatus,
-          targetKanji,
+          targetKanji: response.targetKanji
+            ? (response.targetKanji as KanjiEntry)
+            : gameState.targetKanji,
         };
-        setGameState(newState);
 
-        // Persist game to localStorage (including feedbacks)
         const guessChars = newGuesses.map((g) => g.guess);
         const history = loadHistory(difficulty);
         history[todayStr] = {
@@ -365,42 +314,47 @@ export default function GameContainer({
         };
         saveHistory(history, difficulty);
 
-        // Update stats on game end
-        if (newStatus !== "playing") {
-          const updatedStats = { ...stats };
-          updatedStats.gamesPlayed += 1;
+        if (newStatus === "playing") {
+          // 判定の現れる動きは、結果が出ない推測の行だけが持つ。結果が出る最後の推測では、結果のボックスの
+          // 登場だけが動く（DESIGN.md §11「1つの操作に応える UI の動きは1つだけ」）。
+          setAppearingRow(newGuesses.length - 1);
+          pendingRevealRef.current = "input";
+        } else {
+          const base = stats ?? loadStats(difficulty);
+          const updatedStats: GameStats = {
+            ...base,
+            guessDistribution: [...base.guessDistribution],
+            gamesPlayed: base.gamesPlayed + 1,
+            lastPlayedDate: todayStr,
+          };
           if (newStatus === "won") {
             updatedStats.gamesWon += 1;
             updatedStats.guessDistribution[newGuesses.length - 1] += 1;
-          }
-
-          // Update streaks
-          if (newStatus === "won") {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             const yesterdayStr = formatDateJST(yesterday);
-            const yesterdayGame = history[yesterdayStr];
-
-            if (
-              stats.lastPlayedDate === yesterdayStr &&
-              yesterdayGame?.status === "won"
-            ) {
-              updatedStats.currentStreak = stats.currentStreak + 1;
-            } else {
-              updatedStats.currentStreak = 1;
-            }
+            updatedStats.currentStreak =
+              base.lastPlayedDate === yesterdayStr &&
+              history[yesterdayStr]?.status === "won"
+                ? base.currentStreak + 1
+                : 1;
             updatedStats.maxStreak = Math.max(
-              updatedStats.maxStreak,
+              base.maxStreak,
               updatedStats.currentStreak,
             );
           } else {
             updatedStats.currentStreak = 0;
           }
-          updatedStats.lastPlayedDate = todayStr;
-
           setStats(updatedStats);
           saveStats(updatedStats, difficulty);
+          // 遊び終えたことは、来訪者がその場で解き終えたここでだけ送る。解き終えた回を開き直したときに送ると、
+          // 同じ回が何度も数えられる。
+          trackContentEnd("kanji-kanaru", "game", newStatus === "won");
+          setAppearingRow(undefined);
+          setFinishedByGuess(true);
+          pendingRevealRef.current = "result";
         }
+        setGameState(newState);
 
         return { kind: "accepted" };
       } catch {
@@ -412,78 +366,68 @@ export default function GameContainer({
     [gameState, difficulty, todayStr, stats, submitting],
   );
 
-  const lastGuessCount =
-    gameState.status === "won" ? gameState.guesses.length : undefined;
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner} aria-hidden="true" />
-        <span>{"\u8AAD\u307F\u8FBC\u307F\u4E2D..."}</span>
-      </div>
-    );
-  }
-
-  // Error state with retry
   if (error) {
     return (
       <div className={styles.error}>
-        <p className={styles.errorMessage}>{error}</p>
+        <p>{error}</p>
         <Button onClick={() => void initializeGame(difficulty)}>
-          {"\u518D\u8A66\u884C"}
+          もう一度読み込む
         </Button>
       </div>
     );
   }
 
+  const playing = gameState.status === "playing";
+  const remaining = MAX_GUESSES - gameState.guesses.length;
+
   return (
-    <>
-      <GameHeader
-        puzzleNumber={gameState.puzzleNumber}
-        dateString={dateDisplayString}
+    <div className={styles.game}>
+      <HintBar hints={loading ? null : (hintsData?.hints ?? null)} />
+      <GameBoard
+        guesses={loading ? [] : gameState.guesses}
+        showNextRow={loading || playing}
+        appearingRow={appearingRow}
+        pendingText={loading ? LOADING_TEXT : undefined}
+        pendingTextId={loadingTextId}
+      />
+      {loading || playing ? (
+        <GuessInput
+          label={`${DIFFICULTY_LABELS[difficulty]}の漢字を1字入力（あと${remaining}回）`}
+          onSubmit={handleGuess}
+          submitting={submitting}
+          loading={loading}
+          loadingTextId={loadingTextId}
+          rowRef={inputRowRef}
+        />
+      ) : (
+        stats && (
+          <GameResult
+            gameState={gameState}
+            difficulty={difficulty}
+            stats={stats}
+            appear={finishedByGuess}
+            boxRef={resultBoxRef}
+            crossCategoryItems={crossCategoryItems}
+          />
+        )
+      )}
+      <HowToPlay />
+      <DifficultySelector
         difficulty={difficulty}
-        onDifficultyChange={handleDifficultyChange}
+        onChange={handleDifficultyChange}
       />
-      <HintBar
-        strokeCount={hintsData?.hints.strokeCount ?? 0}
-        readingCount={hintsData?.hints.onYomiCount ?? 0}
-        kunYomiCount={hintsData?.hints.kunYomiCount ?? 0}
-      />
-      <GameBoard guesses={gameState.guesses} maxGuesses={MAX_GUESSES} />
-      <GuessInput
-        onSubmit={handleGuess}
-        disabled={gameState.status !== "playing" || submitting}
-        submitting={submitting}
-        disabledReason={
-          gameState.status !== "playing"
-            ? "\u3053\u306E\u96E3\u6613\u5EA6\u306E\u4ECA\u65E5\u306E\u554F\u984C\u306F\u7D42\u308F\u308A\u307E\u3057\u305F\u3002\u307B\u304B\u306E\u96E3\u6613\u5EA6\u304B\u3001\u660E\u65E5\u306E\u554F\u984C\u3067\u904A\u3079\u307E\u3059\u3002"
-            : undefined
-        }
-      />
-      <HowToPlayModal
-        open={showHowToPlay}
-        onClose={() => setShowHowToPlay(false)}
-        returnFocusRef={gameTitleRef}
-      />
-      <ResultModal
-        open={showResult}
-        onClose={() => setShowResult(false)}
-        gameState={gameState}
-        difficulty={difficulty}
-        crossCategoryItems={crossCategoryItems}
-        returnFocusRef={gameTitleRef}
-        onStatsClick={() => {
-          setShowResult(false);
-          setShowStats(true);
-        }}
-      />
-      <StatsModal
-        open={showStats}
-        onClose={() => setShowStats(false)}
-        stats={stats}
-        lastGuessCount={lastGuessCount}
-      />
-    </>
+      {/* 番号と日付は読み込んだあとに分かる。読み込みのあいだも1行を取り、読み込んだときに下が動かない。 */}
+      <p className={styles.puzzleLine}>
+        {loading
+          ? " "
+          : `第${gameState.puzzleNumber}回・${formatPuzzleDate(todayStr)}`}
+      </p>
+    </div>
   );
+}
+
+/** "2026-09-27" を「2026年9月27日」と言う。 */
+function formatPuzzleDate(date: string): string {
+  const [year, month, day] = date.split("-").map(Number);
+  return `${year}年${month}月${day}日`;
 }

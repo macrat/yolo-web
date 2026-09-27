@@ -1,52 +1,34 @@
-import type { Difficulty, FeedbackLevel, GameState } from "./types";
-
-/** Japanese display labels for each difficulty. */
-const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  beginner: "\u521D\u7D1A",
-  intermediate: "\u4E2D\u7D1A",
-  advanced: "\u4E0A\u7D1A",
-};
+import { FEEDBACK_MARKS } from "./marks";
+import { DIFFICULTY_LABELS, MAX_GUESSES } from "./types";
+import type { Difficulty, GameState } from "./types";
 
 /**
- * Map a FeedbackLevel to its emoji representation.
- */
-function feedbackToEmoji(level: FeedbackLevel): string {
-  switch (level) {
-    case "correct":
-      return "\u{1F7E9}"; // green square
-    case "close":
-      return "\u{1F7E8}"; // yellow square
-    case "wrong":
-      return "\u2B1C"; // white square
-  }
-}
-
-/**
- * Generate the share text for a completed game.
- * The page URL is not part of the text; ShareButtons adds it for each share target.
+ * 解き終えた回の共有の文。推測ごとに1行、盤と同じ印（◯・△・×）を並べ、答えを明かさずにどう解いたかを
+ * 見せる。URL は含めない（共有先ごとの形で ShareButtons が付ける）。
  *
- * Format:
+ * 形:
  *   漢字カナール #42 (中級) 3/6
- *   🟩⬜🟨🟩⬜🟩
- *   🟩🟩🟨🟩🟨🟩
- *   🟩🟩🟩🟩🟩🟩
+ *   ×◯◯◯△◯
+ *   ◯◯△◯△◯
+ *   ◯◯◯◯◯◯
  *   #漢字カナール #yolosnet
  *
- * Column order (6 columns): 部首 | 画数 | 学年 | 音読み | 意味 | 訓読み数
- * Note: gradeDirection is NOT included in the emoji grid.
+ * 列の順は盤と同じ（部首・画数・学年・音読み・意味・訓読みの数）。学年の向きは並べない。
  */
 export function generateShareText(
   state: GameState,
   difficulty: Difficulty = "intermediate",
 ): string {
-  const result = state.status === "won" ? `${state.guesses.length}/6` : "X/6";
-  const diffLabel = DIFFICULTY_LABELS[difficulty];
+  const result =
+    state.status === "won"
+      ? `${state.guesses.length}/${MAX_GUESSES}`
+      : `X/${MAX_GUESSES}`;
 
   const rows = state.guesses.map((g) =>
     [g.radical, g.strokeCount, g.grade, g.onYomi, g.category, g.kunYomiCount]
-      .map(feedbackToEmoji)
+      .map((level) => FEEDBACK_MARKS[level].mark)
       .join(""),
   );
 
-  return `\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet`;
+  return `漢字カナール #${state.puzzleNumber} (${DIFFICULTY_LABELS[difficulty]}) ${result}\n${rows.join("\n")}\n#漢字カナール #yolosnet`;
 }

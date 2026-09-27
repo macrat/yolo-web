@@ -49,14 +49,10 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #1 (\u4E2D\u7D1A) 2/6",
     );
-    // Row 1: wrong, correct, correct, correct, close, correct (6 columns)
-    expect(text).toContain(
-      "\u2B1C\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E8}\u{1F7E9}",
-    );
-    // Row 2: all correct (6 columns)
-    expect(text).toContain(
-      "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}",
-    );
+    // 1行目: 不一致・一致・一致・一致・近い・一致
+    expect(text).toContain("×◯◯◯△◯");
+    // 2行目: 6つとも一致
+    expect(text).toContain("◯◯◯◯◯◯");
     expect(text.split("\n").at(-1)).toBe(
       "#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet",
     );
@@ -87,8 +83,8 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #42 (\u4E0A\u7D1A) X/6",
     );
-    // Each row should be all wrong (6 white squares)
-    const allWrongRow = "\u2B1C\u2B1C\u2B1C\u2B1C\u2B1C\u2B1C";
+    // どの行も6つとも不一致
+    const allWrongRow = "××××××";
     const lines = text.split("\n");
     for (let i = 1; i <= 6; i++) {
       expect(lines[i]).toBe(allWrongRow);
@@ -96,7 +92,7 @@ describe("generateShareText", () => {
     expect(text).toContain("#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet");
   });
 
-  test("gradeDirection is NOT included in emoji grid", () => {
+  test("gradeDirection is NOT included in the mark rows", () => {
     const state: GameState = {
       puzzleDate: "2026-03-15",
       puzzleNumber: 15,
@@ -117,18 +113,12 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state, "beginner");
-    // Should have exactly 6 emojis per row (not 7)
-    const lines = text.split("\n");
-    // Line 1 is the row of emojis for the single guess
-    const emojiRow = lines[1];
-    // Count emoji characters (each is 2 code units for colored squares, or surrogate pairs)
-    // 6 green squares
-    expect(emojiRow).toBe(
-      "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}",
-    );
+    // 1行は6つの印（学年の向きの7つ目を持たない）
+    const markRow = text.split("\n")[1];
+    expect(markRow).toBe("◯◯◯◯◯◯");
   });
 
-  test("kunYomiCount column IS included in emoji grid", () => {
+  test("kunYomiCount column IS included in the mark rows", () => {
     const state: GameState = {
       puzzleDate: "2026-03-15",
       puzzleNumber: 15,
@@ -149,12 +139,30 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state, "intermediate");
-    const lines = text.split("\n");
-    const emojiRow = lines[1];
-    // 5 correct (green) + 1 wrong (white) = 6 emojis
-    expect(emojiRow).toBe(
-      "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u2B1C",
-    );
+    const markRow = text.split("\n")[1];
+    expect(markRow).toBe("◯◯◯◯◯×");
+  });
+
+  test("has no emoji", () => {
+    const state: GameState = {
+      puzzleDate: "2026-03-15",
+      puzzleNumber: 15,
+      targetKanji,
+      guesses: [
+        {
+          guess: "\u5C71",
+          radical: "close",
+          strokeCount: "wrong",
+          grade: "correct",
+          gradeDirection: "equal",
+          onYomi: "correct",
+          category: "close",
+          kunYomiCount: "wrong",
+        },
+      ],
+      status: "won",
+    };
+    expect(generateShareText(state)).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   test("includes puzzle number and difficulty in header", () => {

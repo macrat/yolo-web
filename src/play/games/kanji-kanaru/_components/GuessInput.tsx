@@ -1,64 +1,55 @@
 "use client";
 
-import { useState, useRef, useCallback, useId } from "react";
+import { useState, useRef, useCallback, type Ref } from "react";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
+import Field from "@/components/Field";
+import Input from "@/components/Input";
 import {
   EVALUATE_UNAVAILABLE_MESSAGE,
   type GuessSubmitResult,
 } from "@/play/games/shared/_lib/guessSubmit";
 import styles from "./styles/KanjiKanaru.module.css";
 
+const EMPTY_INPUT_MESSAGE = "漢字を1文字入力してください";
+
 interface GuessInputProps {
+  /** 欄のラベル。いまの難易度と残りの回数を言う（「中級の漢字を1字入力（あと6回）」）。 */
+  label: string;
   onSubmit: (kanji: string) => Promise<GuessSubmitResult>;
-  disabled: boolean;
+  /** 送信中か。送信のボタンを押せなくし、字で言う。欄は無効にせず、文字盤を閉じさせない。 */
   submitting?: boolean;
-  /** 送信中でないのに入力できないとき、なぜ入力できないかを言う文（§6 無効）。 */
-  disabledReason?: string;
+  /** 問題を読み込んでいるあいだ true。欄とボタンを無効にする。 */
+  loading?: boolean;
+  /** 読み込み中を言う文の id。無効の欄の説明として読ませる。 */
+  loadingTextId?: string;
+  /** 入力欄と送信のボタンの並び。推測のあと、画面に入るまで送る相手になる。 */
+  rowRef?: Ref<HTMLDivElement>;
 }
 
 /**
- * Single kanji input field with submit button.
- * Handles IME composition events to prevent premature submission.
- * An input error from onSubmit is tied to the field; a failed evaluation is
- * announced outside the field, since the input itself is valid.
- * Supports async onSubmit for server-side evaluation.
+ * 漢字を1字入れる欄と送信のボタン。IME の変換中の Enter では送らない。
+ * 入力の誤りは欄に結び、答え合わせができなかったことは、入力は正しいので欄の外で言う。
  */
 export default function GuessInput({
+  label,
   onSubmit,
-  disabled,
   submitting = false,
-  disabledReason,
+  loading = false,
+  loadingTextId,
+  rowRef,
 }: GuessInputProps) {
-  const reasonId = useId();
-  const errorId = useId();
-  // 送信中はボタンの字が「送信中...」と理由を言うので、理由の文を別に出さない。
-  const showReason = Boolean(disabled && !submitting && disabledReason);
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [unavailable, setUnavailable] = useState(false);
-  const [shaking, setShaking] = useState(false);
   const composingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const describedBy =
-    [showReason ? reasonId : null, error ? errorId : null]
-      .filter(Boolean)
-      .join(" ") || undefined;
-
-  const triggerShake = useCallback(() => {
-    setShaking(true);
-    setTimeout(() => setShaking(false), 400);
-  }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (composingRef.current) return;
-    if (submitting) return;
+    if (composingRef.current || submitting || loading) return;
     const trimmed = value.trim();
     if (!trimmed) {
-      setError(
-        "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
-      );
-      triggerShake();
+      setError(EMPTY_INPUT_MESSAGE);
       return;
     }
 
@@ -66,7 +57,6 @@ export default function GuessInput({
     const result = await onSubmit(trimmed);
     if (result.kind === "invalid") {
       setError(result.message);
-      triggerShake();
     } else if (result.kind === "unavailable") {
       setError(null);
       setUnavailable(true);
@@ -75,67 +65,55 @@ export default function GuessInput({
       setValue("");
     }
     inputRef.current?.focus();
-  }, [value, onSubmit, triggerShake, submitting]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter" && !composingRef.current) {
-        e.preventDefault();
-        void handleSubmit();
-      }
-    },
-    [handleSubmit],
-  );
+  }, [value, onSubmit, submitting, loading]);
 
   return (
     <div className={styles.inputArea}>
-      <div className={`${styles.inputRow} ${shaking ? styles.shaking : ""}`}>
-        <input
-          ref={inputRef}
-          className={styles.inputField}
-          data-field
-          type="text"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setError(null);
-            setUnavailable(false);
-          }}
-          onKeyDown={handleKeyDown}
-          onCompositionStart={() => {
-            composingRef.current = true;
-          }}
-          onCompositionEnd={() => {
-            composingRef.current = false;
-          }}
-          disabled={disabled}
-          placeholder={
-            submitting
-              ? "\u9001\u4FE1\u4E2D..."
-              : "\u6F22\u5B57\u3092\u5165\u529B"
-          }
-          aria-label={"\u6F22\u5B57\u3092\u5165\u529B"}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={describedBy}
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-        />
-        <Button
-          variant="primary"
-          onClick={() => void handleSubmit()}
-          disabled={disabled}
-          aria-describedby={showReason ? reasonId : undefined}
-        >
-          {submitting ? "\u9001\u4FE1\u4E2D..." : "\u9001\u4FE1"}
-        </Button>
-      </div>
-      {showReason && (
-        <p id={reasonId} className={styles.disabledReason}>
-          {disabledReason}
-        </p>
-      )}
-      {error && <ErrorMessage id={errorId} message={error} />}
+      <Field label={label} error={error ?? undefined} disabled={loading}>
+        {(control) => (
+          <div ref={rowRef} className={styles.inputRow}>
+            <Input
+              {...control}
+              ref={inputRef}
+              className={styles.inputField}
+              aria-describedby={
+                [control["aria-describedby"], loading ? loadingTextId : null]
+                  .filter(Boolean)
+                  .join(" ") || undefined
+              }
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setError(null);
+                setUnavailable(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !composingRef.current) {
+                  e.preventDefault();
+                  void handleSubmit();
+                }
+              }}
+              onCompositionStart={() => {
+                composingRef.current = true;
+              }}
+              onCompositionEnd={() => {
+                composingRef.current = false;
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+            />
+            <Button
+              variant="primary"
+              onClick={() => void handleSubmit()}
+              disabled={submitting || loading}
+              aria-describedby={loading ? loadingTextId : undefined}
+            >
+              {submitting ? "送信中..." : "送信"}
+            </Button>
+          </div>
+        )}
+      </Field>
       {unavailable && <ErrorMessage message={EVALUATE_UNAVAILABLE_MESSAGE} />}
     </div>
   );
