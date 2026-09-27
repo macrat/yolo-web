@@ -23,6 +23,7 @@ import {
   saveTodayGame,
 } from "@/play/games/nakamawake/_lib/storage";
 import type { ItemListItem } from "@/components/ItemList";
+import { gameTitleRef } from "@/play/games/shared/_lib/gameTitle";
 import GameHeader from "./GameHeader";
 import WordGrid from "./WordGrid";
 import SolvedGroups from "./SolvedGroups";
@@ -123,9 +124,6 @@ export default function GameContainer({
   const [stats, setStats] = useState<NakamawakeGameStats>(() => loadStats());
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
-  // game-end Result). Without it, closing those modals drops focus to <body>.
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const disabledReasonId = useId();
   // Initialize to false for SSR/CSR consistency.
   // Lazy initializer that reads localStorage would return true on first client
@@ -362,9 +360,6 @@ export default function GameContainer({
       <GameHeader
         puzzleNumber={gameState.puzzleNumber}
         dateString={dateDisplayString}
-        onHelpClick={() => setShowHowToPlay(true)}
-        onStatsClick={() => setShowStats(true)}
-        titleRef={titleRef}
       />
       <SolvedGroups groups={gameState.solvedGroups} />
       <div style={{ visibility: isReady ? "visible" : "hidden" }}>
@@ -402,14 +397,14 @@ export default function GameContainer({
       <HowToPlayModal
         open={showHowToPlay}
         onClose={() => setShowHowToPlay(false)}
-        returnFocusRef={titleRef}
+        returnFocusRef={gameTitleRef}
       />
       <ResultModal
         open={showResult}
         onClose={() => setShowResult(false)}
         gameState={gameState}
         crossCategoryItems={crossCategoryItems}
-        returnFocusRef={titleRef}
+        returnFocusRef={gameTitleRef}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

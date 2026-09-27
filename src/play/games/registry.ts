@@ -36,13 +36,8 @@ const gameEntries: GameMeta[] = [
       ogDescription:
         "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
     },
-    valueProposition:
-      "毎日1つの漢字を推理。部首・画数・読みのヒントで正解を導く",
-    usageExample: {
-      input: "漢字1文字を入力して推理開始",
-      output: "部首・画数・読みのヒントが表示され、6回以内に正解を目指す",
-      description: "Wordleのように毎日問題が変わるデイリーパズルです",
-    },
+    summary: "今日の漢字1字を、部首・画数・読みから6回までに当てる",
+    legend: ["◯ 一致", "△ 近い", "× 不一致"],
     faq: [
       {
         question: "毎日何時に問題が変わりますか？",
@@ -96,13 +91,8 @@ const gameEntries: GameMeta[] = [
       ogDescription:
         "毎日1つの四字熟語を当てるパズルゲーム。色のフィードバックで推理しよう!",
     },
-    valueProposition:
-      "毎日1つの四字熟語を当てる。4文字の漢字を推理する新感覚パズル",
-    usageExample: {
-      input: "四字熟語を1つ入力して推理開始",
-      output: "各文字の正誤が色で表示され、6回以内に正解を目指す",
-      description: "漢字カナールの四字熟語版。より高い語彙力が試されます",
-    },
+    summary: "今日の四字熟語を、1字ずつの当たり外れから6回までに当てる",
+    legend: ["◯ 正しい位置", "△ 別の位置", "× 含まれない"],
     faq: [
       {
         question: "どんな四字熟語が出題されますか？",
@@ -156,14 +146,8 @@ const gameEntries: GameMeta[] = [
       ogDescription:
         "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！",
     },
-    valueProposition:
-      "16個の言葉を4グループに仲間分け。共通テーマを見抜く推理パズル",
-    usageExample: {
-      input: "16個の言葉から同じグループの4語を選択",
-      output:
-        "正解するとグループのテーマが表示される。全4グループの解明を目指す",
-      description: "NYT Connectionsにインスパイアされた日本語版パズルです",
-    },
+    summary: "4回間違えるまでに、16の言葉を共通点で4語ずつ4組に分ける",
+    legend: ["難易度1（易しい）〜", "難易度4（とても難しい）"],
     faq: [
       {
         question: "間違えたらどうなりますか？",
@@ -218,14 +202,7 @@ const gameEntries: GameMeta[] = [
       ogDescription:
         "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色彩感覚を試そう。",
     },
-    valueProposition:
-      "毎日5つのターゲットカラーを再現。HSLスライダーで色彩感覚に挑戦",
-    usageExample: {
-      input: "HSLスライダーでターゲットに近い色を作成",
-      output:
-        "ターゲットとの類似度がスコアで表示。5色の平均スコアで結果が決まる",
-      description: "日本の伝統色も登場する色彩感覚テストです",
-    },
+    summary: "お題の5色に近い色を、色相・彩度・明度のスライダーで作る",
     faq: [
       {
         question: "スコアはどのように計算されますか？",

@@ -1,128 +1,53 @@
-/* GameLayout — ゲームページ共通の器。
- * パンくず・のれん下の紹介文・遊び方の説明・ゲーム本体・シェア・関連導線を
- * 紙・墨の器へ統一する。読みカラム設計の max-width:600px は GameLayout 設計として
- * 維持する（ToolPageLayout の --max-width を機械転用しない・盤面は狭い方が遊びやすい）。
- * 影・一律角丸なし。角丸は --radius（0px 基調）のみ使用。 */
-
+/*
+ * ゲームのページ（/play/kanji-kanaru ほか）の組み方。
+ *
+ * 幅と左右の余白はコンテナが決めるので、器は自分の左右の余白も幅の上限も持たず、コンテンツ幅の左端から
+ * 組む（DESIGN.md §5「コンテンツ幅の左端は、どのページでも同じ位置」）。
+ */
 .layout {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: var(--space-16) var(--space-8);
-  width: 100%;
+  padding-block: var(--space-16);
 }
 
+/* h1 は §4 の主見出しの段（globals.css の h1 の既定）で組む。 */
 .header {
-  margin-bottom: var(--space-16);
-}
-
-.valueProposition {
-  margin-top: var(--space-8);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.9;
-}
-
-/* 「こんなゲームです」の説明区画: 一段沈む面（--paper-2）+ 罫囲み（ToolPageLayout の
- * howItWorksSection/privacyNote と同型）。 */
-.usageExample {
-  margin-bottom: var(--space-24);
-  padding: var(--space-16);
-  background-color: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-}
-
-.usageExampleHeading {
-  font-family: var(--font-heading);
-  font-size: 0.9375rem;
-  color: var(--ink);
-  margin-bottom: var(--space-8);
-  line-height: 1.4;
-}
-
-.usageExampleContent {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   gap: var(--space-8);
+  margin-block: var(--space-16) var(--space-24);
 }
 
-/* 遊び方/体験の各ボックス: 地は --paper（親の --paper-2 との対比で輪郭を示す）。 */
-.usageExampleBox {
-  flex: 1;
-  padding: var(--space-8) var(--space-16);
-  background-color: var(--paper);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+/* 要約と凡例は、本文の大きさで本文の幅に折り返す（§5）。 */
+.summary {
+  max-width: var(--measure);
 }
 
-.usageExampleLabel {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ink-2);
-  margin-bottom: 0.25rem;
-}
-
-.usageExampleText {
-  font-size: 0.9375rem;
-  color: var(--ink);
-  line-height: 1.7;
-  word-break: break-word;
-}
-
-.usageExampleArrow {
+/* 凡例の項目は、1つの項目が1行に収まるうちは項目の中で折らず、項目のあいだで折る。 */
+.legend {
   display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  color: var(--ink-2);
-  font-size: 1.25rem;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
+  max-width: var(--measure);
+  list-style: none;
 }
 
-.usageExampleDescription {
-  margin-top: var(--space-8);
-  font-size: 0.8125rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-}
-
-.content {
-  margin-bottom: 0;
-}
-
+/* 帰属表示は補助情報。上に細い罫線を引いて、ゲーム本体と分ける（§5）。 */
 .attribution {
-  padding: var(--space-16) 0;
   margin-top: var(--space-16);
-  border-top: 1px solid var(--rule);
-  font-size: 0.75rem;
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-small);
   color: var(--ink-2);
 }
 
-.attribution a {
-  color: var(--accent);
-}
-
+/* このゲームを人に勧めるページの共有。上に細い罫線を引いて、上の内容と分ける（§5）。 */
 .shareSection {
+  max-width: var(--measure);
   margin-top: var(--space-32);
   padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .shareSectionTitle {
-  font-family: var(--font-heading);
-  font-size: 1.09375rem;
+  font-size: var(--text-heading-sub);
   margin-bottom: var(--space-8);
-  color: var(--ink);
-  line-height: 1.4;
-}
-
-@media (max-width: 768px) {
-  .usageExampleContent {
-    flex-direction: column;
-  }
-
-  .usageExampleArrow {
-    justify-content: center;
-    transform: rotate(90deg);
-  }
 }

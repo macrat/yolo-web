@@ -1,9 +1,13 @@
 import type { GameMeta } from "@/play/games/types";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqSection from "@/components/FaqSection";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import RecommendedContent from "@/play/_components/RecommendedContent";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
+import { GAME_TITLE_ID } from "@/play/games/shared/_lib/gameTitle";
 import RelatedGames from "./RelatedGames";
 import styles from "./GameLayout.module.css";
 
@@ -15,9 +19,16 @@ interface GameLayoutProps {
 }
 
 /**
- * ゲームのページの共通の組み方。パンくず・ゲーム本体・FAQ・シェア・関連の一覧の順に並べる。
+ * ゲームのページの共通の組み方。
  *
- * h1 はゲーム本体（GameContainer）が持つので、header には置かない。
+ * 遊び始めるのに要ること（何のゲームか・何を当てるか・盤の印の意味）を、読み込みを待たずに誰にも見えるよう
+ * サーバーで描き、そのすぐ下にゲーム本体を置く。
+ *   1. パンくず
+ *   2. h1（ゲーム名）・要約・凡例
+ *   3. ゲーム本体（各ゲームの GameContainer）
+ *   4. 帰属表示・FAQ
+ *   5. このゲームを人に勧めるページの共有。結果の共有は、ゲーム本体の結果のすぐ下にある
+ *   6. 関連のゲーム・ほかの分類のおすすめ・関連の記事
  */
 export default function GameLayout({
   meta,
@@ -33,49 +44,31 @@ export default function GameLayout({
           { label: meta.title, href: `/play/${meta.slug}` },
         ]}
       />
-      {meta.valueProposition && (
-        <header className={styles.header}>
-          <p className={styles.valueProposition}>{meta.valueProposition}</p>
-        </header>
-      )}
-      {meta.usageExample && (
-        <div className={styles.usageExample}>
-          <p className={styles.usageExampleHeading}>こんなゲームです</p>
-          <div className={styles.usageExampleContent}>
-            <div className={styles.usageExampleBox}>
-              <span className={styles.usageExampleLabel}>遊び方</span>
-              <span className={styles.usageExampleText}>
-                {meta.usageExample.input}
-              </span>
-            </div>
-            <span className={styles.usageExampleArrow} aria-hidden="true">
-              {"→"}
-            </span>
-            <div className={styles.usageExampleBox}>
-              <span className={styles.usageExampleLabel}>体験</span>
-              <span className={styles.usageExampleText}>
-                {meta.usageExample.output}
-              </span>
-            </div>
-          </div>
-          {meta.usageExample.description && (
-            <p className={styles.usageExampleDescription}>
-              {meta.usageExample.description}
-            </p>
-          )}
-        </div>
-      )}
-      <section className={styles.content} aria-label="Game">
-        {children}
-      </section>
+      <header className={styles.header}>
+        {/* 自分で開いたダイアログを閉じたとき、ゲームの部品がフォーカスをここへ戻す。 */}
+        <PhrasedText
+          as="h1"
+          id={GAME_TITLE_ID}
+          tabIndex={-1}
+          phrases={splitIntoPhrases(meta.title)}
+          {...headingFontAttr(meta.title)}
+        />
+        <p className={styles.summary}>{meta.summary}</p>
+        {meta.legend && (
+          <ul className={styles.legend}>
+            {meta.legend.map((entry) => (
+              <li key={entry}>{entry}</li>
+            ))}
+          </ul>
+        )}
+      </header>
+      <section aria-label="ゲーム">{children}</section>
       {attribution && (
         <footer className={styles.attribution}>{attribution}</footer>
       )}
       <FaqSection faq={meta.faq} />
       <section className={styles.shareSection}>
-        <h2 className={styles.shareSectionTitle}>
-          このゲームが楽しかったらシェア
-        </h2>
+        <h2 className={styles.shareSectionTitle}>このゲームを勧める</h2>
         <ShareButtons
           url={`/play/${meta.slug}`}
           title={meta.title}

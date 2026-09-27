@@ -2,6 +2,10 @@ import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import GameLayout from "../GameLayout";
 import type { GameMeta } from "@/play/games/types";
+import {
+  GAME_TITLE_ID,
+  gameTitleRef,
+} from "@/play/games/shared/_lib/gameTitle";
 
 // RecommendedContent をモックしてテストを安定させる
 vi.mock("@/play/_components/RecommendedContent", () => ({
@@ -32,16 +36,12 @@ const mockMeta: GameMeta = {
     ogTitle: "テストゲーム",
     ogDescription: "テスト用ゲーム",
   },
+  summary: "今日の字を6回までに当てる",
 };
 
 const mockMetaFull: GameMeta = {
   ...mockMeta,
-  valueProposition: "テスト価値テキスト",
-  usageExample: {
-    input: "テスト入力",
-    output: "テスト出力",
-    description: "テスト補足説明",
-  },
+  legend: ["◯ 一致", "△ 近い", "× 不一致"],
   faq: [
     {
       question: "テスト質問？",
@@ -60,7 +60,8 @@ test("GameLayout renders breadcrumb with game title", () => {
   expect(
     screen.getByRole("navigation", { name: "パンくずリスト" }),
   ).toBeInTheDocument();
-  expect(screen.getByText("テストゲーム")).toBeInTheDocument();
+  const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
+  expect(within(breadcrumb).getByText("テストゲーム")).toBeInTheDocument();
 });
 
 test("GameLayout のパンくずの2つ目は、遊びの一覧へ戻る「遊び」", () => {
@@ -84,66 +85,64 @@ test("GameLayout renders children", () => {
   expect(screen.getByText("Game content here")).toBeInTheDocument();
 });
 
-test("GameLayout does not render h1 heading (avoids duplicate with GameContainer)", () => {
-  render(
-    <GameLayout meta={mockMeta}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
-});
-
-// 注: (new) フォーク版では TrustLevelBadge を撤去しているため、legacy テストの
-// 「TrustLevelBadge を描画する（"正確な処理"）」アサーションと、それ経由で描画
-// されていた trustNote のアサーションは除外している（cycle-268 T3）。
-// AI 注記は Footer/about が担保する方針（cycle-263/267 と同方針）。
-
-test("GameLayout renders valueProposition when provided", () => {
+test("h1 はゲーム名で、パンくずのあとに h1・要約・凡例の順に並ぶ", () => {
   render(
     <GameLayout meta={mockMetaFull}>
       <div>Content</div>
     </GameLayout>,
   );
-  expect(screen.getByText("テスト価値テキスト")).toBeInTheDocument();
+  const heading = screen.getByRole("heading", { level: 1 });
+  expect(heading).toHaveTextContent("テストゲーム");
+  const summary = screen.getByText("今日の字を6回までに当てる");
+  const legend = screen.getByText("◯ 一致");
+  const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
+  const following = (a: Element, b: Element) =>
+    a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING;
+  expect(following(breadcrumb, heading)).toBeTruthy();
+  expect(following(heading, summary)).toBeTruthy();
+  expect(following(summary, legend)).toBeTruthy();
 });
 
-test("GameLayout does not render valueProposition when not provided", () => {
+test("h1 は、ゲームの部品がダイアログを閉じたときのフォーカスの戻り先になる", () => {
   render(
     <GameLayout meta={mockMeta}>
       <div>Content</div>
     </GameLayout>,
   );
-  expect(screen.queryByText("テスト価値テキスト")).not.toBeInTheDocument();
+  const heading = screen.getByRole("heading", { level: 1 });
+  expect(heading).toHaveAttribute("id", GAME_TITLE_ID);
+  expect(heading).toHaveAttribute("tabindex", "-1");
+  expect(gameTitleRef.current).toBe(heading);
 });
 
-test("GameLayout renders usageExample section with game-specific labels", () => {
+test("凡例は GameMeta の legend の語をこの順に並べる", () => {
   render(
     <GameLayout meta={mockMetaFull}>
       <div>Content</div>
     </GameLayout>,
   );
-  expect(screen.getByText("こんなゲームです")).toBeInTheDocument();
-  expect(screen.getByText("遊び方")).toBeInTheDocument();
-  expect(screen.getByText("テスト入力")).toBeInTheDocument();
-  expect(screen.getByText("体験")).toBeInTheDocument();
-  expect(screen.getByText("テスト出力")).toBeInTheDocument();
-  expect(screen.getByText("テスト補足説明")).toBeInTheDocument();
+  const legend = screen.getByText("◯ 一致").closest("ul")!;
+  const items = within(legend).getAllByRole("listitem");
+  expect(items.map((item) => item.textContent)).toEqual([
+    "◯ 一致",
+    "△ 近い",
+    "× 不一致",
+  ]);
 });
 
-test("GameLayout usageExample arrow has aria-hidden", () => {
-  render(
-    <GameLayout meta={mockMetaFull}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  // The arrow character is →
-  const arrow = screen.getByText("→");
-  expect(arrow).toHaveAttribute("aria-hidden", "true");
-});
-
-test("GameLayout does not render usageExample when not provided", () => {
+test("凡例を持たないゲームは凡例を描かない", () => {
   render(
     <GameLayout meta={mockMeta}>
+      <div>Content</div>
+    </GameLayout>,
+  );
+  expect(screen.getByText("今日の字を6回までに当てる")).toBeInTheDocument();
+  expect(screen.queryByText("◯ 一致")).not.toBeInTheDocument();
+});
+
+test("「こんなゲームです」の区画を持たない", () => {
+  render(
+    <GameLayout meta={mockMetaFull}>
       <div>Content</div>
     </GameLayout>,
   );
@@ -178,7 +177,7 @@ test("GameLayout renders share section with game-specific text", () => {
   expect(
     screen.getByRole("heading", {
       level: 2,
-      name: "このゲームが楽しかったらシェア",
+      name: "このゲームを勧める",
     }),
   ).toBeInTheDocument();
 });
@@ -203,13 +202,13 @@ test("GameLayout does not render attribution when not provided", () => {
   expect(article.querySelector("footer")).not.toBeInTheDocument();
 });
 
-test("GameLayout content section has aria-label 'Game'", () => {
+test("ゲーム本体の区画は「ゲーム」という名前を持つ", () => {
   render(
     <GameLayout meta={mockMeta}>
       <div>Content</div>
     </GameLayout>,
   );
-  expect(screen.getByRole("region", { name: "Game" })).toBeInTheDocument();
+  expect(screen.getByRole("region", { name: "ゲーム" })).toBeInTheDocument();
 });
 
 test("GameLayout renders RecommendedContent with meta.slug", () => {

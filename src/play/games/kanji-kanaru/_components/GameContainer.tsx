@@ -24,6 +24,7 @@ import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
+import { gameTitleRef } from "@/play/games/shared/_lib/gameTitle";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -159,9 +160,6 @@ export default function GameContainer({
   const [stats, setStats] = useState<GameStats>(() => loadStats(difficulty));
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
-  // game-end Result). Without it, closing those modals drops focus to <body>.
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
     // Show HowToPlay on first visit
     if (typeof window === "undefined") return false;
@@ -446,9 +444,6 @@ export default function GameContainer({
         dateString={dateDisplayString}
         difficulty={difficulty}
         onDifficultyChange={handleDifficultyChange}
-        onHelpClick={() => setShowHowToPlay(true)}
-        onStatsClick={() => setShowStats(true)}
-        titleRef={titleRef}
       />
       <HintBar
         strokeCount={hintsData?.hints.strokeCount ?? 0}
@@ -469,7 +464,7 @@ export default function GameContainer({
       <HowToPlayModal
         open={showHowToPlay}
         onClose={() => setShowHowToPlay(false)}
-        returnFocusRef={titleRef}
+        returnFocusRef={gameTitleRef}
       />
       <ResultModal
         open={showResult}
@@ -477,7 +472,7 @@ export default function GameContainer({
         gameState={gameState}
         difficulty={difficulty}
         crossCategoryItems={crossCategoryItems}
-        returnFocusRef={titleRef}
+        returnFocusRef={gameTitleRef}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

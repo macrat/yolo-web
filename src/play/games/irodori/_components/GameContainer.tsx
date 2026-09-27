@@ -27,6 +27,7 @@ import {
 } from "@/play/games/irodori/_lib/storage";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
+import { gameTitleRef } from "@/play/games/shared/_lib/gameTitle";
 import GameHeader from "./GameHeader";
 import ProgressBar from "./ProgressBar";
 import ColorTarget from "./ColorTarget";
@@ -148,9 +149,6 @@ export default function GameContainer({
 
   const [showFinalResult, setShowFinalResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
-  // game-end Result). Without it, closing those modals drops focus to <body>.
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -334,9 +332,6 @@ export default function GameContainer({
       <GameHeader
         puzzleNumber={gameState.puzzleNumber}
         dateString={dateDisplayString}
-        onHelpClick={() => setShowHowToPlay(true)}
-        onStatsClick={() => setShowStats(true)}
-        titleRef={titleRef}
       />
       <ProgressBar
         currentRound={gameState.currentRound}
@@ -387,14 +382,14 @@ export default function GameContainer({
       <HowToPlayModal
         open={showHowToPlay}
         onClose={() => setShowHowToPlay(false)}
-        returnFocusRef={titleRef}
+        returnFocusRef={gameTitleRef}
       />
       <ResultModal
         open={showFinalResult}
         onClose={() => setShowFinalResult(false)}
         gameState={gameState}
         crossCategoryItems={crossCategoryItems}
-        returnFocusRef={titleRef}
+        returnFocusRef={gameTitleRef}
         onStatsClick={() => {
           setShowFinalResult(false);
           setShowStats(true);
