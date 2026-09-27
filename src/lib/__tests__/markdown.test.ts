@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeAll } from "vitest";
+import { TABLE_LAYOUT_CALL, TABLE_LAYOUT_DEFINE } from "@/lib/scroll-frame";
 import {
   parseFrontmatter,
   markdownToHtml,
@@ -202,11 +203,30 @@ describe("markdownToHtml", () => {
     );
   });
 
-  test("本文に書いたスクリプトはサニタイズで消え、表の直後の決まった文だけが残る", async () => {
+  test("最初の表の前にだけ、表を組む関数を定めるスクリプトを置く", async () => {
+    const md = "前\n\n| A |\n|---|\n| 1 |\n\n間\n\n| B |\n|---|\n| 2 |";
+    const { html } = await markdownToHtml(md);
+    expect(
+      html.startsWith(
+        `<p>前</p>\n${TABLE_LAYOUT_DEFINE}<div class="table-scroll`,
+      ),
+    ).toBe(true);
+    expect(html.split(TABLE_LAYOUT_DEFINE)).toHaveLength(2);
+    expect(html.split(TABLE_LAYOUT_CALL)).toHaveLength(3);
+  });
+
+  test("表の無い記事にはスクリプトを置かない", async () => {
+    const { html } = await markdownToHtml("本文だけ");
+    expect(html).not.toContain("<script");
+  });
+
+  test("本文に書いたスクリプトはサニタイズで消え、表を組む決まった文だけが残る", async () => {
     const md = "<script>alert(1)</script>\n\n| A |\n|---|\n| 1 |";
     const { html } = await markdownToHtml(md);
     expect(html).not.toContain("alert");
-    expect(html.match(/<script>/g)).toHaveLength(1);
+    expect(
+      html.replace(TABLE_LAYOUT_DEFINE, "").replace(TABLE_LAYOUT_CALL, ""),
+    ).not.toContain("<script");
   });
 
   describe("表のセルの文節の区切り", () => {

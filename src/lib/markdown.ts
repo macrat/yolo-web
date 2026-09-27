@@ -18,7 +18,7 @@ import {
 // 表のセルを見出しと同じ区切りの関数で文節に分ける（DESIGN.md §4）
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 // 表を最初の描画から組むスクリプト（DESIGN.md §5 表）
-import { TABLE_LAYOUT_CALL } from "@/lib/scroll-frame";
+import { TABLE_LAYOUT_CALL, TABLE_LAYOUT_DEFINE } from "@/lib/scroll-frame";
 
 /**
  * Custom marked extension for fenced code blocks.
@@ -411,11 +411,17 @@ export async function markdownToHtml(
     async: true,
   });
   // Sanitize to strip dangerous tags/attributes (XSS prevention), then put the
-  // fixed script that lays out each table right after it, so that the table is
-  // laid out before the browser first paints it (DESIGN.md §5 表).
+  // fixed scripts that lay out each table before the browser first paints it
+  // (DESIGN.md §5 表): one before the first table defines the layout function,
+  // and one right after each table calls it. Articles without tables get none.
+  let defined = false;
   const html = sanitize(result).replace(
     /<div class="table-scroll[^"]*">[\s\S]*?<\/table>\s*<\/div>/g,
-    (table) => table + TABLE_LAYOUT_CALL,
+    (table) => {
+      const define = defined ? "" : TABLE_LAYOUT_DEFINE;
+      defined = true;
+      return define + table + TABLE_LAYOUT_CALL;
+    },
   );
   return { html, headings: getHeadings() };
 }

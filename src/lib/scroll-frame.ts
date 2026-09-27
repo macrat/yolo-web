@@ -1,8 +1,8 @@
 /**
  * 横に送る枠（DESIGN.md §4・§5）の組み方。表の列の幅と、枠を付けて横に送るかを決める。
  *
- * 記事のページは、描く前に表を組むため、この組み方を文字列にして本文の前のスクリプトに入れる
- * （proseLayoutScript）。規則を1か所に持つため、組み方はすべて createFrameLayout の中に書き、外の名前を
+ * 記事のページは、描く前に表を組むため、この組み方を文字列にして本文の最初の表の前のスクリプトに入れる
+ * （TABLE_LAYOUT_DEFINE）。規則を1か所に持つため、組み方はすべて createFrameLayout の中に書き、外の名前を
  * 使わない。ビルドの変換で名前が変わっても、文字列にした関数がそのまま動く。
  */
 
@@ -125,7 +125,7 @@ export function createFrameLayout(): FrameLayout {
    * 区切りを持つ表（.table-phrased）は、表の幅を0にして列を最小の幅（いちばん長い文節の幅）にした組みで各列を
    * 測り、planColumns で決める。区切りを持たない表（書いた Markdown のプレビュー）は、枠だけを決める。
    */
-  function layoutTable(frame: HTMLElement) {
+  function applyTableLayout(frame: HTMLElement) {
     const table = frame.querySelector("table");
     if (!table) return;
     const cells = table.querySelectorAll<HTMLElement>("th, td");
@@ -180,6 +180,23 @@ export function createFrameLayout(): FrameLayout {
   }
 
   /**
+   * 表を組む。組んだときの置かれた幅・字の大きさ・Web フォントの読み込みの状態を枠に覚えさせ、どれも同じなら
+   * 組み直さない。表の直後のスクリプトが組んだ表を、水和のときにもう一度測り直さずに済む（組み直しは枠と幅を
+   * 外して測るので、レイアウトを何度もやり直させる）。
+   */
+  function layoutTable(frame: HTMLElement) {
+    const key =
+      frame.getBoundingClientRect().width +
+      "|" +
+      getComputedStyle(frame).fontSize +
+      "|" +
+      (document.fonts ? document.fonts.status : "");
+    if (frame.getAttribute("data-layout-key") === key) return;
+    applyTableLayout(frame);
+    frame.setAttribute("data-layout-key", key);
+  }
+
+  /**
    * いつも枠を持つもの（コードのボックス・結果のボックスの中身の区画）は、中身の幅が枠の内側の幅を超えるかで
    * 決める。
    */
@@ -215,9 +232,12 @@ export const SCROLL_FRAME_LABELS = frameLayout.labels;
 export const markScrollFrame = frameLayout.markContentFrame;
 export const layoutFrames = frameLayout.layoutFrames;
 
-/** 記事の表の直後に置くスクリプト。本文の前のスクリプトが定めた関数で、直前の表を組む。 */
+/**
+ * 記事の本文の最初の表の前に置くスクリプト。表の直後のスクリプトが呼ぶ、表を組む関数を定める。本文の HTML の中に
+ * 置くので、表の無い記事には配らない。
+ */
+export const TABLE_LAYOUT_DEFINE = `<script>(function(){const l=(${String(createFrameLayout)})();window.yolosLayoutTable=function(s){const f=s.previousElementSibling;if(f)l.layoutTable(f)}})()</script>`;
+
+/** 記事の表の直後に置くスクリプト。最初の表の前のスクリプトが定めた関数で、直前の表を組む。 */
 export const TABLE_LAYOUT_CALL =
   "<script>window.yolosLayoutTable&&yolosLayoutTable(document.currentScript)</script>";
-
-/** 記事の本文の前に置くスクリプト。表の直後のスクリプトが呼ぶ関数を定める。 */
-export const proseLayoutScript = `(function(){const l=(${String(createFrameLayout)})();window.yolosLayoutTable=function(s){const f=s.previousElementSibling;if(f)l.layoutTable(f)}})()`;

@@ -2,7 +2,7 @@ import { describe, test, expect } from "vitest";
 import {
   createFrameLayout,
   markScrollFrame,
-  proseLayoutScript,
+  TABLE_LAYOUT_DEFINE,
   SCROLL_FRAME_LABELS,
 } from "@/lib/scroll-frame";
 
@@ -78,11 +78,43 @@ describe("markScrollFrame（いつも枠を持つもの）", () => {
   });
 });
 
-describe("proseLayoutScript", () => {
+describe("layoutTable（組み直しを飛ばす）", () => {
+  const { layoutTable } = createFrameLayout();
+
+  function tableFrame(width: { value: number }): HTMLElement {
+    const frame = document.createElement("div");
+    frame.className = "table-scroll";
+    frame.innerHTML = "<table><tbody><tr><td>x</td></tr></tbody></table>";
+    frame.getBoundingClientRect = () => ({ width: width.value }) as DOMRect;
+    frame.querySelector("table")!.getBoundingClientRect = () =>
+      ({ width: 500 }) as DOMRect;
+    document.body.appendChild(frame);
+    return frame;
+  }
+
+  test("組んだときと幅も字の大きさも同じなら、組み直さない。幅が変わったら組み直す", () => {
+    const width = { value: 300 };
+    const frame = tableFrame(width);
+    layoutTable(frame);
+    expect(frame.hasAttribute("data-scrolls")).toBe(true);
+    // 組んだあとに印を外しても、同じ幅なら組み直さない。
+    frame.removeAttribute("data-scrolls");
+    layoutTable(frame);
+    expect(frame.hasAttribute("data-scrolls")).toBe(false);
+    width.value = 320;
+    layoutTable(frame);
+    expect(frame.hasAttribute("data-scrolls")).toBe(true);
+    frame.remove();
+  });
+});
+
+describe("TABLE_LAYOUT_DEFINE", () => {
   test("組み方を文字列にしたスクリプトが、外の名前を使わずに動き、表を組む関数を定める", () => {
     const win = window as unknown as { yolosLayoutTable?: unknown };
     delete win.yolosLayoutTable;
-    new Function(proseLayoutScript)();
+    const body = TABLE_LAYOUT_DEFINE.replace(/^<script>|<\/script>$/g, "");
+    expect(body).not.toContain("</script");
+    new Function(body)();
     expect(typeof win.yolosLayoutTable).toBe("function");
   });
 });
