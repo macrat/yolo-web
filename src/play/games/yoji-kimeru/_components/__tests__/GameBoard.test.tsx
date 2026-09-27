@@ -1,59 +1,66 @@
 import { expect, test, describe } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import GameBoard from "@/play/games/yoji-kimeru/_components/GameBoard";
 import type { YojiGuessFeedback } from "@/play/games/yoji-kimeru/_lib/types";
 
+const guesses: YojiGuessFeedback[] = [
+  {
+    guess: "花鳥風月",
+    charFeedbacks: ["absent", "absent", "absent", "absent"],
+  },
+  {
+    guess: "一石二鳥",
+    charFeedbacks: ["correct", "present", "absent", "correct"],
+  },
+];
+
 describe("GameBoard", () => {
-  test("renders empty board with correct number of rows", () => {
-    render(<GameBoard guesses={[]} maxGuesses={6} />);
-    const grid = screen.getByRole("grid");
-    expect(grid).toBeInTheDocument();
+  test("shows only the next row before the first guess", () => {
+    render(<GameBoard guesses={[]} showNextRow={true} addedRow={null} />);
+    expect(screen.getAllByRole("row")).toHaveLength(1);
+    expect(screen.getAllByRole("cell", { name: "空欄" })).toHaveLength(4);
+  });
 
-    // 6 guess rows (no header row for yoji-kimeru)
+  test("shows the used rows and the next row while playing", () => {
+    render(<GameBoard guesses={guesses} showNextRow={true} addedRow={null} />);
+    expect(screen.getAllByRole("row")).toHaveLength(3);
+  });
+
+  test("shows only the used rows after the game ends", () => {
+    render(<GameBoard guesses={guesses} showNextRow={false} addedRow={null} />);
+    expect(screen.getAllByRole("row")).toHaveLength(2);
+    expect(screen.queryByRole("cell", { name: "空欄" })).toBeNull();
+  });
+
+  test("puts the legend's mark under each guessed character", () => {
+    render(<GameBoard guesses={guesses} showNextRow={false} addedRow={null} />);
+    const secondRow = screen.getAllByRole("row")[1];
+    const cells = within(secondRow).getAllByRole("cell");
+    expect(cells.map((cell) => cell.textContent)).toEqual([
+      "一◯",
+      "石△",
+      "二×",
+      "鳥◯",
+    ]);
+  });
+
+  test("reads each cell with the character and the legend's words", () => {
+    render(<GameBoard guesses={guesses} showNextRow={false} addedRow={null} />);
+    expect(
+      screen.getByRole("cell", { name: "一: 正しい位置" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("cell", { name: "石: 別の位置" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("cell", { name: "二: 含まれない" }),
+    ).toBeInTheDocument();
+  });
+
+  test("gives the appearing motion only to the row the guess just added", () => {
+    render(<GameBoard guesses={guesses} showNextRow={true} addedRow={1} />);
     const rows = screen.getAllByRole("row");
-    expect(rows).toHaveLength(6);
-  });
-
-  test("renders empty cells in each row", () => {
-    render(<GameBoard guesses={[]} maxGuesses={6} />);
-    // 6 rows x 4 empty cells = 24 cells
-    const cells = screen.getAllByRole("cell");
-    expect(cells).toHaveLength(24);
-  });
-
-  test("renders filled row with feedback", () => {
-    const guesses: YojiGuessFeedback[] = [
-      {
-        guess: "花鳥風月",
-        charFeedbacks: ["correct", "correct", "correct", "correct"],
-      },
-    ];
-
-    render(<GameBoard guesses={guesses} maxGuesses={6} />);
-
-    // The guessed characters should appear in the grid
-    expect(screen.getByText("花")).toBeInTheDocument();
-    expect(screen.getByText("鳥")).toBeInTheDocument();
-    expect(screen.getByText("風")).toBeInTheDocument();
-    expect(screen.getByText("月")).toBeInTheDocument();
-  });
-
-  test("renders multiple filled rows", () => {
-    const guesses: YojiGuessFeedback[] = [
-      {
-        guess: "花鳥風月",
-        charFeedbacks: ["absent", "absent", "absent", "absent"],
-      },
-      {
-        guess: "一期一会",
-        charFeedbacks: ["correct", "present", "correct", "absent"],
-      },
-    ];
-
-    render(<GameBoard guesses={guesses} maxGuesses={6} />);
-
-    expect(screen.getByText("花")).toBeInTheDocument();
-    expect(screen.getByText("鳥")).toBeInTheDocument();
-    expect(screen.getByText("期")).toBeInTheDocument();
+    expect(rows[0].className).not.toMatch(/rowAppears/);
+    expect(rows[1].className).toMatch(/rowAppears/);
   });
 });

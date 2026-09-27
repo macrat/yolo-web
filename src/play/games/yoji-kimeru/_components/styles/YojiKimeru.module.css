@@ -1,397 +1,245 @@
-/* Yoji Kimeru Game Styles
- *
- * 判定フィードバック（正しい位置/別の位置に存在/含まれない）のセルの地に和色（--wairo-*）を使う。
- * - correct（正しい位置） = --wairo-tokiwa（常磐・緑）
- * - present（別の位置）   = --wairo-yamabuki（山吹・黄）
- * - absent（含まれない）  = 色の不在（--ink-2 の墨の濃淡）
- * どの状態も色だけでなく、セル内の文字＋aria-label（正しい位置/別の位置に存在/含まれない）で
- * 判定できる（§2）。器（ヘッダー・入力欄・ボタン等）は UI のトークンだけを使う。
- */
-
-/* ===== Header ===== */
-.header {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-8);
-  border-bottom: 1px solid var(--rule);
+/* 四字キメルの本体。どの区画もコンテンツ幅の左端から組む（DESIGN.md §5）。 */
+.game {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
+  align-items: flex-start;
+  gap: var(--space-16);
 }
 
-.title {
-  font-family: var(--font-heading);
-  font-size: 1.4rem;
-  letter-spacing: 0.05em;
+.game > * {
+  max-width: 100%;
+}
+
+/* ===== ヒントの帯 ===== */
+/* 1行に1つのヒント。行の中で折れない短い文なので、読み込みの前後で行の数が変わらない。途中まで遊んだ来訪者が
+ * 開き直したときは、記録の行の数（--hint-lines）の高さを、記録を戻すまで取っておく。 */
+.hints {
+  min-height: calc(var(--hint-lines, 2) * 1lh);
+  font-size: var(--text-small);
   color: var(--ink);
 }
 
-/* 遊び方・統計のボタン。縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。 */
-.headerButtons {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--text-box-pad);
-}
-
-.headerSub {
-  font-size: 0.8125rem;
-  color: var(--ink-2);
-}
-
-/* ===== Difficulty Selector ===== */
-/* 選択肢の見え方はラジオボタンの組が持ち、ここは上の並びとのあいだだけを持つ。 */
-.difficultySelector {
-  margin-top: var(--space-8);
-}
-
-/* ===== Hint Bar ===== */
-.hintBar {
-  width: 100%;
-  max-width: 600px;
-  padding: var(--space-8) var(--space-16);
-  text-align: center;
-  font-size: 0.9375rem;
-  color: var(--ink-2);
-  border-bottom: 1px solid var(--rule);
-}
-
 .hintLabel {
-  font-weight: 600;
-  margin-right: var(--space-8);
+  font-weight: 700;
+  margin-inline-end: var(--space-8);
 }
 
-.hintValue {
-  margin-right: var(--space-16);
+.hintNext {
+  color: var(--ink-2);
 }
 
-/* ===== Game Board ===== */
-.boardWrapper {
-  width: 100%;
-  padding: var(--space-8) 0;
-  display: flex;
-  justify-content: center;
-}
-
+/* ===== 盤 ===== */
+/* 4つの字のマスの大きさがこの盤の中身なので、幅はマスが決め、コンテンツ幅に広げない（§5「画像・色見本は
+ * コンテンツが決める」と同じ考え方）。マスは太い線で区切る。途中まで遊んだ来訪者が開き直したときは、記録の
+ * 行の数（--board-rows）の高さを、記録を戻すまで取っておく。 */
 .board {
+  --row-height: calc(
+    var(--char-size) * var(--char-leading) + var(--mark-size) *
+      var(--mark-leading) + var(--rule-w)
+  );
+  --char-size: var(--text-step-2);
+  --char-leading: 1.4;
+  --mark-size: 1.25rem;
+  --mark-leading: 1.2;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  width: 100%;
-  max-width: 280px;
+  min-height: calc(var(--board-rows, 1) * var(--row-height) + var(--rule-w));
+  width: 280px;
+  border-top: var(--rule-w) solid var(--rule);
+  border-left: var(--rule-w) solid var(--rule);
 }
 
-/* ===== Guess Row ===== */
-.guessRow {
+.row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.25rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-/* ===== Feedback Cell ===== */
-.cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3.5rem;
-  border-radius: var(--radius);
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-align: center;
-  padding: 0.15rem;
-  animation: flipIn 0.4s ease-out;
-}
-
-/* 成果物（ゲームの駒）の判定色 = 和色。文字色はそれぞれの -on トークンで確保する。 */
-.cellCorrect {
-  composes: cell;
-  background-color: var(--wairo-tokiwa);
-  color: var(--wairo-tokiwa-on);
-}
-
-.cellPresent {
-  composes: cell;
-  background-color: var(--wairo-yamabuki);
-  color: var(--wairo-yamabuki-on);
-}
-
-/* 不一致 = 色の不在（墨の濃淡）。判定は色でなくセル内テキスト＋aria-label で示す。 */
-.cellAbsent {
-  composes: cell;
-  background-color: var(--ink-2);
-  color: var(--paper);
-}
-
+/* マスは、推測した字の下に判定の印を置く。空のマスも同じ2行を見えない字で持ち、同じ高さになる。 */
+.cellHit,
+.cellMiss,
 .cellEmpty {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3.5rem;
-  border-radius: var(--radius);
-  border: 2px solid var(--rule);
-  background-color: transparent;
-}
-
-/* ===== Animations ===== */
-@keyframes flipIn {
-  0% {
-    transform: rotateX(90deg);
-    opacity: 0;
-  }
-  100% {
-    transform: rotateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-4px);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(4px);
-  }
-}
-
-.shaking {
-  animation: shake 0.4s ease-in-out;
-}
-
-/* ===== Guess Input ===== */
-.inputArea {
-  width: 100%;
-  max-width: 600px;
-  padding: var(--space-16) var(--space-8);
-  display: flex;
   flex-direction: column;
   align-items: center;
+  border-right: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--rule);
+  background: var(--paper);
+}
+
+/* 当たりと当たりに近い判定のマスは --paper-2 の地に --ink の印、外れの判定のマスは --paper の地に --ink-2 の
+ * 印で、地と印の濃さでも盤を見渡せるようにする（§8）。 */
+.cellHit {
+  background: var(--paper-2);
+}
+
+/* 字の行の高さは、字の上下の余白（字面の外の箱）までマスの中に収める。 */
+.char {
+  font-size: var(--char-size);
+  line-height: var(--char-leading);
+  color: var(--ink);
+}
+
+/* 印は凡例と同じ字を、凡例と同じ見出しの書体で組む。 */
+.mark {
+  font-family: var(--font-heading);
+  font-size: var(--mark-size);
+  line-height: var(--mark-leading);
+  color: var(--ink);
+}
+
+.cellMiss .mark {
+  color: var(--ink-2);
+}
+
+/* 判定が現れる動きは、推測という操作への応え（§11 の操作フィードバック。150ms 以下）。 */
+.rowAppears > * {
+  animation: cellAppear 150ms ease-out;
+}
+
+@keyframes cellAppear {
+  from {
+    opacity: 0;
+    transform: rotateX(90deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowAppears > * {
+    animation: none;
+  }
+}
+
+@media (min-width: 480px) {
+  .board {
+    width: 320px;
+  }
+}
+
+/* ===== 入力欄 ===== */
+/* 欄のラベル・欄・誤りの文を積む。欄と送信のボタンの並びは本文の幅で折り返す（§5）。 */
+.guess {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-8);
+  width: 100%;
+}
+
+/* 残りの回数は括弧の一続きで、中では折らない（§4）。 */
+.remaining {
+  white-space: nowrap;
 }
 
 .inputRow {
   display: flex;
   gap: var(--space-8);
-  align-items: center;
-  width: 100%;
-  max-width: 300px;
+  max-width: var(--measure);
 }
 
-/* 枠・余白・無効の見え方・フォーカスの二重リングは data-field（globals.css）が持つ。ここは欄の幅と字の組み方だけを持つ。 */
-.inputField {
-  flex: 1;
+.inputRow > [data-field] {
+  flex: 1 1 auto;
   min-width: 0;
-  font-size: 1.5rem;
-  text-align: center;
 }
 
-/* 入力できない理由。入力の並びの下に本文の大きさで置く（§6 無効）。 */
-.disabledReason {
-  color: var(--ink-2);
-  text-align: center;
+.inputRow > button {
+  flex: none;
 }
 
-/* ===== Result Modal ===== */
-.resultAnswer {
-  font-family: var(--font-heading);
-  text-align: center;
-  font-size: 2rem;
-  color: var(--ink);
-  margin-bottom: 0.25rem;
-  letter-spacing: 0.1em;
+/* ===== くわしい遊び方 ===== */
+/* 開閉の行と中身は、本体の幅いっぱいを使って折り返す。 */
+.howToPlayAccordion {
+  width: 100%;
 }
 
-.resultReading {
-  text-align: center;
-  font-size: 0.9375rem;
-  color: var(--ink-2);
-  margin-bottom: 0.25rem;
-}
-
-.resultMeaning {
-  text-align: center;
-  font-size: 0.9375rem;
-  color: var(--ink-2);
-  margin-bottom: var(--space-8);
-}
-
-.resultSummary {
-  text-align: center;
-  font-size: 1rem;
-  color: var(--ink);
-  margin-bottom: var(--space-16);
-}
-
-/* ===== Stats Button (Result Modal) ===== */
-/* 統計を開くボタンの見え方は Button が持ち、ここは上の内容とのあいだだけを持つ。 */
-.statsAction {
-  margin-top: var(--space-16);
-}
-
-/* ===== Stats Modal ===== */
-.statsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
-  margin-bottom: var(--space-16);
-}
-
-.statItem {
-  text-align: center;
-}
-
-.statValue {
-  font-family: var(--font-body);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.statLabel {
-  font-size: 0.8125rem;
-  color: var(--ink-2);
-}
-
-.distributionTitle {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: var(--space-8);
-}
-
-.distributionRow {
+.howToPlay {
   display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.25rem;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--measure);
+  padding-block: var(--space-8);
 }
 
-.distributionLabel {
-  width: 1rem;
-  text-align: right;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink);
+.howToPlay ul {
+  padding-inline-start: 1.5em;
 }
 
-/* 既定（非ハイライト）のバー = 色の不在（墨の濃淡）。 */
-.distributionBar {
-  height: 1.2rem;
-  background-color: var(--ink-2);
-  border-radius: var(--radius);
-  min-width: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 0.35rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--paper);
-}
-
-/* 正解を出した回数のバー = 成果物内の和色ハイライト。 */
-.distributionBarHighlight {
-  composes: distributionBar;
-  background-color: var(--wairo-tokiwa);
-  color: var(--wairo-tokiwa-on);
-}
-
-/* ===== How To Play Modal ===== */
-.howToPlayContent {
-  line-height: 1.9;
-  color: var(--ink);
-}
-
-.howToPlayContent p {
-  margin-bottom: var(--space-8);
-}
-
-.howToPlaySection {
-  margin-top: var(--space-16);
-}
-
-.feedbackLegend {
-  margin: var(--space-8) 0;
-  padding: 0;
+.markList {
   list-style: none;
 }
 
-.feedbackLegend li {
+.howToPlay .markList {
+  padding-inline-start: 0;
+}
+
+.legendMark {
+  font-family: var(--font-heading);
+  margin-inline-end: 0.25em;
+}
+
+/* 前に分ける内容を持つ小見出しなので、上に細い罫線を引く（§5）。 */
+.howToPlayHeading {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-heading-sub);
+}
+
+/* ===== 難易度と日付 ===== */
+.settings {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.35rem;
-  font-size: 0.9375rem;
-  color: var(--ink);
+  flex-direction: column;
+  gap: var(--space-8);
 }
 
-/* フィードバック凡例の実色チップ（成果物の判定色をそのまま示す小さな四角）。
- * 絵文字は環境依存で実際の判定色と一致しないため使わない。 */
-.legendChip {
-  display: inline-block;
-  width: 1.1rem;
-  height: 1.1rem;
-  border-radius: var(--radius);
-  flex-shrink: 0;
-}
-
-.legendChipCorrect {
-  background-color: var(--wairo-tokiwa);
-}
-
-.legendChipPresent {
-  background-color: var(--wairo-yamabuki);
-}
-
-.legendChipAbsent {
-  background-color: var(--ink-2);
-}
-
-/* ===== Responsive ===== */
-@media (min-width: 480px) {
-  .cell {
-    min-height: 4rem;
-    font-size: 1.75rem;
-  }
-
-  .cellEmpty {
-    min-height: 4rem;
-  }
-
-  .board {
-    max-width: 320px;
-  }
-
-  .title {
-    font-size: 1.6rem;
-  }
-
-  .header {
-    padding: var(--space-16) var(--space-8);
-  }
-}
-
-/* ===== Result Meta (origin & category) ===== */
-.resultMeta {
-  text-align: center;
-  font-size: 0.8125rem;
+.puzzleDate {
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-bottom: var(--space-8);
 }
 
-.resultMetaSeparator {
-  margin: 0 var(--space-8);
-  opacity: 0.4;
+/* ===== 結果 ===== */
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  width: 100%;
+}
+
+.resultBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.resultBody > p {
+  max-width: var(--measure);
+}
+
+.answerOrigin {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 成績の小見出し。前に答えの説明があるので、上に細い罫線を引いて分ける（§5）。 */
+.resultHeading {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-heading-sub);
+}
+
+.statsTable {
+  width: 100%;
+}
+
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.shareHeading {
+  font-size: var(--text-heading-sub);
 }

@@ -36,8 +36,7 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6",
     );
-    expect(text).toContain("\u2B1C\u2B1C\u2B1C\u2B1C");
-    expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
+    expect(text.split("\n").slice(1, 3)).toEqual(["××××", "◯◯◯◯"]);
     expect(text.split("\n").at(-1)).toBe(
       "#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet",
     );
@@ -67,7 +66,7 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u56DB\u5B57\u30AD\u30E1\u30EB #42 (\u4E0A\u7D1A) X/6",
     );
-    const allAbsentRow = "\u2B1C\u2B1C\u2B1C\u2B1C";
+    const allAbsentRow = "××××";
     const lines = text.split("\n");
     for (let i = 1; i <= 6; i++) {
       expect(lines[i]).toBe(allAbsentRow);
@@ -93,7 +92,7 @@ describe("generateShareText", () => {
     expect(text).toContain("(\u521D\u7D1A)");
   });
 
-  test("emoji mapping is correct", () => {
+  test("lines up the same marks as the board, without emoji", () => {
     const state: YojiGameState = {
       puzzleDate: "2026-03-01",
       puzzleNumber: 5,
@@ -108,7 +107,8 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state, "intermediate");
-    expect(text).toContain("\u{1F7E9}\u{1F7E8}\u2B1C\u2B1C");
+    expect(text.split("\n")[1]).toBe("◯△××");
+    expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   test("includes puzzle number in header", () => {

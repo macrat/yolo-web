@@ -6,27 +6,27 @@ import styles from "./styles/YojiKimeru.module.css";
 
 interface GameBoardProps {
   guesses: YojiGuessFeedback[];
-  maxGuesses: number;
+  /** 次の推測を入れる空の行を見せるか（遊んでいるあいだだけ）。 */
+  showNextRow: boolean;
+  /** 来訪者の推測で、いま盤に加わった行の番号。その行の判定だけが現れる動きを持つ。 */
+  addedRow: number | null;
 }
 
 /**
- * The main game grid showing up to maxGuesses rows of feedback.
- * Each row has 4 cells (one per kanji character).
- * Filled rows show colored feedback, empty rows show placeholders.
+ * 盤。使った行と、次の推測を入れる1行だけを並べ、残りの空の行は見せない。1行は推測した4つの字で、
+ * 字の下に判定の印を置く。
  */
-export default function GameBoard({ guesses, maxGuesses }: GameBoardProps) {
-  const rows: (YojiGuessFeedback | null)[] = [];
-  for (let i = 0; i < maxGuesses; i++) {
-    rows.push(guesses[i] ?? null);
-  }
-
+export default function GameBoard({
+  guesses,
+  showNextRow,
+  addedRow,
+}: GameBoardProps) {
   return (
-    <div className={styles.boardWrapper}>
-      <div className={styles.board} role="grid" aria-label="推測結果">
-        {rows.map((feedback, i) => (
-          <GuessRow key={i} feedback={feedback} />
-        ))}
-      </div>
+    <div className={styles.board} role="table" aria-label="推測した四字熟語">
+      {guesses.map((feedback, i) => (
+        <GuessRow key={i} feedback={feedback} appears={i === addedRow} />
+      ))}
+      {showNextRow && <GuessRow feedback={null} appears={false} />}
     </div>
   );
 }

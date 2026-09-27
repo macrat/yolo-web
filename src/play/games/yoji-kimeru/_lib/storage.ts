@@ -20,11 +20,17 @@ function statsKey(difficulty: Difficulty): string {
   return `yoji-kimeru-stats-${difficulty}`;
 }
 
+/** 難易度ごとの遊んだ記録のキーの頭。後ろに難易度が付く。 */
+export const HISTORY_KEY_PREFIX = "yoji-kimeru-history-";
+
+/** 来訪者が選んだ難易度のキー。 */
+export const DIFFICULTY_KEY = "yoji-kimeru-difficulty";
+
 /**
  * Get the localStorage key for history of a given difficulty.
  */
 function historyKey(difficulty: Difficulty): string {
-  return `yoji-kimeru-history-${difficulty}`;
+  return `${HISTORY_KEY_PREFIX}${difficulty}`;
 }
 
 /**
@@ -209,4 +215,25 @@ export function saveTodayGame(
   const history = loadHistory(difficulty);
   history[date] = game;
   saveHistory(history, difficulty);
+}
+
+/**
+ * 来訪者が選んだ難易度。記録が無いか読めないときは中級。
+ */
+export function loadDifficulty(): Difficulty {
+  if (!isStorageAvailable()) return "intermediate";
+  const saved = window.localStorage.getItem(DIFFICULTY_KEY);
+  return saved === "beginner" || saved === "advanced" ? saved : "intermediate";
+}
+
+/**
+ * 来訪者が選んだ難易度を記録する。記録できなくても、いまの回はその難易度で遊べる。
+ */
+export function saveDifficulty(difficulty: Difficulty): void {
+  if (!isStorageAvailable()) return;
+  try {
+    window.localStorage.setItem(DIFFICULTY_KEY, difficulty);
+  } catch {
+    // Silently fail if storage is full or unavailable
+  }
 }

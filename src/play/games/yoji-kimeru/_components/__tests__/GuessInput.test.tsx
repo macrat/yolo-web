@@ -2,18 +2,35 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import GuessInput from "@/play/games/yoji-kimeru/_components/GuessInput";
 
+const LABEL = "中級の四字熟語を入力（あと6回）";
+
 describe("GuessInput", () => {
   test("renders input field and submit button", () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: LABEL })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "送信" })).toBeInTheDocument();
+    // 見えるラベルを持ち、プレースホルダに頼らない（DESIGN.md §8）。
+    expect(screen.getByText(LABEL).tagName).toBe("LABEL");
+  });
+
+  test("ties an input error to the field", async () => {
+    const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+
+    const input = screen.getByRole("textbox");
+    await waitFor(() => {
+      expect(input).toHaveAttribute("aria-invalid", "true");
+    });
+    expect(input).toHaveAccessibleDescription("四字熟語を入力してください");
   });
 
   test("shows error when submitting empty input", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     fireEvent.click(screen.getByRole("button", { name: "送信" }));
 
@@ -27,7 +44,7 @@ describe("GuessInput", () => {
 
   test("calls async onSubmit with input value", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "一期一会" } });
@@ -40,7 +57,7 @@ describe("GuessInput", () => {
 
   test("clears input on successful submission", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "一期一会" } });
@@ -56,7 +73,7 @@ describe("GuessInput", () => {
     const onSubmit = vi
       .fn()
       .mockResolvedValue({ kind: "invalid", message: errorMsg });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "花鳥風月" } });
@@ -71,7 +88,7 @@ describe("GuessInput", () => {
 
   test("shows a failed evaluation outside the field without marking the input invalid", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "unavailable" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "花鳥風月" } });
@@ -88,41 +105,25 @@ describe("GuessInput", () => {
     expect(input).toHaveValue("花鳥風月");
   });
 
-  test("disables input and button when disabled prop is true", () => {
+  test("keeps the field focusable but unchangeable while a guess is being sent", () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={true} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={true} />);
 
-    expect(screen.getByRole("textbox")).toBeDisabled();
+    expect(screen.getByRole("textbox")).not.toBeDisabled();
+    expect(screen.getByRole("textbox")).toHaveAttribute("readonly");
     expect(screen.getByRole("button")).toBeDisabled();
   });
 
-  test("disables input and button when submitting prop is true", () => {
+  test("says on the button that the guess is being sent", () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(
-      <GuessInput onSubmit={onSubmit} disabled={false} submitting={true} />,
-    );
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={true} />);
 
-    expect(screen.getByRole("textbox")).toBeDisabled();
-    expect(screen.getByRole("button")).toBeDisabled();
-  });
-
-  test("shows submitting placeholder when submitting is true", () => {
-    const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(
-      <GuessInput onSubmit={onSubmit} disabled={false} submitting={true} />,
-    );
-
-    expect(screen.getByRole("textbox")).toHaveAttribute(
-      "placeholder",
-      "送信中...",
-    );
+    expect(screen.getByRole("button")).toHaveTextContent("送信中...");
   });
 
   test("does not call onSubmit when submitting is true", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(
-      <GuessInput onSubmit={onSubmit} disabled={false} submitting={true} />,
-    );
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={true} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "一期一会" } });
@@ -135,7 +136,7 @@ describe("GuessInput", () => {
 
   test("submits on Enter key press", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "一期一会" } });
@@ -148,7 +149,7 @@ describe("GuessInput", () => {
 
   test("does not submit during IME composition", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     const input = screen.getByRole("textbox");
     fireEvent.compositionStart(input);
@@ -167,7 +168,7 @@ describe("GuessInput", () => {
 
   test("clears error message when typing new input", async () => {
     const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
-    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
 
     fireEvent.click(screen.getByRole("button", { name: "送信" }));
 
@@ -181,24 +182,5 @@ describe("GuessInput", () => {
     fireEvent.change(input, { target: { value: "あ" } });
 
     expect(screen.queryByRole("alert")).toBeNull();
-  });
-
-  test("does not throw when unmounted during shake animation", async () => {
-    const onSubmit = vi
-      .fn()
-      .mockResolvedValue({ kind: "invalid", message: "エラー" });
-    const { unmount } = render(
-      <GuessInput onSubmit={onSubmit} disabled={false} />,
-    );
-
-    const input = screen.getByRole("textbox");
-    fireEvent.change(input, { target: { value: "花鳥風月" } });
-    fireEvent.click(screen.getByRole("button", { name: "送信" }));
-
-    await waitFor(() => {
-      expect(screen.getByRole("alert")).toHaveTextContent("エラー");
-    });
-    // Unmount while shake timer is still pending — should not throw
-    unmount();
   });
 });
