@@ -55,9 +55,16 @@ export default function GameLayout({
         />
         <p className={styles.summary}>{meta.summary}</p>
         {meta.legend && (
-          <ul className={styles.legend}>
-            {meta.legend.map((entry) => (
-              <li key={entry}>{entry}</li>
+          <ul className={styles.legend} aria-label={meta.legend.name}>
+            {meta.legend.entries.map((entry) => (
+              <li key={entry.meaning}>
+                {entry.mark && (
+                  <span className={styles.mark} aria-hidden="true">
+                    {entry.mark}
+                  </span>
+                )}
+                {entry.meaning}
+              </li>
             ))}
           </ul>
         )}

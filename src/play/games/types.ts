@@ -1,3 +1,21 @@
+/** 凡例の1項目。 */
+export interface GameLegendEntry {
+  /**
+   * 盤に出る印（「◯」など）。読み上げでは読ませず、意味の語だけを読ませる。印の字は読み上げで別の語
+   * （× を「かける」など）になり、盤のマスの読み上げ（「部首: 一致」）とも食い違うため。
+   */
+  mark?: string;
+  /** 印の意味。盤のマスの読み上げも同じ語で言う。 */
+  meaning: string;
+}
+
+/** 盤の印の意味を言う凡例。 */
+export interface GameLegend {
+  /** 何の凡例かを言う名前。読み上げでリストの名前になる。 */
+  name: string;
+  entries: readonly GameLegendEntry[];
+}
+
 /**
  * Game metadata interface.
  * Single source of truth for all game-related metadata.
@@ -55,17 +73,13 @@ export interface GameMeta {
   };
 
   /**
-   * ページの頭で h1 の下に置く要約。何を、どこまでに当てる（作る）かを1文で言う。
+   * ページの頭で h1 の下に置く要約。今日の問題で何を、どこまでに当てる（作る）かを言う。
    * 320px の画面で2行に収まる長さ（約30字）にする。
    */
   summary: string;
 
-  /**
-   * 盤の印の意味を言う凡例。要約の下に、この並びのとおりに置く（判定の印の「◯ 一致」、グループに添える
-   * 難易度の「難易度1（易しい）〜」「難易度4（とても難しい）」）。画面の幅が足りないときは項目のあいだで折れるので、
-   * 括弧の一続きを項目の中に収める。盤の読み上げも同じ語で言う。印を持たないゲームは持たない。
-   */
-  legend?: readonly string[];
+  /** 盤の印の意味を言う凡例。要約の下に置く。印を持たないゲームは持たない。 */
+  legend?: GameLegend;
 
   /**
    * FAQ: Q&A形式の配列

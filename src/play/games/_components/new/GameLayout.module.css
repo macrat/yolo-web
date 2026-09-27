@@ -21,13 +21,23 @@
   max-width: var(--measure);
 }
 
-/* 凡例の項目は、1つの項目が1行に収まるうちは項目の中で折らず、項目のあいだで折る。 */
+/* 凡例の項目は、1つの項目が1行に収まるうちは項目の中で折らず、項目のあいだで折る。項目の中では語と
+ * 括弧の一続きを割らず、空白と括弧の前で折る。それでも1行に収まらない語だけを、その中で折る（§4）。 */
 .legend {
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--space-16);
   max-width: var(--measure);
   list-style: none;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* 印は盤の印と同じ字を見出しの書体で組む。本文の書体では × だけが欧文の小さな字形に落ち、3つの印の大きさが
+ * そろわない。見出しの書体の欧文（IBM Plex Sans）を飛ばし、Zen Antique の全角の印で組む。 */
+.mark {
+  font-family: var(--font-zen-antique), var(--font-ja-heading-fallback);
+  margin-inline-end: 0.25em;
 }
 
 /* 帰属表示は補助情報。上に細い罫線を引いて、ゲーム本体と分ける（§5）。 */

@@ -41,7 +41,14 @@ const mockMeta: GameMeta = {
 
 const mockMetaFull: GameMeta = {
   ...mockMeta,
-  legend: ["◯ 一致", "△ 近い", "× 不一致"],
+  legend: {
+    name: "盤の印の意味",
+    entries: [
+      { mark: "◯", meaning: "一致" },
+      { mark: "△", meaning: "近い" },
+      { mark: "×", meaning: "不一致" },
+    ],
+  },
   faq: [
     {
       question: "テスト質問？",
@@ -94,7 +101,7 @@ test("h1 はゲーム名で、パンくずのあとに h1・要約・凡例の�
   const heading = screen.getByRole("heading", { level: 1 });
   expect(heading).toHaveTextContent("テストゲーム");
   const summary = screen.getByText("今日の字を6回までに当てる");
-  const legend = screen.getByText("◯ 一致");
+  const legend = screen.getByRole("list", { name: "盤の印の意味" });
   const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
   const following = (a: Element, b: Element) =>
     a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING;
@@ -115,18 +122,73 @@ test("h1 は、ゲームの部品がダイアログを閉じたときのフォ�
   expect(gameTitleRef.current).toBe(heading);
 });
 
-test("凡例は GameMeta の legend の語をこの順に並べる", () => {
+test("凡例は名前を持ち、印と意味の語を legend の順に並べる", () => {
   render(
     <GameLayout meta={mockMetaFull}>
       <div>Content</div>
     </GameLayout>,
   );
-  const legend = screen.getByText("◯ 一致").closest("ul")!;
+  const legend = screen.getByRole("list", { name: "盤の印の意味" });
   const items = within(legend).getAllByRole("listitem");
   expect(items.map((item) => item.textContent)).toEqual([
-    "◯ 一致",
-    "△ 近い",
-    "× 不一致",
+    "◯一致",
+    "△近い",
+    "×不一致",
+  ]);
+});
+
+test("凡例の印は読み上げから外し、意味の語だけを読ませる", () => {
+  render(
+    <GameLayout meta={mockMetaFull}>
+      <div>Content</div>
+    </GameLayout>,
+  );
+  const legend = screen.getByRole("list", { name: "盤の印の意味" });
+  for (const mark of ["◯", "△", "×"]) {
+    expect(within(legend).getByText(mark)).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+  }
+  expect(
+    within(legend)
+      .getAllByRole("listitem")
+      .map((item) =>
+        [...item.childNodes]
+          .filter(
+            (node) =>
+              !(
+                node instanceof Element &&
+                node.getAttribute("aria-hidden") === "true"
+              ),
+          )
+          .map((node) => node.textContent)
+          .join(""),
+      ),
+  ).toEqual(["一致", "近い", "不一致"]);
+});
+
+test("印を持たない項目は意味の語だけを置く", () => {
+  render(
+    <GameLayout
+      meta={{
+        ...mockMeta,
+        legend: {
+          name: "盤の数の意味",
+          entries: [
+            { meaning: "グループの難易度 1（易しい）〜4（とても難しい）" },
+          ],
+        },
+      }}
+    >
+      <div>Content</div>
+    </GameLayout>,
+  );
+  const items = within(
+    screen.getByRole("list", { name: "盤の数の意味" }),
+  ).getAllByRole("listitem");
+  expect(items.map((item) => item.innerHTML)).toEqual([
+    "グループの難易度 1（易しい）〜4（とても難しい）",
   ]);
 });
 
@@ -137,16 +199,9 @@ test("凡例を持たないゲームは凡例を描かない", () => {
     </GameLayout>,
   );
   expect(screen.getByText("今日の字を6回までに当てる")).toBeInTheDocument();
-  expect(screen.queryByText("◯ 一致")).not.toBeInTheDocument();
-});
-
-test("「こんなゲームです」の区画を持たない", () => {
-  render(
-    <GameLayout meta={mockMetaFull}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  expect(screen.queryByText("こんなゲームです")).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("list", { name: "盤の印の意味" }),
+  ).not.toBeInTheDocument();
 });
 
 test("GameLayout renders FAQ section when provided", () => {
