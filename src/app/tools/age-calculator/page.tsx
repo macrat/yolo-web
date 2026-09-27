@@ -27,7 +27,7 @@ export default function AgeCalculatorPage() {
         }}
       />
       <ToolErrorBoundary>
-        <AgeCalculatorTile variant="full" />
+        <AgeCalculatorTile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

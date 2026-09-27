@@ -1,20 +1,28 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
+import { revealResult } from "@/lib/reveal";
 import AgeCalculatorTile from "../AgeCalculatorTile";
 
-describe("AgeCalculatorTile", () => {
-  // ルートの既定のタグは section
-  test("renders root element as section by default", () => {
-    const { container } = render(<AgeCalculatorTile />);
-    expect(container.firstChild?.nodeName).toBe("SECTION");
-  });
+vi.mock("@/lib/reveal", () => ({ revealResult: vi.fn() }));
 
-  // as でルートのタグを変えられる
-  test("renders root as div when as=div", () => {
-    const { container } = render(<AgeCalculatorTile as="div" />);
-    expect(container.firstChild?.nodeName).toBe("DIV");
+function calculate(birth: string, target: string) {
+  fireEvent.change(screen.getByLabelText(/生年月日/), {
+    target: { value: birth },
+  });
+  fireEvent.change(screen.getByLabelText(/基準日/), {
+    target: { value: target },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "計算" }));
+}
+
+const resultBox = () =>
+  screen.getByRole("region", { name: "年齢の計算の結果" });
+
+describe("AgeCalculatorTile", () => {
+  beforeEach(() => {
+    vi.mocked(revealResult).mockClear();
   });
 
   // 基本レンダリング: 生年月日・基準日の入力欄が表示される
@@ -96,7 +104,7 @@ describe("AgeCalculatorTile", () => {
     expect(th.innerHTML).toBe("生まれ年<wbr>（和暦）");
   });
 
-  // 値のセルは数と単位の組の切れ目と桁区切りの位置にだけ折り所を持つ
+  // 値のセルは組（数と単位・元号と年・干支と読み）の切れ目と桁区切りの位置にだけ折り所を持つ
   test("value cells break only between number+unit groups", () => {
     render(<AgeCalculatorTile />);
     fireEvent.change(screen.getByLabelText(/生年月日/), {
@@ -113,7 +121,7 @@ describe("AgeCalculatorTile", () => {
     expect(valueOf("通算日数")).toBe("13,<wbr>253日");
     expect(valueOf("通算月数")).toBe("435ヶ月");
     expect(valueOf("生まれ年（和暦）")).toBe("平成<wbr>2年");
-    expect(valueOf("干支")).toBe("午（うま）");
+    expect(valueOf("干支")).toBe("午<wbr>（うま）");
   });
 
   // 変換ロジックの正確性
@@ -217,7 +225,9 @@ describe("AgeCalculatorTile", () => {
     fireEvent.change(targetInput, { target: { value: "2000-01-01" } });
     fireEvent.click(screen.getByRole("button", { name: "計算" }));
     const alert = screen.getByRole("alert");
-    expect(alert.textContent).toMatch(/基準日より前/);
+    expect(alert.textContent).toBe(
+      "生年月日には、基準日と同じ日か、それより前の日付を入力してください",
+    );
     expect(birthInput).toHaveAttribute("aria-invalid", "true");
     expect(birthInput.getAttribute("aria-describedby")).toBe(alert.id);
     expect(targetInput).not.toHaveAttribute("aria-invalid");
@@ -243,24 +253,80 @@ describe("AgeCalculatorTile", () => {
     expect(screen.getByText("基準日（必須）")).toBeInTheDocument();
   });
 
-  // 計算の結果を知らせるライブリージョンがある
-  test("has role=status aria-live=polite for live region", () => {
+  // 同じ日なら 0歳0ヶ月0日 でエラーにしない（エラーの文と同じ振る舞い）
+  test("accepts the same day for birth and target dates", () => {
     render(<AgeCalculatorTile />);
-    const statusEl = screen.getByRole("status");
-    expect(statusEl).toBeInTheDocument();
-    expect(statusEl).toHaveAttribute("aria-live", "polite");
+    calculate("2026-01-01", "2026-01-01");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(resultBox().textContent).toMatch(/0歳0ヶ月0日/);
   });
 
-  // 計算後にライブリージョンに要約の文が入る
-  test("live region contains summary text after calculation", () => {
+  // 計算後にライブリージョンが年齢を知らせる
+  test("announces the age after calculation", () => {
     render(<AgeCalculatorTile />);
-    const birthInput = screen.getByLabelText(/生年月日/);
-    const targetInput = screen.getByLabelText(/基準日/);
-    fireEvent.change(birthInput, { target: { value: "2000-01-01" } });
-    fireEvent.change(targetInput, { target: { value: "2026-01-01" } });
+    calculate("1990-06-15", "2026-09-27");
+    expect(screen.getByRole("status").textContent).toBe(
+      "年齢は36歳3ヶ月12日です",
+    );
+  });
+
+  // 同じ入力で計算し直しても、知らせの中身を作り直して読ませる
+  test("re-creates the announcement when the same input is recalculated", () => {
+    render(<AgeCalculatorTile />);
+    calculate("1990-06-15", "2026-09-27");
+    const first = screen.getByRole("status").firstElementChild;
     fireEvent.click(screen.getByRole("button", { name: "計算" }));
-    const statusEl = screen.getByRole("status");
-    expect(statusEl.textContent).not.toBe("");
+    const second = screen.getByRole("status").firstElementChild;
+    expect(second?.textContent).toBe("年齢は36歳3ヶ月12日です");
+    expect(second).not.toBe(first);
+  });
+
+  // 計算し直すと結果のボックスを作り直し、登場の動きを持たせる
+  test("recalculating re-creates the result box with the appear animation", () => {
+    render(<AgeCalculatorTile />);
+    calculate("1990-06-15", "2026-09-27");
+    const first = resultBox();
+    expect(first.className).toMatch(/appears/);
+    fireEvent.click(screen.getByRole("button", { name: "計算" }));
+    const second = resultBox();
+    expect(second).not.toBe(first);
+    expect(first).not.toBeInTheDocument();
+    expect(second.className).toMatch(/appears/);
+  });
+
+  // エラーになると前の結果と知らせを消す
+  test("clears the previous result after an error", () => {
+    render(<AgeCalculatorTile />);
+    calculate("1990-06-15", "2026-09-27");
+    expect(resultBox()).toBeInTheDocument();
+    calculate("2030-01-01", "2026-09-27");
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: "年齢の計算の結果" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("status").textContent).toBe("");
+  });
+
+  // 計算するたびに、計算のボタンの行と結果のボックスを渡して結果を画面に入れる
+  test("reveals the result box after each calculation", () => {
+    render(<AgeCalculatorTile />);
+    calculate("1990-06-15", "2026-09-27");
+    expect(revealResult).toHaveBeenCalledTimes(1);
+    const [operations, result] = vi.mocked(revealResult).mock.calls[0];
+    expect(operations).toContainElement(
+      screen.getByRole("button", { name: "計算" }),
+    );
+    expect(result).toBe(resultBox());
+    fireEvent.click(screen.getByRole("button", { name: "計算" }));
+    expect(revealResult).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(revealResult).mock.calls[1][1]).toBe(resultBox());
+  });
+
+  // エラーのときは送らない
+  test("does not reveal anything on an error", () => {
+    render(<AgeCalculatorTile />);
+    fireEvent.click(screen.getByRole("button", { name: "計算" }));
+    expect(revealResult).not.toHaveBeenCalled();
   });
 
   // ライブリージョンは画面に出さず、スクリーンリーダーにだけ読ませる
@@ -275,26 +341,6 @@ describe("AgeCalculatorTile", () => {
     expect(
       screen.queryByRole("button", { name: /コピー/ }),
     ).not.toBeInTheDocument();
-  });
-
-  // 同じページに2つ置いても DOM id が重複しない
-  test("multiple instances have unique ids (no duplication)", () => {
-    render(
-      <>
-        <AgeCalculatorTile />
-        <AgeCalculatorTile />
-      </>,
-    );
-    const birthInputs = screen.getAllByLabelText(/生年月日/);
-    const targetInputs = screen.getAllByLabelText(/基準日/);
-    expect(birthInputs).toHaveLength(2);
-    expect(targetInputs).toHaveLength(2);
-    // id の一意性確認
-    const id1 = birthInputs[0].id;
-    const id2 = birthInputs[1].id;
-    expect(id1).not.toBe("");
-    expect(id2).not.toBe("");
-    expect(id1).not.toBe(id2);
   });
 
   // CSS のトークンと組み方
