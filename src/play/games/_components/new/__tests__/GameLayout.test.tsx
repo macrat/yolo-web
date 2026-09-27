@@ -176,7 +176,7 @@ test("印を持たない項目は意味の語だけを置く", () => {
         legend: {
           name: "盤の数の意味",
           entries: [
-            { meaning: "グループの難易度 1（易しい）〜4（とても難しい）" },
+            { meaning: "グループの難易度1（易しい）〜4（とても難しい）" },
           ],
         },
       }}
@@ -188,7 +188,7 @@ test("印を持たない項目は意味の語だけを置く", () => {
     screen.getByRole("list", { name: "盤の数の意味" }),
   ).getAllByRole("listitem");
   expect(items.map((item) => item.innerHTML)).toEqual([
-    "グループの難易度 1（易しい）〜4（とても難しい）",
+    "グループの難易度1（易しい）〜4（とても難しい）",
   ]);
 });
 

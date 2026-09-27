@@ -163,7 +163,7 @@ const gameEntries: GameMeta[] = [
     summary: "今日の16の言葉を、共通点で4組に分ける。4回間違えると終わり",
     legend: {
       name: "盤の数の意味",
-      entries: [{ meaning: "グループの難易度 1（易しい）〜4（とても難しい）" }],
+      entries: [{ meaning: "グループの難易度1（易しい）〜4（とても難しい）" }],
     },
     faq: [
       {

@@ -33,10 +33,10 @@
   overflow-wrap: anywhere;
 }
 
-/* 印は盤の印と同じ字を見出しの書体で組む。本文の書体では × だけが欧文の小さな字形に落ち、3つの印の大きさが
- * そろわない。見出しの書体の欧文（IBM Plex Sans）を飛ばし、Zen Antique の全角の印で組む。 */
+/* 印は盤の印と同じく見出しの書体で組む。◯・△・× は IBM Plex Sans の字の範囲（U+0000-007F）の外なので、
+ * 3つとも Zen Antique の全角の字形で組まれ、大きさがそろう。本文の書体では × が ◯・△ より小さい字形になる。 */
 .mark {
-  font-family: var(--font-zen-antique), var(--font-ja-heading-fallback);
+  font-family: var(--font-heading);
   margin-inline-end: 0.25em;
 }
 
