@@ -5,50 +5,27 @@ import {
   createTableExtension,
 } from "@/lib/markdown-extensions";
 
-function render(md: string): string {
-  return new Marked(createTableExtension(), alertExtension).parse(md, {
+function render(md: string, options = {}): string {
+  return new Marked(createTableExtension(options), alertExtension).parse(md, {
     async: false,
   });
 }
 
-function cells(md: string): string[] {
-  return [...render(md).matchAll(/<t[dh]>([\s\S]*?)<\/t[dh]>/g)].map(
-    (m) => m[1],
-  );
-}
-
 describe("createTableExtension", () => {
-  test("表を .table-scroll で包む", () => {
-    expect(render("| A |\n|---|\n| 1 |")).toMatch(
-      /^<div class="table-scroll"><table>[\s\S]*<\/table>\n<\/div>\n$/,
+  test("表を .table-scroll で包み、セルは折り所を持たない", () => {
+    expect(render("| 新しい値の参照 |\n|---|\n| 1 |")).toBe(
+      '<div class="table-scroll"><table>\n<thead>\n<tr>\n<th>新しい値の参照</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n</tr>\n</tbody></table>\n</div>\n',
     );
   });
 
-  test("セルの語と語のあいだに <wbr> を置く", () => {
-    expect(cells("| 新しい値の参照 |\n|---|\n| x |")[0]).toBe(
-      "新しい<wbr>値<wbr>の<wbr>参照",
-    );
-  });
-
-  test("数字とそれに続く字のあいだ、平仮名どうしのあいだ、記号の前後には置かない", () => {
-    expect(
-      cells("| 4バイト（サロゲートペア） |\n|---|\n| ひらがな・カタカナ |"),
-    ).toEqual(["4バイト（サロゲートペア）", "ひらがな・カタカナ"]);
-  });
-
-  test("全角の英数字どうしのあいだと、最後の1字の語の前には置かない", () => {
-    expect(cells("| ＡＢＣ と 戻り値 |\n|---|\n| x |")[0]).toBe(
-      "ＡＢＣ と 戻り値",
-    );
-  });
-
-  test("コード片・タグ・文字参照の中には置かない", () => {
-    const [cell] = cells(
-      "| `新しい値` と [新しい値の参照](https://example.com) の 値&amp;値 |\n|---|\n| x |",
-    );
-    expect(cell).toBe(
-      '<code>新しい値</code> と <a href="https://example.com">新しい<wbr>値<wbr>の<wbr>参照</a> の 値&amp;値',
-    );
+  test("記事の側から、枠の印とセルの折り所を差し込める", () => {
+    const html = render("| a | b |\n|:-:|---|\n| x | y |", {
+      frameClass: "table-phrased",
+      breakCell: (cell: string) => `[${cell}]`,
+    });
+    expect(html).toContain('<div class="table-scroll table-phrased">');
+    expect(html).toContain('<th align="center">[a]</th>');
+    expect(html).toContain("<td>[y]</td>");
   });
 });
 

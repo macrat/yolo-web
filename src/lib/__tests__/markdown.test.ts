@@ -194,18 +194,58 @@ describe("markdownToHtml", () => {
     expect(html).toContain("<td>");
   });
 
-  test("表を横に送れる枠で包む（列が本文の幅に収まらない表のため）", async () => {
-    const md = "| A | B |\n|---|---|\n| 1 | 2 |";
+  test("表を、区切りを持つ印の付いた横に送れる枠で包み、直後に表を組むスクリプトを置く", async () => {
+    const md = "| A | B |\n|---|---|\n| 1 | 2 |\n\n本文";
     const { html } = await markdownToHtml(md);
     expect(html).toMatch(
-      /<div class="table-scroll"><table>[\s\S]*<\/table>\s*<\/div>/,
+      /<div class="table-scroll table-phrased"><table>[\s\S]*<\/table>\s*<\/div><script>window\.yolosLayoutTable&&yolosLayoutTable\(document\.currentScript\)<\/script>\n<p>本文<\/p>/,
     );
   });
 
-  test("表のセルの語の切れ目に <wbr> を残す（サニタイズで消えない）", async () => {
-    const md = "| 列 |\n|---|\n| 新しい値の参照 |";
+  test("本文に書いたスクリプトはサニタイズで消え、表の直後の決まった文だけが残る", async () => {
+    const md = "<script>alert(1)</script>\n\n| A |\n|---|\n| 1 |";
     const { html } = await markdownToHtml(md);
-    expect(html).toContain("<td>新しい<wbr />値<wbr />の<wbr />参照</td>");
+    expect(html).not.toContain("alert");
+    expect(html.match(/<script>/g)).toHaveLength(1);
+  });
+
+  describe("表のセルの文節の区切り", () => {
+    async function cell(text: string): Promise<string> {
+      const { html } = await markdownToHtml(`| x |\n|---|\n| ${text} |`);
+      return html.match(/<td>([\s\S]*?)<\/td>/)![1];
+    }
+
+    test("語の切れ目の解析が語の中で分ける所には置かない", async () => {
+      expect(await cell("リロード時の変化")).toBe("リロード時の<wbr />変化");
+      expect(await cell("無指定")).toBe("無指定");
+      expect(await cell("コロケーション最重視")).toBe(
+        "コロケーション<wbr />最重視",
+      );
+    });
+
+    test("丸括弧の中も文節で折る", async () => {
+      const text = await cell("大（ページ数分のファイル作成）");
+      expect(text.replace(/<wbr \/>/g, "")).toBe(
+        "大（ページ数分のファイル作成）",
+      );
+      expect(text).toMatch(/（[^）]*<wbr \/>[^）]*）/);
+    });
+
+    test("コード片の中には置かず、強調やリンクをまたぐ文節を切らない", async () => {
+      expect(await cell("`新しい値の参照` を使う")).not.toMatch(
+        /<code>[^<]*<wbr/,
+      );
+      const emphasized = await cell("新しい**値の**参照");
+      expect(emphasized.replace(/<wbr \/>/g, "|")).toBe(
+        "新しい|<strong>値の|</strong>参照",
+      );
+    });
+
+    test("文字参照を1字に数える", async () => {
+      expect(await cell("A&amp;Bの新しい値の参照")).toBe(
+        "A&amp;Bの<wbr />新しい<wbr />値の<wbr />参照",
+      );
+    });
   });
 
   test("converts blockquotes", async () => {

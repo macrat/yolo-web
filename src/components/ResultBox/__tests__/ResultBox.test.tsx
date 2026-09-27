@@ -139,12 +139,12 @@ describe("ResultBox", () => {
   });
 
   test("横に送る枠は、中身がはみ出すときだけ Tab で止まり、名前を持つ", () => {
-    const scrollWidth = vi
-      .spyOn(HTMLElement.prototype, "scrollWidth", "get")
-      .mockReturnValue(500);
-    const clientWidth = vi
-      .spyOn(HTMLElement.prototype, "clientWidth", "get")
-      .mockReturnValue(300);
+    // 中身（pre）の幅が、枠（中身の区画）の幅を超える。
+    const rect = vi
+      .spyOn(HTMLElement.prototype, "getBoundingClientRect")
+      .mockImplementation(function (this: HTMLElement) {
+        return { width: this.tagName === "PRE" ? 500 : 300 } as DOMRect;
+      });
     render(
       <ResultBox caption="整形した JSON" kind="code">
         <pre>code</pre>
@@ -155,8 +155,7 @@ describe("ResultBox", () => {
     });
     expect(frame.tabIndex).toBe(0);
     expect(frame).toContainElement(screen.getByText("code"));
-    scrollWidth.mockRestore();
-    clientWidth.mockRestore();
+    rect.mockRestore();
   });
 
   test("中身がはみ出さない表の枠は、Tab で止まらず名前も持たない", () => {

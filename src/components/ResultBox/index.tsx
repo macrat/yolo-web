@@ -14,7 +14,7 @@ import styles from "./ResultBox.module.css";
 
 /** 結果の見出し。§4 のセクションの見出しの段で、文節で折って組む。 */
 export type ResultHeading = HeadingFontAttr & {
-  /** 見出しの文を折り所で分けた並び。サーバーで splitIntoPhrases（@/lib/phrase-breaks）が作ったものを渡す。 */
+  /** 見出しの文を折り所で分けた並び。作り方は PhrasedText の phrases と同じ。 */
   phrases: readonly string[];
   /** 見出しの要素の段（既定: 2） */
   level?: 2 | 3;

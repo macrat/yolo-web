@@ -15,6 +15,10 @@ import {
   alertExtension,
   createTableExtension,
 } from "@/lib/markdown-extensions";
+// 表のセルを見出しと同じ区切りの関数で文節に分ける（DESIGN.md §4）
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+// 表を最初の描画から組むスクリプト（DESIGN.md §5 表）
+import { TABLE_LAYOUT_CALL } from "@/lib/scroll-frame";
 
 /**
  * Custom marked extension for fenced code blocks.
@@ -152,6 +156,88 @@ function createHeadingExtension(): {
   return { extension, getHeadings };
 }
 
+/** 区切りを持つ記事の表の枠の印。本文の CSS は、この印を持つ表のセルだけを `keep-all` で組む。 */
+const PHRASED_TABLE_CLASS = "table-phrased";
+
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+};
+
+function decodeEntity(entity: string): string {
+  const body = entity.slice(1, -1);
+  if (body.startsWith("#x") || body.startsWith("#X")) {
+    return String.fromCodePoint(parseInt(body.slice(2), 16));
+  }
+  if (body.startsWith("#")) return String.fromCodePoint(Number(body.slice(1)));
+  return NAMED_ENTITIES[body] ?? entity;
+}
+
+/** セルの HTML の1字（文字参照は1字）と、そのもとの書き方。 */
+interface CellChar {
+  source: string;
+  text: string;
+  inCode: boolean;
+}
+
+/**
+ * 組んだセルの HTML に、文節の切れ目の `<wbr>` を置く（DESIGN.md §4 表のセル）。
+ *
+ * 区切りの関数は、セルの字の全体（タグを除き、コード片の字も含め、文字参照を1字に数えた並び）に当てる。
+ * タグで分かれた切れ端ごとに当てると、強調やリンクの前後で文節が切られる。切れ目のうち、前後の字がどちらも
+ * コード片の中にあるものは除く（コード片は字の並びそのものが中身）。`<wbr>` は切れ目の前の字の直後に置き、
+ * 前の字だけがコード片の中にあるときは、コード片を閉じたあとに置く。
+ */
+function breakCellAtPhrases(html: string): string {
+  const pieces: (CellChar | string)[] = [];
+  let codeDepth = 0;
+  for (const part of html.split(/(<[^>]*>)/)) {
+    if (part.startsWith("<")) {
+      if (/^<code[\s>]/.test(part)) codeDepth += 1;
+      else if (part === "</code>") codeDepth -= 1;
+      pieces.push(part);
+      continue;
+    }
+    for (const [source] of part.matchAll(/&#?\w+;|[\s\S]/gu)) {
+      const text = source.startsWith("&") ? decodeEntity(source) : source;
+      pieces.push({ source, text, inCode: codeDepth > 0 });
+    }
+  }
+  const chars = pieces.filter(
+    (piece): piece is CellChar => typeof piece !== "string",
+  );
+  const plain = chars.map((char) => char.text).join("");
+  const breakAfter = new Set<CellChar>();
+  const breakBefore = new Set<CellChar>();
+  let boundary = 0;
+  let consumed = 0;
+  let index = 0;
+  const phrases = splitIntoPhrases(plain, { breakInParens: true });
+  for (const phrase of phrases.slice(0, -1)) {
+    boundary += phrase.length;
+    while (index < chars.length && consumed < boundary) {
+      consumed += chars[index].text.length;
+      index += 1;
+    }
+    const before = chars[index - 1];
+    const after = chars[index];
+    if (!before || !after || (before.inCode && after.inCode)) continue;
+    if (before.inCode) breakBefore.add(after);
+    else breakAfter.add(before);
+  }
+  return pieces
+    .map((piece) => {
+      if (typeof piece === "string") return piece;
+      const head = breakBefore.has(piece) ? "<wbr>" : "";
+      const tail = breakAfter.has(piece) ? "<wbr>" : "";
+      return head + piece.source + tail;
+    })
+    .join("");
+}
+
 /**
  * Build a fresh Marked instance with code, heading, table, and alert
  * extensions, plus a getter for the headings that instance collects.
@@ -178,7 +264,10 @@ function createMarkedInstance(): {
   const instance = new Marked(
     codeExtension,
     headingExtension,
-    createTableExtension(),
+    createTableExtension({
+      frameClass: PHRASED_TABLE_CLASS,
+      breakCell: breakCellAtPhrases,
+    }),
     alertExtension,
   );
   return { instance, getHeadings };
@@ -321,8 +410,13 @@ export async function markdownToHtml(
     breaks: false,
     async: true,
   });
-  // Sanitize to strip dangerous tags/attributes (XSS prevention)
-  const html = sanitize(result);
+  // Sanitize to strip dangerous tags/attributes (XSS prevention), then put the
+  // fixed script that lays out each table right after it, so that the table is
+  // laid out before the browser first paints it (DESIGN.md §5 表).
+  const html = sanitize(result).replace(
+    /<div class="table-scroll[^"]*">[\s\S]*?<\/table>\s*<\/div>/g,
+    (table) => table + TABLE_LAYOUT_CALL,
+  );
   return { html, headings: getHeadings() };
 }
 

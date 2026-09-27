@@ -86,12 +86,16 @@ function scriptRunLength(chars: string[], from: number, step: 1 | -1): number {
  * 最初の文節を、字の種類が変わって漢字か片仮名の語が始まる所（「チューリング|型思考者」「ことわざ|ビギナー」）で
  * さらに分ける。収まらない文節をブラウザが字の所で割ると、「思考／者」のように1字の行や、行頭の長音符が出るので、
  * 代わりに語の切れ目で折れるようにする。
- * 分けるのは、最初の空白より前で、切れ目の前後がどちらも2字以上の同じ字の種類の続きで、丸括弧の中でない所だけ。
+ * 分けるのは、最初の空白より前で、切れ目の前後がどちらも2字以上の同じ字の種類の続きで、丸括弧の中でない所だけ
+ * （丸括弧の中でも折る指定のときは、丸括弧の中も分ける）。
  * 最初の空白より前は行の頭から始まるので、この折り所は、そこが1行に収まらないときにしか使われない。空白の後ろは
  * ブラウザが空白で折れば行の途中から始まりうるので、分けると次の行に丸ごと入る語まで割る（「Unix タイムスタンプ／
  * 変換ツール」）。
  */
-function splitFirstPhraseAtWords(phrase: string): string[] {
+function splitFirstPhraseAtWords(
+  phrase: string,
+  breakInParens: boolean,
+): string[] {
   const chars = toGraphemes(phrase);
   const pieces: string[] = [];
   let start = 0;
@@ -105,7 +109,7 @@ function splitFirstPhraseAtWords(phrase: string): string[] {
     const before = scriptOf(chars[index - 1]);
     const after = scriptOf(chars[index]);
     if (
-      depth === 0 &&
+      (breakInParens || depth === 0) &&
       (after === "han" || after === "katakana") &&
       before !== "other" &&
       before !== after &&
@@ -121,12 +125,23 @@ function splitFirstPhraseAtWords(phrase: string): string[] {
   return pieces;
 }
 
+interface PhraseOptions {
+  /**
+   * 丸括弧の中でも文節で折る（表のセル。DESIGN.md §4）。表のセルの括弧は読み仮名や数でなく説明を囲み、中にも
+   * 文節がある。開き括弧の直後と閉じ括弧の直前で折らない禁則は残る。
+   */
+  breakInParens?: boolean;
+}
+
 /**
  * text を、見出しの行の切れ目にしてよい所で分けた並びを返す。並びをつなぐと text に戻る。
  * 区切りは文節の切れ目と、最初の文節の中の語の切れ目。最後の文節が1字なら前の文節につなぎ、見出しの最後の行を
  * 1字だけにしない。
  */
-export function splitIntoPhrases(text: string): string[] {
+export function splitIntoPhrases(
+  text: string,
+  { breakInParens = false }: PhraseOptions = {},
+): string[] {
   parser ??= loadDefaultJapaneseParser();
   const phrases: string[] = [];
   let parenDepth = 0;
@@ -134,7 +149,7 @@ export function splitIntoPhrases(text: string): string[] {
     const previous = phrases.at(-1);
     if (
       previous !== undefined &&
-      (parenDepth > 0 || isUnbreakable(previous, chunk))
+      ((!breakInParens && parenDepth > 0) || isUnbreakable(previous, chunk))
     ) {
       phrases[phrases.length - 1] = previous + chunk;
     } else {
@@ -148,5 +163,26 @@ export function splitIntoPhrases(text: string): string[] {
     phrases[phrases.length - 1] += last;
   }
   if (phrases.length === 0) return phrases;
-  return [...splitFirstPhraseAtWords(phrases[0]), ...phrases.slice(1)];
+  return [
+    ...splitFirstPhraseAtWords(phrases[0], breakInParens),
+    ...phrases.slice(1),
+  ];
+}
+
+/**
+ * 手で区切った見出しの並び（コードに書いた決まった文。PhrasedText の約束）が、splitIntoPhrases と同じ禁則を
+ * 満たすか。行の頭と終わりに置けない字の所・数字とそれに続く字のあいだ・丸括弧の中に区切りが無く、最後の文節が
+ * 1字でないこと。
+ */
+export function followsPhraseRules(phrases: readonly string[]): boolean {
+  let depth = 0;
+  for (const [index, phrase] of phrases.entries()) {
+    if (phrase === "") return false;
+    if (index > 0 && (depth > 0 || isUnbreakable(phrases[index - 1], phrase))) {
+      return false;
+    }
+    depth = parenDepthAfter(depth, phrase);
+  }
+  const last = phrases.at(-1);
+  return !(phrases.length > 1 && last && toGraphemes(last).length === 1);
 }

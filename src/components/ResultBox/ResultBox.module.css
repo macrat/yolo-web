@@ -43,6 +43,11 @@
   color: var(--ink-2);
 }
 
+/* 補助情報の行と見出しは、§5 の間隔のいちばん小さい値であける。接していると、見出しが補助情報の続きに見える。 */
+.caption + .heading {
+  margin-block-start: var(--space-8);
+}
+
 /* 名前を持つ結果の見出しは、ボックスの見出しの段が何であっても §4 のセクションの見出しの段で組む（§8）。 */
 .heading {
   font-size: var(--text-heading-section);
@@ -52,10 +57,23 @@
   flex-shrink: 0;
 }
 
-/* コードと表の結果は、ボックスの幅に収まらない中身をボックスの中で横に送る。 */
+/* コードと表の結果は、ボックスの幅に収まらない中身をボックスの中で横に送る。送るときは中身の区画が
+ * フォーカスを受けるが、区画の縁には線が無いので、リングは区画でなくボックスの太い線の外に密着して出す
+ * （§6。内の --paper の輪が線に接し、その外に --ink の輪）。 */
 .code .body,
 .table .body {
   overflow-x: auto;
+}
+
+.body:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.box:has(> .body:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--rule-w);
+  box-shadow: 0 0 0 var(--rule-w) var(--paper);
 }
 
 /* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、送るのはボックスの側が持つ。

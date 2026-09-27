@@ -26,6 +26,7 @@ import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
 import RelatedArticles from "@/blog/_components/RelatedArticles";
 import Prose from "@/components/Prose";
+import { proseLayoutScript } from "@/lib/scroll-frame";
 import styles from "./page.module.css";
 
 interface Props {
@@ -124,6 +125,8 @@ export default async function BlogPostPage({ params }: Props) {
             />
           )}
 
+          {/* 本文の表の直後のスクリプトが呼ぶ、表を組む関数を定める。描く前に組み、表とその下を動かさない。 */}
+          <script dangerouslySetInnerHTML={{ __html: proseLayoutScript }} />
           {/* markdownToHtml() の中でサニタイズしてある。 */}
           <Prose className={styles.body} html={post.contentHtml} />
 

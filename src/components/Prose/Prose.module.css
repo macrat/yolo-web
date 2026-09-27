@@ -2,7 +2,7 @@
  * 記事の本文（DESIGN.md §4・§5）。文（段落・箇条書き・引用・注記・本文の区切り・見出し）は本文の幅に
  * 絞り、表とコードのボックスは置かれる幅いっぱいに出す。
  * 表・コードのボックス・本文の中のコード片・本文の区切りの形は globals.css の要素の既定が持つ。ここでは
- * 本文の中の間隔と、本文にだけ出るもの（注記・引用・横に送る表の枠・コードの注釈）を足す。
+ * 本文の中の間隔と、本文にだけ出るもの（注記・引用・表の折り方と横に送る表の枠・コードの注釈）を足す。
  */
 .prose {
   color: var(--ink);
@@ -72,8 +72,8 @@
 }
 
 /*
- * 表を包む枠（src/lib/markdown-extensions.ts）。表はコンテンツ幅いっぱいに組み、セルは語の切れ目
- * （<wbr>）でだけ折る。列が収まらない表は、語を割らない幅のまま枠の中で横に送る。
+ * 表を包む枠（src/lib/markdown-extensions.ts）。表はコンテンツ幅いっぱいに組む。列の幅と、横に送るか
+ * （data-scrolls）は src/lib/scroll-frame.ts が描く前に決める。
  */
 .prose :global(.table-scroll) {
   margin: 0 0 var(--space-16);
@@ -84,26 +84,19 @@
   width: 100%;
 }
 
-.prose th,
-.prose td {
+/* 記事の表のセルは、サーバーが置いた文節の切れ目（<wbr>）でだけ折る。細くした列（data-narrowed）だけは、
+ * 列に入らない文節をその中で折る。区切りを持たない表（書いた Markdown のプレビュー）は通常の禁則で折る。 */
+.prose :global(.table-phrased) :is(th, td) {
   word-break: keep-all;
 }
 
-/*
- * 横に送る表のボックスの枠（src/components/Prose が、はみ出す表にだけ data-scrolls を付ける）。
- * 枠は場所を取らない線で、表の縁の内側に描く。枠が付いても字の位置と表の高さは変わらず、表の字の
- * 左端は枠の無い表と同じ所にある。フォーカスのリングは枠の外に密着させる。内側に出すと、横に送る
- * セルと罫線がリングに重なる。
- */
-.prose :global(.table-scroll[data-scrolls]) {
-  outline: var(--rule-w) solid var(--rule);
-  outline-offset: calc(-1 * var(--rule-w));
+.prose :global(.table-phrased) :is(th, td)[data-narrowed] {
+  overflow-wrap: anywhere;
 }
 
-.prose :global(.table-scroll[data-scrolls]):focus-visible {
-  outline: var(--rule-w) solid var(--rule);
-  outline-offset: calc(-1 * var(--rule-w));
-  box-shadow:
-    0 0 0 var(--rule-w) var(--paper),
-    0 0 0 calc(2 * var(--rule-w)) var(--ink);
+/* 横に送る表のボックス。ほかのボックスと同じ太い線と内側の余白を持ち、表はその内側に組む。フォーカスの
+ * リングは globals.css の既定のまま、太い線の外に密着して出る（§6）。 */
+.prose :global(.table-scroll[data-scrolls]) {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
 }

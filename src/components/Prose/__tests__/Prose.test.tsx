@@ -1,4 +1,4 @@
-import { describe, test, expect, afterEach } from "vitest";
+import { describe, test, expect, afterEach, vi } from "vitest";
 import { render, cleanup } from "@testing-library/react";
 import Prose from "@/components/Prose";
 
@@ -27,30 +27,16 @@ describe("Prose", () => {
     }
   });
 
-  test("はみ出す表とコードだけに、キーボードで送れる止まりどころと名前を付ける", () => {
-    const originalScroll = Object.getOwnPropertyDescriptor(
-      HTMLElement.prototype,
-      "scrollWidth",
-    );
-    const originalClient = Object.getOwnPropertyDescriptor(
-      HTMLElement.prototype,
-      "clientWidth",
-    );
-    // 描く前に幅を与えるため、プロトタイプで既定の幅を返す（はみ出す）。
-    Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
-      configurable: true,
-      get() {
-        return 500;
-      },
-    });
-    Object.defineProperty(HTMLElement.prototype, "clientWidth", {
-      configurable: true,
-      get() {
-        return 300;
-      },
-    });
+  test("はみ出す表とコードだけに、キーボードで送れる止まりどころと名前を付け、HTML を替えたら組み直す", () => {
+    // 表とコードの中身の幅（500）が、置かれた幅（300）を超える。
+    const rect = vi
+      .spyOn(HTMLElement.prototype, "getBoundingClientRect")
+      .mockImplementation(function (this: HTMLElement) {
+        const wide = this.tagName === "TABLE" || this.tagName === "CODE";
+        return { width: wide ? 500 : 300 } as DOMRect;
+      });
     try {
-      const { container } = render(<Prose html={HTML} />);
+      const { container, rerender } = render(<Prose html={HTML} />);
       const table = container.querySelector(".table-scroll") as HTMLElement;
       const pre = container.querySelector("pre") as HTMLElement;
       expect(table.tabIndex).toBe(0);
@@ -63,19 +49,12 @@ describe("Prose", () => {
       expect(pre.getAttribute("aria-label")).toBe(
         "コード（横にスクロールできます）",
       );
+      rerender(<Prose html={`${HTML}<p>足した段落</p>`} />);
+      expect(
+        container.querySelector(".table-scroll")!.hasAttribute("data-scrolls"),
+      ).toBe(true);
     } finally {
-      if (originalScroll)
-        Object.defineProperty(
-          HTMLElement.prototype,
-          "scrollWidth",
-          originalScroll,
-        );
-      if (originalClient)
-        Object.defineProperty(
-          HTMLElement.prototype,
-          "clientWidth",
-          originalClient,
-        );
+      rect.mockRestore();
     }
   });
 });

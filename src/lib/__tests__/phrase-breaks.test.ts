@@ -1,6 +1,6 @@
 import { loadDefaultJapaneseParser } from "budoux";
 import { describe, expect, test } from "vitest";
-import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 import { quizBySlug } from "@/play/quiz/registry";
 
 const characterPersonalityTypeNames = (
@@ -217,5 +217,41 @@ describe("splitIntoPhrases", () => {
 
   test("空の文は文節を持たない", () => {
     expect(splitIntoPhrases("")).toEqual([]);
+  });
+
+  test("丸括弧の中でも折る指定では、括弧の中も文節で分け、括弧の前後の禁則は残す", () => {
+    const table = { breakInParens: true };
+    const pieces = splitIntoPhrases("大（ページ数分のファイル作成）", table);
+    expect(pieces.length).toBeGreaterThan(2);
+    expect(pieces.join("")).toBe("大（ページ数分のファイル作成）");
+    for (const piece of pieces.slice(1)) {
+      expect(piece).not.toMatch(/^）/);
+    }
+    for (const piece of pieces.slice(0, -1)) {
+      expect(piece).not.toMatch(/（$/);
+    }
+    expect(splitIntoPhrases("大（ページ数分のファイル作成）")).toEqual([
+      "大（ページ数分のファイル作成）",
+    ]);
+  });
+});
+
+describe("followsPhraseRules", () => {
+  test("splitIntoPhrases が作る並びは、どれも禁則を満たす", () => {
+    for (const heading of allQuizHeadings) {
+      expect(followsPhraseRules(splitIntoPhrases(heading))).toBe(true);
+    }
+  });
+
+  test("行の頭と終わりに置けない字の所・数字の後ろ・丸括弧の中の区切りと、1字の最後の文節を見つける", () => {
+    expect(followsPhraseRules(["この", "タイプの", "強み"])).toBe(true);
+    expect(followsPhraseRules(["ことわざビギナ", "ー"])).toBe(false);
+    expect(followsPhraseRules(["「よし", "行くぞ！」と"])).toBe(true);
+    expect(followsPhraseRules(["行くぞ", "！」と"])).toBe(false);
+    expect(followsPhraseRules(["叫んで「", "よし"])).toBe(false);
+    expect(followsPhraseRules(["3", "秒後に"])).toBe(false);
+    expect(followsPhraseRules(["藍色（あい", "いろ）"])).toBe(false);
+    expect(followsPhraseRules(["座右の", "銘と", "し", "て"])).toBe(false);
+    expect(followsPhraseRules(["この", ""])).toBe(false);
   });
 });

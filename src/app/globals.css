@@ -348,7 +348,8 @@ hr {
   overflow-x: auto;
 }
 
-/* 表は外枠を持たず、行どうし・列どうしを細い線で区切る。 */
+/* 表は外枠を持たず、行どうし・列どうしを細い線で区切る。セルの余白は罫線を挟んだ字どうしを離すもので、
+ * 表の外側の縁（最初と最後の行・列の外側）では持たない。表の字の左端は本文の字の左端とそろう。 */
 :where(table) {
   border-collapse: collapse;
 }
@@ -361,7 +362,7 @@ hr {
 :where(th) {
   font-weight: 700;
 }
-/* caption・colgroup が先に来る表でも、最初と最後の行グループの外側の線を消す。 */
+/* caption・colgroup が先に来る表でも、最初と最後の行グループの外側の線と余白を消す。 */
 :where(
   table
     > :is(thead, tbody, tfoot):not(:is(thead, tbody, tfoot) ~ *)
@@ -369,6 +370,7 @@ hr {
     > *
 ) {
   border-top: none;
+  padding-top: 0;
 }
 :where(
   table
@@ -377,12 +379,15 @@ hr {
     > *
 ) {
   border-bottom: none;
+  padding-bottom: 0;
 }
 :where(th:first-child, td:first-child) {
   border-left: none;
+  padding-left: 0;
 }
 :where(th:last-child, td:last-child) {
   border-right: none;
+  padding-right: 0;
 }
 
 ::selection {

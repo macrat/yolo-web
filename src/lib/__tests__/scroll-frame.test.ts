@@ -1,34 +1,88 @@
 import { describe, test, expect } from "vitest";
-import { markScrollFrame, SCROLL_FRAME_LABELS } from "@/lib/scroll-frame";
+import {
+  createFrameLayout,
+  markScrollFrame,
+  proseLayoutScript,
+  SCROLL_FRAME_LABELS,
+} from "@/lib/scroll-frame";
 
-function frameWith(scrollWidth: number, clientWidth: number): HTMLElement {
+const { planColumns } = createFrameLayout();
+
+describe("planColumns（列の幅の決め方）", () => {
+  test("下限の合計が収まれば、どの列も下限のまま細くしない", () => {
+    expect(planColumns([100, 50, 30], 200, 68)).toEqual({
+      scrolls: false,
+      widths: [100, 50, 30],
+      narrowed: [false, false, false],
+    });
+  });
+
+  test("収まらなければ、長い列から同じ幅まで細くして収める", () => {
+    const plan = planColumns([200, 150, 30], 250, 68);
+    expect(plan.scrolls).toBe(false);
+    expect(plan.widths).toEqual([110, 110, 30]);
+    expect(plan.narrowed).toEqual([true, true, false]);
+    expect(plan.widths.reduce((a, b) => a + b)).toBe(250);
+  });
+
+  test("4字まで細くしても収まらなければ、下限のまま横に送る", () => {
+    expect(planColumns([200, 150, 100], 190, 68)).toEqual({
+      scrolls: true,
+      widths: [200, 150, 100],
+      narrowed: [false, false, false],
+    });
+  });
+
+  test("幅がちょうど境のとき", () => {
+    // 下限の合計がちょうど置く幅に等しければ、そのまま収まる。
+    expect(planColumns([120, 80], 200, 68).narrowed).toEqual([false, false]);
+    // 4字の幅まで細くしてちょうど収まれば、4字の幅で細くする（横に送らない）。
+    const plan = planColumns([200, 150, 64], 200, 68);
+    expect(plan.scrolls).toBe(false);
+    expect(plan.widths).toEqual([68, 68, 64]);
+    expect(plan.narrowed).toEqual([true, true, false]);
+  });
+});
+
+function frameWith(frameWidth: number, childWidth: number): HTMLElement {
   const frame = document.createElement("div");
-  Object.defineProperty(frame, "scrollWidth", { value: scrollWidth });
-  Object.defineProperty(frame, "clientWidth", { value: clientWidth });
+  const child = document.createElement("div");
+  frame.appendChild(child);
+  frame.getBoundingClientRect = () => ({ width: frameWidth }) as DOMRect;
+  child.getBoundingClientRect = () => ({ width: childWidth }) as DOMRect;
   return frame;
 }
 
-describe("markScrollFrame", () => {
-  test("はみ出す枠に止まりどころ・名前・印を付ける", () => {
-    const frame = frameWith(500, 300);
-    markScrollFrame(frame, SCROLL_FRAME_LABELS.table);
+describe("markScrollFrame（いつも枠を持つもの）", () => {
+  test("中身が枠の内側からはみ出すものに、止まりどころ・名前・印を付ける", () => {
+    const frame = frameWith(300, 300.5);
+    markScrollFrame(frame, SCROLL_FRAME_LABELS.code);
     expect(frame.tabIndex).toBe(0);
     expect(frame.getAttribute("role")).toBe("region");
     expect(frame.getAttribute("aria-label")).toBe(
-      "表（横にスクロールできます）",
+      "コード（横にスクロールできます）",
     );
     expect(frame.hasAttribute("data-scrolls")).toBe(true);
   });
 
-  test("はみ出さない枠からは外す", () => {
+  test("はみ出さないものからは外す", () => {
     const frame = frameWith(300, 300);
-    frame.tabIndex = 0;
+    frame.setAttribute("tabindex", "0");
     frame.setAttribute("role", "region");
-    frame.setAttribute("aria-label", SCROLL_FRAME_LABELS.code);
-    frame.dataset.scrolls = "";
-    markScrollFrame(frame, SCROLL_FRAME_LABELS.code);
+    frame.setAttribute("aria-label", SCROLL_FRAME_LABELS.table);
+    frame.setAttribute("data-scrolls", "");
+    markScrollFrame(frame, SCROLL_FRAME_LABELS.table);
     for (const name of ["tabindex", "role", "aria-label", "data-scrolls"]) {
       expect(frame.hasAttribute(name)).toBe(false);
     }
+  });
+});
+
+describe("proseLayoutScript", () => {
+  test("組み方を文字列にしたスクリプトが、外の名前を使わずに動き、表を組む関数を定める", () => {
+    const win = window as unknown as { yolosLayoutTable?: unknown };
+    delete win.yolosLayoutTable;
+    new Function(proseLayoutScript)();
+    expect(typeof win.yolosLayoutTable).toBe("function");
   });
 });

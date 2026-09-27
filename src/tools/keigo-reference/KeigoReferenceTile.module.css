@@ -17,8 +17,9 @@
   gap: var(--space-16);
 }
 
-/* 広い画面の表（§5）。外枠を持たず、見出し行は太字で、行どうし・列どうしを細い罫線で区切る。
- * セルの上下の余白を、先頭のセルの開閉のボタンが 44px の中で字を置く位置と揃え、行の字の1行目を並べる。 */
+/* 広い画面の表（§5）。外枠を持たず、見出し行は太字で、行どうし・列どうしを細い罫線で区切る。表の外側の縁の
+ * 左右では、セルは余白を持たない。セルの上下の余白を、先頭のセルの開閉のボタンが 44px の中で字を置く位置と
+ * 揃え、行の字の1行目を並べる。 */
 .table {
   --row-line: calc(var(--text-body) * var(--leading-body));
   width: 100%;
@@ -42,10 +43,12 @@
 
 .table tr > :first-child {
   border-left: none;
+  padding-inline-start: 0;
 }
 
 .table tr > :last-child {
   border-right: none;
+  padding-inline-end: 0;
 }
 
 .table tbody tr:last-child > * {
@@ -65,8 +68,9 @@
 
 /*
  * <th scope="row"> の中のボタンで、その行の例文を開閉する。例文は次の行に出るので details で組めず、
- * アコーディオン（§6）と同じ三角（DisclosureTriangle）をボタンに置く。ボタンはセルの左端から始め、三角を
- * ほかのセルの字と同じく左右の余白の内側に置く。hover の線とフォーカスのリングは globals.css の既定に従う。
+ * アコーディオン（§6）と同じ三角（DisclosureTriangle）をボタンに置く。縁の見えないコントロールなので、三角を
+ * 表の左端（本文の左端）に置き、左右の余白を持つ字の箱を左へ張り出させる（§5）。hover の線とフォーカスの
+ * リングは globals.css の既定に従い、字の箱の内側に出る。
  */
 .expandButton {
   display: flex;
@@ -74,7 +78,8 @@
   gap: var(--space-8);
   min-height: 44px;
   padding-block: max(0px, (44px - 1lh) / 2);
-  padding-inline: var(--space-8);
+  padding-inline: var(--text-box-pad);
+  margin-inline-start: calc(-1 * var(--text-box-pad));
   background: none;
   border: none;
   font: inherit;
