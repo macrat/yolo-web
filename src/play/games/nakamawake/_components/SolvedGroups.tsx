@@ -1,6 +1,7 @@
 import type { Ref } from "react";
 import type { NakamawakeGroup } from "@/play/games/nakamawake/_lib/types";
 import { difficultyLabel } from "@/play/games/nakamawake/_lib/engine";
+import GroupWords from "./GroupWords";
 import styles from "./SolvedGroups.module.css";
 
 interface Props {
@@ -30,7 +31,7 @@ export default function SolvedGroups({ groups, latestRef }: Props) {
               {difficultyLabel(group.difficulty)}
             </span>
           </p>
-          <p className={styles.words}>{group.words.join("、")}</p>
+          <GroupWords words={group.words} />
         </li>
       ))}
     </ul>

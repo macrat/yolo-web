@@ -24,7 +24,6 @@ export interface NakamawakeGameState {
   status: "playing" | "won" | "lost";
   selectedWords: string[]; // Currently selected words (0-4)
   remainingWords: string[]; // Words not yet in a solved group
-  guessHistory: { words: string[]; correct: boolean }[]; // All guess attempts
 }
 
 export interface NakamawakeGameStats {
@@ -41,6 +40,5 @@ export interface NakamawakeGameHistory {
     solvedGroups: number[]; // difficulty levels in order solved
     mistakes: number;
     status: "won" | "lost" | "playing";
-    guessHistory?: { words: string[]; correct: boolean }[]; // All guess attempts. May be absent from stored records
   };
 }

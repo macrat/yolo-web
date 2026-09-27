@@ -127,7 +127,7 @@ describe("loadTodayGame", () => {
     expect(game).toBeNull();
   });
 
-  test("returns game record when it exists without guessHistory (legacy data)", () => {
+  test("returns the stored record for the date", () => {
     const history: NakamawakeGameHistory = {
       "2026-03-01": {
         solvedGroups: [1, 2, 3, 4],
@@ -136,42 +136,36 @@ describe("loadTodayGame", () => {
       },
     };
     localStorageMock.setItem("nakamawake-history", JSON.stringify(history));
-    const game = loadTodayGame("2026-03-01");
-    expect(game).toEqual({
+    expect(loadTodayGame("2026-03-01")).toEqual({
       solvedGroups: [1, 2, 3, 4],
       mistakes: 2,
       status: "won",
     });
-    // guessHistory should be absent (undefined) when not stored - fallback handled by caller
-    expect(game?.guessHistory).toBeUndefined();
   });
 
-  test("returns game record with guessHistory when it exists", () => {
-    const history: NakamawakeGameHistory = {
-      "2026-03-01": {
-        solvedGroups: [1, 2, 3, 4],
-        mistakes: 1,
-        status: "won",
-        guessHistory: [
-          { words: ["りんご", "みかん", "ぶどう", "もも"], correct: true },
-          { words: ["いぬ", "ねこ", "うさぎ", "くま"], correct: true },
-          { words: ["あか", "あお", "きいろ", "みどり"], correct: true },
-          { words: ["はる", "なつ", "あき", "ふゆ"], correct: true },
-        ],
-      },
-    };
-    localStorageMock.setItem("nakamawake-history", JSON.stringify(history));
+  test("reads a record that carries fields the game no longer uses", () => {
+    localStorageMock.setItem(
+      "nakamawake-history",
+      JSON.stringify({
+        "2026-03-01": {
+          solvedGroups: [2],
+          mistakes: 1,
+          status: "playing",
+          guessHistory: [
+            { words: ["いぬ", "ねこ", "うさぎ", "くま"], correct: true },
+          ],
+        },
+      }),
+    );
     const game = loadTodayGame("2026-03-01");
-    expect(game?.guessHistory).toHaveLength(4);
-    expect(game?.guessHistory?.[0]).toEqual({
-      words: ["りんご", "みかん", "ぶどう", "もも"],
-      correct: true,
-    });
+    expect(game?.solvedGroups).toEqual([2]);
+    expect(game?.mistakes).toBe(1);
+    expect(game?.status).toBe("playing");
   });
 });
 
 describe("saveTodayGame", () => {
-  test("saves a new game record without guessHistory", () => {
+  test("saves a new game record", () => {
     saveTodayGame("2026-03-01", {
       solvedGroups: [1, 2, 3, 4],
       mistakes: 1,
@@ -182,26 +176,6 @@ describe("saveTodayGame", () => {
       solvedGroups: [1, 2, 3, 4],
       mistakes: 1,
       status: "won",
-    });
-  });
-
-  test("saves a new game record with guessHistory", () => {
-    const guessHistory = [
-      { words: ["りんご", "みかん", "ぶどう", "もも"], correct: true },
-      { words: ["いぬ", "ねこ", "うさぎ", "くま"], correct: false },
-    ];
-    saveTodayGame("2026-03-01", {
-      solvedGroups: [1],
-      mistakes: 1,
-      status: "playing",
-      guessHistory,
-    });
-    const history = loadHistory();
-    expect(history["2026-03-01"]).toEqual({
-      solvedGroups: [1],
-      mistakes: 1,
-      status: "playing",
-      guessHistory,
     });
   });
 
@@ -210,22 +184,15 @@ describe("saveTodayGame", () => {
       solvedGroups: [1, 2, 3, 4],
       mistakes: 0,
       status: "won",
-      guessHistory: [
-        { words: ["りんご", "みかん", "ぶどう", "もも"], correct: true },
-      ],
     });
     saveTodayGame("2026-03-02", {
       solvedGroups: [1, 2],
       mistakes: 4,
       status: "lost",
-      guessHistory: [],
     });
     const history = loadHistory();
     expect(Object.keys(history)).toHaveLength(2);
     expect(history["2026-03-01"]).toBeDefined();
     expect(history["2026-03-02"]).toBeDefined();
-    // Verify guessHistory is preserved for each date
-    expect(history["2026-03-01"].guessHistory).toHaveLength(1);
-    expect(history["2026-03-02"].guessHistory).toHaveLength(0);
   });
 });

@@ -1,40 +1,58 @@
 /* 語の格子（DESIGN.md §6・§8）。格子を本文の幅までに収め、コンテンツ幅の左端から組む。
  * マスが本文の幅より広がると、行を目で横に追う距離が延びる。
- * 列の数は、語の字の大きさに対する格子の幅で選ぶ。4列でマスの1行に3字入る幅があれば4列、無ければ2列、
- * それも無ければ1列にする。どの列の数でも16の語が欠けずに並び、行を横に見比べられる。
  * 選んだ語は、語の上の 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。
  * 語のマスの太い枠と、その内側に離して出す hover の線とフォーカスのリングは data-thick-frame（globals.css）が持つ。 */
 
-/* 格子の幅の器。字の大きさをここで決め、列の数を選ぶ幅をこの字の大きさで測る。狭い画面では語の字を補助情報の
- * 大きさにして、マスの1行に入る字を増やす。 */
+/* 格子の幅の器。語の字の大きさをここで決める。狭い画面では語の字を補助情報の大きさにして、マスの1行に入る字を
+ * 増やす。 */
 .frame {
-  container-type: inline-size;
+  --word-grid-gap: var(--space-8);
   max-width: var(--measure);
   font-size: var(--text-small);
+}
+
+/*
+ * 列の数。マスの1行に語の字が3字（と字の幅の揺れの分 0.2em）入る、いちばん多い列の数にする。4列で入らなければ
+ * 2列、2列でも入らなければ1列。16の語は4列でも2列でも行が埋まり、行を横に見比べられる。語は3字ずつ入る幅で
+ * 行の長さをそろえて折れるので、1字だけの行ができない。
+ * 字が使える幅は、格子の幅から px で決まるマスの間隔と枠を引いた残りで、字の大きさで増えない。そこで、その幅の
+ * 器を列の数ごとに作り（格子の幅から間隔と枠の分を引いた幅）、その器の幅を字の大きさ（em）で測る。マスの中の
+ * 左右の余白は字の大きさに合わせて増えるので、em の側に入れる（1マスあたり 0.5em）。格子はいちばん内側で、
+ * 引いた分を足して元の幅に戻す。
+ */
+.fourColumnText {
+  container: word-grid-four / inline-size;
+  width: calc(100% - 3 * var(--word-grid-gap) - 8 * var(--rule-w));
+}
+
+.twoColumnText {
+  container: word-grid-two / inline-size;
+  width: calc(100% + 2 * var(--word-grid-gap) + 4 * var(--rule-w));
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-8);
+  gap: var(--word-grid-gap);
+  width: calc(100% + var(--word-grid-gap) + 4 * var(--rule-w));
 }
 
-/* 2列: マス2つの中に3字ずつ（6em）と、間隔と余白（約 1.5em）。 */
-@container (min-width: 7.5em) {
+/* 2マスに (3.2em + 0.5em) ずつ。 */
+@container word-grid-two (min-width: 7.4em) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* 4列: マス4つの中に3字ずつ（12em）と、間隔と余白（約 3em）。 */
-@container (min-width: 15em) {
+/* 4マスに (3.2em + 0.5em) ずつ。 */
+@container word-grid-four (min-width: 14.8em) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
 /* マスの中では、四角と語を左右の中央に置き、四角をマスの上端にそろえて、同じ行のマスの四角の高さを並べる。
- * 語はマスの幅で、行の長さをそろえて折り返し、1字だけの行を作らない。 */
+ * 語はマスの幅で、行の長さをそろえて折り返す。 */
 .wordButton {
   display: flex;
   flex-direction: column;
@@ -42,7 +60,7 @@
   gap: var(--space-8);
   min-width: 0;
   min-height: 44px;
-  padding: var(--space-8) 0.25rem;
+  padding: var(--space-8) 0.25em;
   background: var(--paper);
   color: var(--ink);
   font: inherit;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type Ref } from "react";
+import { Fragment, useId, type Ref } from "react";
 import ResultBox from "@/components/ResultBox";
 import QuantityBars from "@/components/QuantityBars";
 import type {
@@ -8,6 +8,7 @@ import type {
   NakamawakeGameStats,
 } from "@/play/games/nakamawake/_lib/types";
 import { difficultyLabel } from "@/play/games/nakamawake/_lib/engine";
+import GroupWords from "./GroupWords";
 import styles from "./GameResult.module.css";
 
 interface Props {
@@ -24,6 +25,14 @@ const WON_HEADING = ["4組", "すべて", "正解"];
 const LOST_HEADING = ["4回", "間違えて", "終了"];
 
 const MISTAKE_LABELS = ["0ミス", "1ミス", "2ミス", "3ミス", "4ミス"];
+
+/** これまでの成績の名前。表のセルの中で文節の切れ目（<wbr>）で折るので、文節ごとに区切る。 */
+const RECORD_LABELS = {
+  played: ["遊んだ", "回数"],
+  winRate: ["勝った", "割合"],
+  currentStreak: ["続けて", "勝った", "日数"],
+  maxStreak: ["いちばん", "長く", "続けて", "勝った", "日数"],
+};
 
 /**
  * 解き終えた回の結果（DESIGN.md §8）。その回の結果（勝った回はミスの数、負けた回は当てた組の数と、
@@ -45,6 +54,12 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
       : 0;
+  const records = [
+    { label: RECORD_LABELS.played, value: `${stats.gamesPlayed}回` },
+    { label: RECORD_LABELS.winRate, value: `${winRate}%` },
+    { label: RECORD_LABELS.currentStreak, value: `${stats.currentStreak}日` },
+    { label: RECORD_LABELS.maxStreak, value: `${stats.maxStreak}日` },
+  ];
 
   return (
     <ResultBox
@@ -74,7 +89,7 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
                       {difficultyLabel(group.difficulty)}
                     </span>
                   </p>
-                  <p className={styles.groupWords}>{group.words.join("、")}</p>
+                  <GroupWords words={group.words} />
                 </li>
               ))}
             </ul>
@@ -86,22 +101,19 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
           </h3>
           <table className={styles.stats}>
             <tbody>
-              <tr>
-                <th scope="row">遊んだ回数</th>
-                <td>{stats.gamesPlayed}回</td>
-              </tr>
-              <tr>
-                <th scope="row">勝った割合</th>
-                <td>{winRate}%</td>
-              </tr>
-              <tr>
-                <th scope="row">続けて勝った日数</th>
-                <td>{stats.currentStreak}日</td>
-              </tr>
-              <tr>
-                <th scope="row">いちばん長く続けて勝った日数</th>
-                <td>{stats.maxStreak}日</td>
-              </tr>
+              {records.map(({ label, value }) => (
+                <tr key={label.join("")}>
+                  <th scope="row">
+                    {label.map((phrase, index) => (
+                      <Fragment key={index}>
+                        {index > 0 && <wbr />}
+                        {phrase}
+                      </Fragment>
+                    ))}
+                  </th>
+                  <td>{value}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </section>

@@ -53,44 +53,6 @@ describe("generateShareText", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3046\u3055\u304E",
-            "\u304F\u307E",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3042\u304B",
-            "\u3042\u304A",
-            "\u304D\u3044\u308D",
-            "\u307F\u3069\u308A",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u306F\u308B",
-            "\u306A\u3064",
-            "\u3042\u304D",
-            "\u3075\u3086",
-          ],
-          correct: true,
-        },
-      ],
     };
 
     const text = generateShareText(state);
@@ -119,62 +81,6 @@ describe("generateShareText", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3044\u306C",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u306D\u3053",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3046\u3055\u304E",
-            "\u304F\u307E",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3042\u304B",
-            "\u3042\u304A",
-            "\u304D\u3044\u308D",
-            "\u307F\u3069\u308A",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u306F\u308B",
-            "\u306A\u3064",
-            "\u3042\u304D",
-            "\u3075\u3086",
-          ],
-          correct: true,
-        },
-      ],
     };
 
     expect(generateShareText(state).split("\n")[0]).toBe(
@@ -192,53 +98,6 @@ describe("generateShareText", () => {
       status: "lost",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3042\u304B",
-            "\u306F\u308B",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3042\u304A",
-            "\u306A\u3064",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u304D\u3044\u308D",
-            "\u3042\u304D",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u307F\u3069\u308A",
-            "\u3075\u3086",
-          ],
-          correct: false,
-        },
-      ],
     };
 
     // 当てた1組（難易度1）だけを並べる
@@ -261,53 +120,6 @@ describe("generateShareText", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3044\u306C",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3046\u3055\u304E",
-            "\u304F\u307E",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3042\u304B",
-            "\u3042\u304A",
-            "\u304D\u3044\u308D",
-            "\u307F\u3069\u308A",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u306F\u308B",
-            "\u306A\u3064",
-            "\u3042\u304D",
-            "\u3075\u3086",
-          ],
-          correct: true,
-        },
-      ],
     };
 
     expect(generateShareText(state).split("\n")[0]).toBe(
@@ -328,7 +140,6 @@ describe("generateShareText solve order", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [],
     };
 
     expect(generateShareText(state).split("\n")[1]).toBe(
@@ -346,7 +157,6 @@ describe("generateShareText solve order", () => {
       status: "lost",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [],
     };
 
     const text = generateShareText(state);
@@ -366,12 +176,6 @@ describe("generateShareText with no solved group", () => {
       status: "lost",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: ["いぬ", "ねこ", "あか", "はる"],
-          correct: false,
-        },
-      ],
     };
 
     expect(generateShareText(state)).toBe(

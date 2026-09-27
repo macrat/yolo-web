@@ -126,7 +126,8 @@ describe("遊んでいるあいだ", () => {
     expect(context).toBe(within(grid).getAllByRole("button")[0]);
   });
 
-  test("キーボードでチェックすると、フォーカスが語の格子の最初の語へ移る", () => {
+  // キーボードで押したときと、Chromium でマウスで押したときは、押したチェックのボタンにフォーカスがある。
+  test("チェックのボタンにフォーカスがあったときは、押したあと語の格子の最初の語へ移す", () => {
     renderGame();
     choose(["りんご", "いぬ", "あか", "はる"]);
     const checkButton = screen.getByRole("button", { name: "チェック" });
@@ -136,12 +137,13 @@ describe("遊んでいるあいだ", () => {
     expect(within(grid).getAllByRole("button")[0]).toHaveFocus();
   });
 
-  test("マウスでチェックしたときは、フォーカスを語の格子へ移さない", () => {
+  // Safari のマウスのように、押したボタンにフォーカスを移さないブラウザでは、フォーカスは元の所にある。
+  test("チェックのボタンにフォーカスが無いまま押されたときは、フォーカスを動かさない", () => {
     renderGame();
     choose(["りんご", "いぬ", "あか", "はる"]);
+    const before = document.activeElement;
     check();
-    const grid = screen.getByRole("group", { name: "言葉の格子" });
-    expect(grid).not.toContainElement(document.activeElement as HTMLElement);
+    expect(document.activeElement).toBe(before);
   });
 });
 
@@ -154,11 +156,6 @@ describe("途中まで遊んだ回を開き直したとき", () => {
           solvedGroups: [2],
           mistakes: 2,
           status: "playing",
-          guessHistory: [
-            { words: ["りんご", "いぬ", "あか", "はる"], correct: false },
-            { words: puzzle.groups[1].words, correct: true },
-            { words: ["りんご", "ねこ", "あお", "なつ"], correct: false },
-          ],
         },
       }),
     );
@@ -199,6 +196,21 @@ describe("解き終えたとき", () => {
     expect(result).toHaveTextContent("ナカマワケ #226 の結果");
     expect(result).toHaveTextContent("ミス1回");
     expect(result).toHaveFocus();
+  });
+
+  test("成績の名前は文節の切れ目で、組の語の並びは語の切れ目で折れるようにする", () => {
+    winWithOneMistake();
+    const table = screen.getByRole("table");
+    const longest = within(table).getByRole("rowheader", {
+      name: "いちばん長く続けて勝った日数",
+    });
+    expect(longest.innerHTML).toBe(
+      "いちばん<wbr>長く<wbr>続けて<wbr>勝った<wbr>日数",
+    );
+    const solved = screen.getByRole("list", { name: "当てた組" });
+    expect(solved.querySelector("li p:last-child")?.innerHTML).toBe(
+      "りんご、<wbr>みかん、<wbr>ぶどう、<wbr>もも",
+    );
   });
 
   test("解き終えたことを1回だけ記録する", () => {
@@ -256,10 +268,6 @@ describe("解き終えたとき", () => {
           solvedGroups: [1, 2, 3, 4],
           mistakes: 0,
           status: "won",
-          guessHistory: puzzle.groups.map((g) => ({
-            words: g.words,
-            correct: true,
-          })),
         },
       }),
     );

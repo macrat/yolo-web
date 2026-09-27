@@ -82,7 +82,6 @@ function initialState(
     selectedWords: [],
     // サーバーの HTML と同じ並びで描き、並べ替えは水和のあとに行う。
     remainingWords: getAllWords(puzzle).sort(),
-    guessHistory: [],
   };
 }
 
@@ -108,7 +107,6 @@ function restoredState(state: NakamawakeGameState): NakamawakeGameState {
     remainingWords: shuffleArray(
       getAllWords(state.puzzle).filter((word) => !solvedWords.has(word)),
     ),
-    guessHistory: saved.guessHistory ?? [],
   };
 }
 
@@ -188,7 +186,8 @@ export default function GameContainer({
       if (statusRef.current) {
         revealControl(statusRef.current, context ?? undefined);
       }
-      // チェックのボタンは選んだ語が消えて押せなくなるので、次に使う語の格子へフォーカスを移す。
+      // チェックのボタンは選んだ語が消えて押せなくなり、フォーカスが行き場を失うので、次に使う語の格子へ移す。
+      // マウスで押したあとのプログラムからのフォーカスには、リングが出ない（:focus-visible）。
       if (pending.focusGrid) firstWord?.focus({ preventScroll: true });
       return;
     }
@@ -251,17 +250,14 @@ export default function GameContainer({
     if (gameState.status !== "playing") return;
     if (gameState.selectedWords.length !== 4) return;
 
+    // チェックのボタンにフォーカスがあったか。キーボードで押したときと、押したボタンにフォーカスを移すブラウザで
+    // マウスで押したときに真になる。
     const focusGrid = document.activeElement === checkRef.current;
     const matchedGroup = checkGuess(
       gameState.selectedWords,
       gameState.puzzle,
       gameState.solvedGroups,
     );
-    const guessHistory = [
-      ...gameState.guessHistory,
-      { words: [...gameState.selectedWords], correct: matchedGroup !== null },
-    ];
-
     let next: NakamawakeGameState;
     if (matchedGroup) {
       const solvedGroups = [...gameState.solvedGroups, matchedGroup];
@@ -272,7 +268,6 @@ export default function GameContainer({
           (w) => !matchedGroup.words.includes(w),
         ),
         selectedWords: [],
-        guessHistory,
         status: solvedGroups.length === 4 ? "won" : "playing",
       };
       setFeedback(
@@ -284,7 +279,6 @@ export default function GameContainer({
         ...gameState,
         mistakes,
         selectedWords: [],
-        guessHistory,
         status: mistakes >= MAX_MISTAKES ? "lost" : "playing",
       };
       setFeedback(
@@ -303,12 +297,11 @@ export default function GameContainer({
         ? { kind: "checked", correct: matchedGroup !== null, focusGrid }
         : { kind: "finished" };
     setGameState(next);
-    // 途中の回も、開き直したときに続きから遊べるよう保存する。共有の文を作るため、推測の並びも残す。
+    // 途中の回も、開き直したときに続きから遊べるよう保存する。
     saveTodayGame(todayStr, {
       solvedGroups: next.solvedGroups.map((g) => g.difficulty),
       mistakes: next.mistakes,
       status: next.status,
-      guessHistory: next.guessHistory,
     });
     if (next.status !== "playing") {
       recordFinish(next.status === "won", next.mistakes);
