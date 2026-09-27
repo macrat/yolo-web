@@ -1,10 +1,70 @@
 import { describe, test, expect } from "vitest";
-import { planFigure, toHexColor, widenGantt } from "../mermaid-figure";
+import {
+  chooseTickInterval,
+  cssColorToHex,
+  figureStart,
+  planFigure,
+  planGantt,
+  startScrollLeft,
+  toHexColor,
+  type GanttLayout,
+  type GanttMeasure,
+} from "../mermaid-figure";
 
 describe("toHexColor", () => {
   test("8ビットの成分を2桁ずつの hex にする", () => {
     expect(toHexColor(252, 252, 252)).toBe("#fcfcfc");
     expect(toHexColor(0, 10, 255)).toBe("#000aff");
+  });
+});
+
+describe("cssColorToHex", () => {
+  // globals.css の UI のトークン（ライトとダーク）と、ビルドがそれを直した lab() の値。
+  const tokens: [string, string, string][] = [
+    ["oklch(0.99 0 0)", "lab(98.84% .0000298023 -.0000119209)", "#fcfcfc"],
+    ["oklch(0.95 0 0)", "lab(94.2% 0 0)", "#eeeeee"],
+    ["oklch(0.62 0 0)", "lab(55.92% -.0000298023 0)", "#868686"],
+    ["oklch(0.15 0 0)", "lab(3.04863% 0 0)", "#0b0b0b"],
+    ["oklch(0.18 0 0)", "lab(5.26802% 0 0)", "#121212"],
+    ["oklch(0.24 0 0)", "lab(11.84% 0 0)", "#1f1f1f"],
+    ["oklch(0.53 0 0)", "lab(45.48% 0 0)", "#6c6c6c"],
+    ["oklch(0.97 0 0)", "lab(96.52% -.0000298023 .0000119209)", "#f5f5f5"],
+  ];
+
+  test.each(tokens)(
+    "トークンの %s と、ビルドが直した %s を、同じ sRGB の hex にする",
+    (oklch, lab, hex) => {
+      expect(cssColorToHex(oklch)).toBe(hex);
+      expect(cssColorToHex(lab)).toBe(hex);
+    },
+  );
+
+  test("無彩の値は3つの成分が同じになる", () => {
+    for (const l of [0, 0.1, 0.33, 0.5, 0.74, 1]) {
+      for (const value of [`oklch(${l} 0 0)`, `lab(${l * 100}% 0 0)`]) {
+        const hex = cssColorToHex(value) ?? "";
+        expect(hex.slice(1, 3)).toBe(hex.slice(3, 5));
+        expect(hex.slice(3, 5)).toBe(hex.slice(5, 7));
+      }
+    }
+  });
+
+  test("彩度を持つ色も sRGB に直す", () => {
+    expect(cssColorToHex("oklch(0.628 0.2577 29.23)")).toBe("#ff0000");
+    expect(cssColorToHex("oklab(0.628 0.2249 0.1258)")).toBe("#ff0000");
+    expect(cssColorToHex("lab(54.29% 80.8 69.89)")).toBe("#ff0000");
+  });
+
+  test("hex と rgb() はそのままの色の hex にする", () => {
+    expect(cssColorToHex("#ABC")).toBe("#aabbcc");
+    expect(cssColorToHex("#123456ff")).toBe("#123456");
+    expect(cssColorToHex(" rgb(1, 2, 3) ")).toBe("#010203");
+    expect(cssColorToHex("rgb(100% 0% 50% / 0.5)")).toBe("#ff0080");
+  });
+
+  test("読めない値は null", () => {
+    expect(cssColorToHex("var(--ink)")).toBeNull();
+    expect(cssColorToHex("")).toBeNull();
   });
 });
 
@@ -39,34 +99,152 @@ describe("planFigure", () => {
   });
 });
 
-describe("widenGantt", () => {
-  const layout = { useWidth: 640, leftPadding: 75, rightPadding: 75 };
-
-  test("目盛りの字が重ならず、区分の名前が余白に収まれば描き直さない", () => {
-    const ticks = [0, 50, 100].map((center) => ({ center, width: 40 }));
-    expect(widenGantt(layout, ticks, 60, 8)).toBeNull();
+describe("figureStart", () => {
+  test("流れ図は向きの指定の端から始まる", () => {
+    expect(figureStart("flowchart TD\n  A --> B")).toBe("top");
+    expect(figureStart("graph TB;\n  A --> B")).toBe("top");
+    expect(figureStart("flowchart BT\n  A --> B")).toBe("bottom");
+    expect(figureStart("flowchart RL\n  A --> B")).toBe("right");
+    expect(figureStart("flowchart LR\n  A --> B")).toBe("left");
   });
 
-  test("目盛りの字が重なるときは、いちばん詰まった所が gap を空けて並ぶまで時間の軸を広げる", () => {
-    const ticks = [
-      { center: 0, width: 40 },
-      { center: 20, width: 40 },
-      { center: 60, width: 40 },
-    ];
-    // 詰まった所は (40 + 40) / 2 + 8 = 48 が要り、間は 20 なので 2.4 倍にする。
-    expect(widenGantt(layout, ticks, 60, 8)).toEqual({
-      useWidth: Math.ceil(490 * 2.4) + 150,
-      leftPadding: 75,
-      rightPadding: 75,
-    });
+  test("前置きの注釈の行を読み飛ばす", () => {
+    expect(figureStart("%% 図の説明\n  graph td\n A --> B")).toBe("top");
   });
 
-  test("区分の名前が左の余白からはみ出すときは、余白を名前の右端から gap の所まで広げる", () => {
-    const ticks = [0, 100].map((center) => ({ center, width: 40 }));
-    expect(widenGantt(layout, ticks, 106, 8)).toEqual({
-      useWidth: 490 + 114 + 75,
+  test("流れ図でない図は左から始まる", () => {
+    expect(figureStart("sequenceDiagram\n  A->>B: 送る")).toBe("left");
+    expect(figureStart("gantt\n  title 題")).toBe("left");
+  });
+});
+
+describe("startScrollLeft", () => {
+  test("始まりを見える幅の真ん中に置く", () => {
+    expect(startScrollLeft(500, 200, 1000)).toBe(400);
+  });
+
+  test("送れる範囲の外には出さない", () => {
+    expect(startScrollLeft(50, 200, 1000)).toBe(0);
+    expect(startScrollLeft(990, 200, 1000)).toBe(800);
+  });
+});
+
+describe("chooseTickInterval", () => {
+  const hour = 60 * 60 * 1000;
+
+  test("目盛りの字が重ならない、いちばん細かい間隔を選ぶ", () => {
+    // 15時間を 480px に置くと、1時間は 32px、2時間は 64px。字に 53px が要る。
+    expect(chooseTickInterval(15 * hour, 480, 53)).toBe("2hour");
+    expect(chooseTickInterval(15 * hour, 1000, 53)).toBe("1hour");
+    expect(chooseTickInterval(15 * hour, 140, 53)).toBe("6hour");
+  });
+
+  test("どの候補でも重なるときは、いちばん粗い間隔", () => {
+    expect(chooseTickInterval(1000 * 24 * hour, 10, 53)).toBe("6month");
+  });
+});
+
+describe("planGantt", () => {
+  const hour = 60 * 60 * 1000;
+  const layout: GanttLayout = {
+    useWidth: 622,
+    leftPadding: 64,
+    rightPadding: 64,
+  };
+  const ticksAt = (centers: number[], width = 44) =>
+    centers.map((center) => ({
+      left: center - width / 2,
+      right: center + width / 2,
+    }));
+
+  test("余白を区分の名前と、軸の右の端からはみ出す字に合わせ、幅はそのまま", () => {
+    const measure: GanttMeasure = {
+      spanMs: 15 * hour,
+      ticks: ticksAt([64, 311, 558]),
+      sectionRight: 106,
+      labels: [{ left: 120, right: 300 }],
+    };
+    expect(planGantt(layout, measure, 8)).toEqual({
+      useWidth: 622,
       leftPadding: 114,
-      rightPadding: 75,
+      rightPadding: 26,
+      tickInterval: undefined,
     });
+  });
+
+  test("余白で図の幅が埋まるときも、時間の軸を目盛りの字2つ分より細くしない", () => {
+    const measure: GanttMeasure = {
+      spanMs: 15 * hour,
+      ticks: ticksAt([100, 200], 88),
+      sectionRight: 202,
+      labels: [],
+    };
+    const next = planGantt({ ...layout, useWidth: 218 }, measure, 16);
+    expect(next?.leftPadding).toBe(218);
+    expect(next && next.useWidth - next.leftPadding - next.rightPadding).toBe(
+      2 * (88 + 16),
+    );
+  });
+
+  // 余白が区分の名前と右の端の字に合っている組み方。
+  const settled: GanttLayout = {
+    useWidth: 622,
+    leftPadding: 64,
+    rightPadding: 4,
+  };
+
+  test("目盛りの字が重なるときは、まず目盛りを間引く", () => {
+    const measure: GanttMeasure = {
+      spanMs: 15 * hour,
+      ticks: ticksAt([64, 96, 128, 160]),
+      sectionRight: 56,
+      labels: [],
+    };
+    const next = planGantt(settled, measure, 8);
+    expect(next?.useWidth).toBe(622);
+    expect(next?.tickInterval).toBe("2hour");
+  });
+
+  test("帯の名前が区分の名前に掛かるときは、時間の軸を広げる", () => {
+    const measure: GanttMeasure = {
+      spanMs: 15 * hour,
+      ticks: ticksAt([64, 558]),
+      sectionRight: 56,
+      labels: [{ left: 20, right: 230 }],
+    };
+    const next = planGantt(settled, measure, 8);
+    expect(next?.useWidth).toBeGreaterThan(622);
+  });
+
+  test("長さを持つ帯の名前が掛かるときは、その帯に名前が収まる所まで一度に広げる", () => {
+    const measure: GanttMeasure = {
+      spanMs: 15 * hour,
+      ticks: ticksAt([64, 558]),
+      sectionRight: 56,
+      labels: [{ left: 20, right: 231, bar: { left: 64, right: 364 } }],
+    };
+    // 帯が 300px なら、名前と余白の 219px は入る所まで広げても 1.25 倍に届かないので、1.25 倍にする。
+    // 帯が 80px なら、219 / 80 倍に一度に広げる。
+    const next = planGantt(settled, measure, 8);
+    expect(next?.useWidth).toBe(64 + Math.ceil(554 * 1.25) + 4);
+    const narrow = planGantt(
+      settled,
+      {
+        ...measure,
+        labels: [{ left: 20, right: 231, bar: { left: 64, right: 144 } }],
+      },
+      8,
+    );
+    expect(narrow?.useWidth).toBe(64 + Math.ceil((554 * 219) / 80) + 4);
+  });
+
+  test("組み方が変わらなければ null", () => {
+    const measure: GanttMeasure = {
+      spanMs: 15 * hour,
+      ticks: ticksAt([64, 311, 596]),
+      sectionRight: 56,
+      labels: [],
+    };
+    expect(planGantt(settled, measure, 8)).toBeNull();
   });
 });

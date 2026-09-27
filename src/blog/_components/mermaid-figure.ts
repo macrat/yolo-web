@@ -1,9 +1,84 @@
 /**
- * 記事の図（DESIGN.md §5 の図）の色と大きさの決め方。描画から切り離して、単体で試せる形にする。
+ * 記事の図（DESIGN.md §5 の図）の色・大きさ・gantt の組み方・最初に見せる位置の決め方。描画から切り離して、
+ * 単体で試せる形にする。
  */
 
 /** 図の中の字の下限。§4 の補助情報の大きさ（rem）。 */
 export const FIGURE_TEXT_MIN_REM = 0.875;
+
+type Matrix = readonly [
+  readonly [number, number, number],
+  readonly [number, number, number],
+  readonly [number, number, number],
+];
+
+function multiply(matrix: Matrix, vector: readonly number[]): number[] {
+  return matrix.map(
+    (row) => row[0] * vector[0] + row[1] * vector[1] + row[2] * vector[2],
+  );
+}
+
+/** CSS Color 4 の D50 の白色点。 */
+const D50_WHITE = [0.3457 / 0.3585, 1, (1 - 0.3457 - 0.3585) / 0.3585];
+
+/** XYZ（D50）から XYZ（D65）への Bradford の変換。 */
+const D50_TO_D65: Matrix = [
+  [0.955473421488075, -0.02309845494876471, 0.06325924320057072],
+  [-0.0283697093338637, 1.0099953980813041, 0.021041441191917323],
+  [0.012314014864481998, -0.020507649298898964, 1.330365926242124],
+];
+
+/** XYZ（D65）から線形の sRGB への変換。 */
+const XYZ_TO_LINEAR_SRGB: Matrix = [
+  [3.2409699419045226, -1.537383177570094, -0.4986107602930034],
+  [-0.9692436362808796, 1.8759675015077202, 0.04155505740717559],
+  [0.05563007969699366, -0.20397695888897652, 1.0569715142428786],
+];
+
+/** OKLab の LMS の立方根から線形の sRGB への変換。 */
+const OKLAB_TO_LMS: Matrix = [
+  [1, 0.3963377774, 0.2158037573],
+  [1, -0.1055613458, -0.0638541728],
+  [1, -0.0894841775, -1.291485548],
+];
+
+const LMS_TO_LINEAR_SRGB: Matrix = [
+  [4.0767416621, -3.3077115913, 0.2309699292],
+  [-1.2684380046, 2.6097574011, -0.3413193965],
+  [-0.0041960863, -0.7034186147, 1.707614701],
+];
+
+/** CIE Lab の定数（κ と ε）。 */
+const LAB_KAPPA = 24389 / 27;
+const LAB_EPSILON = 216 / 24389;
+
+function labToLinearSrgb(l: number, a: number, b: number): number[] {
+  const fy = (l + 16) / 116;
+  const fx = fy + a / 500;
+  const fz = fy - b / 200;
+  const inverse = (f: number) =>
+    f ** 3 > LAB_EPSILON ? f ** 3 : (116 * f - 16) / LAB_KAPPA;
+  const xyz = [
+    inverse(fx) * D50_WHITE[0],
+    (l > LAB_KAPPA * LAB_EPSILON ? fy ** 3 : l / LAB_KAPPA) * D50_WHITE[1],
+    inverse(fz) * D50_WHITE[2],
+  ];
+  return multiply(XYZ_TO_LINEAR_SRGB, multiply(D50_TO_D65, xyz));
+}
+
+function oklabToLinearSrgb(l: number, a: number, b: number): number[] {
+  const lms = multiply(OKLAB_TO_LMS, [l, a, b]).map((value) => value ** 3);
+  return multiply(LMS_TO_LINEAR_SRGB, lms);
+}
+
+function encodeSrgb(linear: number): number {
+  const clamped = Math.min(1, Math.max(0, linear));
+  const encoded =
+    clamped <= 0.0031308
+      ? 12.92 * clamped
+      : 1.055 * Math.pow(clamped, 1 / 2.4) - 0.055;
+  return Math.round(encoded * 255);
+}
 
 /** 8ビットの sRGB の成分を hex の色に直す。 */
 export function toHexColor(red: number, green: number, blue: number): string {
@@ -13,6 +88,58 @@ export function toHexColor(red: number, green: number, blue: number): string {
       .map((channel) => channel.toString(16).padStart(2, "0"))
       .join("")
   );
+}
+
+const NUMBER = String.raw`([-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?)(%?)`;
+const FUNCTION_PATTERN = new RegExp(
+  String.raw`^(lab|oklab|oklch|rgba?)\(\s*${NUMBER}[\s,]+${NUMBER}[\s,]+${NUMBER}(?:deg)?\s*(?:[,/][^)]*)?\)$`,
+  "i",
+);
+
+/**
+ * CSS の色の値（hex・rgb()・lab()・oklab()・oklch()）を、sRGB の hex に数で直す。mermaid が色の計算に使う
+ * khroma は hex・rgb・hsl・色の名前しか読まず、トークンの値（oklch と、ビルドが直した lab）を読まない。
+ * sRGB の外の色は、成分ごとに sRGB の中に詰める。読めない値は null。
+ */
+export function cssColorToHex(value: string): string | null {
+  const text = value.trim();
+  const hex = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.exec(text);
+  if (hex) {
+    const digits =
+      hex[1].length <= 4
+        ? Array.from(hex[1].slice(0, 3), (digit) => digit + digit).join("")
+        : hex[1].slice(0, 6);
+    return `#${digits.toLowerCase()}`;
+  }
+  const match = FUNCTION_PATTERN.exec(text);
+  if (!match) return null;
+  const kind = match[1].toLowerCase();
+  const read = (index: number, percentScale: number) =>
+    match[index + 1]
+      ? (parseFloat(match[index]) * percentScale) / 100
+      : parseFloat(match[index]);
+  if (kind === "rgb" || kind === "rgba") {
+    const channels = [2, 4, 6].map((index) =>
+      Math.round(Math.min(255, Math.max(0, read(index, 255)))),
+    );
+    return toHexColor(channels[0], channels[1], channels[2]);
+  }
+  let linear: number[];
+  if (kind === "lab") {
+    linear = labToLinearSrgb(read(2, 100), read(4, 125), read(6, 125));
+  } else if (kind === "oklab") {
+    linear = oklabToLinearSrgb(read(2, 1), read(4, 0.4), read(6, 0.4));
+  } else {
+    const chroma = read(4, 0.4);
+    const hue = (parseFloat(match[6]) * Math.PI) / 180;
+    linear = oklabToLinearSrgb(
+      read(2, 1),
+      chroma * Math.cos(hue),
+      chroma * Math.sin(hue),
+    );
+  }
+  const [red, green, blue] = linear.map(encodeSrgb);
+  return toHexColor(red, green, blue);
 }
 
 /** 図の描き方。 */
@@ -41,6 +168,82 @@ export function planFigure(
   return { scale, fits: scale <= fitScale };
 }
 
+/** 横に送る図で、最初に見せる図の始まり。 */
+export type FigureStart = "left" | "right" | "top" | "bottom";
+
+/**
+ * 図の始まりの位置を、図の元の文から決める。流れ図は向きの指定（TB・TD は上、BT は下、RL は右、LR は左）の
+ * 端から描き始まる。順序図・gantt など、流れ図でない図は左から始まる。
+ */
+export function figureStart(source: string): FigureStart {
+  const header = /^\s*(?:flowchart|graph)\s+(TB|TD|BT|RL|LR)\b/im.exec(
+    source.replace(/^\s*%%.*$/gm, ""),
+  );
+  switch (header?.[1].toUpperCase()) {
+    case "TB":
+    case "TD":
+      return "top";
+    case "BT":
+      return "bottom";
+    case "RL":
+      return "right";
+    default:
+      return "left";
+  }
+}
+
+/**
+ * 横に送る図の最初の送り位置。center は見せたい所（図の始まり）の、送る範囲の左端からの位置で、そこを見える
+ * 幅の真ん中に置く。送れる範囲の外には出さない。
+ */
+export function startScrollLeft(
+  center: number,
+  viewport: number,
+  scrollWidth: number,
+): number {
+  const max = Math.max(0, scrollWidth - viewport);
+  return Math.min(max, Math.max(0, Math.round(center - viewport / 2)));
+}
+
+/** gantt の目盛りの間隔の候補（mermaid の tickInterval の書き方と、その長さ）。短い順。 */
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+export const GANTT_TICK_INTERVALS: readonly (readonly [string, number])[] = [
+  ["1minute", MINUTE],
+  ["5minute", 5 * MINUTE],
+  ["10minute", 10 * MINUTE],
+  ["15minute", 15 * MINUTE],
+  ["30minute", 30 * MINUTE],
+  ["1hour", HOUR],
+  ["2hour", 2 * HOUR],
+  ["3hour", 3 * HOUR],
+  ["6hour", 6 * HOUR],
+  ["12hour", 12 * HOUR],
+  ["1day", DAY],
+  ["2day", 2 * DAY],
+  ["1week", 7 * DAY],
+  ["2week", 14 * DAY],
+  ["1month", 30 * DAY],
+  ["3month", 91 * DAY],
+  ["6month", 182 * DAY],
+];
+
+/**
+ * 目盛りの字が重ならない、いちばん細かい目盛りの間隔を選ぶ。spanMs は時間の軸の長さ、axisWidth は軸の幅、
+ * pitch は目盛りの字1つが要る幅（字の幅と字どうしのあき）。どの候補でも重なるときは、いちばん粗い間隔。
+ */
+export function chooseTickInterval(
+  spanMs: number,
+  axisWidth: number,
+  pitch: number,
+): string {
+  for (const [interval, length] of GANTT_TICK_INTERVALS) {
+    if ((axisWidth * length) / spanMs >= pitch) return interval;
+  }
+  return GANTT_TICK_INTERVALS[GANTT_TICK_INTERVALS.length - 1][0];
+}
+
 /** gantt の横の組み方（mermaid の gantt の設定の値）。 */
 export interface GanttLayout {
   /** 図の幅。 */
@@ -49,42 +252,123 @@ export interface GanttLayout {
   leftPadding: number;
   /** 右の余白。 */
   rightPadding: number;
+  /** 目盛りの間隔。 */
+  tickInterval?: string;
 }
 
-/** gantt の目盛りの字の、横の中心と幅。 */
-export interface TickLabel {
-  center: number;
-  width: number;
+/** 描いた gantt の字や帯の横の範囲（図の元の座標）。 */
+export interface TextSpan {
+  left: number;
+  right: number;
 }
+
+/** 帯の名前と、その帯（組にできたとき）。 */
+export interface TaskLabel extends TextSpan {
+  bar?: TextSpan;
+}
+
+/** 描いた gantt を測った値。 */
+export interface GanttMeasure {
+  /** 時間の軸の長さ（ミリ秒）。 */
+  spanMs: number;
+  /** 目盛りの字。 */
+  ticks: TextSpan[];
+  /** 区分の名前のいちばん右の端。 */
+  sectionRight: number;
+  /** 帯の名前の字と、その帯。 */
+  labels: TaskLabel[];
+}
+
+/** 時間の軸を広げるときの、いちばん小さい倍率。 */
+const GANTT_WIDEN_STEP = 1.25;
 
 /**
- * gantt を描き直す組み方を決める。gantt は渡された幅に時間の軸を詰めて描くので、字を大きくすると目盛りの字が
- * 重なり、区分の名前が帯に掛かる。目盛りの字が gap を空けて並ぶところまで時間の軸を広げ、区分の名前の右端から
- * gap を空けた所まで左の余白を広げる。どちらも足りていれば null。
+ * gantt を描き直す組み方を決める。gantt は渡された幅に時間の軸を詰めて描くので、次の順に1つずつ決め、決めた
+ * 組み方で描き直してから次へ進む。
+ * 1. 左の余白は区分の名前の右端から gap の所まで、右の余白は軸の右の端からはみ出す字（最後の目盛りの字の半分・
+ *    帯の外に置かれた名前）が収まる所までにする。図の幅は変えない。
+ * 2. 目盛りの字が重なるときは、重ならない所まで目盛りを間引く。
+ * 3. それでも目盛りの字が重なるか、帯の名前が区分の名前に掛かるか図の外に出るときだけ、時間の軸を広げる。
+ *    長さを持つ帯の名前は、その帯の中に収まる所まで一度に広げる。
+ * 時間の軸は、目盛りの字を2つ並べられる幅より細くしない。組み方が変わらなければ null。
  */
-export function widenGantt(
+export function planGantt(
   layout: GanttLayout,
-  ticks: TickLabel[],
-  sectionRight: number,
+  measure: GanttMeasure,
   gap: number,
 ): GanttLayout | null {
-  const sorted = ticks.slice().sort((a, b) => a.center - b.center);
-  let stretch = 1;
-  for (let i = 1; i < sorted.length; i++) {
-    const spacing = sorted[i].center - sorted[i - 1].center;
-    if (spacing <= 0) continue;
-    const needed = (sorted[i - 1].width + sorted[i].width) / 2 + gap;
-    stretch = Math.max(stretch, needed / spacing);
+  const axisEnd = layout.useWidth - layout.rightPadding;
+  let overhang = 0;
+  for (const text of [...measure.ticks, ...measure.labels]) {
+    overhang = Math.max(overhang, text.right - axisEnd);
   }
-  const leftPadding = Math.max(
-    layout.leftPadding,
-    Math.ceil(sectionRight + gap),
-  );
-  if (stretch === 1 && leftPadding === layout.leftPadding) return null;
-  const axis = layout.useWidth - layout.leftPadding - layout.rightPadding;
-  return {
-    useWidth: Math.ceil(axis * stretch) + leftPadding + layout.rightPadding,
+  const sorted = measure.ticks.slice().sort((a, b) => a.left - b.left);
+  let ticksCrowd = false;
+  let widest = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    widest = Math.max(widest, sorted[i].right - sorted[i].left);
+    if (i > 0 && sorted[i].left - sorted[i - 1].right < gap) ticksCrowd = true;
+  }
+  const pitch = widest + gap;
+  const minAxis = Math.ceil(pitch * 2);
+  const withAxis = (
+    leftPadding: number,
+    rightPadding: number,
+    axis: number,
+    thin: boolean,
+  ): GanttLayout => ({
+    useWidth: leftPadding + axis + rightPadding,
     leftPadding,
-    rightPadding: layout.rightPadding,
-  };
+    rightPadding,
+    tickInterval: thin
+      ? chooseTickInterval(measure.spanMs, axis, pitch)
+      : undefined,
+  });
+
+  const leftPadding = Math.ceil(measure.sectionRight + gap);
+  const rightPadding = Math.ceil(overhang + gap / 2);
+  if (
+    leftPadding !== layout.leftPadding ||
+    rightPadding !== layout.rightPadding
+  ) {
+    const axis = Math.max(
+      minAxis,
+      layout.useWidth - leftPadding - rightPadding,
+    );
+    return withAxis(
+      leftPadding,
+      rightPadding,
+      axis,
+      layout.tickInterval !== undefined,
+    );
+  }
+
+  const axis = layout.useWidth - leftPadding - rightPadding;
+  if (
+    ticksCrowd &&
+    chooseTickInterval(measure.spanMs, axis, pitch) !== layout.tickInterval
+  ) {
+    return withAxis(leftPadding, rightPadding, axis, true);
+  }
+  const crowded = measure.labels.filter(
+    (label) =>
+      label.left < measure.sectionRight + gap / 2 ||
+      label.right > layout.useWidth,
+  );
+  if (ticksCrowd || crowded.length > 0) {
+    let stretch = GANTT_WIDEN_STEP;
+    for (const label of crowded) {
+      const bar = label.bar ? label.bar.right - label.bar.left : 0;
+      if (bar > 0) {
+        stretch = Math.max(stretch, (label.right - label.left + gap) / bar);
+      }
+    }
+    return withAxis(
+      leftPadding,
+      rightPadding,
+      Math.ceil(Math.max(axis, minAxis) * stretch),
+      layout.tickInterval !== undefined || ticksCrowd,
+    );
+  }
+  return null;
 }
