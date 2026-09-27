@@ -78,7 +78,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
   if (!dc || dc.variant !== "contrarian-fortune") notFound();
   const cfDc = dc as ContrarianFortuneDetailedContent;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #逆張り運勢診断 #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #逆張り運勢診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
 

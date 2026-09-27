@@ -15,6 +15,7 @@ import type { DetailedContent, QuizResult } from "@/play/quiz/types";
 import AnimalPersonalityContent from "../AnimalPersonalityContent";
 import CharacterPersonalityContent from "../CharacterPersonalityContent";
 import ContrarianFortuneContent from "../ContrarianFortuneContent";
+import { ReadingHeading } from "../ResultReading";
 import ImpossibleAdviceContent from "../ImpossibleAdviceContent";
 import MusicPersonalityContent from "../MusicPersonalityContent";
 import type { ResultPlacement } from "../OtherTypesNav";
@@ -162,5 +163,26 @@ describe("読みものの小見出しの手で区切った並び", () => {
     for (const phrases of headings) {
       expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
     }
+  });
+});
+
+describe("読みものの小見出しの書体の属性", () => {
+  test("見出しの書体に無い字を含む見出しは、渡された属性で本文の書体に替わり、渡さなければ属性を持たない", () => {
+    const { container } = render(
+      <>
+        <ReadingHeading
+          placement="resultPage"
+          phrases={["𠮟られて", "伸びる"]}
+          headingFont={{ "data-heading-font": "fallback" }}
+        />
+        <ReadingHeading
+          placement="resultPage"
+          phrases={["この", "タイプの", "強み"]}
+        />
+      </>,
+    );
+    const [fallback, plain] = container.querySelectorAll("h2");
+    expect(fallback).toHaveAttribute("data-heading-font", "fallback");
+    expect(plain).not.toHaveAttribute("data-heading-font");
   });
 });

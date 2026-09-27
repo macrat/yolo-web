@@ -72,7 +72,7 @@ export default async function TraditionalColorResultPage({ params }: Props) {
   if (!dc || dc.variant !== "traditional-color") notFound();
   const colorDc = dc as TraditionalColorDetailedContent;
 
-  const shareText = `${quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #伝統色診断 #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #伝統色診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどの伝統色? 診断してみよう";
 

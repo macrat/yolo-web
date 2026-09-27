@@ -1,6 +1,6 @@
 /*
  * 診断の結果のページ（/play/music-personality/result/[resultId]）のうち、page.tsx だけが持つ要素。
- * タイプ名から最初の誘いまでは ResultPageShell が、詳しい読みものは MusicPersonalityContent が組む。
+ * タイプ名から説明までは ResultPageShell が、詳しい読みものは MusicPersonalityContent が組む。
  */
 
 /* 読み終えた人への、2つ目の誘い。 */

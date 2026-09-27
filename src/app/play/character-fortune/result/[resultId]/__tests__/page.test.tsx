@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import CharacterFortuneResultPage from "../page";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
+import CharacterFortuneResultPage, { THIRD_PARTY_HEADING } from "../page";
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
@@ -218,5 +219,11 @@ describe("CharacterFortuneResultPage resultIdが不正な場合", () => {
     await expect(CharacterFortuneResultPage({ params })).rejects.toThrow(
       "NEXT_NOT_FOUND",
     );
+  });
+});
+
+describe("第三者から見た場面の小見出し", () => {
+  it("書き手が区切った並びが、文節の区切りの禁則を満たす", () => {
+    expect(followsPhraseRules(THIRD_PARTY_HEADING)).toBe(true);
   });
 });

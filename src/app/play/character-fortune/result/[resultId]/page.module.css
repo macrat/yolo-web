@@ -1,6 +1,6 @@
 /*
  * 診断の結果のページ（/play/character-fortune/result/[resultId]）のうち、page.tsx だけが持つ要素。
- * タイプ名から最初の誘いまでは ResultPageShell が、詳しい読みものは ResultReading が組む。
+ * タイプ名・キャラの自己紹介・最初の誘いは ResultPageShell が、詳しい読みものは ResultReading が組む。
  */
 
 /* 2つ目からの誘い。1ページに1つまでの反転は最初の誘いが持つので、ここは縁の見えないリンクにする。下線と

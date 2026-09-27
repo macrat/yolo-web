@@ -77,7 +77,7 @@ export default async function UnexpectedCompatibilityResultPage({
   if (!dc || dc.variant !== "unexpected-compatibility") notFound();
   const ucDc = dc as UnexpectedCompatibilityDetailedContent;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #斜め上の相性診断 #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #斜め上の相性診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
 

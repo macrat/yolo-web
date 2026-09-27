@@ -1,6 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import PlayQuizResultPage, { generateMetadata } from "../page";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
+import PlayQuizResultPage, {
+  DEFAULT_READING_HEADINGS,
+  generateMetadata,
+} from "../page";
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
@@ -330,5 +334,13 @@ describe("ページの題と共有の文", () => {
     const metadata = await generateMetadata({ params });
     expect(metadata.title).toBe("和顔愛語（わがんあいご）タイプ | yolos.net");
     expect(metadata.openGraph?.title).toBe("和顔愛語（わがんあいご）タイプ");
+  });
+});
+
+describe("読みものの既定の小見出し", () => {
+  it("書き手が区切った並びが、文節の区切りの禁則を満たす", () => {
+    for (const phrases of Object.values(DEFAULT_READING_HEADINGS)) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    }
   });
 });

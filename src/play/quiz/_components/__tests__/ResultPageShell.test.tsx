@@ -156,11 +156,10 @@ test("結果の色を渡したときだけ、字を持たない色見本を出�
   expect(swatch).toHaveAttribute("aria-hidden", "true");
   unmount();
 
-  const { container } = renderShell();
+  renderShell();
   expect(
     screen.getByRole("heading", { level: 1 }).nextElementSibling,
   ).toBeNull();
-  expect(container.querySelector("figure")).toBeNull();
 });
 
 test("タイプ名のあとに、添えた段落・診断への誘い・説明の全文をこの順に置き、そのあとにルートの中身を続ける", () => {

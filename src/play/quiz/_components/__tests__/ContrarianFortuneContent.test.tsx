@@ -2,7 +2,7 @@
  * ContrarianFortuneContent コンポーネントのテスト。
  *
  * テスト対象:
- * - coreSentence / behaviors / persona / thirdPartyNote の4セクション表示
+ * - behaviors / persona / thirdPartyNote の3セクション表示と、説明と重なる coreSentence を出さないこと
  * - humorMetrics テーブル（存在する場合のみ表示）
  * - すべてのタイプ（OtherTypesNav）
  * - 置く面（placement）による見出しの階層（h2/h3）
@@ -86,7 +86,7 @@ const sampleAllResults: QuizResult[] = [
 const sampleQuizSlug = "contrarian-fortune";
 
 describe("ContrarianFortuneContent - 基本レンダリング", () => {
-  it("coreSentenceセクションが表示されること", () => {
+  it("説明と同じことを言う coreSentence を出さないこと", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
@@ -97,10 +97,10 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
       />,
     );
     expect(
-      screen.getByText(
+      screen.queryByText(
         "流行を追わないのではなく、流行を避けることで自分を定義している。",
       ),
-    ).toBeInTheDocument();
+    ).not.toBeInTheDocument();
   });
 
   it("behaviorsセクションが表示されること", () => {
@@ -298,11 +298,7 @@ describe("ContrarianFortuneContent - 読みものの組み方", () => {
         placement="resultPage"
       />,
     );
-    for (const text of [
-      sampleContent.coreSentence,
-      sampleContent.persona,
-      sampleContent.thirdPartyNote,
-    ]) {
+    for (const text of [sampleContent.persona, sampleContent.thirdPartyNote]) {
       expect(screen.getByText(text).tagName).toBe("P");
     }
     for (const item of [...sampleContent.behaviors]) {

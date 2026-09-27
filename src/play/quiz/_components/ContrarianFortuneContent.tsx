@@ -1,9 +1,10 @@
 /**
  * 逆張り運勢診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * 核心の一文・あるある行動・人物像・一緒にいるとどうなるか・数字で見た笑いの指標（あるタイプだけ）・すべてのタイプを
- * 並べる。キャッチコピー・共有・「もう一度挑戦する」は呼び出し側が置き、結果のページの案内は
- * afterThirdPartyNote で差し込む。
+ * あるある行動・人物像・一緒にいるとどうなるか・数字で見た笑いの指標（あるタイプだけ）・すべてのタイプを並べる。
+ * キャッチコピー・説明・共有・「もう一度挑戦する」は呼び出し側が置き、結果のページの案内は afterThirdPartyNote で
+ * 差し込む。核心の一文（coreSentence）は、呼び出し側が置く説明と同じ「一般的な占いなら…ですが」の話を縮めた
+ * 文で、説明のすぐ後に続けると同じことを2度言うので置かない。
  */
 
 import type React from "react";
@@ -44,8 +45,6 @@ export default function ContrarianFortuneContent({
 
   return (
     <Reading>
-      <ReadingText>{detailedContent.coreSentence}</ReadingText>
-
       <ReadingHeading placement={placement} phrases={["あるある", "行動"]} />
       <ReadingList items={detailedContent.behaviors} />
 

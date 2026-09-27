@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import PhrasedText from "@/components/PhrasedText";
+import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import { type ResultPlacement, SECTION_HEADING } from "./OtherTypesNav";
 import styles from "./ResultReading.module.css";
 
@@ -13,6 +14,8 @@ interface ReadingHeadingProps {
   placement: ResultPlacement;
   /** 見出しの文を文節で分けた並び（§4）。作り方は PhrasedText の phrases と同じ。 */
   phrases: readonly string[];
+  /** 見出しの書体に無い字を含むときの属性。データから来る見出しは、サーバーで headingFontAttr が作ったものを渡す。 */
+  headingFont?: HeadingFontAttr;
   id?: string;
 }
 
@@ -20,6 +23,7 @@ interface ReadingHeadingProps {
 export function ReadingHeading({
   placement,
   phrases,
+  headingFont,
   id,
 }: ReadingHeadingProps) {
   return (
@@ -28,6 +32,7 @@ export function ReadingHeading({
       phrases={phrases}
       id={id}
       className={styles.heading}
+      {...headingFont}
     />
   );
 }

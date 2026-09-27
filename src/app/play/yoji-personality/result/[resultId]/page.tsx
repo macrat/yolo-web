@@ -70,7 +70,7 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
   if (!dc || dc.variant !== "yoji-personality") notFound();
   const yojiDc = dc as YojiPersonalityDetailedContent;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #四字熟語診断 #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #四字熟語診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどの四字熟語? 診断してみよう";
 

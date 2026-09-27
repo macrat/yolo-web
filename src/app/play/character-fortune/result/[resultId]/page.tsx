@@ -15,6 +15,7 @@ import {
   ReadingText,
 } from "@/play/quiz/_components/ResultReading";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
@@ -27,7 +28,16 @@ type Props = {
 
 const SLUG = "character-fortune";
 const quiz = characterFortuneQuiz;
-const THIRD_PARTY_HEADING = "このキャラの守護を受けている人と一緒にいると";
+/** 第三者から見た場面の小見出し。コードに書いた決まった文なので、書き手が文節で区切った並びで持つ。 */
+export const THIRD_PARTY_HEADING = [
+  "この",
+  "キャラの",
+  "守護を",
+  "受けている",
+  "人と",
+  "一緒に",
+  "いると",
+] as const;
 
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
@@ -75,7 +85,7 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
   const result = quiz.results.find((r) => r.id === resultId);
   if (!result) notFound();
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどのタイプ? 診断してみよう";
 
@@ -96,18 +106,21 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
         <ReadingHeading
           placement="resultPage"
           phrases={splitIntoPhrases(cf.behaviorsHeading)}
+          headingFont={headingFontAttr(cf.behaviorsHeading)}
         />
         <ReadingList items={cf.behaviors} />
 
         <ReadingHeading
           placement="resultPage"
           phrases={splitIntoPhrases(cf.characterMessageHeading)}
+          headingFont={headingFontAttr(cf.characterMessageHeading)}
         />
         <ReadingText>{cf.characterMessage}</ReadingText>
 
         <ReadingHeading
           placement="resultPage"
-          phrases={splitIntoPhrases(THIRD_PARTY_HEADING)}
+          phrases={THIRD_PARTY_HEADING}
+          headingFont={headingFontAttr(THIRD_PARTY_HEADING.join(""))}
         />
         <ReadingText>{cf.thirdPartyNote}</ReadingText>
       </Reading>

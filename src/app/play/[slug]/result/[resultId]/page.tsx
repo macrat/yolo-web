@@ -20,6 +20,10 @@ import {
   ReadingText,
 } from "@/play/quiz/_components/ResultReading";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import {
+  headingFontAttr,
+  type HeadingFontAttr,
+} from "@/lib/zen-antique-charset";
 import { resultNameWithReading } from "@/play/quiz/resultName";
 import styles from "./page.module.css";
 
@@ -27,6 +31,30 @@ type Props = {
   params: Promise<{ slug: string; resultId: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
+
+/**
+ * 診断が resultPageLabels で言い替えないときの、詳しい読みものの小見出し。コードに書いた決まった文なので、
+ * 書き手が文節で区切った並びで持つ（PhrasedText の約束）。
+ */
+export const DEFAULT_READING_HEADINGS = {
+  traits: ["この", "タイプの", "特徴"],
+  behaviors: ["この", "タイプの", "あるある"],
+  advice: ["この", "タイプの", "人への", "アドバイス"],
+} as const satisfies Record<string, readonly string[]>;
+
+/**
+ * 読みものの小見出しの区切りと書体の属性。診断が言い替えた文はデータなので、サーバーで文節に区切る。
+ */
+function readingHeading(
+  label: string | undefined,
+  fallback: readonly string[],
+): { phrases: readonly string[]; headingFont: HeadingFontAttr } {
+  const text = label ?? fallback.join("");
+  return {
+    phrases: label ? splitIntoPhrases(label) : fallback,
+    headingFont: headingFontAttr(text),
+  };
+}
 
 /**
  * 全クイズの slug + resultId の組み合わせを返す。
@@ -167,7 +195,7 @@ export default async function PlayQuizResultPage({
   }
 
   // 末尾に「あなたは?」を追加してシェアした友人の興味を引く
-  const shareText = `${quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
   const ctaText =
@@ -177,13 +205,7 @@ export default async function PlayQuizResultPage({
 
   const { detailedContent } = result;
 
-  // resultPageLabels から見出しを取得（未設定時はデフォルト値）
-  const traitsHeading =
-    quiz.meta.resultPageLabels?.traitsHeading ?? "このタイプの特徴";
-  const behaviorsHeading =
-    quiz.meta.resultPageLabels?.behaviorsHeading ?? "このタイプのあるある";
-  const adviceHeading =
-    quiz.meta.resultPageLabels?.adviceHeading ?? "このタイプの人へのアドバイス";
+  const labels = quiz.meta.resultPageLabels;
 
   return (
     <ResultPageShell
@@ -211,19 +233,28 @@ export default async function PlayQuizResultPage({
           <Reading>
             <ReadingHeading
               placement="resultPage"
-              phrases={splitIntoPhrases(traitsHeading)}
+              {...readingHeading(
+                labels?.traitsHeading,
+                DEFAULT_READING_HEADINGS.traits,
+              )}
             />
             <ReadingList items={detailedContent.traits} />
 
             <ReadingHeading
               placement="resultPage"
-              phrases={splitIntoPhrases(behaviorsHeading)}
+              {...readingHeading(
+                labels?.behaviorsHeading,
+                DEFAULT_READING_HEADINGS.behaviors,
+              )}
             />
             <ReadingList items={detailedContent.behaviors} />
 
             <ReadingHeading
               placement="resultPage"
-              phrases={splitIntoPhrases(adviceHeading)}
+              {...readingHeading(
+                labels?.adviceHeading,
+                DEFAULT_READING_HEADINGS.advice,
+              )}
             />
             <ReadingText>{detailedContent.advice}</ReadingText>
           </Reading>

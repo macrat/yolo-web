@@ -62,18 +62,6 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     it("quiz.meta.resultPageLabelsから見出しを取得するロジックがある", () => {
       expect(pageSource).toContain("resultPageLabels");
     });
-
-    it("traitsHeadingのデフォルト値「このタイプの特徴」が設定されている", () => {
-      expect(pageSource).toContain("このタイプの特徴");
-    });
-
-    it("behaviorsHeadingのデフォルト値「このタイプのあるある」が設定されている", () => {
-      expect(pageSource).toContain("このタイプのあるある");
-    });
-
-    it("adviceHeadingのデフォルト値「このタイプの人へのアドバイス」が設定されている", () => {
-      expect(pageSource).toContain("このタイプの人へのアドバイス");
-    });
   });
 
   it("ResultPageShellを使用している", () => {
