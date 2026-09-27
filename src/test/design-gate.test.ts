@@ -501,7 +501,7 @@ function analyzeCss(content: string, file: string): Violation[] {
       push(
         "WARN",
         "§5",
-        "gradient 背景を検出（グラデーションは持たない。中身の表示かどうかを目視で確かめる）",
+        "gradient 背景を検出（グラデーションは、移り変わりの各点をその位置が表す値から作った色で塗るときだけ描く。そうなっているかを目視で確かめる）",
         prop,
         value,
       );
