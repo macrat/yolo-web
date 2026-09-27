@@ -29,7 +29,7 @@ CLAUDE.md の規約どおり、Playwright / GA を使うサブエージェント
 
 ## クラウドのコンテナでは MCP のブラウザが起動しない
 
-claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出しが `Browser "chrome-for-testing" is not installed` で失敗する。入っているのは `/opt/pw-browsers/chromium` の Chromium だけで、コンテナの決まりにより `playwright install` でブラウザを足すこともできない。このときは、リポジトリの `playwright` ライブラリで `chromium.launch({ executablePath: "/opt/pw-browsers/chromium" })` とするスクリプトを `tmp/` に書き、`node` で動かして操作とスクリーンショットを行う。このスクリプトでも、解決しない Promise や無限の待ちは使わない。文字サイズ 200% は CDP の `Page.setFontSizes` で既定の文字サイズを 32px にして作る（`html { font-size }` を書き足す方法では `rem` のメディアクエリが動かない）。全画面のスクリーンショット（`fullPage: true`）を撮るとこの設定が既定の 16px に戻るので、撮ったあとに測るときは設定し直す。同じタブで別のページへ移り続けると、3ページ目あたりからこの設定が効かなくなることがあるので、文字サイズを変えて測るときはページごとに新しいタブを開いて設定する。
+claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出しが `Browser "chrome-for-testing" is not installed` で失敗する。入っているのは `/opt/pw-browsers/chromium` の Chromium だけで、コンテナの決まりにより `playwright install` でブラウザを足すこともできない。このときは、リポジトリの `playwright` ライブラリで `chromium.launch({ executablePath: "/opt/pw-browsers/chromium" })` とするスクリプトを `tmp/` に書き、`node` で動かして操作とスクリーンショットを行う。このスクリプトでも、解決しない Promise や無限の待ちは使わない。文字サイズ 200% は、ブラウザの既定の文字サイズを 32px にして作る（`html { font-size }` を書き足す方法では `rem` のメディアクエリが動かない）。確かなのは、プロファイルの設定で決める方法で、`chromium.launchPersistentContext` に渡すユーザーのディレクトリの `Default/Preferences` に `{"webkit":{"webprefs":{"default_font_size":32}}}` を書いてから起動する。CDP の `Page.setFontSizes` でも作れるが、スクリーンショットを撮ると既定の 16px に戻ることがあり（全画面では必ず戻る）、同じタブで別のページへ移り続けると3ページ目あたりから効かなくなる。`Page.setFontSizes` を使うときは、ページごとに新しいタブで設定し、撮るたびに設定し直して、測る前にルートの字の大きさが 32px であることを確かめる。
 
 ## WebKit の折り方を Chromium で近似して測る
 
