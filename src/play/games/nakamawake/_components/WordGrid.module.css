@@ -1,4 +1,5 @@
-/* WordGrid（なかまわけ）— 単語盤面。
+/* 語の格子（DESIGN.md §6・§8）。4列の格子を本文の幅までに収め、コンテンツ幅の左端から組む。
+ * マスが本文の幅より広がると、行を目で横に追う距離が延びる。
  * 選んだ語は、語の上の 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。
  * 語のマスの太い枠と、その内側に離して出す hover の線とフォーカスのリングは data-thick-frame（globals.css）が持つ。 */
 
@@ -6,33 +7,36 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-8);
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: var(--measure);
 }
 
+/* マスの中では、四角と語を左右の中央に置き、四角をマスの上端にそろえて、同じ行のマスの四角の高さを並べる。
+ * 語はマスの幅で、行の長さをそろえて折り返し、1字だけの行を作らない。狭い画面では語の字を補助情報の大きさに
+ * して、マスの1行に入る字を増やす。 */
 .wordButton {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: var(--space-8);
+  min-width: 0;
   min-height: 44px;
-  padding: var(--space-16) 0.25rem;
-  border-radius: var(--radius);
+  padding: var(--space-8) 0.25rem;
   background: var(--paper);
   color: var(--ink);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  font-family: inherit;
+  font: inherit;
+  font-size: var(--text-small);
   cursor: pointer;
   text-align: center;
-  word-break: break-all;
+  line-height: var(--leading-heading);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 /* 太い線で描く 20px の四角。選ぶと内側を --ink で 8px 塗る。 */
 .mark {
   display: grid;
   place-items: center;
+  flex-shrink: 0;
   width: 20px;
   height: 20px;
   border: var(--rule-w) solid var(--rule);
@@ -50,28 +54,8 @@
   visibility: visible;
 }
 
-/* §6 無効。枠を太い破線にし、字と四角を --ink-2 にする。 */
-.wordButton:disabled {
-  border-style: dashed;
-  color: var(--ink-2);
-  cursor: not-allowed;
-}
-
-.wordButton:disabled .mark {
-  border-color: var(--ink-2);
-}
-
-.wordButton:disabled .mark::after {
-  background: var(--ink-2);
-}
-
-@media (max-width: 480px) {
-  .grid {
-    gap: 0.375rem;
-  }
-
+@media (min-width: 45rem) {
   .wordButton {
-    font-size: 0.85rem;
-    padding: var(--space-8) 0.25rem;
+    font-size: var(--text-body);
   }
 }

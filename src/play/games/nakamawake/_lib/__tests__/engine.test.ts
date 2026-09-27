@@ -4,8 +4,7 @@ import {
   isOneAway,
   shuffleArray,
   getAllWords,
-  getDifficultyColor,
-  getDifficultyEmoji,
+  difficultyLabel,
 } from "../engine";
 import type { NakamawakePuzzle, NakamawakeGroup } from "../types";
 
@@ -256,38 +255,9 @@ describe("getAllWords", () => {
   });
 });
 
-describe("getDifficultyColor", () => {
-  test("returns yellow for difficulty 1", () => {
-    expect(getDifficultyColor(1)).toBe("yellow");
-  });
-
-  test("returns green for difficulty 2", () => {
-    expect(getDifficultyColor(2)).toBe("green");
-  });
-
-  test("returns blue for difficulty 3", () => {
-    expect(getDifficultyColor(3)).toBe("blue");
-  });
-
-  test("returns purple for difficulty 4", () => {
-    expect(getDifficultyColor(4)).toBe("purple");
-  });
-});
-
-describe("getDifficultyEmoji", () => {
-  test("returns yellow square for difficulty 1", () => {
-    expect(getDifficultyEmoji(1)).toBe("\u{1F7E8}");
-  });
-
-  test("returns green square for difficulty 2", () => {
-    expect(getDifficultyEmoji(2)).toBe("\u{1F7E9}");
-  });
-
-  test("returns blue square for difficulty 3", () => {
-    expect(getDifficultyEmoji(3)).toBe("\u{1F7E6}");
-  });
-
-  test("returns purple square for difficulty 4", () => {
-    expect(getDifficultyEmoji(4)).toBe("\u{1F7EA}");
+describe("difficultyLabel", () => {
+  test("難易度を「難易度」と数字で言う", () => {
+    expect(difficultyLabel(1)).toBe("難易度1");
+    expect(difficultyLabel(4)).toBe("難易度4");
   });
 });

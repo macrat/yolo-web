@@ -1,0 +1,82 @@
+/*
+ * 解き終えた回の結果の、ボックスの中の組み方（DESIGN.md §8）。ボックスの枠・余白・登場の動きは ResultBox が持つ。
+ * 並びを1つの幅の器にして、ミスの数の字の段をボックスの中の幅で選ぶ。
+ */
+.result {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* ミスの数。§4 の主見出しと同じ段で組み、ボックスに収まらないときは収まる段まで下げる。段を選ぶ幅は、
+ * 字（和字3字と数字1字）の幅に余裕を足した 5em を、段ごとの字の大きさで測ったもの。どの段にも収まらない
+ * 幅では本文の大きさで折り返す。 */
+.score {
+  font-family: var(--font-heading);
+  line-height: var(--leading-body);
+  font-variant-numeric: tabular-nums;
+}
+
+@container (min-width: 7.5rem) {
+  .score {
+    font-size: var(--text-heading-section);
+    white-space: nowrap;
+  }
+}
+
+@container (min-width: 10.5rem) {
+  .score {
+    font-size: var(--text-heading-main);
+  }
+}
+
+/* 結果の中の区画。見出しと中身のあいだは 8px。 */
+.part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* 結果の中の小見出し。前の内容と分けるため、上に細い罫線を引く（§5）。 */
+.subheading {
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 当てられなかった組。行どうしを細い罫線で区切る。 */
+.missed {
+  list-style: none;
+  max-width: var(--measure);
+}
+
+.missed > li + li {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-8);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.groupHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-8);
+}
+
+.groupName {
+  font-weight: 700;
+}
+
+.difficulty {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+.groupWords {
+  font-size: var(--text-small);
+}
+
+/* これまでの成績。名前と値の組の並びなので表で組み、値の数字の桁を揃える（§8）。 */
+.stats td {
+  font-variant-numeric: tabular-nums;
+}

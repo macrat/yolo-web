@@ -1,55 +1,38 @@
 /*
- * SolvedGroups（なかまわけ）— 解けたグループの表示（DESIGN.md フェーズ R・店構えへ変換）。
- *
- * 難易度4色（黄=易 / 緑=普 / 青=難 / 紫=超難）はゲームの駒＝成果物にあたるため、
- * §2 の例外規定により和色（--wairo-*）を使用する（各色 light/dark の AA 検証済みの
- * -on トークンとセットで使う）:
- *   黄 = --wairo-yamabuki（山吹）/ 緑 = --wairo-moegi（萌黄）/
- *   青 = --wairo-ai（藍）/ 紫 = --wairo-fuji（藤）
- * ResultModal / HowToPlayModal も同じ wairo トークンを直接参照する（旧 --nw-difficulty-*
- * ローカル SSoT は撤去——グローバルトークン自体が単一の色源になったため不要）。
+ * 当てた組（DESIGN.md §8）。語のマスと同じ太い線で囲んだ盤のマスで、当たりの判定のマスの地（--paper-2）を持つ。
+ * 組どうしを区別する色を持たず、難易度は字で言う（§2）。
  */
 
-.container {
+.groups {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-  max-width: 500px;
-  margin: 0 auto var(--space-8);
+  list-style: none;
 }
 
 .group {
-  padding: var(--space-16);
-  border-radius: var(--radius);
-  text-align: center;
+  border: var(--rule-w) solid var(--rule);
+  background: var(--paper-2);
+  padding: var(--space-8);
 }
 
-.groupName {
+/* 組の名前と難易度。名前が長い組では、難易度が名前の後ろの行に落ちる。 */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-8);
+}
+
+.name {
   font-weight: 700;
-  font-size: 0.9375rem;
-  margin-bottom: 0.25rem;
 }
 
-.groupWords {
-  font-size: 0.875rem;
+.difficulty {
+  font-size: var(--text-small);
+  color: var(--ink-2);
 }
 
-.yellow {
-  background: var(--wairo-yamabuki);
-  color: var(--wairo-yamabuki-on);
-}
-
-.green {
-  background: var(--wairo-moegi);
-  color: var(--wairo-moegi-on);
-}
-
-.blue {
-  background: var(--wairo-ai);
-  color: var(--wairo-ai-on);
-}
-
-.purple {
-  background: var(--wairo-fuji);
-  color: var(--wairo-fuji-on);
+.words {
+  font-size: var(--text-small);
 }

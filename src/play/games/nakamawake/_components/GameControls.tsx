@@ -1,3 +1,4 @@
+import type { Ref } from "react";
 import Button from "@/components/Button";
 import styles from "./GameControls.module.css";
 
@@ -5,61 +6,35 @@ interface Props {
   onCheck: () => void;
   onShuffle: () => void;
   onDeselectAll: () => void;
-  disabled: boolean;
   canCheck: boolean;
-  /** disabled のとき、なぜ操作できないかを言う文（§6 無効）。 */
-  disabledReason?: string;
-  /** disabledReason を置く要素の id。言葉の盤面もこの文を説明として読ませる。 */
-  disabledReasonId?: string;
+  /** チェックのボタン。4つ目の語を選んだとき、このボタンを画面に入れるのに使う。 */
+  checkRef?: Ref<HTMLButtonElement>;
 }
 
 /**
- * Game control buttons: shuffle, deselect all, and check.
+ * 語の格子の下に並べる操作。並べ替えと選び直しはプライマリでないボタン、選んだ4語の答え合わせは
+ * プライマリボタン（DESIGN.md §6）。
  */
 export default function GameControls({
   onCheck,
   onShuffle,
   onDeselectAll,
-  disabled,
   canCheck,
-  disabledReason,
-  disabledReasonId,
+  checkRef,
 }: Props) {
-  const describedBy = disabled && disabledReason ? disabledReasonId : undefined;
   return (
-    <div className={styles.area}>
-      <div className={styles.controls}>
-        <Button
-          onClick={onShuffle}
-          disabled={disabled}
-          aria-describedby={describedBy}
-        >
-          {"シャッフル"}
-        </Button>
-        <Button
-          onClick={onDeselectAll}
-          disabled={disabled}
-          aria-describedby={describedBy}
-        >
-          {"選択解除"}
-        </Button>
-        <Button
-          variant="primary"
-          onClick={onCheck}
-          disabled={disabled || !canCheck}
-          aria-describedby={describedBy}
-          disabledReason={
-            disabled ? undefined : "言葉を4つ選ぶとチェックできます"
-          }
-        >
-          {"チェック"}
-        </Button>
-      </div>
-      {describedBy && (
-        <p id={describedBy} className={styles.reason}>
-          {disabledReason}
-        </p>
-      )}
+    <div className={styles.controls}>
+      <Button onClick={onShuffle}>シャッフル</Button>
+      <Button onClick={onDeselectAll}>選択解除</Button>
+      <Button
+        ref={checkRef}
+        variant="primary"
+        onClick={onCheck}
+        disabled={!canCheck}
+        disabledReason="言葉を4つ選ぶとチェックできます"
+      >
+        チェック
+      </Button>
     </div>
   );
 }

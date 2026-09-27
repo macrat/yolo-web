@@ -1,23 +1,10 @@
-/* GameControls（なかまわけ）— 操作ボタンの並び。ボタンの見え方は Button が持ち、ここは並べ方と
- * 操作できない理由の文だけを持つ。 */
+/* 語の格子の下の操作の並び。ボタンの見え方は Button が持ち、ここは並べ方だけを持つ。縁の見えないボタンは
+ * 押せる範囲を接して並べる（DESIGN.md §5）。 */
 
-.area {
-  max-width: 500px;
-  margin: var(--space-8) auto;
-}
-
-/* 縁の見えないボタンは押せる範囲を接して並べる（§5）。 */
 .controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
   column-gap: var(--text-box-pad);
   row-gap: var(--space-8);
-}
-
-.reason {
-  margin-top: var(--space-8);
-  color: var(--ink-2);
-  text-align: center;
 }

@@ -1,7 +1,7 @@
 export interface NakamawakeGroup {
   name: string; // Group theme name in Japanese
   words: string[]; // Exactly 4 words
-  difficulty: 1 | 2 | 3 | 4; // 1=yellow(easy), 2=green, 3=blue, 4=purple(hard)
+  difficulty: 1 | 2 | 3 | 4; // 1=易しい 〜 4=とても難しい
 }
 
 export interface NakamawakePuzzle {

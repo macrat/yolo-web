@@ -97,14 +97,15 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!",
     );
-    // Row 1: difficulty 1 (yellow)
-    expect(text).toContain("\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}");
-    // Row 2: difficulty 2 (green)
-    expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
-    // Row 3: difficulty 3 (blue)
-    expect(text).toContain("\u{1F7E6}\u{1F7E6}\u{1F7E6}\u{1F7E6}");
-    // Row 4: difficulty 4 (purple)
-    expect(text).toContain("\u{1F7EA}\u{1F7EA}\u{1F7EA}\u{1F7EA}");
+    // 当てた順に、その組の難易度の数を並べる
+    expect(text.split("\n").slice(1, 5)).toEqual([
+      "1 1 1 1",
+      "2 2 2 2",
+      "3 3 3 3",
+      "4 4 4 4",
+    ]);
+    // 絵文字を持たない
+    expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
     expect(text.split("\n").at(-1)).toBe(
       "#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet",
     );
@@ -246,8 +247,9 @@ describe("generateShareText", () => {
 
     const text = generateShareText(state);
     expect(text).toContain("\u30CA\u30AB\u30DE\u30EF\u30B1 #10 X");
-    // Only 1 correct row (fruits, difficulty 1)
-    expect(text).toContain("\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}");
+    // 当てた1組（難易度1）の行だけを並べる
+    expect(text.split("\n")[1]).toBe("1 1 1 1");
+    expect(text.split("\n")).toHaveLength(3);
     expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
   });
 

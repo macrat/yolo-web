@@ -66,33 +66,10 @@ export function getAllWords(puzzle: NakamawakePuzzle): string[] {
 }
 
 /**
- * Get the difficulty color name for a group.
+ * グループの難易度を言う字（「難易度1」〜「難易度4」）。凡例・解けたグループ・結果・共有の文で同じ数を使う。
  */
-export function getDifficultyColor(difficulty: 1 | 2 | 3 | 4): string {
-  switch (difficulty) {
-    case 1:
-      return "yellow";
-    case 2:
-      return "green";
-    case 3:
-      return "blue";
-    case 4:
-      return "purple";
-  }
-}
-
-/**
- * Get the difficulty emoji for sharing.
- */
-export function getDifficultyEmoji(difficulty: 1 | 2 | 3 | 4): string {
-  switch (difficulty) {
-    case 1:
-      return "\u{1F7E8}"; // yellow
-    case 2:
-      return "\u{1F7E9}"; // green
-    case 3:
-      return "\u{1F7E6}"; // blue
-    case 4:
-      return "\u{1F7EA}"; // purple
-  }
+export function difficultyLabel(
+  difficulty: NakamawakeGroup["difficulty"],
+): string {
+  return `難易度${difficulty}`;
 }

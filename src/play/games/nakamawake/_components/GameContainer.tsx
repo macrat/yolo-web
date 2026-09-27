@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, useId } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { trackContentEnd } from "@/lib/analytics";
+import ShareButtons from "@/components/ShareButtons";
+import type { ItemListItem } from "@/components/ItemList";
 import type {
   NakamawakeGameState,
   NakamawakeGameStats,
@@ -22,35 +30,110 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/nakamawake/_lib/storage";
-import type { ItemListItem } from "@/components/ItemList";
-import { gameTitleRef } from "@/play/games/shared/_lib/gameTitle";
-import GameHeader from "./GameHeader";
+import { generateShareText } from "@/play/games/nakamawake/_lib/share";
+import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
+import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 import WordGrid from "./WordGrid";
 import SolvedGroups from "./SolvedGroups";
 import GameControls from "./GameControls";
-import ResultModal from "./ResultModal";
-import StatsModal from "./StatsModal";
-import HowToPlayModal from "./HowToPlayModal";
+import GameResult from "./GameResult";
+import HowToPlay from "./HowToPlay";
 import styles from "./GameContainer.module.css";
 
 const MAX_MISTAKES = 4;
-const FIRST_VISIT_KEY = "nakamawake-first-visit";
 
 interface GameContainerProps {
   puzzle: NakamawakePuzzle;
   puzzleNumber: number;
-  /** Today's date in JST as "YYYY-MM-DD", generated server-side. */
+  /** 今日の日付（日本時間、"YYYY-MM-DD"）。サーバーで作る。 */
   todayStr: string;
-  /** Today's date formatted in Japanese, e.g. "2026年3月19日", generated server-side. */
+  /** 今日の日付の日本語の書き方（「2026年3月19日」）。サーバーで作る。 */
   dateDisplayString: string;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
   crossCategoryItems: ItemListItem[];
 }
 
 /**
- * Top-level client component that orchestrates the entire Nakamawake game state.
- * Receives today's puzzle data as props from the Server Component (page.tsx),
- * manages selections and guesses, handles win/loss, and persists state to localStorage.
+ * 操作のあとに送る画面の先。描いたあと（layout effect）で、新しい並びに合わせて送る。
+ * - "selected": 4つ目の語を選んだ。チェックのボタンと、選んだ4語を画面に入れる。
+ * - "checked": 解き終える前のチェック。当てた組か残りのミスの字と、語の格子の最初の行を画面に入れる。
+ * - "finished": 解き終えたチェック。結果のボックスの頭を画面に入れ、フォーカスをボックスへ移す。
+ */
+type PendingReveal =
+  | { kind: "selected" }
+  | { kind: "checked"; correct: boolean; focusGrid: boolean }
+  | { kind: "finished" };
+
+function initialState(
+  puzzle: NakamawakePuzzle,
+  puzzleNumber: number,
+  todayStr: string,
+): NakamawakeGameState {
+  return {
+    puzzleDate: todayStr,
+    puzzleNumber,
+    puzzle,
+    solvedGroups: [],
+    mistakes: 0,
+    status: "playing",
+    selectedWords: [],
+    // サーバーの HTML と同じ並びで描き、並べ替えは水和のあとに行う。
+    remainingWords: getAllWords(puzzle).sort(),
+    guessHistory: [],
+  };
+}
+
+/**
+ * 端末に保存した今日の回を、並べ替えた語の並びで戻す。今日の回が無ければ、語を並べ替えただけの初めの状態。
+ */
+function restoredState(state: NakamawakeGameState): NakamawakeGameState {
+  const saved = loadTodayGame(state.puzzleDate);
+  if (!saved) {
+    return { ...state, remainingWords: shuffleArray(state.remainingWords) };
+  }
+  const solvedGroups = saved.solvedGroups
+    .map((difficulty) =>
+      state.puzzle.groups.find((group) => group.difficulty === difficulty),
+    )
+    .filter((group): group is NakamawakeGroup => group !== undefined);
+  const solvedWords = new Set(solvedGroups.flatMap((group) => group.words));
+  return {
+    ...state,
+    solvedGroups,
+    mistakes: saved.mistakes,
+    status: saved.status,
+    remainingWords: shuffleArray(
+      getAllWords(state.puzzle).filter((word) => !solvedWords.has(word)),
+    ),
+    guessHistory: saved.guessHistory ?? [],
+  };
+}
+
+/** 端末の今の画面の上端と下端（DESIGN.md §8。文字盤で狭まった範囲で測る）。 */
+function visibleRange(): { top: number; bottom: number } {
+  const viewport = window.visualViewport;
+  return viewport
+    ? { top: viewport.offsetTop, bottom: viewport.offsetTop + viewport.height }
+    : { top: 0, bottom: window.innerHeight };
+}
+
+/** 結果のボックスの頭（結果の名前の行）が画面から出ていれば、ボックスの上端を画面の上端のそばまで即時に送る。 */
+function revealResultHead(box: HTMLElement): void {
+  const head = box.firstElementChild ?? box;
+  const range = visibleRange();
+  const boxTop = box.getBoundingClientRect().top;
+  const headBottom = head.getBoundingClientRect().bottom;
+  if (boxTop >= range.top && headBottom <= range.bottom) return;
+  // フォーカスのリングがボックスの外に出るので、その幅と間隔ぶん上に余白を取る。
+  const margin = 16;
+  window.scrollBy({ top: boxTop - range.top - margin, behavior: "instant" });
+}
+
+/**
+ * ナカマワケの遊ぶ区画。盤（当てた組と語の格子）・操作・結果・くわしい遊び方・問題の日付を、この順に
+ * 縦に積む。解き終えたら、語の格子と操作の所に結果のボックスが来る（DESIGN.md §8）。
  */
 export default function GameContainer({
   puzzle,
@@ -59,284 +142,175 @@ export default function GameContainer({
   dateDisplayString,
   crossCategoryItems,
 }: GameContainerProps) {
-  // Track whether client-side shuffle has completed to prevent
-  // showing the deterministic sort order before shuffle.
+  const [gameState, setGameState] = useState<NakamawakeGameState>(() =>
+    initialState(puzzle, puzzleNumber, todayStr),
+  );
+  const [stats, setStats] = useState<NakamawakeGameStats | null>(null);
+  // 端末の記録を読み、語を並べ替えるまでは、語の格子を見せない。サーバーの並びが一瞬見えてから替わらないため。
   const [isReady, setIsReady] = useState(false);
+  // この回の最後のチェックで解き終えたか。開いたときにすでに解き終えていた結果は、登場の動きを持たない。
+  const [finishedByPlay, setFinishedByPlay] = useState(false);
+  const [feedback, setFeedback] = useState("");
 
-  const [gameState, setGameState] = useState<NakamawakeGameState>(() => {
-    // Try to restore today's game from localStorage
-    const saved = loadTodayGame(todayStr);
-    if (saved) {
-      // Rebuild state from saved history
-      const solvedGroups: NakamawakeGroup[] = [];
-      for (const diff of saved.solvedGroups) {
-        const group = puzzle.groups.find((g) => g.difficulty === diff);
-        if (group) solvedGroups.push(group);
-      }
-      const solvedWords = new Set(solvedGroups.flatMap((g) => g.words));
-      const allWords = getAllWords(puzzle);
-      const remainingWords = allWords.filter((w) => !solvedWords.has(w));
+  const gridRef = useRef<HTMLDivElement>(null);
+  const checkRef = useRef<HTMLButtonElement>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
+  const latestSolvedRef = useRef<HTMLLIElement>(null);
+  const resultRef = useRef<HTMLElement>(null);
+  const pendingReveal = useRef<PendingReveal | null>(null);
 
-      return {
-        puzzleDate: todayStr,
-        puzzleNumber,
-        puzzle,
-        solvedGroups,
-        mistakes: saved.mistakes,
-        status: saved.status,
-        selectedWords: [],
-        // Use sorted order for SSR/CSR consistency; shuffle happens in useEffect
-        remainingWords: remainingWords.sort(),
-        // Restore guessHistory from saved data; fall back to [] for legacy records
-        // that predate guessHistory persistence
-        guessHistory: saved.guessHistory ?? [],
-      };
-    }
-
-    return {
-      puzzleDate: todayStr,
-      puzzleNumber,
-      puzzle,
-      solvedGroups: [],
-      mistakes: 0,
-      status: "playing",
-      selectedWords: [],
-      // Use sorted order for SSR/CSR consistency; shuffle happens in useEffect
-      remainingWords: getAllWords(puzzle).sort(),
-      guessHistory: [],
-    };
-  });
-
-  // Shuffle remaining words on client side only to prevent hydration mismatch.
-  // This one-time initialization is intentionally done in useEffect because
-  // remainingWords is mutable state that changes during gameplay (words are
-  // removed on correct guesses, reordered by shuffle button), so it must
-  // live in React state rather than a derived computation.
+  // 端末の記録と語の並べ替えは、サーバーの HTML との水和が済んでから当てる。
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- One-time client-side initialization of shuffled word order
-    setGameState((prev) => ({
-      ...prev,
-      remainingWords: shuffleArray(prev.remainingWords),
-    }));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 端末の記録（外のもの）を水和のあとに読む
+    setGameState((prev) => restoredState(prev));
+    setStats(loadStats());
     setIsReady(true);
   }, []);
 
-  const [stats, setStats] = useState<NakamawakeGameStats>(() => loadStats());
-  const [showResult, setShowResult] = useState(false);
-  const [showStats, setShowStats] = useState(false);
-  const disabledReasonId = useId();
-  // Initialize to false for SSR/CSR consistency.
-  // Lazy initializer that reads localStorage would return true on first client
-  // visit but false during SSR (window undefined), causing a hydration mismatch.
-  // First-visit detection is deferred to useEffect so both environments start
-  // with the same false value.
-  const [showHowToPlay, setShowHowToPlay] = useState(false);
-
-  // Detect first visit on the client after hydration to avoid SSR/CSR mismatch.
-  // localStorage write must precede setState to prevent React StrictMode from
-  // double-showing the modal when the effect is re-invoked in development.
-  useEffect(() => {
-    try {
-      const visited = window.localStorage.getItem(FIRST_VISIT_KEY);
-      if (!visited) {
-        window.localStorage.setItem(FIRST_VISIT_KEY, "1");
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- One-time client-side initialization after hydration
-        setShowHowToPlay(true);
+  useLayoutEffect(() => {
+    const pending = pendingReveal.current;
+    if (!pending) return;
+    pendingReveal.current = null;
+    if (pending.kind === "selected") {
+      const firstSelected = gridRef.current?.querySelector(
+        '[aria-pressed="true"]',
+      );
+      if (checkRef.current) {
+        revealControl(checkRef.current, firstSelected ?? undefined);
       }
-    } catch {
-      // Silently fail if localStorage unavailable
+      return;
     }
+    if (pending.kind === "checked") {
+      const firstWord = gridRef.current?.querySelector("button");
+      const context = pending.correct ? latestSolvedRef.current : firstWord;
+      if (statusRef.current) {
+        revealControl(statusRef.current, context ?? undefined);
+      }
+      // チェックのボタンは選んだ語が消えて押せなくなるので、次に使う語の格子へフォーカスを移す。
+      if (pending.focusGrid) firstWord?.focus({ preventScroll: true });
+      return;
+    }
+    const box = resultRef.current;
+    if (box) {
+      revealResultHead(box);
+      box.focus({ preventScroll: true });
+    }
+  }, [gameState]);
+
+  const handleWordToggle = useCallback((word: string) => {
+    setFeedback("");
+    setGameState((prev) => {
+      if (prev.status !== "playing") return prev;
+      const isSelected = prev.selectedWords.includes(word);
+      if (!isSelected && prev.selectedWords.length >= 4) return prev;
+      const selectedWords = isSelected
+        ? prev.selectedWords.filter((w) => w !== word)
+        : [...prev.selectedWords, word];
+      if (selectedWords.length === 4) {
+        pendingReveal.current = { kind: "selected" };
+      }
+      return { ...prev, selectedWords };
+    });
   }, []);
 
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-
-  // Track the previous game status to detect transitions to won/lost
-  const prevStatusRef = useRef(gameState.status);
-  useEffect(() => {
-    if (prevStatusRef.current === "playing" && gameState.status !== "playing") {
-      const timer = setTimeout(() => setShowResult(true), 600);
-      prevStatusRef.current = gameState.status;
-      return () => clearTimeout(timer);
-    }
-    prevStatusRef.current = gameState.status;
-  }, [gameState.status]);
-
-  // Track game completion (GA level_end) once when the game ends (won or lost).
-  // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
-  // the modal useEffect above (React runs useEffects in declaration order,
-  // so a shared ref would already be updated before this effect runs).
-  // hasRecordedPlayRef prevents re-firing on page reload, where
-  // localStorage restores status as "won"/"lost" on mount.
-  const prevStatusForRecordRef = useRef(gameState.status);
-  const hasRecordedPlayRef = useRef(false);
-  useEffect(() => {
-    if (
-      !hasRecordedPlayRef.current &&
-      prevStatusForRecordRef.current === "playing" &&
-      (gameState.status === "won" || gameState.status === "lost")
-    ) {
-      trackContentEnd("nakamawake", "game", gameState.status === "won");
-      hasRecordedPlayRef.current = true;
-    }
-    prevStatusForRecordRef.current = gameState.status;
-  }, [gameState.status]);
-
-  /**
-   * Toggle word selection (max 4).
-   */
-  const handleWordToggle = useCallback(
-    (word: string) => {
-      if (gameState.status !== "playing") return;
-      setFeedbackMessage("");
-
-      setGameState((prev) => {
-        const isSelected = prev.selectedWords.includes(word);
-        let newSelected: string[];
-        if (isSelected) {
-          newSelected = prev.selectedWords.filter((w) => w !== word);
-        } else {
-          if (prev.selectedWords.length >= 4) return prev;
-          newSelected = [...prev.selectedWords, word];
-        }
-        return { ...prev, selectedWords: newSelected };
-      });
+  const recordFinish = useCallback(
+    (won: boolean, mistakes: number) => {
+      const current = stats ?? loadStats();
+      const updated: NakamawakeGameStats = {
+        ...current,
+        gamesPlayed: current.gamesPlayed + 1,
+        gamesWon: current.gamesWon + (won ? 1 : 0),
+        mistakeDistribution: current.mistakeDistribution.map((count, i) =>
+          i === mistakes ? count + 1 : count,
+        ),
+        lastPlayedDate: todayStr,
+      };
+      if (won) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = formatDateJST(yesterday);
+        const wonYesterday =
+          current.lastPlayedDate === yesterdayStr &&
+          loadHistory()[yesterdayStr]?.status === "won";
+        updated.currentStreak = wonYesterday ? current.currentStreak + 1 : 1;
+        updated.maxStreak = Math.max(current.maxStreak, updated.currentStreak);
+      } else {
+        updated.currentStreak = 0;
+      }
+      setStats(updated);
+      saveStats(updated);
+      setFinishedByPlay(true);
+      trackContentEnd("nakamawake", "game", won);
     },
-    [gameState.status],
+    [stats, todayStr],
   );
 
-  /**
-   * Check current selection of 4 words.
-   */
   const handleCheck = useCallback(() => {
     if (gameState.status !== "playing") return;
     if (gameState.selectedWords.length !== 4) return;
 
+    const focusGrid = document.activeElement === checkRef.current;
     const matchedGroup = checkGuess(
       gameState.selectedWords,
       gameState.puzzle,
       gameState.solvedGroups,
     );
+    const guessHistory = [
+      ...gameState.guessHistory,
+      { words: [...gameState.selectedWords], correct: matchedGroup !== null },
+    ];
 
+    let next: NakamawakeGameState;
     if (matchedGroup) {
-      // Correct guess
-      const newSolvedGroups = [...gameState.solvedGroups, matchedGroup];
-      const newRemainingWords = gameState.remainingWords.filter(
-        (w) => !matchedGroup.words.includes(w),
-      );
-      const newGuessHistory = [
-        ...gameState.guessHistory,
-        { words: [...gameState.selectedWords], correct: true },
-      ];
-      const newStatus = newSolvedGroups.length === 4 ? "won" : "playing";
-
-      const newState: NakamawakeGameState = {
+      const solvedGroups = [...gameState.solvedGroups, matchedGroup];
+      next = {
         ...gameState,
-        solvedGroups: newSolvedGroups,
-        remainingWords: newRemainingWords,
+        solvedGroups,
+        remainingWords: gameState.remainingWords.filter(
+          (w) => !matchedGroup.words.includes(w),
+        ),
         selectedWords: [],
-        guessHistory: newGuessHistory,
-        status: newStatus,
+        guessHistory,
+        status: solvedGroups.length === 4 ? "won" : "playing",
       };
-      setGameState(newState);
-      setFeedbackMessage("\u6B63\u89E3!");
-      setTimeout(() => setFeedbackMessage(""), 1500);
-
-      // Save progress including guessHistory so share text survives page reload
-      saveTodayGame(todayStr, {
-        solvedGroups: newSolvedGroups.map((g) => g.difficulty),
-        mistakes: gameState.mistakes,
-        status: newStatus,
-        guessHistory: newGuessHistory,
-      });
-
-      // Update stats on win
-      if (newStatus === "won") {
-        const updatedStats = { ...stats };
-        updatedStats.gamesPlayed += 1;
-        updatedStats.gamesWon += 1;
-        updatedStats.mistakeDistribution[gameState.mistakes] += 1;
-
-        // Update streaks
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = formatDateJST(yesterday);
-        const history = loadHistory();
-        const yesterdayGame = history[yesterdayStr];
-
-        if (
-          stats.lastPlayedDate === yesterdayStr &&
-          yesterdayGame?.status === "won"
-        ) {
-          updatedStats.currentStreak = stats.currentStreak + 1;
-        } else {
-          updatedStats.currentStreak = 1;
-        }
-        updatedStats.maxStreak = Math.max(
-          updatedStats.maxStreak,
-          updatedStats.currentStreak,
-        );
-        updatedStats.lastPlayedDate = todayStr;
-
-        setStats(updatedStats);
-        saveStats(updatedStats);
-      }
+      setFeedback("正解です");
     } else {
-      // Incorrect guess
-      const newMistakes = gameState.mistakes + 1;
-      const oneAway = isOneAway(
-        gameState.selectedWords,
-        gameState.puzzle,
-        gameState.solvedGroups,
-      );
-      const newGuessHistory = [
-        ...gameState.guessHistory,
-        { words: [...gameState.selectedWords], correct: false },
-      ];
-      const newStatus = newMistakes >= MAX_MISTAKES ? "lost" : "playing";
-
-      const newState: NakamawakeGameState = {
+      const mistakes = gameState.mistakes + 1;
+      next = {
         ...gameState,
-        mistakes: newMistakes,
+        mistakes,
         selectedWords: [],
-        guessHistory: newGuessHistory,
-        status: newStatus,
+        guessHistory,
+        status: mistakes >= MAX_MISTAKES ? "lost" : "playing",
       };
-      setGameState(newState);
-
-      if (oneAway) {
-        setFeedbackMessage("\u3042\u30681\u3064!");
-      } else {
-        setFeedbackMessage("");
-      }
-      setTimeout(() => setFeedbackMessage(""), 2000);
-
-      // Persist game state on every mistake (including playing state)
-      // so that progress survives page reload. Include guessHistory so
-      // share text is correct after reload.
-      saveTodayGame(todayStr, {
-        solvedGroups: gameState.solvedGroups.map((g) => g.difficulty),
-        mistakes: newMistakes,
-        status: newStatus,
-        guessHistory: newGuessHistory,
-      });
-
-      // Update stats on loss
-      if (newStatus === "lost") {
-        const updatedStats = { ...stats };
-        updatedStats.gamesPlayed += 1;
-        updatedStats.mistakeDistribution[newMistakes] += 1;
-        updatedStats.currentStreak = 0;
-        updatedStats.lastPlayedDate = todayStr;
-
-        setStats(updatedStats);
-        saveStats(updatedStats);
-      }
+      setFeedback(
+        isOneAway(
+          gameState.selectedWords,
+          gameState.puzzle,
+          gameState.solvedGroups,
+        )
+          ? "おしい。4つのうち3つは同じ組です"
+          : "はずれです",
+      );
     }
-  }, [gameState, todayStr, stats]);
 
-  /**
-   * Shuffle remaining words.
-   */
+    pendingReveal.current =
+      next.status === "playing"
+        ? { kind: "checked", correct: matchedGroup !== null, focusGrid }
+        : { kind: "finished" };
+    setGameState(next);
+    // 途中の回も、開き直したときに続きから遊べるよう保存する。共有の文を作るため、推測の並びも残す。
+    saveTodayGame(todayStr, {
+      solvedGroups: next.solvedGroups.map((g) => g.difficulty),
+      mistakes: next.mistakes,
+      status: next.status,
+      guessHistory: next.guessHistory,
+    });
+    if (next.status !== "playing") {
+      recordFinish(next.status === "won", next.mistakes);
+    }
+  }, [gameState, todayStr, recordFinish]);
+
   const handleShuffle = useCallback(() => {
     setGameState((prev) => ({
       ...prev,
@@ -344,77 +318,76 @@ export default function GameContainer({
     }));
   }, []);
 
-  /**
-   * Clear current selection.
-   */
   const handleDeselectAll = useCallback(() => {
-    setFeedbackMessage("");
-    setGameState((prev) => ({
-      ...prev,
-      selectedWords: [],
-    }));
+    setFeedback("");
+    setGameState((prev) => ({ ...prev, selectedWords: [] }));
   }, []);
 
+  const isFinished = gameState.status !== "playing";
+  const remaining = MAX_MISTAKES - gameState.mistakes;
+
   return (
-    <>
-      <GameHeader
-        puzzleNumber={gameState.puzzleNumber}
-        dateString={dateDisplayString}
-      />
-      <SolvedGroups groups={gameState.solvedGroups} />
-      <div style={{ visibility: isReady ? "visible" : "hidden" }}>
-        <WordGrid
-          words={gameState.remainingWords}
-          selectedWords={gameState.selectedWords}
-          onWordToggle={handleWordToggle}
-          disabled={gameState.status !== "playing"}
-          disabledReasonId={disabledReasonId}
+    <div className={styles.game}>
+      <div className={styles.board}>
+        <SolvedGroups
+          groups={gameState.solvedGroups}
+          latestRef={latestSolvedRef}
         />
-      </div>
-      <div
-        className={`${styles.mistakeIndicator}${gameState.mistakes === MAX_MISTAKES - 1 ? ` ${styles.mistakeDanger}` : ""}`}
-        aria-live="polite"
-      >
-        {"\u25CF".repeat(gameState.mistakes)}
-        {"\u25CB".repeat(MAX_MISTAKES - gameState.mistakes)} {"\u30DF\u30B9"}{" "}
-        {gameState.mistakes}/{MAX_MISTAKES}
-        {gameState.mistakes === MAX_MISTAKES - 1 && (
-          <span className={styles.srOnly}>あと1回ミスでゲームオーバーです</span>
+        {!isFinished && (
+          <div className={isReady ? undefined : styles.pending}>
+            <WordGrid
+              ref={gridRef}
+              words={gameState.remainingWords}
+              selectedWords={gameState.selectedWords}
+              onWordToggle={handleWordToggle}
+            />
+          </div>
         )}
       </div>
-      {feedbackMessage && (
-        <div className={styles.feedback}>{feedbackMessage}</div>
+      {isFinished && stats ? (
+        <>
+          <GameResult
+            ref={resultRef}
+            gameState={gameState}
+            stats={stats}
+            appear={finishedByPlay}
+          />
+          <section className={styles.share} aria-labelledby="nakamawake-share">
+            <h3 id="nakamawake-share" className={styles.shareHeading}>
+              この結果を共有
+            </h3>
+            <ShareButtons
+              url="/play/nakamawake"
+              title="ナカマワケ"
+              text={generateShareText(gameState)}
+              sns={["x", "line", "copy"]}
+              contentType="game"
+              contentId="nakamawake"
+            />
+          </section>
+          <NextPuzzleTime />
+          <NextGameBanner currentGameSlug="nakamawake" />
+          <CrossCategoryBanner items={crossCategoryItems} />
+        </>
+      ) : (
+        <>
+          <div ref={statusRef} className={styles.status} role="status">
+            <p>あと{remaining}回間違えると終わり</p>
+            {feedback && <p>{feedback}</p>}
+          </div>
+          <GameControls
+            onCheck={handleCheck}
+            onShuffle={handleShuffle}
+            onDeselectAll={handleDeselectAll}
+            canCheck={gameState.selectedWords.length === 4}
+            checkRef={checkRef}
+          />
+        </>
       )}
-      <GameControls
-        onCheck={handleCheck}
-        onShuffle={handleShuffle}
-        onDeselectAll={handleDeselectAll}
-        disabled={gameState.status !== "playing"}
-        canCheck={gameState.selectedWords.length === 4}
-        disabledReason="今日の問題は終わりました。明日また新しい問題が出ます。"
-        disabledReasonId={disabledReasonId}
-      />
-      <HowToPlayModal
-        open={showHowToPlay}
-        onClose={() => setShowHowToPlay(false)}
-        returnFocusRef={gameTitleRef}
-      />
-      <ResultModal
-        open={showResult}
-        onClose={() => setShowResult(false)}
-        gameState={gameState}
-        crossCategoryItems={crossCategoryItems}
-        returnFocusRef={gameTitleRef}
-        onStatsClick={() => {
-          setShowResult(false);
-          setShowStats(true);
-        }}
-      />
-      <StatsModal
-        open={showStats}
-        onClose={() => setShowStats(false)}
-        stats={stats}
-      />
-    </>
+      <HowToPlay />
+      <p className={styles.date}>
+        {dateDisplayString}の問題 #{puzzleNumber}
+      </p>
+    </div>
   );
 }

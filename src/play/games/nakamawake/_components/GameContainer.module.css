@@ -1,55 +1,46 @@
-/* GameContainer（なかまわけ）— ミス表示・フィードバック帯 */
+/*
+ * ナカマワケの遊ぶ区画。盤・操作・結果・くわしい遊び方・問題の日付を、コンテンツ幅の左端から縦に積む
+ * （DESIGN.md §5）。
+ */
 
-.mistakeIndicator {
-  text-align: center;
-  font-size: 1rem;
-  margin: var(--space-8) 0;
+.game {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 盤。当てた組と語の格子を、マスどうしと同じ間隔で1つの盤に並べる。 */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--measure);
+}
+
+/* 端末の記録を読み、語を並べ替えるまでは、場所を取ったまま語の格子を見せない。 */
+.pending {
+  visibility: hidden;
+}
+
+/* 残りのミスの数と、チェックへの応え。本文の大きさで字で言う。 */
+.status {
+  max-width: var(--measure);
+}
+
+/* 結果を持ち帰る・共有する区画。ボックスのすぐ下にある小見出しは、ボックスの太い枠がすでに切れ目なので、
+ * 上に線を持たない（§5）。 */
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.shareHeading {
+  font-size: var(--text-heading-sub);
+}
+
+/* 問題の日付と番号。補助情報（§4・§7）。 */
+.date {
+  font-size: var(--text-small);
   color: var(--ink-2);
-}
-
-.feedback {
-  text-align: center;
-  font-weight: 600;
-  color: var(--ink);
-  padding: var(--space-8);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-
-/* 残りミス1回の警告状態。色（--danger 等）ではなく --accent と文字で示す。
- * 点滅は状態変化の強調のみに使い、prefers-reduced-motion では静止表示にする（§11）。 */
-.mistakeDanger {
-  color: var(--accent);
-  font-weight: 600;
-  animation: mistakePulse 1.5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mistakeDanger {
-    animation: none;
-  }
-}
-
-@keyframes mistakePulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/* Screen-reader only text for accessibility */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }

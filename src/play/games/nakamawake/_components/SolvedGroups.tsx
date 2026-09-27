@@ -1,30 +1,38 @@
+import type { Ref } from "react";
 import type { NakamawakeGroup } from "@/play/games/nakamawake/_lib/types";
-import { getDifficultyColor } from "@/play/games/nakamawake/_lib/engine";
+import { difficultyLabel } from "@/play/games/nakamawake/_lib/engine";
 import styles from "./SolvedGroups.module.css";
 
 interface Props {
+  /** 当てた組。当てた順に並べる。 */
   groups: NakamawakeGroup[];
+  /** いちばん新しく当てた組の要素。当てたあと、その組と語の格子を画面に入れるのに使う。 */
+  latestRef?: Ref<HTMLLIElement>;
 }
 
 /**
- * Displays correctly solved groups above the word grid.
+ * 盤の上の段に、当てた組を当てた順に並べる。組は4つの語のマスを1つにつないだ盤のマスで、当たりの判定の
+ * マスと同じ地（DESIGN.md §8）を持つ。組の難易度は、凡例と同じ「難易度1」〜「難易度4」の字で言う。
  */
-export default function SolvedGroups({ groups }: Props) {
+export default function SolvedGroups({ groups, latestRef }: Props) {
   if (groups.length === 0) return null;
   return (
-    <div
-      className={styles.container}
-      aria-label={"\u6B63\u89E3\u3057\u305F\u30B0\u30EB\u30FC\u30D7"}
-    >
-      {groups.map((group) => (
-        <div
+    <ul className={styles.groups} aria-label="当てた組">
+      {groups.map((group, index) => (
+        <li
           key={group.name}
-          className={`${styles.group} ${styles[getDifficultyColor(group.difficulty)]}`}
+          ref={index === groups.length - 1 ? latestRef : undefined}
+          className={styles.group}
         >
-          <div className={styles.groupName}>{group.name}</div>
-          <div className={styles.groupWords}>{group.words.join("\u3001")}</div>
-        </div>
+          <p className={styles.head}>
+            <span className={styles.name}>{group.name}</span>
+            <span className={styles.difficulty}>
+              {difficultyLabel(group.difficulty)}
+            </span>
+          </p>
+          <p className={styles.words}>{group.words.join("、")}</p>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
