@@ -14,8 +14,9 @@ interface NextGameBannerProps {
 }
 
 /**
- * External store for game play statuses.
- * Reads from localStorage once on mount; does not auto-refresh.
+ * 今日の遊んだかどうかの記録（端末の記録）を読む外の置き場。描くたびには読み直さない。
+ * 最初に描くときに読むので、ブラウザで新しく描くとき（解き終えて結果が出たとき・開き直した回の結果）も、
+ * 1回目の描画から並びが出て、あとから並びが現れて下のものを押し下げることがない。
  */
 let cachedStatuses: GamePlayStatus[] = [];
 let statusListeners: Array<() => void> = [];
@@ -27,11 +28,18 @@ let initialized = false;
 // infinite loop" warning. See React docs on useSyncExternalStore server snapshots.
 const EMPTY_STATUSES: GamePlayStatus[] = [];
 
+/** まだ読んでいなければ、端末の記録を読む。読んだら true を返す。 */
+function loadStatusesOnce(): boolean {
+  if (initialized) return false;
+  initialized = true;
+  cachedStatuses = getAllGameStatus();
+  return true;
+}
+
 function subscribeStatuses(callback: () => void): () => void {
   statusListeners.push(callback);
-  if (!initialized) {
-    initialized = true;
-    cachedStatuses = getAllGameStatus();
+  // 水和で描いたとき（サーバーの空の並びを引き継いだとき）は、ここで読んで知らせる。
+  if (loadStatusesOnce()) {
     for (const listener of statusListeners) {
       listener();
     }
@@ -45,6 +53,7 @@ function subscribeStatuses(callback: () => void): () => void {
 }
 
 function getStatusSnapshot(): GamePlayStatus[] {
+  loadStatusesOnce();
   return cachedStatuses;
 }
 
@@ -53,7 +62,7 @@ function getStatusServerSnapshot(): GamePlayStatus[] {
 }
 
 /**
- * ゲームを終えたダイアログで、今日の進み具合と、ほかのデイリーゲームを並べる。
+ * ゲームを解き終えた結果の下で、今日の進み具合と、ほかのデイリーゲームを並べる。
  * 今日遊んだゲームの行は、補助情報でそれを言う。
  */
 export default function NextGameBanner({
@@ -88,7 +97,7 @@ export default function NextGameBanner({
           : `今日のパズル ${playedCount}/${totalCount} クリア`}
       </p>
       {!allComplete && (
-        // ダイアログの枠と二重にならないよう、一覧はボックスを持たない。
+        // 並びを囲む枠と二重にならないよう、一覧はボックスを持たない。
         <ItemList labelledBy={progressId} items={otherGames} boxed={false} />
       )}
     </div>

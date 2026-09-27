@@ -1,4 +1,5 @@
 import { describe, test, expect, vi } from "vitest";
+import { useLayoutEffect, useRef } from "react";
 import { render, screen, within } from "@testing-library/react";
 import NextGameBanner from "../NextGameBanner";
 
@@ -64,5 +65,25 @@ describe("NextGameBanner", () => {
 
     expect(screen.getByText("今日のパズル 完全制覇!")).toBeInTheDocument();
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
+  });
+
+  test("ブラウザで新しく描くとき、最初の描画から並びを持ち、あとから並びが現れて下を押し下げないこと", () => {
+    played.clear();
+    played.add("kanji-kanaru");
+    const firstCommit: { rows: number | null } = { rows: null };
+    // 最初の描画を画面に反映した直後（記録を購読する前）に、並びがすでにあるかを見る。
+    function FirstCommitProbe() {
+      const ref = useRef<HTMLDivElement>(null);
+      useLayoutEffect(() => {
+        firstCommit.rows = ref.current?.querySelectorAll("li").length ?? null;
+      }, []);
+      return (
+        <div ref={ref}>
+          <NextGameBanner currentGameSlug="kanji-kanaru" />
+        </div>
+      );
+    }
+    render(<FirstCommitProbe />);
+    expect(firstCommit.rows).toBe(2);
   });
 });
