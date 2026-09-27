@@ -1,0 +1,70 @@
+"use client";
+
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import {
+  saveResultHeight,
+  type ResultAreaNames,
+} from "@/play/games/shared/_lib/savedLayout";
+import styles from "./ReservedResultArea.module.css";
+
+interface ReservedResultAreaProps {
+  names: ResultAreaNames;
+  /** 解き終えた回の結果を出しているか。出しているあいだ、その高さを覚えておく。 */
+  showsResult: boolean;
+  /** 今日の日付（"YYYY-MM-DD"）と難易度。覚えた高さは、同じ日・同じ難易度のときだけ使う。 */
+  date: string;
+  difficulty: string;
+  /** 遊んでいるあいだは入力欄、解き終えたらその場所に替わる結果。 */
+  children: ReactNode;
+}
+
+/**
+ * 入力欄か、解き終えたらその場所に替わる結果の区画（DESIGN.md §8「結果は、それを生んだ操作の直後」）。
+ *
+ * 解き終えた回を開き直したときは、本体の前のスクリプト（savedLayoutScript）が書いた値で、前に同じ画面で描いた
+ * 結果の区画の高さを取っておき、読み込むあいだは入力欄を見せない。結果を出しているあいだは、その高さを覚えて
+ * おく。結果の中の案内が端末の記録を読んであとから出ても、覚えるのは出たあとの高さである。
+ */
+export default function ReservedResultArea({
+  names,
+  showsResult,
+  date,
+  difficulty,
+  children,
+}: ReservedResultAreaProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!showsResult || !content) return;
+    const save = () =>
+      saveResultHeight(
+        names.storageKey,
+        date,
+        difficulty,
+        content.getBoundingClientRect().height,
+      );
+    save();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(save);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [showsResult, names.storageKey, date, difficulty]);
+
+  // 値の名前はゲームごとに違うので、この部品の CSS が読む決まった名前の値に写す。
+  const reserved = {
+    "--reserved-height": `var(${names.heightProperty}, 0)`,
+    "--reserved-input-visibility": `var(${names.inputVisibilityProperty}, visible)`,
+  } as CSSProperties;
+
+  return (
+    <div className={styles.area} style={reserved}>
+      <div
+        ref={contentRef}
+        className={showsResult ? undefined : styles.waiting}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}

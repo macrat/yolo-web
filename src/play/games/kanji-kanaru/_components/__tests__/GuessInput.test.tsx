@@ -47,7 +47,10 @@ describe("GuessInput", () => {
   test("keeps the field usable while sending so the on-screen keyboard stays open", () => {
     render(<GuessInput label={LABEL} onSubmit={accepted} submitting />);
     expect(screen.getByRole("textbox")).toBeEnabled();
-    expect(screen.getByRole("button", { name: "送信中..." })).toBeDisabled();
+    const button = screen.getByRole("button", { name: "送信中……" });
+    expect(button).toBeDisabled();
+    // 2つの面の字はいつも両方を描き、見えない面は隠す。ボタンの幅が面の字で変わらない。
+    expect(button).toHaveTextContent("送信送信中……");
   });
 
   test("while loading, the field and the button are disabled and described by the loading text", () => {

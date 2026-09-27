@@ -48,6 +48,19 @@ describe("GameBoard", () => {
     ).toBeInTheDocument();
   });
 
+  test("a sent guess waits in its own row with empty judgment squares", () => {
+    render(<GameBoard guesses={[GUESS]} pendingGuess="川" showNextRow />);
+    const rows = screen.getAllByRole("row");
+    // 見出しの行・判定の返った行・判定を待つ行・次の行
+    expect(rows).toHaveLength(4);
+    expect(
+      within(rows[2]).getByRole("cell", { name: "推測した漢字 川" }),
+    ).toBeInTheDocument();
+    expect(
+      within(rows[2]).getByRole("cell", { name: "部首: 判定しています" }),
+    ).toBeEmptyDOMElement();
+  });
+
   test("tells the next row is loading", () => {
     render(
       <GameBoard

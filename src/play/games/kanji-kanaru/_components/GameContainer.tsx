@@ -32,8 +32,15 @@ import {
   loadTodayGame,
 } from "@/play/games/kanji-kanaru/_lib/storage";
 import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
+import {
+  releaseSavedLayout,
+  resultAreaNames,
+  savedLayoutScript,
+} from "@/play/games/shared/_lib/savedLayout";
+import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
+import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
 import { revealControl } from "@/play/games/shared/_lib/revealControl";
 import HintBar from "./HintBar";
@@ -45,9 +52,23 @@ import DifficultySelector from "./DifficultySelector";
 import styles from "./styles/KanjiKanaru.module.css";
 
 const DIFFICULTY_KEY = "kanji-kanaru-difficulty";
+const HISTORY_KEY_PREFIX = "kanji-kanaru-history-";
 const LOADING_TEXT = "読み込んでいます";
 const INIT_FAILED_MESSAGE =
   "問題を読み込めませんでした。時間をおいて、もう一度読み込んでください";
+
+const SAVED_LAYOUT_STYLE_ID = "kanji-kanaru-saved-layout";
+const RESULT_AREA = resultAreaNames("kanji-kanaru");
+
+/** サーバーの HTML で本体の前に置き、端末に記録した今日の回の行と結果の区画の高さを、本体を描く前に取っておく。 */
+const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
+  styleId: SAVED_LAYOUT_STYLE_ID,
+  difficultyKey: DIFFICULTY_KEY,
+  historyKeyPrefix: HISTORY_KEY_PREFIX,
+  maxGuesses: MAX_GUESSES,
+  boardRowsProperty: "--kanji-kanaru-board-rows",
+  resultArea: RESULT_AREA,
+});
 
 /**
  * Load the saved difficulty from localStorage, defaulting to intermediate.
@@ -127,7 +148,8 @@ interface GameContainerProps {
  * ゲーム本体。ヒント・盤・入力欄（解き終えたら結果）・くわしい遊び方・難易度と日付を、上からこの順に置く。
  *
  * サーバーの HTML と読み込みのあいだも、初めての来訪者が読み込んだあとに見るのと同じ区画（空の次の行を持つ盤、
- * 入力欄、くわしい遊び方、難易度と日付の行）を描き、読み込んだときに下のものが動かないようにする。
+ * 入力欄、くわしい遊び方、難易度と日付の行）を描き、読み込んだときに下のものが動かないようにする。遊んだ来訪者が
+ * 開き直したときは、本体の前のスクリプトが端末の記録から盤の行と結果の区画の高さを取っておく。
  * 答えの漢字は、解き終えるまでサーバーからクライアントに渡らない。
  */
 export default function GameContainer({
@@ -153,6 +175,10 @@ export default function GameContainer({
   // 立てない（登場の動きは操作への応えだけが持つ。DESIGN.md §11）。
   const [appearingRow, setAppearingRow] = useState<number | undefined>();
   const [finishedByGuess, setFinishedByGuess] = useState(false);
+  /** 送って答え合わせを待っている推測。判定が返るまで、盤にその行を置いておく。 */
+  const [pendingGuess, setPendingGuess] = useState<string | null>(null);
+
+  const isServerRendered = useIsServerRendered();
 
   const inputRowRef = useRef<HTMLDivElement>(null);
   const resultBoxRef = useRef<HTMLElement>(null);
@@ -222,12 +248,23 @@ export default function GameContainer({
   const handleDifficultyChange = useCallback(
     (newDifficulty: Difficulty) => {
       if (newDifficulty === difficulty) return;
+      releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
       saveDifficulty(newDifficulty);
       setDifficulty(newDifficulty);
       void initializeGame(newDifficulty);
     },
     [difficulty, initializeGame],
   );
+
+  // 遊んでいる途中の回を戻したら、取っておいた行の高さを外す。解き終えた回では、結果の区画が描き終わるまで
+  // （ほかの遊びの案内が端末の記録を読んで出るまで）高さを取っておくため、難易度を替えるまで外さない。
+  useLayoutEffect(() => {
+    if (!loading && gameState.status === "playing")
+      releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
+  }, [loading, gameState.status]);
+
+  // 送った推測も、判定を待たずに1回として数える（盤の行・残りの回数）。
+  const guessCount = gameState.guesses.length + (pendingGuess === null ? 0 : 1);
 
   // 推測を送ったあと、次の推測の入力欄か、解き終えた結果のボックスを画面に入れる。行が増えたのを描いた直後、
   // 塗る前に送り、送りを即時にする（DESIGN.md §8・§11）。
@@ -249,7 +286,7 @@ export default function GameContainer({
       box.scrollIntoView({ behavior: "instant", block: "start" });
     }
     box.focus({ preventScroll: true });
-  }, [gameState.guesses.length]);
+  }, [guessCount, gameState.status]);
 
   /**
    * 推測を送る。入力の誤りは "invalid" と欄に出す文で、答え合わせの失敗は "unavailable" で返す。
@@ -278,6 +315,10 @@ export default function GameContainer({
       }
 
       setSubmitting(true);
+      // 判定を待たずに、送った字の行を盤に置いて入力欄の位置を決める。判定が遅く返っても、送った操作の直後に
+      // 盤が伸び、判定が付くときには盤の下が動かない。
+      setPendingGuess(input);
+      pendingRevealRef.current = "input";
       try {
         const guessNumber = gameState.guesses.length + 1;
         const response = await fetchEvaluate(
@@ -318,7 +359,6 @@ export default function GameContainer({
           // 判定の現れる動きは、結果が出ない推測の行だけが持つ。結果が出る最後の推測では、結果のボックスの
           // 登場だけが動く（DESIGN.md §11「1つの操作に応える UI の動きは1つだけ」）。
           setAppearingRow(newGuesses.length - 1);
-          pendingRevealRef.current = "input";
         } else {
           const base = stats ?? loadStats(difficulty);
           const updatedStats: GameStats = {
@@ -358,8 +398,10 @@ export default function GameContainer({
 
         return { kind: "accepted" };
       } catch {
+        pendingRevealRef.current = null;
         return { kind: "unavailable" };
       } finally {
+        setPendingGuess(null);
         setSubmitting(false);
       }
     },
@@ -378,51 +420,67 @@ export default function GameContainer({
   }
 
   const playing = gameState.status === "playing";
-  const remaining = MAX_GUESSES - gameState.guesses.length;
+  const remaining = MAX_GUESSES - guessCount;
 
   return (
-    <div className={styles.game}>
-      <HintBar hints={loading ? null : (hintsData?.hints ?? null)} />
-      <GameBoard
-        guesses={loading ? [] : gameState.guesses}
-        showNextRow={loading || playing}
-        appearingRow={appearingRow}
-        pendingText={loading ? LOADING_TEXT : undefined}
-        pendingTextId={loadingTextId}
-      />
-      {loading || playing ? (
-        <GuessInput
-          label={`${DIFFICULTY_LABELS[difficulty]}の漢字を1字入力（あと${remaining}回）`}
-          onSubmit={handleGuess}
-          submitting={submitting}
-          loading={loading}
-          loadingTextId={loadingTextId}
-          rowRef={inputRowRef}
+    <>
+      {isServerRendered && (
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: SAVED_LAYOUT_SCRIPT }}
         />
-      ) : (
-        stats && (
-          <GameResult
-            gameState={gameState}
-            difficulty={difficulty}
-            stats={stats}
-            appear={finishedByGuess}
-            boxRef={resultBoxRef}
-            crossCategoryItems={crossCategoryItems}
-          />
-        )
       )}
-      <HowToPlay />
-      <DifficultySelector
-        difficulty={difficulty}
-        onChange={handleDifficultyChange}
-      />
-      {/* 番号と日付は読み込んだあとに分かる。読み込みのあいだも1行を取り、読み込んだときに下が動かない。 */}
-      <p className={styles.puzzleLine}>
-        {loading
-          ? " "
-          : `第${gameState.puzzleNumber}回・${formatPuzzleDate(todayStr)}`}
-      </p>
-    </div>
+      <div className={styles.game}>
+        <HintBar hints={loading ? null : (hintsData?.hints ?? null)} />
+        <GameBoard
+          guesses={loading ? [] : gameState.guesses}
+          pendingGuess={pendingGuess}
+          showNextRow={loading || (playing && guessCount < MAX_GUESSES)}
+          appearingRow={appearingRow}
+          pendingText={loading ? LOADING_TEXT : undefined}
+          pendingTextId={loadingTextId}
+        />
+        <ReservedResultArea
+          names={RESULT_AREA}
+          showsResult={!loading && !playing}
+          date={todayStr}
+          difficulty={difficulty}
+        >
+          {loading || playing ? (
+            <GuessInput
+              label={`${DIFFICULTY_LABELS[difficulty]}の漢字を1字入力（あと${remaining}回）`}
+              onSubmit={handleGuess}
+              submitting={submitting}
+              loading={loading}
+              loadingTextId={loadingTextId}
+              rowRef={inputRowRef}
+            />
+          ) : (
+            stats && (
+              <GameResult
+                gameState={gameState}
+                difficulty={difficulty}
+                stats={stats}
+                appear={finishedByGuess}
+                boxRef={resultBoxRef}
+                crossCategoryItems={crossCategoryItems}
+              />
+            )
+          )}
+        </ReservedResultArea>
+        <HowToPlay />
+        <DifficultySelector
+          difficulty={difficulty}
+          onChange={handleDifficultyChange}
+        />
+        {/* 番号と日付は読み込んだあとに分かる。読み込みのあいだも1行を取り、読み込んだときに下が動かない。 */}
+        <p className={styles.puzzleLine}>
+          {loading
+            ? " "
+            : `第${gameState.puzzleNumber}回・${formatPuzzleDate(todayStr)}`}
+        </p>
+      </div>
+    </>
   );
 }
 

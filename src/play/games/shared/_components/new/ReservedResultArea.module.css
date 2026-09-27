@@ -1,0 +1,9 @@
+/* 解き終えた回を開き直したときに取っておく、結果の区画の高さ（本体の前のスクリプトが書く）。 */
+.area {
+  min-height: var(--reserved-height);
+}
+
+/* 結果を待つあいだの入力欄。解き終えた回では読み込むあいだ見せない（そこには結果が出る）。 */
+.waiting {
+  visibility: var(--reserved-input-visibility);
+}

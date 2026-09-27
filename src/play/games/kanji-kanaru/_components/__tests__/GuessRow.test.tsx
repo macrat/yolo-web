@@ -58,7 +58,7 @@ describe("GuessRow", () => {
       />,
     );
     expect(
-      screen.getByRole("cell", { name: "学年: 近い（対象はより上の学年）" }),
+      screen.getByRole("cell", { name: "学年: 近い（答えはより上の学年）" }),
     ).toHaveTextContent("△↑");
   });
 
@@ -69,7 +69,7 @@ describe("GuessRow", () => {
       />,
     );
     expect(
-      screen.getByRole("cell", { name: "学年: 不一致（対象はより下の学年）" }),
+      screen.getByRole("cell", { name: "学年: 不一致（答えはより下の学年）" }),
     ).toHaveTextContent("×↓");
   });
 

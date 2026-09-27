@@ -12,12 +12,14 @@ import {
 } from "@/play/games/kanji-kanaru/_lib/types";
 import { generateShareText } from "@/play/games/kanji-kanaru/_lib/share";
 import ResultBox from "@/components/ResultBox";
+import PhrasedText from "@/components/PhrasedText";
 import QuantityBars from "@/components/QuantityBars";
 import ShareButtons from "@/components/ShareButtons";
 import type { ItemListItem } from "@/components/ItemList";
 import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import ResultTable, { type ResultTableRow } from "./ResultTable";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface GameResultProps {
@@ -52,24 +54,28 @@ export default function GameResult({
   const isWon = status === "won";
   const difficultyLabel = DIFFICULTY_LABELS[difficulty];
 
-  const facts = targetKanji
+  const facts: ResultTableRow[] = targetKanji
     ? [
-        { label: "音読み", value: targetKanji.onYomi.join("、") },
-        { label: "訓読み", value: targetKanji.kunYomi.join("、") },
-        { label: "意味", value: targetKanji.meanings.join(", ") },
-        { label: "例", value: targetKanji.examples.join("、") },
-      ].filter((fact) => fact.value !== "")
+        { label: "音読み", value: targetKanji.onYomi },
+        { label: "訓読み", value: targetKanji.kunYomi },
+        { label: "意味", value: targetKanji.meanings, separator: ", " },
+        { label: "例", value: targetKanji.examples },
+      ].filter((fact) => fact.value.length > 0)
     : [];
 
   const winRate =
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
       : 0;
-  const records = [
-    { label: "遊んだ日", value: `${stats.gamesPlayed}日` },
-    { label: "当てた割合", value: `${winRate}%` },
-    { label: "続けて当てた日", value: `${stats.currentStreak}日` },
-    { label: "いちばん長く続けて当てた日", value: `${stats.maxStreak}日` },
+  const records: ResultTableRow[] = [
+    { label: "遊んだ日", value: [`${stats.gamesPlayed}日`], unbreakable: true },
+    { label: "正解率", value: [`${winRate}%`], unbreakable: true },
+    {
+      label: "連続中",
+      value: [`${stats.currentStreak}日`],
+      unbreakable: true,
+    },
+    { label: "最長連続", value: [`${stats.maxStreak}日`], unbreakable: true },
   ];
 
   return (
@@ -87,31 +93,14 @@ export default function GameResult({
               ? `${guesses.length}回目で当てました。`
               : `${MAX_GUESSES}回のうちに当てられませんでした。`}
           </p>
-          {facts.length > 0 && (
-            <table className={styles.facts}>
-              <tbody>
-                {facts.map((fact) => (
-                  <tr key={fact.label}>
-                    <th scope="row">{fact.label}</th>
-                    <td>{fact.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          <h2 id={statsHeadingId} className={styles.subHeading}>
-            {difficultyLabel}のこれまでの成績
-          </h2>
-          <table className={styles.facts} aria-labelledby={statsHeadingId}>
-            <tbody>
-              {records.map((record) => (
-                <tr key={record.label}>
-                  <th scope="row">{record.label}</th>
-                  <td>{record.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {facts.length > 0 && <ResultTable rows={facts} />}
+          <PhrasedText
+            as="h2"
+            id={statsHeadingId}
+            className={styles.subHeading}
+            phrases={[`${difficultyLabel}の`, "これまでの", "成績"]}
+          />
+          <ResultTable rows={records} labelledBy={statsHeadingId} />
           <p id={distributionLabelId} className={styles.distributionLabel}>
             何回目で当てたか（当てた日の数）
           </p>
@@ -127,9 +116,12 @@ export default function GameResult({
         </div>
       </ResultBox>
       <section className={styles.share} aria-labelledby={shareHeadingId}>
-        <h2 id={shareHeadingId} className={styles.shareHeading}>
-          この結果を共有
-        </h2>
+        <PhrasedText
+          as="h2"
+          id={shareHeadingId}
+          className={styles.shareHeading}
+          phrases={["この", "結果を", "共有"]}
+        />
         <ShareButtons
           url="/play/kanji-kanaru"
           title="漢字カナール"

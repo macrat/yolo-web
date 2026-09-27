@@ -11,6 +11,8 @@ const SCROLL_FRAME_LABEL = "盤（横にスクロールできます）";
 
 interface GameBoardProps {
   guesses: GuessFeedback[];
+  /** 送って判定を待っている字。判定が返るまで、その行を置いておく。 */
+  pendingGuess?: string | null;
   /** 次に入れる空の行を見せるか（遊んでいるあいだ）。 */
   showNextRow: boolean;
   /** 推測を送った応えとして、いま現れた行の番号。 */
@@ -26,6 +28,7 @@ interface GameBoardProps {
  */
 export default function GameBoard({
   guesses,
+  pendingGuess = null,
   showNextRow,
   appearingRow,
   pendingText,
@@ -63,16 +66,23 @@ export default function GameBoard({
             </div>
           ))}
         </div>
-        {guesses.map((feedback, i) => (
-          <GuessRow key={i} feedback={feedback} appear={i === appearingRow} />
-        ))}
-        {showNextRow && (
-          <GuessRow
-            feedback={null}
-            pendingText={pendingText}
-            pendingTextId={pendingTextId}
-          />
-        )}
+        {/* 行は、開き直した回の行の数（本体の前のスクリプトが端末の記録から決める）の高さを取っておき、下端から
+            積む。記録を戻して上に行が入っても、次の推測を入れる行とその下は動かない。 */}
+        <div className={styles.boardRows} role="rowgroup">
+          {guesses.map((feedback, i) => (
+            <GuessRow key={i} feedback={feedback} appear={i === appearingRow} />
+          ))}
+          {pendingGuess !== null && (
+            <GuessRow feedback={null} pendingGuess={pendingGuess} />
+          )}
+          {showNextRow && (
+            <GuessRow
+              feedback={null}
+              pendingText={pendingText}
+              pendingTextId={pendingTextId}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

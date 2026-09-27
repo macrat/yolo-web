@@ -15,8 +15,8 @@
   flex-wrap: wrap;
   column-gap: var(--space-16);
   max-width: var(--measure);
-  font-size: 0.9375rem;
-  color: var(--ink-2);
+  font-size: var(--text-small);
+  color: var(--ink);
 }
 
 .hintLabel {
@@ -39,13 +39,29 @@
   overflow-x: auto;
 }
 
-/* 字の列と6つの判定の列。判定の列は、印と2字の列の見出しが入る 2rem を下限に広がる。 */
+/* 字の列と6つの判定の列。判定の列は、印と2字の列の見出しが入る 2rem を下限に広がる。マスの高さは、印と
+ * 学年の向きの矢印を縦に2つ積んだ高さで、どの行も同じになる。 */
 .board {
   --board-columns: 2.5rem repeat(6, minmax(2rem, 1fr));
+  --board-gap: 0.25rem;
+  --square-height: calc(2 * var(--text-step-2) + 2 * var(--rule-w-hair));
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  min-width: calc(2.5rem + 6 * 2rem + 6 * 0.25rem);
+  gap: var(--board-gap);
+  min-width: calc(2.5rem + 6 * 2rem + 6 * var(--board-gap));
+}
+
+/* 開き直した回では、記録の行の数（--kanji-kanaru-board-rows）の高さを記録を戻すまで取っておき、行を下端から
+ * 積む。 */
+.boardRows {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--board-gap);
+  min-height: calc(
+    var(--kanji-kanaru-board-rows, 1) *
+      (var(--square-height) + var(--board-gap)) - var(--board-gap)
+  );
 }
 
 .boardRow {
@@ -67,13 +83,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 2.5rem;
+  min-height: var(--square-height);
   border: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .guessKanji {
-  font-size: 1.3rem;
+  font-size: var(--text-step-2);
   font-weight: 700;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -81,7 +98,7 @@
  * --ink の印、外れは --paper の地に --ink-2 の印にして、地と印の濃さでも盤を見渡せるようにする。 */
 .mark {
   font-family: var(--font-heading);
-  font-size: 1.49rem;
+  font-size: var(--text-step-2);
   line-height: 1;
 }
 
@@ -95,11 +112,11 @@
   color: var(--ink-2);
 }
 
-/* 学年の向き（↑↓）は印の下に小さく添え、320px のマスにも収める。見出しの書体の矢印は細く小さいので、本文の
- * 書体の太字で組む。 */
+/* 学年の向き（↑↓）は、答えの学年が上か下かを知る唯一の手がかりなので、印と同じ字の大きさ・書体・濃さで印の
+ * 下に積む。 */
 .direction {
-  font-size: var(--text-small);
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: var(--text-step-2);
   line-height: 1;
 }
 
@@ -132,16 +149,6 @@
   }
 }
 
-@media (min-width: 480px) {
-  .square {
-    min-height: 3rem;
-  }
-
-  .guessKanji {
-    font-size: 1.5rem;
-  }
-}
-
 /* ===== 入力欄 ===== */
 .inputArea {
   display: flex;
@@ -159,6 +166,20 @@
 .inputField {
   flex: 1;
   min-width: 0;
+}
+
+/* 送信のボタンの面の字は、2つとも同じ場所に重ねて、広いほうの幅を取っておく。 */
+.submitFaces {
+  display: grid;
+}
+
+.submitFaces > * {
+  grid-area: 1 / 1;
+}
+
+.submitFaces > [hidden] {
+  display: block;
+  visibility: hidden;
 }
 
 /* ===== 結果 ===== */
@@ -182,8 +203,33 @@
   line-height: var(--leading-body);
 }
 
-.facts {
+/* 結果の中の値の並び（§5 の表）。見出しの列は、どの表でもいちばん長い見出し（4字）の幅にし、同じ結果の中の
+ * 表どうしで値の始まりをそろえる。セルは置いた折り所（文節の切れ目）でだけ折る（§4）。表がボックスに収まらない
+ * ときだけ、枠を付けて横に送る。 */
+.tableFrame {
+  overflow-x: auto;
+}
+
+.tableFrame[data-scrolls] {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+}
+
+.resultTable {
   width: 100%;
+}
+
+.resultTable :is(th, td) {
+  word-break: keep-all;
+}
+
+.resultTable th {
+  width: 4em;
+}
+
+/* 数と単位（「8日」「88%」）は離さない（§8）。 */
+.unbreakable {
+  white-space: nowrap;
 }
 
 /* ボックスの中の小見出し。答えのあとに来るので、上に細い線を引いて分ける（§5）。 */

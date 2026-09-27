@@ -109,7 +109,12 @@ export default function GuessInput({
               disabled={submitting || loading}
               aria-describedby={loading ? loadingTextId : undefined}
             >
-              {submitting ? "送信中..." : "送信"}
+              {/* 面の字は2つとも同じ場所に重ねて描き、広いほうの幅をいつも取っておく。送っているあいだに
+                  ボタンが広がって欄が縮むことがない。見えていない面は読み上げでも読まない。 */}
+              <span className={styles.submitFaces}>
+                <span hidden={submitting || undefined}>送信</span>
+                <span hidden={!submitting || undefined}>送信中……</span>
+              </span>
             </Button>
           </div>
         )}

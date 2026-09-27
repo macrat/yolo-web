@@ -23,14 +23,16 @@ const GRADE_DIRECTION_ARROWS: Record<GuessFeedback["gradeDirection"], string> =
 /** 学年の向きを読み上げで言う語。矢印は読み上げで一定に読まれないので、語で言う。 */
 const GRADE_DIRECTION_LABELS: Record<GuessFeedback["gradeDirection"], string> =
   {
-    up: "（対象はより上の学年）",
-    down: "（対象はより下の学年）",
+    up: "（答えはより上の学年）",
+    down: "（答えはより下の学年）",
     equal: "",
   };
 
 interface GuessRowProps {
-  /** 推測への判定。null なら、次に入れる空の行。 */
+  /** 推測への判定。null なら、判定を待っている行か、次に入れる空の行。 */
   feedback: GuessFeedback | null;
+  /** 送って判定を待っている字。判定が返るまで、字だけを置き、判定のマスを空にしておく。 */
+  pendingGuess?: string;
   /** 推測を送った応えとして、いま現れた行か。印が現れる動きを持つ。 */
   appear?: boolean;
   /** 空の行の判定の列に言う文（読み込みのあいだの「読み込んでいます」）。 */
@@ -44,10 +46,33 @@ interface GuessRowProps {
  */
 export default function GuessRow({
   feedback,
+  pendingGuess,
   appear = false,
   pendingText,
   pendingTextId,
 }: GuessRowProps) {
+  if (pendingGuess !== undefined) {
+    return (
+      <div className={styles.boardRow} role="row">
+        <div
+          className={`${styles.square} ${styles.guessKanji}`}
+          role="cell"
+          aria-label={`推測した漢字 ${pendingGuess}`}
+        >
+          {pendingGuess}
+        </div>
+        {FEEDBACK_COLUMNS.map(({ key, label }) => (
+          <div
+            key={key}
+            className={styles.square}
+            role="cell"
+            aria-label={`${label}: 判定しています`}
+          />
+        ))}
+      </div>
+    );
+  }
+
   if (!feedback) {
     return (
       <div className={styles.boardRow} role="row">

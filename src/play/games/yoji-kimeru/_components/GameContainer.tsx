@@ -34,11 +34,11 @@ import {
   loadTodayGame,
 } from "@/play/games/yoji-kimeru/_lib/storage";
 import {
-  BOARD_ROWS_PROPERTY,
-  HINT_LINES_PROPERTY,
-  SAVED_ROWS_STYLE_ID,
-  reserveSavedRows,
-} from "@/play/games/yoji-kimeru/_lib/savedRows";
+  releaseSavedLayout,
+  resultAreaNames,
+  savedLayoutScript,
+} from "@/play/games/shared/_lib/savedLayout";
+import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
@@ -58,18 +58,26 @@ const DEFAULT_DIFFICULTY: Difficulty = "intermediate";
 const LOAD_FAILED_MESSAGE =
   "問題を読み込めませんでした。時間をおいて、もう一度読み込んでください";
 
-/** サーバーの HTML で本体の前に置き、端末に記録した今日の回の行の高さを、本体を描く前に取っておく。 */
-const RESERVE_SAVED_ROWS_SCRIPT = `(${reserveSavedRows.toString()})(${[
-  SAVED_ROWS_STYLE_ID,
-  BOARD_ROWS_PROPERTY,
-  HINT_LINES_PROPERTY,
-  DIFFICULTY_KEY,
-  HISTORY_KEY_PREFIX,
-]
-  .map((value) => JSON.stringify(value))
-  .join(", ")}, ${JSON.stringify(
-  Array.from({ length: MAX_GUESSES + 1 }, (_, count) => hintLineCount(count)),
-)}, ${MAX_GUESSES})`;
+const SAVED_LAYOUT_STYLE_ID = "yoji-kimeru-saved-rows";
+const RESULT_AREA = resultAreaNames("yoji-kimeru");
+
+/** サーバーの HTML で本体の前に置き、端末に記録した今日の回の行と結果の区画の高さを、本体を描く前に取っておく。 */
+const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
+  styleId: SAVED_LAYOUT_STYLE_ID,
+  difficultyKey: DIFFICULTY_KEY,
+  historyKeyPrefix: HISTORY_KEY_PREFIX,
+  maxGuesses: MAX_GUESSES,
+  boardRowsProperty: "--yoji-kimeru-board-rows",
+  byGuessCount: [
+    {
+      property: "--yoji-kimeru-hint-lines",
+      values: Array.from({ length: MAX_GUESSES + 1 }, (_, count) =>
+        hintLineCount(count),
+      ),
+    },
+  ],
+  resultArea: RESULT_AREA,
+});
 
 /**
  * 問題の手がかり（読み・分類・出典・難しさ）をサーバーから受け取る。答えの四字熟語は含まれない。
@@ -254,6 +262,7 @@ export default function GameContainer({
   const handleDifficultyChange = useCallback(
     (newDifficulty: Difficulty) => {
       if (newDifficulty === difficulty) return;
+      releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
       saveDifficulty(newDifficulty);
       setDifficulty(newDifficulty);
       void initializeGame(newDifficulty);
@@ -261,12 +270,14 @@ export default function GameContainer({
     [difficulty, initializeGame],
   );
 
-  // 記録を戻した行が描かれたら、サーバーの HTML のスクリプトが取っておいた高さを外す。描いたあと、ほかの
-  // 難易度に替えたときに、前の回の行の高さが残らない。
+  // 遊んでいる途中の回を戻したら、サーバーの HTML のスクリプトが取っておいた高さを外す。解き終えた回では、結果の
+  // 区画が描き終わるまで（ほかの遊びの案内が端末の記録を読んで出るまで）高さを取っておくため、難易度を替えるまで
+  // 外さない。
   useLayoutEffect(() => {
-    if (loading) return;
-    document.getElementById(SAVED_ROWS_STYLE_ID)?.remove();
-  }, [loading]);
+    if (!loading && gameState.status === "playing") {
+      releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
+    }
+  }, [loading, gameState.status]);
 
   // 送った推測も、判定を待たずに1回として数える（盤の行・ヒント・残りの回数）。
   const guessCount = gameState.guesses.length + (pendingGuess === null ? 0 : 1);
@@ -390,7 +401,7 @@ export default function GameContainer({
       {isServerRendered && (
         <script
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: RESERVE_SAVED_ROWS_SCRIPT }}
+          dangerouslySetInnerHTML={{ __html: SAVED_LAYOUT_SCRIPT }}
         />
       )}
       <div className={styles.game}>
@@ -401,30 +412,37 @@ export default function GameContainer({
           showNextRow={playing && guessCount < MAX_GUESSES}
           addedRow={addedRow}
         />
-        {answer && !playing ? (
-          <GameResult
-            gameState={gameState}
-            answer={answer}
-            difficulty={difficulty}
-            stats={stats}
-            crossCategoryItems={crossCategoryItems}
-            appear={resultAppears}
-          />
-        ) : (
-          <GuessInput
-            label={
-              <>
-                {difficultyNames[difficulty]}の四字熟語を入力
-                <span className={styles.remaining}>
-                  （あと{MAX_GUESSES - guessCount}回）
-                </span>
-              </>
-            }
-            onSubmit={handleGuess}
-            submitting={submitting}
-            fieldRef={fieldRef}
-          />
-        )}
+        <ReservedResultArea
+          names={RESULT_AREA}
+          showsResult={Boolean(answer) && !playing}
+          date={todayStr}
+          difficulty={difficulty}
+        >
+          {answer && !playing ? (
+            <GameResult
+              gameState={gameState}
+              answer={answer}
+              difficulty={difficulty}
+              stats={stats}
+              crossCategoryItems={crossCategoryItems}
+              appear={resultAppears}
+            />
+          ) : (
+            <GuessInput
+              label={
+                <>
+                  {difficultyNames[difficulty]}の四字熟語を入力
+                  <span className={styles.remaining}>
+                    （あと{MAX_GUESSES - guessCount}回）
+                  </span>
+                </>
+              }
+              onSubmit={handleGuess}
+              submitting={submitting}
+              fieldRef={fieldRef}
+            />
+          )}
+        </ReservedResultArea>
         <HowToPlay />
         <div className={styles.settings}>
           <DifficultySelector

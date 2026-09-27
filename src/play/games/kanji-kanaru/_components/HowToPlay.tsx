@@ -36,8 +36,10 @@ export default function HowToPlay() {
           <li>部首: 同じ部首なら一致。</li>
           <li>画数: 同じなら一致、差が2画までなら近い。</li>
           <li>
-            学年: 同じなら一致、差が1学年なら近い。答えの学年が上なら ↑、下なら
-            ↓ を添えます。
+            学年: 同じなら一致、差が1学年なら近い。答えの学年が上なら
+            <span className={styles.inlineMark}>↑</span>、下なら
+            <span className={styles.inlineMark}>↓</span>
+            を印の下に添えます。
           </li>
           <li>音（音読み）: 同じ音読みを1つでも持てば一致。</li>
           <li>

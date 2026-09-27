@@ -21,7 +21,7 @@ const MISS: GuessFeedback = {
   kunYomiCount: "wrong",
 };
 
-function mockApi(correct: boolean) {
+function mockApi(correct: boolean, evaluate?: () => Promise<Response>) {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string, init?: RequestInit) => {
@@ -31,6 +31,7 @@ function mockApi(correct: boolean) {
           hints: { strokeCount: 3, onYomiCount: 2, kunYomiCount: 1 },
         });
       }
+      if (evaluate) return evaluate();
       const body = JSON.parse(String(init?.body));
       return Response.json({
         feedback: { ...MISS, guess: body.guess },
@@ -87,6 +88,51 @@ describe("GameContainer", () => {
       }),
     ).toHaveFocus();
     expect(screen.getByText("第226回・", { exact: false })).toBeVisible();
+  });
+
+  test("a sent guess takes its row and the remaining count at once, before the judgment returns", async () => {
+    let respond: (response: Response) => void = () => {};
+    mockApi(
+      false,
+      () =>
+        new Promise<Response>((resolve) => {
+          respond = resolve;
+        }),
+    );
+    render(<GameContainer crossCategoryItems={[]} />);
+    const input = await screen.findByRole("textbox");
+    await waitFor(() => expect(input).toBeEnabled());
+    fireEvent.change(input, { target: { value: "川" } });
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+    expect(
+      await screen.findByRole("cell", { name: "部首: 判定しています" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "中級の漢字を1字入力（あと5回）" }),
+    ).toBeInTheDocument();
+    respond(Response.json({ feedback: MISS, isCorrect: false }));
+    expect(
+      await screen.findByRole("cell", { name: "部首: 不一致" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("cell", { name: "部首: 判定しています" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("a failed evaluation takes the waiting row away and leaves the character in the field", async () => {
+    mockApi(false, () => Promise.resolve(new Response(null, { status: 500 })));
+    render(<GameContainer crossCategoryItems={[]} />);
+    const input = await screen.findByRole("textbox");
+    await waitFor(() => expect(input).toBeEnabled());
+    fireEvent.change(input, { target: { value: "川" } });
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("cell", { name: "推測した漢字 川" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "中級の漢字を1字入力（あと6回）" }),
+    ).toHaveValue("川");
   });
 
   test("the winning guess replaces the field with the result box and moves focus to it", async () => {
