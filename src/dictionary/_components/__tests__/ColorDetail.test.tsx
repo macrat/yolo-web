@@ -2,12 +2,20 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { getColorBySlug } from "@/dictionary/_lib/colors";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const toki = getColorBySlug("toki")!;
+const titlePhrases = [toki.name, `（${toki.romaji}）`];
 
 describe("ColorDetail の同じカテゴリの伝統色", () => {
   test("見出しを名前に持つ一覧に6色が並び、行のリンクの読み上げの名前は色名だけである", () => {
-    render(<ColorDetail color={toki} titleFontAttr={{}} />);
+    render(
+      <ColorDetail
+        color={toki}
+        titlePhrases={titlePhrases}
+        titleFontAttr={{}}
+      />,
+    );
     const list = screen.getByRole("list", {
       name: "同じカテゴリの伝統色（赤系）",
     });
@@ -22,7 +30,13 @@ describe("ColorDetail の同じカテゴリの伝統色", () => {
   });
 
   test("行は色見本とローマ字を持つ", () => {
-    render(<ColorDetail color={toki} titleFontAttr={{}} />);
+    render(
+      <ColorDetail
+        color={toki}
+        titlePhrases={titlePhrases}
+        titleFontAttr={{}}
+      />,
+    );
     const list = screen.getByRole("list", {
       name: "同じカテゴリの伝統色（赤系）",
     });
@@ -39,7 +53,11 @@ describe("ColorDetail の同じカテゴリの伝統色", () => {
 describe("ColorDetail の色見本", () => {
   test("大きな色見本は、色の名前とカラーコードを本文が伝えるので、読み上げの木に現れない", () => {
     const { getByTestId } = render(
-      <ColorDetail color={toki} titleFontAttr={{}} />,
+      <ColorDetail
+        color={toki}
+        titlePhrases={titlePhrases}
+        titleFontAttr={{}}
+      />,
     );
     const swatch = getByTestId("color-detail").firstElementChild!;
     expect((swatch as HTMLElement).style.backgroundColor).not.toBe("");
@@ -63,7 +81,13 @@ describe("ColorDetail のカラーコードのコピー", () => {
 
   test("写せたら、押したボタンだけが「コピー済み」になる", async () => {
     writeText.mockResolvedValue(undefined);
-    render(<ColorDetail color={toki} titleFontAttr={{}} />);
+    render(
+      <ColorDetail
+        color={toki}
+        titlePhrases={titlePhrases}
+        titleFontAttr={{}}
+      />,
+    );
     const hexButton = screen.getByRole("button", { name: "HEXをコピー" });
     fireEvent.click(hexButton);
     await waitFor(() => expect(hexButton).toHaveTextContent("コピー済み"));
@@ -80,9 +104,33 @@ describe("ColorDetail のカラーコードのコピー", () => {
       configurable: true,
       writable: true,
     });
-    render(<ColorDetail color={toki} titleFontAttr={{}} />);
+    render(
+      <ColorDetail
+        color={toki}
+        titlePhrases={titlePhrases}
+        titleFontAttr={{}}
+      />,
+    );
     const hexButton = screen.getByRole("button", { name: "HEXをコピー" });
     fireEvent.click(hexButton);
     await waitFor(() => expect(hexButton).toHaveTextContent("コピー失敗"));
   });
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(
+    <ColorDetail color={toki} titlePhrases={titlePhrases} titleFontAttr={{}} />,
+  );
+  const headings: string[][] = [
+    ["関連", "ツール"],
+    ["同じ", "カテゴリの", "伝統色", "（赤系）"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
+  expect(screen.getByRole("heading", { level: 1 }).innerHTML).toBe(
+    titlePhrases.join("<wbr>"),
+  );
 });

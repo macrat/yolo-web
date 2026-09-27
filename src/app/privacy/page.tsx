@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/Breadcrumb";
+import PhrasedText from "@/components/PhrasedText";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 import { PRIVACY_LAST_MODIFIED } from "./meta";
@@ -39,7 +40,11 @@ export default function PrivacyPage() {
           { label: "プライバシー", href: "/privacy" },
         ]}
       />
-      <h1 className={styles.title}>プライバシーポリシー</h1>
+      <PhrasedText
+        as="h1"
+        className={styles.title}
+        phrases={["プライバシー", "ポリシー"]}
+      />
 
       {/* セクション1: はじめに */}
       <section className={styles.section}>
@@ -56,11 +61,17 @@ export default function PrivacyPage() {
 
       {/* セクション2: 収集する情報 */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>収集する情報</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["収集する", "情報"]}
+        />
 
-        <h3 className={styles.subheading}>
-          Google Analyticsによるアクセス情報
-        </h3>
+        <PhrasedText
+          as="h3"
+          className={styles.subheading}
+          phrases={["Google Analyticsに", "よる", "アクセス情報"]}
+        />
         <p>
           本サイトでは、アクセス解析のためにGoogle
           Analyticsを利用しています。Google
@@ -75,12 +86,20 @@ export default function PrivacyPage() {
           </li>
         </ul>
 
-        <h3 className={styles.subheading}>ブラウザ内に保存されるデータ</h3>
+        <PhrasedText
+          as="h3"
+          className={styles.subheading}
+          phrases={["ブラウザ内に", "保存される", "データ"]}
+        />
         <p>
           本サイトのゲームやツールでは、進捗データ（プレイ回数、連続プレイ日数、正解率等）をブラウザのLocalStorageに保存しています。これらのデータはブラウザ外には送信されず、サーバーには保存されません。
         </p>
 
-        <h3 className={styles.subheading}>収集していないデータ</h3>
+        <PhrasedText
+          as="h3"
+          className={styles.subheading}
+          phrases={["収集していない", "データ"]}
+        />
         <p>
           本サイトでは、氏名、メールアドレス等の直接的な個人識別情報、アカウント情報、支払い情報は収集していません。
         </p>
@@ -98,7 +117,11 @@ export default function PrivacyPage() {
 
       {/* セクション4: Cookieについて */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Cookieについて</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["Cookieに", "ついて"]}
+        />
         <p>
           本サイトでは、Google
           Analytics用のCookieを使用しています。Cookieとは、Webサイトがブラウザに保存する小さなテキストファイルで、アクセス解析に利用されます。
@@ -110,7 +133,11 @@ export default function PrivacyPage() {
 
       {/* セクション5: 第三者サービスの利用 */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>第三者サービスの利用</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["第三者", "サービスの", "利用"]}
+        />
 
         <h3 className={styles.subheading}>Google Analytics</h3>
         <p>
@@ -181,7 +208,11 @@ export default function PrivacyPage() {
 
       {/* セクション6: 情報の管理と安全管理措置 */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>情報の管理と安全管理措置</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["情報の", "管理と", "安全管理措置"]}
+        />
         <ul className={styles.list}>
           <li>本サイトはHTTPS通信による暗号化を行っています。</li>
           <li>
@@ -196,7 +227,11 @@ export default function PrivacyPage() {
 
       {/* セクション7: 個人情報の開示・訂正・削除 */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>個人情報の開示・訂正・削除</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["個人情報の", "開示・", "訂正・", "削除"]}
+        />
         <p>
           ご自身の個人情報の開示・訂正・削除を希望される場合は、下記のお問い合わせ窓口よりご連絡ください。合理的な範囲で速やかに対応いたします。
         </p>
@@ -204,7 +239,11 @@ export default function PrivacyPage() {
 
       {/* セクション8: プライバシーポリシーの変更 */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>プライバシーポリシーの変更</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["プライバシー", "ポリシーの", "変更"]}
+        />
         <p>
           本ポリシーの内容は、必要に応じて変更することがあります。変更後のプライバシーポリシーは、本ページに掲載した時点で効力を生じるものとします。
         </p>
@@ -212,7 +251,11 @@ export default function PrivacyPage() {
 
       {/* セクション9: お問い合わせ */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>お問い合わせ</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["お問い", "合わせ"]}
+        />
         <p>
           本ポリシーに関するお問い合わせは、
           <a

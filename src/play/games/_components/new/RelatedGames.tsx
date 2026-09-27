@@ -1,4 +1,5 @@
 import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { getPlayContentsByCategory } from "@/play/registry";
 import { toPlayListItems } from "@/play/listItems";
 import styles from "./RelatedGames.module.css";
@@ -27,9 +28,12 @@ export default function RelatedGames({
 
   return (
     <section className={styles.related}>
-      <h2 id={HEADING_ID} className={styles.heading}>
-        関連ゲーム
-      </h2>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["関連", "ゲーム"]}
+      />
       <ItemList labelledBy={HEADING_ID} items={toPlayListItems(relatedGames)} />
     </section>
   );

@@ -13,6 +13,7 @@ vi.mock("@/lib/date", () => ({
 
 import { getBlogPostsReferencing } from "@/lib/cross-links";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const mockGetBlogPostsReferencing = vi.mocked(getBlogPostsReferencing);
 
@@ -181,5 +182,29 @@ describe("RelatedBlogPosts", () => {
     expect(screen.getAllByRole("link")[0]).toHaveAccessibleName(
       "名前テスト記事",
     );
+  });
+
+  it("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    mockGetBlogPostsReferencing.mockReturnValue([
+      {
+        slug: "test-post",
+        title: "テスト記事",
+        published_at: "2026-01-15T10:00:00+09:00",
+        updated_at: "2026-01-15T10:00:00+09:00",
+        description: "テスト説明",
+        tags: [],
+        category: "tool-guides",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+    ]);
+    render(<RelatedBlogPosts slug="test-tool" />);
+    const headings: string[][] = [["関連", "ブログ", "記事"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

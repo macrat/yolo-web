@@ -1,11 +1,13 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqSection from "@/components/FaqSection";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import { generatePlayJsonLd } from "@/play/seo";
 import { safeJsonLdStringify } from "@/lib/seo";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
@@ -46,7 +48,9 @@ export default async function QuizPlayPageLayout({
   const resultNextContents = toPlayListItems(getResultNextContents(slug));
   const { resultHeadings, readingHeadings } = solvedScreenHeadings(quiz);
   const recommendHeading =
-    quiz.meta.type === "knowledge" ? "このクイズを勧める" : "この診断を勧める";
+    quiz.meta.type === "knowledge"
+      ? ["この", "クイズを", "勧める"]
+      : ["この", "診断を", "勧める"];
 
   return (
     <article className={styles.layout}>
@@ -68,7 +72,11 @@ export default async function QuizPlayPageLayout({
 
       {/* 2. コンパクトな h1 + 短説明（ファーストビューを占有しない） */}
       <header className={styles.header}>
-        <h1 className={styles.title}>{quiz.meta.title}</h1>
+        <PhrasedText
+          as="h1"
+          className={styles.title}
+          phrases={splitIntoPhrases(quiz.meta.title)}
+        />
         <p className={styles.shortDescription}>{quiz.meta.description}</p>
       </header>
 
@@ -86,7 +94,11 @@ export default async function QuizPlayPageLayout({
 
       {/* 5. ページの共有 */}
       <section className={styles.shareSection}>
-        <h2 className={styles.shareSectionTitle}>{recommendHeading}</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.shareSectionTitle}
+          phrases={recommendHeading}
+        />
         <ShareButtons
           url={"/play/" + slug}
           title={quiz.meta.title}

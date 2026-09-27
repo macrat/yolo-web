@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import YojiDetail from "../yoji/YojiDetail";
 import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import type { YojiEntry } from "@/dictionary/_lib/types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 const mockYoji: YojiEntry = {
   yoji: "一期一会",
@@ -183,4 +184,30 @@ test("同じカテゴリの四字熟語は、見出しだけが語の数を言�
       others.filter((y) => y.difficulty === difficulty).map((y) => y.yoji),
     );
   }
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<YojiDetail yoji={mockYoji} />);
+  const count = getYojiByCategory(mockYoji.category).filter(
+    (y) => y.yoji !== mockYoji.yoji,
+  ).length;
+  const title = screen.getByRole("heading", { level: 1 });
+  expect(title.innerHTML).toBe(
+    splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+  );
+  const headings: string[][] = [
+    ["成立と", "出典"],
+    ["AIが", "見た", "人間の", "ひとコマ"],
+    ["関連", "ゲーム"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
+  const related = ["同じ", "カテゴリの", "四字熟語", `（${count}語）`];
+  expect(followsPhraseRules(related)).toBe(true);
+  expect(
+    screen.getByRole("heading", { name: related.join("") }).innerHTML,
+  ).toBe(related.join("<wbr>"));
 });

@@ -47,6 +47,7 @@ vi.mock("@/tools/registry", () => ({
 }));
 
 import RelatedTools from "../index";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 describe("RelatedTools", () => {
   it("見出し「関連ツール」を名前に持つ一覧に、関連ツールが行として並ぶ", () => {
@@ -159,5 +160,15 @@ describe("RelatedTools", () => {
     render(<RelatedTools currentSlug="base64" relatedSlugs={["char-count"]} />);
 
     expect(screen.getByText("関連ツール")).toBeInTheDocument();
+  });
+
+  it("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<RelatedTools currentSlug="base64" relatedSlugs={["char-count"]} />);
+    const headings: string[][] = [["関連", "ツール"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

@@ -2,13 +2,14 @@ import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { HEADER_NAV_ITEMS } from "@/lib/site-frame";
 import GlobalNotFound from "../global-not-found-content";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 test("404 page renders heading", () => {
   render(<GlobalNotFound />);
   expect(
     screen.getByRole("heading", {
       level: 1,
-      name: "ページが見つかりませんでした",
+      name: "ページが見つかりません",
     }),
   ).toBeInTheDocument();
 });
@@ -33,4 +34,17 @@ test("404 の一覧へのリンクは、上端のナビと同じ名前と行き�
     );
   }
   expect(names).toEqual(["ツール", "遊び", "ブログ"]);
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<GlobalNotFound />);
+  const headings: string[][] = [
+    ["ページが", "見つかりません"],
+    ["主要", "コンテンツ"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

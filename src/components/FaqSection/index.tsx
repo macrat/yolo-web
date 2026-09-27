@@ -4,6 +4,7 @@ import {
   type FaqEntry,
 } from "@/lib/seo";
 import Accordion from "@/components/Accordion";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./FaqSection.module.css";
 
 export type { FaqEntry };
@@ -31,7 +32,11 @@ export default function FaqSection({ faq }: FaqSectionProps) {
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
       <section className={styles.section} aria-label="FAQ">
-        <h2 className={styles.heading}>よくある質問</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.heading}
+          phrases={["よくある", "質問"]}
+        />
         <div>
           {faq.map((entry, index) => (
             <Accordion key={index} summary={entry.question}>

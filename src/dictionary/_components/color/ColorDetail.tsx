@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
 import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { getColorsByCategory } from "@/dictionary/_lib/colors";
@@ -14,16 +15,20 @@ const SAME_CATEGORY_HEADING_ID = "same-category-colors";
 
 interface ColorDetailProps {
   color: ColorEntry;
-  /** 見出し（色名）を組むための属性。字の表をクライアントに入れないよう、サーバーのページが判定して渡す。 */
+  /**
+   * 見出し（色名）を組むための折り所の区切りと属性。区切りの関数と字の表をクライアントに入れないよう、
+   * サーバーのページが作って渡す。
+   */
+  titlePhrases: string[];
   titleFontAttr: HeadingFontAttr;
 }
 
 export default function ColorDetail({
   color,
+  titlePhrases,
   titleFontAttr,
 }: ColorDetailProps) {
   const categoryLabel = COLOR_CATEGORY_LABELS[color.category];
-  const title = `${color.name}（${color.romaji}）`;
 
   // Use a deterministic shuffle seeded by the color slug to avoid
   // SSR/CSR hydration mismatch. Math.random() would produce different
@@ -68,9 +73,12 @@ export default function ColorDetail({
         aria-hidden="true"
       />
 
-      <h1 className={styles.title} {...titleFontAttr}>
-        {title}
-      </h1>
+      <PhrasedText
+        as="h1"
+        className={styles.title}
+        phrases={titlePhrases}
+        {...titleFontAttr}
+      />
 
       <section className={styles.section}>
         <h2>カラーコード</h2>
@@ -113,7 +121,7 @@ export default function ColorDetail({
       </section>
 
       <section className={styles.section}>
-        <h2>関連ツール</h2>
+        <PhrasedText as="h2" phrases={["関連", "ツール"]} />
         <Link
           href="/tools/color-converter"
           className={styles.crossLink}
@@ -125,9 +133,11 @@ export default function ColorDetail({
 
       {relatedColors.length > 0 && (
         <section className={styles.section}>
-          <h2 id={SAME_CATEGORY_HEADING_ID}>
-            同じカテゴリの伝統色（{categoryLabel}）
-          </h2>
+          <PhrasedText
+            as="h2"
+            id={SAME_CATEGORY_HEADING_ID}
+            phrases={["同じ", "カテゴリの", "伝統色", `（${categoryLabel}）`]}
+          />
           <ItemList
             labelledBy={SAME_CATEGORY_HEADING_ID}
             items={relatedColors.map((c) => ({

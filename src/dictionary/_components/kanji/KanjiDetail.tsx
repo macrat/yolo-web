@@ -3,6 +3,8 @@ import type { KanjiEntry } from "@/dictionary/_lib/types";
 import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 import { getKanjiByRadical } from "@/dictionary/_lib/kanji";
 import LinkIndex, { type LinkIndexGroup } from "@/components/LinkIndex";
+import PhrasedText from "@/components/PhrasedText";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./KanjiDetail.module.css";
 
@@ -36,7 +38,12 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
     (k) => k.character !== kanji.character,
   );
   const title = `\u6F22\u5B57\u300C${kanji.character}\u300D`;
-  const relatedHeading = `\u540C\u3058\u90E8\u9996\u306E\u6F22\u5B57\uFF08${relatedKanji.length}\u5B57\uFF09`;
+  const relatedHeading = [
+    "\u540C\u3058",
+    "\u90E8\u9996\u306E",
+    "\u6F22\u5B57",
+    `\uFF08${relatedKanji.length}\u5B57\uFF09`,
+  ];
 
   return (
     <article className={styles.detail} data-testid="kanji-detail">
@@ -50,7 +57,11 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
           {kanji.character}
         </span>
         <div className={styles.headerInfo}>
-          <h1 {...headingFontAttr(title)}>{title}</h1>
+          <PhrasedText
+            as="h1"
+            phrases={splitIntoPhrases(title)}
+            {...headingFontAttr(title)}
+          />
           {kanji.onYomi.length > 0 && (
             <p className={styles.readings}>
               <span className={styles.readingLabel}>
@@ -124,7 +135,11 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
 
       {relatedKanji.length > 0 && (
         <section className={styles.section}>
-          <h2 {...headingFontAttr(relatedHeading)}>{relatedHeading}</h2>
+          <PhrasedText
+            as="h2"
+            phrases={relatedHeading}
+            {...headingFontAttr(relatedHeading.join(""))}
+          />
           <LinkIndex
             singleCharacters
             groups={groupByStrokeCount(relatedKanji)}
@@ -134,7 +149,7 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
       )}
 
       <section className={styles.section}>
-        <h2>{"\u95A2\u9023\u30B2\u30FC\u30E0"}</h2>
+        <PhrasedText as="h2" phrases={["\u95A2\u9023", "\u30B2\u30FC\u30E0"]} />
         <Link
           href="/play/kanji-kanaru"
           className={styles.crossLink}

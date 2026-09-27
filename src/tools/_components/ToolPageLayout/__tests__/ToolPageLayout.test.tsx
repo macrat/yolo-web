@@ -68,6 +68,7 @@ vi.mock("@/lib/seo", () => ({
 
 import ToolPageLayout from "../index";
 import type { ToolMeta } from "@/tools/types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 // テスト用の最小 ToolMeta
 const baseMeta: ToolMeta = {
@@ -378,5 +379,26 @@ describe("ToolPageLayout", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/font-weight:\s*700/);
+  });
+
+  it("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(
+      <ToolPageLayout meta={baseMeta}>
+        <div>ツール本体</div>
+      </ToolPageLayout>,
+    );
+    const title = screen.getByRole("heading", { level: 1 });
+    expect(title.innerHTML).toBe(
+      splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+    );
+    const headings: string[][] = [
+      ["この", "ツールに", "ついて"],
+      ["この", "ツールが", "便利だったら", "シェア"],
+    ];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

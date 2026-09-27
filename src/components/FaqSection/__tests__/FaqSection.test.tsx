@@ -2,6 +2,7 @@ import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
 import FaqSection from "@/components/FaqSection";
 import type { FaqEntry } from "@/lib/seo";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const sampleFaq: FaqEntry[] = [
   { question: "テスト質問1", answer: "テスト回答1" },
@@ -96,5 +97,15 @@ describe("FaqSection", () => {
     const summaries = container.querySelectorAll("summary");
     expect(summaries[0]).toHaveTextContent("テスト質問1");
     expect(summaries[1]).toHaveTextContent("テスト質問2");
+  });
+
+  test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<FaqSection faq={sampleFaq} />);
+    const headings: string[][] = [["よくある", "質問"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

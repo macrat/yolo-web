@@ -1,4 +1,5 @@
 import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { toPlayListItems } from "@/play/listItems";
 import type { PlayContentMeta } from "@/play/types";
 import styles from "./PlayRecommendBlock.module.css";
@@ -20,9 +21,12 @@ export default function PlayRecommendBlock({
 
   return (
     <section className={styles.related}>
-      <h2 id={HEADING_ID} className={styles.heading}>
-        こちらもおすすめ
-      </h2>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["こちらも", "おすすめ"]}
+      />
       <p className={styles.subtext}>ブラウザで今すぐ遊べる無料コンテンツ</p>
       <ItemList
         labelledBy={HEADING_ID}

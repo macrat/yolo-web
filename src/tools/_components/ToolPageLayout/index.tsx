@@ -1,9 +1,11 @@
 import type { ToolMeta } from "@/tools/types";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqSection from "@/components/FaqSection";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import RelatedTools from "@/components/RelatedTools";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import TileInteractionTracker from "./TileInteractionTracker";
 import styles from "./ToolPageLayout.module.css";
 
@@ -48,7 +50,11 @@ export default function ToolPageLayout({
 
       {/* 2. h1 と短い説明 */}
       <header className={styles.header}>
-        <h1 className={styles.title}>{meta.name}</h1>
+        <PhrasedText
+          as="h1"
+          className={styles.title}
+          phrases={splitIntoPhrases(meta.name)}
+        />
         <p className={styles.shortDescription}>{meta.shortDescription}</p>
       </header>
 
@@ -68,7 +74,11 @@ export default function ToolPageLayout({
         aria-label="このツールについて"
         data-section="howItWorks"
       >
-        <h2 className={styles.howItWorksHeading}>{"このツールについて"}</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.howItWorksHeading}
+          phrases={["この", "ツールに", "ついて"]}
+        />
         <p className={styles.howItWorksText}>{meta.howItWorks}</p>
       </section>
 
@@ -84,9 +94,11 @@ export default function ToolPageLayout({
 
       {/* 7. シェア */}
       <section className={styles.shareSection}>
-        <h2 className={styles.shareSectionTitle}>
-          {"このツールが便利だったらシェア"}
-        </h2>
+        <PhrasedText
+          as="h2"
+          className={styles.shareSectionTitle}
+          phrases={["この", "ツールが", "便利だったら", "シェア"]}
+        />
         <ShareButtons
           url={`/tools/${meta.slug}`}
           title={meta.name}

@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import RelatedQuizzes from "../RelatedQuizzes";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // 遊びの登録をモックしてテストを安定させる
 vi.mock("@/play/registry", () => ({
@@ -150,4 +151,16 @@ test("RelatedQuizzes は全件で同じになる種別を出さず、問数を�
 
   expect(screen.queryByText("クイズ")).not.toBeInTheDocument();
   expect(screen.getByText("全10問")).toBeInTheDocument();
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
+  const headings: string[][] = [
+    ["他の", "クイズ・", "診断も", "試して", "みよう"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

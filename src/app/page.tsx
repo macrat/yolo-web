@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import Tsutsumi from "@/components/Tsutsumi";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { playContentBySlug } from "@/play/registry";
@@ -249,9 +250,12 @@ export default function Home() {
       {/* 分野ごとのセクション。ここは器を静かに、サイトにあるものの幅を示す。 */}
       {/* 診断・占い・あそび（見せたくなる結果への入口・目玉の診断は除く） */}
       <section className={styles.section}>
-        <h2 id="section-play" className={styles.sectionHeading}>
-          診断・占い・あそび
-        </h2>
+        <PhrasedText
+          as="h2"
+          id="section-play"
+          className={styles.sectionHeading}
+          phrases={["診断・", "占い・", "あそび"]}
+        />
         <ItemList labelledBy="section-play" items={featuredPlayItems} />
         <p className={styles.seeAll}>
           <Link

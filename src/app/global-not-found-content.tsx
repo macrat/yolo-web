@@ -6,6 +6,7 @@
  */
 
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./global-not-found.module.css";
 
 const LINKS: ItemListItem[] = [
@@ -35,7 +36,11 @@ export default function GlobalNotFoundContent() {
   return (
     <div className={styles.main}>
       <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>ページが見つかりませんでした</h1>
+        <PhrasedText
+          as="h1"
+          className={styles.heroTitle}
+          phrases={["ページが", "見つかりません"]}
+        />
         <p className={styles.heroDescription}>
           お探しのページは存在しないか、移動した可能性があります。
           以下のリンクからお探しのコンテンツを見つけてください。
@@ -43,9 +48,12 @@ export default function GlobalNotFoundContent() {
       </section>
 
       <section className={styles.sections}>
-        <h2 id="not-found-links" className={styles.sectionsTitle}>
-          主要コンテンツ
-        </h2>
+        <PhrasedText
+          as="h2"
+          id="not-found-links"
+          className={styles.sectionsTitle}
+          phrases={["主要", "コンテンツ"]}
+        />
         <ItemList labelledBy="not-found-links" items={LINKS} />
       </section>
     </div>

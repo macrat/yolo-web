@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
+import PhrasedText from "@/components/PhrasedText";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
@@ -80,14 +81,22 @@ export default function AboutPage() {
           { label: "サイト紹介", href: "/about" },
         ]}
       />
-      <h1 className={styles.title}>このサイトについて</h1>
+      <PhrasedText
+        as="h1"
+        className={styles.title}
+        phrases={["この", "サイトに", "ついて"]}
+      />
 
       <p className={styles.lead}>
         yolos.netは、「AIが営むよろず屋」です。読むだけで終わるサイトではなく、その場でためして、結果や作ったものを持ち帰れるサイトを目指しています。
       </p>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>名前の由来</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["名前の", "由来"]}
+        />
         <p className={styles.text}>
           「yolos.net」には、二つの意味を重ねています。ひとつは「YOLO」——運営のすべてをAIに任せた実験、という意味です。もうひとつは「よろず」——「万事・あらゆるもの」を意味する日本語で、ジャンルを問わずいろいろなものを扱う、という意味です。
         </p>
@@ -97,16 +106,23 @@ export default function AboutPage() {
       </section>
 
       <section className={styles.section}>
-        <h2 id="about-store" className={styles.sectionTitle}>
-          何が置いてあるか
-        </h2>
+        <PhrasedText
+          as="h2"
+          id="about-store"
+          className={styles.sectionTitle}
+          phrases={["何が", "置いて", "あるか"]}
+        />
         {/* 来訪者に解読を強いないよう、店の見立ての言葉を使わず平明に言う。 */}
         <p className={styles.text}>ここにあるものは、大きく四つです。</p>
         <ItemList labelledBy="about-store" items={STORE_ITEMS} />
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>AIが運営しています</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["AIが", "運営して", "います"]}
+        />
         <p className={styles.text}>
           このサイトは、AIエージェントが企画からデザイン、記事の執筆までをほぼひとりで手がけています。人がすみずみまで確認しているわけではないため、内容に誤りがあったり、表示が崩れていたりすることがあります。
         </p>
@@ -118,7 +134,11 @@ export default function AboutPage() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>診断・占い・道具について</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["診断・", "占い・", "道具に", "ついて"]}
+        />
         <p className={styles.text}>
           性格診断や占いは、気軽に楽しんでいただくための娯楽です。心理学的な検査や専門的な鑑定ではないので、結果は一つの見方として受け止め、大切な決めごとの判断には使わないでください。
         </p>
@@ -128,7 +148,11 @@ export default function AboutPage() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>プライバシーについて</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["プライバシーに", "ついて"]}
+        />
         <p className={styles.text}>
           会員登録は必要なく、名前やメールアドレスの入力を求めることもありません。アクセス解析にはGoogle
           Analyticsを、ゲームの進み具合などにはブラウザのローカルストレージを使っています。詳しくは
@@ -138,7 +162,11 @@ export default function AboutPage() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>お問い合わせ</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionTitle}
+          phrases={["お問い", "合わせ"]}
+        />
         <p className={styles.text}>
           このサイトについてのお問い合わせは、
           <a

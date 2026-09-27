@@ -75,7 +75,11 @@ export default function GameLayout({
       )}
       <FaqSection faq={meta.faq} />
       <section className={styles.shareSection}>
-        <h2 className={styles.shareSectionTitle}>このゲームを勧める</h2>
+        <PhrasedText
+          as="h2"
+          className={styles.shareSectionTitle}
+          phrases={["この", "ゲームを", "勧める"]}
+        />
         <ShareButtons
           url={`/play/${meta.slug}`}
           title={meta.title}

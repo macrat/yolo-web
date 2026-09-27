@@ -1,4 +1,5 @@
 import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { getPlayContentsByCategory } from "@/play/registry";
 import { toPlayListItems } from "@/play/listItems";
 import type { PlayContentMeta } from "@/play/types";
@@ -30,9 +31,12 @@ export default function RelatedQuizzes({
 
   return (
     <section className={styles.related}>
-      <h2 id={HEADING_ID} className={styles.heading}>
-        他のクイズ・診断も試してみよう
-      </h2>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["他の", "クイズ・", "診断も", "試して", "みよう"]}
+      />
       <ItemList
         labelledBy={HEADING_ID}
         items={toPlayListItems(relatedContents)}

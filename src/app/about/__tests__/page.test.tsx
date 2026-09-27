@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import AboutPage, { metadata } from "../page";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // cycle-279 フェーズR: docs/site-concept.md の現行自己定義「AIが営む、
 // 『やってみる』のよろず屋」に合わせて自己紹介の文章を全面的に書き直した。
@@ -116,4 +117,22 @@ test("metadata reflects the yorozuya concept", () => {
   expect(description).toContain("よろず屋");
   expect(description).toContain("AI");
   expect(metadata.title).toBe("サイト紹介 | yolos.net");
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<AboutPage />);
+  const headings: string[][] = [
+    ["この", "サイトに", "ついて"],
+    ["名前の", "由来"],
+    ["何が", "置いて", "あるか"],
+    ["AIが", "運営して", "います"],
+    ["診断・", "占い・", "道具に", "ついて"],
+    ["プライバシーに", "ついて"],
+    ["お問い", "合わせ"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

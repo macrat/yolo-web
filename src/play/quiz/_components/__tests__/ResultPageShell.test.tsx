@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import ResultPageShell from "../ResultPageShell";
 import type { QuizDefinition, QuizResult } from "../../types";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // パンくず・共有・関連の中身はそれぞれのテストが確かめるので、ここでは渡した値だけを出す部品に替える
 vi.mock("@/components/Breadcrumb", () => ({
@@ -236,4 +237,14 @@ test("関連の診断とおすすめに、いまの診断の slug を渡す", ()
 
   expect(screen.getByText("related-test-quiz")).toBeInTheDocument();
   expect(screen.getByText("recommended-test-quiz")).toBeInTheDocument();
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  renderShell();
+  const headings: string[][] = [["この", "結果を", "共有"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

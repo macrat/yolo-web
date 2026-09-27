@@ -1,6 +1,7 @@
 "use client";
 
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./ResultNextContent.module.css";
 
 interface ResultNextContentProps {
@@ -20,9 +21,12 @@ export default function ResultNextContent({ items }: ResultNextContentProps) {
 
   return (
     <section className={styles.section}>
-      <h3 id={HEADING_ID} className={styles.heading}>
-        次はこれを試してみよう
-      </h3>
+      <PhrasedText
+        as="h3"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["次は", "これを", "試して", "みよう"]}
+      />
       <ItemList labelledBy={HEADING_ID} items={items} />
     </section>
   );

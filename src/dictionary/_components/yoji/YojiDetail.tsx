@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LinkIndex, { type LinkIndexGroup } from "@/components/LinkIndex";
+import PhrasedText from "@/components/PhrasedText";
 import type {
   YojiDifficulty,
   YojiEntry,
@@ -12,6 +13,7 @@ import {
 } from "@/dictionary/_lib/types";
 import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import { getAllKanjiChars } from "@/dictionary/_lib/kanji";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./YojiDetail.module.css";
 
@@ -85,7 +87,12 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   const categoryLabel = YOJI_CATEGORY_LABELS[yoji.category];
   const difficultyLabel = YOJI_DIFFICULTY_LABELS[yoji.difficulty];
   const title = `四字熟語「${yoji.yoji}」`;
-  const relatedHeading = `同じカテゴリの四字熟語（${relatedYoji.length}語）`;
+  const relatedHeading = [
+    "同じ",
+    "カテゴリの",
+    "四字熟語",
+    `（${relatedYoji.length}語）`,
+  ];
 
   // Cross-link: find kanji characters from this yoji that exist in kanji-data
   const allKanjiChars = new Set(getAllKanjiChars());
@@ -105,9 +112,12 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         >
           {yoji.yoji}
         </span>
-        <h1 className={styles.title} {...headingFontAttr(title)}>
-          {title}
-        </h1>
+        <PhrasedText
+          as="h1"
+          className={styles.title}
+          phrases={splitIntoPhrases(title)}
+          {...headingFontAttr(title)}
+        />
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
         {/* 分類: カテゴリは索引への導線、難易度は補助情報の文字。ピルにしない。 */}
@@ -153,7 +163,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       )}
 
       <section className={styles.section}>
-        <h2>成立と出典</h2>
+        <PhrasedText as="h2" phrases={["成立と", "出典"]} />
         <dl className={styles.metaList}>
           <div className={styles.metaItem}>
             <dt className={styles.metaTerm}>成立地</dt>
@@ -191,14 +201,21 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       {/* フッターにAI運営の旨が記載されているため、セクション単位の注記は不要 */}
       {yoji.example && (
         <section className={styles.section}>
-          <h2>AIが見た人間のひとコマ</h2>
+          <PhrasedText
+            as="h2"
+            phrases={["AIが", "見た", "人間の", "ひとコマ"]}
+          />
           <p className={styles.exampleQuote}>{yoji.example}</p>
         </section>
       )}
 
       {relatedYoji.length > 0 && (
         <section className={styles.section}>
-          <h2 {...headingFontAttr(relatedHeading)}>{relatedHeading}</h2>
+          <PhrasedText
+            as="h2"
+            phrases={relatedHeading}
+            {...headingFontAttr(relatedHeading.join(""))}
+          />
           <LinkIndex
             groups={groupByDifficulty(relatedYoji)}
             groupHeadingLevel={3}
@@ -207,7 +224,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       )}
 
       <section className={styles.section}>
-        <h2>関連ゲーム</h2>
+        <PhrasedText as="h2" phrases={["関連", "ゲーム"]} />
         <Link
           href="/play/yoji-kimeru"
           className={styles.crossLink}

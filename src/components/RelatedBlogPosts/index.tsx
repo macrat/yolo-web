@@ -1,4 +1,5 @@
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { CATEGORY_LABELS } from "@/blog/_lib/blog";
 import { getBlogPostsReferencing } from "@/lib/cross-links";
 import { formatDate } from "@/lib/date";
@@ -31,9 +32,12 @@ export default function RelatedBlogPosts({ slug }: RelatedBlogPostsProps) {
 
   return (
     <section className={styles.related}>
-      <h2 id={HEADING_ID} className={styles.heading}>
-        関連ブログ記事
-      </h2>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["関連", "ブログ", "記事"]}
+      />
       <ItemList labelledBy={HEADING_ID} items={items} />
     </section>
   );

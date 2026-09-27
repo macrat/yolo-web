@@ -2,6 +2,7 @@ import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import QuizPlayPageLayout from "../QuizPlayPageLayout";
 import type { QuizDefinition } from "../../types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 // Server Componentの依存コンポーネントをモックする。
 vi.mock("@/components/Breadcrumb", () => ({
@@ -317,4 +318,18 @@ test("解き終えた画面の読みものの小見出しの区切りを、サ�
     "このタイプの人へのアドバイス",
   ]);
   expect(readingHeadings["このタイプの特徴"].join("")).toBe("このタイプの特徴");
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", async () => {
+  render(await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }));
+  const title = screen.getByRole("heading", { level: 1 });
+  expect(title.innerHTML).toBe(
+    splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+  );
+  const headings: string[][] = [["この", "診断を", "勧める"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

@@ -6,6 +6,7 @@ import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";
 import { getColorBySlug, getAllColorSlugs } from "@/dictionary/_lib/colors";
 import { getPlayRecommendationsForDictionary } from "@/play/recommendation";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 
 export function generateStaticParams() {
@@ -52,7 +53,11 @@ export default async function ColorDetailPage({
       shareTitle={title}
       playRecommendations={playRecommendations}
     >
-      <ColorDetail color={color} titleFontAttr={headingFontAttr(title)} />
+      <ColorDetail
+        color={color}
+        titlePhrases={splitIntoPhrases(title)}
+        titleFontAttr={headingFontAttr(title)}
+      />
     </DictionaryDetailLayout>
   );
 }

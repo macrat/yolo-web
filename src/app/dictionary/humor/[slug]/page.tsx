@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import {
   generateHumorDictEntryMetadata,
@@ -12,6 +13,7 @@ import {
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
 import EntryRatingButton from "@/humor-dict/_components/EntryRatingButton";
 import { getDefinitionPreview } from "@/humor-dict/_lib/definition-preview";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
 
@@ -66,9 +68,12 @@ export default async function HumorDictEntryPage({
         {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}
         <header className={styles.header}>
           <div className={styles.headingGroup}>
-            <h1 className={styles.word} {...headingFontAttr(entry.word)}>
-              {entry.word}
-            </h1>
+            <PhrasedText
+              as="h1"
+              className={styles.word}
+              phrases={splitIntoPhrases(entry.word)}
+              {...headingFontAttr(entry.word)}
+            />
             <span className={styles.reading}>【{entry.reading}】</span>
           </div>
           <blockquote className={styles.definition}>

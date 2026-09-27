@@ -1,6 +1,7 @@
 import type React from "react";
 import { useId } from "react";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { getPlayResultPath } from "@/play/paths";
 import type { QuizResult } from "@/play/quiz/types";
 import { resultHeadingName } from "@/play/quiz/resultName";
@@ -56,7 +57,6 @@ export default function OtherTypesNav({
   if (results.length < 2) return null;
 
   const onResultPage = placement === "resultPage";
-  const Heading = SECTION_HEADING[placement];
   const items: ItemListItem[] = results.map((result) => {
     // 解き終えた画面では、来訪者のタイプの行だけが太字である理由を字で添え、リンクの説明にもして読み上げでも伝える。
     const visitors = !onResultPage && result.id === currentResultId;
@@ -74,9 +74,12 @@ export default function OtherTypesNav({
 
   return (
     <section className={styles.section}>
-      <Heading id={headingId} className={styles.heading}>
-        すべてのタイプ（{results.length}）
-      </Heading>
+      <PhrasedText
+        as={SECTION_HEADING[placement]}
+        id={headingId}
+        className={styles.heading}
+        phrases={["すべての", "タイプ", `（${results.length}）`]}
+      />
       <ItemList
         labelledBy={headingId}
         items={items}

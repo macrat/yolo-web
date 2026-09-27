@@ -1,4 +1,5 @@
 import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { getRecommendedContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import styles from "./RecommendedContent.module.css";
@@ -21,9 +22,12 @@ export default function RecommendedContent({
 
   return (
     <section className={styles.related}>
-      <h2 id={HEADING_ID} className={styles.heading}>
-        他のジャンルも試してみよう
-      </h2>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["他の", "ジャンルも", "試して", "みよう"]}
+      />
       <ItemList labelledBy={HEADING_ID} items={toPlayListItems(recommended)} />
     </section>
   );

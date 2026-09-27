@@ -33,6 +33,7 @@ vi.mock("@/components/ShareButtons", () => ({
 }));
 
 import { resetFortuneCache } from "@/play/fortune/fortuneStore";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const HEADINGS = {
   "test-fortune": { phrases: ["テスト運勢", "タイトル"] },
@@ -126,5 +127,15 @@ describe("DailyFortuneCard", () => {
     });
     expect(screen.getByText("2026年3月29日のユーモア運勢")).toBeInTheDocument();
     expect(screen.getByText("2026-03-29の運勢説明文")).toBeInTheDocument();
+  });
+
+  it("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", async () => {
+    await renderLoaded();
+    const headings: string[][] = [["この", "結果を", "共有"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

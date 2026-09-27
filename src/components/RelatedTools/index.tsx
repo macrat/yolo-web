@@ -1,4 +1,5 @@
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { toolCategoryLabel } from "@/tools/categories";
 import { allToolMetas } from "@/tools/registry";
 import styles from "./RelatedTools.module.css";
@@ -36,9 +37,12 @@ export default function RelatedTools({
 
   return (
     <section className={styles.related}>
-      <h2 id={HEADING_ID} className={styles.heading}>
-        関連ツール
-      </h2>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["関連", "ツール"]}
+      />
       <ItemList labelledBy={HEADING_ID} items={items} />
     </section>
   );

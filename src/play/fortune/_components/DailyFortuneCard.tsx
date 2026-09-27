@@ -8,6 +8,7 @@ import {
 } from "@/play/fortune/fortuneStore";
 import { formatRating, MAX_RATING } from "@/play/fortune/rating";
 import type { DailyFortuneEntry } from "@/play/fortune/types";
+import PhrasedText from "@/components/PhrasedText";
 import ResultBox, { type ResultHeading } from "@/components/ResultBox";
 import ShareButtons from "@/components/ShareButtons";
 import StarRating from "./StarRating";
@@ -77,9 +78,12 @@ function ShareSection({ shareText }: { shareText: string }) {
   return (
     <>
       <section className={styles.share} aria-labelledby={headingId}>
-        <h3 id={headingId} className={styles.shareHeading}>
-          この結果を共有
-        </h3>
+        <PhrasedText
+          as="h3"
+          id={headingId}
+          className={styles.shareHeading}
+          phrases={["この", "結果を", "共有"]}
+        />
         <ShareButtons
           url="/play/daily"
           title="今日のユーモア運勢"

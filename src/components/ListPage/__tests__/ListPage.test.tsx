@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ListPage from "@/components/ListPage";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 
 describe("ListPage", () => {
   test("パンくず・主見出し・導入の文・中身を上から積む", () => {
@@ -45,5 +46,21 @@ describe("ListPage", () => {
       (el) => el.tagName,
     );
     expect(texts).toEqual(["NAV", "H1", "P"]);
+  });
+
+  test("主見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(
+      <ListPage
+        trail={[{ label: "ホーム", href: "/" }]}
+        heading="同じカテゴリの四字熟語"
+      >
+        <p>一覧</p>
+      </ListPage>,
+    );
+    const title = screen.getByRole("heading", { level: 1 });
+    expect(title.innerHTML).toBe(
+      splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+    );
+    expect(title.querySelectorAll("wbr").length).toBeGreaterThan(0);
   });
 });

@@ -18,7 +18,9 @@ import {
 } from "@/lib/seo";
 import { BASE_URL } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import Breadcrumb from "@/components/Breadcrumb";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import CollapsibleTOC from "@/blog/_components/CollapsibleTOC";
 import TagList from "@/blog/_components/TagList";
@@ -84,7 +86,11 @@ export default async function BlogPostPage({ params }: Props) {
             { label: post.title, href: `/blog/${post.slug}` },
           ]}
         />
-        <h1 className={styles.title}>{post.title}</h1>
+        <PhrasedText
+          as="h1"
+          className={styles.title}
+          phrases={splitIntoPhrases(post.title)}
+        />
         <div className={styles.meta}>
           <Link
             href={`/blog/category/${post.category}`}
@@ -133,7 +139,11 @@ export default async function BlogPostPage({ params }: Props) {
 
       <footer className={styles.articleFooter}>
         <section className={styles.shareSection} aria-label="この記事をシェア">
-          <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
+          <PhrasedText
+            as="h2"
+            className={styles.shareSectionTitle}
+            phrases={["この", "記事を", "シェア"]}
+          />
           <ShareButtons
             url={`/blog/${post.slug}`}
             title={post.title}

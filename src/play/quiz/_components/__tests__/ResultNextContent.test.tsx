@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import type { ItemListItem } from "@/components/ItemList";
 import ResultNextContent from "../ResultNextContent";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const mockItems: ItemListItem[] = [
   {
@@ -62,5 +63,15 @@ describe("ResultNextContent", () => {
   test("空配列の場合は何も描かないこと", () => {
     const { container } = render(<ResultNextContent items={[]} />);
     expect(container.firstChild).toBeNull();
+  });
+
+  test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<ResultNextContent items={mockItems} />);
+    const headings: string[][] = [["次は", "これを", "試して", "みよう"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { playContentBySlug, quizQuestionCountBySlug } from "@/play/registry";
 import PlayRecommendBlock from "../PlayRecommendBlock";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const irodori = playContentBySlug.get("irodori")!;
 const traditionalColor = playContentBySlug.get("traditional-color")!;
@@ -41,5 +42,15 @@ describe("PlayRecommendBlock", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText(/してみる/)).toBeNull();
+  });
+
+  test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<PlayRecommendBlock recommendations={[irodori]} />);
+    const headings: string[][] = [["こちらも", "おすすめ"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

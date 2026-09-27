@@ -20,6 +20,7 @@ import { playContentBySlug } from "@/play/registry";
 import { quizBySlug, getResultIdsForQuiz } from "@/play/quiz/registry";
 import { getContentPath } from "@/play/paths";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 /** 目玉（今日のためしどころ）に立てる診断の slug（page.tsx の HERO_SLUG と同期）。 */
 const HERO_SLUG = "character-personality";
@@ -205,4 +206,14 @@ test("OGP / twitter description も店構えで、canonical はサイトルー�
 test("canonical はサイトルートで、noindex（robots）が紛れ込んでいない", () => {
   expect(metadata.alternates?.canonical).toBe(BASE_URL);
   expect(metadata.robots).toBeUndefined();
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<Home />);
+  const headings: string[][] = [["診断・", "占い・", "あそび"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

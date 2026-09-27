@@ -6,6 +6,7 @@ import {
   GAME_TITLE_ID,
   gameTitleRef,
 } from "@/play/games/shared/_lib/gameTitle";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // RecommendedContent をモックしてテストを安定させる
 vi.mock("@/play/_components/RecommendedContent", () => ({
@@ -274,4 +275,18 @@ test("GameLayout renders RecommendedContent with meta.slug", () => {
   );
   // RecommendedContent のモックが currentSlug=meta.slug で呼ばれることを確認
   expect(screen.getByText("RecommendedContent:test-game")).toBeInTheDocument();
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(
+    <GameLayout meta={mockMeta}>
+      <div>Game content</div>
+    </GameLayout>,
+  );
+  const headings: string[][] = [["この", "ゲームを", "勧める"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

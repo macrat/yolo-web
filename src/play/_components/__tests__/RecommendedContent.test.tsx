@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import RecommendedContent from "../RecommendedContent";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // getRecommendedContents をモックしてテストを安定させる
 vi.mock("@/play/recommendation", () => ({
@@ -155,4 +156,14 @@ test("RecommendedContent renders category labels", () => {
   expect(screen.getByText("運勢")).toBeInTheDocument();
   expect(screen.getByText("診断")).toBeInTheDocument();
   expect(screen.getByText("パズル")).toBeInTheDocument();
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<RecommendedContent currentSlug="kanji-level" />);
+  const headings: string[][] = [["他の", "ジャンルも", "試して", "みよう"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

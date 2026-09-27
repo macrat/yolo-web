@@ -114,9 +114,12 @@ export default function ResultPageShell({
         {children}
 
         <section className={styles.share} aria-labelledby={SHARE_HEADING_ID}>
-          <h2 id={SHARE_HEADING_ID} className={styles.shareHeading}>
-            この結果を共有
-          </h2>
+          <PhrasedText
+            as="h2"
+            id={SHARE_HEADING_ID}
+            className={styles.shareHeading}
+            phrases={["この", "結果を", "共有"]}
+          />
           <ShareButtons
             url={shareUrl}
             title={quiz.meta.title}

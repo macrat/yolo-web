@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import KanjiDetail from "../kanji/KanjiDetail";
 import { getKanjiByChar, getKanjiByRadical } from "@/dictionary/_lib/kanji";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 const mockKanji: KanjiEntry = {
   character: "山",
@@ -115,4 +116,22 @@ test("同じ部首の漢字は、見出しだけが字の数を言い、画数�
     );
   }
   expect(within(index).getAllByRole("link")).toHaveLength(others.length);
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  const water = getKanjiByChar("水")!;
+  render(<KanjiDetail kanji={water} />);
+  const title = screen.getByRole("heading", { level: 1 });
+  expect(title.innerHTML).toBe(
+    splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+  );
+  const headings: string[][] = [
+    ["同じ", "部首の", "漢字", "（117字）"],
+    ["関連", "ゲーム"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

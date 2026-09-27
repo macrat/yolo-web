@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
+import PhrasedText from "@/components/PhrasedText";
 import Section from "@/components/Section";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ListPage.module.css";
 
@@ -30,9 +32,12 @@ export default function ListPage({
       <div className={styles.view}>
         <Breadcrumb items={trail} />
         <div>
-          <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {heading}
-          </h1>
+          <PhrasedText
+            as="h1"
+            className={styles.title}
+            phrases={splitIntoPhrases(heading)}
+            {...headingFontAttr(heading)}
+          />
           {description ? (
             <p className={styles.description}>{description}</p>
           ) : null}
