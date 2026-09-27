@@ -62,19 +62,23 @@
 
 /* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
-/* 本文の組み方は Prose（src/components/Prose）が持ち、ここでは記事にだけ出る図を足す。
- * mermaid ラッパー: block にして overflow-x: auto を flex に依存せず機能させる */
+/* 本文の組み方は Prose（src/components/Prose）が持ち、ここでは記事にだけ出る図を足す（§5 の図）。図はコンテンツ幅に
+ * 左端から置き、大きさと横に送るか（data-scrolls）は MermaidRenderer が描くときに決める。 */
 .body :global(.mermaid) {
-  display: block;
-  margin: var(--space-24) 0;
+  margin: 0 0 var(--space-16);
   overflow-x: auto;
 }
 
-/* SVG は block にして margin: auto で中央寄せ。max-width を外して横長図をスクロール可能にする */
 .body :global(.mermaid) svg {
   display: block;
-  margin: 0 auto;
   height: auto;
+}
+
+/* 横に送る図のボックス。表・コードのボックスと同じ太い線と内側の余白を持つ。フォーカスのリングは globals.css の
+ * 既定のまま、太い線の外に密着して出る（§6）。 */
+.body :global(.mermaid[data-scrolls]) {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
 }
 
 /* シェアセクション */
