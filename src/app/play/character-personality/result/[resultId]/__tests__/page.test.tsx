@@ -39,7 +39,7 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
   default: () => <button data-testid="invite-friend-button">友達を招待</button>,
 }));
 
-// ResultPageShell は、ページが渡した値（添えた段落・説明・誘い・中身）をそのまま出す部品に替える
+// ResultPageShell は、ページが渡した値（添えた段落・誘い・説明・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   default: ({
     quiz,
@@ -58,9 +58,9 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   }) => (
     <div data-testid="result-page-shell">
       {lead && <p>{lead}</p>}
-      {description && <p>{description}</p>}
       <a href="#try">{ctaText}</a>
       <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {description && <p>{description}</p>}
       {children}
       {afterShare}
     </div>

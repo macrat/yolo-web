@@ -9,23 +9,14 @@ import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
-import { countCharWidth } from "@/lib/countCharWidth";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import type { QuizDefinition, QuizResult } from "../types";
 import { resultHeadingName } from "../resultName";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./ResultPageShell.module.css";
-
-/**
- * 説明が4行に収まらないかを、描く前に見込む字の幅（`countCharWidth`。全角1字が 2）。375px の画面の本文の幅
- * （321px）には、本文の大きさで全角が1行に約18字入り、4行で約72字（幅 144）になる。見込みが外れた説明は、
- * 描いたあとに「続きを読む」の行が出入りするので、来訪者の多い 375px で当たる値にする。
- */
-const DESCRIPTION_CLAMP_GUESS_WIDTH = 144;
 
 /** 共有の区画の見出しの id。共有の区画はページに1つだけなので、固定の値でよい。 */
 const SHARE_HEADING_ID = "result-share-heading";
@@ -35,9 +26,9 @@ interface ResultPageShellProps {
   result: QuizResult;
   /** タイプ名のすぐ後に置く、本文の大きさの段落（キャッチコピーやキャラの自己紹介）。 */
   lead?: string;
-  /** タイプの説明。4行まで見せ、隠れる字があるときだけ「続きを読む」を出す。 */
+  /** 誘いのあとに置くタイプの説明。全文を段落で置き、切り分けない（DESIGN.md §8）。 */
   description?: string;
-  /** 説明のあとの、この診断を遊ぶ誘いのボタンの文言。 */
+  /** 添えた段落のすぐ下に置く、この診断を遊ぶ誘いのボタンの文言。 */
   ctaText: string;
   /** 誘いのあとに続く、ルートごとの詳しい読みものと「すべてのタイプ」。 */
   children: React.ReactNode;
@@ -50,8 +41,9 @@ interface ResultPageShellProps {
 }
 
 /**
- * 結果のページを組む。上から、何の診断の結果かの行・タイプ名の h1・読み・色見本、タイプ名の説明と診断への
- * 誘い、ルートごとの読みもの、共有の区画、関連の区画。
+ * 結果のページを組む。上から、何の診断の結果かの行・タイプ名の h1・読み・色見本、添えた段落・診断への誘い・
+ * タイプの説明、ルートごとの読みもの、共有の区画、関連の区画。誘いを説明の前に置き、共有のリンクから来た
+ * 来訪者が、最初の画面でタイプ名と添えた段落と誘いを見られるようにする。
  *
  * タイプ名は、サーバーで作った文節の区切りで折る（DESIGN.md §4）。読みは見出しの折れを避けるため h1 に
  * 入れず、すぐ下に補助情報として添える。共有の操作はページに1か所だけ置き、何を共有するかを見出しが言う（§8）。
@@ -104,15 +96,7 @@ export default function ResultPageShell({
       <div className={styles.body}>
         <div className={styles.intro}>
           {lead && <p className={styles.lead}>{lead}</p>}
-          {description && (
-            <DescriptionExpander
-              description={description}
-              likelyOverflows={
-                countCharWidth(description) > DESCRIPTION_CLAMP_GUESS_WIDTH
-              }
-            />
-          )}
-          <div className={styles.try}>
+          <div>
             <Link
               href={`/play/${slug}`}
               className={styles.tryButton}
@@ -124,6 +108,7 @@ export default function ResultPageShell({
               全{quiz.meta.questionCount}問 / 登録不要
             </p>
           </div>
+          {description && <p className={styles.description}>{description}</p>}
         </div>
 
         {children}

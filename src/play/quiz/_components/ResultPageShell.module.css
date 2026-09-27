@@ -40,17 +40,18 @@
   max-inline-size: var(--measure);
 }
 
-/* タイプ名の説明と診断への誘い。後ろの読みものの小見出しとは、小見出しの上の余白と線で分かれる。 */
+/* 添えた段落・診断への誘い・タイプの説明。後ろの読みものの小見出しとは、小見出しの上の余白と線で分かれる。 */
 .intro {
   margin-block-end: var(--space-32);
 }
 
 .lead {
-  margin: 0 0 var(--space-16);
+  margin: 0 0 var(--space-24);
 }
 
-.try {
-  margin-block-start: var(--space-24);
+/* タイプの説明。全文を本文の段落で置く。 */
+.description {
+  margin: var(--space-24) 0 0;
 }
 
 /* 主要な誘い: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの

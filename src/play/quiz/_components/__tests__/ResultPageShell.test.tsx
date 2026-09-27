@@ -163,7 +163,7 @@ test("結果の色を渡したときだけ、字を持たない色見本を出�
   expect(container.querySelector("figure")).toBeNull();
 });
 
-test("タイプ名のあとに、添えた段落・説明・診断への誘いをこの順に置き、そのあとにルートの中身を続ける", () => {
+test("タイプ名のあとに、添えた段落・診断への誘い・説明の全文をこの順に置き、そのあとにルートの中身を続ける", () => {
   const { container } = renderShell({
     lead: "キャッチコピー",
     description: "タイプの説明",
@@ -172,9 +172,9 @@ test("タイプ名のあとに、添えた段落・説明・診断への誘い�
 
   const order = [
     screen.getByText("キャッチコピー"),
-    screen.getByText("タイプの説明"),
     screen.getByRole("link", { name: "あなたはどのタイプ? 診断してみよう" }),
     screen.getByText("全5問 / 登録不要"),
+    screen.getByText("タイプの説明"),
     screen.getByTestId("child-content"),
   ];
   for (let i = 1; i < order.length; i++) {
@@ -187,6 +187,8 @@ test("タイプ名のあとに、添えた段落・説明・診断への誘い�
     screen.getByRole("link", { name: "あなたはどのタイプ? 診断してみよう" }),
   ).toHaveAttribute("href", "/play/test-quiz");
   expect(container.querySelector("[data-inverted]")).not.toBeNull();
+  // 説明は切り分けず、開くボタンを持たない（DESIGN.md §8）
+  expect(screen.queryByRole("button")).toBeNull();
 });
 
 test("共有の区画を1つだけ置き、見出し「この結果を共有」が区画の名前になる", () => {
