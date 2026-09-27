@@ -15,7 +15,7 @@ import {
 import characterPersonalityQuiz from "@/play/quiz/data/character-personality";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
-import { solvedScreenReadingHeadings } from "@/play/quiz/readingHeadings";
+import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
 
 /** /storybook は開発者向けのコンポーネントカタログ。
  * 来訪者の目に触れる想定はないため `robots: noindex` を指定する。
@@ -63,23 +63,10 @@ function characterSolvedScreen(): SolvedScreenSample {
   const { meta, results } = characterPersonalityQuiz;
   return {
     quizTitle: meta.title,
+    quizName: meta.shortTitle ?? meta.title,
     quizSlug: meta.slug,
     results,
-    readingHeadings: Object.fromEntries(
-      solvedScreenReadingHeadings(characterPersonalityQuiz).map((text) => [
-        text,
-        splitIntoPhrases(text),
-      ]),
-    ),
-    headings: Object.fromEntries(
-      results.map((result) => {
-        const name = result.nameParts?.name ?? result.title;
-        return [
-          result.id,
-          { phrases: splitIntoPhrases(name), ...headingFontAttr(name) },
-        ];
-      }),
-    ),
+    ...solvedScreenHeadings(characterPersonalityQuiz),
   };
 }
 

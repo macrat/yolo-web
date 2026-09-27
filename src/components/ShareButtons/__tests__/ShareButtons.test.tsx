@@ -545,3 +545,50 @@ describe("ShareButtons", () => {
     });
   });
 });
+
+describe("ShareButtons ほかの操作の知らせ", () => {
+  test("notice を、コピーの知らせと同じ1つの知らせの行に出す", () => {
+    const { rerender } = render(
+      <ShareButtons url="/blog/test" title="テスト記事" notice={[]} />,
+    );
+    rerender(
+      <ShareButtons
+        url="/blog/test"
+        title="テスト記事"
+        notice={["画像を用意しています。"]}
+      />,
+    );
+    expect(screen.getAllByRole("status")).toHaveLength(1);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "画像を用意しています。",
+    );
+  });
+
+  test("知らせが変わったときと、コピーを押したときのうち、あとのほうを出す", async () => {
+    mockClipboardWriteText.mockResolvedValue(undefined);
+    const notice = ["リンクをコピーしました"];
+    const { rerender } = render(
+      <ShareButtons url="/blog/test" title="テスト記事" notice={[]} />,
+    );
+    rerender(
+      <ShareButtons url="/blog/test" title="テスト記事" notice={notice} />,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "リンクをコピーしました",
+    );
+    fireEvent.click(screen.getByRole("button", { name: /URLをコピー/ }));
+    await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveTextContent(/^コピーしました$/);
+    });
+    rerender(
+      <ShareButtons
+        url="/blog/test"
+        title="テスト記事"
+        notice={["画像を用意しています。"]}
+      />,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "画像を用意しています。",
+    );
+  });
+});

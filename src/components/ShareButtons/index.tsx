@@ -45,6 +45,11 @@ interface ShareButtonsProps {
   surface?: ShareSurface;
   /** 共有のボタンと同じ並びの最後に置く、結果を持ち帰るほかの操作（画像の保存など） */
   children?: ReactNode;
+  /**
+   * 同じ区画に並べた、結果を持ち帰るほかの操作の知らせ（文ごとに分けたもの）。区画の知らせの行を1つにするため、
+   * コピーの知らせと同じ行に出す。知らせが変わったときと、コピーを押したときのうち、あとのほうを出す。
+   */
+  notice?: readonly string[];
 }
 
 const DEFAULT_SNS: SnsType[] = ["x", "line", "hatena", "copy"];
@@ -72,6 +77,7 @@ export default function ShareButtons({
   contentId,
   surface,
   children,
+  notice,
 }: ShareButtonsProps) {
   const canWebShare = useCanWebShare();
   // 写せるたびに増える番号。0 のあいだは「コピーしました」を出さない。押し直すと番号が変わってタイマーを
@@ -79,6 +85,13 @@ export default function ShareButtons({
   const [copiedCount, setCopiedCount] = useState(0);
   // 写せなかった知らせは、読み終える前に消えないよう、次にコピーを押すまで残す。
   const [copyFailed, setCopyFailed] = useState(false);
+  // ほかの操作の知らせをコピーの知らせより前に出すか。知らせが変わると出し、コピーを押すと下げる。
+  const [showsNotice, setShowsNotice] = useState(false);
+  const [shownNotice, setShownNotice] = useState(notice);
+  if (notice !== shownNotice) {
+    setShownNotice(notice);
+    setShowsNotice(true);
+  }
 
   useEffect(() => {
     if (copiedCount === 0) return;
@@ -140,6 +153,7 @@ export default function ShareButtons({
     async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
       const { fullUrl, body } = getShareTarget();
       setCopyFailed(false);
+      setShowsNotice(false);
       // 写すための欄は、押したボタンの並びに置く。結果のダイアログの中でも、その欄を選べる。
       if (
         await copyText(body + "\n" + fullUrl, event.currentTarget.parentElement)
@@ -203,9 +217,15 @@ export default function ShareButtons({
         )}
         {children}
       </div>
-      {/* コピーの知らせ。aria-live="polite" で読み上げにも伝える。 */}
+      {/* 知らせの行（コピーと、notice で受けたほかの操作の知らせ）。aria-live="polite" で読み上げにも伝える。 */}
       <div className={styles.copyMessage} role="status" aria-live="polite">
-        {copyFailed ? (
+        {showsNotice && notice && notice.length > 0 ? (
+          notice.map((sentence) => (
+            <span key={sentence} className={styles.sentence}>
+              {sentence}
+            </span>
+          ))
+        ) : copyFailed ? (
           <>
             <span className={styles.sentence}>コピーできませんでした。</span>
             <span className={styles.sentence}>

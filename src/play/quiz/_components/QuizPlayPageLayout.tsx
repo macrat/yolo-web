@@ -10,10 +10,7 @@ import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
-import type { ResultHeading } from "@/components/ResultBox";
-import { splitIntoPhrases } from "@/lib/phrase-breaks";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
-import { solvedScreenReadingHeadings } from "@/play/quiz/readingHeadings";
+import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
 // プレイ層のスタイルを参照する
 import styles from "@/app/play/[slug]/page.module.css";
 
@@ -47,22 +44,7 @@ export default async function QuizPlayPageLayout({
   const jsonLd = meta ? generatePlayJsonLd(meta) : null;
 
   const resultNextContents = toPlayListItems(getResultNextContents(slug));
-  // 見出しは名前だけで組み、読みは解き終えた画面が見出しの下に添える。
-  const resultHeadings: Record<string, ResultHeading> = Object.fromEntries(
-    quiz.results.map((result) => {
-      const name = result.nameParts?.name ?? result.title;
-      return [
-        result.id,
-        { phrases: splitIntoPhrases(name), ...headingFontAttr(name) },
-      ];
-    }),
-  );
-  const readingHeadings: Record<string, string[]> = Object.fromEntries(
-    solvedScreenReadingHeadings(quiz).map((text) => [
-      text,
-      splitIntoPhrases(text),
-    ]),
-  );
+  const { resultHeadings, readingHeadings } = solvedScreenHeadings(quiz);
   const recommendHeading =
     quiz.meta.type === "knowledge" ? "このクイズを勧める" : "この診断を勧める";
 

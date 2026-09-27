@@ -296,7 +296,9 @@ export interface SolvedScreenSample {
   quizTitle: string;
   quizSlug: string;
   results: QuizResult[];
-  headings: Readonly<Record<string, ResultHeading>>;
+  /** 補助情報と共有の文で言う診断の名前（短い名前があればそれ） */
+  quizName: string;
+  resultHeadings: Readonly<Record<string, ResultHeading>>;
   readingHeadings: Readonly<Record<string, readonly string[]>>;
 }
 
@@ -1588,10 +1590,11 @@ export default function StorybookContent({
           <ResultCard
             key={solvedResult.id}
             result={solvedResult}
-            heading={solvedScreen.headings[solvedResult.id]}
+            heading={solvedScreen.resultHeadings[solvedResult.id]}
             readingHeadings={solvedScreen.readingHeadings}
             quizType="personality"
             quizTitle={solvedScreen.quizTitle}
+            quizName={solvedScreen.quizName}
             quizSlug={solvedScreen.quizSlug}
             onRetry={() => {}}
             detailedContent={solvedResult.detailedContent}

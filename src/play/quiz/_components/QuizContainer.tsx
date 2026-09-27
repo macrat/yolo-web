@@ -225,6 +225,7 @@ export default function QuizContainer({
         readingHeadings={readingHeadings}
         quizType={quiz.meta.type}
         quizTitle={quiz.meta.title}
+        quizName={quiz.meta.shortTitle ?? quiz.meta.title}
         quizSlug={quiz.meta.slug}
         score={score}
         totalQuestions={

@@ -1,13 +1,7 @@
 /*
  * 札の画像を保存・共有するボタン。いちばん使われる「画像を保存」をプライマリボタンにし、「画像を共有」を
- * プライマリでないボタンにする。ボタンの見え方は Button が持ち、ここは並べ方と知らせの文だけを持つ。
+ * プライマリでないボタンにする。ボタンの見え方は Button が持ち、ここは並べ方だけを持つ。
  */
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
 
 /* プライマリでないボタンは縁が見えないので、押せる範囲を接して並べる（§5）。 */
 .buttons {
@@ -16,16 +10,4 @@
   align-items: center;
   column-gap: var(--text-box-pad);
   row-gap: var(--space-8);
-}
-
-/* 知らせの文。出たり消えたりしても下のボタンが動かないよう、1行分の高さをいつも取る。 */
-.status {
-  min-height: 1lh;
-  font-size: var(--text-small);
-  color: var(--ink);
-}
-
-/* 1行に収まらない知らせは文のあいだで折り、文の中の語を割らない。 */
-.sentence {
-  display: inline-block;
 }

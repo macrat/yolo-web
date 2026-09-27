@@ -113,8 +113,8 @@ vi.mock("next/dynamic", async () => {
 
 // ShareButtonsコンポーネントをモック（Web Share APIなどの依存を排除）
 vi.mock("@/components/ShareButtons", () => ({
-  default: ({ text }: { text: string }) => (
-    <div data-testid="share-buttons">
+  default: ({ text, notice }: { text: string; notice?: string[] }) => (
+    <div data-testid="share-buttons" data-notice={JSON.stringify(notice)}>
       <span>{text}</span>
     </div>
   ),
@@ -385,13 +385,14 @@ vi.mock("next/link", () => ({
 
 /**
  * 見出しの区切りはサーバーで作って渡すものなので、テストでは結果の名前を1つの区切りとして渡し、読みものの
- * 小見出しの区切りは渡さない（受け取っていない小見出しは1つの文節として組まれる）。
+ * 小見出しの区切りは渡さない（受け取っていない小見出しは1つの文節として組まれる）。診断の名前を渡さないテストは、
+ * 題をそのまま名前にする。
  */
 function ResultCard(
   props: Omit<
     ComponentProps<typeof ResultCardComponent>,
-    "heading" | "readingHeadings"
-  >,
+    "heading" | "readingHeadings" | "quizName"
+  > & { quizName?: string },
 ) {
   return (
     <ResultCardComponent
@@ -400,6 +401,7 @@ function ResultCard(
       }}
       readingHeadings={{}}
       {...props}
+      quizName={props.quizName ?? props.quizTitle}
     />
   );
 }
@@ -451,11 +453,29 @@ describe("ResultCard - 結果のボックス", () => {
     expect(box).toHaveTextContent("炎の詩人の説明です。");
   });
 
+  test("補助情報と共有の文は診断の短い名前で言い、ハッシュタグは題から作る", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        quizTitle="あなたを日本の伝統色に例えると?"
+        quizName="日本の伝統色診断"
+        result={typeResult}
+      />,
+    );
+    expect(screen.getByRole("region", { name: "炎の詩人" })).toHaveTextContent(
+      "日本の伝統色診断の結果",
+    );
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      /^日本の伝統色診断の結果は「炎の詩人」でした! #あなたを日本の伝統色に例えると\? #yolosnet$/,
+    );
+  });
+
   test("タイプ名はサーバーで作った区切りのあいだに <wbr> を置いて組み、読み上げの名前はタイトルと同じ", () => {
     render(
       <ResultCardComponent
         {...defaultProps}
         result={{ ...typeResult, title: "締切3分前に本気出す炎の司令塔" }}
+        quizName={defaultProps.quizTitle}
         heading={{ phrases: ["締切3分前に", "本気出す", "炎の司令塔"] }}
         readingHeadings={{}}
       />,
@@ -568,6 +588,22 @@ describe("ResultCard - 結果を共有する区画", () => {
     expect(box.nextElementSibling).toBe(share);
     expect(share).toContainElement(screen.getByTestId("share-buttons"));
     expect(screen.getAllByTestId("share-buttons")).toHaveLength(1);
+  });
+
+  test("札の画像の知らせも、区画の知らせの行1つに出す", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        quizSlug="character-personality"
+        detailedContent={characterContent}
+      />,
+    );
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    expect(share.querySelectorAll("[role=status]")).toHaveLength(0);
+    expect(screen.getByTestId("share-buttons")).toHaveAttribute(
+      "data-notice",
+      "[]",
+    );
   });
 
   test("character-personality では、札の画像の保存と共有も同じ区画に置く", () => {
@@ -888,6 +924,7 @@ describe("ResultCard - DOM順序", () => {
     render(
       <ResultCardComponent
         {...defaultProps}
+        quizName={defaultProps.quizTitle}
         heading={{ phrases: ["テスト結果"] }}
         readingHeadings={{
           このタイプのあるある: ["この", "タイプの", "あるある"],
@@ -1280,12 +1317,14 @@ describe("ResultCard - traditional-color variant", () => {
     const box = screen.getByRole("region", {
       name: traditionalColorProps.result.title,
     });
-    const swatch = box.querySelector("[data-swatch]");
-    expect(swatch).toHaveAttribute(
-      "data-swatch",
-      traditionalColorProps.result.color,
-    );
-    expect(swatch).toBeEmptyDOMElement();
+    const swatches = Array.from(
+      box.querySelectorAll<HTMLElement>("[style]"),
+    ).filter((el) => el.style.backgroundColor !== "");
+    expect(swatches).toHaveLength(1);
+    expect(swatches[0]).toHaveStyle({
+      backgroundColor: traditionalColorProps.result.color,
+    });
+    expect(swatches[0]).toBeEmptyDOMElement();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 
@@ -1351,7 +1390,7 @@ describe("ResultCard - yoji-personality variant", () => {
 
   test("タイプの色を、色見本にもどの要素のインラインスタイルにも入れないこと", () => {
     const { container } = render(<ResultCard {...yojiProps} />);
-    expect(container.querySelector("[data-swatch]")).toBeNull();
+    expect(container.querySelector("[style]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 
@@ -1436,7 +1475,7 @@ describe("ResultCard - unexpected-compatibility variant", () => {
 
   test("タイプの色を、色見本にもどの要素のインラインスタイルにも入れないこと", () => {
     const { container } = render(<ResultCard {...unexpectedProps} />);
-    expect(container.querySelector("[data-swatch]")).toBeNull();
+    expect(container.querySelector("[style]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 });
@@ -1579,7 +1618,7 @@ describe("ResultCard - impossible-advice variant", () => {
 
   test("タイプの色を、色見本にもどの要素のインラインスタイルにも入れないこと", () => {
     const { container } = render(<ResultCard {...impossibleProps} />);
-    expect(container.querySelector("[data-swatch]")).toBeNull();
+    expect(container.querySelector("[style]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 });

@@ -92,7 +92,10 @@ interface ResultCardProps {
   /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ったものを受け取る。 */
   readingHeadings: Readonly<Record<string, readonly string[]>>;
   quizType: QuizType;
+  /** 診断の題（ハッシュタグと、共有シートとはてなブックマークに渡す題に使う） */
   quizTitle: string;
+  /** 補助情報「{診断の名前}の結果」と共有の文で言う診断の名前。短い名前（shortTitle）があればそれを渡す。 */
+  quizName: string;
   quizSlug: string;
   /** 知識クイズの正解の数 */
   score?: number;
@@ -480,6 +483,7 @@ export default function ResultCard({
   readingHeadings,
   quizType,
   quizTitle,
+  quizName,
   quizSlug,
   score,
   totalQuestions,
@@ -493,7 +497,10 @@ export default function ResultCard({
   appear = false,
 }: ResultCardProps) {
   const shareHeadingId = useId();
-  const shareText = `${quizTitle}の結果は「${resultNameWithReading(result)}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  // ハッシュタグは、これまでの共有と同じ語で数えられるよう、題から作る。
+  const shareText = `${quizName}の結果は「${resultNameWithReading(result)}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  // 札の画像のボタンの知らせ。区画の知らせの行を1つにするため、共有のボタンの知らせの行に出す。
+  const [fudaNotice, setFudaNotice] = useState<string[]>([]);
   const catchphrase = catchphraseOf(detailedContent);
   // 見出しは名前だけにし、読みにくい名前の読みは見出しのすぐ下に添える（伝統色の「藍色」と「あいいろ」など）。
   const reading = result.nameParts?.reading ?? result.reading?.kana;
@@ -506,7 +513,7 @@ export default function ResultCard({
       <ResultBox
         ref={resultBoxRef}
         tabIndex={resultBoxRef ? -1 : undefined}
-        caption={`${quizTitle}の結果`}
+        caption={`${quizName}の結果`}
         heading={heading}
         appear={appear}
       >
@@ -516,7 +523,6 @@ export default function ResultCard({
             <div
               className={styles.swatch}
               style={{ backgroundColor: resultColor }}
-              data-swatch={resultColor}
             />
           )}
           {quizType === "knowledge" &&
@@ -539,8 +545,9 @@ export default function ResultCard({
           <FudaActions
             resultId={result.id}
             resultTitle={result.title}
-            quizTitle={quizTitle}
+            quizTitle={quizName}
             quizSlug={quizSlug}
+            onNoticeChange={setFudaNotice}
           />
         )}
         <ShareButtons
@@ -551,6 +558,7 @@ export default function ResultCard({
           contentType={quizType === "personality" ? "diagnosis" : "quiz"}
           contentId={contentIdForQuiz(quizSlug)}
           surface="text"
+          notice={fudaNotice}
         />
       </section>
       {result.recommendation && result.recommendationLink && (

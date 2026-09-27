@@ -7,7 +7,15 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
+}
+
+.card > * + * {
+  margin-top: var(--space-24);
+}
+
+/* 共有の区画の末尾の知らせの行（1行の高さをいつも取る）が、区画の下とのあいだを兼ねる。 */
+.card > .share + * {
+  margin-top: 0;
 }
 
 /* === 結果のボックスの中 === */
@@ -18,8 +26,10 @@
   gap: var(--space-16);
 }
 
-/* タイプ名の中の読みにくい語の読み方。タイプ名のすぐ下に補助情報として添える。 */
+/* タイプ名の読み方。タイプ名に付いて見えるよう、頭の行とのあいだ（ResultBox の 16px）を、補助情報とタイプ名の
+ * あいだと同じ 8px まで詰め、下の内容とは 16px あける。 */
 .reading {
+  margin-top: calc(var(--space-8) - var(--space-16));
   font-size: var(--text-small);
   color: var(--ink-2);
 }

@@ -8,13 +8,32 @@
  * - 共有: 共有シートのキャンセル（reject）では計上しない。
  * - 保存: アンカー download で保存し trackSave(…,"download","fuda")。
  * - fetch 失敗（!res.ok）は握りつぶさずエラー表示にし、UI は壊さない（計上しない）。
+ * - 知らせの文は自分で出さず、onNoticeChange で区画に渡す（テストでは WithNotice が role="status" に出す）。
  *
  * analytics.ts は window.gtag を直接呼ぶので gtag を spy に差し替えて送出 payload を検査する。
  * fetch / navigator.canShare|share|clipboard / URL.createObjectURL をモックする。
  */
 import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
+import { useState } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FudaActions from "../FudaActions";
+
+/** 知らせの文を受け取って出す区画の知らせの行の代わり。 */
+function WithNotice() {
+  const [notice, setNotice] = useState<string[]>([]);
+  return (
+    <>
+      <FudaActions
+        resultId="blazing-strategist"
+        resultTitle="炎の策士"
+        quizTitle="キャラ性格診断"
+        quizSlug="character-personality"
+        onNoticeChange={setNotice}
+      />
+      <div role="status">{notice.join("")}</div>
+    </>
+  );
+}
 
 const gtagSpy = vi.fn();
 const mockFetch = vi.fn();
@@ -72,14 +91,7 @@ afterEach(() => {
 });
 
 function renderActions() {
-  render(
-    <FudaActions
-      resultId="blazing-strategist"
-      resultTitle="炎の策士"
-      quizTitle="キャラ性格診断"
-      quizSlug="character-personality"
-    />,
-  );
+  render(<WithNotice />);
   return {
     saveButton: screen.getByRole("button", { name: "画像を保存" }),
     shareButton: screen.getByRole("button", { name: "画像を共有" }),
