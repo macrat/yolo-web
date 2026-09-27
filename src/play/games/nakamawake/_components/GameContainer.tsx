@@ -30,9 +30,16 @@ import {
   loadHistory,
   loadTodayGame,
   saveTodayGame,
+  HISTORY_KEY,
 } from "@/play/games/nakamawake/_lib/storage";
 import { generateShareText } from "@/play/games/nakamawake/_lib/share";
 import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import {
+  resultAreaNames,
+  savedLayoutScript,
+} from "@/play/games/shared/_lib/savedLayout";
+import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
+import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
 import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
@@ -44,6 +51,18 @@ import HowToPlay from "./HowToPlay";
 import styles from "./GameContainer.module.css";
 
 const MAX_MISTAKES = 4;
+const RESULT_AREA = resultAreaNames("nakamawake");
+
+/**
+ * サーバーの HTML で本体の前に置くスクリプト。端末に記録した今日の回が解き終えた回なら、前に同じ画面で描いた
+ * 盤と結果の区画の高さを、本体を描く前に取っておき、読み込むあいだ語の格子と操作を見せない。取っておいた高さは
+ * 描いた盤と結果の区画の高さと同じなので、外さない。
+ */
+const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
+  styleId: "nakamawake-saved-layout",
+  historyKeyPrefix: HISTORY_KEY,
+  resultArea: RESULT_AREA,
+});
 
 interface GameContainerProps {
   puzzle: NakamawakePuzzle;
@@ -141,13 +160,20 @@ export default function GameContainer({
   dateDisplayString,
   crossCategoryItems,
 }: GameContainerProps) {
-  const [gameState, setGameState] = useState<NakamawakeGameState>(() =>
-    initialState(puzzle, puzzleNumber, todayStr),
+  // サーバーの HTML を水和で引き継ぐときは、サーバーと同じ初めの回で描き、端末の記録は水和のあとに当てる。
+  // ほかのページから移ってきて（「戻る」を含む）ブラウザで新しく描くときは、初めから端末の記録の回で描く。
+  // ブラウザが戻す送りの位置に、前に見ていた結果がそのまま来る。
+  const isServerRendered = useIsServerRendered();
+  const [gameState, setGameState] = useState<NakamawakeGameState>(() => {
+    const initial = initialState(puzzle, puzzleNumber, todayStr);
+    return isServerRendered ? initial : restoredState(initial);
+  });
+  const [stats, setStats] = useState<NakamawakeGameStats | null>(() =>
+    isServerRendered ? null : loadStats(),
   );
-  const [stats, setStats] = useState<NakamawakeGameStats | null>(null);
   // 端末の記録を読み、語を並べ替えるまでは、語の格子・残りのミスの字・操作を場所を取ったまま見せない。
   // サーバーの並びと初めの回の字が一瞬見えてから、端末の回に替わらないため。
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(!isServerRendered);
   // この回の最後のチェックで解き終えたか。開いたときにすでに解き終えていた結果は、登場の動きを持たない。
   const [finishedByPlay, setFinishedByPlay] = useState(false);
   const [feedback, setFeedback] = useState("");
@@ -159,13 +185,14 @@ export default function GameContainer({
   const resultRef = useRef<HTMLElement>(null);
   const pendingReveal = useRef<PendingReveal | null>(null);
 
-  // 端末の記録と語の並べ替えは、サーバーの HTML との水和が済んでから当てる。
+  // 水和で引き継いだ回には、端末の記録と語の並べ替えを水和が済んでから当てる。
   useEffect(() => {
+    if (isReady) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- 端末の記録（外のもの）を水和のあとに読む
     setGameState((prev) => restoredState(prev));
     setStats(loadStats());
     setIsReady(true);
-  }, []);
+  }, [isReady]);
 
   useLayoutEffect(() => {
     const pending = pendingReveal.current;
@@ -324,69 +351,90 @@ export default function GameContainer({
   const remaining = MAX_MISTAKES - gameState.mistakes;
 
   return (
-    <div className={styles.game}>
-      <div className={styles.board}>
-        <SolvedGroups
-          groups={gameState.solvedGroups}
-          latestRef={latestSolvedRef}
+    <>
+      {isServerRendered && (
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: SAVED_LAYOUT_SCRIPT }}
         />
-        {!isFinished && (
-          <div className={isReady ? undefined : styles.pending}>
-            <WordGrid
-              ref={gridRef}
-              words={gameState.remainingWords}
-              selectedWords={gameState.selectedWords}
-              onWordToggle={handleWordToggle}
-            />
-          </div>
-        )}
-      </div>
-      {isFinished && stats ? (
-        <>
-          <GameResult
-            ref={resultRef}
-            gameState={gameState}
-            stats={stats}
-            appear={finishedByPlay}
-          />
-          <section className={styles.share} aria-labelledby="nakamawake-share">
-            <h3 id="nakamawake-share" className={styles.shareHeading}>
-              この結果を共有
-            </h3>
-            <ShareButtons
-              url="/play/nakamawake"
-              title="ナカマワケ"
-              text={generateShareText(gameState)}
-              sns={["x", "line", "copy"]}
-              contentType="game"
-              contentId="nakamawake"
-            />
-          </section>
-          <NextPuzzleTime />
-          <NextGameBanner currentGameSlug="nakamawake" />
-          <CrossCategoryBanner items={crossCategoryItems} />
-        </>
-      ) : (
-        <div
-          className={isReady ? styles.play : `${styles.play} ${styles.pending}`}
-        >
-          <div ref={statusRef} className={styles.status} role="status">
-            <p>あと{remaining}回間違えると終わり</p>
-            {feedback && <p>{feedback}</p>}
-          </div>
-          <GameControls
-            onCheck={handleCheck}
-            onShuffle={handleShuffle}
-            onDeselectAll={handleDeselectAll}
-            canCheck={gameState.selectedWords.length === 4}
-            checkRef={checkRef}
-          />
-        </div>
       )}
-      <HowToPlay />
-      <p className={styles.date}>
-        {dateDisplayString}の問題 #{puzzleNumber}
-      </p>
-    </div>
+      <div className={styles.game}>
+        <ReservedResultArea
+          names={RESULT_AREA}
+          showsResult={isFinished && stats !== null}
+          date={todayStr}
+        >
+          <div className={styles.area}>
+            <div className={styles.board}>
+              <SolvedGroups
+                groups={gameState.solvedGroups}
+                latestRef={latestSolvedRef}
+              />
+              {!isFinished && (
+                <div className={isReady ? undefined : styles.pending}>
+                  <WordGrid
+                    ref={gridRef}
+                    words={gameState.remainingWords}
+                    selectedWords={gameState.selectedWords}
+                    onWordToggle={handleWordToggle}
+                  />
+                </div>
+              )}
+            </div>
+            {isFinished && stats ? (
+              <>
+                <GameResult
+                  ref={resultRef}
+                  gameState={gameState}
+                  stats={stats}
+                  appear={finishedByPlay}
+                />
+                <section
+                  className={styles.share}
+                  aria-labelledby="nakamawake-share"
+                >
+                  <h3 id="nakamawake-share" className={styles.shareHeading}>
+                    この結果を共有
+                  </h3>
+                  <ShareButtons
+                    url="/play/nakamawake"
+                    title="ナカマワケ"
+                    text={generateShareText(gameState)}
+                    sns={["x", "line", "copy"]}
+                    contentType="game"
+                    contentId="nakamawake"
+                  />
+                </section>
+                <NextPuzzleTime />
+                <NextGameBanner currentGameSlug="nakamawake" />
+                <CrossCategoryBanner items={crossCategoryItems} />
+              </>
+            ) : (
+              <div
+                className={
+                  isReady ? styles.play : `${styles.play} ${styles.pending}`
+                }
+              >
+                <div ref={statusRef} className={styles.status} role="status">
+                  <p>あと{remaining}回間違えると終わり</p>
+                  {feedback && <p>{feedback}</p>}
+                </div>
+                <GameControls
+                  onCheck={handleCheck}
+                  onShuffle={handleShuffle}
+                  onDeselectAll={handleDeselectAll}
+                  canCheck={gameState.selectedWords.length === 4}
+                  checkRef={checkRef}
+                />
+              </div>
+            )}
+          </div>
+        </ReservedResultArea>
+        <HowToPlay />
+        <p className={styles.date}>
+          {dateDisplayString}の問題 #{puzzleNumber}
+        </p>
+      </div>
+    </>
   );
 }

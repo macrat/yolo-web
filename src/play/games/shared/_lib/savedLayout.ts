@@ -33,24 +33,42 @@ export function resultAreaNames(slug: string): ResultAreaNames {
 }
 
 /** 本体の前のスクリプトに渡す設定。スクリプトの文に JSON で書き込むので、値はどれも JSON にできるものにする。 */
-export interface SavedLayoutOptions {
+export type SavedLayoutOptions = SavedLayoutBaseOptions &
+  (GuessRowsOptions | { [K in keyof GuessRowsOptions]?: never });
+
+interface SavedLayoutBaseOptions {
   /** 値を書く <style> の id。 */
   styleId: string;
-  /** 選んだ難易度を記録したキー。 */
-  difficultyKey: string;
-  /** 難易度ごとの回の記録のキーの頭（キーは頭と難易度をつないだもの）。 */
+  /**
+   * 選んだ難易度を記録したキー。難易度を選べるゲームで渡す。渡さないゲームでは、難易度を ""（空の文字列）として
+   * 扱う。
+   */
+  difficultyKey?: string;
+  /**
+   * 回の記録のキー。難易度を選べるゲームでは、難易度ごとの記録のキーの頭（キーは頭と難易度をつないだもの）。
+   * 難易度の無いゲームでは、記録のキーそのもの。記録は日付（"YYYY-MM-DD"）ごとの回を持ち、回は status
+   * （"playing"・"won"・"lost"）を持つ。
+   */
   historyKeyPrefix: string;
+  /**
+   * 解き終えた回の結果の区画。入力欄を見せない値と、前に同じ日・同じ難易度・同じ画面の幅と字の大きさで描いた
+   * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。
+   */
+  resultArea?: ResultAreaNames;
+}
+
+/**
+ * 推測の行を盤に積むゲームの値。回の記録が推測の判定の並び（feedbacks）を持つゲームで、3つをそろえて渡す。
+ * 渡すと、推測が1つも無い回には何も書かず、送れる数に届かない「lost」の回は途中の回として扱う。渡さない
+ * ゲームでは、status が "won" か "lost" の回を解き終えた回とし、結果の区画の値だけを書く。
+ */
+interface GuessRowsOptions {
   /** 1回に送れる推測の数。 */
   maxGuesses: number;
   /** 盤の行の数（遊んでいる回は次の推測を入れる行を含む）を書く値の名前。 */
   boardRowsProperty: string;
   /** 推測の回数で決まる値（四字キメルのヒントの帯の行の数など）。values[推測の回数] を書く。 */
   byGuessCount?: { property: string; values: readonly number[] }[];
-  /**
-   * 解き終えた回の結果の区画。入力欄を見せない値と、前に同じ日・同じ難易度・同じ画面の幅と字の大きさで描いた
-   * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。
-   */
-  resultArea?: ResultAreaNames;
 }
 
 /** 結果の区画の高さの記録。同じ日・同じ難易度・同じ画面の幅と字の大きさのときだけ使う。 */
@@ -71,12 +89,14 @@ interface ResultHeightRecord {
 export function reserveSavedLayout(options: SavedLayoutOptions): void {
   let entry: { feedbacks?: unknown[]; status?: string } | undefined;
   let today: string;
-  let difficulty: string;
+  let difficulty = "";
   let resultHeight: Partial<ResultHeightRecord> | null = null;
   try {
-    const saved = localStorage.getItem(options.difficultyKey);
-    difficulty =
-      saved === "beginner" || saved === "advanced" ? saved : "intermediate";
+    if (options.difficultyKey !== undefined) {
+      const saved = localStorage.getItem(options.difficultyKey);
+      difficulty =
+        saved === "beginner" || saved === "advanced" ? saved : "intermediate";
+    }
     today = new Intl.DateTimeFormat("en-CA", {
       timeZone: "Asia/Tokyo",
       year: "numeric",
@@ -95,19 +115,25 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
   } catch {
     return;
   }
-  const guessCount = Array.isArray(entry?.feedbacks)
-    ? entry.feedbacks.length
-    : 0;
-  if (guessCount === 0) return;
-  // 負けを記録した古い形の途中の回（送れる数に届かない「lost」）は、途中の回として戻る。
-  const finished =
-    entry?.status === "won" ||
-    (entry?.status === "lost" && guessCount >= options.maxGuesses);
-  const values: string[] = [
-    `${options.boardRowsProperty}:${guessCount + (finished ? 0 : 1)}`,
-  ];
-  for (const { property, values: byCount } of options.byGuessCount ?? []) {
-    values.push(`${property}:${byCount[guessCount]}`);
+  const values: string[] = [];
+  let finished: boolean;
+  if (options.maxGuesses !== undefined) {
+    const guessCount = Array.isArray(entry?.feedbacks)
+      ? entry.feedbacks.length
+      : 0;
+    if (guessCount === 0) return;
+    // 負けを記録した古い形の途中の回（送れる数に届かない「lost」）は、途中の回として戻る。
+    finished =
+      entry?.status === "won" ||
+      (entry?.status === "lost" && guessCount >= options.maxGuesses);
+    values.push(
+      `${options.boardRowsProperty}:${guessCount + (finished ? 0 : 1)}`,
+    );
+    for (const { property, values: byCount } of options.byGuessCount ?? []) {
+      values.push(`${property}:${byCount[guessCount]}`);
+    }
+  } else {
+    finished = entry?.status === "won" || entry?.status === "lost";
   }
   if (finished && options.resultArea) {
     values.push(`${options.resultArea.inputVisibilityProperty}:hidden`);
@@ -125,6 +151,7 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
       );
     }
   }
+  if (values.length === 0) return;
   const style = document.createElement("style");
   style.id = options.styleId;
   style.textContent = `:root{${values.join(";")}}`;

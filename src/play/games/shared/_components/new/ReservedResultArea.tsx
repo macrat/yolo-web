@@ -11,9 +11,12 @@ interface ReservedResultAreaProps {
   names: ResultAreaNames;
   /** 解き終えた回の結果を出しているか。出しているあいだ、その高さを覚えておく。 */
   showsResult: boolean;
-  /** 今日の日付（"YYYY-MM-DD"）と難易度。覚えた高さは、同じ日・同じ難易度のときだけ使う。 */
+  /**
+   * 今日の日付（"YYYY-MM-DD"）と難易度。覚えた高さは、同じ日・同じ難易度のときだけ使う。難易度の無いゲームでは
+   * 難易度を渡さない（""（空の文字列）として覚える。savedLayoutScript で difficultyKey を渡さないときと同じ）。
+   */
   date: string;
-  difficulty: string;
+  difficulty?: string;
   /** 遊んでいるあいだは入力欄、解き終えたらその場所に替わる結果。 */
   children: ReactNode;
 }
@@ -29,7 +32,7 @@ export default function ReservedResultArea({
   names,
   showsResult,
   date,
-  difficulty,
+  difficulty = "",
   children,
 }: ReservedResultAreaProps) {
   const contentRef = useRef<HTMLDivElement>(null);

@@ -9,6 +9,14 @@
   gap: var(--space-16);
 }
 
+/* 盤と、その下の結果の区画（遊んでいるあいだは残りのミスの字と操作、解き終えたら結果と共有と次の遊びの案内）。
+ * 解き終えた回を開き直したときは、この区画ごと前に描いた高さを取っておく（ReservedResultArea）。 */
+.area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
 /* 盤。当てた組と語の格子を、マスどうしと同じ間隔で1つの盤に並べる。 */
 .board {
   display: flex;

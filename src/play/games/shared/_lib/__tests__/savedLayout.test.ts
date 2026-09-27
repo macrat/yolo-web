@@ -36,6 +36,20 @@ const KANJI: SavedLayoutOptions = {
   resultArea: resultAreaNames("game"),
 };
 
+/** ナカマワケの形: 難易度も推測の行も無く、解き終えた回の結果の区画だけ。 */
+const NAKAMA: SavedLayoutOptions = {
+  styleId: STYLE_ID,
+  historyKeyPrefix: "game-history",
+  resultArea: resultAreaNames("game"),
+};
+
+function saveTodayWithoutDifficulty(status: string) {
+  localStorage.setItem(
+    "game-history",
+    JSON.stringify({ [today]: { solvedGroups: [2], mistakes: 4, status } }),
+  );
+}
+
 function saveToday(difficulty: string, count: number, status: string) {
   localStorage.setItem(
     `game-history-${difficulty}`,
@@ -133,6 +147,20 @@ describe("reserveSavedLayout", () => {
   test("a short 'lost' record from an old version counts as a game in progress", () => {
     saveToday("intermediate", 2, "lost");
     expect(reserve(KANJI)).toBe(":root{--board-rows:3}");
+  });
+
+  test("a game without difficulty or guess rows reserves only the result area of a finished game", () => {
+    expect(reserve(NAKAMA)).toBeNull();
+    saveTodayWithoutDifficulty("playing");
+    expect(reserve(NAKAMA)).toBeNull();
+    saveTodayWithoutDifficulty("lost");
+    expect(reserve(NAKAMA)).toBe(":root{--game-input-visibility:hidden}");
+    saveResultHeight("game-result-height", today, "", 980.2);
+    expect(reserve(NAKAMA)).toBe(
+      ":root{--game-input-visibility:hidden;--game-result-height:981px}",
+    );
+    saveResultHeight("game-result-height", today, "intermediate", 980.2);
+    expect(reserve(NAKAMA)).toBe(":root{--game-input-visibility:hidden}");
   });
 
   test("the script runs the same function on its own, without outer names", () => {

@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeAll, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import GameContainer from "../GameContainer";
 import type { NakamawakePuzzle } from "@/play/games/nakamawake/_lib/types";
 import { revealControl } from "@/play/games/shared/_lib/revealControl";
@@ -213,6 +214,15 @@ describe("解き終えたとき", () => {
     );
   });
 
+  test("開き直したときに取っておけるよう、盤と結果の区画の高さを日付と一緒に覚える", () => {
+    winWithOneMistake();
+    const saved = JSON.parse(
+      window.localStorage.getItem("nakamawake-result-height") ?? "null",
+    );
+    expect(saved).toMatchObject({ date: TODAY, difficulty: "" });
+    expect(typeof saved.height).toBe("number");
+  });
+
   test("解き終えたことを1回だけ記録する", () => {
     winWithOneMistake();
     expect(trackContentEnd).toHaveBeenCalledTimes(1);
@@ -279,6 +289,40 @@ describe("解き終えたとき", () => {
       "難易度4",
     );
     expect(trackContentEnd).not.toHaveBeenCalled();
+  });
+});
+
+describe("サーバーの HTML を水和で引き継ぐとき", () => {
+  test("サーバーの HTML は初めの回で、水和のあとに端末の記録の回を当てる", () => {
+    window.localStorage.setItem(
+      "nakamawake-history",
+      JSON.stringify({
+        [TODAY]: { solvedGroups: [2], mistakes: 1, status: "playing" },
+      }),
+    );
+    const ui = (
+      <GameContainer
+        puzzle={puzzle}
+        puzzleNumber={226}
+        todayStr={TODAY}
+        dateDisplayString="2026年9月27日"
+        crossCategoryItems={[]}
+      />
+    );
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(ui);
+    expect(container.textContent).toContain("あと4回間違えると終わり");
+    expect(container.querySelector("script")?.textContent).toContain(
+      "nakamawake-saved-layout",
+    );
+    document.body.append(container);
+    render(ui, { container, hydrate: true });
+    expect(screen.getByRole("list", { name: "当てた組" })).toHaveTextContent(
+      "動物",
+    );
+    expect(screen.getAllByRole("status")[0]).toHaveTextContent(
+      "あと3回間違えると終わり",
+    );
   });
 });
 
