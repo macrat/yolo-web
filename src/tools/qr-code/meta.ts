@@ -1,13 +1,14 @@
 import type { ToolMeta } from "@/tools/types";
-import { maxChars } from "./capacity";
+import {
+  DEFAULT_LEVEL,
+  LOWEST_LEVEL,
+  formatCount,
+  levelName,
+  maxChars,
+} from "./levels";
 
-const LOW = maxChars("L");
-const DEFAULT = maxChars("M");
-
-/** 3桁ごとに区切った字の数。 */
-function count(n: number): string {
-  return n.toLocaleString("ja-JP");
-}
+const DEFAULT = maxChars(DEFAULT_LEVEL);
+const LOWEST = maxChars(LOWEST_LEVEL);
 
 export const meta: ToolMeta = {
   slug: "qr-code",
@@ -43,7 +44,7 @@ export const meta: ToolMeta = {
     },
     {
       question: "QRコードに入力できるテキストの長さに制限はありますか？",
-      answer: `あります。このツールは文をUTF-8で符号にするので、日本語は半角英数の約3倍の容量を使います。既定のエラー訂正レベル（M）では、半角英数（数字だけの文も同じ）なら${count(DEFAULT.ascii)}字、日本語なら${count(DEFAULT.japanese)}字まで入ります。いちばん低いレベル（L）にすると、半角英数なら${count(LOW.ascii)}字、日本語なら${count(LOW.japanese)}字まで増えます。レベルを上げるほど、入る字の数は減ります。`,
+      answer: `あります。このツールは文をUTF-8でエンコードするので、日本語は1字で半角英数の約3倍の容量を使います。既定のエラー訂正レベル「${levelName(DEFAULT_LEVEL)}」では、半角英数（数字だけの文も同じ）なら${formatCount(DEFAULT.ascii)}字、日本語なら${formatCount(DEFAULT.japanese)}字まで入ります。いちばん低いレベル「${levelName(LOWEST_LEVEL)}」にすると、半角英数なら${formatCount(LOWEST.ascii)}字、日本語なら${formatCount(LOWEST.japanese)}字まで増えます。レベルを上げるほど、入る字の数は減ります。長い文ほどQRコードの点が細かくなり、スマートフォンなどの小さな画面に出すと読み取りにくくなります。読み取ってもらうときは、文を短くするか、ダウンロードしたPNG画像を大きく表示するか印刷してください。`,
     },
   ],
 };

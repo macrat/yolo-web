@@ -4,9 +4,11 @@ import type { QrCodeResult } from "../logic";
 
 // jsdom はキャンバスを描けないので、画像を作る関数を差し替えて、道具の組み方を確かめる。
 vi.mock("../logic", () => ({
-  generateQrCode: vi.fn((text: string): QrCodeResult => {
+  generateQrCode: vi.fn((text: string, level?: string): QrCodeResult => {
     if (text === "TOO_LONG") return { success: false, error: "tooLong" };
     if (text === "NO_CANVAS") return { success: false, error: "failed" };
+    if (text === "FITS_L_ONLY" && level !== "L")
+      return { success: false, error: "tooLong" };
     return {
       success: true,
       dataUrl: `data:image/png;base64,${text.length}`,
@@ -134,7 +136,7 @@ describe("QrCodeTile", () => {
 
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent(
-      "文が長すぎてQRコードに入りません。このレベルで入るのは、半角英数なら2,331字、日本語なら777字までです。文を短くするか、エラー訂正レベルを下げてください。",
+      "文が長すぎてQRコードに入りません。エラー訂正レベル「中（M）」で入るのは、半角英数なら2,331字、日本語なら777字までです。文を短くするか、エラー訂正レベルを下げてください。",
     );
     const textarea = screen.getByRole("textbox");
     expect(textarea).toHaveAttribute("aria-invalid", "true");
@@ -147,8 +149,25 @@ describe("QrCodeTile", () => {
     fireEvent.change(screen.getByRole("combobox"), { target: { value: "L" } });
     await type("TOO_LONG");
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "文が長すぎてQRコードに入りません。このレベルで入るのは、半角英数なら2,953字、日本語なら984字までです。文を短くしてください。",
+      "文が長すぎてQRコードに入りません。エラー訂正レベル「低（L）」で入るのは、半角英数なら2,953字、日本語なら984字までです。文を短くしてください。",
     );
+  });
+
+  test("レベルを選び直すと待たずに作り直し、前のレベルの誤りを一瞬も出さない", async () => {
+    render(<QrCodeTile />);
+    await type("FITS_L_ONLY");
+    expect(screen.getByRole("alert")).toHaveTextContent("「中（M）」");
+
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "L" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    await act(async () => {
+      vi.advanceTimersByTime(0);
+    });
+    expect(generateQrCode).toHaveBeenLastCalledWith("FITS_L_ONLY", "L");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "QRコード" }),
+    ).toBeInTheDocument();
   });
 
   test("画像を描けないときも、何が起きたかを字で言う", async () => {

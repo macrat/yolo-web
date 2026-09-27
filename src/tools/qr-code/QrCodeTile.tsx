@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@/components/Button";
 import Field from "@/components/Field";
 import ResultBox from "@/components/ResultBox";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
+import { generateQrCode, type QrCodeFailure } from "./logic";
 import {
-  generateQrCode,
+  DEFAULT_LEVEL,
+  LEVELS,
+  LOWEST_LEVEL,
+  formatCount,
+  levelName,
+  maxChars,
   type ErrorCorrectionLevel,
-  type QrCodeFailure,
-} from "./logic";
-import { maxChars } from "./capacity";
+} from "./levels";
 import styles from "./QrCodeTile.module.css";
 
 /** 打ち終えてからQRコードを作るまでの間（ms）。打つたびに作り直して画像がちらつかないよう、手が止まるのを待つ。 */
@@ -20,26 +24,19 @@ const DEBOUNCE_MS = 300;
 /** 代替テキストに入れる文の長さの上限（字）。長い文は、ここで切って「…」を添える。 */
 const ALT_TEXT_LIMIT = 40;
 
-const LEVELS: { value: ErrorCorrectionLevel; label: string }[] = [
-  { value: "L", label: "低（L・7%）" },
-  { value: "M", label: "中（M・15%）" },
-  { value: "Q", label: "高（Q・25%）" },
-  { value: "H", label: "最高（H・30%）" },
-];
+/** 作れなかった理由と、そのとき選んでいたレベル。 */
+interface Failure {
+  reason: QrCodeFailure;
+  level: ErrorCorrectionLevel;
+}
 
-/** いちばん多く入るレベル。これより下げて入る量を増やすことはできない。 */
-const LOWEST_LEVEL: ErrorCorrectionLevel = "L";
-
-/** 作れなかったことと、どう直すかを言う文。長すぎるときは、選んでいるレベルで入る字の数を添える。 */
-function failureMessage(
-  failure: QrCodeFailure,
-  level: ErrorCorrectionLevel,
-): string {
-  if (failure === "failed") {
+/** 作れなかったことと、どう直すかを言う文。長すぎるときは、そのレベルの名前と入る字の数を添える。 */
+function failureMessage({ reason, level }: Failure): string {
+  if (reason === "failed") {
     return "QRコードの画像を描けませんでした。ページを読み込み直してから、もう一度試してください。";
   }
   const { ascii, japanese } = maxChars(level);
-  const limit = `このレベルで入るのは、半角英数なら${ascii.toLocaleString("ja-JP")}字、日本語なら${japanese.toLocaleString("ja-JP")}字までです。`;
+  const limit = `エラー訂正レベル「${levelName(level)}」で入るのは、半角英数なら${formatCount(ascii)}字、日本語なら${formatCount(japanese)}字までです。`;
   const fix =
     level === LOWEST_LEVEL
       ? "文を短くしてください。"
@@ -71,26 +68,34 @@ export interface QrCodeTileProps {
  */
 export default function QrCodeTile({ className }: QrCodeTileProps = {}) {
   const [input, setInput] = useState("");
-  const [level, setLevel] = useState<ErrorCorrectionLevel>("M");
+  const [level, setLevel] = useState<ErrorCorrectionLevel>(DEFAULT_LEVEL);
   const [image, setImage] = useState<QrImage | null>(null);
-  const [failure, setFailure] = useState<QrCodeFailure | null>(null);
+  const [failure, setFailure] = useState<Failure | null>(null);
+  const generatedLevel = useRef(level);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!input.trim()) {
-        setImage(null);
-        setFailure(null);
-        return;
-      }
-      const result = generateQrCode(input, level);
-      if (result.success) {
-        setImage({ text: input, dataUrl: result.dataUrl, size: result.size });
-        setFailure(null);
-      } else {
-        setImage(null);
-        setFailure(result.error);
-      }
-    }, DEBOUNCE_MS);
+    // レベルを選び直したときは待たずに作り直す。選ぶのは1回の操作で、打つ途中のように続かないので、待つと
+    // そのあいだ前のレベルの画像や誤りが残る。
+    const levelChanged = generatedLevel.current !== level;
+    const timer = setTimeout(
+      () => {
+        generatedLevel.current = level;
+        if (!input.trim()) {
+          setImage(null);
+          setFailure(null);
+          return;
+        }
+        const result = generateQrCode(input, level);
+        if (result.success) {
+          setImage({ text: input, dataUrl: result.dataUrl, size: result.size });
+          setFailure(null);
+        } else {
+          setImage(null);
+          setFailure({ reason: result.error, level });
+        }
+      },
+      levelChanged ? 0 : DEBOUNCE_MS,
+    );
     return () => clearTimeout(timer);
   }, [input, level]);
 
@@ -106,7 +111,11 @@ export default function QrCodeTile({ className }: QrCodeTileProps = {}) {
     <div className={[styles.tile, className].filter(Boolean).join(" ")}>
       <Field
         label="QRコードにする文字やURL"
-        error={failure ? failureMessage(failure, level) : undefined}
+        error={
+          failure && failure.level === level
+            ? failureMessage(failure)
+            : undefined
+        }
       >
         {(control) => (
           <Textarea
@@ -127,9 +136,9 @@ export default function QrCodeTile({ className }: QrCodeTileProps = {}) {
             value={level}
             onChange={(e) => setLevel(e.target.value as ErrorCorrectionLevel)}
           >
-            {LEVELS.map(({ value, label }) => (
+            {LEVELS.map(({ value, name, recovery }) => (
               <option key={value} value={value}>
-                {label}
+                {`${name}（${value}・${recovery}）`}
               </option>
             ))}
           </Select>

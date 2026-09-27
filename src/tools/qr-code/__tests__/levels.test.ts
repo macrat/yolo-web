@@ -1,6 +1,13 @@
 import { describe, test, expect, beforeAll, vi } from "vitest";
-import { generateQrCode, type ErrorCorrectionLevel } from "../logic";
-import { MAX_BYTES, maxChars } from "../capacity";
+import { generateQrCode } from "../logic";
+import {
+  DEFAULT_LEVEL,
+  MAX_BYTES,
+  levelName,
+  maxChars,
+  type ErrorCorrectionLevel,
+} from "../levels";
+import { meta } from "../meta";
 
 const LEVELS: ErrorCorrectionLevel[] = ["L", "M", "Q", "H"];
 
@@ -19,9 +26,27 @@ beforeAll(() => {
 });
 
 describe("QRコードに入る字の数", () => {
-  test("既定（M）と L の数は、FAQ で言う数と同じ", () => {
+  test("M と L で入る字の数", () => {
     expect(maxChars("M")).toEqual({ ascii: 2331, japanese: 777 });
     expect(maxChars("L")).toEqual({ ascii: 2953, japanese: 984 });
+  });
+
+  test("FAQ の長さの答えが、既定のレベル（中）と L の名前と入る字の数を言う", () => {
+    expect(DEFAULT_LEVEL).toBe("M");
+    const answer = meta.faq!.find((entry) =>
+      entry.question.includes("長さ"),
+    )!.answer;
+    expect(answer).toContain(
+      "既定のエラー訂正レベル「中（M）」では、半角英数（数字だけの文も同じ）なら2,331字、日本語なら777字まで入ります。",
+    );
+    expect(answer).toContain(
+      "いちばん低いレベル「低（L）」にすると、半角英数なら2,953字、日本語なら984字まで増えます。",
+    );
+  });
+
+  test("レベルを文の中で名前で指す", () => {
+    expect(levelName("L")).toBe("低（L）");
+    expect(levelName("H")).toBe("最高（H）");
   });
 
   test.each(LEVELS)(

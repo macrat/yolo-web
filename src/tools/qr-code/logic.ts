@@ -1,6 +1,5 @@
 import qrcode from "qrcode-generator";
-
-export type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
+import { DEFAULT_LEVEL, type ErrorCorrectionLevel } from "./levels";
 
 /**
  * 作れなかった理由。
@@ -74,7 +73,7 @@ function renderPng(
 /** 文を QR コードの PNG にする。空の文は呼び出し側が渡さない。 */
 export function generateQrCode(
   text: string,
-  errorCorrection: ErrorCorrectionLevel = "M",
+  errorCorrection: ErrorCorrectionLevel = DEFAULT_LEVEL,
 ): QrCodeResult {
   const qr = qrcode(0, errorCorrection);
   try {
