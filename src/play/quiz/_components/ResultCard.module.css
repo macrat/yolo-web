@@ -40,33 +40,6 @@
   border: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 知識クイズの正解の数。§4 の主見出しの段で1行に組み、ボックスに収まらなければ収まる段まで下げる（§8）。
- * 行間は本文と同じにする。 */
-.score {
-  font-family: var(--font-heading);
-  line-height: var(--leading-body);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.score[data-step="main"] {
-  font-size: var(--text-heading-main);
-}
-
-.score[data-step="section"] {
-  font-size: var(--text-heading-section);
-}
-
-.score[data-step="sub"] {
-  font-size: var(--text-heading-sub);
-}
-
-/* いちばん下の段でも収まらないときは折り返す。 */
-.score[data-step="body"] {
-  font-size: var(--text-body);
-  white-space: normal;
-}
-
 /* 結果の説明は文章なので、本文の幅で折り返す（§8）。 */
 .description {
   max-width: var(--measure);

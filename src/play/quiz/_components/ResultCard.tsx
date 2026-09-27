@@ -9,7 +9,7 @@
  * 枠は ResultPageShell）は、ここから共有する URL であり、すべてのタイプの行から移る先でもある。
  */
 import type React from "react";
-import { useId, useLayoutEffect, useRef, useState, type Ref } from "react";
+import { useId, useState, type Ref } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import type {
@@ -28,6 +28,7 @@ import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "@/components/ShareButtons";
+import FittedNumber from "@/components/FittedNumber";
 import ResultBox, { type ResultHeading } from "@/components/ResultBox";
 import FudaActions from "./FudaActions";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
@@ -432,54 +433,6 @@ function catchphraseOf(detailedContent?: DetailedContent): string | null {
   return (detailedContent as { catchphrase: string }).catchphrase;
 }
 
-/** 数字の結果の段。§4 の主見出しの段から、ボックスに収まる段まで下げる（DESIGN.md §8 数字・短い語）。 */
-const SCORE_STEPS = ["main", "section", "sub", "body"] as const;
-
-type ScoreStep = (typeof SCORE_STEPS)[number];
-
-/**
- * 知識クイズの正解の数（「10問中8問正解」）。主見出しの段で1行に組み、ボックスの幅に収まらなければ、収まる段
- * まで下げる。いちばん下の段でも収まらなければ折り返す。幅と文字の大きさが変わったら（端末の回転・ブラウザの
- * 拡大）選び直す。
- */
-function Score({ text }: { text: string }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const [step, setStep] = useState<ScoreStep>("main");
-
-  useLayoutEffect(() => {
-    const element = ref.current;
-    const container = element?.parentElement;
-    if (!element || !container) return;
-    const fit = () => {
-      // 段を上から当てて、1行が幅に収まる最初の段を選ぶ。測るあいだだけ属性を直に替える。
-      const fitting =
-        SCORE_STEPS.find((candidate) => {
-          element.dataset.step = candidate;
-          return element.scrollWidth <= element.clientWidth;
-        }) ?? "body";
-      element.dataset.step = fitting;
-      setStep(fitting);
-    };
-    fit();
-    if (typeof ResizeObserver === "undefined") return;
-    // 置かれた幅が変わったときだけ選び直す。段を替えると高さが変わるので、高さの変化では選び直さない。
-    let width = container.clientWidth;
-    const observer = new ResizeObserver(() => {
-      if (container.clientWidth === width) return;
-      width = container.clientWidth;
-      fit();
-    });
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, [text]);
-
-  return (
-    <p ref={ref} className={styles.score} data-step={step}>
-      {text}
-    </p>
-  );
-}
-
 export default function ResultCard({
   result,
   heading,
@@ -530,7 +483,9 @@ export default function ResultCard({
           {quizType === "knowledge" &&
             score !== undefined &&
             totalQuestions !== undefined && (
-              <Score text={`${totalQuestions}問中${score}問正解`} />
+              <FittedNumber
+                segments={[`${totalQuestions}問中`, `${score}問正解`]}
+              />
             )}
           {catchphrase && <p>{catchphrase}</p>}
           <p className={styles.description}>{result.description}</p>

@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  Fragment,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, useId, useMemo, useState } from "react";
 import Field from "@/components/Field";
+import FittedNumber from "@/components/FittedNumber";
 import ResultBox from "@/components/ResultBox";
 import Textarea from "@/components/Textarea";
 import { analyzeText, type CharCountResult } from "./logic";
@@ -56,65 +50,29 @@ const ROWS: Record<CharCountTileVariant, readonly CountRow[]> = {
 
 const numberFormat = new Intl.NumberFormat("ja-JP");
 
-/** 数を桁区切りで書き、桁区切りの後ろにだけ折り所（<wbr>）を置く。数を折るのは桁区切りの位置だけ（§8）。 */
-function GroupedNumber({ value }: { value: number }) {
+/** 数を桁区切りで書き、桁区切りの後ろで分けた並びにする。数を折るのは桁区切りの位置だけ（§8）。 */
+function digitGroups(value: number): string[] {
   const groups = numberFormat.format(value).split(",");
-  return groups.map((group, index) => (
+  return groups.map((group, index) =>
+    index < groups.length - 1 ? `${group},` : group,
+  );
+}
+
+/** 表の値。桁区切りの後ろにだけ折り所（<wbr>）を置く。 */
+function GroupedNumber({ value }: { value: number }) {
+  return digitGroups(value).map((group, index) => (
     <Fragment key={index}>
       {index > 0 && <wbr />}
       {group}
-      {index < groups.length - 1 && ","}
     </Fragment>
   ));
 }
 
-/** 文字数の字の段。§4 の主見出しの段から、ボックスに収まる段まで下げる（§8 数字・短い語）。 */
-const COUNT_STEPS = ["main", "section", "sub", "body"] as const;
-
-type CountStep = (typeof COUNT_STEPS)[number];
-
-/**
- * 文字数（「1,234文字」）。主見出しの段で1行に組み、ボックスの幅に収まらなければ、収まる段まで下げる。
- * いちばん下の段でも収まらなければ、桁区切りの位置で折り返す。幅と文字の大きさが変わったら（端末の回転・
- * ブラウザの拡大）選び直す。
- */
-function MainCount({ value }: { value: number }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const [step, setStep] = useState<CountStep>("main");
-
-  useLayoutEffect(() => {
-    const element = ref.current;
-    const container = element?.parentElement;
-    if (!element || !container) return;
-    const fit = () => {
-      // 段を上から当てて、1行が幅に収まる最初の段を選ぶ。測るあいだだけ属性を直に替える。
-      const fitting =
-        COUNT_STEPS.find((candidate) => {
-          element.dataset.step = candidate;
-          return element.scrollWidth <= element.clientWidth;
-        }) ?? "body";
-      element.dataset.step = fitting;
-      setStep(fitting);
-    };
-    fit();
-    if (typeof ResizeObserver === "undefined") return;
-    // 置かれた幅が変わったときだけ選び直す。段を替えると高さが変わるので、高さの変化では選び直さない。
-    let width = container.clientWidth;
-    const observer = new ResizeObserver(() => {
-      if (container.clientWidth === width) return;
-      width = container.clientWidth;
-      fit();
-    });
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, [value]);
-
-  return (
-    <p ref={ref} className={styles.count} data-step={step}>
-      <GroupedNumber value={value} />
-      文字
-    </p>
-  );
+/** 主役の文字数（「1,234文字」）。単位は数の最後の桁の並びに付け、数から離さない。 */
+function mainCountSegments(value: number): string[] {
+  const groups = digitGroups(value);
+  groups[groups.length - 1] += "文字";
+  return groups;
 }
 
 /**
@@ -161,7 +119,7 @@ export default function CharCountTile({
 
       <ResultBox caption="数えた結果">
         <div className={styles.result}>
-          <MainCount value={result.chars} />
+          <FittedNumber segments={mainCountSegments(result.chars)} />
           <table className={styles.counts}>
             <tbody>
               {ROWS[variant].map(({ key, label }) => (

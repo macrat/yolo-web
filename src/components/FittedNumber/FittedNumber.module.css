@@ -1,0 +1,33 @@
+/* 結果の数・短い語（DESIGN.md §8）。置かれた幅いっぱいを取り、その幅に1行で収まる段を選ぶ。行間は本文と同じ。
+ * 折るのは並びのあいだの <wbr> だけで、並びの中（数と単位のあいだ）では折らない。 */
+.number {
+  align-self: stretch;
+  font-family: var(--font-heading);
+  line-height: var(--leading-body);
+  white-space: nowrap;
+  word-break: keep-all;
+  font-variant-numeric: tabular-nums;
+}
+
+.number[data-step="main"] {
+  font-size: var(--text-heading-main);
+}
+
+.number[data-step="section"] {
+  font-size: var(--text-heading-section);
+}
+
+.number[data-step="sub"] {
+  font-size: var(--text-heading-sub);
+}
+
+/* 1行で組む段では、折り所（<wbr>）を消す。Chromium は white-space: nowrap の中でも <wbr> で折る。 */
+.number:not([data-step="body"]) wbr {
+  display: none;
+}
+
+/* いちばん下の段でも収まらないときは、並びのあいだ（<wbr>）で折り返す。 */
+.number[data-step="body"] {
+  font-size: var(--text-body);
+  white-space: normal;
+}

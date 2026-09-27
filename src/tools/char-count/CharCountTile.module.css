@@ -13,40 +13,6 @@
   gap: var(--space-16);
 }
 
-/* 文字数。§4 の主見出しの段で1行に組み、ボックスに収まらなければ収まる段まで下げる（§8）。行間は本文と同じ。
- * 数と単位のあいだでは折らない。 */
-.count {
-  align-self: stretch;
-  font-family: var(--font-heading);
-  line-height: var(--leading-body);
-  white-space: nowrap;
-  word-break: keep-all;
-  font-variant-numeric: tabular-nums;
-}
-
-.count[data-step="main"] {
-  font-size: var(--text-heading-main);
-}
-
-.count[data-step="section"] {
-  font-size: var(--text-heading-section);
-}
-
-.count[data-step="sub"] {
-  font-size: var(--text-heading-sub);
-}
-
-/* 1行で組む段では、桁区切りの折り所（<wbr>）を消す。Chromium は white-space: nowrap の中でも <wbr> で折る。 */
-.count:not([data-step="body"]) wbr {
-  display: none;
-}
-
-/* いちばん下の段でも収まらないときは、桁区切りの位置（<wbr>）で折り返す。 */
-.count[data-step="body"] {
-  font-size: var(--text-body);
-  white-space: normal;
-}
-
 /* ほかの数の表（§5）。幅は中身で決め、ボックスの幅に広げない。広い画面でも値が名前のすぐ右に来る。 */
 .counts {
   max-width: 100%;
