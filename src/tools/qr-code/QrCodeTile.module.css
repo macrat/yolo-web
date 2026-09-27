@@ -1,76 +1,27 @@
-/* QrCodeTile スタイル
- *
- * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- */
-
-.field {
+/* 入力欄を2つと、結果の組を縦に積む。入力は囲まず、ラベルと欄の細い線で示す（§8）。 */
+.tile {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
+  gap: var(--space-24);
 }
 
-.field:last-child {
-  margin-bottom: 0;
-}
-
-.label {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-}
-
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.ecControl {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.controlLabel {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  /* ux-gate-findings 低指摘: 狭幅でラベルが折り返されないよう nowrap を設定する */
-  white-space: nowrap;
-}
-
+/* 結果のボックスはコンテンツ幅いっぱいに置き、保存のボタンをそのすぐ下に、縁の幅で置く（§5・§8）。 */
 .result {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background-color: var(--paper-2);
+  gap: var(--space-16);
 }
 
-/* QR コードは白背景で読み取り精度を確保する。
- * テーマ（明暗）に関わらず常に白でなければならない——QR は白地に暗いモジュール
- * かつ周囲の quiet-zone が白であることを前提に読み取られるため。ゆえにトークン化
- * せず CSS キーワード white を用いる（「常に白」という意図を正直に表す）。 */
-.qrImage {
-  background-color: white;
-  padding: 1rem;
-  border-radius: var(--radius);
+.download {
+  align-self: flex-start;
 }
 
-.qrImage svg {
+/* 画像は自分の大きさで置き、ボックスの幅を超えるときだけ縮める（§5）。周りの白い余白は画像の一部で、読み取りに
+ * 要るクワイエットゾーンなので、画像の外に枠や地を足さない。モジュールの縁をぼかさず描き、画面を拡大しても
+ * 白と黒の境が立ったまま読み取れるようにする。 */
+.image {
   display: block;
   max-width: 100%;
   height: auto;
-}
-
-.placeholder {
-  font-size: 0.9rem;
-  /* 文字色は2段（--ink / --ink-2）なので、キャプション相当は --ink-2 で組む。 */
-  color: var(--ink-2);
-  text-align: center;
-  margin: 0;
+  image-rendering: pixelated;
 }

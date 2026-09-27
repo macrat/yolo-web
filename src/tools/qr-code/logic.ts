@@ -2,81 +2,84 @@ import qrcode from "qrcode-generator";
 
 export type ErrorCorrectionLevel = "L" | "M" | "Q" | "H";
 
-export interface QrCodeResult {
-  success: boolean;
-  svgTag: string;
-  dataUrl: string;
-  error?: string;
-}
+/**
+ * 作れなかった理由。
+ * - "tooLong": 文が、選んだエラー訂正レベルの QR の最大の容量を超えた。
+ * - "failed": それ以外（画像を描けなかったなど）。
+ */
+export type QrCodeFailure = "tooLong" | "failed";
 
-// Quiet Zone: QR 仕様上の必須要件（最小 4 セル分の白マージン）
-// cellSize=8px, margin=4 セルで既存 createDataURL(8, 4) と同等のサイズ感を維持する
-const CELL_SIZE = 8;
-const MARGIN_CELLS = 4;
+export type QrCodeResult =
+  | {
+      success: true;
+      /** PNG の data URL。画面に見せる画像と、保存する画像は同じもの。 */
+      dataUrl: string;
+      /** 画面に見せる一辺の CSS px。PNG はこの2倍の画素で描いてある。 */
+      size: number;
+    }
+  | { success: false; error: QrCodeFailure };
 
 /**
- * canvas を使って PNG DataURL を生成する（案Y: 真の PNG 化）。
- * renderTo2dContext は margin パラメータを持たないため、
- * canvas サイズ拡大 + translate で Quiet Zone を自前実装する（cycle-207 T-2 計画書 L160-168）。
+ * 画面に見せる1モジュールの一辺の CSS px。短い URL の QR が 150px ほどになり、画面から読み取れる大きさで、
+ * 保存のボタンと一緒に1画面に収まる。
  */
-function createPngDataUrl(
-  qr: ReturnType<typeof qrcode>,
-  cellSize: number,
-  marginCells: number,
-): string {
-  const moduleCount = qr.getModuleCount();
-  const totalSize = (moduleCount + marginCells * 2) * cellSize;
+const CELL_SIZE = 4;
+/**
+ * PNG を画面の何倍の画素で描くか。高い解像度の画面でもモジュールの境がぼけず、保存した画像を印刷や資料に
+ * 使うときも1モジュールが8画素ある。整数倍なので、等倍の画面で半分に縮めても境が揃う。
+ */
+const PNG_SCALE = 2;
+/** 周りの白い余白（クワイエットゾーン）のモジュールの数。読み取りに要る規格の最小の 4。 */
+const MARGIN_CELLS = 4;
 
+// 文を UTF-8 のバイトにして符号にする。ライブラリの既定は字のコードの下位8ビットだけを取るので、
+// 日本語の文が別の字の並びになり、読み取ると化ける。
+const utf8 = new TextEncoder();
+qrcode.stringToBytes = (s) => Array.from(utf8.encode(s));
+
+/**
+ * QR を PNG に描く。renderTo2dContext は余白を持たないので、余白ぶん大きいキャンバスを白で塗り、
+ * モジュールを余白ぶんずらして描く。
+ */
+function renderPng(
+  qr: ReturnType<typeof qrcode>,
+  size: number,
+): string | undefined {
+  const cell = CELL_SIZE * PNG_SCALE;
+  const pixels = size * PNG_SCALE;
   const canvas = document.createElement("canvas");
-  canvas.width = totalSize;
-  canvas.height = totalSize;
+  canvas.width = pixels;
+  canvas.height = pixels;
 
   const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    throw new Error("Failed to get 2D rendering context");
-  }
+  if (!ctx) return undefined;
 
-  // 全面を白で塗りつぶして Quiet Zone を確保する
   ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, totalSize, totalSize);
-
-  // QR モジュール本体を margin 分オフセットして描画する
+  ctx.fillRect(0, 0, pixels, pixels);
   ctx.save();
-  ctx.translate(marginCells * cellSize, marginCells * cellSize);
-  qr.renderTo2dContext(ctx, cellSize);
+  ctx.translate(MARGIN_CELLS * cell, MARGIN_CELLS * cell);
+  qr.renderTo2dContext(ctx, cell);
   ctx.restore();
 
   return canvas.toDataURL("image/png");
 }
 
+/** 文を QR コードの PNG にする。空の文は呼び出し側が渡さない。 */
 export function generateQrCode(
   text: string,
   errorCorrection: ErrorCorrectionLevel = "M",
 ): QrCodeResult {
-  if (!text) {
-    return { success: false, svgTag: "", dataUrl: "", error: "Input is empty" };
-  }
-
+  const qr = qrcode(0, errorCorrection);
   try {
-    // typeNumber 0 = auto-detect
-    const qr = qrcode(0, errorCorrection);
+    // 型番号 0 で、文の長さに合う型を選ばせる。容量を超えると、ライブラリは文字列を投げる。
     qr.addData(text);
     qr.make();
-
-    const svgTag = qr.createSvgTag(4, 4);
-    // PNG DataURL: renderTo2dContext + toDataURL("image/png") で GIF ではなく真の PNG を生成する
-    const dataUrl = createPngDataUrl(qr, CELL_SIZE, MARGIN_CELLS);
-
-    return { success: true, svgTag, dataUrl };
-  } catch (e) {
-    return {
-      success: false,
-      svgTag: "",
-      dataUrl: "",
-      error:
-        e instanceof Error
-          ? e.message
-          : "QR code generation failed. Text may be too long.",
-    };
+  } catch {
+    return { success: false, error: "tooLong" };
   }
+
+  const size = (qr.getModuleCount() + MARGIN_CELLS * 2) * CELL_SIZE;
+  const dataUrl = renderPng(qr, size);
+  if (!dataUrl) return { success: false, error: "failed" };
+  return { success: true, dataUrl, size };
 }

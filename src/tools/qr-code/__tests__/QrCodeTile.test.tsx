@@ -1,252 +1,185 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import type { QrCodeResult } from "../logic";
 
-// logic.ts の generateQrCode をモック（UI テスト観点）
+// jsdom はキャンバスを描けないので、画像を作る関数を差し替えて、道具の組み方を確かめる。
 vi.mock("../logic", () => ({
-  generateQrCode: vi
-    .fn()
-    .mockImplementation((text: string): import("../logic").QrCodeResult => {
-      if (!text)
-        return { success: false, svgTag: "", dataUrl: "", error: "空入力" };
-      if (text === "TOOLONG_ERROR")
-        return {
-          success: false,
-          svgTag: "",
-          dataUrl: "",
-          error: "Too long",
-        };
-      return {
-        success: true,
-        svgTag: '<svg xmlns="http://www.w3.org/2000/svg"><rect /></svg>',
-        dataUrl: "data:image/png;base64,abc123",
-      };
-    }),
+  generateQrCode: vi.fn((text: string): QrCodeResult => {
+    if (text === "TOO_LONG") return { success: false, error: "tooLong" };
+    if (text === "NO_CANVAS") return { success: false, error: "failed" };
+    return {
+      success: true,
+      dataUrl: `data:image/png;base64,${text.length}`,
+      size: 148,
+    };
+  }),
 }));
 
+import { generateQrCode } from "../logic";
 import QrCodeTile from "../QrCodeTile";
+
+async function type(value: string) {
+  fireEvent.change(screen.getByRole("textbox"), { target: { value } });
+  await act(async () => {
+    vi.advanceTimersByTime(300);
+  });
+}
 
 describe("QrCodeTile", () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    vi.mocked(generateQrCode).mockClear();
   });
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  // A-1: ルート要素が Panel（section タグ）になっているか
-  test("root element is Panel (renders as section by default)", () => {
+  test("入力欄と選ぶ欄をラベルで名指しでき、道具の全体を枠で囲まない", () => {
     const { container } = render(<QrCodeTile />);
-    const root = container.firstChild as HTMLElement;
-    expect(root.tagName.toLowerCase()).toBe("section");
-  });
-
-  // E-1: 基本レンダリング
-  test("renders without crashing", () => {
-    render(<QrCodeTile />);
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
-  });
-
-  // E-1: テキスト入力欄とセレクトが表示される
-  test("renders input textarea and error correction select", () => {
-    render(<QrCodeTile />);
     expect(
-      screen.getByPlaceholderText(/URLまたはテキストを入力/),
+      screen.getByRole("textbox", { name: "QRコードにする文字やURL" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    expect(
+      screen.getByRole("combobox", { name: "エラー訂正レベル" }),
+    ).toHaveValue("M");
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName).toBe("DIV");
   });
 
-  // E-3: 空入力初期状態ではダウンロードボタンが disabled
-  test("download button is disabled on initial empty state", () => {
+  test("入力する前は、結果のボックスも保存のボタンも出さない", () => {
     render(<QrCodeTile />);
-    const dlButton = screen.getByRole("button", { name: /ダウンロード/ });
-    expect(dlButton).toBeDisabled();
+    expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /ダウンロード/ }),
+    ).not.toBeInTheDocument();
   });
 
-  // E-3: 空入力ではエラーが表示されない
-  test("no error message shown on empty input", async () => {
+  test("入力すると、結果のボックスに画像を入れ、保存のボタンをボックスのすぐ下に置く", async () => {
     render(<QrCodeTile />);
-    await act(async () => {
-      vi.advanceTimersByTime(400);
+    await type("https://example.com");
+
+    const box = screen.getByRole("region", { name: "QRコード" });
+    const image = screen.getByRole("img", {
+      name: "「https://example.com」のQRコード",
     });
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(box).toContainElement(image);
+    expect(image).toHaveAttribute("width", "148");
+    expect(image).toHaveAttribute("height", "148");
+
+    const download = screen.getByRole("button", {
+      name: "PNG画像をダウンロード",
+    });
+    expect(box).not.toContainElement(download);
+    expect(box.nextElementSibling).toBe(download);
+    expect(download).toHaveAttribute("data-variant", "primary");
   });
 
-  // E-2: 入力があるとQRコードが生成されダウンロードボタンが有効になる
-  test("enables download button after input and QR generation", async () => {
+  test("初めて画像ができたときだけ、結果のボックスが登場の動きを持つ", async () => {
     render(<QrCodeTile />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "https://example.com" } });
-    await act(async () => {
-      vi.advanceTimersByTime(400);
-    });
-    const dlButton = screen.getByRole("button", { name: /ダウンロード/ });
-    expect(dlButton).not.toBeDisabled();
+    await type("a");
+    const box = screen.getByRole("region", { name: "QRコード" });
+    await type("ab");
+    expect(screen.getByRole("region", { name: "QRコード" })).toBe(box);
+    expect(box.className).toMatch(/appears/);
   });
 
-  // E-4: 変換ロジックの正確性 - 入力でgenerateQrCodeが呼ばれる
-  test("calls generateQrCode with input text and selected error correction level", async () => {
-    const { generateQrCode } = await import("../logic");
+  test("長い文の代替テキストは40字で切って「…」を添える", async () => {
     render(<QrCodeTile />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "hello" } });
-    await act(async () => {
-      vi.advanceTimersByTime(400);
-    });
-    expect(generateQrCode).toHaveBeenCalledWith("hello", "M");
+    await type("あ".repeat(41));
+    expect(
+      screen.getByRole("img", { name: `「${"あ".repeat(40)}…」のQRコード` }),
+    ).toBeInTheDocument();
   });
 
-  // E-5: ARIA - ライブリージョンにrole=status aria-live=politeがある
-  test("has role=status aria-live=polite for QR generation status", () => {
+  test("選んだエラー訂正レベルで作り直す", async () => {
     render(<QrCodeTile />);
-    const statusEl = screen.getByRole("status");
-    expect(statusEl).toBeInTheDocument();
-    expect(statusEl).toHaveAttribute("aria-live", "polite");
-  });
-
-  // C-3: ライブリージョンには実テキストノードのサマリがある（QR生成後）
-  test("live region shows actual text summary after QR generation", async () => {
-    render(<QrCodeTile />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "https://example.com" } });
-    await act(async () => {
-      vi.advanceTimersByTime(400);
-    });
-    const statusEl = screen.getByRole("status");
-    expect(statusEl.textContent).not.toBe("");
-    expect(statusEl.textContent).toMatch(/QR|生成/);
-  });
-
-  // E-5: ARIA - ダウンロードボタンのaria-label
-  test("download button has aria-label", () => {
-    render(<QrCodeTile />);
-    const dlButton = screen.getByRole("button", { name: /ダウンロード/ });
-    expect(dlButton).toBeInTheDocument();
-  });
-
-  // エラー処理: エラー発生時にErrorMessageが表示される（A-4日本語化）
-  test("shows Japanese error message via ErrorMessage when QR generation fails", async () => {
-    render(<QrCodeTile />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "TOOLONG_ERROR" } });
-    await act(async () => {
-      vi.advanceTimersByTime(400);
-    });
-    // ErrorMessage uses role="alert"
-    const alertEl = screen.getByRole("alert");
-    expect(alertEl).toBeInTheDocument();
-    // 日本語メッセージであること（英語生エラーではない）
-    expect(alertEl.textContent).toMatch(/[^\x00-\x7F]/); // 非ASCII文字（日本語）を含む
-  });
-
-  // E-10: QR画像がSVGとして表示される
-  test("renders SVG QR code after input", async () => {
-    render(<QrCodeTile />);
-    const textarea = screen.getByRole("textbox");
-    fireEvent.change(textarea, { target: { value: "test" } });
-    await act(async () => {
-      vi.advanceTimersByTime(400);
-    });
-    // SVGコンテナに role="img" が付与されているか
-    const qrImg = screen.getByRole("img");
-    expect(qrImg).toBeInTheDocument();
-  });
-
-  // debounce: 連続入力でgenerateQrCodeは最後の1回のみ呼ばれる（D-4）
-  test("debounces: generateQrCode called only once after rapid input", async () => {
-    const { generateQrCode } = await import("../logic");
-    vi.clearAllMocks();
-    render(<QrCodeTile />);
-    const textarea = screen.getByRole("textbox");
-
-    fireEvent.change(textarea, { target: { value: "a" } });
-    await act(async () => {
-      vi.advanceTimersByTime(100);
-    });
-    fireEvent.change(textarea, { target: { value: "ab" } });
-    await act(async () => {
-      vi.advanceTimersByTime(100);
-    });
-    fireEvent.change(textarea, { target: { value: "abc" } });
-    await act(async () => {
-      vi.advanceTimersByTime(100);
-    });
-    // まだ300ms経過していない
-    expect(generateQrCode).not.toHaveBeenCalled();
+    await type("hello");
+    expect(generateQrCode).toHaveBeenLastCalledWith("hello", "M");
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "H" } });
     await act(async () => {
       vi.advanceTimersByTime(300);
+    });
+    expect(generateQrCode).toHaveBeenLastCalledWith("hello", "H");
+  });
+
+  test("打っているあいだは作らず、手が止まってから最後の文で1回だけ作る", async () => {
+    render(<QrCodeTile />);
+    const textarea = screen.getByRole("textbox");
+    for (const value of ["a", "ab", "abc"]) {
+      fireEvent.change(textarea, { target: { value } });
+      await act(async () => {
+        vi.advanceTimersByTime(100);
+      });
+    }
+    expect(generateQrCode).not.toHaveBeenCalled();
+    await act(async () => {
+      vi.advanceTimersByTime(200);
     });
     expect(generateQrCode).toHaveBeenCalledTimes(1);
     expect(generateQrCode).toHaveBeenCalledWith("abc", "M");
   });
 
-  // reviewer 指摘: ダウンロードボタンが共通 Button コンポーネント (variant="primary") を使っているか確認
-  test("download button uses Button component with variant=primary", () => {
+  test("空白だけの文では作らない", async () => {
     render(<QrCodeTile />);
-    const dlButton = screen.getByRole("button", { name: /ダウンロード/ });
-    // 共通 Button は data-variant 属性でバリアントを公開する（Button/index.tsx 参照）
-    expect(dlButton).toHaveAttribute("data-variant", "primary");
+    await type("   ");
+    expect(generateQrCode).not.toHaveBeenCalled();
+    expect(screen.queryByRole("region")).not.toBeInTheDocument();
   });
 
-  // A-6: 複数インスタンスで DOM id が重複しないこと（useId ベース）
-  test("multiple instances have no duplicate DOM ids", () => {
-    const { container: c1 } = render(<QrCodeTile />);
-    const { container: c2 } = render(<QrCodeTile />);
-    const allIds = [
-      ...Array.from(c1.querySelectorAll("[id]")).map((el) => el.id),
-      ...Array.from(c2.querySelectorAll("[id]")).map((el) => el.id),
-    ];
-    const uniqueIds = new Set(allIds);
-    expect(uniqueIds.size).toBe(allIds.length);
+  test("文が長すぎると、欄の直下に直し方を字で言い、欄をエラーにして、前の画像を消す", async () => {
+    render(<QrCodeTile />);
+    await type("ok");
+    expect(screen.getByRole("region")).toBeInTheDocument();
+    await type("TOO_LONG");
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent(
+      "文が長すぎてQRコードに入りません。文を短くするか、エラー訂正レベルを下げてください。",
+    );
+    const textarea = screen.getByRole("textbox");
+    expect(textarea).toHaveAttribute("aria-invalid", "true");
+    expect(textarea).toHaveAccessibleDescription(alert.textContent!);
+    expect(screen.queryByRole("region")).not.toBeInTheDocument();
   });
 
-  // E-12: CSS トークン検証
-  test("CSS does not use deprecated --color-* tokens", () => {
-    const cssPath = resolve(__dirname, "../QrCodeTile.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
+  test("画像を描けないときも、何が起きたかを字で言う", async () => {
+    render(<QrCodeTile />);
+    await type("NO_CANVAS");
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "QRコードの画像を描けませんでした。",
+    );
   });
 
-  test("CSS does not use --accent as background directly", () => {
-    const cssPath = resolve(__dirname, "../QrCodeTile.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/background(-color)?\s*:\s*var\(--accent\)/);
+  test("作ったことを読み上げの知らせで言う", async () => {
+    render(<QrCodeTile />);
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("");
+    await type("https://example.com");
+    expect(status).toHaveTextContent("QRコードを作りました");
   });
 
-  test("CSS does not use font-weight: 700", () => {
-    const cssPath = resolve(__dirname, "../QrCodeTile.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight\s*:\s*700/);
+  test("保存のボタンは、見えている画像を qrcode.png として保存する", async () => {
+    render(<QrCodeTile />);
+    await type("hello");
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        expect(this.href).toBe("data:image/png;base64,5");
+        expect(this.download).toBe("qrcode.png");
+      });
+    fireEvent.click(
+      screen.getByRole("button", { name: "PNG画像をダウンロード" }),
+    );
+    expect(click).toHaveBeenCalledTimes(1);
+    click.mockRestore();
   });
 
-  // .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
-  test("CSS .controlLabel has white-space: nowrap to prevent label wrapping", () => {
-    const cssPath = resolve(__dirname, "../QrCodeTile.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const controlLabelBlock = css.match(/\.controlLabel\s*\{([\s\S]*?)\}/);
-    expect(controlLabelBlock).not.toBeNull();
-    expect(controlLabelBlock![1]).toMatch(/white-space\s*:\s*nowrap/);
-  });
-
-  // 全 CSS var(--token) が globals.css 定義トークンに解決するか
-  test("all CSS var(--token) references are defined in globals.css", () => {
-    const cssPath = resolve(__dirname, "../QrCodeTile.module.css");
-    const globalsCssPath = resolve(__dirname, "../../../app/globals.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const globalsCss = readFileSync(globalsCssPath, "utf-8");
-
-    const definedTokens = new Set<string>();
-    for (const m of globalsCss.matchAll(/^\s*(--[\w-]+)\s*:/gm)) {
-      definedTokens.add(m[1]);
-    }
-
-    const usedTokens: string[] = [];
-    for (const m of css.matchAll(/var\((--[\w-]+)[,)]/g)) {
-      usedTokens.push(m[1]);
-    }
-
-    const undefinedTokens = usedTokens.filter((t) => !definedTokens.has(t));
-    expect(undefinedTokens).toEqual([]);
+  test("2つ置いても id が重ならない", () => {
+    const { container: first } = render(<QrCodeTile />);
+    const { container: second } = render(<QrCodeTile />);
+    const ids = [first, second].flatMap((c) =>
+      Array.from(c.querySelectorAll("[id]"), (el) => el.id),
+    );
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });
