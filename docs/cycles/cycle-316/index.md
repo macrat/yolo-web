@@ -301,9 +301,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 - [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
-<!-- pause-cycle: Owner の指示（Claude の週間の利用上限が近い）で作業を止めた。再開は Owner の指示を待つ。 -->
-
-- 一時停止（Owner の指示）: 途中だった作業の差分は [wip-paused.patch](./wip-paused.patch) に残した（`git apply` で作業ツリーに戻し、戻したらこのファイルを消す）。止めたときに動いていた作業と、再開したらすること:
+- 一時停止（Owner の指示）: 途中だった作業の差分をパッチに残し、再開（2026-09-28）で作業ツリーに戻した。止めたときに動いていた作業と、再開したらすること:
   - builder（差分は patch にあり、どれも確かめの途中）: イロドリのスライダー（T4-14 Major-2。`src/components/Slider/`・`globals.css`・HslSliders・2つの道具の CSS）、コピーのボタンの4巡目（T4-4c。CopyButton・DESIGN.md §8 の呼び名と頭の行の文・storybook・道具の CSS）、見出しの折り方の続き（`phrase-breaks.ts`・`markdown.ts`・ResultCard の共有の見出し）、JSON 整形の3巡目（T4-15c。ResultBox のキーボードの送り・誤りの位置を求める関数・`globals.css` の1続きのコード・Textarea のタブ）、ナカマワケの途中の日の開き直し（savedLayout の拡張）。DESIGN.md と SKILL.md には、planner が書いた §8 の結果への送り・§5 のコード・§4 の符号の文字列の文も入っている（未コミット・未レビュー）。
   - reviewer（止めたので記録は無い）: 漢字カナール3巡目・四字キメル3巡目・Base64 2巡目・図3巡目。再開したら新しい reviewer でやり直す。
   - 残るタスク: 上の builder の続きとそれぞれのレビュー、T4-15a（文字数カウント）のレビュー、イロドリの開き直し（T4-14 Major-1）とレビュー、ゲームの共有の部品の片付け、T4-9・T4-19・T4-20・T4-21、T5〜T12、`/cycle-completion`。
