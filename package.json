@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "check:phrased-names": "CHECK_PHRASED_NAMES=1 vitest run src/test/check-phrased-names.test.ts",
     "format": "prettier --write .",
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
