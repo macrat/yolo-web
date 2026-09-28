@@ -7,6 +7,7 @@ import {
   difficultyLabel,
   dailyOrder,
   sayingPhrases,
+  fitPhrase,
 } from "../engine";
 import type { NakamawakePuzzle, NakamawakeGroup } from "../types";
 
@@ -298,5 +299,25 @@ describe("sayingPhrases", () => {
     ]) {
       expect(sayingPhrases(phrases)).toBeNull();
     }
+  });
+});
+
+describe("fitPhrase", () => {
+  test("keeps a phrase that fits one line of a word cell", () => {
+    expect(fitPhrase("口ほどに")).toEqual(["口ほどに"]);
+  });
+
+  test("splits a long phrase where kana turns into kanji", () => {
+    expect(fitPhrase("棒に当たる")).toEqual(["棒に", "当たる"]);
+  });
+
+  test("leaves a long phrase whole when it has no such point", () => {
+    expect(fitPhrase("船頭多くして")).toEqual(["船頭多くして"]);
+  });
+});
+
+describe("sayingPhrases with a phrase that cannot fit", () => {
+  test("does not split the word into phrases", () => {
+    expect(sayingPhrases(["船頭多くして", "船山に上る"])).toBeNull();
   });
 });

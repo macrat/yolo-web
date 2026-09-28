@@ -1,18 +1,29 @@
 import { describe, test, expect } from "vitest";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
-import { sayingPhrases } from "../engine";
+import { PHRASE_MAX_LENGTH, sayingPhrases } from "../engine";
 import puzzleData from "../../data/nakamawake-data.json";
 import type { NakamawakePuzzle } from "../types";
 
+const phrasedWords = (puzzleData as NakamawakePuzzle[])
+  .flatMap((puzzle) => puzzle.groups.flatMap((group) => group.words))
+  .flatMap((word) => {
+    const phrases = sayingPhrases(splitIntoPhrases(word));
+    return phrases ? [phrases] : [];
+  });
+
 describe("句の切れ目で折る語（問題のデータ）", () => {
+  test("どの句も、語のマスの1行に入る字の数までにする", () => {
+    for (const phrases of phrasedWords) {
+      for (const phrase of phrases) {
+        expect([...phrase].length, phrases.join("|")).toBeLessThanOrEqual(
+          PHRASE_MAX_LENGTH,
+        );
+      }
+    }
+  });
+
   test("ことわざと句を並べた語だけが句に分かれる", () => {
-    const phrased = (puzzleData as NakamawakePuzzle[])
-      .flatMap((puzzle) => puzzle.groups.flatMap((group) => group.words))
-      .flatMap((word) => {
-        const phrases = sayingPhrases(splitIntoPhrases(word));
-        return phrases ? [phrases.join("|")] : [];
-      })
-      .sort();
+    const phrased = phrasedWords.map((phrases) => phrases.join("|")).sort();
     expect(phrased).toEqual([
       "味噌を|つける",
       "手に|汗握る",

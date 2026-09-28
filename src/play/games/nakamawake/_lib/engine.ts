@@ -86,14 +86,15 @@ export function dailyOrder<T>(arr: T[], seed: string): T[] {
 const PHRASE_ENDINGS = /[がもはにをのばてりら]$/;
 
 /** 語のマスの1行にいつも入る字の数（WordGrid の列の数の決まり）。句はこの字の数までにする。 */
-const PHRASE_MAX_LENGTH = 4;
+export const PHRASE_MAX_LENGTH = 4;
 
 /**
  * 語を文節に分けた並び（splitIntoPhrases）が、ことわざのように句を並べた語のものなら、その並びを返す。句を
  * 並べた語は、漢字を含み、最後のほかのどの句も2字以上で助詞などで終わる。そうでない語（「は｜まぐり」
  * 「たい｜焼き」のように1つの語を分けたもの）は null。
  * 語のマスは句の切れ目でだけ折るので、マスの1行に入らない長い句（「棒に当たる」）は、語の切れ目で2字以上の
- * 句に分け直す（「棒に｜当たる」）。
+ * 句に分け直す（「棒に｜当たる」）。分け直しても PHRASE_MAX_LENGTH 字を超える句が残る語は、句で折れず
+ * マスからはみ出すので、句に分けず（null）、ほかの語と同じ折り方にする。
  */
 export function sayingPhrases(phrases: string[]): string[] | null {
   if (phrases.length < 2 || !/\p{Script=Han}/u.test(phrases.join(""))) {
@@ -101,17 +102,19 @@ export function sayingPhrases(phrases: string[]): string[] | null {
   }
   const isPhrase = (phrase: string) =>
     phrase.length >= 2 && PHRASE_ENDINGS.test(phrase);
-  return phrases.slice(0, -1).every(isPhrase)
-    ? phrases.flatMap(fitPhrase)
+  if (!phrases.slice(0, -1).every(isPhrase)) return null;
+  const fitted = phrases.flatMap(fitPhrase);
+  return fitted.every((phrase) => [...phrase].length <= PHRASE_MAX_LENGTH)
+    ? fitted
     : null;
 }
 
 /**
  * 句が1行に入らないとき、仮名から漢字に移る所（「棒に｜当たる」）のうち、どちらの側も2字以上になり真ん中に
- * いちばん近い所で2つに分ける。
+ * いちばん近い所で2つに分ける。分けられる所が無い句は、そのまま返す（長いまま残る）。
  */
-function fitPhrase(phrase: string): string[] {
-  if (phrase.length <= PHRASE_MAX_LENGTH) return [phrase];
+export function fitPhrase(phrase: string): string[] {
+  if ([...phrase].length <= PHRASE_MAX_LENGTH) return [phrase];
   const chars = [...phrase];
   const cuts = chars
     .map((_, index) => index)
