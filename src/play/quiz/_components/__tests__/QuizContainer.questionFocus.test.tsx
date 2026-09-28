@@ -35,9 +35,7 @@ vi.mock("../ResultCard", () => ({
 }));
 vi.mock("../ResultExtraLoader", () => ({
   default: () => null,
-}));
-vi.mock("../ResultNextContent", () => ({
-  default: () => null,
+  hasResultExtra: () => false,
 }));
 vi.mock("next/link", () => ({
   default: ({
@@ -86,7 +84,12 @@ function makeTwoQuestionPersonalityQuiz(): QuizDefinition {
 /** intro→playing へ遷移する（"はじめる" を押す）。 */
 async function startQuiz(quiz: QuizDefinition) {
   render(
-    <QuizContainer quiz={quiz} resultHeadings={{}} readingHeadings={{}} />,
+    <QuizContainer
+      head={<h1>見出し</h1>}
+      quiz={quiz}
+      resultHeadings={{}}
+      readingHeadings={{}}
+    />,
   );
   const startBtn = screen.getByRole("button", { name: "はじめる" });
   await act(async () => {

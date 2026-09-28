@@ -461,7 +461,10 @@ describe("ResultCard - 結果のボックス", () => {
         allResults={[]}
       />,
     );
-    const heading = screen.getByRole("heading", { level: 2 });
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "締切3分前に本気出す炎の司令塔",
+    });
     expect(heading.querySelectorAll("wbr")).toHaveLength(2);
     expect(heading).toHaveAccessibleName("締切3分前に本気出す炎の司令塔");
   });
@@ -894,21 +897,86 @@ describe("ResultCard - character-fortune variant", () => {
   });
 });
 
-describe("ResultCard - DOM順序", () => {
-  test("結果のボックス・結果の共有・詳しい読みもの・もう一度挑戦するの順に並ぶこと", () => {
-    const domOrderContent: QuizResultDetailedContent = {
-      traits: ["特徴1"],
-      behaviors: ["あるある1"],
-      advice: "アドバイス",
-    };
+describe("ResultCard - セクションの並び", () => {
+  const content: QuizResultDetailedContent = {
+    traits: ["特徴1"],
+    behaviors: ["あるある1"],
+    advice: "アドバイス",
+  };
+  const allTypes: QuizResult[] = [
+    { id: "test-result", title: "テスト結果", description: "説明" },
+    { id: "type-b", title: "タイプB", description: "タイプBの説明" },
+  ];
 
-    render(<ResultCard {...defaultProps} detailedContent={domOrderContent} />);
+  /** ページの直下のセクション（全幅の罫線で分かれる単位）を上から並べる。 */
+  function pageSections(container: HTMLElement): HTMLElement[] {
+    return Array.from(container.querySelectorAll(":scope > section"));
+  }
 
+  test("ページの頭と結果と共有・このタイプについて・次はこれを試してみよう・すべてのタイプを、この順の兄弟のセクションにする", () => {
+    const { container } = render(
+      <ResultCard
+        {...defaultProps}
+        head={<h1>診断の名前</h1>}
+        detailedContent={content}
+        allResults={allTypes}
+        nextItems={[{ name: "次の遊び", href: "/play/next" }]}
+      />,
+    );
+    const sections = pageSections(container);
+    expect(sections).toHaveLength(4);
+    const [first, about, next, all] = sections;
+
+    const firstOrder = [
+      within(first).getByRole("heading", { level: 1, name: "診断の名前" }),
+      within(first).getByRole("region", { name: "テスト結果" }),
+      within(first).getByRole("heading", { name: "この結果を共有" }),
+      within(first).getByTestId("share-buttons"),
+    ];
+    for (let i = 1; i < firstOrder.length; i++) {
+      expect(
+        firstOrder[i - 1].compareDocumentPosition(firstOrder[i]) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    }
+    expect(
+      within(about).getByRole("heading", {
+        level: 2,
+        name: "このタイプについて",
+      }),
+    ).toBeInTheDocument();
+    expect(within(about).getByText("あるある1")).toBeInTheDocument();
+    expect(
+      within(next).getByRole("heading", {
+        level: 2,
+        name: "次はこれを試してみよう",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(next).getByRole("button", { name: "もう一度挑戦する" }),
+    ).toBeInTheDocument();
+    expect(
+      within(next).getByRole("link", { name: "次の遊び" }),
+    ).toBeInTheDocument();
+    expect(
+      within(all).getByRole("heading", {
+        level: 2,
+        name: "すべてのタイプ（2）",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  test("「もう一度挑戦する」は「次はこれを試してみよう」の見出しのすぐ下、次の遊びの一覧の上に置く", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        nextItems={[{ name: "次の遊び", href: "/play/next" }]}
+      />,
+    );
     const order = [
-      screen.getByRole("region", { name: "テスト結果" }),
-      screen.getByTestId("share-buttons"),
-      screen.getByText("あるある1"),
+      screen.getByRole("heading", { name: "次はこれを試してみよう" }),
       screen.getByRole("button", { name: "もう一度挑戦する" }),
+      screen.getByRole("list", { name: "次はこれを試してみよう" }),
     ];
     for (let i = 1; i < order.length; i++) {
       expect(
@@ -916,6 +984,104 @@ describe("ResultCard - DOM順序", () => {
           Node.DOCUMENT_POSITION_FOLLOWING,
       ).toBeTruthy();
     }
+  });
+
+  test("詳しい読みものを持たないクイズは、結果と共有・次はこれを試してみようの2つのセクションで、結果ごとのおすすめは「もう一度挑戦する」の下に置く", () => {
+    const { container } = render(
+      <ResultCard
+        {...defaultProps}
+        result={{
+          ...defaultProps.result,
+          recommendation: "漢字辞典で漢字の世界を探検しよう",
+          recommendationLink: "/dictionary/kanji",
+        }}
+      />,
+    );
+    const sections = pageSections(container);
+    expect(sections).toHaveLength(2);
+    const retry = within(sections[1]).getByRole("button", {
+      name: "もう一度挑戦する",
+    });
+    const recommendation = within(sections[1]).getByRole("link", {
+      name: "漢字辞典で漢字の世界を探検しよう",
+    });
+    expect(
+      retry.compareDocumentPosition(recommendation) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("heading", { name: "このタイプについて" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("その結果の辞典の項目へのリンクは、「このタイプについて」の読みもののすぐ後ろに置き、「次はこれを試してみよう」には置かない", () => {
+    const { container } = render(
+      <ResultCard
+        {...defaultProps}
+        result={{
+          ...defaultProps.result,
+          recommendation: "藍色の詳しい解説を見る",
+          recommendationLink: "/dictionary/colors/ai",
+        }}
+        detailedContent={content}
+        allResults={allTypes}
+        extra={<p>相性と招待</p>}
+      />,
+    );
+    const [, about, next] = pageSections(container);
+    const link = within(about).getByRole("link", {
+      name: "藍色の詳しい解説を見る",
+    });
+    expect(link).toHaveAttribute("href", "/dictionary/colors/ai");
+    const order = [
+      within(about).getByText("アドバイス"),
+      link,
+      within(about).getByText("相性と招待"),
+    ];
+    for (let i = 1; i < order.length; i++) {
+      expect(
+        order[i - 1].compareDocumentPosition(order[i]) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    }
+    expect(within(next).queryByRole("link", { name: /藍色/ })).toBeNull();
+  });
+
+  test("追加の読みものは「このタイプについて」の最後、詳しい読みもののあとに置く", () => {
+    const { container } = render(
+      <ResultCard
+        {...defaultProps}
+        detailedContent={content}
+        allResults={allTypes}
+        extra={<p>追加の読みもの</p>}
+      />,
+    );
+    const about = pageSections(container)[1];
+    const extra = within(about).getByText("追加の読みもの");
+    expect(about.lastElementChild?.lastElementChild).toBe(extra);
+    expect(
+      within(about).getByText("アドバイス").compareDocumentPosition(extra) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  test("詳しい読みものを持たない診断でも、追加の読みものがあれば「このタイプについて」のセクションに置き、すべてのタイプは置かない", () => {
+    const { container } = render(
+      <ResultCard
+        {...defaultProps}
+        allResults={allTypes}
+        extra={<p>相性と招待</p>}
+      />,
+    );
+    const sections = pageSections(container);
+    expect(sections).toHaveLength(3);
+    expect(
+      within(sections[1]).getByRole("heading", { name: "このタイプについて" }),
+    ).toBeInTheDocument();
+    expect(within(sections[1]).getByText("相性と招待")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: /すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 
   test("読みものの小見出しは、受け取った文節の区切りのあいだに <wbr> を置いた h3 で組む", () => {

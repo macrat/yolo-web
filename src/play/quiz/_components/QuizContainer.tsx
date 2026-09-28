@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import { trackContentStart, trackContentEnd } from "@/lib/analytics";
 import Link from "next/link";
 import type {
@@ -19,21 +25,24 @@ import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-
 import { getEstimatedTime } from "./introBadges";
 import Button from "@/components/Button";
 import ProgressBar from "@/components/ProgressBar";
+import Section from "@/components/Section";
 import type { ItemListItem } from "@/components/ItemList";
 import type { ResultHeading } from "@/components/ResultBox";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
-import ResultNextContent from "./ResultNextContent";
-import ResultExtraLoader from "./ResultExtraLoader";
+import ResultExtraLoader, { hasResultExtra } from "./ResultExtraLoader";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./QuizContainer.module.css";
 
 type QuizContainerProps = {
+  /** ページの頭（パンくずと h1）。どの段階でも最初のセクションの頭に置く。 */
+  head: ReactNode;
   quiz: QuizDefinition;
   /** Optional referrer type ID from URL search params (for compatibility) */
   referrerTypeId?: string;
   /**
-   * 結果の下に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、サーバーで行にしてから受け取る。
+   * 解き終えた画面の「次はこれを試してみよう」に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、
+   * サーバーで行にしてから受け取る。
    */
   recommendedContents?: ItemListItem[];
   /** 結果の見出し（タイプ名）の文節の区切りと書体の属性。結果の id ごとに、サーバーで作ってから受け取る。 */
@@ -43,10 +52,13 @@ type QuizContainerProps = {
 };
 
 /**
- * Client-side quiz container that manages the entire quiz lifecycle:
- * intro -> playing -> result.
+ * クイズ・診断の本体。開始 → 設問 → 結果の段階を持ち、段階ごとにページのセクションを描く（DESIGN.md §5）。
+ * 開始の画面と設問では、ページの頭と本体を1つのセクションに置く。解き終えた画面では、ページの頭と結果に続けて
+ * 「このタイプについて」「次はこれを試してみよう」「すべてのタイプ」を兄弟のセクションとして並べる（ResultCard）。
+ * よくある質問から後ろのセクションは、ページ（QuizPlayPageLayout）が続けて置く。
  */
 export default function QuizContainer({
+  head,
   quiz,
   referrerTypeId,
   recommendedContents,
@@ -69,6 +81,9 @@ export default function QuizContainer({
     box.scrollIntoView?.({ behavior: "instant", block: "start" });
     box.focus({ preventScroll: true });
   }, [phase]);
+
+  // パンくずと h1 を、その下の中身と同じ間隔で積む（§5 の間隔）。
+  const pageHead = <div className={styles.head}>{head}</div>;
 
   const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
   const contentId = contentIdForQuiz(quiz.meta.slug);
@@ -137,56 +152,62 @@ export default function QuizContainer({
         : "",
     ].filter((fact) => fact !== "");
     return (
-      <div className={styles.intro}>
-        <p className={styles.introFacts}>
-          {introFacts.map((fact) => (
-            <span key={fact}>{fact}</span>
-          ))}
-        </p>
-        <p>
-          {quiz.meta.type === "knowledge"
-            ? "準備ができたら始めましょう。"
-            : "気軽に答えていくと、結果が出ます。"}
-        </p>
-        <Button variant="primary" onClick={handleStart}>
-          はじめる
-        </Button>
-        <p>{quiz.meta.description}</p>
-        {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
-          <div className={styles.relatedLinks}>
-            {quiz.meta.relatedLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={styles.relatedLink}
-                data-text-box="inline"
-              >
-                {link.label}
-              </Link>
+      <Section>
+        {pageHead}
+        <div className={styles.intro}>
+          <p className={styles.introFacts}>
+            {introFacts.map((fact) => (
+              <span key={fact}>{fact}</span>
             ))}
-          </div>
-        )}
-      </div>
+          </p>
+          <p>
+            {quiz.meta.type === "knowledge"
+              ? "準備ができたら始めましょう。"
+              : "気軽に答えていくと、結果が出ます。"}
+          </p>
+          <Button variant="primary" onClick={handleStart}>
+            はじめる
+          </Button>
+          <p>{quiz.meta.description}</p>
+          {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
+            <div className={styles.relatedLinks}>
+              {quiz.meta.relatedLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={styles.relatedLink}
+                  data-text-box="inline"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </Section>
     );
   }
 
   if (phase === "playing") {
     const question = quiz.questions[currentIndex];
     return (
-      <div className={styles.stage}>
-        <ProgressBar
-          current={currentIndex + 1}
-          total={quiz.questions.length}
-          label="設問の進捗"
-        />
-        <QuestionCard
-          key={question.id}
-          question={question}
-          quizType={quiz.meta.type}
-          onAnswer={handleAnswer}
-          onNext={handleNext}
-        />
-      </div>
+      <Section>
+        {pageHead}
+        <div className={styles.stage}>
+          <ProgressBar
+            current={currentIndex + 1}
+            total={quiz.questions.length}
+            label="設問の進捗"
+          />
+          <QuestionCard
+            key={question.id}
+            question={question}
+            quizType={quiz.meta.type}
+            onAnswer={handleAnswer}
+            onNext={handleNext}
+          />
+        </div>
+      </Section>
     );
   }
 
@@ -221,37 +242,38 @@ export default function QuizContainer({
       : [];
 
   return (
-    <div className={styles.resultPhase}>
-      <ResultCard
-        result={result}
-        heading={resultHeadings[result.id]}
-        readingHeadings={readingHeadings}
-        quizType={quiz.meta.type}
-        quizTitle={quiz.meta.title}
-        quizName={quiz.meta.shortTitle ?? quiz.meta.title}
-        quizSlug={quiz.meta.slug}
-        score={score}
-        totalQuestions={
-          quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
-        }
-        onRetry={handleRetry}
-        detailedContent={result.detailedContent}
-        resultPageLabels={quiz.meta.resultPageLabels}
-        referrerTypeId={referrerTypeId}
-        allResults={quiz.results}
-        coTypes={coTypes}
-        resultBoxRef={resultBoxRef}
-        appear
-      />
-      {recommendedContents && recommendedContents.length > 0 && (
-        <ResultNextContent items={recommendedContents} />
-      )}
-      <ResultExtraLoader
-        slug={quiz.meta.slug}
-        resultId={result.id}
-        referrerTypeId={referrerTypeId}
-        answers={answers}
-      />
-    </div>
+    <ResultCard
+      head={pageHead}
+      result={result}
+      heading={resultHeadings[result.id]}
+      readingHeadings={readingHeadings}
+      quizType={quiz.meta.type}
+      quizTitle={quiz.meta.title}
+      quizName={quiz.meta.shortTitle ?? quiz.meta.title}
+      quizSlug={quiz.meta.slug}
+      score={score}
+      totalQuestions={
+        quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
+      }
+      onRetry={handleRetry}
+      detailedContent={result.detailedContent}
+      resultPageLabels={quiz.meta.resultPageLabels}
+      referrerTypeId={referrerTypeId}
+      extra={
+        hasResultExtra(quiz.meta.slug) ? (
+          <ResultExtraLoader
+            slug={quiz.meta.slug}
+            resultId={result.id}
+            referrerTypeId={referrerTypeId}
+            answers={answers}
+          />
+        ) : undefined
+      }
+      nextItems={recommendedContents}
+      allResults={quiz.results}
+      coTypes={coTypes}
+      resultBoxRef={resultBoxRef}
+      appear
+    />
   );
 }

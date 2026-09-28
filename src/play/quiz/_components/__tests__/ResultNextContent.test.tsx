@@ -28,13 +28,37 @@ const mockItems: ItemListItem[] = [
   },
 ];
 
-describe("ResultNextContent", () => {
-  test("見出しが一覧の名前になり、行を渡された順に並べること", () => {
-    render(<ResultNextContent items={mockItems} />);
+function renderNext(items: ItemListItem[] = mockItems) {
+  return render(
+    <ResultNextContent items={items}>
+      <button type="button">もう一度挑戦する</button>
+    </ResultNextContent>,
+  );
+}
 
-    expect(
-      screen.getByRole("heading", { level: 3, name: "次はこれを試してみよう" }),
-    ).toBeInTheDocument();
+describe("ResultNextContent", () => {
+  test("1つのセクションで、見出し「次はこれを試してみよう」（セクションの見出しの段の h2）のすぐ下に操作を置き、その下に次の遊びの一覧を置く", () => {
+    const { container } = renderNext();
+
+    const sections = container.querySelectorAll(":scope > section");
+    expect(sections).toHaveLength(1);
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "次はこれを試してみよう",
+    });
+    const retry = screen.getByRole("button", { name: "もう一度挑戦する" });
+    const list = screen.getByRole("list", { name: "次はこれを試してみよう" });
+    const all = Array.from(container.querySelectorAll("*"));
+    const positions = [heading, retry, list].map((element) =>
+      all.indexOf(element),
+    );
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    expect(sections[0]).toHaveAccessibleName("次はこれを試してみよう");
+  });
+
+  test("行を渡された順に並べ、リンクの読み上げの名前が行の名前だけであること", () => {
+    renderNext();
+
     const list = screen.getByRole("list", { name: "次はこれを試してみよう" });
     const links = within(list).getAllByRole("link");
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
@@ -42,17 +66,15 @@ describe("ResultNextContent", () => {
       "/play/kanji-level",
       "/play/kanji-kanaru",
     ]);
-  });
-
-  test("リンクの読み上げの名前が行の名前だけであること", () => {
-    render(<ResultNextContent items={mockItems} />);
-
-    const names = screen.getAllByRole("link").map((link) => link.textContent);
-    expect(names).toEqual(["動物診断", "漢字レベル診断", "漢字カナール"]);
+    expect(links.map((link) => link.textContent)).toEqual([
+      "動物診断",
+      "漢字レベル診断",
+      "漢字カナール",
+    ]);
   });
 
   test("説明・種別・補助情報を行に出すこと", () => {
-    render(<ResultNextContent items={mockItems} />);
+    renderNext();
 
     expect(screen.getByText("固有種12タイプで自分を知る")).toBeInTheDocument();
     expect(screen.getByText("診断")).toBeInTheDocument();
@@ -60,13 +82,19 @@ describe("ResultNextContent", () => {
     expect(screen.getByText("毎日更新")).toBeInTheDocument();
   });
 
-  test("空配列の場合は何も描かないこと", () => {
-    const { container } = render(<ResultNextContent items={[]} />);
-    expect(container.firstChild).toBeNull();
+  test("並べる行が無いときも、見出しと操作は置き、空の一覧を置かないこと", () => {
+    renderNext([]);
+    expect(
+      screen.getByRole("heading", { name: "次はこれを試してみよう" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "もう一度挑戦する" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
 
   test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
-    render(<ResultNextContent items={mockItems} />);
+    renderNext();
     const headings: string[][] = [["次は", "これを", "試して", "みよう"]];
     for (const phrases of headings) {
       expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);

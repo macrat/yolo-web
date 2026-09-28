@@ -9,6 +9,7 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import QuizContainer from "../QuizContainer";
+import type { ItemListItem } from "@/components/ItemList";
 import type {
   QuizDefinition,
   QuizMeta,
@@ -44,31 +45,43 @@ vi.mock("@/components/Button", () => ({
   ),
 }));
 
-// ResultCard は、結果のボックスにあたる要素だけを描く軽い形にし、受け取った値を属性で見せる。
+// ResultCard は、ページの頭・結果のボックスにあたる要素・追加の読みものだけを描く軽い形にし、受け取った値を属性で見せる。
 vi.mock("../ResultCard", () => ({
   default: ({
+    head,
     resultBoxRef,
     heading,
     appear,
+    extra,
+    nextItems,
   }: {
+    head: React.ReactNode;
     resultBoxRef: React.Ref<HTMLElement>;
     heading: { phrases: string[] };
     appear?: boolean;
+    extra?: React.ReactNode;
+    nextItems?: unknown[];
   }) => (
-    <section
-      ref={resultBoxRef}
-      tabIndex={-1}
-      data-testid="result-box"
-      data-phrases={heading.phrases.join("|")}
-      data-appear={String(Boolean(appear))}
-    />
+    <>
+      {head}
+      <section
+        ref={resultBoxRef}
+        tabIndex={-1}
+        data-testid="result-box"
+        data-phrases={heading.phrases.join("|")}
+        data-appear={String(Boolean(appear))}
+        data-next-items={String(nextItems?.length ?? 0)}
+      />
+      {extra}
+    </>
   ),
 }));
+// 追加の読みものは japanese-culture だけが持つことにし、置かれた所を見えるようにする。
 vi.mock("../ResultExtraLoader", () => ({
-  default: () => null,
-}));
-vi.mock("../ResultNextContent", () => ({
-  default: () => null,
+  default: ({ slug }: { slug: string }) => (
+    <div data-testid="result-extra" data-slug={slug} />
+  ),
+  hasResultExtra: (slug: string) => slug === "japanese-culture",
 }));
 
 // next/link を最低限の <a> に
@@ -134,15 +147,20 @@ function makeKnowledgeQuiz(): QuizDefinition {
 }
 
 /** quiz をプレイして結果まで遷移する（level_end 発火まで待つ） */
-async function playToLevelEnd(quiz: QuizDefinition) {
+async function playToLevelEnd(
+  quiz: QuizDefinition,
+  recommendedContents?: ItemListItem[],
+) {
   const resultHeadings = Object.fromEntries(
     quiz.results.map((result) => [result.id, { phrases: [...result.title] }]),
   );
   render(
     <QuizContainer
+      head={<h1>見出し</h1>}
       quiz={quiz}
       resultHeadings={resultHeadings}
       readingHeadings={{}}
+      recommendedContents={recommendedContents}
     />,
   );
   // "はじめる" を押して playing へ
@@ -237,10 +255,41 @@ describe("QuizContainer — 結果に着いたとき", () => {
     expect(document.activeElement).toBe(box);
   });
 
+  test("解き終えた画面にも、ページの頭と次の遊びの行を渡す", async () => {
+    await playToLevelEnd(makePersonalityQuiz(), [
+      { name: "次の遊び", href: "/play/next" },
+    ]);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "見出し",
+    );
+    expect(screen.getByTestId("result-box")).toHaveAttribute(
+      "data-next-items",
+      "1",
+    );
+  });
+
+  test("追加の読みものは、それを持つ診断だけに渡す", async () => {
+    await playToLevelEnd(makePersonalityQuiz());
+    expect(screen.queryByTestId("result-extra")).not.toBeInTheDocument();
+  });
+
+  test("追加の読みものを持つ診断では、その診断の追加の読みものを渡す", async () => {
+    const quiz = makePersonalityQuiz();
+    await playToLevelEnd({
+      ...quiz,
+      meta: { ...quiz.meta, slug: "japanese-culture" },
+    });
+    expect(screen.getByTestId("result-extra")).toHaveAttribute(
+      "data-slug",
+      "japanese-culture",
+    );
+  });
+
   test("開始の画面では画面を送らない", () => {
     const quiz = makePersonalityQuiz();
     render(
       <QuizContainer
+        head={<h1>見出し</h1>}
         quiz={quiz}
         resultHeadings={{ "type-a": { phrases: ["タイプA"] } }}
         readingHeadings={{}}

@@ -4,16 +4,9 @@ import dynamic from "next/dynamic";
 import type { QuizAnswer } from "@/play/quiz/types";
 
 /**
- * Lazy-loaded wrappers for quiz-specific result extra components.
- * Using next/dynamic ensures these heavy data modules (character-fortune,
- * science-thinking, japanese-culture) are code-split
- * into separate chunks and only loaded when the corresponding quiz result
- * is shown.
- *
- * Note: music-personality uses MusicPersonalityContent with afterTodayAction
- * slot for compatibility section, so it does not need a ResultExtra component.
- * Note: character-personality has its own dedicated route and uses
- * CharacterPersonalityContent, so it does not need a ResultExtra component.
+ * 診断ごとの追加の読みもの（理系思考のプロフィール・相性・招待）。解き終えた画面の「このタイプについて」の
+ * 最後に置く。どれも診断のデータを丸ごと読むので、next/dynamic でクイズのページの最初のバンドルから分け、
+ * その診断を解き終えたときだけ読み込む。ほかの診断の相性と招待は、読みものの部品（*Content）が持つ。
  */
 
 const CharacterFortuneResultExtra = dynamic(
@@ -75,18 +68,27 @@ const JapaneseCultureResultExtra = dynamic(
   { ssr: false },
 );
 
+/** 追加の読みものを持つ診断。 */
+const RESULT_EXTRA_SLUGS: ReadonlySet<string> = new Set([
+  "character-fortune",
+  "science-thinking",
+  "japanese-culture",
+]);
+
+/** その診断が追加の読みものを持つか。持たない診断では、置く側が「このタイプについて」に何も足さない。 */
+export function hasResultExtra(slug: string): boolean {
+  return RESULT_EXTRA_SLUGS.has(slug);
+}
+
 interface ResultExtraLoaderProps {
   slug: string;
   resultId: string;
   referrerTypeId?: string;
-  /** Optional answers array, needed by quizzes that compute per-user scores (e.g. science-thinking) */
+  /** 来訪者の答え。答えから来訪者ごとのスコアを出す診断（science-thinking）が使う。 */
   answers?: QuizAnswer[];
 }
 
-/**
- * Dynamically loads and renders quiz-specific extra content below the result
- * card. Only loads the relevant module for the active quiz slug.
- */
+/** その診断の追加の読みものだけを読み込んで描く。 */
 export default function ResultExtraLoader({
   slug,
   resultId,

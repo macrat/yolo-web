@@ -1,7 +1,16 @@
 /*
  * クイズ本体（開始・設問・結果）。入力と結果を生む操作は囲まず、ページの地（--paper）にそのまま置く
- * （DESIGN.md §8）。結果を囲むのは結果のボックスだけである。
+ * （DESIGN.md §8）。結果を囲むのは結果のボックスだけである。セクションのあいだの全幅の罫線と余白は Section が持つ。
  */
+
+/* 最初のセクションの頭。パンくず・主見出しと、その下の中身（開始の画面・設問・結果）を、同じ間隔で積む
+ * （§5 の間隔）。 */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
+}
 
 /* 設問の画面の縦の並び。 */
 .stage {
@@ -50,19 +59,4 @@
   align-items: center;
   min-width: 44px;
   min-height: 44px;
-}
-
-/* === result フェーズ === */
-
-/* 結果（ResultCard）と、そのあとの次の遊び・追加の読みものを縦に積む。 */
-.resultPhase {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
-}
-
-/* 結果に着いたときに送る先（結果のボックス）。ボックスを画面の上端に貼り付けず、フォーカスのリング（ボックスの
- * 線の外に 6px）まで画面に入る余白を上に残す（§12「フォーカスが必ず見え、隠れない」）。 */
-.resultPhase :where(section[tabindex="-1"]) {
-  scroll-margin-top: var(--space-16);
 }

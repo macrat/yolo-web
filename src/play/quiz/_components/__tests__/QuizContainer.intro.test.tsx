@@ -18,9 +18,7 @@ vi.mock("../ResultCard", () => ({
 }));
 vi.mock("../ResultExtraLoader", () => ({
   default: () => null,
-}));
-vi.mock("../ResultNextContent", () => ({
-  default: () => null,
+  hasResultExtra: () => false,
 }));
 vi.mock("next/link", () => ({
   default: ({
@@ -61,7 +59,12 @@ const quiz: QuizDefinition = {
 
 function renderQuiz() {
   return render(
-    <QuizContainer quiz={quiz} resultHeadings={{}} readingHeadings={{}} />,
+    <QuizContainer
+      head={<h1>見出し</h1>}
+      quiz={quiz}
+      resultHeadings={{}}
+      readingHeadings={{}}
+    />,
   );
 }
 
@@ -91,4 +94,24 @@ test("説明は開始の画面だけに出て、設問の画面には出ない",
     screen.getByRole("button", { name: "はじめる" }).click();
   });
   expect(screen.queryByText(DESCRIPTION)).not.toBeInTheDocument();
+});
+
+test("開始の画面と設問の画面は、ページの頭と本体を1つのセクションに置く（DESIGN.md §5）", async () => {
+  const { container } = renderQuiz();
+  const sectionsOf = () =>
+    Array.from(container.querySelectorAll(":scope > section"));
+  expect(sectionsOf()).toHaveLength(1);
+  const [intro] = sectionsOf();
+  expect(intro).toContainElement(screen.getByRole("heading", { level: 1 }));
+  expect(intro).toContainElement(
+    screen.getByRole("button", { name: "はじめる" }),
+  );
+
+  await act(async () => {
+    screen.getByRole("button", { name: "はじめる" }).click();
+  });
+  expect(sectionsOf()).toHaveLength(1);
+  const [playing] = sectionsOf();
+  expect(playing).toContainElement(screen.getByRole("heading", { level: 1 }));
+  expect(playing).toContainElement(screen.getByText("選択1A"));
 });

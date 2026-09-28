@@ -1578,7 +1578,7 @@ export default function StorybookContent({
         </h2>
         <p>
           {solvedScreen.quizTitle}
-          を解き終えたときの画面。タイプを選ぶと、そのタイプの結果・結果を共有する区画・詳しい読みもの（このタイプについて）・すべてのタイプを、解き終えた画面と同じ部品で開く。
+          を解き終えたときの画面。タイプを選ぶと、このセクションのあとに、そのタイプの結果と結果を共有する区画・このタイプについて・次はこれを試してみよう・すべてのタイプのセクションを、解き終えた画面と同じ部品で開く。
         </p>
         <Field label="開くタイプ">
           {(control) => (
@@ -1595,22 +1595,20 @@ export default function StorybookContent({
             </Select>
           )}
         </Field>
-        <div className={styles.solvedScreen}>
-          <ResultCard
-            key={solvedResult.id}
-            result={solvedResult}
-            heading={solvedScreen.resultHeadings[solvedResult.id]}
-            readingHeadings={solvedScreen.readingHeadings}
-            quizType="personality"
-            quizTitle={solvedScreen.quizTitle}
-            quizName={solvedScreen.quizName}
-            quizSlug={solvedScreen.quizSlug}
-            onRetry={() => {}}
-            detailedContent={solvedResult.detailedContent}
-            allResults={solvedScreen.results}
-          />
-        </div>
       </Section>
+      <ResultCard
+        key={solvedResult.id}
+        result={solvedResult}
+        heading={solvedScreen.resultHeadings[solvedResult.id]}
+        readingHeadings={solvedScreen.readingHeadings}
+        quizType="personality"
+        quizTitle={solvedScreen.quizTitle}
+        quizName={solvedScreen.quizName}
+        quizSlug={solvedScreen.quizSlug}
+        onRetry={() => {}}
+        detailedContent={solvedResult.detailedContent}
+        allResults={solvedScreen.results}
+      />
     </>
   );
 }

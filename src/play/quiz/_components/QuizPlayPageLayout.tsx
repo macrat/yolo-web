@@ -28,7 +28,9 @@ interface QuizPlayPageLayoutProps {
  * など）が使う。
  *
  * ページはセクションを上から並べる（DESIGN.md §5 ページの割り方）。
- *   1. パンくず・主見出し（h1）・クイズ本体（開始の画面・設問・解き終えた画面）
+ *   1. クイズ本体のセクション。パンくずと主見出し（h1）をここで作って QuizContainer に渡し、QuizContainer が
+ *      段階ごとのセクションを描く。開始の画面と設問では頭と本体の1つ、解き終えた画面では頭と結果と共有・
+ *      このタイプについて・次はこれを試してみよう・すべてのタイプの並び
  *   2. よくある質問（FAQPage の JSON-LD を持つ）
  *   3. このクイズ・診断を人に勧めるページの共有。結果の共有は、解き終えた画面の結果のすぐ下にある
  *   4. 同じ分類のクイズ・診断（RelatedQuizzes）
@@ -64,29 +66,29 @@ export default async function QuizPlayPageLayout({
         />
       )}
 
-      <Section>
-        <div className={styles.head}>
-          <Breadcrumb
-            items={[
-              { label: "ホーム", href: "/" },
-              { label: "遊び", href: "/play" },
-              { label: quiz.meta.title, href: `/play/${slug}` },
-            ]}
-          />
-          <PhrasedText
-            as="h1"
-            phrases={splitIntoPhrases(quiz.meta.title)}
-            {...headingFontAttr(quiz.meta.title)}
-          />
-          <QuizContainer
-            quiz={quiz}
-            referrerTypeId={referrerTypeId}
-            recommendedContents={resultNextContents}
-            resultHeadings={resultHeadings}
-            readingHeadings={readingHeadings}
-          />
-        </div>
-      </Section>
+      <QuizContainer
+        head={
+          <>
+            <Breadcrumb
+              items={[
+                { label: "ホーム", href: "/" },
+                { label: "遊び", href: "/play" },
+                { label: quiz.meta.title, href: `/play/${slug}` },
+              ]}
+            />
+            <PhrasedText
+              as="h1"
+              phrases={splitIntoPhrases(quiz.meta.title)}
+              {...headingFontAttr(quiz.meta.title)}
+            />
+          </>
+        }
+        quiz={quiz}
+        referrerTypeId={referrerTypeId}
+        recommendedContents={resultNextContents}
+        resultHeadings={resultHeadings}
+        readingHeadings={readingHeadings}
+      />
 
       {quiz.meta.faq && quiz.meta.faq.length > 0 && (
         <Section>

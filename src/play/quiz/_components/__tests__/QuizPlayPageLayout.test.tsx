@@ -21,25 +21,30 @@ vi.mock("@/components/Panel", () => ({
   ),
 }));
 
+// QuizContainer は、受け取ったページの頭を最初のセクションに置く形だけを描く。
 vi.mock("@/play/quiz/_components/QuizContainer", () => ({
   default: ({
+    head,
     quiz,
     referrerTypeId,
     resultHeadings,
     readingHeadings,
   }: {
+    head: React.ReactNode;
     quiz: QuizDefinition;
     referrerTypeId?: string;
     resultHeadings: Record<string, { phrases: string[] }>;
     readingHeadings: Record<string, string[]>;
   }) => (
-    <div
+    <section
       data-testid="quiz-container"
       data-quiz-slug={quiz.meta.slug}
       data-referrer={referrerTypeId}
       data-result-headings={JSON.stringify(resultHeadings)}
       data-reading-headings={JSON.stringify(readingHeadings)}
-    />
+    >
+      {head}
+    </section>
   ),
 }));
 
@@ -333,7 +338,7 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", asyn
   }
 });
 
-test("ページは、頭とクイズ本体・よくある質問・ページの共有の順のセクションで組む（DESIGN.md §5）", async () => {
+test("ページは、QuizContainer が描くクイズ本体のセクション（頭にパンくずと h1）・よくある質問・ページの共有の順のセクションで組む（DESIGN.md §5）", async () => {
   const { container } = render(
     await QuizPlayPageLayout({
       quiz: {
@@ -353,9 +358,7 @@ test("ページは、頭とクイズ本体・よくある質問・ページの�
   expect(
     within(sections[0] as HTMLElement).getByRole("heading", { level: 1 }),
   ).toBeInTheDocument();
-  expect(
-    within(sections[0] as HTMLElement).getByTestId("quiz-container"),
-  ).toBeInTheDocument();
+  expect(sections[0]).toBe(screen.getByTestId("quiz-container"));
   expect(
     within(sections[1] as HTMLElement).getByTestId("faq-section"),
   ).toBeInTheDocument();

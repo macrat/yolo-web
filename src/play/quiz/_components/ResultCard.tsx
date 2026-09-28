@@ -1,16 +1,22 @@
 "use client";
 
 /**
- * 解き終えた画面（`/play/[slug]`）に出す結果。
+ * 解き終えた画面（`/play/[slug]`）。
  *
  * `QuizContainer` が開始→設問→結果と進んだあとに描き、variant ごとの詳しい読みものへの振り分けもここで行う。
- * 上から、結果のボックス（タイプ名・キャッチコピー・説明）、結果を持ち帰る・共有する区画、詳しい読みもの
- * （セクション「このタイプについて」）、すべてのタイプ、「もう一度挑戦する」の順に置く（DESIGN.md §8）。各タイプの
+ * 画面はページのセクションを上から並べる（DESIGN.md §5・§8）。
+ *   1. ページの頭（パンくず・h1）・結果のボックス（タイプ名・キャッチコピー・説明）・結果を持ち帰る・共有する区画
+ *   2. このタイプについて（詳しい読みもの。その結果の辞典の項目へのリンクと、診断ごとの追加の読みもの・相性・招待を、
+ *      その後ろに置く）
+ *   3. 次はこれを試してみよう（「もう一度挑戦する」と、ほかの遊びへの結果ごとのおすすめ、次の遊びの一覧）
+ *   4. すべてのタイプ
+ * 2 は、詳しい読みもの・辞典の項目へのリンク・追加の読みもののどれかがあるときだけ描く。4 は、詳しい読みものを
+ * 持たない診断・クイズでは描かない。結果ごとのおすすめを 2 と 3 のどちらに置くかは recommendationPlacement が決める。各タイプの
  * 結果のページ（`/play/[slug]/result/[resultId]`。枠は ResultPageShell）は、ここから共有する URL であり、
  * すべてのタイプの行から移る先でもある。
  */
 import type React from "react";
-import { useId, useState, type Ref } from "react";
+import { useId, useState, type ReactNode, type Ref } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import type {
@@ -40,6 +46,7 @@ import {
   resultNameWithReading,
 } from "@/play/quiz/resultName";
 import { standardReadingHeadings } from "@/play/quiz/readingHeadings";
+import { recommendationPlacement } from "@/play/quiz/recommendationPlacement";
 import {
   Reading,
   ReadingHeading,
@@ -48,6 +55,9 @@ import {
   ReadingText,
 } from "./ResultReading";
 import Button from "@/components/Button";
+import type { ItemListItem } from "@/components/ItemList";
+import Section from "@/components/Section";
+import ResultNextContent from "./ResultNextContent";
 import styles from "./ResultCard.module.css";
 
 // 詳しい読みものの部品とそれが読む診断のデータ（あわせて 120KB を超える）を、クイズのページの最初のバンドルから
@@ -93,6 +103,8 @@ const ContrarianFortuneContent = dynamic(
 );
 
 interface ResultCardProps {
+  /** 最初のセクションの頭に置くページの頭（パンくずと h1）。 */
+  head?: ReactNode;
   result: QuizResult;
   /** 結果の見出し（タイプ名）の文節の区切りと書体の属性。サーバーで作ったものを受け取る。 */
   heading: ResultHeading;
@@ -115,6 +127,15 @@ interface ResultCardProps {
   resultPageLabels?: QuizMeta["resultPageLabels"];
   /** 相性を見る友だちのタイプの id（共有のリンクの ref） */
   referrerTypeId?: string;
+  /**
+   * 診断ごとの追加の読みもの（理系思考のプロフィール・相性・招待など）。「このタイプについて」の最後に置く。
+   */
+  extra?: ReactNode;
+  /**
+   * 「次はこれを試してみよう」に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、サーバーで行にして
+   * から受け取る。
+   */
+  nextItems?: ItemListItem[];
   /**
    * 診断の全タイプ。詳しい読みもののあとの、すべてのタイプの一覧に並べる。呼び出し側が持つ quiz.results を
    * 受け取り、ここで診断ごとのデータを読み込まない（バンドルを小さく保つ）。
@@ -359,6 +380,7 @@ function catchphraseOf(detailedContent?: DetailedContent): string | null {
 }
 
 export default function ResultCard({
+  head,
   result,
   heading,
   readingHeadings,
@@ -372,6 +394,8 @@ export default function ResultCard({
   detailedContent,
   resultPageLabels,
   referrerTypeId,
+  extra,
+  nextItems = [],
   allResults,
   coTypes,
   resultBoxRef,
@@ -388,84 +412,112 @@ export default function ResultCard({
   // 伝統色診断は、結果の色が結果そのものなので、色見本で見せる（DESIGN.md §2）。
   const resultColor =
     detailedContent?.variant === "traditional-color" ? result.color : undefined;
+  // 結果ごとのおすすめのリンク。その結果の辞典の項目なら「このタイプについて」、ほかへの誘いなら「次はこれを試してみよう」に置く。
+  const { recommendation: recommendationText, recommendationLink } = result;
+  const recommendation =
+    recommendationText && recommendationLink
+      ? {
+          placement: recommendationPlacement(recommendationLink),
+          link: (
+            <Link
+              href={recommendationLink}
+              className={styles.recommendation}
+              data-text-box="inline"
+            >
+              {recommendationText}
+            </Link>
+          ),
+        }
+      : undefined;
+  const aboutLink =
+    recommendation?.placement === "aboutType" ? recommendation.link : null;
+  const nextLink =
+    recommendation?.placement === "next" ? recommendation.link : null;
 
   return (
-    <div className={styles.card}>
-      <ResultBox
-        ref={resultBoxRef}
-        tabIndex={resultBoxRef ? -1 : undefined}
-        caption={`${quizName}の結果`}
-        heading={reading === undefined ? heading : { ...heading, reading }}
-        appear={appear}
-      >
-        <div className={styles.result}>
-          {resultColor && (
-            <div
-              className={styles.swatch}
-              style={{ backgroundColor: resultColor }}
+    <>
+      <Section>
+        {head}
+        <div className={styles.card}>
+          <ResultBox
+            ref={resultBoxRef}
+            tabIndex={resultBoxRef ? -1 : undefined}
+            caption={`${quizName}の結果`}
+            heading={reading === undefined ? heading : { ...heading, reading }}
+            appear={appear}
+          >
+            <div className={styles.result}>
+              {resultColor && (
+                <div
+                  className={styles.swatch}
+                  style={{ backgroundColor: resultColor }}
+                />
+              )}
+              {quizType === "knowledge" &&
+                score !== undefined &&
+                totalQuestions !== undefined && (
+                  <FittedNumber
+                    segments={[`${totalQuestions}問中`, `${score}問正解`]}
+                  />
+                )}
+              {catchphrase && <p>{catchphrase}</p>}
+              <p className={styles.description}>{result.description}</p>
+              {coTypes &&
+                coTypes.length > 0 &&
+                renderTiedTypesDisclosure(result, coTypes, quizSlug)}
+            </div>
+          </ResultBox>
+          <section className={styles.share} aria-labelledby={shareHeadingId}>
+            <PhrasedText
+              as="h3"
+              id={shareHeadingId}
+              className={styles.shareHeading}
+              phrases={["この", "結果を", "共有"]}
             />
-          )}
-          {quizType === "knowledge" &&
-            score !== undefined &&
-            totalQuestions !== undefined && (
-              <FittedNumber
-                segments={[`${totalQuestions}問中`, `${score}問正解`]}
+            {detailedContent?.variant === "character-personality" && (
+              <FudaActions
+                resultId={result.id}
+                resultTitle={result.title}
+                quizName={quizName}
+                quizSlug={quizSlug}
+                onNoticeChange={setFudaNotice}
               />
             )}
-          {catchphrase && <p>{catchphrase}</p>}
-          <p className={styles.description}>{result.description}</p>
-          {coTypes &&
-            coTypes.length > 0 &&
-            renderTiedTypesDisclosure(result, coTypes, quizSlug)}
+            <ShareButtons
+              url={`/play/${quizSlug}/result/${result.id}`}
+              title={quizTitle}
+              text={shareText}
+              sns={["x", "line", "copy"]}
+              contentType={quizType === "personality" ? "diagnosis" : "quiz"}
+              contentId={contentIdForQuiz(quizSlug)}
+              surface="text"
+              notice={fudaNotice}
+            />
+          </section>
         </div>
-      </ResultBox>
-      <section className={styles.share} aria-labelledby={shareHeadingId}>
-        <PhrasedText
-          as="h3"
-          id={shareHeadingId}
-          className={styles.shareHeading}
-          phrases={["この", "結果を", "共有"]}
-        />
-        {detailedContent?.variant === "character-personality" && (
-          <FudaActions
-            resultId={result.id}
-            resultTitle={result.title}
-            quizName={quizName}
-            quizSlug={quizSlug}
-            onNoticeChange={setFudaNotice}
-          />
-        )}
-        <ShareButtons
-          url={`/play/${quizSlug}/result/${result.id}`}
-          title={quizTitle}
-          text={shareText}
-          sns={["x", "line", "copy"]}
-          contentType={quizType === "personality" ? "diagnosis" : "quiz"}
-          contentId={contentIdForQuiz(quizSlug)}
-          surface="text"
-          notice={fudaNotice}
-        />
-      </section>
-      {result.recommendation && result.recommendationLink && (
-        <Link
-          href={result.recommendationLink}
-          className={`${styles.action} ${styles.recommendation}`}
-          data-text-box="inline"
-        >
-          {result.recommendation}
-        </Link>
-      )}
-      {detailedContent && (
-        <>
+      </Section>
+      {(detailedContent || aboutLink || extra) && (
+        <Section>
           <ReadingSection>
-            {renderDetailedContent(
-              detailedContent,
-              result.id,
-              (text) => readingHeadings[text] ?? [text],
-              resultPageLabels,
-              referrerTypeId,
-            )}
+            {detailedContent &&
+              renderDetailedContent(
+                detailedContent,
+                result.id,
+                (text) => readingHeadings[text] ?? [text],
+                resultPageLabels,
+                referrerTypeId,
+              )}
+            {aboutLink && <div className={styles.aboutLink}>{aboutLink}</div>}
+            {extra}
           </ReadingSection>
+        </Section>
+      )}
+      <ResultNextContent items={nextItems}>
+        <Button onClick={onRetry}>もう一度挑戦する</Button>
+        {nextLink}
+      </ResultNextContent>
+      {detailedContent && (
+        <Section>
           <OtherTypesNav
             quizSlug={quizSlug}
             currentResultId={result.id}
@@ -473,11 +525,8 @@ export default function ResultCard({
             placement="solvedScreen"
             showSwatch={resultColor !== undefined}
           />
-        </>
+        </Section>
       )}
-      <div className={styles.action}>
-        <Button onClick={onRetry}>もう一度挑戦する</Button>
-      </div>
-    </div>
+    </>
   );
 }

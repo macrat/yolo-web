@@ -315,8 +315,3 @@
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
-
-/* 解き終えた画面の見本。タイプを選ぶ欄と、開いた画面のあいだをあける。 */
-.solvedScreen {
-  margin-top: var(--space-24);
-}

@@ -4,13 +4,6 @@
  * セクションの見出し）に従う。
  */
 
-/* 最初のセクションの中身。パンくず・主見出し・クイズ本体を、上から同じ間隔で積む（§5 の間隔）。 */
-.head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-}
-
 /* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
 .sectionHeading {
   margin-block-end: var(--space-16);

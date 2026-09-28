@@ -12,7 +12,7 @@ import scienceThinkingQuiz from "@/play/quiz/data/science-thinking";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import RadarChart, { type RadarChartAxis } from "./RadarChart";
 import InviteFriendButton from "./InviteFriendButton";
-import { Reading, ReadingHeading } from "./ResultReading";
+import { ReadingHeading } from "./ResultReading";
 import styles from "./ScienceThinkingResultExtra.module.css";
 
 /** 軸の名前 */
@@ -32,7 +32,7 @@ interface ScienceThinkingResultExtraProps {
   answers?: QuizAnswer[];
 }
 
-/** ResultExtraLoader が読み込んで、解き終えた画面の結果のあとに描く。 */
+/** ResultExtraLoader が読み込んで、解き終えた画面の「このタイプについて」の最後に描く。 */
 export function renderScienceThinkingExtra(
   referrerTypeId?: string,
   answers?: QuizAnswer[],
@@ -53,6 +53,7 @@ export function renderScienceThinkingExtra(
  * 理系思考タイプ診断の、来訪者の答えから出した5つの軸のスコア。レーダーとスコアの帯で見せ、どちらも軸ごとの
  * 満点に対する割合を言う。満点は軸によって違うので、点数でなく割合で並べる（DESIGN.md §5 量の帯）。
  * そのあとに友達を招待するボタンを置く。答えが無いとき（結果のリンクから開いたとき）は招待だけを出す。
+ * 読みものの最後の小見出しとして、置かれた読みものに続けて組む。
  */
 function ScienceThinkingResultExtra({
   resultId,
@@ -94,7 +95,7 @@ function ScienceThinkingResultExtra({
   }));
 
   return (
-    <Reading>
+    <>
       <ReadingHeading
         phrases={["あなたの", "思考プロフィール"]}
         id={headingId}
@@ -109,6 +110,6 @@ function ScienceThinkingResultExtra({
         <QuantityBars labelledBy={headingId} items={bars} max={100} />
       </div>
       {invite}
-    </Reading>
+    </>
   );
 }

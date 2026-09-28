@@ -44,7 +44,22 @@ vi.mock("../JapaneseCultureResultExtra", () => ({
 }));
 
 // モックのセットアップ後に対象コンポーネントをインポート
-const { default: ResultExtraLoader } = await import("../ResultExtraLoader");
+const { default: ResultExtraLoader, hasResultExtra } =
+  await import("../ResultExtraLoader");
+
+test("追加の読みものを持つのは character-fortune・science-thinking・japanese-culture の3つだけ", () => {
+  expect(
+    [
+      "character-fortune",
+      "science-thinking",
+      "japanese-culture",
+      "character-personality",
+      "music-personality",
+      "animal-personality",
+      "kanji-level",
+    ].filter(hasResultExtra),
+  ).toEqual(["character-fortune", "science-thinking", "japanese-culture"]);
+});
 
 test("character-personality スラグでは null が返る（追加の区画は CharacterPersonalityContent が持つ）", () => {
   const { container } = render(
