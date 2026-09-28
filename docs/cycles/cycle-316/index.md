@@ -295,7 +295,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 - 事故: 転送量の「増分0」に執着し、サイトの開発を1日半止めた（AP-P22・AP-P01）。[incident-2.md](./incident-2.md)
 
 - T5-25a で `docs/knowledge/animation-conventions.md` を消した。前提にしていたタイルとコード生成は撤去済みで、動きの規則はいま `DESIGN.md` が定め、reduced-motion の例は水和の不一致を招く形だったため、今のコードで通用する知識が残っていなかった（review-t5-25a-2.md）。
-- T5-3b の残りの PM の決定: (1) コントロールの名前の `line-break: strict` は区切りを組む部品 `PhrasedText` が持ち、文字列で渡した名前とボタンの面の字も T5-3b が `PhrasedText` を通して組む（T5-25c が `globals.css` で掛けるのは見出しだけ。review-t5-3b.md の指摘1・5）。(2) 画像の道具の説明の行（「PNG, JPEG, GIF, WebP対応 (最大20MB)」）が 320px で語の中と括弧の中で折れるのは、その道具の T5-18 の行で直す。(3) 一覧の組の開閉のラベル（`list-browse.ts` の `controlsLabel`。`auto-phrase` に頼る）は T5-7 で区切りの並びに移す。(4) Chromium は `<wbr>` ごとに名前へ空白を足すので、見えるラベルと名前の一致を確かめるときは空白を除いて比べる。 (5) T5-3b で文字列の名前を1文節として組んだため、FAQ の問い（`Accordion` の `summary` に文字列で渡る）は T5-3c が文節の並びで渡すまで、375px の既定で行頭の「、」や「」」1字の行が出る。出荷は1回なので途中の状態として受け入れ、T5-3c を出荷の前に必ず終え、T5-26 で FAQ の問いの折れを数える。
+- T5-3b の残りの PM の決定: (1) コントロールの名前の `line-break: strict` は区切りを組む部品 `PhrasedText` が持ち、文字列で渡した名前とボタンの面の字も T5-3b が `PhrasedText` を通して組む（T5-25c が `globals.css` で掛けるのは見出しだけ。review-t5-3b.md の指摘1・5）。(2) 画像の道具の説明の行（「PNG, JPEG, GIF, WebP対応 (最大20MB)」）が 320px で語の中と括弧の中で折れるのは、その道具の T5-18 の行で直す。(3) 一覧の組の開閉のラベル（`list-browse.ts` の `controlsLabel`。`auto-phrase` に頼る）は T5-7 で区切りの並びに移す。(4) Chromium は `<wbr>` ごとに名前へ空白を足すので、見えるラベルと名前の一致を確かめるときは空白を除いて比べる。 (5) T5-3b で文字列の名前を1文節として組んだため、FAQ の問い（`Accordion` の `summary` に文字列で渡る）は T5-3c が文節の並びで渡すまで、375px の既定で行頭の「、」や「」」1字の行が出る。出荷は1回なので途中の状態として受け入れ、T5-3c を出荷の前に必ず終え、T5-26 で FAQ の問いの折れを数える。 (6) 記事の h1 が、語が1行に収まる幅でもハイフンの後ろで折れる（「not-／found.tsx」「marked-／alert」「JSON-／LD」。1280px・375px。review-t6-2-2.md）。§4 に反するので、区切りを組む部品 `PhrasedText` の側で T5-3b の続きとして直す。
 
 ## サイクル終了時のチェックリスト
 
