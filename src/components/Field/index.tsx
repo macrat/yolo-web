@@ -1,5 +1,9 @@
 import { useId, type ReactNode } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
+import PhrasedText, {
+  renderPhrasedName,
+  type PhrasedName,
+} from "@/components/PhrasedText";
 import styles from "./Field.module.css";
 
 /** Field が中の入力欄に渡す属性。そのまま Input・Select・Textarea に広げる。 */
@@ -11,11 +15,16 @@ export interface FieldControlProps {
   "aria-required"?: true;
 }
 
-interface FieldProps {
-  /** 何を書く欄・選ぶ欄かを言う文。欄の上に置く。 */
-  label: ReactNode;
-  /** 必須のとき true。ラベルに「必須」の文字を添える（§8）。 */
-  required?: boolean;
+/**
+ * 欄の名前（何を書く欄・選ぶ欄かを言う文）と必須の印。名前は欄の上に置き、区切りの並び（文字列の配列）を渡すと
+ * 見出しと同じく文節で折る（PhrasedText）。必須の欄は「（必須）」を名前の後ろの1つの文節として添える（§8）ので、
+ * 名前を字か区切りの並びで渡す。
+ */
+type FieldLabelProps =
+  | { label: PhrasedName; required?: boolean }
+  | { label: ReactNode; required?: false };
+
+type FieldProps = FieldLabelProps & {
   /** 何が問題でどう直すかを言う文。あるあいだ、欄を太い線で囲み、この文を欄の直下に置く（§8）。 */
   error?: string;
   /** 無効のとき true。欄に disabled を渡す。 */
@@ -28,7 +37,9 @@ interface FieldProps {
   /** 欄に渡す属性を受け取り、欄を返す。 */
   children: (control: FieldControlProps) => ReactNode;
   className?: string;
-}
+};
+
+const REQUIRED = "（必須）";
 
 /**
  * 入力欄とそのラベル・エラーの理由・無効の理由の組（DESIGN.md §5・§6・§8）。ラベルは行を分けて欄の上に置き、
@@ -60,8 +71,17 @@ function Field({
   return (
     <div className={[styles.field, className].filter(Boolean).join(" ")}>
       <label htmlFor={id} className={styles.label}>
-        {label}
-        {required && "（必須）"}
+        {required ? (
+          <PhrasedText
+            as="span"
+            phrases={[
+              ...(typeof label === "string" ? [label] : label),
+              REQUIRED,
+            ]}
+          />
+        ) : (
+          renderPhrasedName(label)
+        )}
       </label>
       {children({
         id,

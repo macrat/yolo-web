@@ -1,13 +1,16 @@
-import { Fragment, type ComponentPropsWithoutRef } from "react";
+import { Fragment, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { joinDashes } from "@/lib/phrase-dashes";
 import styles from "./PhrasedText.module.css";
 
-type PhrasedTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+/** 区切りを組む要素。見出しと、見出しの外で文節で折るもの（コントロールの名前・リンク・表のセル）。 */
+type PhrasedTag =
+  "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "p" | "th" | "td";
 
 interface PhrasedTextOwnProps<T extends PhrasedTag> {
-  /** 組む見出しの要素。 */
+  /** 組む要素。 */
   as: T;
   /**
-   * 見出しの文を折り所で分けた並び。データから来る文は、サーバーで splitIntoPhrases（@/lib/phrase-breaks）が
+   * 文を折り所で分けた並び。データから来る文は、サーバーで splitIntoPhrases（@/lib/phrase-breaks）が
    * 作ったものを渡す。コードに書いた決まった文は、書き手が文節で分けた並びをそのまま書く（BudouX が語を割る
    * 文でも正しく分けられる）。手で書く並びも splitIntoPhrases と同じ禁則を満たし、followsPhraseRules で確かめる。
    */
@@ -18,31 +21,15 @@ interface PhrasedTextOwnProps<T extends PhrasedTag> {
 type PhrasedTextProps<T extends PhrasedTag> = PhrasedTextOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof PhrasedTextOwnProps<T> | "children">;
 
-/** ダッシュ（「—」「──」「--」）の前の空白。 */
-const SPACE_BEFORE_DASH = /[ \t]+(?=[—―─]|--)/gu;
-/** ダッシュの字の前（空白でない字の後ろ）と、ダッシュの字どうしのあいだ。 */
-const INSIDE_OR_BEFORE_DASH =
-  /(?<=[^\s])(?=[—―─])|(?<=[—―─])(?=[—―─])|(?<=[^\s-])(?=--)|(?<=-)(?=-)/gu;
-const NO_BREAK_SPACE = "\u00A0";
-const WORD_JOINER = "\u2060";
-
-/** ダッシュを前の語に付け、ダッシュの中で折れないようにする。 */
-function joinDashes(phrase: string): string {
-  return phrase
-    .replace(SPACE_BEFORE_DASH, NO_BREAK_SPACE)
-    .replace(INSIDE_OR_BEFORE_DASH, WORD_JOINER);
-}
-
 /**
- * 見出しを文節で折って組む（DESIGN.md §4）。渡された並びのあいだにだけ折り所の <wbr> を置き、並びの1つの中では、
- * それが1行に収まらないときだけ折る。
+ * 文を文節で折って組む（DESIGN.md §4）。見出し・コントロールの名前・表のセルのように、折る所を文節の切れ目に
+ * 限るものを、このサイトではどれもこの部品で組む。渡された並びのあいだにだけ折り所の <wbr> を置き、並びの1つの
+ * 中では、それが1行に収まらないときだけ折る。
  *
  * 要素の中は文の字と <wbr> だけにし、字を分ける要素を持たない。見出しの中の要素で読み上げが見出しを分けて
  * 読まないようにし、写した文やページ内の検索が元の文のままになるようにする。
  *
- * ダッシュ（「—」「──」「--」）は前の語に付けて組む。前の空白は折れない空白にし、空白の無いダッシュの前と、ダッシュの
- * 字どうしのあいだには語結合子（U+2060）を置く。ブラウザはダッシュの前と「-」の後ろで折るので、そのままでは
- * ダッシュが行の頭に来るか、ダッシュだけの行や「-／-」ができる。語結合子は見えず、ページ内の検索も元の文で当たる。 */
+ * ダッシュ（「—」「──」「--」）は、joinDashes（@/lib/phrase-dashes）で前の語に付けて組む。 */
 export default function PhrasedText<T extends PhrasedTag>({
   as,
   phrases,
@@ -62,5 +49,41 @@ export default function PhrasedText<T extends PhrasedTag>({
         </Fragment>
       ))}
     </Tag>
+  );
+}
+
+/**
+ * コントロールの名前。区切りの並びを渡すと文節で折り、文字列を渡すと区切らずに組む（1文節の名前は区切りが
+ * 要らない）。
+ */
+export type PhrasedName = string | readonly string[];
+
+/** 名前の字を1続きの文にしたもの。読み上げの知らせや字の幅の見積もりに使う。 */
+export function phrasedNameText(name: PhrasedName): string {
+  return typeof name === "string" ? name : name.join("");
+}
+
+function isPhrases(content: unknown): content is readonly string[] {
+  return (
+    Array.isArray(content) &&
+    content.every((phrase) => typeof phrase === "string")
+  );
+}
+
+/**
+ * コントロールの名前を組む。区切りの並び（文字列の配列）なら PhrasedText の span で文節で折って組み、
+ * 文字列や要素はそのまま返す。名前に文字列のほかに要素も受け取る部品が使う。
+ */
+export function renderPhrasedName(
+  content: ReactNode | readonly string[],
+  className?: string,
+): ReactNode {
+  if (isPhrases(content)) {
+    return <PhrasedText as="span" phrases={content} className={className} />;
+  }
+  return className === undefined ? (
+    content
+  ) : (
+    <span className={className}>{content}</span>
   );
 }

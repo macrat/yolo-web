@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import FileDropZone from "../index";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const MB = 1024 * 1024;
 
@@ -62,7 +63,7 @@ describe("FileDropZone", () => {
     );
     const input = getFileInput(container);
     expect(input).toHaveAccessibleDescription(
-      /ファイルを選ぶ.*PNG, JPEG 対応 \(最大10MB\)/,
+      "ファイルを選ぶ ここにファイルを落としても選べます PNG, JPEG 対応 (最大10MB)",
     );
   });
 
@@ -213,6 +214,35 @@ describe("FileDropZone", () => {
     );
     expect(onError).toHaveBeenCalledWith(
       "ファイルが10MBを超えています。10MB以下のファイルを選んでください",
+    );
+  });
+
+  it("面の字は文節で折り、落として選べる案内は括弧で添えずに補助情報の行に置く", () => {
+    const { container } = render(
+      <FileDropZone label="画像ファイル" onFileSelect={onFileSelect} />,
+    );
+    const zone = container.querySelector("[data-field]")!;
+    const [prompt, hint] = [...zone.children];
+    expect(prompt.innerHTML).toBe("ファイルを<wbr>選ぶ");
+    expect(hint.innerHTML).toBe(
+      "ここに<wbr>ファイルを<wbr>落としても<wbr>選べます",
+    );
+    expect(followsPhraseRules(hint.innerHTML.split("<wbr>"))).toBe(true);
+    expect(zone.textContent).not.toMatch(/[（(]/);
+    expect(followsPhraseRules(prompt.innerHTML.split("<wbr>"))).toBe(true);
+    fireEvent.dragEnter(zone);
+    expect(prompt.innerHTML).toBe("ここで<wbr>離すと<wbr>選べます");
+    expect(followsPhraseRules(prompt.innerHTML.split("<wbr>"))).toBe(true);
+  });
+
+  it("区切りの並びのラベルは文節で折り、入力の名前は元の文", () => {
+    const { container } = render(
+      <FileDropZone label={["変換する", "画像"]} onFileSelect={onFileSelect} />,
+    );
+    const input = getFileInput(container);
+    expect(input).toHaveAccessibleName("変換する画像");
+    expect(container.querySelector("label")!.innerHTML).toContain(
+      "変換する<wbr>画像",
     );
   });
 });

@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import Slider, { stepValue, textEm, trackPosition } from "..";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 function Controlled({
   initial,
@@ -165,6 +166,42 @@ describe("− と ＋", () => {
     });
     expect(onChange).toHaveBeenLastCalledWith(150);
     expect(status()).toHaveTextContent("");
+  });
+});
+
+describe("ラベル", () => {
+  test("区切りの並びのラベルは文節で折り、名前・知らせ・字の幅の見積もりは元の文で言う", () => {
+    const phrases = ["画像の", "品質"];
+    function Phrased() {
+      const [value, setValue] = useState(80);
+      return (
+        <Slider
+          items={[
+            {
+              label: phrases,
+              value,
+              min: 10,
+              max: 100,
+              onChange: setValue,
+              decreaseLabel: "品質を1下げる",
+              increaseLabel: "品質を1上げる",
+            },
+          ]}
+        />
+      );
+    }
+    const { container } = render(<Phrased />);
+    const slider = screen.getByRole("slider", { name: "画像の品質" });
+    expect(
+      container.querySelector(`label[for="${slider.id}"]`)!.innerHTML,
+    ).toContain("画像の<wbr>品質");
+    fireEvent.click(screen.getByRole("button", { name: "品質を1上げる" }));
+    expect(status()).toHaveTextContent("画像の品質 81");
+    const style = (container.firstElementChild as HTMLElement).style;
+    expect(style.getPropertyValue("--slider-label")).toBe(
+      `${textEm("画像の品質")}em`,
+    );
+    expect(followsPhraseRules(phrases)).toBe(true);
   });
 });
 

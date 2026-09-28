@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import Checkbox from "../index";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 describe("Checkbox", () => {
   it("ラベルを名前に持つチェックボックスを描く", () => {
@@ -51,5 +52,17 @@ describe("Checkbox", () => {
       "aria-describedby",
     );
     expect(screen.getByRole("checkbox")).toBe(checkbox);
+  });
+
+  it("区切りの並びのラベルは文節で折り、読み上げの名前は元の文", () => {
+    const phrases = ["連続する", "改行を", "まとめる"];
+    render(<Checkbox label={phrases} />);
+    const checkbox = screen.getByRole("checkbox", {
+      name: "連続する改行をまとめる",
+    });
+    expect(checkbox.closest("label")!.innerHTML).toContain(
+      "連続する<wbr>改行を<wbr>まとめる",
+    );
+    expect(followsPhraseRules(phrases)).toBe(true);
   });
 });

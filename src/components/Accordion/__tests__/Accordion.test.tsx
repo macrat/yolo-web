@@ -1,6 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import Accordion from "../index";
+import styles from "../Accordion.module.css";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 describe("Accordion", () => {
   it("details と summary で組み、summary がラベルを持つ", () => {
@@ -39,5 +42,33 @@ describe("Accordion", () => {
     details.open = false;
     details.dispatchEvent(new Event("toggle"));
     expect(onToggle).toHaveBeenCalled();
+  });
+
+  it("区切りの並びを渡すと、ラベルを <wbr> と文節で折るクラスで組む", () => {
+    const phrases = ["カテゴリから", "探す"];
+    const { container } = render(
+      <Accordion summary={phrases}>
+        <p>中身</p>
+      </Accordion>,
+    );
+    const label = container.querySelector("summary > span")!;
+    expect(label.innerHTML).toBe("カテゴリから<wbr>探す");
+    expect(label).toHaveClass(phrasedStyles.phrased, styles.label);
+    expect(container.querySelector("summary")).toHaveTextContent(
+      "カテゴリから探す",
+    );
+    expect(followsPhraseRules(phrases)).toBe(true);
+  });
+
+  it("文字列のラベルは区切らずにラベルの span に組む", () => {
+    const { container } = render(
+      <Accordion summary="目次">
+        <p>中身</p>
+      </Accordion>,
+    );
+    const label = container.querySelector("summary > span")!;
+    expect(label.innerHTML).toBe("目次");
+    expect(label).toHaveClass(styles.label);
+    expect(label).not.toHaveClass(phrasedStyles.phrased);
   });
 });

@@ -8,6 +8,11 @@ import {
   type MouseEvent,
   type Ref,
 } from "react";
+import {
+  phrasedNameText,
+  renderPhrasedName,
+  type PhrasedName,
+} from "@/components/PhrasedText";
 import { trackGradient, type TrackStop } from "./trackPosition";
 import { textEm } from "./textWidth";
 import styles from "./Slider.module.css";
@@ -16,8 +21,8 @@ export { trackPosition, type TrackStop } from "./trackPosition";
 export { textEm } from "./textWidth";
 
 export interface SliderItem {
-  /** 見えるラベル。スライダーの名前にもなる */
-  label: string;
+  /** 見えるラベル。スライダーの名前にもなる。区切りの並びを渡すと文節で折る（PhrasedText） */
+  label: PhrasedName;
   value: number;
   min: number;
   max: number;
@@ -101,7 +106,9 @@ export default function Slider({ items }: SliderProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [notice, setNotice] = useState("");
 
-  const labelWidth = Math.max(...items.map((item) => textEm(item.label)));
+  const labelWidth = Math.max(
+    ...items.map((item) => textEm(phrasedNameText(item.label))),
+  );
   const valueWidth = Math.max(
     ...items.map((item) => textEm(longestValue(item))),
   );
@@ -125,7 +132,7 @@ export default function Slider({ items }: SliderProps) {
       setNotice("");
       return;
     }
-    setNotice(`${item.label} ${format(item, next)}`);
+    setNotice(`${phrasedNameText(item.label)} ${format(item, next)}`);
   };
 
   // マウスで押してもフォーカスを移さない。移すと、そのあと矢印のキーでスライダーが動かなくなる。
@@ -158,10 +165,11 @@ export default function Slider({ items }: SliderProps) {
             if (typeof ref === "function") ref(element);
             else if (ref) ref.current = element;
           };
+          const labelText = phrasedNameText(item.label);
           return (
-            <div key={item.label} className={styles.row}>
+            <div key={labelText} className={styles.row}>
               <label htmlFor={inputId} className={styles.label}>
-                {item.label}
+                {renderPhrasedName(item.label)}
               </label>
               <input
                 ref={setInput}

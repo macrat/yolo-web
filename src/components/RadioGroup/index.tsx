@@ -1,17 +1,21 @@
 import { useId, type ReactNode } from "react";
+import { renderPhrasedName } from "@/components/PhrasedText";
 import Radio from "@/components/Radio";
 import styles from "./RadioGroup.module.css";
 
 export interface RadioGroupOption {
-  /** 円の右に本文の大きさで組むラベル。 */
-  label: ReactNode;
+  /** 円の右に本文の大きさで組むラベル。区切りの並び（文字列の配列）を渡すと文節で折る（PhrasedText）。 */
+  label: ReactNode | readonly string[];
   /** 選択肢を一意に識別する値。 */
   value: string;
 }
 
 interface RadioGroupProps {
-  /** 組の名前。選択肢の上に見出しとして見せ、読み上げでも組の名前になる。 */
-  legend: ReactNode;
+  /**
+   * 組の名前。選択肢の上に見出しとして見せ、読み上げでも組の名前になる。区切りの並び（文字列の配列）を渡すと
+   * 文節で折る（PhrasedText）。
+   */
+  legend: ReactNode | readonly string[];
   options: RadioGroupOption[];
   /** 選ばれている選択肢の値。 */
   value: string;
@@ -54,7 +58,7 @@ export default function RadioGroup({
       className={[styles.group, className].filter(Boolean).join(" ")}
     >
       <legend id={legendId} className={styles.legend}>
-        {legend}
+        {renderPhrasedName(legend)}
       </legend>
       <div className={styles.options}>
         {options.map((option) => (
@@ -62,7 +66,7 @@ export default function RadioGroup({
             key={option.value}
             name={id}
             value={option.value}
-            label={option.label}
+            label={renderPhrasedName(option.label)}
             checked={option.value === value}
             onChange={() => onChange(option.value)}
           />

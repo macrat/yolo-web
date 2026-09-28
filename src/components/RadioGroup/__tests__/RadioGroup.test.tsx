@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import RadioGroup from "@/components/RadioGroup";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const options = [
   { label: "新しい順", value: "new" },
@@ -78,5 +79,37 @@ describe("RadioGroup", () => {
     );
     fireEvent.click(screen.getByText("名前の順"));
     expect(handleChange).toHaveBeenCalledWith("name");
+  });
+
+  it("区切りの並びの見出しと選択肢は文節で折り、読み上げの名前は元の文", () => {
+    const legend = ["キーワードの", "書き方"];
+    const choice = ["大文字に", "そろえる"];
+    render(
+      <RadioGroup
+        legend={legend}
+        options={[
+          { label: choice, value: "upper" },
+          { label: "そのまま", value: "keep" },
+        ]}
+        value="upper"
+        onChange={vi.fn()}
+      />,
+    );
+    const group = screen.getByRole("radiogroup", {
+      name: "キーワードの書き方",
+    });
+    expect(group.querySelector("legend")!.innerHTML).toContain(
+      "キーワードの<wbr>書き方",
+    );
+    const radio = screen.getByRole("radio", { name: "大文字にそろえる" });
+    expect(radio.closest("label")!.innerHTML).toContain(
+      "大文字に<wbr>そろえる",
+    );
+    expect(
+      screen.getByRole("radio", { name: "そのまま" }).closest("label")!
+        .innerHTML,
+    ).not.toContain("<wbr>");
+    expect(followsPhraseRules(legend)).toBe(true);
+    expect(followsPhraseRules(choice)).toBe(true);
   });
 });

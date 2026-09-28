@@ -3,11 +3,15 @@
 import { useCallback, useId, useRef, useState } from "react";
 import type { DragEvent, ChangeEvent } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
+import PhrasedText, {
+  renderPhrasedName,
+  type PhrasedName,
+} from "@/components/PhrasedText";
 import styles from "./FileDropZone.module.css";
 
 interface FileDropZoneProps {
-  /** 何のファイルを選ぶ欄かを言うラベル。欄の上に置く。 */
-  label: string;
+  /** 何のファイルを選ぶ欄かを言うラベル。欄の上に置く。区切りの並びを渡すと文節で折る（PhrasedText）。 */
+  label: PhrasedName;
 
   /** ファイルが選ばれたときに呼ぶ。サイズの上限を超えたときは呼ばず、onError を呼ぶ。 */
   onFileSelect: (file: File) => void;
@@ -21,7 +25,7 @@ interface FileDropZoneProps {
   /** input[type="file"] の accept 属性（例: "image/*"）。未指定なら制限しない。 */
   accept?: string;
 
-  /** 対応する形式や容量の目安など、欄の中に添える補助情報。 */
+  /** 対応する形式や容量の目安など、欄の中に落とし方の案内に続けて添える補助情報。 */
   description?: string;
   /**
    * 選んだファイルの何が問題でどう直すかを言う文。あるあいだ、欄を太い線で囲み、この文を欄の直下に
@@ -30,12 +34,20 @@ interface FileDropZoneProps {
   error?: string;
 }
 
+/** 欄の面の字。コントロールの名前なので文節で折る（§4）。 */
+const PROMPT = ["ファイルを", "選ぶ"];
+/** ファイルを欄に重ねているあいだの面の字。 */
+const DROP_PROMPT = ["ここで", "離すと", "選べます"];
+/** 落として選べることの案内。面の字の下の補助情報の行に置き、欄の字として面の字と同じく文節で折る。 */
+const DROP_HINT = ["ここに", "ファイルを", "落としても", "選べます"];
+
 /**
  * ファイルを選ぶ欄（DESIGN.md §8 の選ぶ欄）。
  *
  * 欄を押すかキーボードで操作するとファイルを選ぶ画面が開き、ファイルを欄の上に落としても選べる。
- * 落とす操作は選ぶ画面の近道で、それでしかできないことは持たない（§6）。ファイルを重ねているあいだは、
- * 線を変えずに欄の中の文言で、離せば選べることを示す。線を変えると hover やエラーと読み違えられるため。
+ * 落とす操作は選ぶ画面の近道で、それでしかできないことは持たない（§6）。落として選べることは、面の字の下の
+ * 補助情報の行で案内する。ファイルを重ねているあいだは、線を変えずに面の字で、離せば選べることを示す。
+ * 線を変えると hover やエラーと読み違えられるため。
  *
  * 選ぶのは本物の `<input type="file">` で、見えないまま欄の直前に置き、フォーカス・キーボード・
  * 選ぶ画面を開く動作をブラウザの標準に任せる。見えている欄はその入力の `<label>` なので、押すと
@@ -53,10 +65,12 @@ function FileDropZone({
   const inputId = useId();
   const labelId = `${inputId}-label`;
   const promptId = `${inputId}-prompt`;
+  const hintId = `${inputId}-hint`;
   const descriptionId = `${inputId}-description`;
   const errorId = `${inputId}-error`;
   const describedBy = [
     promptId,
+    hintId,
     description ? descriptionId : undefined,
     error ? errorId : undefined,
   ]
@@ -124,7 +138,7 @@ function FileDropZone({
   return (
     <div className={styles.field}>
       <label id={labelId} htmlFor={inputId} className={styles.label}>
-        {label}
+        {renderPhrasedName(label)}
       </label>
       <input
         id={inputId}
@@ -145,11 +159,17 @@ function FileDropZone({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        <span id={promptId}>
-          {isDraggingOver
-            ? "ここで離すと選べます"
-            : "ファイルを選ぶ（ここにファイルを落としても選べます）"}
-        </span>
+        <PhrasedText
+          as="span"
+          id={promptId}
+          phrases={isDraggingOver ? DROP_PROMPT : PROMPT}
+        />
+        <PhrasedText
+          as="span"
+          id={hintId}
+          className={styles.description}
+          phrases={DROP_HINT}
+        />
         {description && (
           <span id={descriptionId} className={styles.description}>
             {description}

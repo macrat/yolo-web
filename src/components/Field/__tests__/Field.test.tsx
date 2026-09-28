@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Field from "../index";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 
@@ -97,5 +99,47 @@ describe("Field", () => {
     expect(
       screen.queryByText("「自分で決める」を選ぶと書き込めます"),
     ).not.toBeInTheDocument();
+  });
+
+  it("「（必須）」を名前の後ろの1つの文節にし、名前の中と括弧の中では折らない", () => {
+    const { container } = render(
+      <Field label="生年月日" required>
+        {(c) => <Input {...c} type="date" />}
+      </Field>,
+    );
+    const name = container.querySelector("label > span")!;
+    expect(name.innerHTML).toBe("生年月日<wbr>（必須）");
+    expect(name).toHaveClass(phrasedStyles.phrased);
+    expect(screen.getByLabelText("生年月日（必須）")).toHaveAttribute(
+      "type",
+      "date",
+    );
+    expect(followsPhraseRules(["生年月日", "（必須）"])).toBe(true);
+  });
+
+  it("区切りの並びの名前は文節で折り、必須なら「（必須）」を最後の文節に足す", () => {
+    const phrases = ["基準日を", "変える"];
+    const { container, rerender } = render(
+      <Field label={phrases}>{(c) => <Input {...c} />}</Field>,
+    );
+    expect(container.querySelector("label")!.innerHTML).toContain(
+      "基準日を<wbr>変える</span>",
+    );
+    rerender(
+      <Field label={phrases} required>
+        {(c) => <Input {...c} />}
+      </Field>,
+    );
+    expect(container.querySelector("label > span")!.innerHTML).toBe(
+      "基準日を<wbr>変える<wbr>（必須）",
+    );
+    expect(followsPhraseRules([...phrases, "（必須）"])).toBe(true);
+  });
+
+  it("必須でない文字列の名前は区切らずに組む", () => {
+    const { container } = render(
+      <Field label="名前">{(c) => <Input {...c} />}</Field>,
+    );
+    expect(container.querySelector("label")!.innerHTML).toBe("名前");
   });
 });

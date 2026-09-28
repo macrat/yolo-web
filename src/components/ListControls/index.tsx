@@ -13,21 +13,23 @@ import {
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import Field from "@/components/Field";
 import Input from "@/components/Input";
+import { phrasedNameText, type PhrasedName } from "@/components/PhrasedText";
 import RadioGroup from "@/components/RadioGroup";
 import { ALL, controlsLabel, type BrowseChoice } from "@/lib/list-browse";
 import styles from "./ListControls.module.css";
 
 /** ラジオボタンの組1つ。絞り込みの組の選択肢には「すべて」を含めない（部品が先頭に足す）。 */
 export interface ListControlsGroup {
-  legend: string;
+  /** 組の名前。区切りの並びを渡すと文節で折る（PhrasedText）。 */
+  legend: PhrasedName;
   options: BrowseChoice[];
   value: string;
   onChange: (value: string) => void;
 }
 
 interface ListControlsProps {
-  /** 名前の欄のラベル。何で探せるかを言う（§7）。 */
-  searchLabel: string;
+  /** 名前の欄のラベル。何で探せるかを言う（§7）。区切りの並びを渡すと文節で折る（PhrasedText）。 */
+  searchLabel: PhrasedName;
   /** 名前の欄の要素。一覧の操作のあとに、親がここへフォーカスを移す。 */
   searchRef?: Ref<HTMLInputElement>;
   /** 名前の条件。欄の外から変わったとき（戻る・「絞り込みを外す」）は、欄の字もこの値にする。 */
@@ -172,7 +174,7 @@ export default function ListControls({
           >
             {filterGroupsInOrder.map((group) => (
               <RadioGroup
-                key={group.legend}
+                key={phrasedNameText(group.legend)}
                 legend={group.legend}
                 options={withAll(group.options)}
                 value={group.value}

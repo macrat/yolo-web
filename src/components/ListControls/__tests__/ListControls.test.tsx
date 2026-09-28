@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import ListControls from "@/components/ListControls";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const KINDS = [
   { value: "text", label: "文章" },
@@ -131,5 +132,35 @@ describe("ListControls", () => {
     expect(input).toHaveValue("json");
     fireEvent.click(screen.getByRole("button", { name: "外から消す" }));
     expect(input).toHaveValue("");
+  });
+
+  test("区切りの並びの欄の名前と組の名前は文節で折り、読み上げの名前は元の文", () => {
+    const searchLabel = ["名前・", "説明で", "探す"];
+    const legend = ["難易度で", "絞る"];
+    render(
+      <ListControls
+        searchLabel={searchLabel}
+        query=""
+        onQueryChange={() => {}}
+        filterGroups={[
+          {
+            legend,
+            options: [{ value: "easy", label: "やさしい" }],
+            value: "all",
+            onChange: () => {},
+          },
+        ]}
+      />,
+    );
+    const search = screen.getByRole("searchbox", { name: "名前・説明で探す" });
+    expect(search.closest("div")!.querySelector("label")!.innerHTML).toContain(
+      "名前・<wbr>説明で<wbr>探す",
+    );
+    const group = screen.getByRole("radiogroup", { name: "難易度で絞る" });
+    expect(group.querySelector("legend")!.innerHTML).toContain(
+      "難易度で<wbr>絞る",
+    );
+    expect(followsPhraseRules(searchLabel)).toBe(true);
+    expect(followsPhraseRules(legend)).toBe(true);
   });
 });

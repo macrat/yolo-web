@@ -1,10 +1,14 @@
 import type { ReactNode, SyntheticEvent } from "react";
 import DisclosureTriangle from "@/components/DisclosureTriangle";
+import { renderPhrasedName } from "@/components/PhrasedText";
 import styles from "./Accordion.module.css";
 
 interface AccordionProps {
-  /** 開閉の行に置くラベル。三角の右に本文の大きさで組む。 */
-  summary: ReactNode;
+  /**
+   * 開閉の行に置くラベル。三角の右に本文の大きさで組む。区切りの並び（文字列の配列）を渡すと、見出しと同じく
+   * 文節で折る（PhrasedText）。
+   */
+  summary: ReactNode | readonly string[];
   /** 開いたときに出る中身。 */
   children: ReactNode;
   /** 開いているか。渡すと onToggle と組んで開閉を親が持つ。 */
@@ -40,7 +44,7 @@ export default function Accordion({
         data-text-box="inline"
       >
         <DisclosureTriangle />
-        <span className={styles.label}>{summary}</span>
+        {renderPhrasedName(summary, styles.label)}
       </summary>
       {children}
     </details>
