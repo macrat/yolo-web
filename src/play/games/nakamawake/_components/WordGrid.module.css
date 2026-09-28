@@ -7,25 +7,33 @@
  * 増やす。 */
 .frame {
   --word-grid-gap: var(--space-8);
+  --word-cell-pad: var(--space-8);
   max-width: var(--measure);
   font-size: var(--text-small);
 }
 
 /*
- * 列の数。マスの1行に語の字が3字と語の両脇の空き（1マスあたり 3.7em）が入る、いちばん多い列の数にする。4列で
- * 入らなければ2列、2列でも入らなければ1列。16の語は4列でも2列でも行が埋まり、行を横に見比べられる。
- * 字が使える幅は、格子の幅から px で決まるマスの間隔と枠を引いた残りで、字の大きさで増えない。そこで、その幅の
- * 器を列の数ごとに作り（格子の幅から間隔と枠の分を引いた幅）、その器の幅を字の大きさ（em）で測る。格子は
- * いちばん内側で、引いた分を足して元の幅に戻す。
+ * 列の数。マスの1行に語の字が4字（と字の幅の揺れの分 0.2em）入る、いちばん多い列の数にする（4列・2列・1列）。
+ * 4字の片仮名の語は、行頭に長音符と小書きの仮名を置かないと「ジュー／ス」のようにしか折れないので、4字が
+ * 1行に入る幅にして1字の行を作らない。16の語は4列でも2列でも行が埋まり、行を横に見比べられる。
+ * 字が使える幅は、格子の幅から px で決まるマスの間隔・枠・内側の余白を引いた残りで、字の大きさで増えない。
+ * そこで、その幅の器を列の数ごとに作り（格子の幅から間隔と枠と余白の分を引いた幅）、その器の幅を字の大きさ
+ * （em）で測る。格子はいちばん内側で、引いた分を足して元の幅に戻す。
  */
 .fourColumnText {
   container: word-grid-four / inline-size;
-  width: calc(100% - 3 * var(--word-grid-gap) - 8 * var(--rule-w));
+  width: calc(
+    100% - 3 * var(--word-grid-gap) - 8 * var(--rule-w) - 8 *
+      var(--word-cell-pad)
+  );
 }
 
 .twoColumnText {
   container: word-grid-two / inline-size;
-  width: calc(100% + 2 * var(--word-grid-gap) + 4 * var(--rule-w));
+  width: calc(
+    100% + 2 * var(--word-grid-gap) + 4 * var(--rule-w) + 4 *
+      var(--word-cell-pad)
+  );
 }
 
 /* 水和のときに語のマスは描き直されて動きうるので、ブラウザが画面の送りを合わせる目印（スクロールアンカー）に
@@ -35,27 +43,28 @@
   grid-template-columns: 1fr;
   gap: var(--word-grid-gap);
   overflow-anchor: none;
-  width: calc(100% + var(--word-grid-gap) + 4 * var(--rule-w));
+  width: calc(
+    100% + var(--word-grid-gap) + 4 * var(--rule-w) + 4 * var(--word-cell-pad)
+  );
 }
 
-/* 2マスに 3.7em ずつ。 */
-@container word-grid-two (min-width: 7.4em) {
+/* 2マスに 4.2em ずつ。 */
+@container word-grid-two (min-width: 8.4em) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* 4マスに 3.7em ずつ。 */
-@container word-grid-four (min-width: 14.8em) {
+/* 4マスに 4.2em ずつ。 */
+@container word-grid-four (min-width: 16.8em) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
 /* マスの中では、四角と語を左右の中央に置き、四角をマスの上端にそろえて、同じ行のマスの四角の高さを並べる。
- * 語はマスの幅で、行の長さをそろえて折り返す。行頭に長音符と小書きの仮名を置かない（line-break: strict）。
- * そのぶん折り所が減り、4字の片仮名の語が「ジュー／ス」と1字の行を作らないよう、語は左右の余白を持たずに
- * 字の間を少し詰め、いちばん狭いマスでも4字が1行に入るようにする。 */
+ * 語はマスの内側の余白（§5）の中で、行の長さをそろえて折り返す。行頭に長音符と小書きの仮名を置かない
+ * （line-break: strict）。 */
 .wordButton {
   display: flex;
   flex-direction: column;
@@ -63,7 +72,7 @@
   gap: var(--space-8);
   min-width: 0;
   min-height: 44px;
-  padding: var(--space-8) 0;
+  padding: var(--space-8) var(--word-cell-pad);
   background: var(--paper);
   color: var(--ink);
   font: inherit;
@@ -71,15 +80,23 @@
   text-align: center;
   line-height: var(--leading-heading);
   overflow-wrap: anywhere;
-  letter-spacing: -0.05em;
   line-break: strict;
   text-wrap: balance;
 }
 
-/* ことわざのように句を持つ語は、句の切れ目（<wbr>）で折る。マスに7字ほど入る広い格子（4マスに
- * 7.5em ずつ）では句の中で折らない。狭い格子では句がマスより長いことがあるので、句の切れ目を
- * 折り所に足すだけにし、句の中でも折る（1字だけの行を作らないため）。 */
+/* ことわざのように句を持つ語は、句の切れ目（<wbr>）で折る。狭い格子では句がマスより長いことがあるので、
+ * 句の切れ目を折り所に足すだけにし、句の中でも折る（1字だけの行を作らないため）。 */
+
+/* 広い格子（4マスに 7.5em ずつ）。マスの中で、四角を語の左に置き（§6 チェックボックスと同じ並び）、語を四角の
+ * 右から左揃えで組む。四角を語の上に積まないぶん行が低くなり、長い語の多い日も盤が縦に伸びない。語の字には
+ * 6字ほどの幅があり、句の中では折らない。 */
 @container word-grid-four (min-width: 30em) {
+  .wordButton {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: start;
+  }
+
   .phrased {
     word-break: keep-all;
   }

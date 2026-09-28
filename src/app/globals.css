@@ -197,13 +197,19 @@
 }
 
 /* 全幅の罫線は画面の幅（100vw）で張り出すので、幅を取るスクロールバーがある画面では右の端を越える。
- * 越えた分を切り、ページを横に送らせない。 */
+ * 越えた分を切り、ページを横に送らせない。
+ * html と body の幅と高さは、画面の大きさで値の変わる単位（vw・svh）で書かない。画面を回したときや窓の
+ * 大きさを変えたとき、ブラウザは見ていた所を画面に残すよう送りを合わせる（スクロールアンカー）が、
+ * 包む要素の幅や高さの値が変わると、その合わせをやめてしまう。 */
 html,
 body {
-  max-width: 100vw;
   overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
+}
+
+html {
+  height: 100%;
 }
 
 /* 上端・中間・下端を縦に積み、中身が短いページでも下端を画面の下に置く。
@@ -211,7 +217,7 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+  min-height: 100%;
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: var(--leading-body);
