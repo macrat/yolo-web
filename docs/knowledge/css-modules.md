@@ -1,13 +1,13 @@
 # CSS Modules 固有の技術知見
 
-CSS Modules のクラス名の hash とテーマの切り替えにまつわる知見。§1 は cycle-171 で確かめ cycle-316 で現行のコードに合わせて書き直したもの、§2 は cycle-316 で得たもの。
+CSS Modules がクラス名を hash する範囲と、テーマの切り替えに部品の CSS を追従させる方法についての知見。
 
 ---
 
 ## 1. モジュールの外で付くクラスは `:global()` で包む
 
 CSS Modules のコンパイラは、セレクタの中の**すべてのクラス名**を hash する。
-コンポーネントの JSX ではなく、変換で作られた生の HTML に付くクラス（`src/lib/markdown.ts` が表を包む `.table-scroll`、shiki の `.shiki`、mermaid の `.mermaid` など）を CSS Modules のファイルにそのまま書くと、そのクラスも hash され、HTML のクラスに一致しない。
+コンポーネントの JSX ではなく、変換で作られた生の HTML に付くクラス（`src/lib/markdown.ts` が表を包む `.table-scroll`、shiki の `.shiki`、mermaid の `.mermaid` など）を CSS Modules のファイルにそのまま書くと、そのクラスも hash され、HTML のクラスに一致しない（実測・cycle-171。モジュールのファイルに書いた外のクラスが hash され、実機でスタイルが当たらなかった）。
 
 ```css
 /* NG: .table-scroll も hash され、markdown が出す class="table-scroll" に一致しない */
@@ -33,8 +33,8 @@ CSS Modules のコンパイラは、セレクタの中の**すべてのクラス
 
 ## 2. テーマはトークンで追従させる
 
-サイトのテーマは端末の設定に従い、`src/app/globals.css` が `@media (prefers-color-scheme: dark)` の中でトークン（`--paper`・`--ink` など）の値を切り替える。`<html>` や `<body>` にテーマのクラスは付かない。
+サイトのテーマは端末の設定に従い、`src/app/globals.css` が `@media (prefers-color-scheme: dark)` の中でトークン（`--paper`・`--ink` など）の値を切り替える。`<html>` や `<body>` にテーマのクラスは付かない（実測・cycle-316。実機で両方のテーマを表示し、`src/` にテーマのクラスが残っていないことを確かめた）。
 
-そのため部品の CSS Modules は、トークンを使うだけで light と dark の両方に追従する。テーマのクラスを参照するセレクタは、どこにも一致しない。
+そのため部品の CSS Modules は、トークンを使うだけで light と dark の両方に追従する。テーマのクラスを参照するセレクタは、どこにも一致しない（この構造からの推論・cycle-316）。
 
 `@media (prefers-color-scheme: dark)` を部品の CSS に書くのは、トークンで色を決められないものだけにする。用例は `src/app/blog/[slug]/page.module.css` の shiki で、shiki は light と dark の色を要素の inline style の変数（`--shiki-dark` など）で出すため、dark のときにその変数へ切り替える。
