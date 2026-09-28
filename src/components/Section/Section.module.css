@@ -1,12 +1,16 @@
 /* セクション（DESIGN.md §5 ページの割り方）。中間のコンテナのコンテンツ幅に、上から順に並ぶ。
- * 上下の余白は、狭い画面では詰めてコンテンツに回す。 */
+ * 最初のセクションは上端の全幅の罫線から少しだけあけて始まり、頭に置くもの（パンくず・主見出し）が
+ * どのページでも同じ高さに立つ。セクションとセクションのあいだは、罫線の上下に同じ余白をあける。
+ * どの余白も、狭い画面では詰めてコンテンツに回す。 */
 .section {
+  --section-start-space: var(--space-16);
   --section-space: var(--space-32);
-  padding-block: var(--section-space);
+  padding-block: var(--section-start-space) var(--section-space);
 }
 
 @media (min-width: 45rem) {
   .section {
+    --section-start-space: var(--space-24);
     --section-space: var(--space-48);
   }
 }
