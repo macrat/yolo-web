@@ -160,7 +160,10 @@ test("QuizPlayPageLayout renders QuizContainer with quiz and referrerTypeId", as
 
 test("QuizPlayPageLayout renders FaqSection", async () => {
   const component = await QuizPlayPageLayout({
-    quiz: mockQuiz,
+    quiz: {
+      ...mockQuiz,
+      meta: { ...mockQuiz.meta, faq: [{ question: "Q", answer: "A" }] },
+    },
     slug: "test-quiz",
   });
   render(component);
@@ -328,4 +331,51 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", asyn
     const heading = screen.getByRole("heading", { name: phrases.join("") });
     expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
   }
+});
+
+test("ページは、頭とクイズ本体・よくある質問・ページの共有の順のセクションで組む（DESIGN.md §5）", async () => {
+  const { container } = render(
+    await QuizPlayPageLayout({
+      quiz: {
+        ...mockQuiz,
+        meta: { ...mockQuiz.meta, faq: [{ question: "Q", answer: "A" }] },
+      },
+      slug: "test-quiz",
+    }),
+  );
+  const sections = Array.from(container.querySelectorAll(":scope > section"));
+  expect(sections).toHaveLength(3);
+  expect(
+    within(sections[0] as HTMLElement).getByRole("navigation", {
+      name: "パンくずリスト",
+    }),
+  ).toBeInTheDocument();
+  expect(
+    within(sections[0] as HTMLElement).getByRole("heading", { level: 1 }),
+  ).toBeInTheDocument();
+  expect(
+    within(sections[0] as HTMLElement).getByTestId("quiz-container"),
+  ).toBeInTheDocument();
+  expect(
+    within(sections[1] as HTMLElement).getByTestId("faq-section"),
+  ).toBeInTheDocument();
+  expect(
+    within(sections[2] as HTMLElement).getByRole("heading", {
+      level: 2,
+      name: "この診断を勧める",
+    }),
+  ).toBeInTheDocument();
+});
+
+test("よくある質問を持たないクイズは、空のセクションを置かない", async () => {
+  const { container } = render(
+    await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }),
+  );
+  expect(container.querySelectorAll(":scope > section")).toHaveLength(2);
+  expect(screen.queryByTestId("faq-section")).not.toBeInTheDocument();
+});
+
+test("h1 の下に説明を置かない（説明は開始の画面が「はじめる」の下に置く）", async () => {
+  render(await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }));
+  expect(screen.queryByText("テスト用のクイズです")).not.toBeInTheDocument();
 });

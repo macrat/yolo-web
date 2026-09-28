@@ -125,9 +125,9 @@ export default function QuizContainer({
     const estimatedTime = getEstimatedTime(questionCount);
     const typeLabel = quiz.meta.type === "knowledge" ? "知識クイズ" : "診断";
 
-    // h1 と説明はページ章立て（QuizPlayPageLayout の header）が担うため、
-    // ここでは「これから始める道具」としての所要情報と開始操作だけを静かに置く。
-    // 所要情報（種別・問題数・所要時間・タイプ数）は、間隔をあけて並べた補助情報にする。
+    // 開始の画面は、事実の行 → 一文 →「はじめる」→ 説明 → 関連の入口の順に積む。「はじめる」を狭い画面でも
+    // 最初の画面に入れるため、説明はその下に置く。説明はこのクイズ・診断が何をするかを言う文なので、ほかの遊びへの
+    // 入口より先に置く。事実（種別・問題数・所要時間・タイプ数）は、間隔をあけて並べた補助情報にする。
     const introFacts = [
       typeLabel,
       `全${questionCount}問`,
@@ -137,36 +137,35 @@ export default function QuizContainer({
         : "",
     ].filter((fact) => fact !== "");
     return (
-      <div className={styles.stage}>
-        <div className={styles.intro}>
-          <p className={styles.introFacts}>
-            {introFacts.map((fact) => (
-              <span key={fact}>{fact}</span>
+      <div className={styles.intro}>
+        <p className={styles.introFacts}>
+          {introFacts.map((fact) => (
+            <span key={fact}>{fact}</span>
+          ))}
+        </p>
+        <p>
+          {quiz.meta.type === "knowledge"
+            ? "準備ができたら始めましょう。"
+            : "気軽に答えていくと、結果が出ます。"}
+        </p>
+        <Button variant="primary" onClick={handleStart}>
+          はじめる
+        </Button>
+        <p>{quiz.meta.description}</p>
+        {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
+          <div className={styles.relatedLinks}>
+            {quiz.meta.relatedLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={styles.relatedLink}
+                data-text-box="inline"
+              >
+                {link.label}
+              </Link>
             ))}
-          </p>
-          <p className={styles.introLead}>
-            {quiz.meta.type === "knowledge"
-              ? "準備ができたら始めましょう。"
-              : "気軽に答えていくと、結果が出ます。"}
-          </p>
-          <Button variant="primary" onClick={handleStart}>
-            はじめる
-          </Button>
-          {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
-            <div className={styles.relatedLinks}>
-              {quiz.meta.relatedLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={styles.relatedLink}
-                  data-text-box="inline"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }

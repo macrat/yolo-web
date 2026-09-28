@@ -148,3 +148,17 @@ test("見出しは書き手が分けた文節の切れ目でだけ折れる（DE
     expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
   }
 });
+
+test("ページの1つのセクションで、見出しはセクションの見出し（h2）", () => {
+  const { container } = render(
+    <RelatedQuizzes currentSlug="kanji-level" category="knowledge" />,
+  );
+  const section = container.firstChild as HTMLElement;
+  expect(section.tagName).toBe("SECTION");
+  expect(
+    within(section).getByRole("heading", {
+      level: 2,
+      name: "他のクイズ・診断も試してみよう",
+    }),
+  ).toBeInTheDocument();
+});

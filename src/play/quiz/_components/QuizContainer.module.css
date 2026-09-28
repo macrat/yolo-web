@@ -3,7 +3,7 @@
  * （DESIGN.md §8）。結果を囲むのは結果のボックスだけである。
  */
 
-/* 開始と設問の画面の縦の並び。 */
+/* 設問の画面の縦の並び。 */
 .stage {
   display: flex;
   flex-direction: column;
@@ -11,19 +11,24 @@
 
 /* === intro フェーズ === */
 
+/* 開始の画面。事実の行・一文・「はじめる」・説明・関連の入口を、上から同じ間隔で積む（§5 の間隔）。
+ * 一文と説明は本文の大きさで、本文の幅で折り返す（§4・§5）。 */
 .intro {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+  gap: var(--space-16);
+}
+
+.intro > p {
+  max-width: var(--measure);
 }
 
 /*
- * 所要情報は枠や地で囲まず、補助情報の文字で置く（§4）。
+ * 事実の行は枠や地で囲まず、補助情報の文字で置く（§4）。
  * 値どうしは字で区切らず間隔で分ける。「・」は値の中にも現れることがあり、区切りと見分けられないため。
  */
 .introFacts {
-  margin: 0;
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--space-16);
@@ -31,16 +36,9 @@
   font-size: var(--text-small);
 }
 
-/* 開始前の一言（補足）。目立たせない */
-.introLead {
-  font-size: 0.95rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  margin: 0;
-}
-
-/* intro 下部の関連リンク（任意）。縁の見えないコントロールなので、字の左右の余白と、字を並びの左端に置く
- * 張り出しは data-text-box（globals.css）が持つ。下線と訪問済みの色は a の既定に従う。 */
+/* 関連の入口。縁の見えないコントロールなので、字の左右の余白と、字を並びの左端に置く張り出しは
+ * data-text-box（globals.css）が持つ。押せる範囲が 44px に届かなければ、字を左に置いたまま広げる（§5）。
+ * 下線と訪問済みの色は a の既定に従う。 */
 .relatedLinks {
   display: flex;
   flex-direction: column;
@@ -52,7 +50,6 @@
   align-items: center;
   min-width: 44px;
   min-height: 44px;
-  font-size: 0.875rem;
 }
 
 /* === result フェーズ === */

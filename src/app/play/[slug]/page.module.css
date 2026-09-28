@@ -1,53 +1,17 @@
 /*
- * クイズ・診断のページ（/play/[slug]・/play/music-personality）の組み方。
- *
- * パンくずと h1 で何のページかを確かめてから本体に入り、補助の情報は本体の下に置く。器は背景も囲みも持たず、
- * 地（--paper）にそのまま置く。
+ * クイズ・診断のページ（/play/[slug]・/play/music-personality）の組み方。ページの割り方と、セクションの
+ * あいだの全幅の罫線と余白は Section が持つ（DESIGN.md §5）。見出しの大きさは h1・h2 の既定（§4 の主見出し・
+ * セクションの見出し）に従う。
  */
 
-/* ページの中身。幅と左右の余白はコンテナが決めるので、器は自分の左右の余白を持たず、コンテンツ幅の左端から
- * 組む（DESIGN.md §5「コンテンツ幅の左端は、どのページでも同じ位置」）。 */
-.layout {
-  padding-block: var(--space-24);
+/* 最初のセクションの中身。パンくず・主見出し・クイズ本体を、上から同じ間隔で積む（§5 の間隔）。 */
+.head {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
 }
 
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-/* h1 は、本体をファーストビューに入れるため小さく組む。 */
-.title {
-  font-size: 1.1rem;
-  color: var(--ink);
-}
-
-@media (min-width: 48rem) {
-  .title {
-    font-size: 1.25rem;
-  }
-}
-
-/* 短い説明は1〜2文。本文の幅で折り返す（§5）。 */
-.shortDescription {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  max-width: var(--measure);
-}
-
-/* このクイズ・診断を人に勧めるページの共有。上に細い罫線を引いて、上の内容と分ける（§5）。 */
-.shareSection {
-  max-width: var(--measure);
-  padding-top: var(--space-24);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.shareSectionTitle {
-  font-size: var(--text-heading-sub);
-  margin-bottom: var(--space-8);
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
 }

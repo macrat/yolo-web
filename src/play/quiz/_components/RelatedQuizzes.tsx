@@ -1,5 +1,6 @@
 import ItemList from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import { getPlayContentsByCategory } from "@/play/registry";
 import { toPlayListItems } from "@/play/listItems";
 import type { PlayContentMeta } from "@/play/types";
@@ -16,8 +17,9 @@ interface RelatedQuizzesProps {
 }
 
 /**
- * いまのクイズ・診断と同じ分類のものを、登録の順に、いまのものを除いて並べる。
- * 並べるものが無いときは何も描かない。
+ * いまのクイズ・診断と同じ分類のものを、登録の順に、いまのものを除いて並べる、ページの1つのセクション
+ * （DESIGN.md §5）。見出しはセクションの見出しで、どの面に置いても主見出しより小さい段に立つ（§4）。
+ * 並べるものが無いときは、セクションごと描かない。
  */
 export default function RelatedQuizzes({
   currentSlug,
@@ -30,7 +32,7 @@ export default function RelatedQuizzes({
   if (relatedContents.length === 0) return null;
 
   return (
-    <section className={styles.related}>
+    <Section>
       <PhrasedText
         as="h2"
         id={HEADING_ID}
@@ -41,6 +43,6 @@ export default function RelatedQuizzes({
         labelledBy={HEADING_ID}
         items={toPlayListItems(relatedContents)}
       />
-    </section>
+    </Section>
   );
 }

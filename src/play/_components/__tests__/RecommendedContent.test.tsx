@@ -75,10 +75,18 @@ test("RecommendedContent renders 3 cards", () => {
   expect(links.length).toBe(3);
 });
 
-test("RecommendedContent renders section heading", () => {
-  render(<RecommendedContent currentSlug="kanji-level" />);
-
-  expect(screen.getByText("他のジャンルも試してみよう")).toBeInTheDocument();
+test("ページの1つのセクションで、見出しはセクションの見出し（h2）", () => {
+  const { container } = render(
+    <RecommendedContent currentSlug="kanji-level" />,
+  );
+  const section = container.firstChild as HTMLElement;
+  expect(section.tagName).toBe("SECTION");
+  expect(
+    within(section).getByRole("heading", {
+      level: 2,
+      name: "他のジャンルも試してみよう",
+    }),
+  ).toBeInTheDocument();
 });
 
 test("RecommendedContent の一覧が見出しの名前を持ち、リンクの読み上げの名前が行の名前だけであること", () => {

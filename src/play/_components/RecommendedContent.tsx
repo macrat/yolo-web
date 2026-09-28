@@ -1,5 +1,6 @@
 import ItemList from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import { getRecommendedContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import styles from "./RecommendedContent.module.css";
@@ -11,7 +12,9 @@ interface RecommendedContentProps {
 const HEADING_ID = "recommended-content";
 
 /**
- * いまの遊びと違う分類から、おすすめを1件ずつ選んで並べる。選ぶものが無いときは何も描かない。
+ * いまの遊びと違う分類から、おすすめを1件ずつ選んで並べる、ページの1つのセクション（DESIGN.md §5）。
+ * 見出しはセクションの見出しで、どの面に置いても主見出しより小さい段に立つ（§4）。
+ * 選ぶものが無いときは、セクションごと描かない。
  */
 export default function RecommendedContent({
   currentSlug,
@@ -21,7 +24,7 @@ export default function RecommendedContent({
   if (recommended.length === 0) return null;
 
   return (
-    <section className={styles.related}>
+    <Section>
       <PhrasedText
         as="h2"
         id={HEADING_ID}
@@ -29,6 +32,6 @@ export default function RecommendedContent({
         phrases={["他の", "ジャンルも", "試して", "みよう"]}
       />
       <ItemList labelledBy={HEADING_ID} items={toPlayListItems(recommended)} />
-    </section>
+    </Section>
   );
 }
