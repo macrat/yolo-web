@@ -178,15 +178,16 @@ describe("RadarChart を測り直す", () => {
 
   let figureWidth = 320;
   const observers: ResizeObserverCallback[] = [];
+  let measureStyle: HTMLStyleElement | null = null;
 
   /**
    * 図の幅を figureWidth に、字を 14px（1字の幅 14px・行の高さ 17.5px）にして測らせ、ResizeObserver の通知を
    * resizeTo で送れるようにする。この測りでは、軸の名前を置けるいちばん狭い図の幅が 96px になる。
    */
   function stubMeasurement() {
-    const style = document.createElement("style");
-    style.textContent = "[data-radar-name] { font-size: 14px; }";
-    document.head.append(style);
+    measureStyle = document.createElement("style");
+    measureStyle.textContent = "[data-radar-name] { font-size: 14px; }";
+    document.head.append(measureStyle);
     vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(
       () => figureWidth,
     );
@@ -240,7 +241,8 @@ describe("RadarChart を測り直す", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
-    document.head.querySelectorAll("style").forEach((style) => style.remove());
+    measureStyle?.remove();
+    measureStyle = null;
     observers.length = 0;
     figureWidth = 320;
   });
@@ -275,7 +277,7 @@ describe("RadarChart を測り直す", () => {
     }
   });
 
-  test("軸の数が変わっても、前の軸で測った値では組まず、いまの軸で測り直して描く", () => {
+  test("軸の数が変わっても落ちず、いまの軸の数で描き直す", () => {
     stubMeasurement();
     const { container, rerender } = render(
       <RadarChart label="レーダー" axes={axes5} />,
