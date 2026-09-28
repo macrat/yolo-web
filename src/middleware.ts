@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { PAPER, PAPER_DARK } from "@/lib/token-hex";
 import { SITE_NAME } from "@/lib/constants";
-import { RELEASE_ID } from "@/lib/generated/release-id";
+import {
+  gaTrackingId,
+  gtagInitScript,
+  gtagLoaderSrc,
+} from "@/lib/google-analytics";
 import {
   AI_NOTICE,
   FOOTER_LINKS,
@@ -149,14 +153,14 @@ export const GONE_PAGE_HEADING_PHRASES = [
 const GONE_PAGE_HEADING = GONE_PAGE_HEADING_PHRASES.join("");
 
 /**
- * GA の読み込み。ほかのページの GoogleAnalytics（@/components/GoogleAnalytics）と同じ ID と同じ設定で送り、
+ * GA の読み込み。ほかのページの GoogleAnalytics と同じく `@/lib/google-analytics` の URL と初期化の文を使い、
  * 消した記事の URL に着いた来訪者の数をほかのページの数と同じ所で見られるようにする。ID が無い環境では何も出さない。
  */
 function analyticsTags(): string {
-  const id = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+  const id = gaTrackingId();
   if (!id) return "";
-  return `<script async src='https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}'></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{analytics_storage:'granted'});gtag('config',${JSON.stringify(id)},{release:${JSON.stringify(RELEASE_ID)}});</script>
+  return `<script async src='${gtagLoaderSrc(id)}'></script>
+<script>${gtagInitScript(id)}</script>
 `;
 }
 

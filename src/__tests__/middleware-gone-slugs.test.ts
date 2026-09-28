@@ -13,7 +13,7 @@ import {
   GONE_PAGE_HEADING_PHRASES,
 } from "../middleware";
 import { SITE_NAME } from "@/lib/constants";
-import { RELEASE_ID } from "@/lib/generated/release-id";
+import { gtagInitScript, gtagLoaderSrc } from "@/lib/google-analytics";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import {
   FOOTER_LINKS,
@@ -182,7 +182,7 @@ describe("build410Html の見出しの折り方（DESIGN.md §4）", () => {
     expect(html).toContain("<h1>この<wbr>コンテンツは<wbr>終了しました</h1>");
   });
 
-  test("見出しは語の中で折らず、行頭の禁則を厳しい側で組み、auto-phrase に頼らない", () => {
+  test("見出しは文節の中では1行に収まらないときだけ折り、行頭の禁則を厳しい側で組み、auto-phrase に頼らない", () => {
     const h1Rule = html.match(/\nh1\{[^}]*\}/)?.[0] ?? "";
     expect(h1Rule).toContain("word-break:keep-all");
     expect(h1Rule).toContain("overflow-wrap:anywhere");
@@ -197,16 +197,14 @@ describe("build410Html の GA", () => {
     vi.unstubAllEnvs();
   });
 
-  test("ID があれば、ほかのページと同じ ID と release で gtag を読み込む", () => {
+  test("ID があれば、ほかのページと同じ読み込みの URL と初期化の文を head に置く", () => {
     vi.stubEnv("NEXT_PUBLIC_GA_TRACKING_ID", "G-TESTID123");
     const html = build410Html();
     const head = html.match(/<head>[\s\S]*<\/head>/)?.[0] ?? "";
     expect(head).toContain(
-      "<script async src='https://www.googletagmanager.com/gtag/js?id=G-TESTID123'></script>",
+      `<script async src='${gtagLoaderSrc("G-TESTID123")}'></script>`,
     );
-    expect(head).toContain(
-      `gtag('config',"G-TESTID123",{release:${JSON.stringify(RELEASE_ID)}});`,
-    );
+    expect(head).toContain(`<script>${gtagInitScript("G-TESTID123")}</script>`);
   });
 
   test("ID が無ければ GA を読み込まない", () => {
