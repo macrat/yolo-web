@@ -5,7 +5,7 @@
 
 /* 読み終えた人への、2つ目の誘い。 */
 .cta2Section {
-  margin-block-start: var(--space-32);
+  margin-block-start: var(--space-24);
   padding-block-start: var(--space-24);
   border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }

@@ -21,8 +21,11 @@
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* セクションの見出しのすぐ下の小見出しは、見出しがすでに切れ目なので、線を持たない（§5）。 */
-.sectionHeading + .reading > .heading:first-child {
+/* セクションの見出しのすぐ下の区画は、見出しがすでに切れ目なので、線と上の余白を持たない（§5）。読みものなら
+ * その最初の小見出しが、読みものでない区画（相性の区画など）ならその区画自身が、見出しのすぐ下の区画になる。 */
+.sectionHeading + .reading > .heading:first-child,
+.sectionHeading + :not(.reading) {
+  margin-top: 0;
   padding-top: 0;
   border-top: 0;
 }

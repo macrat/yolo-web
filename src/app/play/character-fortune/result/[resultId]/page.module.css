@@ -21,7 +21,7 @@
 /* 読みものを締めくくる、相性への誘い。本文の区切りの細い罫線で、前の読みものと分ける。診断への誘いは
  * ここの1つだけにし、同じ行き先のリンクを続けて並べない。 */
 .compatibilitySection {
-  margin-block-start: var(--space-32);
+  margin-block-start: var(--space-24);
   padding-block-start: var(--space-24);
   border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
