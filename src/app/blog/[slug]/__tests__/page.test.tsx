@@ -140,6 +140,19 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
+  describe("構造化データ", () => {
+    it("記事の JSON-LD の image が、ページの画像の URL（og:image と同じ）であること", async () => {
+      const { default: BlogPostPage, generateStaticParams } =
+        await import("../page");
+      const { shareImageUrl } = await import("@/lib/share-image");
+      const [{ slug }] = generateStaticParams();
+      const page = await BlogPostPage({ params: Promise.resolve({ slug }) });
+      const [script] = page.props.children;
+      const jsonLd = JSON.parse(script.props.dangerouslySetInnerHTML.__html);
+      expect(jsonLd.image).toBe(shareImageUrl(`/blog/${slug}`));
+    });
+  });
+
   describe("本文", () => {
     it("本文を markdown-preview と同じ組み方の Prose で出すこと", () => {
       expect(source).toMatch(/<Prose\s[^>]*html=\{post\.contentHtml\}/);

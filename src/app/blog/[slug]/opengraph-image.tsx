@@ -1,38 +1,36 @@
+import { notFound } from "next/navigation";
 import {
   getAllBlogSlugs,
   getBlogPostBySlug,
   CATEGORY_LABELS,
-  type BlogCategory,
 } from "@/blog/_lib/blog";
 import {
-  createOgpImageResponse,
-  ogpSize,
-  ogpContentType,
-} from "@/lib/ogp-image";
+  createShareImageResponse,
+  shareImageAltByKind,
+  SHARE_IMAGE_CONTENT_TYPE,
+  SHARE_IMAGE_SIZE,
+} from "@/lib/share-image";
 
-export const alt = "yolos.net blog";
-export const size = ogpSize;
-export const contentType = ogpContentType;
+export const alt = shareImageAltByKind("ブログの記事の題");
+export const size = SHARE_IMAGE_SIZE;
+export const contentType = SHARE_IMAGE_CONTENT_TYPE;
 
 export function generateStaticParams() {
   return getAllBlogSlugs().map((slug) => ({ slug }));
 }
 
-type Props = {
+/** 記事の画像。名前は記事の h1 と同じ題で、副題に記事のカテゴリを添える。 */
+export default async function OpenGraphImage({
+  params,
+}: {
   params: Promise<{ slug: string }>;
-};
-
-export default async function OpenGraphImage({ params }: Props) {
+}) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
-
-  const title = post?.title ?? "Blog";
-  const categoryLabel = post
-    ? (CATEGORY_LABELS[post.category as BlogCategory] ?? "")
-    : "";
-
-  return createOgpImageResponse({
-    title,
-    subtitle: categoryLabel,
+  if (!post) notFound();
+  return createShareImageResponse({
+    aux: "ブログ",
+    name: post.title,
+    subtitle: CATEGORY_LABELS[post.category],
   });
 }

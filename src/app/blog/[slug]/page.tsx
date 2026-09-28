@@ -16,9 +16,9 @@ import {
   generateBlogPostJsonLd,
   safeJsonLdStringify,
 } from "@/lib/seo";
-import { BASE_URL } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { shareImageUrl } from "@/lib/share-image";
 import Breadcrumb from "@/components/Breadcrumb";
 import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const jsonLd = generateBlogPostJsonLd({
     ...post,
-    image: `${BASE_URL}/blog/${slug}/opengraph-image`,
+    image: shareImageUrl(`/blog/${slug}`),
   });
 
   return (
