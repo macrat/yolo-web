@@ -7,7 +7,7 @@ import styles from "./HowToPlay.module.css";
  */
 export default function HowToPlay() {
   return (
-    <Accordion summary="くわしい遊び方">
+    <Accordion summary={["くわしい", "遊び方"]}>
       <div className={styles.body}>
         <p>16の言葉のなかに、共通点でつながる4つずつの組が4つ隠れています。</p>
         <p>

@@ -70,7 +70,7 @@ export default function ListStatus({
         {announcement}
       </p>
       {empty && onClear ? (
-        <Button onClick={onClear}>絞り込みを外す</Button>
+        <Button onClick={onClear} phrases={["絞り込みを", "外す"]} />
       ) : null}
     </div>
   );

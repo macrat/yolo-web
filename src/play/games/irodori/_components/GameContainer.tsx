@@ -46,6 +46,7 @@ import Button from "@/components/Button";
 import ProgressBar from "@/components/ProgressBar";
 import ShareButtons from "@/components/ShareButtons";
 import { revealControl } from "@/lib/reveal";
+import { SHARE_LABELS } from "@/lib/share-labels";
 import {
   releaseSavedLayout,
   resultAreaNames,
@@ -417,9 +418,8 @@ export default function GameContainer({
                         variant="primary"
                         onClick={handleNextRound}
                         aria-describedby={roundResultId}
-                      >
-                        次の問題へ
-                      </Button>
+                        phrases={["次の", "問題へ"]}
+                      />
                     </div>
                   </>
                 )}
@@ -476,7 +476,10 @@ function ResultShare({ gameState, onSaveImage }: ResultShareProps) {
         contentId="irodori"
         surface="text"
       >
-        <Button onClick={onSaveImage}>画像を保存</Button>
+        <Button
+          onClick={onSaveImage}
+          phrases={SHARE_LABELS.saveImage.phrases}
+        />
       </ShareButtons>
     </section>
   );

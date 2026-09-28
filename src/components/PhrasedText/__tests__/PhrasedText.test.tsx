@@ -127,6 +127,12 @@ describe("PhrasedText", () => {
       "ガイド\u2060─\u2060─シェア効かない\u00A0-\u2060-CSS",
     );
   });
+  test("ハイフンで結んだ語は、ハイフンの後ろで折らない", () => {
+    render(<PhrasedText as="h1" phrases={["not-found.tsx が", "効かない"]} />);
+    expect(screen.getByRole("heading", { level: 1 }).innerHTML).toBe(
+      "not-\u2060found.tsx が<wbr>効かない",
+    );
+  });
 });
 
 describe("renderPhrasedName", () => {

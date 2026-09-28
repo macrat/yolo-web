@@ -2,6 +2,40 @@ import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ShareButtons from "@/components/ShareButtons";
 import Button from "@/components/Button";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
+import { SHARE_LABELS, type ShareLabel } from "@/lib/share-labels";
+
+describe("共有のボタンの面の区切り", () => {
+  test.each(Object.entries(SHARE_LABELS))(
+    "%s の面の並びは文節の区切りの禁則を満たす",
+    (_key, label) => {
+      expect(followsPhraseRules(label.phrases)).toBe(true);
+    },
+  );
+
+  test("読み上げの名前を持つボタンは、見える文言で名前を始める", () => {
+    const labels: ShareLabel[] = Object.values(SHARE_LABELS);
+    for (const { phrases, ariaLabel } of labels) {
+      if (ariaLabel !== undefined) {
+        expect(ariaLabel.startsWith(phrases.join(""))).toBe(true);
+      }
+    }
+  });
+
+  test("面は区切りの並びのあいだにだけ <wbr> を持つ", () => {
+    render(<ShareButtons url="/blog/test" title="テスト記事" />);
+    expect(
+      screen
+        .getAllByRole("button")
+        .map((b) => b.querySelector("span")!.innerHTML),
+    ).toEqual([
+      "X で<wbr>シェア",
+      "LINE で<wbr>シェア",
+      "はてブに<wbr>追加",
+      "URLを<wbr>コピー",
+    ]);
+  });
+});
 
 // jsdom の navigator は share を持たないので、結果の共有も外部の共有先のボタンを並べる。
 describe("共有のボタンの文言と読み上げの名前", () => {

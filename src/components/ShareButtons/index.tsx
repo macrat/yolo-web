@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, type ReactNode } from "react";
 import Button from "@/components/Button";
 import { trackShare, type ShareSurface } from "@/lib/analytics";
 import { copyText } from "@/lib/clipboard";
-import { SHARE_LABELS } from "@/lib/share-labels";
+import { SHARE_LABELS, type ShareLabel } from "@/lib/share-labels";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import styles from "./ShareButtons.module.css";
 
@@ -164,33 +164,18 @@ export default function ShareButtons({
 
   interface ShareAction {
     key: SnsType;
-    label: string;
-    ariaLabel?: string;
+    label: ShareLabel;
     onClick: () => void | Promise<void>;
   }
 
   const actions: ShareAction[] = [
-    {
-      key: "x",
-      label: SHARE_LABELS.x.text,
-      ariaLabel: SHARE_LABELS.x.ariaLabel,
-      onClick: handleShareX,
-    },
-    {
-      key: "line",
-      label: SHARE_LABELS.line.text,
-      ariaLabel: SHARE_LABELS.line.ariaLabel,
-      onClick: handleShareLine,
-    },
-    {
-      key: "hatena",
-      label: SHARE_LABELS.hatena.text,
-      ariaLabel: SHARE_LABELS.hatena.ariaLabel,
-      onClick: handleShareHatena,
-    },
+    { key: "x", label: SHARE_LABELS.x, onClick: handleShareX },
+    { key: "line", label: SHARE_LABELS.line, onClick: handleShareLine },
+    { key: "hatena", label: SHARE_LABELS.hatena, onClick: handleShareHatena },
     {
       key: "copy",
-      label: text === undefined ? "URLをコピー" : "結果をコピー",
+      label:
+        text === undefined ? SHARE_LABELS.copyUrl : SHARE_LABELS.copyResult,
       onClick: handleCopy,
     },
   ];
@@ -199,14 +184,20 @@ export default function ShareButtons({
     <div className={styles.wrapper}>
       <div className={styles.buttons}>
         {text !== undefined && canWebShare ? (
-          <Button onClick={handleWebShare}>この結果をシェア</Button>
+          <Button
+            onClick={handleWebShare}
+            phrases={SHARE_LABELS.webShare.phrases}
+          />
         ) : (
           actions
             .filter((a) => sns.includes(a.key))
-            .map(({ key, label, ariaLabel, onClick }) => (
-              <Button key={key} onClick={onClick} aria-label={ariaLabel}>
-                {label}
-              </Button>
+            .map(({ key, label, onClick }) => (
+              <Button
+                key={key}
+                onClick={onClick}
+                aria-label={label.ariaLabel}
+                phrases={label.phrases}
+              />
             ))
         )}
         {children}

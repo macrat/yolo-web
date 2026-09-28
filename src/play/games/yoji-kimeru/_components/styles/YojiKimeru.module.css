@@ -141,11 +141,6 @@
   width: 100%;
 }
 
-/* 残りの回数は括弧の一続きで、中では折らない（§4）。 */
-.remaining {
-  white-space: nowrap;
-}
-
 .inputRow {
   display: flex;
   gap: var(--space-8);

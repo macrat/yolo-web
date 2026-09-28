@@ -30,7 +30,8 @@ type PhrasedTextProps<T extends PhrasedTag> = PhrasedTextOwnProps<T> &
  * 要素の中は文の字と <wbr> だけにし、字を分ける要素を持たない。見出しの中の要素で読み上げが見出しを分けて
  * 読まないようにし、写した文やページ内の検索が元の文のままになるようにする。
  *
- * ダッシュ（「—」「──」「--」）は、joinDashes（@/lib/phrase-dashes）で前の語に付けて組む。 */
+ * ダッシュ（「—」「──」「--」）は、joinDashes（@/lib/phrase-dashes）で前の語に付けて組み、ハイフンで結んだ語
+ * （「not-found」）は、語が1行に収まる幅ではハイフンの後ろで折らない。 */
 export default function PhrasedText<T extends PhrasedTag>({
   as,
   phrases,

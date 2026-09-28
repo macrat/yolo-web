@@ -18,7 +18,10 @@ const MARK_ORDER: CharFeedback[] = ["correct", "present", "absent"];
  */
 export default function HowToPlay() {
   return (
-    <Accordion summary="くわしい遊び方" className={styles.howToPlayAccordion}>
+    <Accordion
+      summary={["くわしい", "遊び方"]}
+      className={styles.howToPlayAccordion}
+    >
       <div className={styles.howToPlay}>
         <p>
           毎日1つの四字熟語を当てるゲームです。漢字4字を入力して送ると、盤に推測した字が並び、字の下の印が、その字が答えのどこにあるかを示します。6回までに当てましょう。

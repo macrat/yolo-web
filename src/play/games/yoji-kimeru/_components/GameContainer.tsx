@@ -20,7 +20,7 @@ import type {
 import { MAX_GUESSES } from "@/play/games/yoji-kimeru/_lib/types";
 import { isValidYojiInput } from "@/play/games/yoji-kimeru/_lib/engine";
 import { formatDateJST } from "@/play/games/yoji-kimeru/_lib/daily";
-import { difficultyNames } from "@/play/games/yoji-kimeru/_lib/constants";
+import { guessLabel } from "@/play/games/yoji-kimeru/_lib/guessLabel";
 import {
   DIFFICULTY_KEY,
   HISTORY_KEY_PREFIX,
@@ -442,9 +442,10 @@ export default function GameContainer({
     return (
       <div className={styles.game}>
         <p>{LOAD_FAILED_MESSAGE}</p>
-        <Button onClick={() => void initializeGame(difficulty)}>
-          もう一度読み込む
-        </Button>
+        <Button
+          onClick={() => void initializeGame(difficulty)}
+          phrases={["もう一度", "読み込む"]}
+        />
       </div>
     );
   }
@@ -491,14 +492,7 @@ export default function GameContainer({
             />
           ) : (
             <GuessInput
-              label={
-                <>
-                  {difficultyNames[difficulty]}の四字熟語を入力
-                  <span className={styles.remaining}>
-                    （あと{MAX_GUESSES - guessCount}回）
-                  </span>
-                </>
-              }
+              label={guessLabel(difficulty, MAX_GUESSES - guessCount)}
               onSubmit={handleGuess}
               submitting={submitting}
               fieldRef={fieldRef}

@@ -1,17 +1,12 @@
 "use client";
 
-import {
-  useState,
-  useRef,
-  useCallback,
-  type ReactNode,
-  type RefObject,
-} from "react";
+import { useState, useRef, useCallback, type RefObject } from "react";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import Field from "@/components/Field";
 import Input from "@/components/Input";
 import PhrasedText from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
 import {
   EVALUATE_UNAVAILABLE_MESSAGE,
   type GuessSubmitResult,
@@ -19,8 +14,11 @@ import {
 import styles from "./styles/YojiKimeru.module.css";
 
 interface GuessInputProps {
-  /** 欄の上に置くラベル。いまの難易度と残りの回数も言う（「中級の四字熟語を入力（あと6回）」）。 */
-  label: ReactNode;
+  /**
+   * 欄の上に置くラベル。いまの難易度と残りの回数を言う（「中級の四字熟語を入力（あと6回）」）。文節で分けた区切りの
+   * 並びで渡し、そのあいだで折る（PhrasedName）。
+   */
+  label: PhrasedName;
   onSubmit: (input: string) => Promise<GuessSubmitResult>;
   submitting: boolean;
   /** 欄の要素。推測のあと、画面の外に出た欄を画面に入れるために、呼び出し側が測る。 */

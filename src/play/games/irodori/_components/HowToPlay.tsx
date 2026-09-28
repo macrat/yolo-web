@@ -7,7 +7,7 @@ import styles from "./HowToPlay.module.css";
  */
 export default function HowToPlay() {
   return (
-    <Accordion summary="くわしい遊び方" className={styles.howToPlay}>
+    <Accordion summary={["くわしい", "遊び方"]} className={styles.howToPlay}>
       <div className={styles.content}>
         <p>
           毎日、お題の色が5つ出ます。1問ずつ、お題の色を見て、色相・彩度・明度の3つのスライダーで、できるだけ近い色を作ってください。

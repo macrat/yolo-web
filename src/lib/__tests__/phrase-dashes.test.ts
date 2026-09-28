@@ -29,9 +29,20 @@ describe("joinDashes", () => {
     expect(joinDashes("前 \t — 後")).toBe(`前${NBSP}— 後`);
   });
 
-  test("ダッシュの無い文と1つだけの「-」はそのまま返す", () => {
+  test("ハイフンで結んだ語は、ハイフンの後ろに語結合子を置き、そこで折らない", () => {
+    expect(joinDashes("not-found.tsx")).toBe(`not-${WJ}found.tsx`);
+    expect(joinDashes("marked-alert の導入")).toBe(`marked-${WJ}alert の導入`);
+    expect(joinDashes("JSON-LDセキュリティ")).toBe(`JSON-${WJ}LDセキュリティ`);
+    expect(joinDashes("global-not-found.js")).toBe(
+      `global-${WJ}not-${WJ}found.js`,
+    );
+  });
+
+  test("ダッシュの無い文と、数字の前・空白の隣の「-」はそのまま返す", () => {
     expect(joinDashes("生年月日（必須）")).toBe("生年月日（必須）");
     expect(joinDashes("UTF-8 の文字")).toBe("UTF-8 の文字");
+    expect(joinDashes("a - b")).toBe("a - b");
+    expect(joinDashes("-x")).toBe("-x");
   });
 
   test("文の頭のダッシュの前には何も置かない", () => {
@@ -39,7 +50,7 @@ describe("joinDashes", () => {
   });
 
   test("字を消さず、語結合子を除けば元の文に戻る（空白は折れない空白に替わるだけ）", () => {
-    const text = "見出し — その先 ── さらに -- 終わり";
+    const text = "見出し — その先 ── さらに -- 終わり not-found";
     expect(joinDashes(text).replaceAll(WJ, "").replaceAll(NBSP, " ")).toBe(
       text,
     );

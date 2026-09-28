@@ -21,6 +21,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { trackSave, trackShare } from "@/lib/analytics";
 import { copyText } from "@/lib/clipboard";
+import { SHARE_LABELS } from "@/lib/share-labels";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import Button from "@/components/Button";
 import styles from "./FudaActions.module.css";
@@ -201,10 +202,12 @@ export default function FudaActions({
 
   return (
     <div className={styles.buttons}>
-      <Button variant="primary" onClick={handleSave}>
-        画像を保存
-      </Button>
-      <Button onClick={handleShare}>画像を共有</Button>
+      <Button
+        variant="primary"
+        onClick={handleSave}
+        phrases={SHARE_LABELS.saveImage.phrases}
+      />
+      <Button onClick={handleShare} phrases={SHARE_LABELS.shareImage.phrases} />
     </div>
   );
 }

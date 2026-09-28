@@ -18,10 +18,8 @@ import type {
   EvaluateResponse,
   HintsResponse,
 } from "@/play/games/kanji-kanaru/_lib/types";
-import {
-  DIFFICULTY_LABELS,
-  MAX_GUESSES,
-} from "@/play/games/kanji-kanaru/_lib/types";
+import { MAX_GUESSES } from "@/play/games/kanji-kanaru/_lib/types";
+import { guessLabel } from "@/play/games/kanji-kanaru/_lib/guessLabel";
 import { formatDateJST } from "@/play/games/kanji-kanaru/_lib/daily";
 import {
   migrateToV2,
@@ -428,9 +426,10 @@ export default function GameContainer({
     return (
       <div className={styles.error}>
         <p>{error}</p>
-        <Button onClick={() => void initializeGame(difficulty)}>
-          もう一度読み込む
-        </Button>
+        <Button
+          onClick={() => void initializeGame(difficulty)}
+          phrases={["もう一度", "読み込む"]}
+        />
       </div>
     );
   }
@@ -464,7 +463,7 @@ export default function GameContainer({
         >
           {loading || playing ? (
             <GuessInput
-              label={`${DIFFICULTY_LABELS[difficulty]}の漢字を1字入力（あと${remaining}回）`}
+              label={guessLabel(difficulty, remaining)}
               onSubmit={handleGuess}
               submitting={submitting}
               loading={loading}

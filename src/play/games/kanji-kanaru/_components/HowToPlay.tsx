@@ -21,7 +21,7 @@ function Mark({ level }: { level: keyof typeof FEEDBACK_MARKS }) {
  */
 export default function HowToPlay() {
   return (
-    <Accordion summary="くわしい遊び方">
+    <Accordion summary={["くわしい", "遊び方"]}>
       <div className={styles.howToPlay}>
         <p>
           毎日1つの漢字を当てるゲームです。6回までに答えの漢字を見つけましょう。
