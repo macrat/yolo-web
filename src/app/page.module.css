@@ -1,7 +1,7 @@
 /*
  * トップページ。
  *
- * 器（背景）はベタ塗りの地のまま、色付きカード・影・グラデーション・角丸装飾を持たない（§5）。
+ * 背景はベタ塗りの地のまま、色付きカード・影・グラデーション・角丸装飾を持たない（§5）。
  * 構造は罫と組版だけで組み、その中で「階層と焦点」を作る:
  * 目玉（診断）を罫で囲った一区画で立て、分野ごとのセクションはそれより静かに置く。
  * 色・角丸・書体はすべてトークン経由。
@@ -55,59 +55,19 @@
 
 /* ── 目玉（今日のためしどころ・焦点）─────────────────────────────────────
  * 罫で囲った単一の独立区画。地は --paper。
- * 影・色地・角丸・グラデーション・ピルなし（§5）。
- * 中は「誘い（左）＋結果見本（右）」の非対称な一対。モバイル 375 先行で縦積み、広い画面で横並びにする。 */
+ * 影・色地・角丸・グラデーション・ピルなし（§5）。 */
 .hero {
   margin: 0 0 var(--space-48);
   padding: var(--space-32) var(--space-24);
   background: var(--paper);
   border: 1px solid var(--rule);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-32);
 }
 
-/*
- * 広い画面（48rem〜）で誘いと見本を横並びにする。誘い（左）を主・見本（右）を 22rem の定幅に
- * 置き、上端を揃える（flex-start）ことで「まず読む→右で現物を見る」の視線の流れを作る。
- * 区画のパディングも一段ゆったりさせ、目玉としての存在感と余白の律動を出す。
- */
+/* 広い画面（48rem〜）では区画のパディングを一段ゆったりさせ、目玉としての存在感を出す。 */
 @media (min-width: 48rem) {
   .hero {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: var(--space-48);
     padding: var(--space-48) var(--space-32);
   }
-}
-
-/* 誘い側（左）: 可変幅で主役。min-width:0 で長い日本語が親の幅を押し広げないようにする。 */
-.heroInvite {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-/* 見本側（右）: 成果物（包み）と「見本」注記の縦組み。広い画面では 22rem の定幅で右に据える
- * （Tsutsumi 自身が max 22rem のため、この定幅で包みがちょうど収まる）。 */
-.heroSample {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-@media (min-width: 48rem) {
-  .heroSample {
-    flex: 0 0 22rem;
-  }
-}
-
-/* 「見本」であることを正直に添える注記（来訪者自身の結果と誤認させない）。補助情報（13px・--ink-2）。 */
-.heroSampleNote {
-  margin: 0;
-  color: var(--ink-2);
-  font-family: var(--font-body);
-  font-size: 0.8125rem; /* 13px */
-  line-height: 1.6;
 }
 
 /* 冠（今日のためしどころ）: 目玉を「今日の目玉」と名指す小さな見出しラベル。 */
@@ -145,7 +105,7 @@
   font-size: var(--text-small);
 }
 
-/* 目玉の入口の器（余白のみ）。 */
+/* 目玉の入口を包む段落（余白のみ）。 */
 .heroAction {
   margin: 0;
 }

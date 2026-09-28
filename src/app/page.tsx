@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
-import Tsutsumi from "@/components/Tsutsumi";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { playContentBySlug } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
@@ -12,20 +11,17 @@ import styles from "./page.module.css";
 /**
  * トップページ
  *
- * 同じ形の行を並べただけの索引にせず、焦点（目玉）のあるページにする。器は紙・墨・罫・組版のみ。
- * その器の中で「階層と焦点」を作る（site-concept「その場でためして持ち帰れる」）:
+ * 同じ形の行を並べただけの索引にせず、焦点（目玉）のあるページにする。紙・墨・罫と組版だけで
+ * 「階層と焦点」を作る（site-concept「その場でためして持ち帰れる」）:
  *
  * 1. 名乗り（compact）: サイト名（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせ、
  *    説明の羅列はしない（具体は目玉と行の一覧が担う）。AI 明示は Footer が常時持つため、
  *    ここは短い一言に留める（§9「AI 運営を正直に、簡潔に示す」）。
  * 2. 目玉（今日のためしどころ・above the fold）: 成長エンジンの「あなたに似たキャラ診断」を
  *    単一の独立した区画（罫で囲う・地は --paper・影/色地/角丸/グラデ/ピルなし・§5）として立てる。
- *    中は「誘い＋結果見本」の非対称な一対——左に誘い（診断名・具体の一言・結果のタイプ数・
- *    入口ボタン「やってみる →」44px・ピルなし）、右に結果の見本を Tsutsumi（包み）で 1 枚
- *    実際に見せる。「持ち帰れる札」を言うだけでなく成果物として見せ、来訪者自身
- *    の結果と誤認させないよう「見本」であることを正直に添える。デスクトップは左右・モバイルは縦積み。
+ *    中は誘い（診断名・具体の一言・結果のタイプ数・入口ボタン「やってみる →」44px・ピルなし）。
  * 3. 分野ごとのセクション: 目玉の後ろに、残りの体験・辞典・道具・読みものを、見出しと行の一覧
- *    （ItemList）で並べる。ここはサイトにあるものの幅を示す部分。器は静かに。
+ *    （ItemList）で並べる。ここはサイトにあるものの幅を示す部分なので、静かに組む。
  *    目玉に立てた診断は一覧から外す（同じページで同一診断を二度立てない）。
  *
  * インライン style は使わない（色・角丸はすべてトークン経由で module.css に置く）。
@@ -205,50 +201,28 @@ export default function Home() {
        */}
       {heroContent ? (
         <section className={styles.hero} aria-labelledby="hero-heading">
-          {/* 誘い側（左）: 何を・何が得られるか・入口。視線はまずここに落ちる。 */}
-          <div className={styles.heroInvite}>
-            <p className={styles.heroKicker}>今日のためしどころ</p>
-            <h2 id="hero-heading" className={styles.heroTitle}>
-              {heroContent.title}
-            </h2>
-            <p className={styles.heroLede}>
-              12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
-            </p>
-            <p className={styles.heroFacts}>24タイプ</p>
-            <p className={styles.heroAction}>
-              <Link
-                href={getContentPath(heroContent)}
-                className={styles.heroLink}
-                data-inverted
-              >
-                やってみる →
-              </Link>
-            </p>
-          </div>
-
-          {/*
-           * 見本側（右）: 結果の成果物（包み）を 1 枚実際に見せる。「持ち帰れる」を言葉でなく
-           * 現物で伝える。和色は Tsutsumi の中身にだけ出る（器へ漏らさない・§2）。
-           * これは来訪者自身の結果ではなく「見本」——誤認を避けるため、その旨を正直に添える。
-           */}
-          <div className={styles.heroSample}>
-            <Tsutsumi
-              productName="キャラ診断"
-              typeName="静かな観察者"
-              word="よく見て、少しだけ動く。"
-              symbol="観"
-              color="ai"
-              seal="診"
-            />
-            <p className={styles.heroSampleNote}>
-              結果はこんな札になります（これは見本です）。
-            </p>
-          </div>
+          <p className={styles.heroKicker}>今日のためしどころ</p>
+          <h2 id="hero-heading" className={styles.heroTitle}>
+            {heroContent.title}
+          </h2>
+          <p className={styles.heroLede}>
+            12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
+          </p>
+          <p className={styles.heroFacts}>24タイプ</p>
+          <p className={styles.heroAction}>
+            <Link
+              href={getContentPath(heroContent)}
+              className={styles.heroLink}
+              data-inverted
+            >
+              やってみる →
+            </Link>
+          </p>
         </section>
       ) : null}
 
-      {/* 分野ごとのセクション。ここは器を静かに、サイトにあるものの幅を示す。 */}
-      {/* 診断・占い・あそび（見せたくなる結果への入口・目玉の診断は除く） */}
+      {/* 分野ごとのセクション。ここは静かに、サイトにあるものの幅を示す。 */}
+      {/* 診断・占い・あそび（目玉の診断は除く） */}
       <section className={styles.section}>
         <PhrasedText
           as="h2"

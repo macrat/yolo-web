@@ -16,7 +16,7 @@
  * ── 検査する項目（コードは DESIGN.md の節）────────────────────────────────
  *   §2   UI の色は無彩。この検査は、そのうち取り違えやすい青〜紫を見る:
  *        色関数で hue≈250〜320 の色 = ERROR。
- *        --accent-weak / --wairo-* を状態セレクタ（STATE_SELECTOR_RE）の外で background に使う = ERROR。
+ *        --accent-weak を状態セレクタ（STATE_SELECTOR_RE）の外で background に使う = ERROR。
  *   §3   本文の font-family に Inter/Roboto/Open Sans 等の欧文既定 sans・monospace = ERROR。
  *        見出しの書体（--font-heading）で組む要素のウェイトが 400 以外 = ERROR
  *        （Zen Antique は 400 の1本だけで、ほかのウェイトはブラウザが合成太字を作る。§4「合成太字を作らない」）。
@@ -78,66 +78,6 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
     fileEndsWith:
       "src/tools/traditional-color-palette/TraditionalColorPaletteTile.module.css",
     declaration: "border-radius: 50%",
-  },
-  // ゲームの駒・結果の色見本など、中身に和色（--wairo-*）を敷く宣言。セレクタ名が状態を
-  // 表さないので STATE_SELECTOR_RE に掛からず、ここで個別に許す。
-  {
-    fileEndsWith:
-      "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
-    declaration: ".cellClose { background-color: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
-    declaration:
-      ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
-    declaration:
-      ".legendChipClose { background-color: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
-    declaration: ".yellow { background: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
-    declaration: ".green { background: var(--wairo-moegi); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
-    declaration: ".blue { background: var(--wairo-ai); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
-    declaration: ".purple { background: var(--wairo-fuji); }",
-  },
-  // yoji-kimeru の判定フィードバック色（成果物＝ゲームの駒の中身）。cellCorrect/
-  // legendChipCorrect は selector 名に "Correct" を含み STATE_SELECTOR_RE で
-  // 自動許容されるが、cellPresent/legendChipPresent は "Present" のため個別許容する
-  // （kanji-kanaru の cellClose/legendChipClose と同じ理由）。
-  {
-    fileEndsWith:
-      "src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css",
-    declaration: ".cellPresent { background-color: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css",
-    declaration:
-      ".legendChipPresent { background-color: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css",
-    declaration:
-      ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
   },
 ];
 
@@ -307,7 +247,7 @@ function extractDeclarationsWithSelector(
 }
 
 /**
- * 状態セレクタ。これに一致するセレクタ内の --accent-weak / --wairo-* の背景は、操作や選択の
+ * 状態セレクタ。これに一致するセレクタ内の --accent-weak の背景は、操作や選択の
  * 状態を示す地として許す。一致しないものは、静的な区画に地を敷いた疑いとして検出する。
  *   - 疑似クラス: :hover / :focus / :focus-visible / :focus-within / :active / :checked / ::selection
  *   - ARIA/data 状態属性: [aria-current] [aria-selected] [aria-pressed] [aria-checked]
@@ -322,7 +262,7 @@ const STATE_SELECTOR_RE =
   /:hover\b|:focus(-visible|-within)?\b|:active\b|:checked\b|::selection\b|\[aria-(current|selected|pressed|checked)\b|\[data-(selected|current|active|state)\b|current|selected|active|correct/i;
 
 /**
- * --accent-weak / --wairo-* が background / background-color の値に使われ、かつそのルールの
+ * --accent-weak が background / background-color の値に使われ、かつそのルールの
  * セレクタが STATE_SELECTOR_RE に一致しない宣言を検出する。静的な区画に地を敷かないため。
  */
 function analyzeStaticAccentBackground(css: string, file: string): Violation[] {
@@ -331,15 +271,13 @@ function analyzeStaticAccentBackground(css: string, file: string): Violation[] {
     css,
   )) {
     if (prop !== "background" && prop !== "background-color") continue;
-    const usesAccentWeak = /var\(--accent-weak\)/.test(value);
-    const usesWairo = /var\(--wairo-[a-z]+\)/i.test(value);
-    if (!usesAccentWeak && !usesWairo) continue;
+    if (!/var\(--accent-weak\)/.test(value)) continue;
     if (STATE_SELECTOR_RE.test(selector)) continue;
     v.push({
       file,
       severity: "ERROR",
       code: "§2",
-      message: `${usesAccentWeak ? "--accent-weak" : "--wairo-*"} が状態セレクタを含まないルールの ${prop} に使われている——静的な区画に地を敷いている疑い`,
+      message: `--accent-weak が状態セレクタを含まないルールの ${prop} に使われている——静的な区画に地を敷いている疑い`,
       declaration: `${selector} { ${prop}: ${value}; }`,
     });
   }
@@ -502,7 +440,7 @@ function analyzeCss(content: string, file: string): Violation[] {
       );
     }
   }
-  // §2 --accent-weak/--wairo-* を静的な区画の地に使っていないか。
+  // §2 --accent-weak を静的な区画の地に使っていないか。
   v.push(...analyzeStaticAccentBackground(content, file));
   return v;
 }
@@ -991,7 +929,7 @@ describe("機械の検査の検出力（合成入力）", () => {
     expect(vs.some((x) => x.code === "§3")).toBe(true);
   });
 
-  // §2 --accent-weak/--wairo-* を静的な区画の地に使う宣言の検出。
+  // §2 --accent-weak を静的な区画の地に使う宣言の検出。
   test("§2 静的セレクタの --accent-weak 背景（区画の地）を検出", () => {
     const vs = analyzeCss(
       `.todayActionCard { background: var(--accent-weak); }`,
@@ -1023,19 +961,10 @@ describe("機械の検査の検出力（合成入力）", () => {
     );
     expect(vs.filter((x) => x.code === "§2")).toEqual([]);
   });
-  test("§2 静的セレクタの --wairo-* 背景（区画の地）を検出", () => {
-    const vs = analyzeCss(
-      `.heroBanner { background: var(--wairo-kurenai); }`,
-      "synthetic.css",
-    );
-    expect(vs.some((x) => x.code === "§2" && x.severity === "ERROR")).toBe(
-      true,
-    );
-  });
-  test("§2 background 以外のプロパティに使う --wairo-* は対象外（誤検知しない）", () => {
+  test("§2 background 以外のプロパティに使う --accent-weak は対象外（誤検知しない）", () => {
     const vs = analyzeCss(
       `.barFill { background-color: var(--extra-fill); }
-       .wrapper[data-color="kurenai"] { --extra-fill: var(--wairo-kurenai); }`,
+       .wrapper { --extra-fill: var(--accent-weak); }`,
       "synthetic.css",
     );
     expect(vs.filter((x) => x.code === "§2")).toEqual([]);

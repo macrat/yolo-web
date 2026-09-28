@@ -1,20 +1,11 @@
-import type { WairoColor } from "@/components/Tsutsumi";
-
 /**
- * 成果物パレット「和色」8色の hex ルックアップ表（DESIGN.md §2）。
+ * 札の画像（`src/lib/fuda-image.tsx`）の記号面に敷く和色8色と、その上の文字色の hex 表。
  *
- * なぜ hex が要るか: 正典トークンは `globals.css` に oklch で定義されるが、Satori
- * （札＝OG 画像生成・`src/lib/fuda-image.tsx`）は oklch を解釈できない。ここで hex に
- * 固定して Satori へ渡す。
+ * Satori は oklch を解釈できないので、色は hex で持つ。OG 画像は1枚の PNG で明暗を
+ * 切り替えられないため、明るい地の値だけを持つ。
  *
- * ライト固定の根拠（DESIGN §2/§4「札」）: OG は 1枚の PNG で light/dark を切り替えられない。
- * よって **light の地色hex** を採用する（暗所で開くユーザもライトの札を保存する前提）。
- * 文字色 `on`（墨 `--wairo-ink-sumi` / 白 `--wairo-ink-white`）は両モード共通のため、
- * light 地色hex に対して AA を担保すれば足りる。
- *
- * AA 実測（このファイルの hex 値そのもので再計測——継承でなく生成値で 4.5:1 を満たすこと。
- *  WCAG 2.1 相対輝度・sRGB。変換元は `globals.css` の light oklch を `oklchToHex` で hex 化した値。
- *  乖離ガードは `__tests__/wairoHex.test.ts` が globals.css からの再変換と突き合わせて担保する）:
+ * 地色と文字色のコントラスト比（WCAG 2.1 の相対輝度・sRGB。`__tests__/wairoHex.test.ts` が
+ * この表の値そのもので 4.5:1 以上を確かめる）:
  *
  *   色      地hex     文字   文字hex   コントラスト比
  *   紅      #af283d   白     #fafafa   6.30:1
@@ -25,17 +16,19 @@ import type { WairoColor } from "@/components/Tsutsumi";
  *   藍      #2b568b   白     #fafafa   7.17:1
  *   藤      #ad98d5   墨     #201e1a   6.52:1
  *   蘇芳    #923558   白     #fafafa   7.00:1
- *   （全色 4.5:1 以上・最小は柿 5.50:1。DESIGN §2「トークン値を変更したら必ず再計測」に従い、
- *    globals.css の oklch を変えたら本表と AA コメントも更新すること——テストが不一致を検知する。）
  */
 
-/** 成果物の文字色（色相を持たない中性の白/墨・両モード共通。`--wairo-ink-*` の hex 化）。 */
+/** 和色8色のキー。 */
+export type WairoColor =
+  "kurenai" | "kaki" | "yamabuki" | "moegi" | "tokiwa" | "ai" | "fuji" | "suou";
+
+/** 記号面の文字色（色相を持たない白と墨）。 */
 export const WAIRO_INK_WHITE = "#fafafa";
 export const WAIRO_INK_SUMI = "#201e1a";
 
 /** 1つの和色の「地色hex」と「その上の文字色hex（AA 担保済）」。 */
 export interface WairoHex {
-  /** 記号面の地に使う和色（light の生成 hex）。 */
+  /** 記号面の地の和色。 */
   bg: string;
   /** 地色の上で AA 4.5:1 を満たす文字色hex（墨 or 白）。 */
   on: string;
@@ -54,3 +47,27 @@ export const WAIRO_HEX: Record<WairoColor, WairoHex> = {
   fuji: { bg: "#ad98d5", on: WAIRO_INK_SUMI }, // 藤 6.52:1
   suou: { bg: "#923558", on: WAIRO_INK_WHITE }, // 蘇芳 7.00:1
 };
+
+/** {@link pickResultWairoColor} が id のハッシュで引く和色の並び。 */
+const WAIRO_COLORS: readonly WairoColor[] = [
+  "kurenai",
+  "kaki",
+  "yamabuki",
+  "moegi",
+  "tokiwa",
+  "ai",
+  "fuji",
+  "suou",
+];
+
+/**
+ * 結果タイプの id から和色を1つ選ぶ。id の多項式ハッシュで8色へ写すので、
+ * 同じタイプはいつも同じ色になる。
+ */
+export function pickResultWairoColor(id: string): WairoColor {
+  let hash = 0;
+  for (let i = 0; i < id.length; i += 1) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return WAIRO_COLORS[hash % WAIRO_COLORS.length];
+}

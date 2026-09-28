@@ -110,9 +110,7 @@ describe("renderFudaImage", () => {
   });
 
   test("記号面の地に和色 hex（成果物パレット）を使う", async () => {
-    const { WAIRO_HEX } = await import("../wairoHex");
-    const { pickResultWairoColor } =
-      await import("@/play/quiz/_components/resultVisual");
+    const { WAIRO_HEX, pickResultWairoColor } = await import("../wairoHex");
     const { element } = await render({
       id: "blazing-strategist",
       title: "炎の策士",
@@ -146,9 +144,7 @@ describe("renderFudaImage", () => {
   });
 
   test("colorOverride 指定時: 記号面の地に固有 hex を使い、和色8色へ丸めない", async () => {
-    const { WAIRO_HEX } = await import("../wairoHex");
-    const { pickResultWairoColor } =
-      await import("@/play/quiz/_components/resultVisual");
+    const { WAIRO_HEX, pickResultWairoColor } = await import("../wairoHex");
     // 藍色（伝統色診断・色＝中身）の固有 hex。
     const hex = "#0d5661";
     const { element } = await render({
@@ -203,9 +199,7 @@ describe("renderFudaImage", () => {
   });
 
   test("colorOverride 未指定時: 従来の和色経路と既定の印 '診' を保つ", async () => {
-    const { WAIRO_HEX } = await import("../wairoHex");
-    const { pickResultWairoColor } =
-      await import("@/play/quiz/_components/resultVisual");
+    const { WAIRO_HEX, pickResultWairoColor } = await import("../wairoHex");
     const { element } = await render({
       id: "blazing-strategist",
       title: "炎の策士",

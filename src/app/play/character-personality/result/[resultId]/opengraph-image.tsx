@@ -1,13 +1,12 @@
 /**
  * /play/character-personality/result/[resultId] 専用 OGP 画像（＝札）。
  *
- * 画像は「札（Tsutsumi の視覚言語）」で組む。
- * レンダラは {@link renderFudaImage} に共有化してあり、この **メタ用 og:image**（Next 自動配線）と、
- * クライアントが決定的 URL で取得する Route Handler（`./fuda-image/route.ts`）が
- * **同じレンダラを呼ぶ**——リンクプレビューと保存画像は単一の真実。
+ * 画像は札で組む。レンダラは {@link renderFudaImage} に共有化してあり、
+ * この **メタ用 og:image**（Next 自動配線）と、クライアントが決定的 URL で取得する
+ * Route Handler（`./fuda-image/route.ts`）が **同じレンダラを呼ぶ**——リンクプレビューと保存画像は単一の真実。
  *
- * 地色は、タイプ ID から決定的に選ぶ和色8色
- * （`pickResultWairoColor`）。文字色は和色ごとに AA を満たす墨/白（`WAIRO_HEX`）。
+ * 記号面の地色は、タイプ ID から決定的に選ぶ和色8色（`pickResultWairoColor`）。
+ * 文字色は和色ごとに AA を満たす墨/白（`WAIRO_HEX`）。
  */
 
 import { renderFudaImage, fudaImageSize } from "@/lib/fuda-image";

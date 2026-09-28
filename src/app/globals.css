@@ -104,47 +104,6 @@
   --font-mono:
     ui-monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New",
     monospace;
-
-  /* 和色。包み（Tsutsumi）・診断の結果の図・ゲームの判定のセル・なかまわけの統計の強調・運勢の星で使う。
-   * 8色はどれも伝統色の名を持つ。各色は light・dark の地の色と、その地の上で 4.5:1 を満たす文字色
-   * （白か墨）を対で持つ。文字色は色ごとに1つで、両モードの地の明度を、同じ文字色で 4.5:1 を満たす
-   * ように決めている。
-   *
-   * 地の色と文字色のコントラスト比（oklch の値から計算）:
-   *   色       文字  light   dark
-   *   紅       白    6.30    5.05
-   *   柿       墨    5.53    6.46
-   *   山吹     墨    8.88    9.51
-   *   萌黄     墨    8.74    9.36
-   *   常磐     白    5.93    5.00
-   *   藍       白    7.15    5.28
-   *   藤       墨    6.53    7.03
-   *   蘇芳     白    7.03    5.67
-   * 値を変えたら、比を計算し直す。 */
-
-  /* 和色の地の上に置く文字色。両モードで共通。 */
-  --wairo-ink-white: oklch(0.985 0 0);
-  --wairo-ink-sumi: oklch(0.235 0.008 80);
-
-  /* 和色 8 色（ライト・地の色）。 */
-  --wairo-kurenai: oklch(0.5 0.17 18); /* 紅 */
-  --wairo-kaki: oklch(0.68 0.15 55); /* 柿 */
-  --wairo-yamabuki: oklch(0.8 0.14 88); /* 山吹 */
-  --wairo-moegi: oklch(0.78 0.16 135); /* 萌黄 */
-  --wairo-tokiwa: oklch(0.48 0.11 155); /* 常磐 */
-  --wairo-ai: oklch(0.45 0.1 255); /* 藍 */
-  --wairo-fuji: oklch(0.72 0.09 300); /* 藤 */
-  --wairo-suou: oklch(0.47 0.13 0); /* 蘇芳 */
-
-  /* 各色の地の上に置く文字色。 */
-  --wairo-kurenai-on: var(--wairo-ink-white);
-  --wairo-kaki-on: var(--wairo-ink-sumi);
-  --wairo-yamabuki-on: var(--wairo-ink-sumi);
-  --wairo-moegi-on: var(--wairo-ink-sumi);
-  --wairo-tokiwa-on: var(--wairo-ink-white);
-  --wairo-ai-on: var(--wairo-ink-white);
-  --wairo-fuji-on: var(--wairo-ink-sumi);
-  --wairo-suou-on: var(--wairo-ink-white);
 }
 
 @media (min-width: 45rem) {
@@ -175,16 +134,6 @@
     --ink: oklch(0.97 0 0);
     --ink-2: oklch(0.74 0 0);
     --rule-2: oklch(0.53 0 0);
-
-    /* 和色（ダーク）。文字色は両モードで共通なので、地の色だけを変える。 */
-    --wairo-kurenai: oklch(0.55 0.16 18); /* 紅 */
-    --wairo-kaki: oklch(0.72 0.14 55); /* 柿 */
-    --wairo-yamabuki: oklch(0.82 0.14 88); /* 山吹 */
-    --wairo-moegi: oklch(0.8 0.16 135); /* 萌黄 */
-    --wairo-tokiwa: oklch(0.52 0.11 155); /* 常磐 */
-    --wairo-ai: oklch(0.52 0.1 255); /* 藍 */
-    --wairo-fuji: oklch(0.74 0.09 300); /* 藤 */
-    --wairo-suou: oklch(0.52 0.13 0); /* 蘇芳 */
   }
 }
 
@@ -639,17 +588,4 @@ input[data-field]:is(
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-/* インラインスタイルから参照するグローバルアニメーション
-   CSS Modules は局所スコープのため、インラインスタイルの animation: "spin ..."
-   は globals.css に定義した @keyframes が必要（AP-I10 参照）。
-   使用箇所: ImageResizerTile.tsx スピナー */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

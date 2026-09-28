@@ -1,7 +1,7 @@
 /**
  * /play/traditional-color/result/[resultId] 専用 OGP 画像（＝札）。
  *
- * 画像は「札（Tsutsumi の視覚言語）」で組み、character-personality の結果 OGP と同じ共有レンダラ
+ * 画像は札で組み、character-personality の結果 OGP と同じ共有レンダラ
  * {@link renderFudaImage} を呼ぶ。
  *
  * 伝統色診断では、各タイプ固有の伝統色（藍色 #0d5661 等）そのものが結果である（DESIGN.md §2 コンテンツ）。

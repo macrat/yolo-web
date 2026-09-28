@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { pickResultSymbol, pickResultWairoColor } from "../resultVisual";
+import { pickResultSymbol } from "../fudaSymbol";
 
 describe("pickResultSymbol — 記号面の1字", () => {
   test("通常タイトルは先頭書記素をそのまま採る", () => {
@@ -68,13 +68,5 @@ describe("pickResultSymbol — 記号面の1字", () => {
   test("サロゲートペア（結合文字なし）は書記素安全に扱う", () => {
     // 数学記号など BMP 外の1字。開き括弧でなければそのまま採る。
     expect(pickResultSymbol("𠮷野家の人")).toBe("𠮷");
-  });
-});
-
-describe("pickResultWairoColor — id から決定的に和色を選ぶ", () => {
-  test("同じ id は常に同じ色", () => {
-    expect(pickResultWairoColor("blazing-strategist")).toBe(
-      pickResultWairoColor("blazing-strategist"),
-    );
   });
 });

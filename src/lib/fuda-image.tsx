@@ -6,11 +6,8 @@ import {
   ogpContentType,
 } from "@/lib/ogp-image";
 import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/utsuwaHex";
-import { WAIRO_HEX } from "@/lib/wairoHex";
-import {
-  pickResultWairoColor,
-  pickResultSymbol,
-} from "@/play/quiz/_components/resultVisual";
+import { WAIRO_HEX, pickResultWairoColor } from "@/lib/wairoHex";
+import { pickResultSymbol } from "@/lib/fudaSymbol";
 import { getContrastTextColor } from "@/play/color-utils";
 
 /**

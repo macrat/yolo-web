@@ -5,11 +5,10 @@ import {
   WAIRO_HEX,
   WAIRO_INK_WHITE,
   WAIRO_INK_SUMI,
+  pickResultWairoColor,
   type WairoHex,
 } from "../wairoHex";
 import { oklchToHex, parseOklch } from "../oklchToHex";
-// 器定数の SSoT は中立モジュール utsuwaHex。next/og に依存しない純粋な hex 定数なので
-// ImageResponse のモックは不要。
 import { PAPER, INK, INK_2, RULE, RULE_2, PAPER_DARK } from "../utsuwaHex";
 
 /** WCAG 2.1 相対輝度・コントラスト比を hex から計算する（AA 再計測用・sRGB）。 */
@@ -53,16 +52,28 @@ describe("WAIRO_HEX — AA を生成 hex 値そのもので再計測", () => {
   });
 });
 
-describe("oklchToHex — 正典 oklch との乖離ガード", () => {
-  // globals.css の :root（light）ブロックの和色 oklch を hex 化し、WAIRO_HEX と一致すること。
-  // oklch→sRGB クリップによるサイレント乖離（globals.css だけ変えて hex 表を放置）を検知する。
+describe("pickResultWairoColor", () => {
+  test("同じ id は常に同じ色", () => {
+    expect(pickResultWairoColor("blazing-strategist")).toBe(
+      pickResultWairoColor("blazing-strategist"),
+    );
+  });
+
+  test("返す色は WAIRO_HEX のキー", () => {
+    for (const id of ["blazing-strategist", "ai", "sakura", ""]) {
+      expect(WAIRO_KEYS).toContain(pickResultWairoColor(id));
+    }
+  });
+});
+
+describe("utsuwaHex — globals.css のトークンとの一致", () => {
+  // 札の画像の紙・墨・罫の hex（utsuwaHex.ts）を、globals.css の oklch から変換し直して
+  // 突き合わせる。dark の値は prefers-color-scheme: dark のブロックにあり、それより前が light。
   const cssPath = join(process.cwd(), "src/app/globals.css");
   const css = readFileSync(cssPath, "utf8");
-  // dark の値は prefers-color-scheme: dark のブロックにあり、それより前が light の宣言。
   const [lightCss, darkCss] = css.split("@media (prefers-color-scheme: dark)");
 
   function readOklchTokenIn(block: string, name: string): string {
-    // 例: "--wairo-kurenai: oklch(0.5 0.17 18);"
     const re = new RegExp(`--${name}:\\s*(oklch\\([^)]*\\))`);
     const m = block.match(re);
     if (!m) throw new Error(`token --${name} not found in globals.css`);
@@ -71,28 +82,6 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
   const readOklchToken = (name: string): string =>
     readOklchTokenIn(lightCss, name);
 
-  test("中性文字色（ink-white / ink-sumi）が globals.css と一致", () => {
-    const white = parseOklch(readOklchToken("wairo-ink-white"));
-    const sumi = parseOklch(readOklchToken("wairo-ink-sumi"));
-    expect(white).not.toBeNull();
-    expect(sumi).not.toBeNull();
-    expect(oklchToHex(white!.l, white!.c, white!.h)).toBe(WAIRO_INK_WHITE);
-    expect(oklchToHex(sumi!.l, sumi!.c, sumi!.h)).toBe(WAIRO_INK_SUMI);
-  });
-
-  test.each(WAIRO_KEYS)(
-    "%s の地色hex が globals.css の light oklch から再現できる",
-    (key) => {
-      const parsed = parseOklch(readOklchToken(`wairo-${key}`));
-      expect(parsed).not.toBeNull();
-      const regenerated = oklchToHex(parsed!.l, parsed!.c, parsed!.h);
-      expect(regenerated).toBe(WAIRO_HEX[key].bg);
-    },
-  );
-
-  // 器（紙・墨・線）の直書き hex 定数（utsuwaHex.ts）も、和色と同じく
-  // globals.css の light トークンから生成した値。トークン名との対応（PAPER↔--paper 等）を
-  // globals.css の oklch から再変換して突き合わせ、サイレント乖離を検知する。
   const CONTAINER_TOKENS: ReadonlyArray<[hex: string, token: string]> = [
     [PAPER, "paper"],
     [INK, "ink"],
@@ -103,7 +92,7 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
   ];
 
   test.each(CONTAINER_TOKENS)(
-    "器定数 %s が globals.css の light トークン --%s から再現できる",
+    "%s が globals.css の light トークン --%s から再現できる",
     (hex, token) => {
       const parsed = parseOklch(readOklchToken(token));
       expect(parsed).not.toBeNull();
@@ -116,7 +105,7 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
   ];
 
   test.each(CONTAINER_DARK_TOKENS)(
-    "器定数 %s が globals.css の dark トークン --%s から再現できる",
+    "%s が globals.css の dark トークン --%s から再現できる",
     (hex, token) => {
       const parsed = parseOklch(readOklchTokenIn(darkCss, token));
       expect(parsed).not.toBeNull();
