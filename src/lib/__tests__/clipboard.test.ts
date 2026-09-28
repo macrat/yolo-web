@@ -58,20 +58,6 @@ describe("copyText", () => {
     expect(execCommand).toHaveBeenCalledWith("copy");
   });
 
-  test("置く所を渡すと、写す欄をその中に置く（モーダルのダイアログの中から写すため）", async () => {
-    stubClipboard(undefined);
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    let parent: Element | null = null;
-    stubExecCommand(() => {
-      parent = document.querySelector("textarea")?.parentElement ?? null;
-      return true;
-    });
-    await expect(copyText("文", container)).resolves.toBe(true);
-    expect(parent).toBe(container);
-    container.remove();
-  });
-
   test("どちらでも写せなければ false を返す", async () => {
     stubClipboard(vi.fn().mockRejectedValue(new Error("denied")));
     stubExecCommand(() => false);

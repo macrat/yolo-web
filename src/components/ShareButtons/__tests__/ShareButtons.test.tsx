@@ -217,21 +217,15 @@ describe("ShareButtons", () => {
   });
 
   describe("クリップボードの API で写せない端末", () => {
-    test("API に拒まれても、押したボタンの並びに置いた欄を選んで写し、「コピーしました」を出す", async () => {
+    test("API に拒まれても、欄を選んで写し、「コピーしました」を出す", async () => {
       mockClipboardWriteText.mockRejectedValue(new Error("denied"));
-      let copiedFrom: Element | null = null;
-      const execCommand = stubExecCommand(() => {
-        copiedFrom = document.querySelector("textarea")?.parentElement ?? null;
-        return true;
-      });
+      const execCommand = stubExecCommand(() => true);
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
-      const copy = screen.getByRole("button", { name: "URLをコピー" });
-      fireEvent.click(copy);
+      fireEvent.click(screen.getByRole("button", { name: "URLをコピー" }));
       await waitFor(() =>
         expect(screen.getByRole("status")).toHaveTextContent("コピーしました"),
       );
       expect(execCommand).toHaveBeenCalledWith("copy");
-      expect(copiedFrom).toBe(copy.parentElement);
     });
 
     test("どの方法でも写せなければ、写せなかったことと代わりの手を知らせ、次に押すまで残す", async () => {

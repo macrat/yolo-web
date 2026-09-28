@@ -196,15 +196,6 @@
   padding: 0;
 }
 
-dialog {
-  margin: auto;
-}
-
-/* Prevent background scrolling when any dialog is open */
-body:has(dialog[open]) {
-  overflow: hidden;
-}
-
 /* 全幅の罫線は画面の幅（100vw）で張り出すので、幅を取るスクロールバーがある画面では右の端を越える。
  * 越えた分を切り、ページを横に送らせない。 */
 html,

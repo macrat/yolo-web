@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useCallback,
-  useEffect,
-  type MouseEvent,
-  type ReactNode,
-} from "react";
+import { useState, useCallback, useEffect, type ReactNode } from "react";
 import Button from "@/components/Button";
 import { trackShare, type ShareSurface } from "@/lib/analytics";
 import { copyText } from "@/lib/clipboard";
@@ -155,30 +149,24 @@ export default function ShareButtons({
     track("hatena");
   }, [title, getShareTarget, track]);
 
-  const handleCopy = useCallback(
-    async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
-      const { fullUrl, body } = getShareTarget();
-      setCopyFailed(false);
-      setShowsNotice(false);
-      // 写すための欄は、押したボタンの並びに置く。結果のダイアログの中でも、その欄を選べる。
-      if (
-        await copyText(body + "\n" + fullUrl, event.currentTarget.parentElement)
-      ) {
-        setCopiedCount((count) => count + 1);
-        track("clipboard");
-      } else {
-        setCopiedCount(0);
-        setCopyFailed(true);
-      }
-    },
-    [getShareTarget, track],
-  );
+  const handleCopy = useCallback(async (): Promise<void> => {
+    const { fullUrl, body } = getShareTarget();
+    setCopyFailed(false);
+    setShowsNotice(false);
+    if (await copyText(body + "\n" + fullUrl)) {
+      setCopiedCount((count) => count + 1);
+      track("clipboard");
+    } else {
+      setCopiedCount(0);
+      setCopyFailed(true);
+    }
+  }, [getShareTarget, track]);
 
   interface ShareAction {
     key: SnsType;
     label: string;
     ariaLabel?: string;
-    onClick: (event: MouseEvent<HTMLButtonElement>) => void | Promise<void>;
+    onClick: () => void | Promise<void>;
   }
 
   const actions: ShareAction[] = [
