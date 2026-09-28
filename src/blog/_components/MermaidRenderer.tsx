@@ -3,19 +3,15 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { markScrollFrame } from "@/lib/scroll-frame";
 import {
-  chooseWrap,
   cssColorToHex,
   FIGURE_TEXT_MIN_REM,
   figureStart,
-  lineProblems,
   planFigure,
   planGantt,
   startScrollLeft,
   type GanttLayout,
   type GanttMeasure,
   type TextSpan,
-  wrapCandidates,
-  type WrapTrial,
 } from "./mermaid-figure";
 
 /** 図の元の文。描いた図は元の文を置き換えるので、描き直すときのために取っておく。 */
@@ -26,26 +22,6 @@ const SCROLL_LABEL = "図（横にスクロールできます）";
 
 /** gantt を描き直す回数の上限。余白・目盛り・軸の幅を決め直すたびに、字の置かれ方が変わる。 */
 const GANTT_REDRAW_LIMIT = 8;
-
-/**
- * 流れ図の箱の中の文の折り返しの幅の範囲（ルートの大きさに対する倍率）。いちばん広い幅で、まず折り返さずに描く。
- * いちばん狭い幅は、それより狭くすると短い名前まで折れる幅。
- */
-const WRAP_MAX_REM = 40;
-const WRAP_MIN_REM = 7.5;
-
-/**
- * 流れ図の段（rank）の間隔の候補（ルートの大きさに対する倍率）。狭い順。段の間隔が狭いと、同じ2つの箱を結ぶ辺の
- * 名前が重なることがあるので、どの折り返しの幅でも読みにくい所が残るときだけ広げて試す。
- */
-const RANK_SPACINGS_REM = [2, 3];
-
-/**
- * 重なりとして数えない、接しの幅（px）。線の太さほどの接しは数えない。字どうしは、低いほうの字の高さの
- * TEXT_OVERLAP_RATIO より深く重なったときだけ数える（行の箱は字面より少し高いので、上下に並ぶ字の箱は接する）。
- */
-const TOUCH_TOLERANCE = 2;
-const TEXT_OVERLAP_RATIO = 0.25;
 
 type Mermaid = typeof import("mermaid").default;
 type MermaidConfig = ReturnType<typeof buildConfig>;
@@ -161,13 +137,12 @@ function buildConfig(figureWidth: number) {
       gridColor: line,
       vertLineColor: line,
     },
-    // 箱の中の文の折り返しの幅は、図ごとに renderDiagram が決める。部分図の題は、中の箱と重ならない余白を持つ。
+    // 部分図の題は、中の箱と重ならない余白を持つ。段の間隔は、同じ箱から出る辺の名前どうしが重ならない広さにする。
     flowchart: {
       nodeSpacing: rootPx * 1.5,
-      rankSpacing: rootPx * RANK_SPACINGS_REM[0],
+      rankSpacing: rootPx * 3,
       padding: rootPx * 0.5,
       diagramPadding: 0,
-      wrappingWidth: rootPx * WRAP_MAX_REM,
       subGraphTitleMargin: { top: rootPx * 0.5, bottom: rootPx * 0.5 },
     },
     sequence: {
@@ -198,9 +173,10 @@ function buildConfig(figureWidth: number) {
       `marker [fill="black"] { fill: ${line}; }`,
       `.tick text, .titleText { font-size: ${fontSize}; }`,
       `.today { display: none; }`,
-      // 箱の中の文は、行の頭に長音符・小書きの仮名などを置かない折り方にし（§4）、折れるブラウザでは文節で折る。
-      // 文節で折れないブラウザでも、読みにくい折れは renderFlowchart が折り返しの幅を選んで避ける。
-      `.nodeLabel, .edgeLabel, .cluster-label { line-break: strict; word-break: auto-phrase; }`,
+      // 箱・辺・部分図の名前は折り返さず、記事を書く人が改行を入れた所でだけ改行する。語を割らず、どのブラウザでも
+      // 同じ所で改行し、読み上げも元の文のままになる。収まらない図は横に送る。mermaid は名前の幅を字の幅で測るので、
+      // 折り返しの上限（style 属性の max-width）を外す。
+      `foreignObject > div { white-space: nowrap !important; max-width: none !important; }`,
     ].join(" "),
   };
 }
@@ -254,14 +230,6 @@ async function ganttSpan(mermaid: Mermaid, source: string): Promise<number> {
   return Math.max(1, Math.max(...ends) - Math.min(...starts));
 }
 
-/** 図を置く場所の大きさ。折り返しの幅を決めるのに使う。 */
-interface FigureRoom {
-  /** コンテンツ幅。 */
-  available: number;
-  /** 字の下限（px）。 */
-  minText: number;
-}
-
 /** 画面の外に、測るための置き場を作って fn に渡し、終わったら片付ける。 */
 async function withHost<T>(fn: (host: HTMLElement) => Promise<T>): Promise<T> {
   const host = document.createElement("div");
@@ -273,267 +241,6 @@ async function withHost<T>(fn: (host: HTMLElement) => Promise<T>): Promise<T> {
   } finally {
     host.remove();
   }
-}
-
-/**
- * 描いた図を置き場に、元の大きさで置く。mermaid の図は置かれた幅いっぱいに伸び縮みするので、そのままでは字の
- * 折れ方を、mermaid が測ったのと違う大きさで見てしまう。
- */
-function placeNatural(host: HTMLElement, svg: string): SVGSVGElement | null {
-  host.innerHTML = svg;
-  const drawn = host.querySelector("svg");
-  const width = drawn?.viewBox.baseVal?.width;
-  if (!drawn || !width) return drawn;
-  drawn.style.width = `${width}px`;
-  drawn.style.maxWidth = "none";
-  return drawn;
-}
-
-/** 字の行の箱と、その字が属する箱（流れ図の箱・辺の名前・部分図）。 */
-interface LineBox {
-  rect: DOMRect;
-  owner: Element | null;
-}
-
-/** 2つの箱の重なりの幅と高さ。 */
-function overlap(a: DOMRect, b: DOMRect): { width: number; height: number } {
-  return {
-    width: Math.min(a.right, b.right) - Math.max(a.left, b.left),
-    height: Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top),
-  };
-}
-
-function textsOverlap(a: DOMRect, b: DOMRect): boolean {
-  const { width, height } = overlap(a, b);
-  return (
-    width > TOUCH_TOLERANCE &&
-    height > TEXT_OVERLAP_RATIO * Math.min(a.height, b.height)
-  );
-}
-
-function textCoversShape(text: DOMRect, shape: DOMRect): boolean {
-  const { width, height } = overlap(text, shape);
-  return width > TOUCH_TOLERANCE && height > TOUCH_TOLERANCE;
-}
-
-/** 要素の中の字の並び（テキストノード）。 */
-function textNodes(root: Node): Text[] {
-  const nodes: Text[] = [];
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    nodes.push(node as Text);
-  }
-  return nodes;
-}
-
-/** テキストノードが折り返された行の、字と箱。 */
-function textLines(text: Text): { text: string; rect: DOMRect }[] {
-  const range = document.createRange();
-  const lines: { text: string; rect: DOMRect }[] = [];
-  for (let index = 0; index < text.length; index++) {
-    range.setStart(text, index);
-    range.setEnd(text, index + 1);
-    const rect = range.getBoundingClientRect();
-    const current = lines[lines.length - 1];
-    if (rect.width === 0 && rect.height === 0) {
-      // 行の終わりで消える空白は箱を持たないが、そこで折れたことを見分けるため、行の字に残す。
-      if (current && /\s/.test(text.data[index]))
-        current.text += text.data[index];
-      continue;
-    }
-    if (current && rect.top < current.rect.top + rect.height / 2) {
-      current.text += text.data[index];
-      current.rect = new DOMRect(
-        Math.min(current.rect.left, rect.left),
-        current.rect.top,
-        Math.max(current.rect.right, rect.right) -
-          Math.min(current.rect.left, rect.left),
-        Math.max(current.rect.height, rect.height),
-      );
-    } else {
-      lines.push({ text: text.data[index], rect });
-    }
-  }
-  return lines;
-}
-
-/**
- * 流れ図の箱の中の文の折れを、元の大きさでの折れ方のまま改行に置き換えて固める。mermaid は箱の幅を字の幅
- * ちょうどに測るので、図を縮めて描くと字の幅の端数で折れ方が変わり、測った図に無い1字の行ができる。固めた改行には
- * data-wrap を付け（空白の所で折れたものは "space"）、書き手が入れた改行と見分けられるようにする。
- */
-function freezeLines(svg: SVGSVGElement) {
-  for (const label of Array.from(svg.querySelectorAll("foreignObject"))) {
-    for (const text of textNodes(label)) {
-      const lines = textLines(text);
-      if (lines.length < 2) continue;
-      const fragment = document.createDocumentFragment();
-      lines.forEach((line, index) => {
-        if (index > 0) {
-          const lineBreak = document.createElement("br");
-          lineBreak.dataset.wrap = /\s$/.test(lines[index - 1].text)
-            ? "space"
-            : "";
-          fragment.append(lineBreak);
-        }
-        fragment.append(line.text.trimEnd());
-      });
-      text.replaceWith(fragment);
-    }
-    label.querySelector("div")?.style.setProperty("white-space", "nowrap");
-  }
-}
-
-/**
- * 描いた流れ図の、読みにくい所を数える。箱の中の文の折れ（1字だけの行・禁則の破れ・英数字の語の中の折れ）と、
- * 別の箱に属する字どうしの重なり、字と別の箱の重なり（部分図の題が中の箱に隠れるなど）。
- */
-function countFlaws(svg: SVGSVGElement): number {
-  let flaws = 0;
-  const lineBoxes: LineBox[] = [];
-  for (const label of Array.from(svg.querySelectorAll("foreignObject"))) {
-    const owner = label.closest(".node, .edgeLabel, .cluster");
-    for (const text of textNodes(label)) {
-      const lines = textLines(text);
-      const problems = lineProblems(lines.map((line) => line.text));
-      flaws += problems.single + problems.forbidden + problems.splitWords;
-      for (const line of lines) {
-        if (line.text.trim()) lineBoxes.push({ rect: line.rect, owner });
-      }
-    }
-  }
-  const shapes = Array.from(
-    svg.querySelectorAll(
-      ".node rect, .node polygon, .node circle, .node ellipse, .node path",
-    ),
-  ).map((shape) => ({
-    rect: shape.getBoundingClientRect(),
-    owner: shape.closest(".node"),
-  }));
-  for (let i = 0; i < lineBoxes.length; i++) {
-    for (let j = i + 1; j < lineBoxes.length; j++) {
-      if (
-        lineBoxes[i].owner !== lineBoxes[j].owner &&
-        textsOverlap(lineBoxes[i].rect, lineBoxes[j].rect)
-      ) {
-        flaws++;
-      }
-    }
-    for (const shape of shapes) {
-      if (
-        shape.owner !== lineBoxes[i].owner &&
-        textCoversShape(lineBoxes[i].rect, shape.rect)
-      ) {
-        flaws++;
-      }
-    }
-  }
-  return flaws;
-}
-
-/** 折り返さずに描いた流れ図の、箱の文のかたまり（書き手の改行で区切ったもの）の幅。 */
-function segmentWidths(svg: SVGSVGElement): number[] {
-  const range = document.createRange();
-  return Array.from(svg.querySelectorAll("foreignObject")).flatMap((label) =>
-    textNodes(label).map((text) => {
-      range.selectNodeContents(text);
-      return range.getBoundingClientRect().width;
-    }),
-  );
-}
-
-/**
- * 流れ図の箱の中の文の折り返しの幅を、図ごとに決めて描く（列に収まる図は語を割らず、収まらない図だけ詰める）。
- * 1. 折り返さずに描き、収まって読みにくい所（1字だけの行・禁則の破れ・語の中の折れ・字の重なり）が無ければ、それ。
- * 2. 箱の文の長さから折り返しの幅の候補を作り（wrapCandidates）、いちばん狭い幅で描く。それでも収まらなければ、
- *    狭い順に試して、読みにくい所の無い最初の幅にする（横に送る量をいちばん減らす）。収まるなら、広い順に試して、
- *    収まって読みにくい所の無い最初の幅にする。
- * 3. どの幅にも読みにくい所が残るときは、段の間隔を広げて試し直し、試した中から chooseWrap で決める。
- * 決めた図の折れは、改行に置き換えて固める。
- */
-async function renderFlowchart(
-  mermaid: Mermaid,
-  id: string,
-  source: string,
-  config: MermaidConfig,
-  room: FigureRoom,
-  firstSvg: string,
-  isCancelled: () => boolean,
-): Promise<string | null> {
-  const rootPx = config.fontSize;
-  return withHost(async (host) => {
-    type Trial = WrapTrial & { svg: string };
-    const trials: Trial[] = [];
-    const draw = async (
-      wrap: number,
-      rankRem: number,
-    ): Promise<Trial | null> => {
-      let svg = firstSvg;
-      if (trials.length > 0) {
-        if (isCancelled()) return null;
-        mermaid.initialize({
-          ...config,
-          flowchart: {
-            ...config.flowchart,
-            wrappingWidth: wrap,
-            rankSpacing: rootPx * rankRem,
-          },
-        });
-        ({ svg } = await mermaid.render(`${id}-${trials.length}`, source));
-        if (isCancelled()) return null;
-      }
-      const drawn = placeNatural(host, svg);
-      const width = drawn?.viewBox.baseVal?.width ?? 0;
-      const trial: Trial = {
-        wrap,
-        svg,
-        width,
-        fits:
-          drawn !== null &&
-          width > 0 &&
-          planFigure(width, room.available, smallestText(drawn), room.minText)
-            .fits,
-        flaws: drawn && width > 0 ? countFlaws(drawn) : 0,
-      };
-      trials.push(trial);
-      return trial;
-    };
-    const frozen = (svg: string) => {
-      const drawn = placeNatural(host, svg);
-      if (!drawn) return svg;
-      freezeLines(drawn);
-      drawn.style.removeProperty("width");
-      drawn.style.removeProperty("max-width");
-      return host.innerHTML;
-    };
-
-    const widest = await draw(rootPx * WRAP_MAX_REM, RANK_SPACINGS_REM[0]);
-    if (!widest) return null;
-    if (widest.fits && widest.flaws === 0) return frozen(widest.svg);
-    const drawnWidest = placeNatural(host, widest.svg);
-    const candidates = wrapCandidates(
-      drawnWidest ? segmentWidths(drawnWidest) : [],
-      rootPx * WRAP_MIN_REM,
-      rootPx * WRAP_MAX_REM,
-    );
-    for (const rankRem of RANK_SPACINGS_REM) {
-      const narrowest = await draw(candidates[candidates.length - 1], rankRem);
-      if (!narrowest) return null;
-      const order = narrowest.fits
-        ? candidates.slice(0, -1)
-        : candidates.slice(0, -1).reverse();
-      const accept = (trial: Trial) =>
-        trial.flaws === 0 && (trial.fits || !narrowest.fits);
-      if (accept(narrowest) && !narrowest.fits) return frozen(narrowest.svg);
-      for (const wrap of order) {
-        const trial = await draw(wrap, rankRem);
-        if (!trial) return null;
-        if (accept(trial)) return frozen(trial.svg);
-      }
-      if (accept(narrowest)) return frozen(narrowest.svg);
-    }
-    return frozen(chooseWrap(trials).svg);
-  });
 }
 
 /**
@@ -579,7 +286,7 @@ async function renderGantt(
 }
 
 /**
- * 図を描いて SVG の文字列を返す。流れ図は箱の中の文の折り返しの幅を、gantt は横の組み方を、描いて測って決める。
+ * 図を描いて SVG の文字列を返す。gantt は横の組み方を、描いて測って決める。
  * 描くたびに設定を渡し、描いている途中で取り消されたら null を返して、それより後の設定に触らない。
  */
 async function renderDiagram(
@@ -587,7 +294,6 @@ async function renderDiagram(
   id: string,
   source: string,
   config: MermaidConfig,
-  room: FigureRoom,
   isCancelled: () => boolean,
 ): Promise<string | null> {
   mermaid.initialize(config);
@@ -595,9 +301,6 @@ async function renderDiagram(
   if (isCancelled()) return null;
   if (/aria-roledescription="gantt"/.test(svg)) {
     return renderGantt(mermaid, id, source, config, svg, isCancelled);
-  }
-  if (/aria-roledescription="flowchart/.test(svg)) {
-    return renderFlowchart(mermaid, id, source, config, room, svg, isCancelled);
   }
   return svg;
 }
@@ -738,12 +441,7 @@ export default function MermaidRenderer() {
       const mermaid = (await import("mermaid")).default;
       await document.fonts?.ready;
       if (cancelled) return;
-      const available = figures[0].getBoundingClientRect().width;
-      const config = buildConfig(available);
-      const room: FigureRoom = {
-        available,
-        minText: config.fontSize * FIGURE_TEXT_MIN_REM,
-      };
+      const config = buildConfig(figures[0].getBoundingClientRect().width);
       const pass = Date.now().toString(36);
       for (const [index, figure] of figures.entries()) {
         let svg: string | null;
@@ -753,7 +451,6 @@ export default function MermaidRenderer() {
             `mermaid-${pass}-${index}`,
             figure.getAttribute(SOURCE_ATTR) ?? "",
             config,
-            room,
             isCancelled,
           );
         } catch {

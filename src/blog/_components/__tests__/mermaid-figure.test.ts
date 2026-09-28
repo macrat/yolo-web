@@ -1,12 +1,9 @@
 import { describe, test, expect } from "vitest";
 import {
   chooseTickInterval,
-  chooseWrap,
   cssColorToHex,
   figureStart,
-  lineProblems,
   planFigure,
-  wrapCandidates,
   planGantt,
   startScrollLeft,
   toHexColor,
@@ -286,85 +283,5 @@ describe("planGantt", () => {
       labels: [],
     };
     expect(planGantt(settled, measure, 8)).toBeNull();
-  });
-});
-
-describe("lineProblems", () => {
-  test("折れの無い1行の文は数えない", () => {
-    expect(lineProblems(["み"])).toEqual({
-      single: 0,
-      forbidden: 0,
-      splitWords: 0,
-    });
-  });
-
-  test("1字だけの行を数える", () => {
-    expect(lineProblems(["プロンプトテンプレート読み込", "み"]).single).toBe(1);
-  });
-
-  test("行頭の長音符・小書きの仮名・閉じ括弧と、行末の開き括弧を数える", () => {
-    expect(lineProblems(["修正・再レビュ", "ー"]).forbidden).toBe(1);
-    expect(lineProblems(["タスクの確認をしてロ", "ックする"]).forbidden).toBe(
-      1,
-    );
-    expect(lineProblems(["状態管理", "）"]).forbidden).toBe(1);
-    expect(lineProblems(["状態管理（", "RUNNING）"]).forbidden).toBe(1);
-  });
-
-  test("英数字の語の中の折れを数える", () => {
-    expect(lineProblems(["process-", "manager.ts"]).splitWords).toBe(1);
-    expect(lineProblems(["/cycle-", "execution"]).splitWords).toBe(1);
-    expect(lineProblems(["watcher.ts", "ファイル監視"]).splitWords).toBe(0);
-  });
-});
-
-describe("chooseWrap", () => {
-  test("読みにくい所の無い幅のうち、収まるいちばん広い幅にする", () => {
-    expect(
-      chooseWrap([
-        { wrap: 200, fits: false, width: 900, flaws: 0 },
-        { wrap: 168, fits: true, width: 600, flaws: 0 },
-        { wrap: 144, fits: true, width: 560, flaws: 0 },
-        { wrap: 120, fits: true, width: 520, flaws: 2 },
-      ]).wrap,
-    ).toBe(168);
-  });
-
-  test("収まる幅が無ければ、読みにくい所の無い幅のうち図がいちばん狭くなる幅にする", () => {
-    expect(
-      chooseWrap([
-        { wrap: 200, fits: false, width: 900, flaws: 0 },
-        { wrap: 168, fits: false, width: 820, flaws: 0 },
-        { wrap: 120, fits: false, width: 700, flaws: 3 },
-      ]).wrap,
-    ).toBe(168);
-  });
-
-  test("どの幅にも読みにくい所があるときは、いちばん少ない幅の中から選ぶ", () => {
-    expect(
-      chooseWrap([
-        { wrap: 200, fits: true, width: 600, flaws: 2 },
-        { wrap: 168, fits: true, width: 560, flaws: 1 },
-        { wrap: 144, fits: true, width: 520, flaws: 1 },
-      ]).wrap,
-    ).toBe(168);
-  });
-
-  test("同じ幅で試したものが並ぶときは、先に試したものにする", () => {
-    const first = { wrap: 200, fits: true, width: 600, flaws: 0 };
-    const second = { wrap: 200, fits: true, width: 600, flaws: 0 };
-    expect(chooseWrap([first, second])).toBe(first);
-  });
-});
-
-describe("wrapCandidates", () => {
-  test("文のかたまりの幅ごとに、それを1行に残す幅を広い順に並べ、いちばん狭い幅を足す", () => {
-    expect(wrapCandidates([176, 95.5, 250, 176], 120, 400)).toEqual([
-      251, 177, 120,
-    ]);
-  });
-
-  test("狭い幅以下と、広い幅以上の候補は持たない", () => {
-    expect(wrapCandidates([80, 119, 399, 600], 120, 400)).toEqual([120]);
   });
 });
