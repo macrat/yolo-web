@@ -188,17 +188,18 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 
 ---
 
-## 12. ルートファイルを `git mv` した後、stale な `.next/dev/types/validator.ts` が pre-commit の typecheck を壊す
+## 12. `.next/dev/types/` の型ファイルが古いか壊れていると、commit と push の typecheck が落ちる
 
-`tsconfig.json` の `include` には `.next/dev/types/**/*.ts` が含まれる。`next dev` を実行すると Next.js が `.next/dev/types/validator.ts` を生成し、これが**その時点の全ルートファイルへの相対 import を持つ**。デザイン移行などでルートの `page.tsx` を `git mv`（例: `(legacy)/dictionary/kanji/` → `(new)/dictionary/kanji/`）すると、この validator.ts が**移動前の旧パスを参照したまま残り**、`tsc --noEmit` が `TS2307: Cannot find module '.../(legacy)/.../page.js'` で落ちる。
+`tsconfig.json` の `include` には `.next/dev/types/**/*.ts` が含まれる。`next dev` はここに `validator.ts`（その時点の全ルートファイルへの相対 import）と `routes.d.ts` を生成する。`.next/` は git 管理外なので git status に出ず、`npm run build` は別系統の `.next/types/` を作り直して通るため、「build は通るのに commit や push だけが落ちる」形で現れる。壊れ方は2つある。
 
-**影響**: `npm run build` は `.next/types/`（dev とは別系統）を再生成して通るのに、pre-commit フック（`tsc --noEmit`）だけが stale な `.next/dev/types/validator.ts` を拾って失敗する。「build は通るのに commit できない」という一見矛盾した状態になる。`.next/` は git 管理外なので git status にも出ず原因が見えにくい。
+- **古いパス**: ルートの `page.tsx` を `git mv`（例: route group をまたぐ移動）すると、`validator.ts` が移動前のパスを参照したまま残り、`TS2307: Cannot find module '.../page.js'` で落ちる。
+- **書きかけ**: `next dev` が、親のエージェントが終わったあとも動き続けていると（親プロセスが 1 になった孤児）、作業ツリーの変更に合わせて `routes.d.ts` を書き直し続け、途中の状態の `routes.d.ts` が `TS1146: Declaration expected`・`TS1161: Unterminated regular expression literal` で落ちる。
 
-**対処**: `rm -rf .next/dev` で stale な dev 型キャッシュを削除してから typecheck/commit する（次回 `next dev` 起動時に正しいパスで再生成される）。`.next/dev/types/**` は include の glob なので、ファイルが無ければマッチゼロでエラーにならない。
+**対処**: 孤児の `next dev` とその子の `next-server` を止め（`ps -o ppid=` が 1 で、cwd がリポジトリのもの）、`rm -rf .next/dev/types` してから typecheck・commit・push する。ファイルが無ければ include の glob はマッチゼロで、エラーにならない。
 
-**予防**: ルート（`app/` 配下の `page.tsx`/`layout.tsx` 等）を移動・リネームしたら、視覚検証で `next dev` を使った後は `rm -rf .next/dev` を挟んでから commit する。辞典移行（cycle-262〜265）のように route group をまたぐ `git mv` を伴う作業では定常的に発生する。
+**予防**: ルートを移動・リネームしたあとは、`next dev` で確かめたあとに `rm -rf .next/dev` を挟んでから commit する。サブエージェントに dev サーバーを使わせるときは、終える前に自分の起動した `next dev` と子の `next-server` の両方を止めるよう指示する。
 
-出典: cycle-265
+出典: cycle-265・cycle-316
 
 ---
 
