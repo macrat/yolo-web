@@ -144,19 +144,90 @@ describe("layoutRadar", () => {
   });
 });
 
+const axes5: RadarChartAxis[] = [
+  { label: "理論", percent: 75 },
+  { label: "実験", percent: 58 },
+  { label: "数値化", percent: 100 },
+  { label: "観察", percent: 24 },
+  { label: "創造", percent: 0 },
+];
+
+let figureWidth = 320;
+const observers: ResizeObserverCallback[] = [];
+let measureStyle: HTMLStyleElement | null = null;
+
+/**
+ * 図の幅を figureWidth に、字を 14px（1字の幅 14px・行の高さ 17.5px）にして測らせ、ResizeObserver の通知を
+ * resizeTo で送れるようにする。この測りでは、軸の名前を置けるいちばん狭い図の幅が 96px になる。
+ */
+function stubMeasurement() {
+  measureStyle = document.createElement("style");
+  measureStyle.textContent = "[data-radar-name] { font-size: 14px; }";
+  document.head.append(measureStyle);
+  vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(
+    () => figureWidth,
+  );
+  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+    function (this: HTMLElement) {
+      const width = (this.textContent ?? "").length * 14;
+      return {
+        width,
+        height: 17.5,
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
+        right: width,
+        bottom: 17.5,
+        toJSON: () => ({}),
+      };
+    },
+  );
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      #callback: ResizeObserverCallback;
+      constructor(callback: ResizeObserverCallback) {
+        this.#callback = callback;
+        observers.push(callback);
+      }
+      observe() {}
+      unobserve() {}
+      disconnect() {
+        const index = observers.indexOf(this.#callback);
+        if (index >= 0) observers.splice(index, 1);
+      }
+    },
+  );
+}
+
+function resizeTo(width: number) {
+  figureWidth = width;
+  act(() => {
+    for (const callback of observers) {
+      callback([], {} as ResizeObserver);
+    }
+  });
+}
+
+function labelCount(container: HTMLElement): number {
+  return container.querySelectorAll("svg text").length;
+}
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+  measureStyle?.remove();
+  measureStyle = null;
+  observers.length = 0;
+  figureWidth = 320;
+});
+
 describe("RadarChart", () => {
   test("頂点に点を置かず、多角形1つと格子で描き、読み上げでは名前を1つ持つ図になる", () => {
+    stubMeasurement();
     const { container } = render(
-      <RadarChart
-        label="5つの軸のレーダー"
-        axes={[
-          { label: "理論", percent: 75 },
-          { label: "実験", percent: 58 },
-          { label: "数値化", percent: 100 },
-          { label: "観察", percent: 24 },
-          { label: "創造", percent: 0 },
-        ]}
-      />,
+      <RadarChart label="5つの軸のレーダー" axes={axes5} />,
     );
     expect(
       screen.getByRole("img", { name: "5つの軸のレーダー" }),
@@ -168,85 +239,6 @@ describe("RadarChart", () => {
 });
 
 describe("RadarChart を測り直す", () => {
-  const axes5: RadarChartAxis[] = [
-    { label: "理論", percent: 75 },
-    { label: "実験", percent: 58 },
-    { label: "数値化", percent: 100 },
-    { label: "観察", percent: 24 },
-    { label: "創造", percent: 0 },
-  ];
-
-  let figureWidth = 320;
-  const observers: ResizeObserverCallback[] = [];
-  let measureStyle: HTMLStyleElement | null = null;
-
-  /**
-   * 図の幅を figureWidth に、字を 14px（1字の幅 14px・行の高さ 17.5px）にして測らせ、ResizeObserver の通知を
-   * resizeTo で送れるようにする。この測りでは、軸の名前を置けるいちばん狭い図の幅が 96px になる。
-   */
-  function stubMeasurement() {
-    measureStyle = document.createElement("style");
-    measureStyle.textContent = "[data-radar-name] { font-size: 14px; }";
-    document.head.append(measureStyle);
-    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(
-      () => figureWidth,
-    );
-    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
-      function (this: HTMLElement) {
-        const width = (this.textContent ?? "").length * 14;
-        return {
-          width,
-          height: 17.5,
-          x: 0,
-          y: 0,
-          top: 0,
-          left: 0,
-          right: width,
-          bottom: 17.5,
-          toJSON: () => ({}),
-        };
-      },
-    );
-    vi.stubGlobal(
-      "ResizeObserver",
-      class {
-        #callback: ResizeObserverCallback;
-        constructor(callback: ResizeObserverCallback) {
-          this.#callback = callback;
-          observers.push(callback);
-        }
-        observe() {}
-        unobserve() {}
-        disconnect() {
-          const index = observers.indexOf(this.#callback);
-          if (index >= 0) observers.splice(index, 1);
-        }
-      },
-    );
-  }
-
-  function resizeTo(width: number) {
-    figureWidth = width;
-    act(() => {
-      for (const callback of observers) {
-        callback([], {} as ResizeObserver);
-      }
-    });
-  }
-
-  function labelCount(container: HTMLElement): number {
-    return container.querySelectorAll("svg text").length;
-  }
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.unstubAllGlobals();
-    measureStyle?.remove();
-    measureStyle = null;
-    observers.length = 0;
-    figureWidth = 320;
-  });
-
   test("幅が変わるたびに組み直し、名前を置けない幅では図を描かず、広がればまた描く", () => {
     stubMeasurement();
     const { container } = render(
