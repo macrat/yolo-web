@@ -6,7 +6,7 @@ import styles from "./SiteFrame.module.css";
 
 /**
  * どのページにも共通の枠（DESIGN.md §5 レイアウト）。スキップのリンク・上端・中間・下端を順に置く。
- * ルートのレイアウト（src/app/layout.tsx）が body の中に置く。404 もルートのレイアウトの中に描かれ、同じ枠を持つ。
+ * ルートのレイアウト（src/app/layout.tsx）が body の中に置く。
  */
 export default function SiteFrame({ children }: { children: React.ReactNode }) {
   return (

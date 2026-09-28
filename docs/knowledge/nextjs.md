@@ -181,3 +181,13 @@ Next.js 16.3.0 の Turbopack のビルドでは、`next/font/google` に `adjust
 **対処**: `fallback: []` も一緒に渡す。Turbopack は `fallback` が指定されると自動の代わりの書体を作らず、変数の値は `"<書体名>"` だけになる。確かめるときは `npx next build --experimental-build-mode=compile` のあと、`.next/static/chunks/*.css` で `Fallback` を探す。
 
 **根拠**: 実測（cycle-316）。
+
+---
+
+## 13. 404 の応答には Next が `noindex` を足すので、ルートのレイアウトの `robots` を受け継ぐと robots が2つ出る
+
+404 を返すとき（`not-found.tsx` を描くとき）、Next.js は `<meta name="robots" content="noindex"/>` を自分で足す。`not-found.tsx` の `metadata` が `robots` を書かないと、ルートのレイアウトの `metadata.robots`（このサイトでは `index, follow, max-image-preview:large`）も受け継がれ、robots の meta が2つ出る。`robots: { index: false }` を書いても、Next が足すものと `metadata` のもので `noindex` が2つになる。
+
+**対処**: `not-found.tsx` の `metadata` に `robots: null` を書く。受け継いだ `robots` が消え、Next が足す `noindex` の1つだけが出る。ほかのページの `robots` は変わらない。確かめるときは本番のビルドを `next start` で起こし、404 の URL と通常のページの HTML で `<meta name="robots"` を数える。
+
+**根拠**: 実測（cycle-316。T5-22 の設計の調べ（`docs/cycles/cycle-316/t5-design.md` の 0-8）で、受け継いだときに2つ出ること、`robots: null` で `/zz-not-exist`・`/dictionary/kanji/zz`・`/tools/zz` の `noindex` が1つになり `/tools/base64` の `index, follow, max-image-preview:large` が変わらないことを確かめた。`robots: { index: false }` で `noindex` が2つになることは、同じ調べのレビューの再ビルドで確かめた。T5-22 の実装のビルドで、5つの 404 の URL の HTML の robots が `noindex` の1つだけであることを確かめた）。

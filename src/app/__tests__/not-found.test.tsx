@@ -14,7 +14,7 @@ test("404 のページは主見出しを持つ", () => {
   ).toBeInTheDocument();
 });
 
-test("404 のページはルートのレイアウトの robots を受け継がない（Next が足す noindex だけが出る）", () => {
+test("404 のページの metadata は題を持ち、robots を null にしてルートのレイアウトの index, follow を受け継がない", () => {
   expect(metadata.robots).toBeNull();
   expect(metadata.title).toBe("ページが見つかりません | yolos.net");
 });
