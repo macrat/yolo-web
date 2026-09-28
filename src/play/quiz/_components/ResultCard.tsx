@@ -4,9 +4,10 @@
  * 解き終えた画面（`/play/[slug]`）に出す結果。
  *
  * `QuizContainer` が開始→設問→結果と進んだあとに描き、variant ごとの詳しい読みものへの振り分けもここで行う。
- * 上から、結果のボックス（タイプ名・キャッチコピー・説明）、結果を持ち帰る・共有する区画、詳しい読みもの、
- * 「もう一度挑戦する」の順に置く（DESIGN.md §8）。各タイプの結果のページ（`/play/[slug]/result/[resultId]`。
- * 枠は ResultPageShell）は、ここから共有する URL であり、すべてのタイプの行から移る先でもある。
+ * 上から、結果のボックス（タイプ名・キャッチコピー・説明）、結果を持ち帰る・共有する区画、詳しい読みもの
+ * （セクション「このタイプについて」）、すべてのタイプ、「もう一度挑戦する」の順に置く（DESIGN.md §8）。各タイプの
+ * 結果のページ（`/play/[slug]/result/[resultId]`。枠は ResultPageShell）は、ここから共有する URL であり、
+ * すべてのタイプの行から移る先でもある。
  */
 import type React from "react";
 import { useId, useState, type Ref } from "react";
@@ -43,6 +44,7 @@ import {
   Reading,
   ReadingHeading,
   ReadingList,
+  ReadingSection,
   ReadingText,
 } from "./ResultReading";
 import Button from "@/components/Button";
@@ -114,10 +116,10 @@ interface ResultCardProps {
   /** 相性を見る友だちのタイプの id（共有のリンクの ref） */
   referrerTypeId?: string;
   /**
-   * 診断の全タイプ。すべてのタイプの一覧と、全タイプを読む詳しい読みもの（unexpected-compatibility など）が使う。
-   * 呼び出し側が持つ quiz.results を受け取り、ここで診断ごとのデータを読み込まない（バンドルを小さく保つ）。
+   * 診断の全タイプ。詳しい読みもののあとの、すべてのタイプの一覧に並べる。呼び出し側が持つ quiz.results を
+   * 受け取り、ここで診断ごとのデータを読み込まない（バンドルを小さく保つ）。
    */
-  allResults?: QuizResult[];
+  allResults: QuizResult[];
   /**
    * 主タイプと同じ最高得点を分け合ったタイプ。word-sense-personality で同点が残ったときだけ渡される。
    * 1件以上あるとき、主タイプと同格に「同じくらい強く出た型」を結果の中で言う。
@@ -174,40 +176,18 @@ function renderStandardContent(
   content: QuizResultDetailedContent,
   phrasesOf: PhrasesOf,
   labels?: QuizMeta["resultPageLabels"],
-  allResults?: QuizResult[],
-  quizSlug?: string,
-  resultId?: string,
 ): React.ReactNode {
   const headings = standardReadingHeadings(labels);
 
   return (
-    <>
-      <Reading>
-        <ReadingHeading
-          placement="solvedScreen"
-          phrases={phrasesOf(headings.traits)}
-        />
-        <ReadingList items={content.traits} />
-        <ReadingHeading
-          placement="solvedScreen"
-          phrases={phrasesOf(headings.behaviors)}
-        />
-        <ReadingList items={content.behaviors} />
-        <ReadingHeading
-          placement="solvedScreen"
-          phrases={phrasesOf(headings.advice)}
-        />
-        <ReadingText>{content.advice}</ReadingText>
-      </Reading>
-      {allResults && quizSlug && resultId && (
-        <OtherTypesNav
-          quizSlug={quizSlug}
-          currentResultId={resultId}
-          results={allResults}
-          placement="solvedScreen"
-        />
-      )}
-    </>
+    <Reading>
+      <ReadingHeading phrases={phrasesOf(headings.traits)} />
+      <ReadingList items={content.traits} />
+      <ReadingHeading phrases={phrasesOf(headings.behaviors)} />
+      <ReadingList items={content.behaviors} />
+      <ReadingHeading phrases={phrasesOf(headings.advice)} />
+      <ReadingText>{content.advice}</ReadingText>
+    </Reading>
   );
 }
 
@@ -268,15 +248,9 @@ function renderCharacterFortuneContent(
   return (
     <Reading>
       <ReadingText>{content.characterIntro}</ReadingText>
-      <ReadingHeading
-        placement="solvedScreen"
-        phrases={phrasesOf(content.behaviorsHeading)}
-      />
+      <ReadingHeading phrases={phrasesOf(content.behaviorsHeading)} />
       <ReadingList items={content.behaviors} />
-      <ReadingHeading
-        placement="solvedScreen"
-        phrases={phrasesOf(content.characterMessageHeading)}
-      />
+      <ReadingHeading phrases={phrasesOf(content.characterMessageHeading)} />
       <ReadingText>{content.characterMessage}</ReadingText>
     </Reading>
   );
@@ -285,35 +259,18 @@ function renderCharacterFortuneContent(
 function renderDetailedContent(
   content: DetailedContent,
   resultId: string,
-  quizSlug: string,
   phrasesOf: PhrasesOf,
   labels?: QuizMeta["resultPageLabels"],
   referrerTypeId?: string,
-  allResults?: QuizResult[],
 ): React.ReactNode {
   // variant を持たない標準の形
   if (!content.variant) {
-    return renderStandardContent(
-      content,
-      phrasesOf,
-      labels,
-      allResults,
-      quizSlug,
-      resultId,
-    );
+    return renderStandardContent(content, phrasesOf, labels);
   }
   switch (content.variant) {
     case "contrarian-fortune": {
       const Comp = ContrarianFortuneContent;
-      return (
-        <Comp
-          quizSlug={quizSlug}
-          resultId={resultId}
-          detailedContent={content}
-          allResults={allResults ?? []}
-          placement="solvedScreen"
-        />
-      );
+      return <Comp detailedContent={content} />;
     }
     case "character-fortune":
       // character-fortune は専用 *Content を持たず、常に
@@ -324,8 +281,6 @@ function renderDetailedContent(
       return (
         <Comp
           content={content}
-          resultId={resultId}
-          placement="solvedScreen"
           afterTodayAction={buildAnimalPersonalityAfterTodayAction(
             resultId,
             referrerTypeId,
@@ -339,27 +294,17 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          placement="solvedScreen"
           referrerTypeId={referrerTypeId}
         />
       );
     }
     case "traditional-color": {
       const Comp = TraditionalColorContent;
-      return (
-        <Comp
-          content={content}
-          resultId={resultId}
-          placement="solvedScreen"
-          // ResultCard内では相性データがないため afterColorAdvice は省略
-        />
-      );
+      return <Comp content={content} />;
     }
     case "yoji-personality": {
       const Comp = YojiPersonalityContent;
-      return (
-        <Comp content={content} resultId={resultId} placement="solvedScreen" />
-      );
+      return <Comp content={content} />;
     }
     case "character-personality": {
       const Comp = CharacterPersonalityContent;
@@ -367,36 +312,17 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          placement="solvedScreen"
           referrerTypeId={referrerTypeId}
         />
       );
     }
     case "unexpected-compatibility": {
       const Comp = UnexpectedCompatibilityContent;
-      return (
-        <Comp
-          quizSlug={quizSlug}
-          resultId={resultId}
-          detailedContent={content}
-          allResults={allResults ?? []}
-          placement="solvedScreen"
-          // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
-        />
-      );
+      return <Comp detailedContent={content} />;
     }
     case "impossible-advice": {
       const Comp = ImpossibleAdviceContent;
-      return (
-        <Comp
-          quizSlug={quizSlug}
-          resultId={resultId}
-          detailedContent={content}
-          allResults={allResults ?? []}
-          placement="solvedScreen"
-          // ResultCard内では afterPracticalTip スロットは不要
-        />
-      );
+      return <Comp detailedContent={content} />;
     }
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
@@ -530,17 +456,24 @@ export default function ResultCard({
         </Link>
       )}
       {detailedContent && (
-        <div>
-          {renderDetailedContent(
-            detailedContent,
-            result.id,
-            quizSlug,
-            (text) => readingHeadings[text] ?? [text],
-            resultPageLabels,
-            referrerTypeId,
-            allResults,
-          )}
-        </div>
+        <>
+          <ReadingSection>
+            {renderDetailedContent(
+              detailedContent,
+              result.id,
+              (text) => readingHeadings[text] ?? [text],
+              resultPageLabels,
+              referrerTypeId,
+            )}
+          </ReadingSection>
+          <OtherTypesNav
+            quizSlug={quizSlug}
+            currentResultId={result.id}
+            results={allResults}
+            placement="solvedScreen"
+            showSwatch={resultColor !== undefined}
+          />
+        </>
       )}
       <div className={styles.action}>
         <Button onClick={onRetry}>もう一度挑戦する</Button>

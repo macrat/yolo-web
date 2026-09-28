@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { beforeAll, describe, expect, test } from "vitest";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
@@ -15,10 +15,13 @@ import type { DetailedContent, QuizResult } from "@/play/quiz/types";
 import AnimalPersonalityContent from "../AnimalPersonalityContent";
 import CharacterPersonalityContent from "../CharacterPersonalityContent";
 import ContrarianFortuneContent from "../ContrarianFortuneContent";
-import { ReadingHeading } from "../ResultReading";
+import {
+  READING_SECTION_HEADING,
+  ReadingHeading,
+  ReadingSection,
+} from "../ResultReading";
 import ImpossibleAdviceContent from "../ImpossibleAdviceContent";
 import MusicPersonalityContent from "../MusicPersonalityContent";
-import type { ResultPlacement } from "../OtherTypesNav";
 import { renderScienceThinkingExtra } from "../ScienceThinkingResultExtra";
 import TraditionalColorContent from "../TraditionalColorContent";
 import UnexpectedCompatibilityContent from "../UnexpectedCompatibilityContent";
@@ -44,7 +47,7 @@ function contentOf<T extends DetailedContent["variant"]>(
 }
 
 /** 読みものの全部の小見出しが出るように、各診断の読みものを組む。 */
-function readings(placement: ResultPlacement): ReactElement[] {
+function readings(): ReactElement[] {
   const contrarian = contrarianFortune.results.find(
     (result) =>
       result.detailedContent?.variant === "contrarian-fortune" &&
@@ -54,62 +57,42 @@ function readings(placement: ResultPlacement): ReactElement[] {
     <AnimalPersonalityContent
       key="animal"
       content={contentOf(animalPersonality.results, "animal-personality")}
-      resultId={animalPersonality.results[0].id}
-      placement={placement}
       afterTodayAction={null}
     />,
     <CharacterPersonalityContent
       key="character"
       content={contentOf(characterPersonality.results, "character-personality")}
       resultId={characterPersonality.results[0].id}
-      placement={placement}
       afterCharacterMessage={null}
     />,
     <ContrarianFortuneContent
       key="contrarian"
-      quizSlug={contrarianFortune.meta.slug}
-      resultId={contrarian.id}
       detailedContent={contentOf([contrarian], "contrarian-fortune")}
-      allResults={contrarianFortune.results}
-      placement={placement}
     />,
     <ImpossibleAdviceContent
       key="impossible"
-      quizSlug={impossibleAdvice.meta.slug}
-      resultId={impossibleAdvice.results[0].id}
       detailedContent={contentOf(impossibleAdvice.results, "impossible-advice")}
-      allResults={impossibleAdvice.results}
-      placement={placement}
     />,
     <MusicPersonalityContent
       key="music"
       content={contentOf(musicPersonality.results, "music-personality")}
       resultId={musicPersonality.results[0].id}
-      placement={placement}
       afterTodayAction={null}
     />,
     <TraditionalColorContent
       key="color"
       content={contentOf(traditionalColor.results, "traditional-color")}
-      resultId={traditionalColor.results[0].id}
-      placement={placement}
     />,
     <UnexpectedCompatibilityContent
       key="unexpected"
-      quizSlug={unexpectedCompatibility.meta.slug}
-      resultId={unexpectedCompatibility.results[0].id}
       detailedContent={contentOf(
         unexpectedCompatibility.results,
         "unexpected-compatibility",
       )}
-      allResults={unexpectedCompatibility.results}
-      placement={placement}
     />,
     <YojiPersonalityContent
       key="yoji"
       content={contentOf(yojiPersonality.results, "yoji-personality")}
-      resultId={yojiPersonality.results[0].id}
-      placement={placement}
     />,
   ];
 }
@@ -127,17 +110,15 @@ function phrasesOf(heading: Element): string[] {
 describe("読みものの小見出しの手で区切った並び", () => {
   test("どの小見出しも、splitIntoPhrases と同じ禁則を満たす", () => {
     const headings: string[][] = [];
-    for (const placement of ["solvedScreen", "resultPage"] as const) {
-      for (const reading of readings(placement)) {
-        const { container, unmount } = render(reading);
-        container
-          .querySelectorAll("h2, h3")
-          .forEach(
-            (heading) =>
-              heading.querySelector("wbr") && headings.push(phrasesOf(heading)),
-          );
-        unmount();
-      }
+    for (const reading of readings()) {
+      const { container, unmount } = render(reading);
+      container
+        .querySelectorAll("h3")
+        .forEach(
+          (heading) =>
+            heading.querySelector("wbr") && headings.push(phrasesOf(heading)),
+        );
+      unmount();
     }
     const answers = scienceThinking.questions.map((question) => ({
       questionId: question.id,
@@ -158,8 +139,8 @@ describe("読みものの小見出しの手で区切った並び", () => {
           heading.querySelector("wbr") && headings.push(phrasesOf(heading)),
       );
 
-    // 8本の読みもの（2つの面）と、理系思考タイプ診断のプロフィールの小見出し
-    expect(headings.length).toBeGreaterThanOrEqual(2 * 30 + 1);
+    // 8本の読みものと、理系思考タイプ診断のプロフィールの小見出し
+    expect(headings.length).toBeGreaterThanOrEqual(30 + 1);
     for (const phrases of headings) {
       expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
     }
@@ -171,18 +152,33 @@ describe("読みものの小見出しの書体の属性", () => {
     const { container } = render(
       <>
         <ReadingHeading
-          placement="resultPage"
           phrases={["𠮟られて", "伸びる"]}
           headingFont={{ "data-heading-font": "fallback" }}
         />
-        <ReadingHeading
-          placement="resultPage"
-          phrases={["この", "タイプの", "強み"]}
-        />
+        <ReadingHeading phrases={["この", "タイプの", "強み"]} />
       </>,
     );
-    const [fallback, plain] = container.querySelectorAll("h2");
+    const [fallback, plain] = container.querySelectorAll("h3");
     expect(fallback).toHaveAttribute("data-heading-font", "fallback");
     expect(plain).not.toHaveAttribute("data-heading-font");
+  });
+});
+
+describe("読みもののセクション", () => {
+  test("見出し「このタイプについて」の h2 を頭に持つ region で、その下に読みものを続ける", () => {
+    render(
+      <ReadingSection>
+        <ReadingHeading phrases={["この", "タイプの", "強み"]} />
+      </ReadingSection>,
+    );
+    const section = screen.getByRole("region", { name: "このタイプについて" });
+    const [sectionHeading, subheading] = section.querySelectorAll("h2, h3");
+    expect(sectionHeading.tagName).toBe("H2");
+    expect(sectionHeading).toHaveTextContent("このタイプについて");
+    expect(subheading.tagName).toBe("H3");
+  });
+
+  test("セクションの見出しの手で区切った並びは、splitIntoPhrases と同じ禁則を満たす", () => {
+    expect(followsPhraseRules(READING_SECTION_HEADING)).toBe(true);
   });
 });

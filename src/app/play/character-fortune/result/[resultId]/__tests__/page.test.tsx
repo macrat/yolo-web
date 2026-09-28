@@ -182,17 +182,6 @@ describe("CharacterFortuneResultPage compatibilityPrompt", () => {
   });
 });
 
-describe("CharacterFortuneResultPage 全タイプ一覧", () => {
-  it("全タイプが一覧表示されること", async () => {
-    const params = Promise.resolve({ resultId: "commander" });
-    const page = await CharacterFortuneResultPage({ params });
-    render(page);
-
-    expect(screen.getByText("司令官キャラ")).toBeInTheDocument();
-    expect(screen.getByText("教授キャラ")).toBeInTheDocument();
-  });
-});
-
 describe("CharacterFortuneResultPage 誘い", () => {
   it("診断ボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "commander" });

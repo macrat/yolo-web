@@ -1,5 +1,5 @@
 import { expect, test, vi, describe } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import React, { type ComponentProps } from "react";
 import ResultCardComponent from "../ResultCard";
 import type {
@@ -367,13 +367,13 @@ vi.mock("next/link", () => ({
 /**
  * 見出しの区切りはサーバーで作って渡すものなので、テストでは結果の名前を1つの区切りとして渡し、読みものの
  * 小見出しの区切りは渡さない（受け取っていない小見出しは1つの文節として組まれる）。診断の名前を渡さないテストは、
- * 題をそのまま名前にする。
+ * 題をそのまま名前にする。診断の全タイプを渡さないテストは、結果のタイプだけを持つ診断にする。
  */
 function ResultCard(
   props: Omit<
     ComponentProps<typeof ResultCardComponent>,
-    "heading" | "readingHeadings" | "quizName"
-  > & { quizName?: string },
+    "heading" | "readingHeadings" | "quizName" | "allResults"
+  > & { quizName?: string; allResults?: QuizResult[] },
 ) {
   return (
     <ResultCardComponent
@@ -383,6 +383,7 @@ function ResultCard(
       readingHeadings={{}}
       {...props}
       quizName={props.quizName ?? props.quizTitle}
+      allResults={props.allResults ?? [props.result]}
     />
   );
 }
@@ -456,6 +457,7 @@ describe("ResultCard - 結果のボックス", () => {
         quizName={defaultProps.quizTitle}
         heading={{ phrases: ["締切3分前に", "本気出す", "炎の司令塔"] }}
         readingHeadings={{}}
+        allResults={[]}
       />,
     );
     const heading = screen.getByRole("heading", { level: 2 });
@@ -713,8 +715,43 @@ describe("ResultCard - Standard variant すべてのタイプの一覧", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "すべてのタイプ（3）" }),
+      screen.getByRole("heading", { level: 2, name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
+  });
+
+  test("読みものはセクション「このタイプについて」（h2）にまとめ、その中の小見出しは h3。すべてのタイプはそのあとに置く", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={currentResult}
+        detailedContent={standardContent}
+        allResults={allTypes}
+      />,
+    );
+    const section = screen.getByRole("region", { name: "このタイプについて" });
+    expect(
+      within(section).getByRole("heading", {
+        level: 2,
+        name: "このタイプについて",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(section)
+        .getAllByRole("heading", { level: 3 })
+        .map((heading) => heading.textContent),
+    ).toEqual([
+      "このタイプの特徴",
+      "このタイプのあるある",
+      "このタイプの人へのアドバイス",
+    ]);
+    const allTypesHeading = screen.getByRole("heading", {
+      name: "すべてのタイプ（3）",
+    });
+    expect(section).not.toContainElement(allTypesHeading);
+    expect(
+      section.compareDocumentPosition(allTypesHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   test("自タイプ以外は同一診断の結果ページへのリンクになること", () => {
@@ -749,19 +786,6 @@ describe("ResultCard - Standard variant すべてのタイプの一覧", () => {
       "aria-current",
       "true",
     );
-  });
-
-  test("allResults が未指定の場合はナビが表示されないこと", () => {
-    render(
-      <ResultCard
-        {...defaultProps}
-        result={currentResult}
-        detailedContent={standardContent}
-      />,
-    );
-    expect(
-      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
-    ).not.toBeInTheDocument();
   });
 
   test("allResults が1件のみの場合はナビが表示されないこと", () => {
@@ -908,6 +932,7 @@ describe("ResultCard - DOM順序", () => {
           このタイプのあるある: ["この", "タイプの", "あるある"],
         }}
         detailedContent={content}
+        allResults={[]}
       />,
     );
     const heading = screen.getByRole("heading", {
@@ -1068,10 +1093,21 @@ describe("ResultCard - animal-personality variant", () => {
   });
 
   test("全タイプ一覧が表示されること", () => {
-    render(<ResultCard {...animalProps} />);
-    // モックデータには nihon-zaru と hondo-tanuki の2タイプが存在
-    expect(screen.getByText("ニホンザル")).toBeInTheDocument();
-    expect(screen.getByText("ホンドタヌキ")).toBeInTheDocument();
+    render(
+      <ResultCard
+        {...animalProps}
+        allResults={[
+          { id: "nihon-zaru", title: "ニホンザル", description: "" },
+          { id: "hondo-tanuki", title: "ホンドタヌキ", description: "" },
+        ]}
+      />,
+    );
+    expect(
+      screen.getByRole("link", { name: "ニホンザル" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "ホンドタヌキ" }),
+    ).toBeInTheDocument();
   });
 
   test("タイプやクイズの色を、どの要素にもインラインスタイルで入れないこと", () => {
@@ -1299,13 +1335,25 @@ describe("ResultCard - traditional-color variant", () => {
     expect(inlineColoredElements(container)).toEqual([]);
   });
 
-  test("全タイプ一覧が表示されること", () => {
-    render(<ResultCard {...traditionalColorProps} />);
-    // モックデータには藍色と紅色の2タイプが存在
-    // 藍色はh2（result.title）と全タイプ一覧の両方に出るため getAllByText で確認
-    const aiiroElements = screen.getAllByText("藍色");
-    expect(aiiroElements.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("紅色")).toBeInTheDocument();
+  test("全タイプ一覧が表示され、伝統色はタイプの中身なので、どの行も色見本を持つこと", () => {
+    render(
+      <ResultCard
+        {...traditionalColorProps}
+        allResults={[
+          { id: "ai-iro", title: "藍色", description: "", color: "#165e83" },
+          { id: "kurenai", title: "紅色", description: "", color: "#d7003a" },
+        ]}
+      />,
+    );
+    const list = screen.getByRole("heading", { name: "すべてのタイプ（2）" })
+      .parentElement as HTMLElement;
+    expect(
+      within(list).getByRole("link", { name: "藍色" }),
+    ).toBeInTheDocument();
+    expect(
+      within(list).getByRole("link", { name: "紅色" }),
+    ).toBeInTheDocument();
+    expect(list.querySelectorAll("[style*='background']").length).toBe(2);
   });
 });
 

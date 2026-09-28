@@ -237,32 +237,27 @@ describe("OtherTypesNav", () => {
     ).toHaveLength(0);
   });
 
-  test("結果のページでは見出しが h2 になること", () => {
-    render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { level: 2, name: "すべてのタイプ（3）" }),
-    ).toBeInTheDocument();
-  });
-
-  test("解き終えた画面では見出しが h3 になること", () => {
-    render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-        placement="solvedScreen"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { level: 3, name: "すべてのタイプ（3）" }),
-    ).toBeInTheDocument();
+  test("どちらの面でも、見出しはセクションの見出しの段の h2 で、一覧のセクションの名前になること", () => {
+    for (const placement of ["resultPage", "solvedScreen"] as const) {
+      const { unmount } = render(
+        <OtherTypesNav
+          quizSlug="word-sense-personality"
+          currentResultId="type-a"
+          results={results}
+          placement={placement}
+        />,
+      );
+      const section = screen.getByRole("region", {
+        name: "すべてのタイプ（3）",
+      });
+      expect(
+        within(section).getByRole("heading", {
+          level: 2,
+          name: "すべてのタイプ（3）",
+        }),
+      ).toBeInTheDocument();
+      unmount();
+    }
   });
 
   test("1件以下のときは何も描画されないこと", () => {

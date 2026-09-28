@@ -11,9 +11,9 @@
   color: var(--ink-2);
 }
 
+/* 相性の名前。大きさは h3 の既定（§4 のセクションの中の小見出しの段）。 */
 .label {
   margin: var(--space-8) 0 0;
-  font-size: var(--text-heading-sub);
 }
 
 .text {

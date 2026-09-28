@@ -89,8 +89,6 @@ export default async function TraditionalColorResultPage({ params }: Props) {
     >
       <TraditionalColorContent
         content={colorDc}
-        resultId={resultId}
-        placement="resultPage"
         afterColorAdvice={
           <div className={styles.cta2Section}>
             <Link

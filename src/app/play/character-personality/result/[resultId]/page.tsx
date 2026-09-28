@@ -166,7 +166,6 @@ export default async function CharacterPersonalityResultPage({
       <CharacterPersonalityContent
         content={characterDc}
         resultId={resultId}
-        placement="resultPage"
         afterCharacterMessage={
           <>
             {compatData && (

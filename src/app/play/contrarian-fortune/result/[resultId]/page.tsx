@@ -93,11 +93,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
       ctaText={ctaText}
     >
       <ContrarianFortuneContent
-        quizSlug={SLUG}
-        resultId={resultId}
         detailedContent={cfDc}
-        allResults={quiz.results}
-        placement="resultPage"
         afterThirdPartyNote={
           <div className={styles.cta2Section}>
             <Link

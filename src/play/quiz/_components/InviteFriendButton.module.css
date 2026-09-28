@@ -1,23 +1,23 @@
 /*
- * 友達を招待するボタン（相性診断の入口）。ボタンの見え方は Button が持つ。
+ * 友達を招待するボタン（相性診断の入口）。読みものの小見出しと同じく、上の細い罫線で前の内容と分ける
+ * （DESIGN.md §5）。ボタンの見え方は Button が持つ。
  */
 .wrapper {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
-  text-align: left;
+  margin-top: var(--space-24);
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .label {
-  font-size: 0.875rem;
+  margin-bottom: var(--space-8);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-bottom: 0.5rem;
 }
 
 /* コピーの知らせ。出たり消えたりしても下の要素が動かないよう、1行分の高さをいつも取る。 */
 .copiedMessage {
   min-height: 1lh;
-  margin-top: 0.25rem;
+  margin-top: var(--space-8);
   font-size: var(--text-small);
   color: var(--ink);
 }

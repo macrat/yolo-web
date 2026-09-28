@@ -157,7 +157,6 @@ export default async function MusicPersonalityResultPage({
       <MusicPersonalityContent
         content={musicDc}
         resultId={resultId}
-        placement="resultPage"
         afterTodayAction={
           <>
             {compatData && (

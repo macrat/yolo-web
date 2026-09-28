@@ -92,11 +92,7 @@ export default async function UnexpectedCompatibilityResultPage({
       ctaText={ctaText}
     >
       <UnexpectedCompatibilityContent
-        quizSlug={SLUG}
-        resultId={resultId}
         detailedContent={ucDc}
-        allResults={quiz.results}
-        placement="resultPage"
         afterLifeAdvice={
           <div className={styles.cta2Section}>
             <Link

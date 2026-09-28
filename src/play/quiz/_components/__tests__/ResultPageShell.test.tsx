@@ -158,8 +158,27 @@ test("結果の色を渡したときだけ、字を持たない色見本を出�
   ).toBeNull();
 });
 
+/** 詳しい読みものを持つタイプと、同じ診断のもう1つのタイプ。 */
+const readingResult: QuizResult = {
+  ...mockResult,
+  detailedContent: {
+    traits: ["特徴"],
+    behaviors: ["あるある"],
+    advice: "助言",
+  },
+};
+const readingQuiz: QuizDefinition = {
+  ...mockQuiz,
+  results: [
+    readingResult,
+    { id: "result-b", title: "もう1つのタイプ", description: "説明" },
+  ],
+};
+
 test("タイプ名のあとに、添えた段落・診断への誘い・説明の全文をこの順に置き、そのあとにルートの中身を続ける", () => {
   const { container } = renderShell({
+    quiz: readingQuiz,
+    result: readingResult,
     lead: "キャッチコピー",
     description: "タイプの説明",
     children: <div data-testid="child-content">子コンテンツ</div>,
@@ -184,6 +203,66 @@ test("タイプ名のあとに、添えた段落・診断への誘い・説明�
   expect(container.querySelector("[data-inverted]")).not.toBeNull();
   // 説明は切り分けず、開くボタンを持たない（DESIGN.md §8）
   expect(screen.queryByRole("button")).toBeNull();
+});
+
+test("詳しい読みものを持つタイプは、ルートの中身をセクション「このタイプについて」（h2）に置き、そのあとにすべてのタイプ（h2）、共有の区画を続ける", () => {
+  renderShell({
+    quiz: readingQuiz,
+    result: readingResult,
+    children: <div data-testid="child-content">子コンテンツ</div>,
+  });
+
+  const reading = screen.getByRole("region", { name: "このタイプについて" });
+  expect(
+    within(reading).getByRole("heading", {
+      level: 2,
+      name: "このタイプについて",
+    }),
+  ).toBeInTheDocument();
+  expect(within(reading).getByTestId("child-content")).toBeInTheDocument();
+  const allTypes = screen.getByRole("heading", {
+    level: 2,
+    name: "すべてのタイプ（2）",
+  });
+  const share = screen.getByRole("region", { name: "この結果を共有" });
+  expect(reading).not.toContainElement(allTypes);
+  for (const [before, after] of [
+    [reading, allTypes],
+    [allTypes, share],
+  ]) {
+    expect(
+      before.compareDocumentPosition(after) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  }
+  // 結果のページでは、いまのタイプの行は開いているページなので現在地になる
+  expect(
+    screen.getByRole("link", { name: "テスト結果タイトル" }),
+  ).toHaveAttribute("aria-current", "page");
+});
+
+test("結果の色を渡したときは、すべてのタイプの行も色見本を持つ", () => {
+  renderShell({
+    quiz: {
+      ...readingQuiz,
+      results: readingQuiz.results.map((result) => ({
+        ...result,
+        color: "#165e83",
+      })),
+    },
+    result: readingResult,
+    swatch: "#165e83",
+  });
+  const allTypes = screen.getByRole("heading", { name: "すべてのタイプ（2）" })
+    .parentElement as HTMLElement;
+  expect(allTypes.querySelectorAll("[style*='background']")).toHaveLength(2);
+});
+
+test("詳しい読みものを持たないタイプは、読みもののセクションもすべてのタイプも置かない", () => {
+  renderShell({ quiz: readingQuiz, result: mockResult, children: undefined });
+  expect(
+    screen.queryByRole("region", { name: "このタイプについて" }),
+  ).toBeNull();
+  expect(screen.queryByRole("heading", { name: /^すべてのタイプ/ })).toBeNull();
 });
 
 test("共有の区画を1つだけ置き、見出し「この結果を共有」が区画の名前になる", () => {

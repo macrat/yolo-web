@@ -3,35 +3,14 @@
  *
  * テスト対象:
  * - entityEssence / whyCompatible / behaviors / lifeAdvice の4セクション表示
- * - すべてのタイプ（OtherTypesNav）
- * - 置く面（placement）による見出しの階層（h2/h3）
- * - タイプの色を wrapper に入れないこと
+ * - 小見出しの段（h3）と、すべてのタイプを持たないこと
  * - afterLifeAdvice スロット
- * - 現在タイプのハイライト（aria-current）
  */
 
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import UnexpectedCompatibilityContent from "../UnexpectedCompatibilityContent";
 import type { UnexpectedCompatibilityDetailedContent } from "../../types";
-import type { QuizResult } from "../../types";
-
-// next/link をモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
 
 const sampleContent: UnexpectedCompatibilityDetailedContent = {
   variant: "unexpected-compatibility",
@@ -50,40 +29,9 @@ const sampleContent: UnexpectedCompatibilityDetailedContent = {
     "小さな「ちゃんと応えた」の積み重ねが、やがて信頼という光になる。",
 };
 
-const sampleAllResults: QuizResult[] = [
-  {
-    id: "vendingmachine",
-    title: "自動販売機",
-    description: "説明1",
-    color: "#0891b2",
-  },
-  {
-    id: "oldclock",
-    title: "古い掛け時計",
-    description: "説明2",
-    color: "#92400e",
-  },
-  {
-    id: "streetlight",
-    title: "街灯",
-    description: "説明3",
-    color: "#ca8a04",
-  },
-];
-
-const sampleQuizSlug = "unexpected-compatibility";
-
 describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
   it("entityEssenceセクションが表示されること", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<UnexpectedCompatibilityContent detailedContent={sampleContent} />);
     expect(screen.getByText("この存在の本質")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -93,15 +41,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
   });
 
   it("whyCompatibleセクションが表示されること", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<UnexpectedCompatibilityContent detailedContent={sampleContent} />);
     expect(screen.getByText("なぜ相性が良いのか")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -111,15 +51,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
   });
 
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<UnexpectedCompatibilityContent detailedContent={sampleContent} />);
     expect(screen.getByText("この存在と共鳴する日常")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -134,15 +66,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
   });
 
   it("lifeAdviceセクションが表示されること", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<UnexpectedCompatibilityContent detailedContent={sampleContent} />);
     expect(screen.getByText("この存在から学べること")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -150,58 +74,18 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
       ),
     ).toBeInTheDocument();
   });
-
-  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("自動販売機")).toBeInTheDocument();
-    expect(screen.getByText("古い掛け時計")).toBeInTheDocument();
-    expect(screen.getByText("街灯")).toBeInTheDocument();
-  });
 });
 
-describe("UnexpectedCompatibilityContent - placement による見出しの階層", () => {
-  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
+describe("UnexpectedCompatibilityContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
+      <UnexpectedCompatibilityContent detailedContent={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // entityEssence / whyCompatible / behaviors / lifeAdvice / 全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(5);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="solvedScreen"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(5);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -212,11 +96,7 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
     );
     render(
       <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
         detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
         afterLifeAdvice={afterContent}
       />,
     );
@@ -227,13 +107,7 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
   it("afterLifeAdvice が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
       render(
-        <UnexpectedCompatibilityContent
-          quizSlug={sampleQuizSlug}
-          resultId="vendingmachine"
-          detailedContent={sampleContent}
-          allResults={sampleAllResults}
-          placement="resultPage"
-        />,
+        <UnexpectedCompatibilityContent detailedContent={sampleContent} />,
       );
     }).not.toThrow();
   });
@@ -242,13 +116,7 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
 describe("UnexpectedCompatibilityContent - 読みものの組み方", () => {
   it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vending-machine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
+      <UnexpectedCompatibilityContent detailedContent={sampleContent} />,
     );
     for (const text of [
       sampleContent.entityEssence,
@@ -261,70 +129,5 @@ describe("UnexpectedCompatibilityContent - 読みものの組み方", () => {
       expect(screen.getByText(item).tagName).toBe("LI");
     }
     expect(container.querySelector("[class*='Card']")).toBeNull();
-  });
-});
-
-describe("UnexpectedCompatibilityContent - aria-current", () => {
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /自動販売機/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /古い掛け時計/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-
-  it("解き終えた画面では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="oldclock"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="solvedScreen"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /古い掛け時計/ });
-    expect(currentLink).toHaveAttribute("aria-current", "true");
-    const otherLink = screen.getByRole("link", { name: /自動販売機/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-});
-
-describe("UnexpectedCompatibilityContent - リンクのhref", () => {
-  it("すべてのタイプのリンクが正しいhrefを持つこと", () => {
-    render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    const clockLink = screen.getByRole("link", { name: /古い掛け時計/ });
-    expect(clockLink).toHaveAttribute(
-      "href",
-      `/play/${sampleQuizSlug}/result/oldclock`,
-    );
   });
 });

@@ -90,11 +90,7 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
       ctaText={ctaText}
     >
       <ImpossibleAdviceContent
-        quizSlug={SLUG}
-        resultId={resultId}
         detailedContent={iaDc}
-        allResults={quiz.results}
-        placement="resultPage"
         afterPracticalTip={
           <div className={styles.cta2Section}>
             <Link

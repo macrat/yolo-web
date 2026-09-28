@@ -3,23 +3,6 @@ import { describe, it, expect, vi } from "vitest";
 import MusicPersonalityContent from "../MusicPersonalityContent";
 import type { MusicPersonalityDetailedContent } from "../../types";
 
-// next/linkをモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
-
 // music-personalityデータモジュールをモック
 vi.mock("@/play/quiz/data/music-personality", () => ({
   default: {
@@ -61,7 +44,6 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの音楽的な強み")).toBeInTheDocument();
@@ -74,7 +56,6 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの音楽的な弱み")).toBeInTheDocument();
@@ -87,7 +68,6 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("このタイプの音楽あるある")).toBeInTheDocument();
@@ -100,7 +80,6 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("今日の音楽ライフのヒント")).toBeInTheDocument();
@@ -108,51 +87,21 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
       screen.getByText("今日の音楽ライフのヒントテキスト"),
     ).toBeInTheDocument();
   });
-
-  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
-    render(
-      <MusicPersonalityContent
-        content={sampleContent}
-        resultId="festival-pioneer"
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("フェス一番乗り族")).toBeInTheDocument();
-    expect(screen.getByText("プレイリスト伝道師")).toBeInTheDocument();
-  });
 });
 
-describe("MusicPersonalityContent - placement による見出しの階層", () => {
-  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
+describe("MusicPersonalityContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
       />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // 強み・弱み・行動・アクション・全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(5);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <MusicPersonalityContent
-        content={sampleContent}
-        resultId="festival-pioneer"
-        placement="solvedScreen"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(5);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -165,7 +114,6 @@ describe("MusicPersonalityContent - afterTodayAction スロット", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
         afterTodayAction={afterContent}
       />,
     );
@@ -179,7 +127,6 @@ describe("MusicPersonalityContent - afterTodayAction スロット", () => {
         <MusicPersonalityContent
           content={sampleContent}
           resultId="festival-pioneer"
-          placement="resultPage"
         />,
       );
     }).not.toThrow();
@@ -192,7 +139,6 @@ describe("MusicPersonalityContent - 読みものの組み方", () => {
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
-        placement="resultPage"
         afterTodayAction={null}
       />,
     );
@@ -211,19 +157,3 @@ describe("MusicPersonalityContent - 読みものの組み方", () => {
 });
 
 // タイプごとの色をインラインスタイルで入れない（DESIGN.md §2）。
-
-describe("MusicPersonalityContent - 全タイプリンク", () => {
-  it("全タイプへのリンクが /play/music-personality/result/{id} 形式であること", () => {
-    const { container } = render(
-      <MusicPersonalityContent
-        content={sampleContent}
-        resultId="festival-pioneer"
-        placement="resultPage"
-      />,
-    );
-    const links = container.querySelectorAll(
-      "a[href*='/play/music-personality/result/']",
-    );
-    expect(links.length).toBeGreaterThanOrEqual(2);
-  });
-});

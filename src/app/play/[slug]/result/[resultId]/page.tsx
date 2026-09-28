@@ -12,7 +12,6 @@ import { getCompatibility } from "@/play/quiz/data/music-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import {
   Reading,
   ReadingHeading,
@@ -231,7 +230,6 @@ export default async function PlayQuizResultPage({
         <>
           <Reading>
             <ReadingHeading
-              placement="resultPage"
               {...readingHeading(
                 labels?.traitsHeading,
                 DEFAULT_READING_HEADINGS.traits,
@@ -240,7 +238,6 @@ export default async function PlayQuizResultPage({
             <ReadingList items={detailedContent.traits} />
 
             <ReadingHeading
-              placement="resultPage"
               {...readingHeading(
                 labels?.behaviorsHeading,
                 DEFAULT_READING_HEADINGS.behaviors,
@@ -249,7 +246,6 @@ export default async function PlayQuizResultPage({
             <ReadingList items={detailedContent.behaviors} />
 
             <ReadingHeading
-              placement="resultPage"
               {...readingHeading(
                 labels?.adviceHeading,
                 DEFAULT_READING_HEADINGS.advice,
@@ -257,14 +253,6 @@ export default async function PlayQuizResultPage({
             />
             <ReadingText>{detailedContent.advice}</ReadingText>
           </Reading>
-
-          {/* 検索や共有のリンクから来た来訪者にも、ほかのタイプを見せる。 */}
-          <OtherTypesNav
-            quizSlug={slug}
-            currentResultId={result.id}
-            results={quiz.results}
-            placement="resultPage"
-          />
 
           <div className={styles.cta2Section}>
             <Link

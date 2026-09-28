@@ -14,15 +14,9 @@ type OtherTypesNavResult = Pick<
 
 /**
  * 診断の結果を置く面。結果のページ（resultPage）と、解き終えた画面（solvedScreen。ResultCard の中）がある。
- * 結果のページではセクションの見出しが h1 の次の h2 に、解き終えた画面では結果の見出し h2 の下の h3 になる。
+ * 面によって、いまのタイプの行の示し方が変わる。
  */
 export type ResultPlacement = "resultPage" | "solvedScreen";
-
-/** 結果を置く面ごとの、セクションの見出しの要素。 */
-export const SECTION_HEADING: Readonly<Record<ResultPlacement, "h2" | "h3">> = {
-  resultPage: "h2",
-  solvedScreen: "h3",
-};
 
 interface OtherTypesNavProps {
   quizSlug: string;
@@ -41,8 +35,10 @@ interface OtherTypesNavProps {
 /**
  * 診断の全タイプを並べ、いまのタイプを示す。結果を受け取った来訪者が、ほかに何があるかを眺める一覧。
  *
- * 全件の一覧なので、見出しがタイプの数を言う（DESIGN.md §7）。タイプ名は長い句なので、段組みにせず1行1項目で組む。
- * 解き終えた画面（ResultCard）と結果のページの両方から使うので、フックは useId だけにしてサーバーでも描ける形にする。
+ * 面（解き終えた画面の ResultCard と、結果のページの ResultPageShell）が、読みもののセクションのあとに置く。
+ * 1つのセクションで、見出しはどちらの面でもセクションの見出しの段（§4）。全件の一覧なので、見出しがタイプの数を
+ * 言う（DESIGN.md §7）。タイプ名は長い句なので、段組みにせず1行1項目で組む。サーバーでも描けるよう、フックは
+ * useId だけにする。
  */
 export default function OtherTypesNav({
   quizSlug,
@@ -73,9 +69,9 @@ export default function OtherTypesNav({
   const currentResultHref = getPlayResultPath(quizSlug, currentResultId);
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} aria-labelledby={headingId}>
       <PhrasedText
-        as={SECTION_HEADING[placement]}
+        as="h2"
         id={headingId}
         className={styles.heading}
         phrases={["すべての", "タイプ", `（${results.length}）`]}

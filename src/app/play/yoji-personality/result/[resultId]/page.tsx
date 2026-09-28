@@ -86,8 +86,6 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
     >
       <YojiPersonalityContent
         content={yojiDc}
-        resultId={resultId}
-        placement="resultPage"
         afterMotto={
           <div className={styles.cta2Section}>
             <Link

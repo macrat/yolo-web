@@ -6,7 +6,6 @@ import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
-import { SECTION_HEADING } from "./OtherTypesNav";
 import styles from "./CompatibilitySection.module.css";
 
 interface TypeInfo {
@@ -15,7 +14,7 @@ interface TypeInfo {
 }
 
 /**
- * 置く面。どちらの面かで、見出しの段と、2人のタイプの言い方が決まる。
+ * 置く面。どちらの面かで、2人のタイプの言い方が決まる。
  * - 解き終えた画面: 友達の共有のリンクから来て診断を解いた来訪者に見せる。来訪者が myType、友達が friendType。
  * - 結果のページ: 相性を共有したリンクを受け取った人が開く。開いた人がどちらのタイプかは分からないので、
  *   2人のタイプを立場を言わずに並べる。相性の名前はサーバーで文節に区切って渡す（§4）。
@@ -39,12 +38,11 @@ type CompatibilitySectionProps = Placement & {
 };
 
 /**
- * 2人のタイプの相性。タイプの読みもののあとに置き、相性の名前を見出しにして、相性の説明と、この相性を共有する
- * ボタンを続ける。
+ * 2人のタイプの相性。読みもののセクションの最後に置き、相性の名前をセクションの中の小見出しにして、相性の説明と、
+ * この相性を共有するボタンを続ける。
  */
 export default function CompatibilitySection(props: CompatibilitySectionProps) {
   const { myType, friendType, compatibility, quizTitle, quizSlug } = props;
-  const Heading = SECTION_HEADING[props.placement];
   const hashtag = quizTitle.replace(/\s/g, "");
   const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした! #${hashtag} #yolosnet`;
 
@@ -55,7 +53,7 @@ export default function CompatibilitySection(props: CompatibilitySectionProps) {
     caption = `「${myType.title}」と「${friendType.title}」の相性`;
     heading = (
       <PhrasedText
-        as={Heading}
+        as="h3"
         phrases={phrases}
         className={styles.label}
         {...fontAttr}
@@ -63,7 +61,7 @@ export default function CompatibilitySection(props: CompatibilitySectionProps) {
     );
   } else {
     caption = "友達との相性";
-    heading = <Heading className={styles.label}>{compatibility.label}</Heading>;
+    heading = <h3 className={styles.label}>{compatibility.label}</h3>;
   }
 
   return (

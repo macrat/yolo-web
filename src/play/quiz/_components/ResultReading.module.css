@@ -1,4 +1,10 @@
 /* 診断のタイプを詳しく説明する読みもの（DESIGN.md §5・§8）。 */
+
+/* 読みもののセクションの見出し。大きさは h2 の既定（§4 のセクションの見出しの段）。 */
+.sectionHeading {
+  margin: 0 0 var(--space-16);
+}
+
 .reading {
   color: var(--ink);
 }
@@ -13,7 +19,12 @@
   margin: var(--space-32) 0 0;
   padding-top: var(--space-16);
   border-top: var(--rule-w-hair) solid var(--rule-2);
-  font-size: var(--text-heading-sub);
+}
+
+/* セクションの見出しのすぐ下の小見出しは、見出しがすでに切れ目なので、線を持たない（§5）。 */
+.sectionHeading + .reading > .heading:first-child {
+  padding-top: 0;
+  border-top: 0;
 }
 
 .text {

@@ -29,7 +29,7 @@
   margin: 0 0 var(--space-8);
 }
 
-/* すべてのタイプのあとの、診断への誘い。 */
+/* 読みものを締めくくる、診断への誘い。 */
 .closingTry {
   margin-block-start: var(--space-24);
 }

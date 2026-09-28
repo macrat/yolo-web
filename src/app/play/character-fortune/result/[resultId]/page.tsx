@@ -7,7 +7,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import {
   Reading,
   ReadingHeading,
@@ -104,20 +103,18 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
     >
       <Reading>
         <ReadingHeading
-          placement="resultPage"
           phrases={splitIntoPhrases(cf.behaviorsHeading)}
           headingFont={headingFontAttr(cf.behaviorsHeading)}
         />
         <ReadingList items={cf.behaviors} />
 
         <ReadingHeading
-          placement="resultPage"
           phrases={splitIntoPhrases(cf.characterMessageHeading)}
           headingFont={headingFontAttr(cf.characterMessageHeading)}
         />
         <ReadingText>{cf.characterMessage}</ReadingText>
 
-        <ReadingHeading placement="resultPage" phrases={THIRD_PARTY_HEADING} />
+        <ReadingHeading phrases={THIRD_PARTY_HEADING} />
         <ReadingText>{cf.thirdPartyNote}</ReadingText>
       </Reading>
 
@@ -131,13 +128,6 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           診断して相性を見てみる
         </Link>
       </div>
-
-      <OtherTypesNav
-        quizSlug={SLUG}
-        currentResultId={resultId}
-        results={quiz.results}
-        placement="resultPage"
-      />
       <div className={styles.closingTry}>
         <Link
           href={`/play/${SLUG}`}

@@ -30,7 +30,7 @@ describe("CompatibilitySection", () => {
     );
   });
 
-  test("結果のページでは、立場を言わずに2人のタイプを並べ、相性の名前を区切りどおりの h2 にする", () => {
+  test("結果のページでは、立場を言わずに2人のタイプを並べ、相性の名前を区切りどおりの h3 にする", () => {
     render(
       <CompatibilitySection
         {...props}
@@ -43,7 +43,7 @@ describe("CompatibilitySection", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(/あなた|友達との/)).toBeNull();
     const heading = screen.getByRole("heading", {
-      level: 2,
+      level: 3,
       name: "静と動の名コンビ",
     });
     expect(heading.querySelectorAll("wbr")).toHaveLength(1);

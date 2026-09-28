@@ -96,7 +96,6 @@ function ScienceThinkingResultExtra({
   return (
     <Reading>
       <ReadingHeading
-        placement="solvedScreen"
         phrases={["あなたの", "思考プロフィール"]}
         id={headingId}
       />

@@ -4,35 +4,14 @@
  * テスト対象:
  * - behaviors / persona / thirdPartyNote の3セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
- * - すべてのタイプ（OtherTypesNav）
- * - 置く面（placement）による見出しの階層（h2/h3）
- * - タイプの色を wrapper に入れないこと
+ * - 小見出しの段（h3）と、すべてのタイプを持たないこと
  * - afterThirdPartyNote スロット
- * - 現在タイプのハイライト（aria-current）
  */
 
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import ContrarianFortuneContent from "../ContrarianFortuneContent";
 import type { ContrarianFortuneDetailedContent } from "../../types";
-import type { QuizResult } from "../../types";
-
-// next/link をモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
 
 const sampleContent: ContrarianFortuneDetailedContent = {
   variant: "contrarian-fortune",
@@ -57,40 +36,9 @@ const sampleContentWithMetrics: ContrarianFortuneDetailedContent = {
   ],
 };
 
-const sampleAllResults: QuizResult[] = [
-  {
-    id: "antitrend",
-    title: "逆張りマスター",
-    description: "説明1",
-    color: "#7c3aed",
-  },
-  {
-    id: "unique",
-    title: "マイウェイ型",
-    description: "説明2",
-    color: "#0891b2",
-  },
-  {
-    id: "classic",
-    title: "王道無視型",
-    description: "説明3",
-    color: "#dc2626",
-  },
-];
-
-const sampleQuizSlug = "contrarian-fortune";
-
 describe("ContrarianFortuneContent - 基本レンダリング", () => {
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     expect(screen.getByText("あるある行動")).toBeInTheDocument();
     expect(
       screen.getByText("人気のカフェに行かない理由を3つ以上言える。"),
@@ -101,15 +49,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
   });
 
   it("personaセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     expect(screen.getByText("このタイプの人物像")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -119,15 +59,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
   });
 
   it("thirdPartyNoteセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
+    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     expect(
       screen.getByText("このタイプの人と一緒にいると"),
     ).toBeInTheDocument();
@@ -137,36 +69,12 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
       ),
     ).toBeInTheDocument();
   });
-
-  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("逆張りマスター")).toBeInTheDocument();
-    expect(screen.getByText("マイウェイ型")).toBeInTheDocument();
-    expect(screen.getByText("王道無視型")).toBeInTheDocument();
-  });
 });
 
 describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () => {
   it("humorMetricsが存在しない場合、テーブルが表示されないこと", () => {
     const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContent} />,
     );
     expect(container.querySelector("table")).toBeNull();
     expect(screen.queryByText("このタイプを数字で見ると")).toBeNull();
@@ -174,13 +82,7 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
 
   it("humorMetricsが存在する場合、テーブルが表示されること", () => {
     render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContentWithMetrics}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContentWithMetrics} />,
     );
     expect(screen.getByRole("table")).toBeInTheDocument();
     // 表は自分の小見出しの下に置き、「一緒にいると」の区画の中身に見せない
@@ -194,38 +96,16 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
   });
 });
 
-describe("ContrarianFortuneContent - placement による見出しの階層", () => {
-  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
+describe("ContrarianFortuneContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // behaviors / persona / thirdPartyNote / 全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(3);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="solvedScreen"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(3);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -236,11 +116,7 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
     );
     render(
       <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
         detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
         afterThirdPartyNote={afterContent}
       />,
     );
@@ -252,15 +128,7 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
 
   it("afterThirdPartyNote が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(
-        <ContrarianFortuneContent
-          quizSlug={sampleQuizSlug}
-          resultId="antitrend"
-          detailedContent={sampleContent}
-          allResults={sampleAllResults}
-          placement="resultPage"
-        />,
-      );
+      render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     }).not.toThrow();
   });
 });
@@ -268,13 +136,7 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
 describe("ContrarianFortuneContent - 読みものの組み方", () => {
   it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="contrarian"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContent} />,
     );
     for (const text of [sampleContent.persona, sampleContent.thirdPartyNote]) {
       expect(screen.getByText(text).tagName).toBe("P");
@@ -283,70 +145,5 @@ describe("ContrarianFortuneContent - 読みものの組み方", () => {
       expect(screen.getByText(item).tagName).toBe("LI");
     }
     expect(container.querySelector("[class*='Card']")).toBeNull();
-  });
-});
-
-describe("ContrarianFortuneContent - aria-current", () => {
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /逆張りマスター/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-
-  it("解き終えた画面では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="unique"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="solvedScreen"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(currentLink).toHaveAttribute("aria-current", "true");
-    const otherLink = screen.getByRole("link", { name: /逆張りマスター/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-});
-
-describe("ContrarianFortuneContent - リンクのhref", () => {
-  it("すべてのタイプのリンクが正しいhrefを持つこと", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    const uniqueLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(uniqueLink).toHaveAttribute(
-      "href",
-      `/play/${sampleQuizSlug}/result/unique`,
-    );
   });
 });

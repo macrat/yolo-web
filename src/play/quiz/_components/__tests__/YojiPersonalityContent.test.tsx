@@ -1,52 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import YojiPersonalityContent from "../YojiPersonalityContent";
 import type { YojiPersonalityDetailedContent } from "../../types";
-
-// next/linkをモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
-
-// yoji-personalityデータモジュールをモック
-vi.mock("@/play/quiz/data/yoji-personality", () => ({
-  default: {
-    meta: {
-      slug: "yoji-personality",
-      title: "あなたを四字熟語に例えると?",
-      questionCount: 8,
-    },
-    results: [
-      {
-        id: "shoshikantetsu",
-        title: "初志貫徹",
-        color: "#1e40af",
-      },
-      {
-        id: "tenshinranman",
-        title: "天真爛漫",
-        color: "#f59e0b",
-      },
-      {
-        id: "sessatakuma",
-        title: "切磋琢磨",
-        color: "#059669",
-      },
-    ],
-  },
-}));
 
 const sampleContent: YojiPersonalityDetailedContent = {
   variant: "yoji-personality",
@@ -66,13 +21,7 @@ const sampleContent: YojiPersonalityDetailedContent = {
 
 describe("YojiPersonalityContent - 基本レンダリング", () => {
   it("kanjiBreakdownセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この四字熟語の成り立ち")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -82,13 +31,7 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
   });
 
   it("originセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この四字熟語のルーツ")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -98,77 +41,31 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
   });
 
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この四字熟語が現れる日常")).toBeInTheDocument();
     expect(screen.getByText("行動あるある1")).toBeInTheDocument();
     expect(screen.getByText("行動あるある4")).toBeInTheDocument();
   });
 
   it("mottoセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("座右の銘として")).toBeInTheDocument();
     expect(
       screen.getByText("始めた志を信じ、最後まで歩き続けよう。"),
     ).toBeInTheDocument();
   });
-
-  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("初志貫徹")).toBeInTheDocument();
-    expect(screen.getByText("天真爛漫")).toBeInTheDocument();
-    expect(screen.getByText("切磋琢磨")).toBeInTheDocument();
-  });
 });
 
-describe("YojiPersonalityContent - placement による見出しの階層", () => {
-  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
+describe("YojiPersonalityContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
+      <YojiPersonalityContent content={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // kanjiBreakdown / origin / behaviors / motto / 全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(5);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="solvedScreen"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(5);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -180,8 +77,6 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
     render(
       <YojiPersonalityContent
         content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
         afterMotto={afterContent}
       />,
     );
@@ -191,13 +86,7 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
 
   it("afterMotto が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(
-        <YojiPersonalityContent
-          content={sampleContent}
-          resultId="shoshikantetsu"
-          placement="resultPage"
-        />,
-      );
+      render(<YojiPersonalityContent content={sampleContent} />);
     }).not.toThrow();
   });
 });
@@ -205,11 +94,7 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
 describe("YojiPersonalityContent - 読みものの組み方", () => {
   it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
+      <YojiPersonalityContent content={sampleContent} />,
     );
     for (const text of [
       sampleContent.kanjiBreakdown,
@@ -222,45 +107,5 @@ describe("YojiPersonalityContent - 読みものの組み方", () => {
       expect(screen.getByText(item).tagName).toBe("LI");
     }
     expect(container.querySelector("[class*='Card']")).toBeNull();
-  });
-});
-
-describe("YojiPersonalityContent - aria-current", () => {
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /初志貫徹/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /天真爛漫/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-
-  it("解き終えた画面では、渡した resultId のタイプがいまの項目（aria-current='true'）になること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="tenshinranman"
-        placement="solvedScreen"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /天真爛漫/ });
-    expect(currentLink).toHaveAttribute("aria-current", "true");
-    const otherLink = screen.getByRole("link", { name: /初志貫徹/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
   });
 });

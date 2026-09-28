@@ -154,8 +154,6 @@ export default async function AnimalPersonalityResultPage({
     >
       <AnimalPersonalityContent
         content={dc}
-        resultId={resultId}
-        placement="resultPage"
         afterTodayAction={
           <>
             {compatData && (

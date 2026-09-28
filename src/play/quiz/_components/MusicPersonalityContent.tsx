@@ -1,9 +1,9 @@
 /**
  * 音楽性格診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * 音楽的な強み・弱み・音楽あるある・今日の音楽ライフのヒント・すべてのタイプを並べる。解き終えた画面では、
- * 友達の結果から来たときの相性と招待もここで出す。結果のページは afterTodayAction で相性と招待を差し込む。
- * キャッチコピー・共有・「もう一度挑戦する」は呼び出し側が置く。
+ * 音楽的な強み・弱み・音楽あるある・今日の音楽ライフのヒントを並べる。解き終えた画面では、友達の結果から
+ * 来たときの相性と招待もここで出す。結果のページは afterTodayAction で相性と招待を差し込む。キャッチコピー・
+ * 共有・すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
@@ -16,7 +16,6 @@ import musicPersonalityQuiz, {
 } from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
 import {
   Reading,
   ReadingHeading,
@@ -26,14 +25,12 @@ import {
 
 interface MusicPersonalityContentProps {
   content: MusicPersonalityDetailedContent;
-  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
+  /** 来訪者のタイプ。友達との相性と招待に使う。 */
   resultId: string;
-  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
-  placement: ResultPlacement;
   /** 友達のタイプ。解き終えた画面で、友達の結果から来たときに相性を出す。 */
   referrerTypeId?: string;
   /**
-   * 今日の音楽ライフのヒントのあと、すべてのタイプの前に置くもの（結果のページの相性・招待）。渡したときは、
+   * 今日の音楽ライフのヒントのあと、読みものの最後に置くもの（結果のページの相性・招待）。渡したときは、
    * referrerTypeId から相性を組まない。
    */
   afterTodayAction?: React.ReactNode;
@@ -91,11 +88,9 @@ function buildAfterTodayAction(
 export default function MusicPersonalityContent({
   content,
   resultId,
-  placement,
   referrerTypeId,
   afterTodayAction,
 }: MusicPersonalityContentProps) {
-  const quiz = musicPersonalityQuiz;
   const resolvedAfterTodayAction =
     afterTodayAction !== undefined
       ? afterTodayAction
@@ -103,38 +98,19 @@ export default function MusicPersonalityContent({
 
   return (
     <Reading>
-      <ReadingHeading
-        placement={placement}
-        phrases={["この", "タイプの", "音楽的な", "強み"]}
-      />
+      <ReadingHeading phrases={["この", "タイプの", "音楽的な", "強み"]} />
       <ReadingList items={content.strengths} />
 
-      <ReadingHeading
-        placement={placement}
-        phrases={["この", "タイプの", "音楽的な", "弱み"]}
-      />
+      <ReadingHeading phrases={["この", "タイプの", "音楽的な", "弱み"]} />
       <ReadingList items={content.weaknesses} />
 
-      <ReadingHeading
-        placement={placement}
-        phrases={["この", "タイプの", "音楽", "あるある"]}
-      />
+      <ReadingHeading phrases={["この", "タイプの", "音楽", "あるある"]} />
       <ReadingList items={content.behaviors} />
 
-      <ReadingHeading
-        placement={placement}
-        phrases={["今日の", "音楽ライフの", "ヒント"]}
-      />
+      <ReadingHeading phrases={["今日の", "音楽ライフの", "ヒント"]} />
       <ReadingText>{content.todayAction}</ReadingText>
 
       {resolvedAfterTodayAction}
-
-      <OtherTypesNav
-        quizSlug={quiz.meta.slug}
-        currentResultId={resultId}
-        results={quiz.results}
-        placement={placement}
-      />
     </Reading>
   );
 }

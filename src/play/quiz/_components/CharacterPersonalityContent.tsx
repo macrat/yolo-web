@@ -1,9 +1,9 @@
 /**
  * あなたに似たキャラ診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * 成り立ち・日常・キャラからのメッセージ・すべてのタイプを並べる。解き終えた画面では、友達の結果から来たときの
- * 相性と招待もここで出す。結果のページは afterCharacterMessage で自分の相性と招待を差し込む。キャッチコピー・
- * 共有・「もう一度挑戦する」は呼び出し側が置く。
+ * 成り立ち・日常・キャラからのメッセージを並べる。解き終えた画面では、友達の結果から来たときの相性と招待も
+ * ここで出す。結果のページは afterCharacterMessage で自分の相性と招待を差し込む。キャッチコピー・共有・
+ * すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
@@ -12,12 +12,8 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import type { CharacterPersonalityDetailedContent } from "@/play/quiz/types";
 import type { CompatibilityEntry } from "@/play/quiz/types";
-import characterPersonalityQuiz, {
-  CHARACTER_PERSONALITY_TYPE_IDS,
-} from "@/play/quiz/data/character-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
 import {
   Reading,
   ReadingHeading,
@@ -29,12 +25,6 @@ const QUIZ_SLUG = "character-personality";
 const QUIZ_TITLE = "あなたに似たキャラ診断";
 const INVITE_TEXT = "似たキャラ診断で相性を調べよう!";
 
-/** 全タイプを、タイプの id の定義の順に並べる。 */
-const allTypes = CHARACTER_PERSONALITY_TYPE_IDS.flatMap((typeId) => {
-  const result = characterPersonalityQuiz.results.find((r) => r.id === typeId);
-  return result ? [result] : [];
-});
-
 interface CompatibilityApiResponse {
   label: string;
   description: string;
@@ -44,14 +34,12 @@ interface CompatibilityApiResponse {
 
 interface CharacterPersonalityContentProps {
   content: CharacterPersonalityDetailedContent;
-  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
+  /** 来訪者のタイプ。友達との相性と招待に使う。 */
   resultId: string;
-  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
-  placement: ResultPlacement;
   /** 友達のタイプ。解き終えた画面で、友達の結果から来たときに相性を出す。 */
   referrerTypeId?: string;
   /**
-   * キャラからのメッセージのあと、すべてのタイプの前に置くもの（結果のページの相性・招待）。渡したときは、
+   * キャラからのメッセージのあと、読みものの最後に置くもの（結果のページの相性・招待）。渡したときは、
    * referrerTypeId から相性を読み込まない。
    */
   afterCharacterMessage?: React.ReactNode;
@@ -162,7 +150,6 @@ function CompatibilityArea({
 export default function CharacterPersonalityContent({
   content,
   resultId,
-  placement,
   referrerTypeId,
   afterCharacterMessage,
 }: CharacterPersonalityContentProps) {
@@ -175,32 +162,16 @@ export default function CharacterPersonalityContent({
 
   return (
     <Reading>
-      <ReadingHeading
-        placement={placement}
-        phrases={["この", "キャラの", "成り立ち"]}
-      />
+      <ReadingHeading phrases={["この", "キャラの", "成り立ち"]} />
       <ReadingText>{content.archetypeBreakdown}</ReadingText>
 
-      <ReadingHeading
-        placement={placement}
-        phrases={["この", "キャラの", "日常"]}
-      />
+      <ReadingHeading phrases={["この", "キャラの", "日常"]} />
       <ReadingList items={content.behaviors} />
 
-      <ReadingHeading
-        placement={placement}
-        phrases={["キャラからの", "メッセージ"]}
-      />
+      <ReadingHeading phrases={["キャラからの", "メッセージ"]} />
       <ReadingText>{content.characterMessage}</ReadingText>
 
       {resolvedAfterCharacterMessage}
-
-      <OtherTypesNav
-        quizSlug={QUIZ_SLUG}
-        currentResultId={resultId}
-        results={allTypes}
-        placement={placement}
-      />
     </Reading>
   );
 }

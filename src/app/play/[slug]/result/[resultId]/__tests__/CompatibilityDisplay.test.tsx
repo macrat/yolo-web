@@ -17,9 +17,9 @@ describe("CompatibilityDisplay", () => {
       />,
     );
 
-    // 結果のページではタイプ名が h1 なので、相性の見出しはその下の h2
+    // 相性は読みもののセクションの中に置くので、相性の名前はセクションの中の小見出しの h3
     expect(
-      screen.getByRole("heading", { level: 2, name: "最高の相性" }),
+      screen.getByRole("heading", { level: 3, name: "最高の相性" }),
     ).toBeInTheDocument();
     expect(screen.getByText("相性の説明")).toBeInTheDocument();
     // 開くのは共有を受け取った人なので、2人のタイプを立場を言わずに並べる
@@ -43,7 +43,7 @@ describe("CompatibilityDisplay", () => {
       />,
     );
     const heading = screen.getByRole("heading", {
-      level: 2,
+      level: 3,
       name: "静かな書斎と賑やかな寄席",
     });
     expect(heading.querySelectorAll("wbr").length).toBeGreaterThan(0);
@@ -64,7 +64,7 @@ describe("CompatibilityDisplay", () => {
     );
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "リズムの相性" }),
+      screen.getByRole("heading", { level: 3, name: "リズムの相性" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("「ロックタイプ」と「ジャズタイプ」の相性"),

@@ -10,6 +10,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
+import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
+import { ReadingSection } from "@/play/quiz/_components/ResultReading";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
@@ -30,8 +32,11 @@ interface ResultPageShellProps {
   description?: string;
   /** 添えた段落のすぐ下に置く、この診断を遊ぶ誘いのボタンの文言。 */
   ctaText: string;
-  /** 誘いのあとに続く、ルートごとの詳しい読みものと「すべてのタイプ」。 */
-  children: React.ReactNode;
+  /**
+   * 誘いのあとに続く、ルートごとの詳しい読みもの。タイプが詳しい読みもの（detailedContent）を持つときに、
+   * セクション「このタイプについて」に置く。
+   */
+  children?: React.ReactNode;
   shareText: string;
   shareUrl: string;
   /** 結果が色そのものである診断で、タイプ名のすぐ下に出す結果の色（DESIGN.md §2 の色見本）。 */
@@ -42,8 +47,9 @@ interface ResultPageShellProps {
 
 /**
  * 結果のページを組む。上から、何の診断の結果かの行・タイプ名の h1・読み・色見本、添えた段落・診断への誘い・
- * タイプの説明、ルートごとの読みもの、共有の区画、関連の区画。誘いを説明の前に置き、共有のリンクから来た
- * 来訪者が、最初の画面でタイプ名と添えた段落と誘いを見られるようにする。
+ * タイプの説明、ルートごとの読みもの（セクション「このタイプについて」）、すべてのタイプ、共有の区画、関連の区画。
+ * 誘いを説明の前に置き、共有のリンクから来た来訪者が、最初の画面でタイプ名と添えた段落と誘いを見られるように
+ * する。読みものとすべてのタイプは、タイプが詳しい読みものを持つときだけ置く。
  *
  * タイプ名は、サーバーで作った文節の区切りで折る（DESIGN.md §4）。読みは見出しの折れを避けるため h1 に
  * 入れず、すぐ下に補助情報として添える。共有の操作はページに1か所だけ置き、何を共有するかを見出しが言う（§8）。
@@ -111,7 +117,18 @@ export default function ResultPageShell({
           {description && <p className={styles.description}>{description}</p>}
         </div>
 
-        {children}
+        {result.detailedContent && (
+          <>
+            <ReadingSection>{children}</ReadingSection>
+            <OtherTypesNav
+              quizSlug={slug}
+              currentResultId={result.id}
+              results={quiz.results}
+              placement="resultPage"
+              showSwatch={swatch !== undefined}
+            />
+          </>
+        )}
 
         <section className={styles.share} aria-labelledby={SHARE_HEADING_ID}>
           <PhrasedText

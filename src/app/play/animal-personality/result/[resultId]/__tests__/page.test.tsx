@@ -199,21 +199,6 @@ describe("AnimalPersonalityResultPage todayAction", () => {
   });
 });
 
-describe("AnimalPersonalityResultPage 全タイプ一覧", () => {
-  it("全タイプが一覧表示されること", async () => {
-    const params = Promise.resolve({ resultId: "nihon-zaru" });
-    const page = await AnimalPersonalityResultPage({ params });
-    render(page);
-
-    expect(
-      screen.getByText("ニホンザル——温泉を発明した革命児"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("ホンドタヌキ——化かすどころか化かされる愛されキャラ"),
-    ).toBeInTheDocument();
-  });
-});
-
 describe("AnimalPersonalityResultPage 読み終えた人への2つ目の誘い", () => {
   it("2つ目の誘いのリンクが表示されること", async () => {
     const params = Promise.resolve({ resultId: "nihon-zaru" });

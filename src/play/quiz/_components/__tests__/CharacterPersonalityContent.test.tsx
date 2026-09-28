@@ -4,9 +4,7 @@
  * テスト対象:
  * - archetypeBreakdown / behaviors / characterMessage の3セクション表示
  * - 相性機能エリア（referrerTypeId あり/なし、API成功/失敗）
- * - すべてのタイプ（OtherTypesNav）
- * - 置く面（placement）による見出しの階層（h2/h3）
- * - タイプの色を wrapper に入れないこと
+ * - 小見出しの段（h3）と、すべてのタイプを持たないこと
  * - afterCharacterMessage スロット
  */
 
@@ -22,45 +20,6 @@ global.fetch = mockFetch;
 beforeEach(() => {
   mockFetch.mockReset();
 });
-
-// next/link をモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
-
-// character-personality データモジュールをモック
-// （CHARACTER_PERSONALITY_TYPE_IDS の実データは長いためスタブにする）
-vi.mock("@/play/quiz/data/character-personality", () => ({
-  default: {
-    meta: {
-      slug: "character-personality",
-      title: "あなたに似たキャラ診断",
-      questionCount: 12,
-    },
-    results: [
-      { id: "blazing-strategist", title: "炎の戦略家" },
-      { id: "blazing-poet", title: "炎の詩人" },
-      { id: "gentle-fortress", title: "静かなる要塞" },
-    ],
-  },
-  CHARACTER_PERSONALITY_TYPE_IDS: [
-    "blazing-strategist",
-    "blazing-poet",
-    "gentle-fortress",
-  ],
-}));
 
 // CompatibilitySection をモック
 vi.mock("@/play/quiz/_components/CompatibilitySection", () => ({
@@ -115,7 +74,6 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("このキャラの成り立ち")).toBeInTheDocument();
@@ -131,7 +89,6 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("このキャラの日常")).toBeInTheDocument();
@@ -150,7 +107,6 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
       />,
     );
     expect(screen.getByText("キャラからのメッセージ")).toBeInTheDocument();
@@ -160,52 +116,21 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
       ),
     ).toBeInTheDocument();
   });
-
-  it("すべてのタイプが表示され、見出しがタイプの数を言うこと", () => {
-    render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.getByRole("heading", { name: /^すべてのタイプ（\d+）$/ }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("炎の戦略家")).toBeInTheDocument();
-    expect(screen.getByText("炎の詩人")).toBeInTheDocument();
-    expect(screen.getByText("静かなる要塞")).toBeInTheDocument();
-  });
 });
 
-describe("CharacterPersonalityContent - placement による見出しの階層", () => {
-  it("結果のページ（placement=resultPage）では、セクション見出しがh2タグでレンダリングされること", () => {
+describe("CharacterPersonalityContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
       />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // archetypeBreakdown / behaviors / characterMessage / 全タイプ見出し で 4 以上
-    expect(h2s.length).toBeGreaterThanOrEqual(4);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("解き終えた画面（placement=solvedScreen）では、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        placement="solvedScreen"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(4);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -215,7 +140,6 @@ describe("CharacterPersonalityContent - 読みものの組み方", () => {
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         afterCharacterMessage={null}
       />,
     );
@@ -241,7 +165,6 @@ describe("CharacterPersonalityContent - afterCharacterMessage スロット", () 
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         afterCharacterMessage={afterContent}
       />,
     );
@@ -257,7 +180,6 @@ describe("CharacterPersonalityContent - afterCharacterMessage スロット", () 
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         referrerTypeId="blazing-poet"
         afterCharacterMessage={afterContent}
       />,
@@ -272,7 +194,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId なし）"
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
       />,
     );
     expect(
@@ -301,7 +222,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -332,7 +252,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId="blazing-strategist"
-        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -356,7 +275,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -379,7 +297,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -405,7 +322,6 @@ describe("CharacterPersonalityContent - 相性機能（ローディング中）"
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
-        placement="resultPage"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -419,21 +335,5 @@ describe("CharacterPersonalityContent - 相性機能（ローディング中）"
     expect(
       screen.queryByRole("button", { name: /友達に診断を送る/ }),
     ).not.toBeInTheDocument();
-  });
-});
-
-describe("CharacterPersonalityContent - 全タイプリンク", () => {
-  it("全タイプへのリンクが /play/character-personality/result/{id} 形式であること", () => {
-    const { container } = render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        placement="resultPage"
-      />,
-    );
-    const links = container.querySelectorAll(
-      "a[href*='/play/character-personality/result/']",
-    );
-    expect(links.length).toBeGreaterThanOrEqual(3);
   });
 });
