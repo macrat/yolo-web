@@ -86,7 +86,6 @@ export default function NextGameBanner({
   if (statuses.length === 0) return null;
 
   const playedCount = statuses.filter((s) => s.playedToday).length;
-  // デイリーゲームの総数（ランダム出題型ゲームは含まない）
   const totalCount = ALL_GAMES.length;
   const otherGames: ItemListItem[] = statuses
     .filter((s) => s.game.slug !== currentGameSlug)

@@ -36,12 +36,7 @@ export interface GameMeta {
   keywords: string[];
   /** localStorage stats key (e.g. "kanji-kanaru-stats") */
   statsKey: string;
-  /**
-   * デイリーゲームかどうか。
-   * trueのゲームはNextGameBannerの「今日のパズル」進捗に含まれる。
-   * falseまたは未設定のゲームはランダム出題型など、デイリー以外のゲーム。
-   * デフォルト: false（後方互換性のため、既存ゲームはregistryで明示的にtrueを設定）
-   */
+  /** デイリーゲームかどうか。true のゲームが、解き終えた画面の今日の進み（NextGameBanner）に数えられる。 */
   isDaily?: boolean;
   /** OGP image subtitle */
   ogpSubtitle: string;
