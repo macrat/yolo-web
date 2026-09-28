@@ -279,23 +279,6 @@ test("共有の区画を1つだけ置き、見出し「この結果を共有」�
   expect(screen.getAllByTestId("share-buttons")).toHaveLength(1);
 });
 
-test("afterShare を渡したときだけ、共有の区画のあとに置く", () => {
-  const { unmount } = renderShell({
-    afterShare: <div data-testid="after-share">シェア後コンテンツ</div>,
-  });
-
-  const share = screen.getByRole("region", { name: "この結果を共有" });
-  const afterShare = screen.getByTestId("after-share");
-  expect(
-    share.compareDocumentPosition(afterShare) &
-      Node.DOCUMENT_POSITION_FOLLOWING,
-  ).toBeTruthy();
-  unmount();
-
-  renderShell();
-  expect(screen.queryByTestId("after-share")).toBeNull();
-});
-
 test("パンくずに、ホーム・遊び・診断・結果を並べる", () => {
   renderShell();
 

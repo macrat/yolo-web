@@ -42,14 +42,12 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
     description,
     ctaText,
     children,
-    afterShare,
   }: {
     quiz: { meta: { questionCount: number } };
     lead?: string;
     description?: string;
     ctaText: string;
     children: React.ReactNode;
-    afterShare?: React.ReactNode;
   }) => (
     <div data-testid="result-page-shell">
       {lead && <p>{lead}</p>}
@@ -57,7 +55,6 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
       <p>全{quiz.meta.questionCount}問 / 登録不要</p>
       {description && <p>{description}</p>}
       {children}
-      {afterShare}
     </div>
   ),
 }));

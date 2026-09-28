@@ -2,9 +2,9 @@ import type { QuizDefinition, QuizMeta } from "./types";
 
 /**
  * 標準の形（variant を持たない）の詳しい読みものの、既定の小見出し。コードに書いた決まった文なので、文節の
- * 区切りも書き手が分けて持つ（PhrasedText の約束）。
+ * 区切りも書き手が分けて持つ（PhrasedText の約束）。解き終えた画面と結果のページの両方が、これを使う。
  */
-const DEFAULT_READING_HEADINGS = {
+export const DEFAULT_READING_HEADINGS = {
   traits: ["この", "タイプの", "特徴"],
   behaviors: ["この", "タイプの", "あるある"],
   advice: ["この", "タイプの", "人への", "アドバイス"],

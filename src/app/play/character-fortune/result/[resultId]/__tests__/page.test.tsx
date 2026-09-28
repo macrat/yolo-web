@@ -38,14 +38,12 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
     description,
     ctaText,
     children,
-    afterShare,
   }: {
     quiz: { meta: { questionCount: number } };
     lead?: string;
     description?: string;
     ctaText: string;
     children: React.ReactNode;
-    afterShare?: React.ReactNode;
   }) => (
     <div data-testid="result-page-shell">
       {lead && <p>{lead}</p>}
@@ -53,7 +51,6 @@ vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
       <p>全{quiz.meta.questionCount}問 / 登録不要</p>
       {description && <p>{description}</p>}
       {children}
-      {afterShare}
     </div>
   ),
 }));
@@ -183,18 +180,23 @@ describe("CharacterFortuneResultPage compatibilityPrompt", () => {
 });
 
 describe("CharacterFortuneResultPage 誘い", () => {
-  it("診断ボタンが表示されること", async () => {
+  it("読みもののあとの誘いは相性の区画の1つだけで、同じ行き先のリンクを続けて並べない", async () => {
     const params = Promise.resolve({ resultId: "commander" });
     const page = await CharacterFortuneResultPage({ params });
     render(page);
 
-    // 最初の誘いと、相性の区画の誘いの両方がある
-    const ctaButtons =
-      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
-    expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
-
-    // 相性診断ボタンも表示される
-    expect(screen.getByText("診断して相性を見てみる")).toBeInTheDocument();
+    const tryLink = screen.getByRole("link", {
+      name: "診断して相性を見てみる",
+    });
+    expect(tryLink).toHaveAttribute("href", "/play/character-fortune");
+    expect(tryLink.nextElementSibling).toHaveTextContent("登録不要");
+    expect(
+      screen
+        .getAllByRole("link")
+        .filter(
+          (link) => link.getAttribute("href") === "/play/character-fortune",
+        ),
+    ).toHaveLength(1);
   });
 });
 

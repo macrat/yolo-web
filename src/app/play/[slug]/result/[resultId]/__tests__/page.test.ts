@@ -21,35 +21,12 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     expect(pageSource).toContain("detailedContent");
   });
 
-  describe("noindex条件分岐の全パターン", () => {
-    it("detailedContent有り + 非相性ページ → index: true になるロジックがある", () => {
-      // shouldIndex = hasDetailedContent && !compatFriendTypeId の形でロジックが実装されていること
-      expect(pageSource).toContain("hasDetailedContent");
-      expect(pageSource).toContain("!compatFriendTypeId");
-      // index: true が存在すること
-      expect(pageSource).toContain("index: true");
-    });
-
-    it("detailedContent有り + 相性ページ → index: false になるロジックがある", () => {
-      // compatFriendTypeId が存在する場合は shouldIndex = false となること
-      // shouldIndex = hasDetailedContent && !compatFriendTypeId なので、
-      // compatFriendTypeId が truthy なら shouldIndex は false になる
-      expect(pageSource).toContain("shouldIndex");
-      expect(pageSource).toContain("index: false");
-    });
-
-    it("detailedContent無し → index: false になるロジックがある", () => {
-      // hasDetailedContent が false なら shouldIndex は false になること
-      expect(pageSource).toContain("Boolean(result.detailedContent)");
-      expect(pageSource).toContain("index: false");
-    });
-
-    it("shouldIndexが単一のブーリアン変数で管理されている", () => {
-      // shouldIndex 変数が定義されていること
-      expect(pageSource).toContain("const shouldIndex =");
-      // robots に shouldIndex が使われていること
-      expect(pageSource).toContain("shouldIndex");
-    });
+  it("詳しい読みものを持つタイプだけを検索に載せるロジックがある", () => {
+    expect(pageSource).toContain(
+      "const shouldIndex = Boolean(result.detailedContent)",
+    );
+    expect(pageSource).toContain("index: true");
+    expect(pageSource).toContain("index: false");
   });
 
   describe("シェアテキストの変更", () => {

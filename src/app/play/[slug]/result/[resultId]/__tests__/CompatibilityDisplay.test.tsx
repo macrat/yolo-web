@@ -17,7 +17,7 @@ describe("CompatibilityDisplay", () => {
       />,
     );
 
-    // 相性は読みもののセクションの中に置くので、相性の名前はセクションの中の小見出しの h3
+    // 相性は読みもののセクションの最後に置くので、相性の名前はセクションの中の小見出しの h3
     expect(
       screen.getByRole("heading", { level: 3, name: "最高の相性" }),
     ).toBeInTheDocument();

@@ -127,15 +127,6 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
         >
           診断して相性を見てみる
         </Link>
-      </div>
-      <div className={styles.closingTry}>
-        <Link
-          href={`/play/${SLUG}`}
-          className={styles.tryLink}
-          data-text-box="inline"
-        >
-          {ctaText}
-        </Link>
         <p className={styles.tryCost}>
           全{quiz.meta.questionCount}問 / 登録不要
         </p>

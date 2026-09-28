@@ -41,8 +41,6 @@ interface ResultPageShellProps {
   shareUrl: string;
   /** 結果が色そのものである診断で、タイプ名のすぐ下に出す結果の色（DESIGN.md §2 の色見本）。 */
   swatch?: string;
-  /** 共有の区画の直後に置く、ルートごとの区画（相性など）。 */
-  afterShare?: React.ReactNode;
 }
 
 /**
@@ -64,7 +62,6 @@ export default function ResultPageShell({
   shareText,
   shareUrl,
   swatch,
-  afterShare,
 }: ResultPageShellProps) {
   const slug = quiz.meta.slug;
   const heading = resultHeadingName(result);
@@ -149,7 +146,6 @@ export default function ResultPageShell({
             surface="text"
           />
         </section>
-        {afterShare}
       </div>
       <RelatedQuizzes currentSlug={slug} category={quiz.meta.category} />
       <RecommendedContent currentSlug={slug} />
