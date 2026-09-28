@@ -6,6 +6,7 @@ import {
   getAllWords,
   difficultyLabel,
 } from "../engine";
+import { dailyOrder } from "../engine";
 import type { NakamawakePuzzle, NakamawakeGroup } from "../types";
 
 const sampleGroups: [
@@ -259,5 +260,15 @@ describe("difficultyLabel", () => {
   test("難易度を「難易度」と数字で言う", () => {
     expect(difficultyLabel(1)).toBe("難易度1");
     expect(difficultyLabel(4)).toBe("難易度4");
+  });
+});
+
+describe("dailyOrder", () => {
+  test("gives the same order for the same day and keeps every item", () => {
+    const words = ["あ", "い", "う", "え", "お", "か", "き", "く"];
+    const order = dailyOrder(words, "2026-09-28");
+    expect(dailyOrder(words, "2026-09-28")).toEqual(order);
+    expect([...order].sort()).toEqual([...words].sort());
+    expect(dailyOrder(words, "2026-09-29")).not.toEqual(order);
   });
 });

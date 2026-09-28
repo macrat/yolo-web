@@ -1,3 +1,4 @@
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import type { Metadata } from "next";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/play/games/registry";
@@ -45,6 +46,14 @@ export default function NakamawakePage() {
   // it consistent with the puzzle selection date.
   // new Date(todayStr) is parsed as UTC 00:00:00; Intl.DateTimeFormat with
   // timeZone "Asia/Tokyo" converts it to JST 09:00:00, yielding the same date.
+  // 文節を持つ語（ことわざなど）は、語のマスの中で文節の切れ目で折る。
+  const wordPhrases = Object.fromEntries(
+    puzzle.groups
+      .flatMap((group) => group.words)
+      .map((word) => [word, splitIntoPhrases(word)] as const)
+      .filter(([, phrases]) => phrases.length > 1),
+  );
+
   const dateDisplayString = new Intl.DateTimeFormat("ja-JP", {
     timeZone: "Asia/Tokyo",
     year: "numeric",
@@ -65,6 +74,7 @@ export default function NakamawakePage() {
           todayStr={todayStr}
           dateDisplayString={dateDisplayString}
           crossCategoryItems={crossCategoryItems}
+          wordPhrases={wordPhrases}
         />
       </GameLayout>
     </>

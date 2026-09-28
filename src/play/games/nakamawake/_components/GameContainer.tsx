@@ -20,6 +20,7 @@ import {
   checkGuess,
   isOneAway,
   shuffleArray,
+  dailyOrder,
   getAllWords,
   difficultyLabel,
 } from "@/play/games/nakamawake/_lib/engine";
@@ -106,6 +107,8 @@ interface GameContainerProps {
   dateDisplayString: string;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
   crossCategoryItems: ItemListItem[];
+  /** 文節を持つ語の文節の並び（語 → 文節）。Server Component（page.tsx）で分けて渡す。 */
+  wordPhrases: Record<string, string[]>;
 }
 
 /**
@@ -132,19 +135,17 @@ function initialState(
     mistakes: 0,
     status: "playing",
     selectedWords: [],
-    // サーバーの HTML と同じ並びで描き、並べ替えは水和のあとに行う。
-    remainingWords: getAllWords(puzzle).sort(),
+    remainingWords: dailyOrder(getAllWords(puzzle), todayStr),
   };
 }
 
 /**
- * 端末に保存した今日の回を、並べ替えた語の並びで戻す。今日の回が無ければ、語を並べ替えただけの初めの状態。
+ * 端末に保存した今日の回を戻す。残る語は、その日の並び（サーバーの HTML と同じ）から当てた組の語を除いた並び。
+ * 今日の回が無ければ、初めの状態のまま。
  */
 function restoredState(state: NakamawakeGameState): NakamawakeGameState {
   const saved = loadTodayGame(state.puzzleDate);
-  if (!saved) {
-    return { ...state, remainingWords: shuffleArray(state.remainingWords) };
-  }
+  if (!saved) return state;
   const solvedGroups = saved.solvedGroups
     .map((difficulty) =>
       state.puzzle.groups.find((group) => group.difficulty === difficulty),
@@ -156,9 +157,10 @@ function restoredState(state: NakamawakeGameState): NakamawakeGameState {
     solvedGroups,
     mistakes: saved.mistakes,
     status: saved.status,
-    remainingWords: shuffleArray(
-      getAllWords(state.puzzle).filter((word) => !solvedWords.has(word)),
-    ),
+    remainingWords: dailyOrder(
+      getAllWords(state.puzzle),
+      state.puzzleDate,
+    ).filter((word) => !solvedWords.has(word)),
   };
 }
 
@@ -168,6 +170,15 @@ function visibleRange(): { top: number; bottom: number } {
   return viewport
     ? { top: viewport.offsetTop, bottom: viewport.offsetTop + viewport.height }
     : { top: 0, bottom: window.innerHeight };
+}
+
+/** フォーカスを受け取った語が画面の上に出ていれば、リングの幅を空けて語の上端まで即時に送り戻す。 */
+function revealFocusedWord(word: HTMLElement): void {
+  const range = visibleRange();
+  const rect = word.getBoundingClientRect();
+  if (rect.top >= range.top && rect.bottom <= range.bottom) return;
+  const margin = 16;
+  window.scrollBy({ top: rect.top - range.top - margin, behavior: "instant" });
 }
 
 /** 結果のボックスの頭（結果の名前の行）が画面から出ていれば、ボックスの上端を画面の上端のそばまで即時に送る。 */
@@ -192,6 +203,7 @@ export default function GameContainer({
   todayStr,
   dateDisplayString,
   crossCategoryItems,
+  wordPhrases,
 }: GameContainerProps) {
   // サーバーの HTML を水和で引き継ぐときは、サーバーと同じ初めの回で描き、端末の記録は水和のあとに当てる。
   // ほかのページから移ってきて（「戻る」を含む）ブラウザで新しく描くときは、初めから端末の記録の回で描く。
@@ -247,8 +259,13 @@ export default function GameContainer({
         revealControl(statusRef.current, context ?? undefined);
       }
       // チェックのボタンは選んだ語が消えて押せなくなり、フォーカスが行き場を失うので、次に使う語の格子へ移す。
-      // マウスで押したあとのプログラムからのフォーカスには、リングが出ない（:focus-visible）。
-      if (pending.focusGrid) firstWord?.focus({ preventScroll: true });
+      // フォーカスを受け取る語は画面に入れる。status と語が同じ画面に入らないときは、語を先にする（status は
+      // 読み上げで知らせ、目で見る分は語の格子のすぐ下にある）。マウスで押したあとのプログラムからの
+      // フォーカスには、リングが出ない（:focus-visible）。
+      if (pending.focusGrid && firstWord) {
+        firstWord.focus({ preventScroll: true });
+        revealFocusedWord(firstWord);
+      }
       return;
     }
     const box = resultRef.current;
@@ -422,6 +439,7 @@ export default function GameContainer({
                     words={gameState.remainingWords}
                     selectedWords={gameState.selectedWords}
                     onWordToggle={handleWordToggle}
+                    wordPhrases={wordPhrases}
                     reservedDisplay={isReady ? undefined : reservedWordDisplay}
                   />
                 </div>

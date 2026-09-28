@@ -1,6 +1,6 @@
 "use client";
 
-import type { Ref } from "react";
+import { Fragment, type Ref } from "react";
 import styles from "./WordGrid.module.css";
 
 interface Props {
@@ -12,6 +12,8 @@ interface Props {
    * 記録で当てた組の語を格子から外す値を書く。
    */
   reservedDisplay?: (word: string) => string;
+  /** 文節を持つ語の文節の並び（サーバーで分けたもの）。文節の切れ目で折る。 */
+  wordPhrases: Record<string, string[]>;
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -25,6 +27,7 @@ export default function WordGrid({
   selectedWords,
   onWordToggle,
   reservedDisplay,
+  wordPhrases,
   ref,
 }: Props) {
   return (
@@ -40,7 +43,11 @@ export default function WordGrid({
             {words.map((word) => (
               <button
                 key={word}
-                className={styles.wordButton}
+                className={
+                  wordPhrases[word]
+                    ? `${styles.wordButton} ${styles.phrased}`
+                    : styles.wordButton
+                }
                 data-thick-frame
                 style={reservedDisplay && { display: reservedDisplay(word) }}
                 onClick={() => onWordToggle(word)}
@@ -49,7 +56,14 @@ export default function WordGrid({
                 type="button"
               >
                 <span className={styles.mark} aria-hidden="true" />
-                {word}
+                {wordPhrases[word]
+                  ? wordPhrases[word].map((phrase, index) => (
+                      <Fragment key={index}>
+                        {index > 0 && <wbr />}
+                        {phrase}
+                      </Fragment>
+                    ))
+                  : word}
               </button>
             ))}
           </div>

@@ -59,6 +59,30 @@ export function shuffleArray<T>(arr: T[]): T[] {
 }
 
 /**
+ * その日の語の並び。日付から決まる並べ替えなので、サーバーで描いた HTML と端末で描く並びが同じになり、同じ日に
+ * 開き直しても同じ並びで戻る（開き直したときに格子の高さが変わらない）。
+ */
+export function dailyOrder<T>(arr: T[], seed: string): T[] {
+  let state = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    state ^= seed.charCodeAt(i);
+    state = Math.imul(state, 16777619);
+  }
+  const random = () => {
+    state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+/**
  * Get all 16 words from a puzzle in a flat array.
  */
 export function getAllWords(puzzle: NakamawakePuzzle): string[] {

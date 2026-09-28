@@ -38,6 +38,7 @@ function renderGame() {
       todayStr={TODAY}
       dateDisplayString="2026年9月27日"
       crossCategoryItems={[]}
+      wordPhrases={{}}
     />,
   );
 }
@@ -136,6 +137,37 @@ describe("遊んでいるあいだ", () => {
     fireEvent.click(checkButton);
     const grid = screen.getByRole("group", { name: "言葉の格子" });
     expect(within(grid).getAllByRole("button")[0]).toHaveFocus();
+  });
+
+  test("フォーカスを受け取った語が画面の上に出ていれば、その語まで送り戻す", () => {
+    renderGame();
+    choose(["りんご", "いぬ", "あか", "はる"]);
+    const checkButton = screen.getByRole("button", { name: "チェック" });
+    checkButton.focus();
+    const scrollBy = vi.fn();
+    window.scrollBy = scrollBy;
+    const rect = vi
+      .spyOn(HTMLButtonElement.prototype, "getBoundingClientRect")
+      .mockReturnValue({ top: -200, bottom: -120 } as DOMRect);
+    fireEvent.click(checkButton);
+    rect.mockRestore();
+    expect(scrollBy).toHaveBeenCalledWith({ top: -216, behavior: "instant" });
+  });
+
+  test("文節を持つ語は、文節の切れ目で折れるようにする", () => {
+    render(
+      <GameContainer
+        puzzle={puzzle}
+        puzzleNumber={226}
+        todayStr={TODAY}
+        dateDisplayString="2026年9月27日"
+        crossCategoryItems={[]}
+        wordPhrases={{ うさぎ: ["うさ", "ぎ"] }}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "うさぎ" }).innerHTML).toContain(
+      "うさ<wbr>ぎ",
+    );
   });
 
   // Safari のマウスのように、押したボタンにフォーカスを移さないブラウザでは、フォーカスは元の所にある。
@@ -307,6 +339,7 @@ describe("サーバーの HTML を水和で引き継ぐとき", () => {
         todayStr={TODAY}
         dateDisplayString="2026年9月27日"
         crossCategoryItems={[]}
+        wordPhrases={{}}
       />
     );
     const container = document.createElement("div");

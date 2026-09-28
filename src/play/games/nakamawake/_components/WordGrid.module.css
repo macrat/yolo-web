@@ -30,14 +30,11 @@
   width: calc(100% + 2 * var(--word-grid-gap) + 4 * var(--rule-w));
 }
 
-/* 行はどれも、いちばん高いマスの高さにそろえる。格子の高さは残る語の組み合わせだけで決まり、並べ替えでは
- * 変わらない（開き直したとき、盤の前で取っておく高さと同じになる）。並べ替えでマスは動くので、ブラウザが画面の
- * 送りを合わせる目印（スクロールアンカー）にしない。目印にすると、開き直したときに並べ替えで動いた語を追って
- * 画面が送られる。 */
+/* 水和のときに語のマスは描き直されて動きうるので、ブラウザが画面の送りを合わせる目印（スクロールアンカー）に
+ * しない。目印にすると、開き直したときに動いた語を追って画面が送られる。 */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  grid-auto-rows: 1fr;
   gap: var(--word-grid-gap);
   overflow-anchor: none;
   width: calc(100% + var(--word-grid-gap) + 4 * var(--rule-w));
@@ -74,7 +71,17 @@
   text-align: center;
   line-height: var(--leading-heading);
   overflow-wrap: anywhere;
+  line-break: strict;
   text-wrap: balance;
+}
+
+/* 文節を持つ語（ことわざなど）は、文節の切れ目（<wbr>）で折る。マスに7字ほど入る広い格子（4マスに
+ * (7em + 0.5em) ずつ）では文節の中で折らない。狭い格子では文節がマスより長いことがあるので、文節の切れ目を
+ * 折り所に足すだけにし、文節の中でも折る（1字だけの行を作らないため）。 */
+@container word-grid-four (min-width: 30em) {
+  .phrased {
+    word-break: keep-all;
+  }
 }
 
 /* 太い線で描く 20px の四角。選ぶと内側を --ink で 8px 塗る。 */
