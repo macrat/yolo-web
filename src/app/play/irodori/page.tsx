@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
-import GameLayout from "@/play/games/_components/new/GameLayout";
+import GameLayout from "@/play/games/_components/GameLayout";
 import GameContainer from "@/play/games/irodori/_components/GameContainer";
 import type { TraditionalColor } from "@/play/games/irodori/_lib/daily";
 import type { IrodoriScheduleEntry } from "@/play/games/irodori/_lib/types";

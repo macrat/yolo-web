@@ -3,7 +3,7 @@ import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
-import GameLayout from "@/play/games/_components/new/GameLayout";
+import GameLayout from "@/play/games/_components/GameLayout";
 import GameContainer from "@/play/games/nakamawake/_components/GameContainer";
 import type {
   NakamawakePuzzle,

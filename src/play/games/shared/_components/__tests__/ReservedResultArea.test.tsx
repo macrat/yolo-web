@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
+import ReservedResultArea from "@/play/games/shared/_components/ReservedResultArea";
 import { resultAreaNames } from "@/play/games/shared/_lib/savedLayout";
 
 const NAMES = resultAreaNames("game");

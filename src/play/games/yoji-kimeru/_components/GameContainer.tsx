@@ -41,7 +41,7 @@ import {
   savedLayoutScript,
   type SavedLayoutOptions,
 } from "@/play/games/shared/_lib/savedLayout";
-import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
+import ReservedResultArea from "@/play/games/shared/_components/ReservedResultArea";
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";

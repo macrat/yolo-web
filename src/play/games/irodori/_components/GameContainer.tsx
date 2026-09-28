@@ -51,11 +51,11 @@ import {
   resultAreaNames,
   savedLayoutScript,
 } from "@/play/games/shared/_lib/savedLayout";
-import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
+import ReservedResultArea from "@/play/games/shared/_components/ReservedResultArea";
 import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
-import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
-import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
-import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import NextPuzzleTime from "@/play/games/shared/_components/NextPuzzleTime";
+import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
 import ColorPair from "./ColorPair";
 import HslSliders from "./HslSliders";
 import RoundResult from "./RoundResult";

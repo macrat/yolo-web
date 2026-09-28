@@ -16,9 +16,9 @@ import PhrasedText from "@/components/PhrasedText";
 import QuantityBars from "@/components/QuantityBars";
 import ShareButtons from "@/components/ShareButtons";
 import type { ItemListItem } from "@/components/ItemList";
-import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
-import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
-import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import NextPuzzleTime from "@/play/games/shared/_components/NextPuzzleTime";
+import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
 import ResultTable, { type ResultTableRow } from "./ResultTable";
 import styles from "./styles/KanjiKanaru.module.css";
 

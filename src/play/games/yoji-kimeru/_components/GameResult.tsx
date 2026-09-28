@@ -5,9 +5,9 @@ import ResultBox from "@/components/ResultBox";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import ShareButtons from "@/components/ShareButtons";
 import type { ItemListItem } from "@/components/ItemList";
-import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
-import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
-import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import NextPuzzleTime from "@/play/games/shared/_components/NextPuzzleTime";
+import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
 import { revealControl } from "@/lib/reveal";
 import type {
   Difficulty,
