@@ -81,7 +81,7 @@
 .share {
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
+  gap: var(--space-8);
   margin-block-start: var(--space-32);
   padding-block-start: var(--space-16);
   border-block-start: var(--rule-w-hair) solid var(--rule-2);

@@ -523,7 +523,7 @@ export default function ResultCard({
       {result.recommendation && result.recommendationLink && (
         <Link
           href={result.recommendationLink}
-          className={styles.recommendation}
+          className={`${styles.action} ${styles.recommendation}`}
           data-text-box="inline"
         >
           {result.recommendation}
@@ -542,7 +542,7 @@ export default function ResultCard({
           )}
         </div>
       )}
-      <div>
+      <div className={styles.action}>
         <Button onClick={onRetry}>もう一度挑戦する</Button>
       </div>
     </div>

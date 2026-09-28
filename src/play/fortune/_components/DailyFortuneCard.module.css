@@ -36,16 +36,21 @@
   color: var(--ink-2);
 }
 
+/* 結果を共有する区画。ボックスの太い枠のすぐ下にある小見出しは、ボックスの枠がすでに切れ目なので、上に線を
+ * 持たない（§5）。 */
 .share {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
   margin-block-start: var(--space-24);
 }
 
-/* ボックスの太い枠のすぐ下にある小見出しなので、上に線を持たない（§5）。 */
 .shareHeading {
-  margin-block-end: var(--space-8);
+  font-size: var(--text-heading-sub);
 }
 
+/* 区画の末尾の知らせの行は、知らせが出ても下が動かないよう1行分の高さをいつも取り、それが区画の下のあいだを
+ * 兼ねる。 */
 .comeback {
-  margin-block-start: var(--space-24);
   color: var(--ink-2);
 }
