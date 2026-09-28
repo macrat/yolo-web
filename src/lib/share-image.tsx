@@ -6,15 +6,17 @@
  *
  * 字の組み方:
  * - 書体は字の範囲で分ける。U+0000-007F は IBM Plex Sans、ほかは和文の書体で、名前と数字の結果は Zen Antique
- *   （Zen Antique に無い字を含むときは和文を丸ごと BIZ UDGothic）、補助情報・読み・副題は BIZ UDPGothic。
- *   Satori は書体の並びを渡すと字ごとに書体を選び分けないので、字の範囲で分けた書体のまとまりに書体を1つずつ渡す。
+ *   （Zen Antique に無い字を含むときは和文を丸ごと BIZ UDGothic）、補助情報・読み・副題は BIZ UDPGothic。和文の書体
+ *   に無い字（纁・彐など）は、§3 の本文の書体の並びの末尾の Noto Sans JP で組み、幅もその書体で測る。Satori は書体の
+ *   並びを渡すと字ごとに書体を選び分けないので、字の範囲で分けた書体のまとまりに書体を1つずつ渡す。
  * - 行は、ここで描くのと同じ書体のファイルの送り幅で測って決め、1行ずつ描く。どの字も、画面の見出しと同じ所で折る:
  *   文節の切れ目（splitIntoPhrases）・文節の中の空白の後ろ（ダッシュの前を除く）・閉じ括弧の直後。1行に収まらない
  *   単位だけを、割れない字の組（境で割っても禁則を破らない字の並び）を書体のまとまりごとに集めて分け、収まらない
  *   集まりは組に、それでも収まらない組は字に分ける（breakUnits）。文節の頭の空白は前の文節の終わりに移し、行の
  *   終わりの空白は描かない。行を決めてから描くので、名前の段を選ぶときに数えた行の数と、描いた行の数が同じになる。
  *
- * 書体を取れないときは例外を投げる。画像はビルドで書き出すので、違う書体の画像が出荷される前にビルドが止まる。
+ * 書体を取れないときと、どの書体にも無い字があるときは例外を投げる。画像はビルドで書き出すので、違う書体や豆腐の字の
+ * 画像が出荷される前にビルドが止まる。
  */
 import "server-only";
 import { createHash } from "node:crypto";
@@ -148,12 +150,19 @@ const PLEX = "IBM Plex Sans";
 const ZEN_ANTIQUE = "Zen Antique";
 const BIZ_UDP_GOTHIC = "BIZ UDPGothic";
 const BIZ_UD_GOTHIC = "BIZ UDGothic";
+/**
+ * 和文の書体に無い字を組む書体。§3 の本文の書体の並びの末尾で、BIZ UDGothic にも無い字（纁・彐など）を持つ。
+ * `next/og` は、渡した書体に無い字を見つけると黙って別の書体を取りに行き、取れないと豆腐の字を描いたまま画像を返す
+ * ので、無い字もここで書体を決めて渡す。
+ */
+const NOTO_SANS_JP = "Noto Sans JP";
 
 type Family =
   | typeof PLEX
   | typeof ZEN_ANTIQUE
   | typeof BIZ_UDP_GOTHIC
-  | typeof BIZ_UD_GOTHIC;
+  | typeof BIZ_UD_GOTHIC
+  | typeof NOTO_SANS_JP;
 
 /** Google Fonts の CSS の URL。User-Agent を送らないと、分割されていない TrueType を1つ返す。 */
 const GOOGLE_FONTS_CSS_URL = "https://fonts.googleapis.com/css2";
@@ -212,19 +221,25 @@ function toLoaded(data: ArrayBuffer): LoadedFont {
 
 let fontsPromise: Promise<LoadedFonts> | undefined;
 
-/** 描くのに使う4つの書体。ビルド（またはサーバー）の中で1度だけ取り、失敗したら次の呼び出しで取り直す。 */
+/**
+ * 描くのに使う5つの書体。ビルド（またはサーバー）の中で1度だけ取り、失敗したら次の呼び出しで取り直す。
+ * Noto Sans JP は無い字が出たときだけ使うが、字を絞らない1つのファイルを取る。字ごとに絞ったファイルは画像ごとに
+ * 取り直すことになり、ビルドの取得が増えて、失敗しうる所も増える。
+ */
 function loadFonts(): Promise<LoadedFonts> {
   fontsPromise ??= Promise.all([
     readPlex(),
     fetchGoogleFont(ZEN_ANTIQUE),
     fetchGoogleFont(BIZ_UDP_GOTHIC),
     fetchGoogleFont(BIZ_UD_GOTHIC),
+    fetchGoogleFont(NOTO_SANS_JP),
   ]).then(
-    ([plex, zen, udp, ud]) => ({
+    ([plex, zen, udp, ud, noto]) => ({
       [PLEX]: toLoaded(plex),
       [ZEN_ANTIQUE]: toLoaded(zen),
       [BIZ_UDP_GOTHIC]: toLoaded(udp),
       [BIZ_UD_GOTHIC]: toLoaded(ud),
+      [NOTO_SANS_JP]: toLoaded(noto),
     }),
     (error: unknown) => {
       fontsPromise = undefined;
@@ -268,11 +283,27 @@ function graphemes(text: string): string[] {
   return [...graphemeSegmenter.segment(text)].map(({ segment }) => segment);
 }
 
-function toRuns(text: string, jaFamily: Family): Run[] {
+/**
+ * 字の書体。U+0000-007F は IBM Plex Sans、ほかは和文の書体で、その書体に無い字は Noto Sans JP。Noto Sans JP にも
+ * 無い字は描けないので、豆腐の字の画像を出荷しないよう例外を投げる。
+ */
+function familyOf(char: string, jaFamily: Family, fonts: LoadedFonts): Family {
+  if (char.codePointAt(0)! <= PLEX_LAST_CODE_POINT) return PLEX;
+  if (/\s/u.test(char) || hasGlyph(fonts[jaFamily].font, char)) {
+    return jaFamily;
+  }
+  if (hasGlyph(fonts[NOTO_SANS_JP].font, char)) return NOTO_SANS_JP;
+  throw new Error(`no font has "${char}" (${jaFamily}, ${NOTO_SANS_JP})`);
+}
+
+function hasGlyph(font: Font, char: string): boolean {
+  return font.charToGlyphIndex(char) > 0;
+}
+
+function toRuns(text: string, jaFamily: Family, fonts: LoadedFonts): Run[] {
   const runs: Run[] = [];
   for (const char of text) {
-    const family =
-      char.codePointAt(0)! <= PLEX_LAST_CODE_POINT ? PLEX : jaFamily;
+    const family = familyOf(char, jaFamily, fonts);
     const last = runs.at(-1);
     if (last && last.family === family) last.text += char;
     else runs.push({ text: char, family });
@@ -281,7 +312,7 @@ function toRuns(text: string, jaFamily: Family): Run[] {
 }
 
 function measure(text: string, style: TextStyle, fonts: LoadedFonts): number {
-  return toRuns(text, style.jaFamily).reduce(
+  return toRuns(text, style.jaFamily, fonts).reduce(
     (sum, run) =>
       sum + fonts[run.family].font.getAdvanceWidth(run.text, style.size),
     0,
@@ -374,8 +405,8 @@ function unbreakableClusters(text: string): string[] {
 /**
  * 行に詰める単位。1行に収まる単位はそのまま使う。収まらない単位は、割れない字の組を書体のまとまりごとに集め、
  * 1行に収まる集まりはそのまま、収まらない集まりは組に、それでも収まらない組は字に分ける。どの切れ端も1行に収まる。
- * 組を字に分けるのは、行の頭に置かない字が1行より長く続くときだけで、画面の見出しも、ほかに折り所が無ければ禁則の
- * 字の前で折って枠に収める。
+ * 組を字に分けるのは、禁則の字（行の頭に置かない字・開き括弧）が1行より長く続くときだけで、画面の見出しも、ほかに
+ * 折り所が無ければ禁則の字の前で折って枠に収める。
  */
 function breakUnits(
   units: readonly string[],
@@ -389,7 +420,7 @@ function breakUnits(
     if (fits(unit)) return [unit];
     // 各組を、その頭の字が属する書体のまとまりの集まりに入れる。
     const runOfOffset: number[] = [];
-    toRuns(unit, style.jaFamily).forEach(({ text }, runIndex) => {
+    toRuns(unit, style.jaFamily, fonts).forEach(({ text }, runIndex) => {
       for (let i = 0; i < text.length; i++) runOfOffset.push(runIndex);
     });
     const groups: string[][] = [];
@@ -438,7 +469,7 @@ function fillLines(
     .map((text) => text.replace(TRAILING_SPACES, ""))
     .filter((text) => text !== "")
     .map((text) => ({
-      runs: toRuns(text, style.jaFamily),
+      runs: toRuns(text, style.jaFamily, fonts),
       width: measure(text, style, fonts),
     }));
 }

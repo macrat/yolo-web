@@ -103,7 +103,13 @@ const INPUTS: Record<string, ShareImageContent> = {
     subtitle: "テキストとBase64の相互変換 (UTF-8 対応)",
   },
   /** Zen Antique に無い字を含む名前。 */
+  /** Zen Antique に無く BIZ UDGothic にある字を含む名前。 */
   missingFromZenAntique: {
+    aux: "漢字辞典",
+    name: "𠮟る",
+  },
+  /** BIZ UDGothic にも無い字の名前。 */
+  missingFromBizUdGothic: {
     aux: "伝統色辞典",
     name: "纁",
     reading: "sohi #b35c44",
@@ -388,13 +394,13 @@ const rendered: Record<string, Rendered> = {};
 const cpuMilliseconds: Record<string, number> = {};
 
 /**
- * 描く時間を測る前に描く1枚。書体を取る時間と、4つの書体と、補助情報・数字の結果・名前・読み・副題・色見本のどの段も
- * 初めて通す時間を、測る入力に背負わせない。
+ * 描く時間を測る前に描く1枚。書体を取る時間と、5つの書体（名前の「纁」は Noto Sans JP、「の」は BIZ UDGothic）と、
+ * 補助情報・数字の結果・名前・読み・副題・色見本のどの段も初めて通す時間を、測る入力に背負わせない。
  */
 const WARM_UP: ShareImageContent = {
   aux: "イロドリ #212の結果",
   numeric: ["10問中", "8問正解"],
-  name: "纁 Plex",
+  name: "纁の Plex",
   reading: "toki #eea9a9",
   subtitle: "テキストとBase64の相互変換 (UTF-8 対応)",
   swatch: "#eea9a9",
@@ -669,15 +675,58 @@ describe("名前", () => {
     expect(rendered.quizScore.layout.nameSize).toBe(NAME_SIZES[0]);
   });
 
+  const familiesOf = (key: string) =>
+    nameBlock(rendered[key].layout).lines.flatMap((line) =>
+      line.runs.map((run) => [run.text, run.family]),
+    );
+
   test("Zen Antique に無い字を含む名前は、和文を丸ごと BIZ UDGothic で組む", () => {
-    const families = nameBlock(
-      rendered.missingFromZenAntique.layout,
-    ).lines.flatMap((line) => line.runs.map((run) => run.family));
-    expect(new Set(families)).toEqual(new Set(["BIZ UDGothic"]));
+    expect(familiesOf("missingFromZenAntique")).toEqual([
+      ["𠮟る", "BIZ UDGothic"],
+    ]);
     const zenFamilies = nameBlock(rendered.dash.layout).lines.flatMap((line) =>
       line.runs.map((run) => run.family),
     );
     expect(new Set(zenFamilies)).toEqual(new Set(["Zen Antique"]));
+  });
+
+  test("BIZ UDGothic にも無い字は、Noto Sans JP で組む", () => {
+    expect(familiesOf("missingFromBizUdGothic")).toEqual([
+      ["纁", "Noto Sans JP"],
+    ]);
+  });
+
+  test("和文の書体に無い字を描くあいだも通信しない（next/og に黙って書体を取りに行かせない）", async () => {
+    // 書体は取り終えているので、描くあいだに通信が起きれば、それは next/og が、渡された書体に無い字の書体を取りに
+    // 行ったもの。
+    const realFetch = globalThis.fetch;
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        calls.push(String(input));
+        return realFetch(input, init);
+      }),
+    );
+    try {
+      for (const content of [
+        INPUTS.missingFromBizUdGothic,
+        INPUTS.missingFromZenAntique,
+        { aux: "纁と彐の補助情報", name: "彐" },
+      ]) {
+        const { response } = await renderShareImage(content);
+        await response.arrayBuffer();
+      }
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(calls).toEqual([]);
+  });
+
+  test("どの書体にも無い字は、描かずに例外を投げる", async () => {
+    await expect(renderShareImage({ name: "\u{E000}" })).rejects.toThrow(
+      /no font has/,
+    );
   });
 
   test("「——」は1本の線につながる", () => {
@@ -699,15 +748,6 @@ describe("名前", () => {
 describe("字で割るときの禁則", () => {
   const lineTextsOf = (block: Block) =>
     block.lines.map((line) => line.runs.map((run) => run.text).join(""));
-
-  /** 補助情報の1行に「カ」が何字入るか。 */
-  async function katakanaPerAuxLine(): Promise<number> {
-    const { layout } = await renderShareImage({
-      aux: "カ".repeat(200),
-      name: "x",
-    });
-    return lineTextsOf(layout.aux!)[0].length;
-  }
 
   /** 補助情報の1行に、字 char が何字入るか。 */
   async function perAuxLine(char: string): Promise<number> {
@@ -731,7 +771,7 @@ describe("字で割るときの禁則", () => {
     }
   }
 
-  test("丸括弧の中の、1行近い欧文の続きの直後の「?！」を、前の字ごと次の行へ送る", async () => {
+  test("丸括弧の中の、1行近い欧文の続きの直後の「?！」を、前の字と離さない", async () => {
     // 「?」が1行目の終わりの前後に来る長さを並べて試す。
     const perLine = await perAuxLine("a");
     for (let count = perLine - 4; count <= perLine + 2; count++) {
@@ -742,7 +782,7 @@ describe("字で割るときの禁則", () => {
     }
   });
 
-  test("字の範囲のまとまりに禁則の字が付いて1行を超えるときは、そのまとまりの中で折る", async () => {
+  test("書体のまとまりに禁則の字が付いて1行を超えるときは、割れない字の組の境で折る", async () => {
     const perLine = await perAuxLine("カ");
     for (let count = perLine - 4; count <= perLine; count++) {
       const aux = "（" + "a".repeat(20) + "、" + "カ".repeat(count) + "）";
@@ -795,7 +835,7 @@ describe("字で割るときの禁則", () => {
   test.each(["？", "、", "」", "ー"])(
     "補助情報の1行を「カ」で満たした直後の「%s」を、次の行の頭に置かない",
     async (tail) => {
-      const perLine = await katakanaPerAuxLine();
+      const perLine = await perAuxLine("カ");
       const { layout } = await renderShareImage({
         aux: "カ".repeat(perLine) + tail + "です",
         name: "x",
@@ -827,7 +867,7 @@ describe("字で割るときの禁則", () => {
   });
 
   test("開き括弧で行を終えない", async () => {
-    const perLine = await katakanaPerAuxLine();
+    const perLine = await perAuxLine("カ");
     const aux = "カ".repeat(perLine - 1) + "「カ」です";
     const { layout } = await renderShareImage({ aux, name: "x" });
     const lines = lineTextsOf(layout.aux!);
@@ -1108,6 +1148,23 @@ describe("書体を取れないとき", () => {
     );
     const { renderShareImage: renderFresh } = await import("@/lib/share-image");
     await expect(renderFresh({ name: "x" })).rejects.toThrow(/returned 404/);
+  });
+
+  test("Noto Sans JP だけが取れないときも、描かずに例外を投げる", async () => {
+    vi.resetModules();
+    const realFetch = globalThis.fetch;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) =>
+        String(input).includes("Noto+Sans+JP")
+          ? new Response("", { status: 503 })
+          : realFetch(input, init),
+      ),
+    );
+    const { renderShareImage: renderFresh } = await import("@/lib/share-image");
+    await expect(renderFresh({ name: "纁" })).rejects.toThrow(
+      /Noto Sans JP: .* returned 503/,
+    );
   });
 
   test("TrueType でない書体を返すと、描かずに例外を投げる", async () => {
