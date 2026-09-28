@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import {
   boundaryScores,
   followsPhraseRules,
+  parenDepthAfter,
   splitIntoPhrases,
 } from "@/lib/phrase-breaks";
 import { quizBySlug } from "@/play/quiz/registry";
@@ -348,5 +349,22 @@ describe("followsPhraseRules", () => {
     expect(followsPhraseRules(["藍色（あい", "いろ）"])).toBe(false);
     expect(followsPhraseRules(["座右の", "銘と", "し", "て"])).toBe(false);
     expect(followsPhraseRules(["この", ""])).toBe(false);
+  });
+});
+
+describe("parenDepthAfter", () => {
+  test("半角と全角の丸括弧を開いた数だけ数え、閉じると減らす", () => {
+    expect(parenDepthAfter(0, "相互変換 (UTF-8")).toBe(1);
+    expect(parenDepthAfter(1, " 対応)")).toBe(0);
+    expect(parenDepthAfter(0, "（コンセプト（再策定記")).toBe(2);
+    expect(parenDepthAfter(2, "）1/3）")).toBe(0);
+  });
+
+  test("閉じ括弧が多くても 0 より下がらない", () => {
+    expect(parenDepthAfter(0, "対応)）")).toBe(0);
+  });
+
+  test("鉤括弧は数えない", () => {
+    expect(parenDepthAfter(0, "「でも")).toBe(0);
   });
 });

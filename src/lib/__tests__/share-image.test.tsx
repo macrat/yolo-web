@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { CATEGORY_LABELS, getAllBlogPosts } from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
-import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { parenDepthAfter, splitIntoPhrases } from "@/lib/phrase-breaks";
 import {
   lineBreakUnits,
   renderShareImage,
@@ -501,9 +501,12 @@ describe("名前", () => {
       breaks.add(offset + (phrase.length - phrase.trimStart().length));
       offset += phrase.length;
     }
+    let depth = 0;
     for (let index = 1; index < text.length; index++) {
       const before = text[index - 1];
       const rest = text.slice(index);
+      depth = parenDepthAfter(depth, before);
+      if (depth > 0) continue;
       if (
         /\s/u.test(before) &&
         /^\S/u.test(rest) &&
@@ -562,6 +565,24 @@ describe("名前", () => {
         (start) => start > wordStart && start < wordStart + word.length,
       ),
     ).toBe(true);
+  });
+
+  test.each([
+    ["テキストとBase64の相互変換 (UTF-8 対応)", "(UTF-8 対応)"],
+    [
+      "AIエージェントの思考バイアスとコンテキストエンジニアリング（コンセプト再策定記 1/3）",
+      "（コンセプト再策定記 1/3）",
+    ],
+  ])("丸括弧の中の空白では単位を割らない: %s", (text, group) => {
+    const units = lineBreakUnits(text);
+    expect(units.join("")).toBe(text);
+    expect(units.some((unit) => unit.includes(group))).toBe(true);
+  });
+
+  test("丸括弧の外の空白と閉じ括弧の直後では単位を割る", () => {
+    expect(lineBreakUnits("Gitコマンド 早見表")).toContain("コマンド ");
+    const units = lineBreakUnits("テキスト (UTF-8 対応) の変換");
+    expect(units.some((unit) => unit.endsWith("対応) "))).toBe(true);
   });
 
   test("最初の語を割らず、画面の h1 と同じく空白の後ろで折る（「Git」だけの行を作らない）", () => {

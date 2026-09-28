@@ -77,8 +77,11 @@ function isUnbreakable(before: string, after: string): boolean {
   );
 }
 
-/** text の中で閉じていない丸括弧の数を、depth から数え進める。 */
-function parenDepthAfter(depth: number, text: string): number {
+/**
+ * text の中で閉じていない丸括弧の数を、depth から数え進める。丸括弧の一続きの中では折らない（§4）ので、見出しの
+ * 折り所を別の組み方で足すところ（サーバーで描く画像の字の組み方）も、これで丸括弧の中かどうかを数える。
+ */
+export function parenDepthAfter(depth: number, text: string): number {
   let next = depth;
   for (const ch of text) {
     if (OPEN_PAREN.test(ch)) next += 1;

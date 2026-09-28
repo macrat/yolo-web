@@ -23,40 +23,9 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 import { parse, type Font } from "opentype.js";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
-import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { parenDepthAfter, splitIntoPhrases } from "@/lib/phrase-breaks";
 import { canSetInZenAntique } from "@/lib/zen-antique-charset";
 import { INK, INK_2, PAPER, RULE, RULE_2 } from "@/lib/token-hex";
-import {
-  AUX_LINE_HEIGHT,
-  AUX_SIZE,
-  BOTTOM_RULE_Y,
-  CONTENT_HEIGHT,
-  CONTENT_LEFT,
-  CONTENT_MAX_HEIGHT,
-  CONTENT_TOP,
-  CONTENT_WIDTH,
-  GAP_AFTER_AUX,
-  GAP_AFTER_NAME,
-  GAP_AFTER_NUMERIC,
-  GAP_AFTER_READING,
-  LEFT_RULE_X,
-  NAME_MAX_LINES,
-  NAME_SIZES,
-  NUMERIC_LINE_HEIGHT,
-  NUMERIC_SIZE,
-  RIGHT_RULE_X,
-  SHARE_IMAGE_HEIGHT,
-  SHARE_IMAGE_WIDTH,
-  SITE_NAME_HEIGHT,
-  SITE_NAME_SIZE,
-  SITE_NAME_TOP,
-  SWATCH_GAP,
-  SWATCH_SIZE,
-  THICK_RULE,
-  THIN_RULE,
-  TOP_RULE_Y,
-  nameLineHeight,
-} from "@/lib/share-image-frame";
 import * as frame from "@/lib/share-image-frame";
 
 /** 画像に書く中身。 */
@@ -79,8 +48,8 @@ export interface ShareImageContent {
 }
 
 const SHARE_IMAGE_SIZE = {
-  width: SHARE_IMAGE_WIDTH,
-  height: SHARE_IMAGE_HEIGHT,
+  width: frame.SHARE_IMAGE_WIDTH,
+  height: frame.SHARE_IMAGE_HEIGHT,
 };
 
 /** 画像の代替テキスト。画像に書いてある字を、書いてある順に言う。 */
@@ -159,8 +128,8 @@ export function shareOpenGraphImage(
 ): ShareOpenGraphImage {
   return {
     url: shareImageUrl(pagePath, content),
-    width: SHARE_IMAGE_WIDTH,
-    height: SHARE_IMAGE_HEIGHT,
+    width: frame.SHARE_IMAGE_WIDTH,
+    height: frame.SHARE_IMAGE_HEIGHT,
     alt: shareImageAlt(content),
   };
 }
@@ -338,17 +307,26 @@ const NO_BREAK_BEFORE = /^(?:[—―─]|--|[、。，．,.！？!?」』）)…
 
 /**
  * 文節を、画面の見出しが文節の中でも折る所で分ける。空白の後ろ（ダッシュの前を除く）と、閉じ括弧の直後。
+ * 丸括弧の一続きの中では折らない（§4）。depth は、文節の前までに閉じていない丸括弧の数。
  */
-function splitAtInnerBreaks(phrase: string): string[] {
+function splitAtInnerBreaks(phrase: string, depth: number): string[] {
   const pieces: string[] = [];
   let current = "";
+  let parenDepth = depth;
   const chars = [...phrase];
   chars.forEach((char, index) => {
     current += char;
+    parenDepth = parenDepthAfter(parenDepth, char);
     const rest = chars.slice(index + 1).join("");
+    // 空白は前の単位の終わりに付けるので、空白の前では割らない。
     const breaksAfter =
-      (/\s/u.test(char) && !/^\s/u.test(rest)) || CLOSING_BRACKET.test(char);
-    if (breaksAfter && rest !== "" && !NO_BREAK_BEFORE.test(rest)) {
+      (/\s/u.test(char) || CLOSING_BRACKET.test(char)) && !/^\s/u.test(rest);
+    if (
+      breaksAfter &&
+      parenDepth === 0 &&
+      rest !== "" &&
+      !NO_BREAK_BEFORE.test(rest)
+    ) {
       pieces.push(current);
       current = "";
     }
@@ -358,11 +336,16 @@ function splitAtInnerBreaks(phrase: string): string[] {
 }
 
 /**
- * 文を、画面の見出しが折る所（DESIGN.md §4）で分けた単位。文節の切れ目・文節の中の空白の後ろ・閉じ括弧の直後。
- * 文節の頭の空白は前の単位の終わりに付く。
+ * 文を、画面の見出しが折る所（DESIGN.md §4）で分けた単位。文節の切れ目・文節の中の空白の後ろ・閉じ括弧の直後で、
+ * 丸括弧の一続きの中は割らない。文節の頭の空白は前の単位の終わりに付く。
  */
 export function lineBreakUnits(text: string): string[] {
-  return moveLeadingSpaces(splitIntoPhrases(text)).flatMap(splitAtInnerBreaks);
+  let depth = 0;
+  return moveLeadingSpaces(splitIntoPhrases(text)).flatMap((phrase) => {
+    const pieces = splitAtInnerBreaks(phrase, depth);
+    depth = parenDepthAfter(depth, phrase);
+    return pieces;
+  });
 }
 
 /**
@@ -481,10 +464,10 @@ export interface ShareImageLayout {
 
 /** 前の段から次の段までのあいだ。 */
 const GAP_AFTER: Record<BlockKind, number> = {
-  aux: GAP_AFTER_AUX,
-  numeric: GAP_AFTER_NUMERIC,
-  name: GAP_AFTER_NAME,
-  reading: GAP_AFTER_READING,
+  aux: frame.GAP_AFTER_AUX,
+  numeric: frame.GAP_AFTER_NUMERIC,
+  name: frame.GAP_AFTER_NAME,
+  reading: frame.GAP_AFTER_READING,
   subtitle: 0,
 };
 
@@ -506,12 +489,12 @@ function auxBlock(
 ): Block {
   return {
     kind,
-    size: AUX_SIZE,
-    lineHeight: AUX_LINE_HEIGHT,
+    size: frame.AUX_SIZE,
+    lineHeight: frame.AUX_LINE_HEIGHT,
     color: INK_2,
     lines: breakText(
       text,
-      { jaFamily: BIZ_UDP_GOTHIC, size: AUX_SIZE },
+      { jaFamily: BIZ_UDP_GOTHIC, size: frame.AUX_SIZE },
       maxWidth,
       fonts,
     ),
@@ -526,12 +509,12 @@ function numericBlock(
 ): Block {
   const style = {
     jaFamily: headingFamily(segments.join("")),
-    size: NUMERIC_SIZE,
+    size: frame.NUMERIC_SIZE,
   };
   return {
     kind: "numeric",
-    size: NUMERIC_SIZE,
-    lineHeight: NUMERIC_LINE_HEIGHT,
+    size: frame.NUMERIC_SIZE,
+    lineHeight: frame.NUMERIC_LINE_HEIGHT,
     color: INK,
     lines: fillLines(segments, style, maxWidth, fonts),
   };
@@ -546,7 +529,7 @@ function nameBlock(
   return {
     kind: "name",
     size,
-    lineHeight: nameLineHeight(size),
+    lineHeight: frame.nameLineHeight(size),
     color: INK,
     lines: breakText(
       name,
@@ -589,10 +572,10 @@ function layoutShareImage(
   fonts: LoadedFonts,
 ): ShareImageLayout {
   const columnWidth = content.swatch
-    ? CONTENT_WIDTH - SWATCH_SIZE - SWATCH_GAP
-    : CONTENT_WIDTH;
+    ? frame.CONTENT_WIDTH - frame.SWATCH_SIZE - frame.SWATCH_GAP
+    : frame.CONTENT_WIDTH;
   const aux = content.aux
-    ? auxBlock("aux", content.aux, CONTENT_WIDTH, fonts)
+    ? auxBlock("aux", content.aux, frame.CONTENT_WIDTH, fonts)
     : undefined;
   const numeric = content.numeric?.length
     ? numericBlock(content.numeric, columnWidth, fonts)
@@ -606,10 +589,10 @@ function layoutShareImage(
 
   const heightOf = (column: readonly Block[]) => {
     const columnHeight = content.swatch
-      ? Math.max(SWATCH_SIZE, blocksHeight(column))
+      ? Math.max(frame.SWATCH_SIZE, blocksHeight(column))
       : blocksHeight(column);
     return aux
-      ? aux.lines.length * aux.lineHeight + GAP_AFTER_AUX + columnHeight
+      ? aux.lines.length * aux.lineHeight + frame.GAP_AFTER_AUX + columnHeight
       : columnHeight;
   };
   const columnOf = (name: Block, sub: Block | undefined) =>
@@ -621,12 +604,12 @@ function layoutShareImage(
     jaFamily: headingFamily(content.name),
     size,
   });
-  const candidates = NAME_SIZES.map((size) =>
+  const candidates = frame.NAME_SIZES.map((size) =>
     nameBlock(content.name, size, columnWidth, fonts),
   );
   const fitsFrame = (name: Block) =>
-    name.lines.length <= NAME_MAX_LINES &&
-    heightOf(columnOf(name, subtitle)) <= CONTENT_MAX_HEIGHT;
+    name.lines.length <= frame.NAME_MAX_LINES &&
+    heightOf(columnOf(name, subtitle)) <= frame.CONTENT_MAX_HEIGHT;
   const name =
     candidates.find(
       (candidate) =>
@@ -643,15 +626,15 @@ function layoutShareImage(
 
   let sub = subtitle;
   let subtitleTruncated = false;
-  if (sub && heightOf(columnOf(name, sub)) > CONTENT_MAX_HEIGHT) {
+  if (sub && heightOf(columnOf(name, sub)) > frame.CONTENT_MAX_HEIGHT) {
     const withoutSubtitle = heightOf(columnOf(name, undefined));
     const spare =
-      CONTENT_MAX_HEIGHT -
+      frame.CONTENT_MAX_HEIGHT -
       withoutSubtitle -
       GAP_AFTER[reading ? "reading" : "name"];
     sub = truncatedSubtitle(
       content.subtitle!,
-      Math.floor(spare / AUX_LINE_HEIGHT),
+      Math.floor(spare / frame.AUX_LINE_HEIGHT),
       columnWidth,
       fonts,
     );
@@ -751,42 +734,42 @@ function ShareImage({ layout }: { layout: ShareImageLayout }) {
       style={{
         position: "relative",
         display: "flex",
-        width: SHARE_IMAGE_WIDTH,
-        height: SHARE_IMAGE_HEIGHT,
+        width: frame.SHARE_IMAGE_WIDTH,
+        height: frame.SHARE_IMAGE_HEIGHT,
         backgroundColor: PAPER,
         color: INK,
       }}
     >
       {rule({
-        left: LEFT_RULE_X,
+        left: frame.LEFT_RULE_X,
         top: 0,
-        width: THICK_RULE,
-        height: SHARE_IMAGE_HEIGHT,
+        width: frame.THICK_RULE,
+        height: frame.SHARE_IMAGE_HEIGHT,
       })}
       {rule({
-        left: RIGHT_RULE_X,
+        left: frame.RIGHT_RULE_X,
         top: 0,
-        width: THICK_RULE,
-        height: SHARE_IMAGE_HEIGHT,
+        width: frame.THICK_RULE,
+        height: frame.SHARE_IMAGE_HEIGHT,
       })}
       {rule({
         left: 0,
-        top: TOP_RULE_Y,
-        width: SHARE_IMAGE_WIDTH,
-        height: THICK_RULE,
+        top: frame.TOP_RULE_Y,
+        width: frame.SHARE_IMAGE_WIDTH,
+        height: frame.THICK_RULE,
       })}
       {rule({
         left: 0,
-        top: BOTTOM_RULE_Y,
-        width: SHARE_IMAGE_WIDTH,
-        height: THICK_RULE,
+        top: frame.BOTTOM_RULE_Y,
+        width: frame.SHARE_IMAGE_WIDTH,
+        height: frame.THICK_RULE,
       })}
       <div
         style={{
           position: "absolute",
-          left: CONTENT_LEFT,
-          top: SITE_NAME_TOP,
-          height: SITE_NAME_HEIGHT,
+          left: frame.CONTENT_LEFT,
+          top: frame.SITE_NAME_TOP,
+          height: frame.SITE_NAME_HEIGHT,
           display: "flex",
           alignItems: "center",
         }}
@@ -794,7 +777,7 @@ function ShareImage({ layout }: { layout: ShareImageLayout }) {
         <span
           style={{
             fontFamily: PLEX,
-            fontSize: SITE_NAME_SIZE,
+            fontSize: frame.SITE_NAME_SIZE,
             lineHeight: 1,
             color: INK,
           }}
@@ -805,17 +788,17 @@ function ShareImage({ layout }: { layout: ShareImageLayout }) {
       <div
         style={{
           position: "absolute",
-          left: CONTENT_LEFT,
-          top: CONTENT_TOP,
-          width: CONTENT_WIDTH,
-          height: CONTENT_HEIGHT,
+          left: frame.CONTENT_LEFT,
+          top: frame.CONTENT_TOP,
+          width: frame.CONTENT_WIDTH,
+          height: frame.CONTENT_HEIGHT,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
         }}
       >
         {layout.aux && (
-          <div style={{ ...BOX, marginBottom: GAP_AFTER_AUX }}>
+          <div style={{ ...BOX, marginBottom: frame.GAP_AFTER_AUX }}>
             {renderBlock(layout.aux)}
           </div>
         )}
@@ -824,11 +807,11 @@ function ShareImage({ layout }: { layout: ShareImageLayout }) {
             <div
               style={{
                 ...BOX,
-                width: SWATCH_SIZE,
-                height: SWATCH_SIZE,
-                marginRight: SWATCH_GAP,
+                width: frame.SWATCH_SIZE,
+                height: frame.SWATCH_SIZE,
+                marginRight: frame.SWATCH_GAP,
                 backgroundColor: layout.swatch,
-                border: `${THIN_RULE}px solid ${RULE_2}`,
+                border: `${frame.THIN_RULE}px solid ${RULE_2}`,
               }}
             />
             {renderColumn(layout.column)}
