@@ -294,6 +294,9 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 - 事故: サブエージェントの完了をコマンドで待ち続け、その再発防止をアンチパターン集のルールに反する形で書いた（取り下げ済み）。[incident-1.md](./incident-1.md)
 - 事故: 転送量の「増分0」に執着し、サイトの開発を1日半止めた（AP-P22・AP-P01）。[incident-2.md](./incident-2.md)
 
+- T5-25a で `docs/knowledge/animation-conventions.md` を消した。前提にしていたタイルとコード生成は撤去済みで、動きの規則はいま `DESIGN.md` が定め、reduced-motion の例は水和の不一致を招く形だったため、今のコードで通用する知識が残っていなかった（review-t5-25a-2.md）。
+- T5-3b の残りの PM の決定: (1) `line-break: strict` は区切りを組む部品 `PhrasedText` が持つ（T5-25c は `globals.css` で重ねて掛けない）。(2) 画像の道具の説明の行（「PNG, JPEG, GIF, WebP対応 (最大20MB)」）が 320px で語の中と括弧の中で折れるのは、その道具の T5-18 の行で直す。(3) 一覧の組の開閉のラベル（`list-browse.ts` の `controlsLabel`。`auto-phrase` に頼る）は T5-7 で区切りの並びに移す。(4) Chromium は `<wbr>` ごとに名前へ空白を足すので、見えるラベルと名前の一致を確かめるときは空白を除いて比べる。
+
 ## サイクル終了時のチェックリスト
 
 - [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
