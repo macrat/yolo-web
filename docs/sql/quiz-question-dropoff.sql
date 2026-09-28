@@ -152,9 +152,10 @@
 --       question_answered が皆無でも run を数える）で確認する。
 --   (b) at_risk が小さい行（<20 目安）は率を読まない——1 件が 5pt 以上動く。
 --   (c) モバイルは離脱時の最終ビーコンが届かないことが多く、「答えなかった」と
---       「計測が欠けた」を区別できない（docs/knowledge/research-and-
---       verification-techniques.md）。runs_no_answer_observed / min_question_number
---       の異常を「発火漏れ」と決めつける前に、この欠落と release を確認する。
+--       「計測が欠けた」を区別できない
+--       （docs/knowledge/research-and-verification-techniques.md）。
+--       runs_no_answer_observed / min_question_number の異常を「発火漏れ」と
+--       決めつける前に、この欠落と release を確認する。
 --
 -- ----------------------------------------------------------------------------
 -- 不変条件（SECTION 3 が機械的に検査する）
