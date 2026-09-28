@@ -209,7 +209,7 @@ A' にしたときに消すもの・変えるもの:
 - **幅 400px に縮めて読めるか。** 試作の PNG を幅 400px（カードの小さい表示の目安）に縮めると、84px の名前は約 28px、48px のブログの題は約 16px で読めた。補助情報の 32px は約 11px で、読みにくかった。補助情報・読み・副題は 36px 以上（400px で 12px 以上）にし、名前の段のいちばん小さい段も 400px で 14px（1200px で 42px）を下回らないようにする。
 - **Zen Antique で組むと「——」は1本の線になる。** 同じ ezo-shika の題を Zen Antique 50px で組むと、線の画素は x=240〜339 の1本で、隙間が無い（3-4）。
 - **書体のファイルの出どころ**: IBM Plex Sans は、画面と同じ `@ibm/plex-sans` 1.1.0 の WOFF 1（`fonts/complete/woff/IBMPlexSans-Regular.woff`・`-Bold.woff`）をリポジトリの `src/fonts/ibm-plex-sans/` に写す（1-3。版が画面と同じで、ビルドがネットワークに依らない。`@ibm/plex-sans` を依存に加えないのは fonts-decision.md のとおり）。同じ版であることは、`name` の版（3.005）と U+0020〜007E の送り幅が画面の woff2 と一致することを、テストで確かめる。Zen Antique（5.5 MB）・BIZ UDPGothic（4.4 MB）・BIZ UDGothic は、いまと同じく Google Fonts の CSS に古い UA で問い合わせて TTF を取る（Zen Antique は画面と同じ出どころ。1-3）。
-- 名前に Zen Antique に無い字（𠮟・剝・塡・頰・纁。t4-inventory.md 3-2）があるときは、§3 のとおり名前の和文を丸ごと `"BIZ UDGothic"` で組む（`charsMissingFromZenAntique`、`src/lib/zen-antique-charset.ts`）。
+- 名前に Zen Antique に無い字（𠮟・剝・塡・頰・纁。t4-inventory.md 3-2）があるときは、§3 のとおり名前の和文を丸ごと `"BIZ UDGothic"` で組む（`charsMissingFromZenAntique`、`src/lib/zen-antique-charset.ts`）。BIZ UDGothic にも無い字（纁・彐など）は、§3 の本文の書体の並びの末尾の Noto Sans JP で描き、幅もその書体で測る。Noto Sans JP はこのモジュールが自分で取り、取れなければ例外を投げてビルドを止める（`next/og` が黙って別の書体を取りに行き、失敗すると豆腐の画像を 200 で返すのに頼らない）。
 - **書体を取れなかったら、ビルドを失敗させる。** いまは取れないと黙って `sans-serif` に落とし、違う顔の画像がそのまま出荷される（`ogp-image.tsx:213-214` のコメントのとおり）。画像はビルドで書き出すので、そこで止めれば出荷の前に分かる。
 
 代替テキスト: 画像に書いてある字を言う（例「yolos.net 動物性格診断の結果 エゾシカ——北の大地を群れで駆ける繊細戦士」）。ルートごとの決まった文（「クイズ結果」など）をやめる。伝統色辞典は「伝統色辞典」の語を含める（index.md の T6 の行）。
