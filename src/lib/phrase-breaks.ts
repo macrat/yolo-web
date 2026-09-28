@@ -63,6 +63,21 @@ const SHORT_TAIL = 2;
 
 let parser: ReturnType<typeof loadDefaultJapaneseParser> | undefined;
 
+/** text を行の頭に置けないか。行の頭に置かない字か、ダッシュで始まる。 */
+export function cannotStartLine(text: string): boolean {
+  return NO_LINE_START.test(text) || STARTS_WITH_DASH.test(text);
+}
+
+/** text で行を終えられないか。行の終わりに置かない字（開き括弧）で終わる。 */
+export function cannotEndLine(text: string): boolean {
+  return NO_LINE_END.test(text);
+}
+
+/** char が、直後でブラウザが見出しの文節の中でも折る閉じ括弧か。 */
+export function isClosingBracket(char: string): boolean {
+  return CLOSING_BRACKET.test(char);
+}
+
 /**
  * 文節の境を置けない所か。行の頭と終わりに置けない字の所と、数とそれに続く字（「3秒後に」「10年」の助数詞）の
  * あいだでは折らない。
@@ -70,9 +85,8 @@ let parser: ReturnType<typeof loadDefaultJapaneseParser> | undefined;
 function isUnbreakable(before: string, after: string): boolean {
   const head = after.trimStart();
   return (
-    NO_LINE_START.test(head) ||
-    STARTS_WITH_DASH.test(head) ||
-    NO_LINE_END.test(before) ||
+    cannotStartLine(head) ||
+    cannotEndLine(before) ||
     (ENDS_WITH_NUMBER.test(before) && !STARTS_WITH_SPACE.test(after))
   );
 }

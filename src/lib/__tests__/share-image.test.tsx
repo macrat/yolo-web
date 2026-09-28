@@ -6,7 +6,12 @@ import sharp from "sharp";
 import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { CATEGORY_LABELS, getAllBlogPosts } from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
-import { parenDepthAfter, splitIntoPhrases } from "@/lib/phrase-breaks";
+import {
+  cannotEndLine,
+  cannotStartLine,
+  parenDepthAfter,
+  splitIntoPhrases,
+} from "@/lib/phrase-breaks";
 import {
   lineBreakUnits,
   renderShareImage,
@@ -353,26 +358,59 @@ interface Rendered {
   png: Png;
   layout: ShareImageLayout;
   lines: PlacedLine[];
-  milliseconds: number;
+}
+
+/** 描いた中身の CPU の時間を測る回数。ほかのプロセスとの取り合いと GC の揺れを、いちばん短い値で外す。 */
+const TIMING_RUNS = 3;
+
+async function cpuMillisecondsToDraw(
+  content: ShareImageContent,
+): Promise<number> {
+  const times: number[] = [];
+  for (let run = 0; run < TIMING_RUNS; run++) {
+    const start = process.cpuUsage();
+    const { response } = await renderShareImage(content);
+    await response.arrayBuffer();
+    const { user, system } = process.cpuUsage(start);
+    times.push((user + system) / 1000);
+  }
+  return Math.min(...times);
 }
 
 async function render(content: ShareImageContent): Promise<Rendered> {
-  const start = performance.now();
   const { response, layout } = await renderShareImage(content);
   const png = await decode(response);
-  const milliseconds = performance.now() - start;
-  return { png, layout, lines: placeLines(layout), milliseconds };
+  return { png, layout, lines: placeLines(layout) };
 }
 
 const rendered: Record<string, Rendered> = {};
+/** 試しの入力ごとの、1枚を PNG に書き出すまでの CPU の時間（数回描いたうちのいちばん短い値）。 */
+const cpuMilliseconds: Record<string, number> = {};
+
+/**
+ * 描く時間を測る前に描く1枚。書体を取る時間と、4つの書体と、補助情報・数字の結果・名前・読み・副題・色見本のどの段も
+ * 初めて通す時間を、測る入力に背負わせない。
+ */
+const WARM_UP: ShareImageContent = {
+  aux: "イロドリ #212の結果",
+  numeric: ["10問中", "8問正解"],
+  name: "纁 Plex",
+  reading: "toki #eea9a9",
+  subtitle: "テキストとBase64の相互変換 (UTF-8 対応)",
+  swatch: "#eea9a9",
+};
 
 beforeAll(async () => {
-  // 1枚目は書体を取る時間を含むので、描く時間を測る前に1度描いておく。
-  await renderShareImage({ name: "yolos.net" });
+  await (await renderShareImage(WARM_UP)).response.arrayBuffer();
+  // 名前を Zen Antique で組む道も通す（上の名前は Zen Antique に無い字を含み、BIZ UDGothic で組む）。
+  await (
+    await renderShareImage({ name: "漢字マスター" })
+  ).response.arrayBuffer();
   for (const [key, content] of Object.entries(INPUTS)) {
     rendered[key] = await render(content);
+    cpuMilliseconds[key] = await cpuMillisecondsToDraw(content);
   }
-}, 120_000);
+}, 180_000);
 
 const cases = () => Object.entries(INPUTS).map(([key]) => key);
 
@@ -484,9 +522,12 @@ describe("中身", () => {
     }
   });
 
-  test.each(cases())("%s: 描き終えるまでが1秒を超えない", (key) => {
-    expect(rendered[key].milliseconds).toBeLessThan(1000);
-  });
+  test.each(cases())(
+    "%s: 描き終えるまでが CPU の時間で1秒を超えない",
+    (key) => {
+      expect(cpuMilliseconds[key]).toBeLessThan(1000);
+    },
+  );
 });
 
 describe("名前", () => {
@@ -652,6 +693,66 @@ describe("名前", () => {
     }
     // 全角のダッシュ2字ぶんの幅。隙間があると1字ぶんずつの2本に分かれる。
     expect(longestRun).toBeGreaterThan(line.block.size * 1.8);
+  });
+});
+
+describe("字で割るときの禁則", () => {
+  const lineTextsOf = (block: Block) =>
+    block.lines.map((line) => line.runs.map((run) => run.text).join(""));
+
+  /** 補助情報の1行に「カ」が何字入るか。 */
+  async function katakanaPerAuxLine(): Promise<number> {
+    const { layout } = await renderShareImage({
+      aux: "カ".repeat(200),
+      name: "x",
+    });
+    return lineTextsOf(layout.aux!)[0].length;
+  }
+
+  test.each(["？", "、", "」", "ー"])(
+    "補助情報の1行を「カ」で満たした直後の「%s」を、次の行の頭に置かない",
+    async (tail) => {
+      const perLine = await katakanaPerAuxLine();
+      const { layout } = await renderShareImage({
+        aux: "カ".repeat(perLine) + tail + "です",
+        name: "x",
+      });
+      const lines = lineTextsOf(layout.aux!);
+      expect(lines.length).toBeGreaterThan(1);
+      expect(lines.join("")).toBe("カ".repeat(perLine) + tail + "です");
+      for (const line of lines) {
+        expect(cannotStartLine(line), line).toBe(false);
+        expect(cannotEndLine(line), line).toBe(false);
+      }
+    },
+  );
+
+  test("名前の中で字で割られる欧文の語の後ろの「!?」を、行の頭に置かない", async () => {
+    // いちばん下の段で1行に入る「x」の数を数え、3行ちょうどを「x」で満たした直後に「!?」を置く。
+    const probe = await renderShareImage({ name: "x".repeat(400) });
+    const probeName = probe.layout.column.find((b) => b.kind === "name")!;
+    expect(probeName.size).toBe(NAME_SIZES[NAME_SIZES.length - 1]);
+    const perLine = lineTextsOf(probeName)[0].length;
+    const name = "x".repeat(perLine * 3) + "!?";
+    const { layout } = await renderShareImage({ name });
+    const block = layout.column.find((b) => b.kind === "name")!;
+    const lines = lineTextsOf(block);
+    expect(lines.join("")).toBe(name);
+    for (const line of lines) {
+      expect(cannotStartLine(line), line).toBe(false);
+    }
+  });
+
+  test("開き括弧で行を終えない", async () => {
+    const perLine = await katakanaPerAuxLine();
+    const aux = "カ".repeat(perLine - 1) + "「カ」です";
+    const { layout } = await renderShareImage({ aux, name: "x" });
+    const lines = lineTextsOf(layout.aux!);
+    expect(lines.join("")).toBe(aux);
+    for (const line of lines) {
+      expect(cannotEndLine(line), line).toBe(false);
+      expect(cannotStartLine(line), line).toBe(false);
+    }
   });
 });
 

@@ -2,7 +2,10 @@ import { loadDefaultJapaneseParser } from "budoux";
 import { describe, expect, test } from "vitest";
 import {
   boundaryScores,
+  cannotEndLine,
+  cannotStartLine,
   followsPhraseRules,
+  isClosingBracket,
   parenDepthAfter,
   splitIntoPhrases,
 } from "@/lib/phrase-breaks";
@@ -366,5 +369,42 @@ describe("parenDepthAfter", () => {
 
   test("鉤括弧は数えない", () => {
     expect(parenDepthAfter(0, "「でも")).toBe(0);
+  });
+});
+
+describe("行の頭と終わりの禁則", () => {
+  test.each([
+    "？です",
+    "、と",
+    "」と",
+    "ーと",
+    "ゃく",
+    "々と",
+    "：と",
+    "—と",
+    "--と",
+    ")と",
+  ])("「%s」は行の頭に置けない", (text) => {
+    expect(cannotStartLine(text)).toBe(true);
+  });
+
+  test.each(["カです", "Gitと", "-と", "（と"])(
+    "「%s」は行の頭に置ける",
+    (text) => {
+      expect(cannotStartLine(text)).toBe(false);
+    },
+  );
+
+  test.each(["語「", "語（", "語("])("「%s」で行を終えられない", (text) => {
+    expect(cannotEndLine(text)).toBe(true);
+  });
+
+  test.each(["語」", "語。", "語"])("「%s」で行を終えられる", (text) => {
+    expect(cannotEndLine(text)).toBe(false);
+  });
+
+  test("直後で折れる閉じ括弧は、鉤括弧と丸括弧の閉じ", () => {
+    expect(["」", "』", "）", ")"].every(isClosingBracket)).toBe(true);
+    expect(["「", "（", "。", "]"].some(isClosingBracket)).toBe(false);
   });
 });

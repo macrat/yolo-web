@@ -23,7 +23,13 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 import { parse, type Font } from "opentype.js";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
-import { parenDepthAfter, splitIntoPhrases } from "@/lib/phrase-breaks";
+import {
+  cannotEndLine,
+  cannotStartLine,
+  isClosingBracket,
+  parenDepthAfter,
+  splitIntoPhrases,
+} from "@/lib/phrase-breaks";
 import { canSetInZenAntique } from "@/lib/zen-antique-charset";
 import { INK, INK_2, PAPER, RULE, RULE_2 } from "@/lib/token-hex";
 import * as frame from "@/lib/share-image-frame";
@@ -297,17 +303,9 @@ function moveLeadingSpaces(phrases: readonly string[]): string[] {
   return moved.filter((phrase) => phrase !== "");
 }
 
-/** 直後で折れる閉じ括弧（ブラウザは見出しの文節の中でも、ここで折る）。 */
-const CLOSING_BRACKET = /[」』）)]/u;
 /**
- * 前で折らない字。ダッシュ（「—」「──」「--」。画面の見出しはダッシュの前の空白を折れない空白にする）と、行の頭に
- * 置かない約物。
- */
-const NO_BREAK_BEFORE = /^(?:[—―─]|--|[、。，．,.！？!?」』）)…‥・ー])/u;
-
-/**
- * 文節を、画面の見出しが文節の中でも折る所で分ける。空白の後ろ（ダッシュの前を除く）と、閉じ括弧の直後。
- * 丸括弧の一続きの中では折らない（§4）。depth は、文節の前までに閉じていない丸括弧の数。
+ * 文節を、画面の見出しが文節の中でも折る所で分ける。空白の後ろと、閉じ括弧の直後。丸括弧の一続きの中と、行の頭に
+ * 置かない字（ダッシュを含む。画面の見出しはダッシュの前の空白を折れない空白にする）の前では折らない（§4）。depth は、文節の前までに閉じていない丸括弧の数。
  */
 function splitAtInnerBreaks(phrase: string, depth: number): string[] {
   const pieces: string[] = [];
@@ -320,12 +318,13 @@ function splitAtInnerBreaks(phrase: string, depth: number): string[] {
     const rest = chars.slice(index + 1).join("");
     // 空白は前の単位の終わりに付けるので、空白の前では割らない。
     const breaksAfter =
-      (/\s/u.test(char) || CLOSING_BRACKET.test(char)) && !/^\s/u.test(rest);
+      (/\s/u.test(char) || isClosingBracket(char)) && !/^\s/u.test(rest);
     if (
       breaksAfter &&
       parenDepth === 0 &&
       rest !== "" &&
-      !NO_BREAK_BEFORE.test(rest)
+      !cannotStartLine(rest) &&
+      !cannotEndLine(current.trimEnd())
     ) {
       pieces.push(current);
       current = "";
@@ -349,8 +348,36 @@ export function lineBreakUnits(text: string): string[] {
 }
 
 /**
+ * 切れ端を、行の頭に置かない字で始まるものは前の切れ端に、行の終わりに置かない字で終わる切れ端には次の切れ端を
+ * 付けてまとめる。字の所で割るときも、行の頭と終わりの禁則を破らない（§4）。付けると1行に収まらないときは、前の
+ * 切れ端の最後の字を次の切れ端に送る（ブラウザが行の終わりの字を次の行へ送るのと同じ）。
+ */
+function joinForbiddenEdges(
+  pieces: readonly string[],
+  fits: (text: string) => boolean,
+): string[] {
+  const joined: string[] = [];
+  for (const piece of pieces) {
+    const last = joined.at(-1);
+    if (
+      last === undefined ||
+      !(cannotStartLine(piece) || cannotEndLine(last))
+    ) {
+      joined.push(piece);
+    } else if (fits(last + piece)) {
+      joined[joined.length - 1] = last + piece;
+    } else {
+      const lastChars = graphemes(last);
+      joined[joined.length - 1] = lastChars.slice(0, -1).join("");
+      joined.push(lastChars[lastChars.length - 1] + piece);
+    }
+  }
+  return joined.filter((piece) => piece !== "");
+}
+
+/**
  * 行に詰める単位。1行に収まる単位はそのまま、収まらない単位は字の範囲のまとまりに、それでも収まらないまとまりは字に
- * 分ける。
+ * 分ける。分けた切れ端は、行の頭と終わりの禁則を破らないようにまとめ直す。
  */
 function breakUnits(
   units: readonly string[],
@@ -362,8 +389,11 @@ function breakUnits(
     measure(text.replace(TRAILING_SPACES, ""), style, fonts) <= maxWidth;
   return units.flatMap((unit) => {
     if (fits(unit)) return [unit];
-    return toRuns(unit, style.jaFamily).flatMap(({ text }) =>
-      fits(text) ? [text] : graphemes(text),
+    return joinForbiddenEdges(
+      toRuns(unit, style.jaFamily).flatMap(({ text }) =>
+        fits(text) ? [text] : graphemes(text),
+      ),
+      fits,
     );
   });
 }
