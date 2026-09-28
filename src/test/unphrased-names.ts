@@ -824,20 +824,26 @@ function attribute(
 }
 
 /**
- * 名前の属性のどれよりも後ろで広げた props。広げた props は前の属性を上書きしうるので、その位置の値になりうる。
- * 名前の属性が無ければ、どこかで広げた props。
+ * 見る位置を決める属性のどれか1つでも、その後ろで広げた props（いちばん後ろのもの）。広げた props は前に書いた
+ * 属性を上書きしうるので、その位置の値になりうる。書いていない属性は、どこで広げても広げた props から来うる
+ * ので、広げたものがあれば返す。`CopyButton` の面のように1つの位置を複数の属性で決めるときも、どの属性が
+ * 広げた props から来ても見落とさない。
  */
 function spreadOverAttributes(
   element: ts.JsxOpeningLikeElement,
   names: readonly string[],
 ): ts.JsxSpreadAttribute | undefined {
   const properties = element.attributes.properties;
-  const lastNamed = properties.findLastIndex(
-    (property) =>
-      ts.isJsxAttribute(property) && names.includes(property.name.getText()),
+  const earliestLastWritten = Math.min(
+    ...names.map((name) =>
+      properties.findLastIndex(
+        (property) =>
+          ts.isJsxAttribute(property) && property.name.getText() === name,
+      ),
+    ),
   );
   const lastSpread = properties.findLastIndex(ts.isJsxSpreadAttribute);
-  return lastSpread > lastNamed
+  return lastSpread > earliestLastWritten
     ? (properties[lastSpread] as ts.JsxSpreadAttribute)
     : undefined;
 }

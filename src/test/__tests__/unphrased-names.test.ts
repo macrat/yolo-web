@@ -345,6 +345,25 @@ describe("値で渡すもの", () => {
     ]);
   });
 
+  test("CopyButton の面は、3つの属性のどれか1つでもその後ろで広げていれば出す", () => {
+    expect(
+      valueFindings(`
+        export function Sample({ P, Q, R }) {
+          return (
+            <>
+              <CopyButton text={t} {...P} target="メールの全文" />
+              <CopyButton text={t} showTarget {...Q} target="メールの全文" />
+              <CopyButton text={t} {...R} showTarget targetPhrases={["メールの", "全文"]} target="メールの全文" />
+            </>
+          );
+        }
+      `).map(({ position, source }) => [position, source]),
+    ).toEqual([
+      ["`CopyButton` の `target`", "{...P}"],
+      ["`CopyButton` の `target`", "{...Q}"],
+    ]);
+  });
+
   test("選択肢と組のオブジェクトは、名前の欄より後ろで広げていれば値で渡すものに出す", () => {
     expect(
       valueFindings(`
