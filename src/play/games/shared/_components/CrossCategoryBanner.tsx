@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./CrossCategoryBanner.module.css";
 
 interface CrossCategoryBannerProps {
@@ -10,21 +11,23 @@ interface CrossCategoryBannerProps {
 }
 
 /**
- * ゲームを解き終えた結果の下で、ゲームでない遊び（運勢・診断・クイズ）を並べる。行は名前と種別を持つ。
+ * ゲームを解き終えた結果に続く小見出しの区画で、ゲームでない遊び（運勢・診断・クイズ）を並べる。行は名前と種別を持つ。
  * 並べるものが無いときは何も描かない。
  */
 export function CrossCategoryBanner({ items }: CrossCategoryBannerProps) {
-  const labelId = useId();
+  const headingId = useId();
 
   if (items.length === 0) return null;
 
   return (
-    <div className={styles.crossCategory}>
-      <p id={labelId} className={styles.label}>
-        他のコンテンツも試してみよう
-      </p>
-      {/* 区画は上の罫線で区切るので、一覧もボックスを持たず罫線で区切る。 */}
-      <ItemList labelledBy={labelId} items={items} boxed={false} />
-    </div>
+    <section className={styles.crossCategory} aria-labelledby={headingId}>
+      <PhrasedText
+        as="h2"
+        id={headingId}
+        className={styles.heading}
+        phrases={["他の", "コンテンツも", "試して", "みよう"]}
+      />
+      <ItemList labelledBy={headingId} items={items} />
+    </section>
   );
 }

@@ -1,14 +1,17 @@
-.container {
-  margin: var(--space-16) 0;
-  padding: var(--space-16);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--paper-2);
+/* 結果に続く小見出しの区画。前の内容とは小見出しの上の細い線で分ける（DESIGN.md §5）。 */
+.nextGames {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.heading {
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-heading-sub);
 }
 
 .progress {
-  font-weight: 600;
-  font-size: 0.9375rem;
-  color: var(--ink);
-  margin: 0 0 var(--space-8);
+  font-size: var(--text-small);
+  color: var(--ink-2);
 }

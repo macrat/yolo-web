@@ -8,9 +8,15 @@ const items = [
 ];
 
 describe("CrossCategoryBanner", () => {
-  test("一覧がラベルの名前を持ち、リンクの読み上げの名前が行の名前だけであること", () => {
+  test("小見出しが一覧の名前になり、リンクの読み上げの名前が行の名前だけであること", () => {
     render(<CrossCategoryBanner items={items} />);
 
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "他のコンテンツも試してみよう",
+      }),
+    ).toBeInTheDocument();
     const list = screen.getByRole("list", {
       name: "他のコンテンツも試してみよう",
     });
