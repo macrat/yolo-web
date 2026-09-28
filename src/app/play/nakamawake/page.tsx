@@ -1,5 +1,5 @@
-import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import type { Metadata } from "next";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
@@ -13,6 +13,7 @@ import {
   getTodaysPuzzle,
   formatDateJST,
 } from "@/play/games/nakamawake/_lib/daily";
+import { sayingPhrases } from "@/play/games/nakamawake/_lib/engine";
 import puzzleDataJson from "@/play/games/nakamawake/data/nakamawake-data.json";
 import scheduleJson from "@/play/games/nakamawake/data/nakamawake-schedule.json";
 import { computeCrossCategoryItems } from "@/play/games/shared/_lib/crossCategoryItems";
@@ -38,6 +39,16 @@ export default function NakamawakePage() {
 
   const { puzzle, puzzleNumber } = getTodaysPuzzle(puzzleData, schedule);
 
+  // ことわざのように句を持つ語は、語のマスの中で句の切れ目で折る。
+  const wordPhrases = Object.fromEntries(
+    puzzle.groups
+      .flatMap((group) => group.words)
+      .flatMap((word) => {
+        const phrases = sayingPhrases(splitIntoPhrases(word));
+        return phrases ? [[word, phrases] as const] : [];
+      }),
+  );
+
   // Generate todayStr on the server so the puzzle selection date and
   // localStorage key always match, even near JST midnight boundaries.
   const todayStr = formatDateJST(new Date());
@@ -46,14 +57,6 @@ export default function NakamawakePage() {
   // it consistent with the puzzle selection date.
   // new Date(todayStr) is parsed as UTC 00:00:00; Intl.DateTimeFormat with
   // timeZone "Asia/Tokyo" converts it to JST 09:00:00, yielding the same date.
-  // 文節を持つ語（ことわざなど）は、語のマスの中で文節の切れ目で折る。
-  const wordPhrases = Object.fromEntries(
-    puzzle.groups
-      .flatMap((group) => group.words)
-      .map((word) => [word, splitIntoPhrases(word)] as const)
-      .filter(([, phrases]) => phrases.length > 1),
-  );
-
   const dateDisplayString = new Intl.DateTimeFormat("ja-JP", {
     timeZone: "Asia/Tokyo",
     year: "numeric",

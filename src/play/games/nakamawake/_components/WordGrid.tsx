@@ -12,7 +12,7 @@ interface Props {
    * 記録で当てた組の語を格子から外す値を書く。
    */
   reservedDisplay?: (word: string) => string;
-  /** 文節を持つ語の文節の並び（サーバーで分けたもの）。文節の切れ目で折る。 */
+  /** ことわざのように句を持つ語の句の並び（サーバーで分けたもの）。句の切れ目で折る。 */
   wordPhrases: Record<string, string[]>;
   ref?: Ref<HTMLDivElement>;
 }

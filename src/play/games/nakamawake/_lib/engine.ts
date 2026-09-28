@@ -82,6 +82,23 @@ export function dailyOrder<T>(arr: T[], seed: string): T[] {
   return result;
 }
 
+/** 句の終わりの字。ことわざの句は助詞（「が」「も」「に」「から」「より」など）や「ば」「て」で終わる。 */
+const PHRASE_ENDINGS = /[がもはにをのばてりら]$/;
+
+/**
+ * 語を文節に分けた並び（splitIntoPhrases）が、ことわざのように句を並べた語のものなら、その並びを返す。句を
+ * 並べた語は、漢字を含み、最後のほかのどの句も2字以上で助詞などで終わる。そうでない語（「は｜まぐり」
+ * 「たい｜焼き」のように1つの語を分けたもの）は null。
+ */
+export function sayingPhrases(phrases: string[]): string[] | null {
+  if (phrases.length < 2 || !/\p{Script=Han}/u.test(phrases.join(""))) {
+    return null;
+  }
+  const isPhrase = (phrase: string) =>
+    phrase.length >= 2 && PHRASE_ENDINGS.test(phrase);
+  return phrases.slice(0, -1).every(isPhrase) ? phrases : null;
+}
+
 /**
  * Get all 16 words from a puzzle in a flat array.
  */

@@ -5,8 +5,9 @@ import {
   shuffleArray,
   getAllWords,
   difficultyLabel,
+  dailyOrder,
+  sayingPhrases,
 } from "../engine";
-import { dailyOrder } from "../engine";
 import type { NakamawakePuzzle, NakamawakeGroup } from "../types";
 
 const sampleGroups: [
@@ -270,5 +271,32 @@ describe("dailyOrder", () => {
     expect(dailyOrder(words, "2026-09-28")).toEqual(order);
     expect([...order].sort()).toEqual([...words].sort());
     expect(dailyOrder(words, "2026-09-29")).not.toEqual(order);
+  });
+});
+
+describe("sayingPhrases", () => {
+  test("keeps the phrases of a saying", () => {
+    for (const phrases of [
+      ["風が", "吹けば", "桶屋が", "儲かる"],
+      ["猿も", "木から", "落ちる"],
+      ["花より", "団子"],
+      ["雨降って", "地固まる"],
+    ]) {
+      expect(sayingPhrases(phrases)).toEqual(phrases);
+    }
+  });
+
+  test("does not split a single word", () => {
+    for (const phrases of [
+      ["は", "まぐり"],
+      ["たい", "焼き"],
+      ["ぬか", "漬け"],
+      ["こうの", "とり"],
+      ["七", "並べ"],
+      ["あか", "つき"],
+      ["リュウグウノツカイ"],
+    ]) {
+      expect(sayingPhrases(phrases)).toBeNull();
+    }
   });
 });

@@ -36,6 +36,7 @@ import {
 import { generateShareText } from "@/play/games/nakamawake/_lib/share";
 import { revealControl } from "@/play/games/shared/_lib/revealControl";
 import {
+  releaseSavedLayout,
   resultAreaNames,
   savedLayoutScript,
 } from "@/play/games/shared/_lib/savedLayout";
@@ -53,6 +54,7 @@ import styles from "./GameContainer.module.css";
 
 const MAX_MISTAKES = 4;
 const RESULT_AREA = resultAreaNames("nakamawake");
+const SAVED_LAYOUT_STYLE_ID = "nakamawake-saved-layout";
 
 /** 本体の前のスクリプトが、端末の記録で当てた組ごとに書く値の名前。 */
 const SOLVED_LIST_PROPERTY = "--nakamawake-solved-list";
@@ -64,10 +66,11 @@ const SOLVED_WORD_PREFIX = "--nakamawake-solved-word-";
  * - 途中の回: 当てた組の場所と、残る語だけの格子の場所を取る（当てた組の数で決まる）。サーバーの HTML は
  *   すべての組と語を見えないまま持ち、この値で当てた組を見せる側に、その語を格子から外す側に回す。
  * - 解き終えた回: 前に同じ画面で描いた盤と結果の区画の高さを取っておき、読み込むあいだ語の格子と操作を見せ
- *   ない。取っておいた高さは描いた盤と結果の区画の高さと同じなので、外さない。
+ *   ない。
+ * 取っておいた値は、このページから離れるときに外す。
  */
 const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
-  styleId: "nakamawake-saved-layout",
+  styleId: SAVED_LAYOUT_STYLE_ID,
   historyKeyPrefix: HISTORY_KEY,
   resultArea: RESULT_AREA,
   byRecordItem: [
@@ -107,7 +110,7 @@ interface GameContainerProps {
   dateDisplayString: string;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
   crossCategoryItems: ItemListItem[];
-  /** 文節を持つ語の文節の並び（語 → 文節）。Server Component（page.tsx）で分けて渡す。 */
+  /** ことわざのように句を持つ語の句の並び（語 → 句）。Server Component（page.tsx）で分けて渡す。 */
   wordPhrases: Record<string, string[]>;
 }
 
@@ -229,6 +232,9 @@ export default function GameContainer({
   const latestSolvedRef = useRef<HTMLLIElement>(null);
   const resultRef = useRef<HTMLElement>(null);
   const pendingReveal = useRef<PendingReveal | null>(null);
+
+  // 取っておいた場所の値は、このページから離れるときに外す。
+  useEffect(() => () => releaseSavedLayout(SAVED_LAYOUT_STYLE_ID), []);
 
   // 水和で引き継いだ回には、端末の記録と語の並べ替えを水和が済んでから当てる。
   useEffect(() => {
