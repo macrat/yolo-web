@@ -84,7 +84,7 @@ describe("MobileTocBlock (inline TOC for mobile)", () => {
     expect(container.innerHTML).toBe("");
   });
 
-  // U-1 アフォーダンス: ChevronDown SVG が summary 内に存在すること（DESIGN.md §3）
+  // 開閉のアフォーダンス: ChevronDown SVG が summary 内に存在すること（DESIGN.md §3）
   test("renders ChevronDown SVG inside summary for affordance", () => {
     render(<MobileTocBlock headings={mockHeadings} />);
     const chevron = screen.getByTestId("mobile-toc-chevron");

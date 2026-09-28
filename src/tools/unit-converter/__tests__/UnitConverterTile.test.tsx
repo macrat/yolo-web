@@ -320,7 +320,7 @@ describe("T-10: CSS トークン検証", () => {
   );
   const css = readFileSync(cssPath, "utf-8");
 
-  test("--color-* トークンが存在しない", () => {
+  test("CSS が --color-* トークンを参照しない", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 

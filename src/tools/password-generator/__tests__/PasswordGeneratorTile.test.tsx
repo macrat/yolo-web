@@ -47,7 +47,7 @@ describe("CSS トークン検証", () => {
     return css.replace(/\/\*[\s\S]*?\*\//g, "");
   }
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/var\(--color-/);
   });

@@ -23,9 +23,6 @@
  * ```tsx
  * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <ColorConverterTile variant="full" />
- * <ColorConverterTile variant="hex" />
- * <ColorConverterTile variant="rgb" />
- * <ColorConverterTile variant="hsl" />
  * ```
  *
  * ## アクセシビリティ

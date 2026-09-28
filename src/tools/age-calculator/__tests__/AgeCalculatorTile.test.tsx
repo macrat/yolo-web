@@ -372,7 +372,7 @@ describe("AgeCalculatorTile", () => {
   });
 
   // CSS のトークンと組み方
-  test("CSS does not use deprecated --color-* tokens", () => {
+  test("CSS does not reference --color-* tokens", () => {
     const cssPath = resolve(__dirname, "../AgeCalculatorTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);

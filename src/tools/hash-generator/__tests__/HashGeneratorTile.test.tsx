@@ -354,7 +354,7 @@ describe("HashGeneratorTile", () => {
   // -------------------------------------------------------
   // CSS トークン検証
   // -------------------------------------------------------
-  test("CSS does not use deprecated --color-* tokens", () => {
+  test("CSS does not reference --color-* tokens", () => {
     const cssPath = resolve(__dirname, "../HashGeneratorTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);

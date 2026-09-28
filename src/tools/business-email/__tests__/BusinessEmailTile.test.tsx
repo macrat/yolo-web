@@ -319,7 +319,7 @@ describe("BusinessEmailTile", () => {
       );
       const css = readFileSync(cssPath, "utf-8");
 
-      // 旧トークン --color-* が存在しないこと
+      // --color-* トークンを参照しないこと
       expect(css).not.toMatch(/var\(--color-/);
 
       // --accent 直塗りがないこと

@@ -25,8 +25,6 @@
  * ```tsx
  * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <HtmlEntityTile variant="full" />
- * <HtmlEntityTile variant="encode" />
- * <HtmlEntityTile variant="decode" />
  * ```
  *
  * ## アクセシビリティ

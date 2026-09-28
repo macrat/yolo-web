@@ -25,9 +25,6 @@
  * ```tsx
  * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <LineBreakRemoverTile variant="full" />
- * <LineBreakRemoverTile variant="remove" />
- * <LineBreakRemoverTile variant="replace-space" />
- * <LineBreakRemoverTile variant="smart-pdf" />
  * ```
  *
  * ## アクセシビリティ

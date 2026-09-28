@@ -535,7 +535,7 @@ describe("ImageResizerTile", () => {
   // -------------------------------------------------------
   // CSSトークン検証（新タイルの CSS を対象とする）
   // -------------------------------------------------------
-  it("CSS に --color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);

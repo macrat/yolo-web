@@ -15,7 +15,6 @@
  * - V-11: id インスタンス一意性（同一ページに2つ描画して id 重複なし）
  * - V-12: CSS トークン検証（--color-* 不使用・--accent 直塗り禁止・font-weight:700 禁止）
  * - V-13: navigator.clipboard 不在環境でクラッシュしない
- * - V-14: 変換後に形式変更すると旧結果がクリアされない（ユーザーが再度「変換」ボタンを押すまで）
  */
 import { describe, test, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
@@ -253,7 +252,7 @@ describe("CsvConverterTile", () => {
     );
     const css = readFileSync(cssPath, "utf-8");
 
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
 
     // --accent 直塗りがないこと（フォーカス用途 outline: 2px solid var(--accent) は許可）

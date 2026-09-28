@@ -287,15 +287,15 @@ describe("MarkdownPreviewTile", () => {
 
   // --- CSS トークン検証 ---
 
-  // 旧トークン・禁止パターンが CSS に含まれていないこと
-  test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
+  // --color-* トークン・禁止パターンが CSS に含まれていないこと
+  test("CSS does not reference --color-* tokens, fill with --accent directly, or use font-weight 700", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/markdown-preview/MarkdownPreviewTile.module.css",
     );
     const css = readFileSync(cssPath, "utf-8");
 
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
 
     // background に --accent を直接使っていないこと

@@ -183,7 +183,7 @@ test("metadata title はサイト名そのもの", () => {
   expect(metadata.title).toBe(SITE_NAME);
 });
 
-test("metadata description は店構え（よろず屋・やってみる）で、道具箱中心ではない", () => {
+test("metadata description は店構え（よろず屋・やってみる）で、ツールを集めたサイトという自己定義ではない", () => {
   const description = metadata.description as string;
   expect(description).toMatch(/よろず屋/);
   expect(description).toMatch(/ためして/);

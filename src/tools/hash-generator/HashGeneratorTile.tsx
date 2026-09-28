@@ -38,7 +38,6 @@
  * ```tsx
  * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <HashGeneratorTile variant="full" />
- * <HashGeneratorTile variant="sha256" />
  * ```
  */
 

@@ -59,7 +59,7 @@ describe("gameMetaToPlayContentMeta", () => {
   });
 });
 
-describe("allPlayContents (ゲーム4種のみの旧テスト)", () => {
+describe("allPlayContents (ゲーム)", () => {
   test("contains all expected game slugs", () => {
     const slugs = allPlayContents.map((c) => c.slug);
     for (const slug of EXPECTED_GAME_SLUGS) {
@@ -202,7 +202,7 @@ describe("playContentBySlug", () => {
   });
 });
 
-describe("getPlayContentsByCategory (ゲームのみ旧テスト)", () => {
+describe("getPlayContentsByCategory (ゲーム)", () => {
   test("returns all 4 games for category 'game'", () => {
     const results = getPlayContentsByCategory("game");
     expect(results).toHaveLength(4);
@@ -291,7 +291,7 @@ describe("DAILY_UPDATE_SLUGS (共有定数)", () => {
   });
 });
 
-describe("PLAY_FEATURED_ITEMS (B-209: /playページイチオシセクション)", () => {
+describe("PLAY_FEATURED_ITEMS (/playページイチオシセクション)", () => {
   test("is exported from registry", () => {
     expect(PLAY_FEATURED_ITEMS).toBeDefined();
   });

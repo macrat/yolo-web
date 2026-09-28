@@ -242,15 +242,15 @@ describe("YamlFormatterTile", () => {
     expect(input1.id).not.toBe(input2.id);
   });
 
-  // CSS トークン検証（Tile CSS に旧トークン・直塗り・font-weight:700 がないこと）
-  test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
+  // CSS トークン検証（Tile CSS に --color-* トークン・直塗り・font-weight:700 がないこと）
+  test("CSS does not reference --color-* tokens, fill with --accent directly, or use font-weight 700", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/yaml-formatter/YamlFormatterTile.module.css",
     );
     const css = readFileSync(cssPath, "utf-8");
 
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
 
     // --accent 直塗りがないこと（フォーカス用途 outline: 2px solid var(--accent) は許可）

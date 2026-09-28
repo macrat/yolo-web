@@ -102,7 +102,7 @@ export default function DummyTextTile({
   const charCount = useMemo(() => countGeneratedChars(output), [output]);
 
   // スクリーンリーダーへ通知する統計サマリ（実テキストノード）
-  // 日本語モードでは文字数のみ（文数は pool[0] の2文問題で入力値と一致せず廃止）
+  // 日本語モードでは文字数のみ（文の素材 pool[0] が2文を含み、数えた文数が入力の文数と合わないため文数は出さない）
   // Lorem モードでは「単語数」を表示（英語はスペース区切りで単語数が有意味）
   const statusSummary =
     language === "japanese"
@@ -183,7 +183,7 @@ export default function DummyTextTile({
       </div>
 
       {/* 統計バー（段落数・文字数・単語数）
-          日本語モードでは文字数のみを表示する（文数は廃止: pool[0]の2文問題）。
+          日本語モードでは文字数のみを表示する（文の素材 pool[0] が2文を含み、文数が入力と合わないため）。
           Lorem モードでは単語数を表示（英語はスペース区切りで有意味）。 */}
       <div className={styles.statsBar} aria-hidden="true">
         <span>{paragraphs}段落</span>

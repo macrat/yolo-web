@@ -317,7 +317,7 @@ describe("V-18: ラジオボタンの組に aria-label", () => {
 
 // --- V-19: CSS トークン検証 ---
 describe("V-19: CSS トークン検証", () => {
-  it("KanaConverterTile.module.css に旧トークン --color-* が存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = join(__dirname, "..", "KanaConverterTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);

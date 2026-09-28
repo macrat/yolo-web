@@ -15,6 +15,7 @@
  * - V-11: aria 属性（aria-labelledby / aria-live）
  * - V-12: clipboard 不在時の silent fail
  * - V-13: デフォルト variant = full
+ * - V-14: CSS トークン検証（--color-* 不使用・--accent 直塗り禁止・font-weight:700 禁止）
  */
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -423,7 +424,7 @@ describe("V-13: デフォルト variant", () => {
 describe("V-14: CSS トークン検証", () => {
   const cssPath = join(__dirname, "..", "LineBreakRemoverTile.module.css");
 
-  it("--color-* 旧トークンを使用しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

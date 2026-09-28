@@ -369,7 +369,7 @@ describe("DateCalculatorTile", () => {
   // ----------------------------------------------------------
   // CSS トークン検証（readFileSync パターン）
   // ----------------------------------------------------------
-  test("CSS does not use old --color-* tokens", () => {
+  test("CSS does not reference --color-* tokens", () => {
     const cssPath = resolve(__dirname, "../DateCalculatorTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);

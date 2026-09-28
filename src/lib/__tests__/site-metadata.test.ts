@@ -2,12 +2,8 @@ import { expect, test } from "vitest";
 import { sharedMetadata } from "../site-metadata";
 
 /**
- * cycle-279 C1 で (legacy)/__tests__/metadata.test.ts から移設・改善。
- *
- * 旧テストは `(legacy)/layout.tsx` の re-export 経由で sharedMetadata を検証して
- * いたが、内容は sharedMetadata（本ファイルが唯一の真実の源）そのものなので、
- * layout.tsx を経由せず直接検証する形に改めた（(legacy) 削除に伴う移設の副産物として
- * テストの結合度を下げた）。
+ * サイト共通のメタデータ sharedMetadata（site-metadata.ts が唯一の真実の源）を
+ * layout.tsx を経由せず直接検証する。
  */
 
 test("sharedMetadata includes twitter card configuration", () => {
@@ -16,19 +12,19 @@ test("sharedMetadata includes twitter card configuration", () => {
   );
 });
 
-test("sharedMetadata keywords reflect 診断中心コンセプト (cycle-277 決定(a))", () => {
-  // cycle-277 決定(a): サイト共通 keywords は全ページに継承される自己定義であり、
-  // 道具箱中心から診断中心（自分を知り、楽しむ）へ刷新した。
+test("sharedMetadata keywords reflect 診断中心コンセプト", () => {
+  // サイト共通 keywords は全ページに継承される自己定義であり、
+  // 診断中心（自分を知り、楽しむ）のサイトであることを表す。
   const keywords = sharedMetadata.keywords as string[];
   expect(keywords).toBeDefined();
-  // 新コンセプト（自己発見系）のキーワードが上位に含まれていること
+  // 自己発見系のキーワードが含まれていること
   expect(keywords).toContain("性格診断");
   expect(keywords).toContain("占い");
   // 辞典系（文化コンテンツ）のキーワードも含まれていること
   expect(keywords).toContain("漢字");
   // 実用層のオンライン道具にも少数だけ触れていること
   expect(keywords).toContain("オンラインツール");
-  // 旧自己定義の核（道具箱-as-core）を象徴する語は上位から降ろしたこと
+  // 道具を中心とするサイトと読まれる「道具箱」は含まないこと
   expect(keywords).not.toContain("道具箱");
 });
 

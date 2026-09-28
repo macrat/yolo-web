@@ -419,7 +419,7 @@ describe("複数インスタンス同居時の id 一意性", () => {
 describe("CSS トークン検証", () => {
   const cssPath = path.resolve(__dirname, "../ColorConverterTile.module.css");
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

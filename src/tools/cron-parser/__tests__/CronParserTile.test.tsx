@@ -604,7 +604,6 @@ describe("CronParserTile - JST固定化", () => {
 // =========================================================
 describe("CronParserTile - 見出しレベル", () => {
   // 本体セクション見出しは h1 直下のトップレベルなので h2 が正。
-  // かつて h3 で描画され h1→h3 とレベルを飛ばしていた回帰を防ぐ。
   it("解析モードの「Cron式を入力」見出しが level 2（h2）である", async () => {
     await act(async () => {
       render(<CronParserTile variant="parser" />);
@@ -651,7 +650,7 @@ describe("CronParserTile - 見出しレベル", () => {
 // CSS トークン検証
 // =========================================================
 describe("CronParserTile - CSS トークン検証", () => {
-  it("CSSファイルに --color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/cron-parser/CronParserTile.module.css",

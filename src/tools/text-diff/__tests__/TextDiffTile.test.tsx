@@ -410,7 +410,7 @@ describe("差分結果見出しのレベル", () => {
 });
 
 // ===========================================================
-// reviewer 指摘: 「+」「−」記号を差分本文に付与（meta.ts との整合）
+// 「+」「−」記号を差分本文に付与（meta.ts の説明と一致させる）
 // ===========================================================
 describe("+/− 記号が差分本文に付与されている", () => {
   it("追加部分に「+」記号が表示される（line モード）", () => {
@@ -502,7 +502,7 @@ describe("CSSトークン検証（TextDiffTile.module.css）", () => {
     "src/tools/text-diff/TextDiffTile.module.css",
   );
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

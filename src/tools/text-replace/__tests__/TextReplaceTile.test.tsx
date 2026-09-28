@@ -350,7 +350,7 @@ describe("V-9: アクセシビリティ", () => {
 
 // --- V-10: CSS トークン検証 ---
 describe("V-10: CSS トークン検証", () => {
-  it("CSS ファイルに --color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = resolve(__dirname, "../TextReplaceTile.module.css");
     let css = "";
     try {

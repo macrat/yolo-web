@@ -145,8 +145,8 @@ test("RecommendedContent returns null when no recommendations", () => {
 test("RecommendedContent renders category labels", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
-  // 新デザイン体系ではカテゴリラベルを静かなタグとして表示する
-  // （data-category 属性によるカテゴリ別配色は廃止。色は機能のみ・DESIGN.md §2.4）。
+  // カテゴリラベルは静かなタグとして表示し、カテゴリ別には色を分けない
+  // （色は機能のみ・DESIGN.md §2.4）。
   expect(screen.getByText("運勢")).toBeInTheDocument();
   expect(screen.getByText("診断")).toBeInTheDocument();
   expect(screen.getByText("パズル")).toBeInTheDocument();

@@ -25,9 +25,6 @@
  * ```tsx
  * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <DateCalculatorTile variant="full" />
- * <DateCalculatorTile variant="diff" />
- * <DateCalculatorTile variant="add" />
- * <DateCalculatorTile variant="wareki" />
  * ```
  *
  * ## アクセシビリティ

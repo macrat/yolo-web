@@ -12,6 +12,7 @@
  * - V-8: id インスタンス一意性（複数インスタンス同居）
  * - V-9: CSS トークン検証（--color-* / font-weight: 700 禁止）
  * - V-10: エラー表示（日本語化）
+ * - V-11: variant 未指定のとき full として描画される
  */
 
 import { describe, it, test, expect, vi, beforeEach, afterEach } from "vitest";
@@ -238,7 +239,7 @@ describe("V-9: CSS トークン検証", () => {
       "src/tools/sql-formatter/SqlFormatterTile.module.css",
     );
     const css = readFileSync(cssPath, "utf-8");
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
     // background/color に --accent が直接使われていないこと
     const accentDirectUse = css.match(

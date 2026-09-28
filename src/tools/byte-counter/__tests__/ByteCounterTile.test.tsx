@@ -17,7 +17,7 @@
  * V-12: コピーボタンなし（byte-counter は知る対象）
  * V-13: id インスタンス一意性（複数インスタンス同居）
  * V-14: デフォルト variant は full と同等
- * V-15: CSS トークン検証（--color-* 旧トークン・font-weight:700 禁止）
+ * V-15: CSS トークン検証（--color-* トークン不使用・font-weight:700 禁止）
  * V-16: variant=compact では バイト分布セクションが非表示
  */
 
@@ -203,7 +203,7 @@ describe("V-16: variant=compact でのバイト分布非表示", () => {
 describe("V-15: ByteCounterTile CSS トークン検証", () => {
   const cssPath = join(__dirname, "..", "ByteCounterTile.module.css");
 
-  it("--color-* 旧トークンを使用しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

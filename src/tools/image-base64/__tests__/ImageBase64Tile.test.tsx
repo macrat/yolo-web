@@ -702,7 +702,7 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   // CSS トークン検証 (readFileSync パターン)
   // -------------------------------------------------------
-  it("CSS: 旧トークン --color-* が存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(
       join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
       "utf-8",

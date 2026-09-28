@@ -14,7 +14,7 @@ export interface DictionaryMeta {
   valueProposition?: string;
   /**
    * FAQ: Q&A形式の配列
-   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
+   * FAQPage JSON-LDのデータソースである。
    * answerはプレーンテキストのみ。
    */
   faq?: Array<{

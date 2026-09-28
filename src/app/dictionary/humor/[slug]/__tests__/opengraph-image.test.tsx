@@ -4,9 +4,9 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 let createOgpImageResponseCalls: Array<{ title: string; subtitle?: string }> =
   [];
 
-// 共通の店構えレンダラ @/lib/ogp-image をモックする。cycle-282 でユーモア辞典 OGP は
-// 独自 ImageResponse（旧デザイン）を廃し createOgpImageResponse へ統一したため、
-// この call-site は「正しい title/subtitle を共通レンダラへ渡すか」で検証する。
+// 共通の店構えレンダラ @/lib/ogp-image をモックする。ユーモア辞典 OGP は
+// createOgpImageResponse で描くので、この call-site は
+// 「正しい title/subtitle を共通レンダラへ渡すか」で検証する。
 vi.mock("@/lib/ogp-image", () => ({
   ogpSize: { width: 1200, height: 630 },
   ogpContentType: "image/png",

@@ -7,8 +7,7 @@
  *
  * ツールを registry.ts に追加したが、個別ページの作成を忘れた場合に検出する。
  *
- * 全36ツールが src/app/tools 配下に存在する
- * （cycle-279 C1 で (legacy) 撤去・フェーズ R・C1 で旧 Route Group (new) も平坦化済み）。
+ * 全ツールのページは src/app/tools/<slug>/ に置く。
  */
 import { describe, test, expect } from "vitest";
 import { getAllToolSlugs } from "@/tools/registry";

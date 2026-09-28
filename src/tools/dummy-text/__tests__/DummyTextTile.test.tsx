@@ -229,14 +229,14 @@ describe("DummyTextTile — variant='full'", () => {
   });
 
   // CSS トークン検証（ファイル先頭 import { readFileSync } from "fs" を使用）
-  test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
+  test("CSS does not reference --color-* tokens, fill with --accent directly, or use font-weight 700", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/dummy-text/DummyTextTile.module.css",
     );
     const css = readFileSync(cssPath, "utf-8");
 
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
 
     // --accent 直塗りがないこと（フォーカス用途 outline は許可）

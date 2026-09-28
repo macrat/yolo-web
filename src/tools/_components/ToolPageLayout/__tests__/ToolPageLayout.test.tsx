@@ -363,7 +363,7 @@ describe("ToolPageLayout", () => {
     expect(css).toContain("var(--measure)");
   });
 
-  it("CSS: --color-* トークンを使用しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);

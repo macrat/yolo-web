@@ -353,7 +353,7 @@ describe("V-14: デフォルト variant", () => {
 
 // --- CSS トークン検証 ---
 describe("CSS トークン検証", () => {
-  it("--color-* 旧トークンが CSS に存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/fullwidth-converter/FullwidthConverterTile.module.css",

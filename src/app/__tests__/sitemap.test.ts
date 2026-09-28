@@ -166,10 +166,10 @@ describe("sitemap", () => {
     }
   });
 
-  test("sitemap includes word-sense-personality result pages (un-noindex後)", () => {
+  test("sitemap includes word-sense-personality result pages", () => {
     const entries = sitemap();
     const urls = entries.map((e) => e.url);
-    // cycle-247: word-sense の8結果に detailedContent を付与し index 可能化した。
+    // word-sense の8結果は detailedContent を持つので index 対象になる。
     expect(urls).toContain(
       `${BASE_URL}/play/word-sense-personality/result/elegant-precise`,
     );

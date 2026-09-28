@@ -14,7 +14,7 @@
  * - V-10: コピーボタン disabled / 有効状態
  * - V-11: コピー後テキスト変化
  * - V-12: 変換ロジックの正確性（UI経由）
- * - V-13: CSS トークン検証（旧トークン不使用）
+ * - V-13: CSS トークン検証（--color-* トークン不使用）
  */
 import { readFileSync } from "fs";
 import path from "path";
@@ -282,7 +282,7 @@ describe("V-12: 変換ロジックの正確性", () => {
 describe("V-13: CSS トークン検証", () => {
   const cssPath = path.resolve(__dirname, "../HtmlEntityTile.module.css");
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

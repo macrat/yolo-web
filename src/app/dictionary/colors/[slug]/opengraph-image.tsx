@@ -7,11 +7,9 @@
  * 「色そのものが中身の面」）。記号は色名の先頭字（pickResultSymbol が title 先頭を拾う）、
  * のれん帯の品名に hex コード、下部に色名（よみ）を出す。
  *
- * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。cycle-282/283 の自己貶め
- * 「試」（店の看板印を内容 fuda に流用した誤り）は cycle-306 で撤去した（詳細
- * docs/cycles/cycle-306/decision.md）。サイトの identity 標章（頭字 y）は
- * ogp-image・favicon にあり、内容 fuda の印はこれとは別（内容を表す字）。cycle-282
- * まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
+ * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。店の看板印「試」は
+ * 内容 fuda には使わない。サイトの identity 標章（頭字 y）は ogp-image・favicon にあり、
+ * 内容 fuda の印はこれとは別（内容を表す字）。
  */
 
 import {
@@ -27,7 +25,7 @@ export const contentType = fudaImageContentType;
 
 /**
  * 内容を表す印の一字。伝統色辞典の中身は「色そのもの」なので印は「色」（結果札の既定「診」と
- * 平行の内容印・§4 / cycle-306）。回帰検知のためテストから参照できるよう export する。
+ * 平行の内容印・§4）。テストから参照できるよう export する。
  */
 export const CONTENT_SEAL_CHAR = "色";
 

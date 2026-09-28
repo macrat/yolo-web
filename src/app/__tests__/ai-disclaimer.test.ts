@@ -3,12 +3,8 @@ import * as fs from "fs";
 import * as path from "path";
 
 /**
- * AiDisclaimer was removed in favor of the footer disclaimer text.
- * This test ensures AiDisclaimer is not re-introduced in any source file.
- *
- * cycle-279 C1 で (legacy)/__tests__/section-layouts.test.ts から退避
- * （(legacy) Route Group 一式削除に伴う移設。このテスト自体は route group に
- * 依存しない全 src/ 横断のリグレッションガードのため、内容は変更しない）。
+ * The AI-run notice lives in the footer text, not in an AiDisclaimer component.
+ * This test ensures no source file under src/ uses AiDisclaimer.
  */
 describe("AiDisclaimer is not used anywhere", () => {
   // src/ directory: src/app/__tests__ から 2段上に上がる

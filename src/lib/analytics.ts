@@ -21,7 +21,7 @@ type GaContentType = "game" | "quiz" | "diagnosis" | "fortune";
  *
  * Arm-independent surfaces (games/fortune/dictionary) omit `surface` for now,
  * so the main KPI is not polluted with a partially-populated dimension
- * (cycle-280 design §4/NICE: closed union, surface optional).
+ * (closed union, surface optional).
  */
 export type ShareSurface = "fuda" | "invite" | "text";
 
@@ -168,7 +168,7 @@ export function trackContentEnd(
  * Send a share event for social sharing actions.
  *
  * `item_id` is preserved for continuity with existing dashboards, and the
- * same value is dual-written to `content_id` (cycle-280 B-551 fix) so
+ * same value is dual-written to `content_id` so
  * `share` can be joined with `level`/`save` on a single `content_id` key
  * without breaking historical `item_id`-keyed data.
  *
@@ -206,9 +206,9 @@ export function trackShare(
 
 /**
  * Send a save event when a visitor takes home a generated result image
- * (e.g. the character-personality 札). New in cycle-280; there is no
- * historical data, so `content_id` is the sole content key (no `item_id`
- * dual-write needed) and it joins directly with `level`/`share`.
+ * (e.g. the character-personality 札). The save event has no `item_id`-keyed
+ * history, so `content_id` is the sole content key (no `item_id` dual-write
+ * needed) and it joins directly with `level`/`share`.
  *
  * Pass `surface` to tag where the save fired (currently "fuda"); omit it
  * on surfaces without a defined surface dimension. Pass `ab` only when the
@@ -254,7 +254,7 @@ export function trackContentRating(ab?: AbEventContext): void {
   });
 }
 
-// ── Tile interaction tracking (cycle-234) ────────────────────────────────────
+// ── Tile interaction tracking ────────────────────────────────────────────────
 //
 // Identity convention shared by every event that identifies a tile:
 // - item_id is always the tool slug WITHOUT the variant suffix, so it can be
@@ -263,15 +263,11 @@ export function trackContentRating(ab?: AbEventContext): void {
 //   parameter is omitted entirely (never sent as undefined/null).
 // Privacy: these events carry only item_id, variant and surface. Tile input/
 // output content is never sent.
-//
-// The toolbox dashboard (/toolbox) and its add/remove/reset/preset events were
-// removed in the phase-R teardown (cycle-279). The only surviving surface that
-// uses a tile is the tool's own detail page.
 
 /**
- * Where a tile interaction happened. Only the tool's detail page remains after
- * the toolbox dashboard was removed (cycle-279); the field is kept so the GA
- * event schema and any historical `toolbox` values remain interpretable.
+ * Where a tile interaction happened. The tool's detail page is the only surface
+ * that renders a tile; the field keeps the GA event schema stable, and older
+ * events may carry `toolbox` (a dashboard page the site no longer has).
  */
 export type TileSurface = "detail";
 

@@ -91,12 +91,7 @@ async function flushWorker() {
   await vi.runAllTimersAsync();
 }
 
-// RegexTesterTile を静的 import（実装ファイルが存在しない場合はコンパイル段階で失敗する）
 import RegexTesterTile from "../RegexTesterTile";
-
-// =========================================================
-// T-1: Panel ルート
-// =========================================================
 
 /** 置換のアコーディオンの開閉の行。 */
 function getReplaceSummary(): HTMLElement {
@@ -115,7 +110,10 @@ async function openReplace(): Promise<void> {
   });
 }
 
-describe("T-1: Panel ルート", () => {
+// =========================================================
+// Panel ルート
+// =========================================================
+describe("Panel ルート", () => {
   it("タイルのルート要素が <section>（Panel デフォルト）で描画される", () => {
     const { container } = render(<RegexTesterTile variant="full" />);
     // Panel の デフォルト as="section"
@@ -131,9 +129,9 @@ describe("T-1: Panel ルート", () => {
 });
 
 // =========================================================
-// T-2: variant=full の基本レンダリング
+// variant=full の基本レンダリング
 // =========================================================
-describe("T-2: variant=full 基本レンダリング", () => {
+describe("variant=full 基本レンダリング", () => {
   it("正規表現パターン入力欄が存在する", () => {
     render(<RegexTesterTile variant="full" />);
     expect(
@@ -161,9 +159,9 @@ describe("T-2: variant=full 基本レンダリング", () => {
 });
 
 // =========================================================
-// T-3: 入力 → マッチ結果更新
+// 入力 → マッチ結果更新
 // =========================================================
-describe("T-3: 入力→マッチ結果更新", () => {
+describe("入力→マッチ結果更新", () => {
   it("パターン・テスト文字列を入力するとマッチ件数が更新される", async () => {
     render(<RegexTesterTile variant="full" />);
     const patternInput = screen.getByRole("textbox", {
@@ -205,9 +203,9 @@ describe("T-3: 入力→マッチ結果更新", () => {
 });
 
 // =========================================================
-// T-4: エラー表示（無効な正規表現）
+// エラー表示（無効な正規表現）
 // =========================================================
-describe("T-4: エラー表示", () => {
+describe("エラー表示", () => {
   it("無効な正規表現でエラーが表示される（日本語）", async () => {
     render(<RegexTesterTile variant="full" />);
     const patternInput = screen.getByRole("textbox", {
@@ -231,9 +229,9 @@ describe("T-4: エラー表示", () => {
 });
 
 // =========================================================
-// T-5: ARIA 要件
+// ARIA 要件
 // =========================================================
-describe("T-5: ARIA", () => {
+describe("ARIA", () => {
   it("マッチ件数サマリ欄に role=status と aria-live=polite が付与されている", () => {
     render(<RegexTesterTile variant="full" />);
     const statusEl = screen.getByRole("status");
@@ -263,9 +261,9 @@ describe("T-5: ARIA", () => {
 });
 
 // =========================================================
-// T-6: フラグ操作
+// フラグ操作
 // =========================================================
-describe("T-6: フラグ操作", () => {
+describe("フラグ操作", () => {
   it("g フラグチェックボックスが存在しデフォルトでオンになっている", () => {
     render(<RegexTesterTile variant="full" />);
     const gCheckbox = screen.getByRole("checkbox", { name: /g/ });
@@ -309,9 +307,9 @@ describe("T-6: フラグ操作", () => {
 });
 
 // =========================================================
-// T-7: 置換機能
+// 置換機能
 // =========================================================
-describe("T-7: 置換機能", () => {
+describe("置換機能", () => {
   it("「置換」の開閉の行が存在する", () => {
     render(<RegexTesterTile variant="full" />);
     expect(getReplaceSummary()).toBeInTheDocument();
@@ -347,9 +345,9 @@ describe("T-7: 置換機能", () => {
 });
 
 // =========================================================
-// T-8: サンプル投入機能
+// サンプル投入機能
 // =========================================================
-describe("T-8: サンプル投入機能", () => {
+describe("サンプル投入機能", () => {
   it("サンプル選択セレクトが存在する", () => {
     render(<RegexTesterTile variant="full" />);
     const select = screen.getByRole("combobox", { name: /サンプル/ });
@@ -395,9 +393,9 @@ describe("T-8: サンプル投入機能", () => {
 });
 
 // =========================================================
-// T-9: 複数インスタンス同居
+// 複数インスタンス同居
 // =========================================================
-describe("T-9: 複数インスタンス同居", () => {
+describe("複数インスタンス同居", () => {
   it("2つのインスタンスを描画して DOM id が重複しない", () => {
     const { container } = render(
       <div>
@@ -437,9 +435,9 @@ describe("T-9: 複数インスタンス同居", () => {
 });
 
 // =========================================================
-// T-10: 置換結果の aria-labelledby 紐付け
+// 置換結果の aria-labelledby 紐付け
 // =========================================================
-describe("T-10: 置換結果 aria-labelledby", () => {
+describe("置換結果 aria-labelledby", () => {
   it("置換結果ラベルに id が付与され <pre> が aria-labelledby で紐付いている", async () => {
     render(<RegexTesterTile variant="full" />);
     await openReplace();
@@ -468,12 +466,12 @@ describe("T-10: 置換結果 aria-labelledby", () => {
 });
 
 // =========================================================
-// T-11: CSS トークン検証
+// CSS トークン検証
 // =========================================================
-describe("T-11: CSS トークン検証", () => {
+describe("CSS トークン検証", () => {
   const cssPath = resolve(__dirname, "../RegexTesterTile.module.css");
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
@@ -529,9 +527,9 @@ describe("T-11: CSS トークン検証", () => {
 });
 
 // =========================================================
-// T-13: マッチ一覧見出しの見出しレベル（a11y 回帰防止）
+// マッチ一覧見出しの見出しレベル
 // =========================================================
-describe("T-13: マッチ一覧見出しの見出しレベル", () => {
+describe("マッチ一覧見出しの見出しレベル", () => {
   // 本体セクション見出しは h1 の直下なので h2 である。
   // ツール本体セクション見出し「マッチ結果」が h2 であることを保証し、
   // h2 を飛ばして h3 になる見出し階層崩れの再発を防ぐ。
@@ -560,9 +558,9 @@ describe("T-13: マッチ一覧見出しの見出しレベル", () => {
 });
 
 // =========================================================
-// T-12: Worker クリーンアップ確認（terminate が呼ばれる）
+// Worker クリーンアップ確認（terminate が呼ばれる）
 // =========================================================
-describe("T-12: Worker ライフサイクル", () => {
+describe("Worker ライフサイクル", () => {
   it("アンマウント後に Worker.terminate が呼ばれる", async () => {
     const { unmount } = render(<RegexTesterTile variant="full" />);
     const patternInput = screen.getByRole("textbox", {

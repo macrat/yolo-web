@@ -433,7 +433,7 @@ describe("CSSトークン検証", () => {
     "src/tools/email-validator/EmailValidatorTile.module.css",
   );
 
-  it("--color-* トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

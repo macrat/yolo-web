@@ -649,7 +649,7 @@ describe("CSS のトークン（UnixTimestampTile.module.css）", () => {
     "src/tools/unix-timestamp/UnixTimestampTile.module.css",
   );
 
-  test("--color-* のトークンを使わないこと", () => {
+  test("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     const matches = css.match(/var\(--color-[^)]+\)/g) ?? [];
     expect(matches).toHaveLength(0);
