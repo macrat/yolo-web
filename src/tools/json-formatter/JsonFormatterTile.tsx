@@ -37,6 +37,8 @@ const RESULT_ANNOUNCEMENTS: Record<JsonResult["kind"], string> = {
 
 const EMPTY_INPUT_ERROR = "JSONを入力してください。";
 const INVALID_JSON_ERROR = "JSONの形式が正しくありません。";
+const TOO_DEEP_ERROR =
+  "JSONの形式は正しいものの、入れ子が深すぎてこのブラウザでは整形できません。";
 
 /**
  * 数と、それに続く単位の字をつなぎ、あいだで折らない（「3行目」を「3行／目」に、「3文字目付近」を「3文字目付／近」に
@@ -47,12 +49,13 @@ function keepTogether(text: string): string {
 }
 
 /**
- * 合わない JSON に、どこが誤りかを添えた日本語の文を返す。位置は道具が自分で読んで求めるので、エンジンの誤りの
- * 文（英語で、ブラウザと誤りの種類によって位置を言わない）に頼らず、どのブラウザでも同じ行と字を言う。
+ * 操作できなかった JSON に、なぜかを言う日本語の文を返す。誤りの位置は道具が自分で読んで求めるので、エンジンの
+ * 誤りの文（英語で、ブラウザと誤りの種類によって位置を言わない）に頼らず、どのブラウザでも同じ行と字を言う。
+ * 読んで誤りが無いのに操作できなかったときは、形式は正しく、ブラウザが扱える入れ子の深さを超えている。
  */
-function invalidJsonMessage(input: string): string {
+function failureMessage(input: string): string {
   const position = findJsonErrorPosition(input);
-  if (!position) return INVALID_JSON_ERROR;
+  if (!position) return TOO_DEEP_ERROR;
   const line = keepTogether(`${position.line}行目`);
   const column = keepTogether(`${position.column}文字目付近`);
   return `${INVALID_JSON_ERROR}（${line}、${column}）`;
@@ -101,7 +104,7 @@ export default function JsonFormatterTile() {
     try {
       showResult(operate(input));
     } catch {
-      showError(invalidJsonMessage(input));
+      showError(failureMessage(input));
     }
   }
 

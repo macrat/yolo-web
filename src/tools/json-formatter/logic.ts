@@ -128,71 +128,63 @@ function findMismatchIndex(input: string): number | null {
     }
   };
 
-  const readArray = (): void => {
-    i++;
+  // 開いている入れ子を配列のスタックで持ち、どれほど深い入れ子でも呼び出しのスタックを使わずに読む。
+  const openContainers: ("array" | "object")[] = [];
+
+  /** オブジェクトの鍵と「:」を読む。 */
+  const readKey = (): void => {
     skipWhitespace();
-    if (input[i] === "]") {
-      i++;
-      return;
-    }
-    for (;;) {
-      readValue();
-      skipWhitespace();
-      if (input[i] === ",") {
-        i++;
-        continue;
-      }
-      if (input[i] === "]") {
-        i++;
-        return;
-      }
-      fail();
-    }
+    if (input[i] !== '"') fail();
+    readString();
+    skipWhitespace();
+    if (input[i] !== ":") fail();
+    i++;
   };
 
-  const readObject = (): void => {
-    i++;
-    skipWhitespace();
-    if (input[i] === "}") {
-      i++;
-      return;
-    }
-    for (;;) {
-      skipWhitespace();
-      if (input[i] !== '"') fail();
-      readString();
-      skipWhitespace();
-      if (input[i] !== ":") fail();
-      i++;
-      readValue();
-      skipWhitespace();
-      if (input[i] === ",") {
-        i++;
-        continue;
-      }
-      if (input[i] === "}") {
-        i++;
-        return;
-      }
-      fail();
-    }
-  };
-
-  function readValue(): void {
+  /** 値を1つ読み始める。入れ子を開いたときは、その中の最初の値の手前まで進めて true を返す。 */
+  const startValue = (): boolean => {
     skipWhitespace();
     const char = input[i];
-    if (char === "{") return readObject();
-    if (char === "[") return readArray();
-    if (char === '"') return readString();
-    if (char === "-" || isDigit(char)) return readNumber();
-    const literal = LITERALS.find((word) => word[0] === char);
-    if (literal) return readLiteral(literal);
-    fail();
-  }
+    if (char === "[" || char === "{") {
+      i++;
+      skipWhitespace();
+      const closing = char === "[" ? "]" : "}";
+      if (input[i] === closing) {
+        i++;
+        return false;
+      }
+      openContainers.push(char === "[" ? "array" : "object");
+      if (char === "{") readKey();
+      return true;
+    }
+    if (char === '"') readString();
+    else if (char === "-" || isDigit(char)) readNumber();
+    else {
+      const literal = LITERALS.find((word) => word[0] === char);
+      if (!literal) fail();
+      readLiteral(literal!);
+    }
+    return false;
+  };
 
   try {
-    readValue();
-    skipWhitespace();
+    let needValue = true;
+    for (;;) {
+      if (needValue && startValue()) continue;
+      needValue = false;
+      skipWhitespace();
+      const container = openContainers.at(-1);
+      if (!container) break;
+      if (input[i] === ",") {
+        i++;
+        if (container === "object") readKey();
+        needValue = true;
+        continue;
+      }
+      if (input[i] !== (container === "array" ? "]" : "}")) fail();
+      i++;
+      openContainers.pop();
+    }
     if (i < input.length) fail();
     return null;
   } catch (e) {

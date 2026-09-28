@@ -10,6 +10,11 @@
   list-style: none;
 }
 
+/* 端末の記録を当てる前の場所取り。見えないまま、記録で当てた組の場所だけを取る。 */
+.reserved {
+  visibility: hidden;
+}
+
 .group {
   border: var(--rule-w) solid var(--rule);
   background: var(--paper-2);

@@ -215,7 +215,7 @@ function breakCellAtPhrases(html: string): string {
   let boundary = 0;
   let consumed = 0;
   let index = 0;
-  const phrases = splitIntoPhrases(plain, { breakInParens: true });
+  const phrases = splitIntoPhrases(plain, { tableCell: true });
   for (const phrase of phrases.slice(0, -1)) {
     boundary += phrase.length;
     while (index < chars.length && consumed < boundary) {

@@ -30,10 +30,16 @@
   width: calc(100% + 2 * var(--word-grid-gap) + 4 * var(--rule-w));
 }
 
+/* 行はどれも、いちばん高いマスの高さにそろえる。格子の高さは残る語の組み合わせだけで決まり、並べ替えでは
+ * 変わらない（開き直したとき、盤の前で取っておく高さと同じになる）。並べ替えでマスは動くので、ブラウザが画面の
+ * 送りを合わせる目印（スクロールアンカー）にしない。目印にすると、開き直したときに並べ替えで動いた語を追って
+ * 画面が送られる。 */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
   gap: var(--word-grid-gap);
+  overflow-anchor: none;
   width: calc(100% + var(--word-grid-gap) + 4 * var(--rule-w));
 }
 

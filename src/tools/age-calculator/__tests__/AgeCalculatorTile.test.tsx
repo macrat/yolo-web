@@ -5,7 +5,10 @@ import { resolve } from "path";
 import { revealResult } from "@/lib/reveal";
 import AgeCalculatorTile from "../AgeCalculatorTile";
 
-vi.mock("@/lib/reveal", () => ({ revealResult: vi.fn() }));
+vi.mock("@/lib/reveal", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/reveal")>()),
+  revealResult: vi.fn(),
+}));
 
 function calculate(birth: string, target: string) {
   fireEvent.change(screen.getByLabelText(/生年月日/), {

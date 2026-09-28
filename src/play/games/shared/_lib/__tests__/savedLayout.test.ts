@@ -163,6 +163,37 @@ describe("reserveSavedLayout", () => {
     expect(reserve(NAKAMA)).toBe(":root{--game-input-visibility:hidden}");
   });
 
+  test("writes a value for each item of a list in the record", () => {
+    const options: SavedLayoutOptions = {
+      ...NAKAMA,
+      byRecordItem: [
+        { field: "solvedGroups", propertyPrefix: "--group-", value: "block" },
+        { field: "solvedGroups", propertyPrefix: "--word-", value: "none" },
+        { field: "missing", propertyPrefix: "--missing-", value: "none" },
+      ],
+    };
+    saveTodayWithoutDifficulty("playing");
+    expect(reserve(options)).toBe(":root{--group-2:block;--word-2:none}");
+  });
+
+  test("writes a value by the number of items of a list in the record", () => {
+    const options: SavedLayoutOptions = {
+      ...NAKAMA,
+      byRecordLength: [
+        { field: "solvedGroups", property: "--list", values: ["none", "flex"] },
+      ],
+    };
+    saveTodayWithoutDifficulty("playing");
+    expect(reserve(options)).toBe(":root{--list:flex}");
+    localStorage.setItem(
+      "game-history",
+      JSON.stringify({
+        [today]: { solvedGroups: [], mistakes: 1, status: "playing" },
+      }),
+    );
+    expect(reserve(options)).toBe(":root{--list:none}");
+  });
+
   test("the script runs the same function on its own, without outer names", () => {
     saveToday("intermediate", 3, "playing");
     new Function(savedLayoutScript(YOJI))();

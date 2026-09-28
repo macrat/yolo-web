@@ -143,6 +143,27 @@ describe("revealFocusedFrame", () => {
     });
   });
 
+  test("Tab を押してから 1,000ms を超えて着いたときは、その Tab の位置を使わず、いまの位置を着く前の位置とする", () => {
+    const tabTime = pressTabThenBrowserScrolls(200, 500) - 5;
+    // リングの上の辺はいま 100px。古い Tab の位置（200）から数えると 400px で、どちらでも見えているが、
+    // 戻す先はいまの位置なので送らない。
+    revealFocusedFrame(box(100, 3000), false, tabTime + 1001);
+    paint();
+    expect(window.scrollTo).not.toHaveBeenCalled();
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test("1,000ms 以内の Tab の位置には戻す", () => {
+    const tabTime = pressTabThenBrowserScrolls(200, 500) - 5;
+    revealFocusedFrame(box(100, 3000), false, tabTime + 999);
+    paint();
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      left: 0,
+      top: 200,
+      behavior: "instant",
+    });
+  });
+
   test("Tab を押さずに着いたときは、いまの位置を着く前の位置とする", () => {
     vi.stubGlobal("scrollY", 500);
     revealFocusedFrame(box(100, 3000), false, 1e9);

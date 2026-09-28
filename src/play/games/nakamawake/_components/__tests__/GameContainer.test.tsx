@@ -315,6 +315,16 @@ describe("サーバーの HTML を水和で引き継ぐとき", () => {
     expect(container.querySelector("script")?.textContent).toContain(
       "nakamawake-saved-layout",
     );
+    // 当てた組の場所と残る語の格子を、スクリプトの書く値で取っておけるよう、すべての組と語を見えないまま持つ。
+    const reservedGroups = [...container.querySelectorAll("ul li")].filter(
+      (li) => li.getAttribute("style")?.includes("--nakamawake-solved-group-"),
+    );
+    expect(reservedGroups).toHaveLength(4);
+    expect(
+      container
+        .querySelector('button[aria-label="いぬ"]')
+        ?.getAttribute("style"),
+    ).toBe("display:var(--nakamawake-solved-word-2, flex)");
     document.body.append(container);
     render(ui, { container, hydrate: true });
     expect(screen.getByRole("list", { name: "当てた組" })).toHaveTextContent(

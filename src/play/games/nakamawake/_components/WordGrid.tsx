@@ -7,6 +7,11 @@ interface Props {
   words: string[];
   selectedWords: string[];
   onWordToggle: (word: string) => void;
+  /**
+   * 端末の記録を当てる前の場所取り。渡すと、語のマスの見せ方（display）をこの値にする。本体の前のスクリプトが、
+   * 記録で当てた組の語を格子から外す値を書く。
+   */
+  reservedDisplay?: (word: string) => string;
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -19,6 +24,7 @@ export default function WordGrid({
   words,
   selectedWords,
   onWordToggle,
+  reservedDisplay,
   ref,
 }: Props) {
   return (
@@ -36,6 +42,7 @@ export default function WordGrid({
                 key={word}
                 className={styles.wordButton}
                 data-thick-frame
+                style={reservedDisplay && { display: reservedDisplay(word) }}
                 onClick={() => onWordToggle(word)}
                 aria-pressed={selectedWords.includes(word)}
                 aria-label={word}

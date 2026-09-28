@@ -91,4 +91,15 @@ describe("findJsonErrorPosition", () => {
     expect(isValidJson(input)).toBe(true);
     expect(findJsonErrorPosition(input)).toBeNull();
   });
+
+  test("呼び出しのスタックを使わずに読み、深い入れ子でも落ちない", () => {
+    const depth = 100_000;
+    const unclosed = "[".repeat(depth) + "]".repeat(depth - 1);
+    expect(findJsonErrorPosition(unclosed)).toEqual({
+      line: 1,
+      column: depth * 2,
+    });
+    const deepObject = '{"a":'.repeat(depth) + "1" + "}".repeat(depth);
+    expect(findJsonErrorPosition(deepObject)).toBeNull();
+  });
 });

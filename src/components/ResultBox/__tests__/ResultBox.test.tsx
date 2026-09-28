@@ -6,9 +6,9 @@ import { renderToString } from "react-dom/server";
 import ResultBox from "@/components/ResultBox";
 import { revealFocusedFrame } from "@/lib/reveal";
 
-vi.mock("@/lib/reveal", () => ({
+vi.mock("@/lib/reveal", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/reveal")>()),
   revealFocusedFrame: vi.fn(),
-  trackScrollBeforeTab: () => () => {},
 }));
 
 const phrases = ["先頭を", "走りながら", "「全員来てるか！」と"];
@@ -284,6 +284,42 @@ describe("ResultBox", () => {
       const { onFocus } = arrive({ keyboard: true, from: "copy" });
       expect(revealFocusedFrame).not.toHaveBeenCalled();
       expect(onFocus).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Tab を押した時点の位置を覚える受け手", () => {
+    function keydownListeners(spy: { mock: { calls: unknown[][] } }): number {
+      return spy.mock.calls.filter((call) => call[0] === "keydown").length;
+    }
+
+    test("横に送る区画を持つボックスだけが置き、外すときに外す", () => {
+      const add = vi.spyOn(window, "addEventListener");
+      const remove = vi.spyOn(window, "removeEventListener");
+      const { unmount } = render(
+        <ResultBox caption="整形したJSON" kind="code">
+          <pre>code</pre>
+        </ResultBox>,
+      );
+      expect(keydownListeners(add)).toBe(1);
+      expect(keydownListeners(remove)).toBe(0);
+      unmount();
+      expect(keydownListeners(remove)).toBe(1);
+      const added = add.mock.calls.find(([type]) => type === "keydown");
+      const removed = remove.mock.calls.find(([type]) => type === "keydown");
+      expect(removed?.[1]).toBe(added?.[1]);
+      add.mockRestore();
+      remove.mockRestore();
+    });
+
+    test("区画を持たないボックスは置かない", () => {
+      const add = vi.spyOn(window, "addEventListener");
+      render(
+        <ResultBox caption="文字数の結果">
+          <p>1,234文字</p>
+        </ResultBox>,
+      );
+      expect(keydownListeners(add)).toBe(0);
+      add.mockRestore();
     });
   });
 });

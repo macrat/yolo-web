@@ -6,8 +6,9 @@
  * 同時に正しく保たれる（手動同期による再乖離を構造的に防ぐ）。
  *
  * カウント基準:
- *   - 文字数 / 空白なし文字数: Unicode コードポイント単位（Array.from）
- *     絵文字（サロゲートペア）を1文字として数える。
+ *   - 文字数 / 空白と改行を除いた文字数: 来訪者が1文字と見るまとまり（書記素）の数。
+ *     Intl.Segmenter（granularity: "grapheme"）で分け、ZWJ でつないだ絵文字・国旗・肌の色つきの絵文字・
+ *     濁点を分けて書いた「が」も1文字。Intl.Segmenter が無い環境ではコードポイントで数える。
  *   - 単語数: Intl.Segmenter（ja, granularity: "word"）を優先。
  *     Intl.Segmenter が利用不可な環境ではスペース分割でフォールバック。
  *     同一環境では両ツールが必ず同一コードパスを通るため結果が一致する。
@@ -15,20 +16,20 @@
  *   - バイト数: TextEncoder による UTF-8 バイト列の長さ。
  */
 
-/**
- * Unicode コードポイント単位で文字数をカウントする。
- * サロゲートペアで表される絵文字も1文字として数える。
- */
+const graphemeSegmenter =
+  typeof Intl !== "undefined" && "Segmenter" in Intl
+    ? new Intl.Segmenter("ja", { granularity: "grapheme" })
+    : null;
+
+/** 文字数（書記素の数）をカウントする。 */
 export function countChars(text: string): number {
-  return Array.from(text).length;
+  if (!graphemeSegmenter) return Array.from(text).length;
+  return Array.from(graphemeSegmenter.segment(text)).length;
 }
 
-/**
- * 空白文字（スペース・タブ・改行等）を除いた文字数をカウントする。
- * コードポイント単位で計算するため、絵文字は1文字として数える。
- */
+/** 空白（全角の空白を含む）・タブ・改行を除いた文字数（書記素の数）をカウントする。 */
 export function countCharsNoSpaces(text: string): number {
-  return Array.from(text.replace(/\s/g, "")).length;
+  return countChars(text.replace(/\s/g, ""));
 }
 
 /**

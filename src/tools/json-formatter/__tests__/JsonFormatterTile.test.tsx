@@ -182,6 +182,32 @@ describe("JsonFormatterTile", () => {
       expect(alertText()).toBe(`JSONの形式が正しくありません。（${position}）`);
     });
 
+    test("深すぎる入れ子の誤りも、落ちずに位置を言い、前の結果を消す", () => {
+      render(<JsonFormatterTile />);
+      enter('{"a":1}');
+      press("整形");
+      const depth = 30_000;
+      enter("[".repeat(depth) + "]".repeat(depth - 1));
+      press("整形");
+      expect(alertText()).toBe(
+        `JSONの形式が正しくありません。（1行目、${depth * 2}文字目付近）`,
+      );
+      expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    });
+
+    test("形式は正しいのにブラウザが深さで扱えないときは、そう言う", () => {
+      vi.spyOn(JSON, "stringify").mockImplementation(() => {
+        throw new RangeError("Maximum call stack size exceeded");
+      });
+      render(<JsonFormatterTile />);
+      enter('{"a": [1, 2]}');
+      press("整形");
+      expect(alertText()).toBe(
+        "JSONの形式は正しいものの、入れ子が深すぎてこのブラウザでは整形できません。",
+      );
+      vi.restoreAllMocks();
+    });
+
     test("同じ誤りのまま押し直すと、エラーの文を入れ直す", () => {
       render(<JsonFormatterTile />);
       enter("{invalid}");

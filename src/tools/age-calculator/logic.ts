@@ -20,12 +20,12 @@ function daysInMonth(year: number, month: number): number {
 }
 
 /**
- * 生まれた日から monthCount か月たった日（応当日）。年齢と月と日は、この日の当日から1つ進む。
+ * 生まれた日から monthCount か月目の区切りの日。この日に月が1つ進み、日数は0に戻る（12か月ごとに年齢が1つ進む）。
  *
  * 年齢計算ニ関スル法律は、年齢を出生の日から数え、民法 143 条を準用する。民法 143 条2項では、期間は応当日の
- * 前日が終わった時に満ち、最後の月に応当日が無いときは、その月の末日が終わった時に満ちる。この道具は満ちた
- * 翌日を区切りの初日として数えるので、応当日のある月はその日、無い月は翌月の1日を区切りにする（1月31日
- * 生まれの1か月目は3月1日、2月29日生まれの平年の誕生日は3月1日）。
+ * 前日が終わった時に満ち、最後の月に応当日が無いときは、その月の末日が終わった時に満ちる。区切りの日は満ちた
+ * 翌日なので、応当日のある月はその日、無い月は翌月の1日になる（1月31日生まれの1か月目の区切りの日は3月1日、
+ * 2月29日生まれの平年の誕生日の区切りの日は3月1日）。
  */
 function monthAnniversary(birth: Date, monthCount: number): Date {
   const year =
@@ -162,28 +162,13 @@ const CONSTELLATIONS: ConstellationRange[] = [
 ];
 
 export function getConstellation(month: number, day: number): string {
+  // 星座はどれも2つの月にまたがるので、始まりの月の始まりの日以後か、終わりの月の終わりの日以前で決まる。
   for (const c of CONSTELLATIONS) {
-    if (c.startMonth === c.endMonth) {
-      // Same month range
-      if (month === c.startMonth && day >= c.startDay && day <= c.endDay) {
-        return c.name;
-      }
-    } else if (c.startMonth > c.endMonth) {
-      // Wraps around year (Capricorn: Dec-Jan)
-      if (
-        (month === c.startMonth && day >= c.startDay) ||
-        (month === c.endMonth && day <= c.endDay)
-      ) {
-        return c.name;
-      }
-    } else {
-      // Normal range
-      if (
-        (month === c.startMonth && day >= c.startDay) ||
-        (month === c.endMonth && day <= c.endDay)
-      ) {
-        return c.name;
-      }
+    if (
+      (month === c.startMonth && day >= c.startDay) ||
+      (month === c.endMonth && day <= c.endDay)
+    ) {
+      return c.name;
     }
   }
   return "";

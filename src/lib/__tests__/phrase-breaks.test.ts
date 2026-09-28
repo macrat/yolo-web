@@ -55,20 +55,6 @@ function parenDepth(text: string): number {
   return depth;
 }
 
-const HAN_OR_KATAKANA = /^[\p{Script=Han}\p{Script=Katakana}]/u;
-
-function isScriptChange(before: string, after: string): boolean {
-  const script = (ch: string) =>
-    /[\p{Script=Katakana}ー]/u.test(ch)
-      ? "katakana"
-      : /\p{Script=Han}/u.test(ch)
-        ? "han"
-        : /\p{Script=Hiragana}/u.test(ch)
-          ? "hiragana"
-          : "other";
-  return script(before) !== script(after) && script(before) !== "other";
-}
-
 describe("splitIntoPhrases", () => {
   test("character-personality のタイプ名は24件ある", () => {
     expect(characterPersonalityTypeNames).toHaveLength(24);
@@ -85,10 +71,12 @@ describe("splitIntoPhrases", () => {
     }
   });
 
-  test("数字とそれに続く字が別の文節に分かれない", () => {
+  test("数とそれに続く字が別の文節に分かれない", () => {
     for (const text of headings) {
       for (const [before, after] of boundaries(splitIntoPhrases(text))) {
-        expect(`${before}|${after}`, text).not.toMatch(/[0-9０-９]\|\S/u);
+        expect(`${before}|${after}`, text).not.toMatch(
+          /(?:^|[^A-Za-z0-9０-９])[0-9０-９]+\|\S/u,
+        );
       }
     }
   });
@@ -132,7 +120,7 @@ describe("splitIntoPhrases", () => {
     }
   });
 
-  test("BudouX の境目を外すのは、禁則・開き括弧・数字・丸括弧の中・最後の1字の所だけ", () => {
+  test("BudouX の境目を外すのは、禁則・開き括弧・数・丸括弧の中・最後の1字・中点で並べた平仮名の語の中・閉じ括弧の後ろの短い続きの所だけ", () => {
     for (const text of headings) {
       const kept = new Set(boundaryOffsets(splitIntoPhrases(text)));
       for (const offset of boundaryOffsets(budoux.parse(text))) {
@@ -142,30 +130,13 @@ describe("splitIntoPhrases", () => {
         const allowed =
           NO_LINE_START.test(after) ||
           NO_LINE_END.test(before) ||
-          /[0-9０-９]$/u.test(before) ||
+          /(?:^|[^A-Za-z0-9０-９])[0-9０-９]+$/u.test(before) ||
           parenDepth(before) > 0 ||
-          [...after].length === 1;
+          [...after].length === 1 ||
+          /\p{Script=Hiragana}$/u.test(before) ||
+          /[」』）)][^」』）)]{1,2}$/u.test(before);
         expect(allowed, `${text} の ${before}|${after}`).toBe(true);
       }
-    }
-  });
-
-  test("BudouX に無い境目は、最初の文節の最初の空白より前の、字の種類が変わって漢字か片仮名が始まる所だけ", () => {
-    for (const text of headings) {
-      const budouxOffsets = new Set(boundaryOffsets(budoux.parse(text)));
-      const offsets = boundaryOffsets(splitIntoPhrases(text));
-      offsets.forEach((offset, index) => {
-        if (budouxOffsets.has(offset)) return;
-        const before = text.slice(0, offset);
-        const after = text.slice(offset);
-        expect(
-          offsets.slice(0, index).every((o) => !budouxOffsets.has(o)),
-          `${text} の ${before}|${after}`,
-        ).toBe(true);
-        expect(before, text).not.toMatch(/\s/u);
-        expect(after, text).toMatch(HAN_OR_KATAKANA);
-        expect(isScriptChange(before.at(-1) ?? "", after[0]), text).toBe(true);
-      });
     }
   });
 
@@ -193,10 +164,54 @@ describe("splitIntoPhrases", () => {
     ]);
   });
 
-  test("最初の文節の空白より後ろには語の切れ目の折り所を足さない", () => {
-    expect(splitIntoPhrases("Unix タイムスタンプ変換ツール")).toEqual([
-      "Unix タイムスタンプ変換ツール",
+  test("中点で並べた語の後ろで区切り、中点で並べた平仮名の語の中では区切らない", () => {
+    expect(splitIntoPhrases("Base64エンコード・デコード")).toEqual([
+      "Base64",
+      "エンコード・",
+      "デコード",
     ]);
+    expect(splitIntoPhrases("ひらがな・カタカナ変換")).toEqual([
+      "ひらがな・",
+      "カタカナ変換",
+    ]);
+  });
+
+  test("英字を含む語が漢字か片仮名の語に移る所で区切り、数の後ろでは区切らない", () => {
+    expect(splitIntoPhrases("画像Base64変換")).toEqual(["画像Base64", "変換"]);
+    expect(splitIntoPhrases("伝統色250色")).toEqual(["伝統色250色"]);
+  });
+
+  test("閉じ括弧の後ろの2字までの続きは、次の文節の頭に移す", () => {
+    const phrases = splitIntoPhrases("サイト名を「yolos.net」に変更しました");
+    expect(phrases).toContain("「yolos.net」");
+    expect(phrases[phrases.indexOf("「yolos.net」") + 1]).toMatch(/^に/u);
+  });
+
+  test("見出しの狭い行に収まらない幅の文節は、1行を作れる切れ端になる語の切れ目と、禁則を満たす片仮名の字の所で分ける", () => {
+    expect(
+      splitIntoPhrases(
+        "デザイン移行で旧トークンを消してもビルドは教えてくれない",
+      ).slice(-2),
+    ).toEqual(["教えて", "くれない"]);
+    expect(splitIntoPhrases("リリースしました: 漢字力診断")).toEqual([
+      "リリース",
+      "しました: ",
+      "漢字力診断",
+    ]);
+    expect(splitIntoPhrases("他のジャンルも試してみよう")).toEqual([
+      "他の",
+      "ジャンルも",
+      "試してみよう",
+    ]);
+    expect(splitIntoPhrases("伝統色カラーパレット")).toEqual([
+      "伝統色",
+      "カラー",
+      "パレット",
+    ]);
+    for (const piece of splitIntoPhrases("Next.jsハイドレーション不整合")) {
+      expect(piece).not.toMatch(NO_LINE_START);
+      expect([...piece].length).toBeGreaterThan(1);
+    }
   });
 
   test("最初の文節の語の切れ目は、前後に2字以上の同じ字の種類が続く所だけ", () => {
@@ -219,8 +234,8 @@ describe("splitIntoPhrases", () => {
     expect(splitIntoPhrases("")).toEqual([]);
   });
 
-  test("丸括弧の中でも折る指定では、括弧の中も文節で分け、括弧の前後の禁則は残す", () => {
-    const table = { breakInParens: true };
+  test("表のセルでは、括弧の中も文節で分け、括弧の前後の禁則は残す", () => {
+    const table = { tableCell: true };
     const pieces = splitIntoPhrases("大（ページ数分のファイル作成）", table);
     expect(pieces.length).toBeGreaterThan(2);
     expect(pieces.join("")).toBe("大（ページ数分のファイル作成）");

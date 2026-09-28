@@ -590,6 +590,13 @@ describe("ResultCard - 結果を共有する区画", () => {
     expect(screen.getAllByTestId("share-buttons")).toHaveLength(1);
   });
 
+  test("「この結果を共有」は文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<ResultCard {...defaultProps} />);
+    expect(
+      screen.getByRole("heading", { name: "この結果を共有" }).innerHTML,
+    ).toBe("この<wbr>結果を<wbr>共有");
+  });
+
   test("札の画像の知らせも、区画の知らせの行1つに出す", () => {
     render(
       <ResultCard

@@ -1,16 +1,24 @@
 /**
- * 見出しを文節で折るための区切り（DESIGN.md §4）。
+ * 見出しと表のセルを文節で折るための区切り（DESIGN.md §4）。
  *
- * 文節は BudouX の日本語のモデルで分け、そのうえで行の頭と終わりに置けない字の所、数字の後ろ、丸括弧の中の
- * 区切りを外す。最初の文節の、最初の空白より前には、語の切れ目の折り所を足す。この部分は必ず行の頭から始まるので、
- * 足した折り所は、この部分が1行に収まらずブラウザが字の所で割るときの代わりにだけ使われる。
+ * 文節は BudouX の日本語のモデルで分け、そのうえで行の頭と終わりに置けない字の所、数の後ろ、丸括弧の中の
+ * 区切りを外す。見出しでは、語の切れ目の折り所をさらに次のように足し引きする。
+ * - 中点で並べた語（「ひらがな・カタカナ」）の後ろと、英字を含む語が漢字か片仮名の語に移る所（「Base64|エンコード」）に
+ *   折り所を足し、中点で並べた平仮名の語の中の折り所を外す。
+ * - 閉じ括弧の後ろに2字までの続きがある文節は、続きを次の文節の頭に移す。閉じ括弧の直後はブラウザが折るので、
+ *   続きだけで行を作らない。
+ * - 最初の文節の、最初の空白より前には、字の種類が変わって語が始まる所の折り所を足す。この部分は行の頭から始まるので、
+ *   この折り所は、この部分が1行に収まらないときの代わりにだけ使われる。
+ * - 見出しの狭い行に収まらない幅の文節には、語の切れ目の折り所を足す。収まらない文節をブラウザが字の所で割ると、
+ *   1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。<wbr> の折り所に優先の順は無いので、
+ *   この折り所は、文節が1行に収まる広い行でも、行の終わりに来れば使われる。
  * BudouX の分け方の表は大きいので、クライアントのバンドルに入れないよう、区切りはサーバーで作る。
  * クライアントの部品から読み込むとビルドが止まる（server-only）。クライアントの部品が描く見出しには、
  * サーバーの page.tsx がここで作った区切りを props で渡す。
  * 区切りを組むのは PhrasedText の部品。
  */
 import "server-only";
-import { loadDefaultJapaneseParser } from "budoux";
+import { jaModel, loadDefaultJapaneseParser } from "budoux";
 
 /** 行の頭に置かない字。閉じ括弧・句読点・感嘆符と疑問符・リーダ・中点類・小書きの仮名・長音符・繰り返し記号。 */
 const NO_LINE_START =
@@ -19,7 +27,8 @@ const NO_LINE_START =
 /** 行の終わりに置かない字。開き括弧。 */
 const NO_LINE_END = /[(\[{（［｛〔〈《「『【〘〖〝‘“«]$/u;
 
-const ENDS_WITH_DIGIT = /[0-9０-９]$/u;
+/** 数で終わる文。英字に続く数字（「Base64」）は語の一部で、数ではない。 */
+const ENDS_WITH_NUMBER = /(?:^|[^A-Za-z0-9０-９])[0-9０-９]+$/u;
 const STARTS_WITH_SPACE = /^\s/u;
 
 /**
@@ -29,17 +38,35 @@ const STARTS_WITH_SPACE = /^\s/u;
 const OPEN_PAREN = /[(（]/u;
 const CLOSE_PAREN = /[)）]/u;
 
+/** 直後でブラウザが折る閉じ括弧（Unicode の改行の規則。`word-break: keep-all` でも折れる）。 */
+const CLOSING_BRACKET = /[」』）)]/u;
+
+const MIDDLE_DOT = "・";
+
+/** 英字・数字と、語の中に入る記号の続き。 */
+const LATIN_WORD_CHAR = /^[A-Za-z0-9./+#-]$/u;
+const LATIN_LETTER = /[A-Za-z]/u;
+
+/**
+ * 見出しの行が既定の文字サイズで収める幅（全角の字の数）のうち、いちばん狭いもの。記事の主見出しを 320px の画面で
+ * 組んだ行に、全角の字が6字余り入る。これより広い文節は、この行に収まらずに文節の中で折れうる。
+ */
+const NARROWEST_HEADING_LINE = 6;
+
+/** 続きだけの行を作らないよう、閉じ括弧の後ろから次の文節へ移す続きの字の数の上限。 */
+const SHORT_TAIL = 2;
+
 let parser: ReturnType<typeof loadDefaultJapaneseParser> | undefined;
 
 /**
- * 文節の境を置けない所か。行の頭と終わりに置けない字の所と、数字とそれに続く字（「3秒後に」「10年」の助数詞）の
+ * 文節の境を置けない所か。行の頭と終わりに置けない字の所と、数とそれに続く字（「3秒後に」「10年」の助数詞）の
  * あいだでは折らない。
  */
 function isUnbreakable(before: string, after: string): boolean {
   return (
     NO_LINE_START.test(after) ||
     NO_LINE_END.test(before) ||
-    (ENDS_WITH_DIGIT.test(before) && !STARTS_WITH_SPACE.test(after))
+    (ENDS_WITH_NUMBER.test(before) && !STARTS_WITH_SPACE.test(after))
   );
 }
 
@@ -54,6 +81,7 @@ function parenDepthAfter(depth: number, text: string): number {
 }
 
 const graphemes = new Intl.Segmenter("ja", { granularity: "grapheme" });
+const words = new Intl.Segmenter("ja", { granularity: "word" });
 
 function toGraphemes(text: string): string[] {
   return Array.from(graphemes.segment(text), ({ segment }) => segment);
@@ -80,6 +108,121 @@ function scriptRunLength(chars: string[], from: number, step: 1 | -1): number {
     length += 1;
   }
   return length;
+}
+
+/** 字の並びを、境目の位置（字の番号）で分ける。 */
+function cut(chars: string[], offsets: Iterable<number>): string[] {
+  const pieces: string[] = [];
+  let start = 0;
+  for (const offset of [...offsets].sort((a, b) => a - b)) {
+    if (offset <= start || offset >= chars.length) continue;
+    pieces.push(chars.slice(start, offset).join(""));
+    start = offset;
+  }
+  pieces.push(chars.slice(start).join(""));
+  return pieces;
+}
+
+/** 境目の位置（字の番号）。 */
+function offsetsOf(pieces: string[]): number[] {
+  const offsets: number[] = [];
+  let offset = 0;
+  for (const piece of pieces.slice(0, -1)) {
+    offset += toGraphemes(piece).length;
+    offsets.push(offset);
+  }
+  return offsets;
+}
+
+/** chars の各位置の前で閉じていない丸括弧の数。 */
+function parenDepths(chars: string[]): number[] {
+  const depths: number[] = [];
+  let depth = 0;
+  for (const ch of chars) {
+    depths.push(depth);
+    depth = parenDepthAfter(depth, ch);
+  }
+  return depths;
+}
+
+/** chars[index] を含む英字・数字の語が英字を含むか。 */
+function isLatinWordAt(chars: string[], index: number): boolean {
+  let start = index;
+  while (start > 0 && LATIN_WORD_CHAR.test(chars[start - 1])) start -= 1;
+  let end = index;
+  while (end < chars.length - 1 && LATIN_WORD_CHAR.test(chars[end + 1]))
+    end += 1;
+  return LATIN_LETTER.test(chars.slice(start, end + 1).join(""));
+}
+
+/** chars[index] を含む平仮名の続きが、中点に接するか（中点で並べた平仮名の語）。 */
+function isListedHiraganaWord(chars: string[], index: number): boolean {
+  let start = index;
+  while (start > 0 && scriptOf(chars[start - 1]) === "hiragana") start -= 1;
+  let end = index;
+  while (end < chars.length - 1 && scriptOf(chars[end + 1]) === "hiragana")
+    end += 1;
+  return chars[start - 1] === MIDDLE_DOT || chars[end + 1] === MIDDLE_DOT;
+}
+
+/**
+ * BudouX の分け方を、見出しの語の切れ目で直す。中点で並べた平仮名の語の中の境目を外し（BudouX は「ひらが|な・
+ * カタカナ」と割る）、中点の後ろと、英字を含む語から漢字か片仮名の語に移る所に境目を足す。丸括弧の中には足さない。
+ */
+function refineAtWords(chunks: string[]): string[] {
+  const chars = toGraphemes(chunks.join(""));
+  const depths = parenDepths(chars);
+  const offsets = new Set(
+    offsetsOf(chunks).filter(
+      (offset) =>
+        !(
+          scriptOf(chars[offset - 1]) === "hiragana" &&
+          scriptOf(chars[offset]) === "hiragana" &&
+          isListedHiraganaWord(chars, offset)
+        ),
+    ),
+  );
+  for (let index = 1; index < chars.length; index += 1) {
+    if (depths[index] > 0) continue;
+    const before = chars[index - 1];
+    const after = chars[index];
+    const afterDot =
+      before === MIDDLE_DOT &&
+      index >= 2 &&
+      !STARTS_WITH_SPACE.test(chars[index - 2]) &&
+      !STARTS_WITH_SPACE.test(after);
+    const latinToJapanese =
+      LATIN_WORD_CHAR.test(before) &&
+      (scriptOf(after) === "han" || scriptOf(after) === "katakana") &&
+      isLatinWordAt(chars, index - 1);
+    if (afterDot || latinToJapanese) offsets.add(index);
+  }
+  return cut(chars, offsets);
+}
+
+/**
+ * 閉じ括弧の後ろに2字までの続きがある文節（「「yolos.net」に」）は、続きを次の文節の頭に移す。閉じ括弧の直後は
+ * ブラウザが折るので、そのままでは続きの字（「に」）だけで行ができうる。
+ */
+function moveTailsAfterClosingBrackets(phrases: string[]): string[] {
+  const moved = [...phrases];
+  for (let index = 0; index < moved.length - 1; index += 1) {
+    const chars = toGraphemes(moved[index]);
+    const bracket = chars.findLastIndex((ch) => CLOSING_BRACKET.test(ch));
+    if (bracket <= 0 || bracket === chars.length - 1) continue;
+    const head = chars.slice(0, bracket + 1).join("");
+    const tail = chars.slice(bracket + 1).join("");
+    if (
+      chars.length - bracket - 1 > SHORT_TAIL ||
+      parenDepthAfter(0, head) > 0 ||
+      isUnbreakable(head, tail)
+    ) {
+      continue;
+    }
+    moved[index] = head;
+    moved[index + 1] = tail + moved[index + 1];
+  }
+  return moved;
 }
 
 /**
@@ -125,31 +268,227 @@ function splitFirstPhraseAtWords(
   return pieces;
 }
 
-interface PhraseOptions {
-  /**
-   * 丸括弧の中でも文節で折る（表のセル。DESIGN.md §4）。表のセルの括弧は読み仮名や数でなく説明を囲み、中にも
-   * 文節がある。開き括弧の直後と閉じ括弧の直前で折らない禁則は残る。
-   */
-  breakInParens?: boolean;
+/** 全角の字を1とした幅。半角の字は 0.5 とする。 */
+function widthOf(chars: string[]): number {
+  return chars.reduce(
+    (width, ch) =>
+      width +
+      ((ch.codePointAt(0) ?? 0) < 0x1100 || /^[\uFF61-\uFF9F]/u.test(ch)
+        ? 0.5
+        : 1),
+    0,
+  );
+}
+
+/** 空白で区切った続きのうち、いちばん広いものの幅。空白ではブラウザが折る。 */
+function widestRunWidth(chars: string[]): number {
+  let widest = 0;
+  let run: string[] = [];
+  for (const ch of [...chars, " "]) {
+    if (STARTS_WITH_SPACE.test(ch)) {
+      widest = Math.max(widest, widthOf(run));
+      run = [];
+    } else {
+      run.push(ch);
+    }
+  }
+  return widest;
 }
 
 /**
- * text を、見出しの行の切れ目にしてよい所で分けた並びを返す。並びをつなぐと text に戻る。
- * 区切りは文節の切れ目と、最初の文節の中の語の切れ目。最後の文節が1字なら前の文節につなぎ、見出しの最後の行を
- * 1字だけにしない。
+ * 行を1つで作ってよい切れ端か。文字（約物を除く）が2字以上で、平仮名だけなら3字以上（「た:」「から」「なら、」
+ * だけの行を作らない）。
+ */
+function canStandAlone(chars: string[]): boolean {
+  const letters = chars.filter((ch) => /^[\p{L}\p{N}]/u.test(ch));
+  if (letters.length < 2) return false;
+  return (
+    letters.length >= 3 || !letters.every((ch) => scriptOf(ch) === "hiragana")
+  );
+}
+
+/** サ変の動詞の頭（「リリース|しました」「表示|されない」）。 */
+const SURU_VERB = /^[しさすせ]/u;
+
+/** 片仮名の語どうしの語の境目を折り所にする、前後の語の字の数の下限（「バリ|データー」のような割り方を除く）。 */
+const MIN_KATAKANA_WORD = 3;
+
+/**
+ * 文節の中の所の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
+ * wordStart は、そこが語の境目なら前後の語の字の数。
+ * 0: 語の境目で、字の種類が変わって漢字か片仮名の語が始まる所（「思考|バイアス」）と、3字以上の片仮名の語どうしの所
+ *    （「オンライン|ツール」）。
+ * 1: 語の境目で、漢字か片仮名の語からサ変の動詞に移る所（「リリース|しました」）。
+ * 2: 平仮名どうしの所（「教えて|くれない」）。語の境目は平仮名の続きを正しく見分けない（「教え|てく|れ|ない」）ので、
+ *    字ごとの所を候補にし、BudouX の度合いで選ぶ。
+ * 3: 片仮名どうしの所。1行に収まらない片仮名の語（「ハイドレーション」）をブラウザが字の所で割ると、行頭の長音符や
+ *    小書きの仮名が出るので、禁則を満たす所で割る。
+ * 漢字どうしの所（「漢字|力」）と、漢字か片仮名の語から助詞や送り仮名に移る所（「ツール|を」）は語を割るので使わない。
+ */
+function wordBreakRank(
+  before: string,
+  after: string,
+  wordStart: { before: number; after: number } | undefined,
+): number | undefined {
+  const left = scriptOf(before);
+  const right = scriptOf(after);
+  if (left === "katakana" && right === "katakana") {
+    return wordStart &&
+      wordStart.before >= MIN_KATAKANA_WORD &&
+      wordStart.after >= MIN_KATAKANA_WORD
+      ? 0
+      : 3;
+  }
+  if (!wordStart)
+    return right === "hiragana" && left === "hiragana" ? 2 : undefined;
+  if (right === "han" || right === "katakana") {
+    return left !== right ? 0 : undefined;
+  }
+  if (right === "hiragana") {
+    if (left === "hiragana") return 2;
+    if ((left === "han" || left === "katakana") && SURU_VERB.test(after))
+      return 1;
+  }
+  return undefined;
+}
+
+let scorer: ((sentence: string) => number[]) | undefined;
+
+/**
+ * BudouX の日本語のモデルが、文の各位置（1 から）を文節の境目とみなす度合い。parse は 0 を超える所だけを境目に
+ * するが、ここでは境目に満たない所どうしを比べるために値そのものを返す。
+ */
+function boundaryScores(sentence: string): number[] {
+  if (!scorer) {
+    const model = new Map(
+      Object.entries(jaModel).map(([name, table]) => [
+        name,
+        new Map(Object.entries(table as Record<string, number>)),
+      ]),
+    );
+    const base =
+      -0.5 *
+      [...model.values()]
+        .flatMap((table) => [...table.values()])
+        .reduce((sum, value) => sum + value, 0);
+    const features: [string, number, number][] = [
+      ["UW1", -3, -2],
+      ["UW2", -2, -1],
+      ["UW3", -1, 0],
+      ["UW4", 0, 1],
+      ["UW5", 1, 2],
+      ["UW6", 2, 3],
+      ["BW1", -2, 0],
+      ["BW2", -1, 1],
+      ["BW3", 0, 2],
+      ["TW1", -3, 0],
+      ["TW2", -2, 1],
+      ["TW3", -1, 2],
+      ["TW4", 0, 3],
+    ];
+    scorer = (text) => {
+      const scores = [0];
+      for (let index = 1; index < text.length; index += 1) {
+        let score = base;
+        for (const [name, from, to] of features) {
+          score +=
+            model.get(name)?.get(text.substring(index + from, index + to)) ?? 0;
+        }
+        scores.push(score);
+      }
+      return scores;
+    };
+  }
+  return scorer(sentence);
+}
+
+/**
+ * 見出しの狭い行（NARROWEST_HEADING_LINE）に収まらない幅の文節を、語の切れ目で収まるまで分ける（「教えて|くれない」
+ * 「リリース|しました:」）。収まらない切れ端ごとに、語の切れ目のうち、禁則を満たし、丸括弧の中でなく、分けた切れ端の
+ * どちらもが1行を作ってよい所（canStandAlone）から、順位（wordBreakRank）、BudouX の度合いの順にいちばん良い所で
+ * 分ける。どの切れ端も、分けられる所が無ければそのまま残す。
+ * 語の境目は Intl.Segmenter で見る。
+ */
+function splitWidePhraseAtWords(phrase: string): string[] {
+  const chars = toGraphemes(phrase);
+  const depths = parenDepths(chars);
+  const unitOffsets: number[] = [];
+  let unit = 0;
+  for (const ch of chars) {
+    unitOffsets.push(unit);
+    unit += ch.length;
+  }
+  const scores = boundaryScores(phrase);
+  const wordStarts = new Map<number, { before: number; after: number }>();
+  let position = 0;
+  let previousLength = 0;
+  for (const { segment } of words.segment(phrase)) {
+    const length = toGraphemes(segment).length;
+    wordStarts.set(position, { before: previousLength, after: length });
+    position += length;
+    previousLength = length;
+  }
+  const candidates: { index: number; rank: number; score: number }[] = [];
+  for (let index = 1; index < chars.length; index += 1) {
+    if (depths[index] > 0) continue;
+    const rank = wordBreakRank(
+      chars[index - 1],
+      chars[index],
+      wordStarts.get(index),
+    );
+    if (rank === undefined) continue;
+    candidates.push({ index, rank, score: scores[unitOffsets[index]] });
+  }
+  const split = (from: number, to: number): number[] => {
+    const piece = chars.slice(from, to);
+    if (widestRunWidth(piece) <= NARROWEST_HEADING_LINE) return [];
+    const best = candidates
+      .filter(
+        ({ index }) =>
+          index > from &&
+          index < to &&
+          canStandAlone(chars.slice(from, index)) &&
+          canStandAlone(chars.slice(index, to)) &&
+          !isUnbreakable(
+            chars.slice(from, index).join(""),
+            chars.slice(index, to).join(""),
+          ),
+      )
+      .sort((a, b) => a.rank - b.rank || b.score - a.score)[0];
+    if (!best) return [];
+    return [...split(from, best.index), best.index, ...split(best.index, to)];
+  };
+  return cut(chars, split(0, chars.length));
+}
+
+interface PhraseOptions {
+  /**
+   * 組む先が表のセルか（DESIGN.md §4）。表のセルは丸括弧の中も文節で折る。表のセルの括弧は読み仮名や数でなく説明を
+   * 囲み、中にも文節がある。開き括弧の直後と閉じ括弧の直前で折らない禁則は残る。列の幅はいちばん長い文節で決まるので、
+   * 見出しのための語の切れ目の折り所は足さない。
+   */
+  tableCell?: boolean;
+}
+
+/**
+ * text を、行の切れ目にしてよい所で分けた並びを返す。並びをつなぐと text に戻る。
+ * 区切りは文節の切れ目と、見出しでは語の切れ目（ファイルの頭の説明）。最後の文節が1字なら前の文節につなぎ、
+ * 最後の行を1字だけにしない。
  */
 export function splitIntoPhrases(
   text: string,
-  { breakInParens = false }: PhraseOptions = {},
+  { tableCell = false }: PhraseOptions = {},
 ): string[] {
+  if (text === "") return [];
   parser ??= loadDefaultJapaneseParser();
-  const phrases: string[] = [];
+  const chunks = parser.parse(text);
+  let phrases: string[] = [];
   let parenDepth = 0;
-  for (const chunk of parser.parse(text)) {
+  for (const chunk of tableCell ? chunks : refineAtWords(chunks)) {
     const previous = phrases.at(-1);
     if (
       previous !== undefined &&
-      ((!breakInParens && parenDepth > 0) || isUnbreakable(previous, chunk))
+      ((!tableCell && parenDepth > 0) || isUnbreakable(previous, chunk))
     ) {
       phrases[phrases.length - 1] = previous + chunk;
     } else {
@@ -157,21 +496,22 @@ export function splitIntoPhrases(
     }
     parenDepth = parenDepthAfter(parenDepth, chunk);
   }
+  if (!tableCell) phrases = moveTailsAfterClosingBrackets(phrases);
   const last = phrases.length > 1 ? phrases[phrases.length - 1] : undefined;
   if (last !== undefined && toGraphemes(last).length === 1) {
     phrases.pop();
     phrases[phrases.length - 1] += last;
   }
-  if (phrases.length === 0) return phrases;
-  return [
-    ...splitFirstPhraseAtWords(phrases[0], breakInParens),
+  phrases = [
+    ...splitFirstPhraseAtWords(phrases[0], tableCell),
     ...phrases.slice(1),
   ];
+  return tableCell ? phrases : phrases.flatMap(splitWidePhraseAtWords);
 }
 
 /**
  * 手で区切った見出しの並び（コードに書いた決まった文。PhrasedText の約束）が、splitIntoPhrases と同じ禁則を
- * 満たすか。行の頭と終わりに置けない字の所・数字とそれに続く字のあいだ・丸括弧の中に区切りが無く、最後の文節が
+ * 満たすか。行の頭と終わりに置けない字の所・数とそれに続く字のあいだ・丸括弧の中に区切りが無く、最後の文節が
  * 1字でないこと。
  */
 export function followsPhraseRules(phrases: readonly string[]): boolean {

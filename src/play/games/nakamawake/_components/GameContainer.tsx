@@ -53,16 +53,49 @@ import styles from "./GameContainer.module.css";
 const MAX_MISTAKES = 4;
 const RESULT_AREA = resultAreaNames("nakamawake");
 
+/** 本体の前のスクリプトが、端末の記録で当てた組ごとに書く値の名前。 */
+const SOLVED_LIST_PROPERTY = "--nakamawake-solved-list";
+const SOLVED_GROUP_PREFIX = "--nakamawake-solved-group-";
+const SOLVED_WORD_PREFIX = "--nakamawake-solved-word-";
+
 /**
- * サーバーの HTML で本体の前に置くスクリプト。端末に記録した今日の回が解き終えた回なら、前に同じ画面で描いた
- * 盤と結果の区画の高さを、本体を描く前に取っておき、読み込むあいだ語の格子と操作を見せない。取っておいた高さは
- * 描いた盤と結果の区画の高さと同じなので、外さない。
+ * サーバーの HTML で本体の前に置くスクリプト。端末に記録した今日の回の盤を、本体を描く前に取っておく。
+ * - 途中の回: 当てた組の場所と、残る語だけの格子の場所を取る（当てた組の数で決まる）。サーバーの HTML は
+ *   すべての組と語を見えないまま持ち、この値で当てた組を見せる側に、その語を格子から外す側に回す。
+ * - 解き終えた回: 前に同じ画面で描いた盤と結果の区画の高さを取っておき、読み込むあいだ語の格子と操作を見せ
+ *   ない。取っておいた高さは描いた盤と結果の区画の高さと同じなので、外さない。
  */
 const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
   styleId: "nakamawake-saved-layout",
   historyKeyPrefix: HISTORY_KEY,
   resultArea: RESULT_AREA,
+  byRecordItem: [
+    {
+      field: "solvedGroups",
+      propertyPrefix: SOLVED_GROUP_PREFIX,
+      value: "block",
+    },
+    {
+      field: "solvedGroups",
+      propertyPrefix: SOLVED_WORD_PREFIX,
+      value: "none",
+    },
+  ],
+  byRecordLength: [
+    {
+      field: "solvedGroups",
+      property: SOLVED_LIST_PROPERTY,
+      values: ["none", "flex"],
+    },
+  ],
 });
+
+/** 端末の記録を当てる前の、当てた組の並びの見せ方。記録で当てた組だけが場所を取る。 */
+const RESERVED_SOLVED_GROUPS = {
+  listDisplay: `var(${SOLVED_LIST_PROPERTY}, none)`,
+  groupDisplay: (group: NakamawakeGroup) =>
+    `var(${SOLVED_GROUP_PREFIX}${group.difficulty}, none)`,
+};
 
 interface GameContainerProps {
   puzzle: NakamawakePuzzle;
@@ -348,6 +381,11 @@ export default function GameContainer({
   }, []);
 
   const isFinished = gameState.status !== "playing";
+  // 端末の記録を当てる前の、語のマスの見せ方。記録で当てた組の語は格子から外れ、残る語だけが場所を取る。
+  const reservedWordDisplay = (word: string) =>
+    `var(${SOLVED_WORD_PREFIX}${
+      puzzle.groups.find((group) => group.words.includes(word))?.difficulty
+    }, flex)`;
   const remaining = MAX_MISTAKES - gameState.mistakes;
 
   return (
@@ -366,10 +404,17 @@ export default function GameContainer({
         >
           <div className={styles.area}>
             <div className={styles.board}>
-              <SolvedGroups
-                groups={gameState.solvedGroups}
-                latestRef={latestSolvedRef}
-              />
+              {isReady ? (
+                <SolvedGroups
+                  groups={gameState.solvedGroups}
+                  latestRef={latestSolvedRef}
+                />
+              ) : (
+                <SolvedGroups
+                  groups={puzzle.groups}
+                  reserved={RESERVED_SOLVED_GROUPS}
+                />
+              )}
               {!isFinished && (
                 <div className={isReady ? undefined : styles.pending}>
                   <WordGrid
@@ -377,6 +422,7 @@ export default function GameContainer({
                     words={gameState.remainingWords}
                     selectedWords={gameState.selectedWords}
                     onWordToggle={handleWordToggle}
+                    reservedDisplay={isReady ? undefined : reservedWordDisplay}
                   />
                 </div>
               )}

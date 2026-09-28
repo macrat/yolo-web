@@ -55,6 +55,16 @@ interface SavedLayoutBaseOptions {
    * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。
    */
   resultArea?: ResultAreaNames;
+  /**
+   * 回の記録の配列（field）の要素ごとに書く値（ナカマワケの当てた組ごとに、盤の組と語の格子の語の見せ方を
+   * 決めるなど）。要素ごとに、名前の頭（propertyPrefix）と要素をつないだ名前の値に value を書く。
+   */
+  byRecordItem?: { field: string; propertyPrefix: string; value: string }[];
+  /**
+   * 回の記録の配列（field）の要素の数で決まる値。values[要素の数] を書く（要素の数が values より多いときは
+   * 最後の値）。
+   */
+  byRecordLength?: { field: string; property: string; values: string[] }[];
 }
 
 /**
@@ -87,7 +97,9 @@ interface ResultHeightRecord {
  * この関数は外の名前を参照せず、値の名前と記録のキーは options で受け取る。
  */
 export function reserveSavedLayout(options: SavedLayoutOptions): void {
-  let entry: { feedbacks?: unknown[]; status?: string } | undefined;
+  let entry:
+    | ({ feedbacks?: unknown[]; status?: string } & Record<string, unknown>)
+    | undefined;
   let today: string;
   let difficulty = "";
   let resultHeight: Partial<ResultHeightRecord> | null = null;
@@ -134,6 +146,19 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
     }
   } else {
     finished = entry?.status === "won" || entry?.status === "lost";
+  }
+  for (const { field, propertyPrefix, value } of options.byRecordItem ?? []) {
+    const items = entry?.[field];
+    if (!Array.isArray(items)) continue;
+    for (const item of items) values.push(`${propertyPrefix}${item}:${value}`);
+  }
+  for (const { field, property, values: byLength } of options.byRecordLength ??
+    []) {
+    const items = entry?.[field];
+    if (!Array.isArray(items)) continue;
+    values.push(
+      `${property}:${byLength[Math.min(items.length, byLength.length - 1)]}`,
+    );
   }
   if (finished && options.resultArea) {
     values.push(`${options.resultArea.inputVisibilityProperty}:hidden`);

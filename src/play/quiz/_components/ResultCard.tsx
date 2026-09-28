@@ -27,6 +27,7 @@ import {
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import FittedNumber from "@/components/FittedNumber";
 import ResultBox, { type ResultHeading } from "@/components/ResultBox";
@@ -495,9 +496,12 @@ export default function ResultCard({
         </div>
       </ResultBox>
       <section className={styles.share} aria-labelledby={shareHeadingId}>
-        <h3 id={shareHeadingId} className={styles.shareHeading}>
-          この結果を共有
-        </h3>
+        <PhrasedText
+          as="h3"
+          id={shareHeadingId}
+          className={styles.shareHeading}
+          phrases={["この", "結果を", "共有"]}
+        />
         {detailedContent?.variant === "character-personality" && (
           <FudaActions
             resultId={result.id}
