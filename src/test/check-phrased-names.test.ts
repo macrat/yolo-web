@@ -7,6 +7,9 @@
  * - PHRASED_NAMES_PATHS: 数えるファイルかディレクトリ（空白かカンマで区切る。既定は `src`）。
  *   vitest の位置引数は試験のファイルの絞り込みに使われるので、パスは環境変数で渡す。
  * - PHRASED_NAMES_REPORT_ONLY=1: 字で渡すものがあっても失敗させず、出すだけにする。
+ *
+ * 渡したパスのどれかから数える `.tsx` が1つも出なければ（無いパス・`.ts` のファイル・`.tsx` の無いディレクトリ）、
+ * 数え違いなので失敗させる。出すだけの指定のときも、そのパスを出力の頭で知らせる。
  */
 import { describe, expect, test } from "vitest";
 import { findUnphrasedNames, formatFinding } from "./unphrased-names";
@@ -21,6 +24,10 @@ describe.runIf(enabled)("check:phrased-names", () => {
     const report = findUnphrasedNames(targets);
     const lines = [
       `数えたパス: ${targets.join(" ")}`,
+      `数えた .tsx: ${report.fileCount}`,
+      ...report.targetsWithoutFiles.map(
+        (target) => `数える .tsx が無いパス: ${target}`,
+      ),
       "",
       `字で渡すもの（直すもの）: ${report.literals.length}`,
       ...report.literals.map(formatFinding),
@@ -32,6 +39,7 @@ describe.runIf(enabled)("check:phrased-names", () => {
     ];
     process.stdout.write(`${lines.join("\n")}\n`);
     if (process.env.PHRASED_NAMES_REPORT_ONLY !== "1") {
+      expect(report.targetsWithoutFiles).toEqual([]);
       expect(report.literals.map(formatFinding)).toEqual([]);
     }
   });

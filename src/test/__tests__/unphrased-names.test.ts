@@ -195,7 +195,7 @@ describe("字で渡す2文節以上の名前と面", () => {
       `export const x = (\n  <Button>画像を保存</Button>\n);\n`,
     );
     expect(formatFinding(report.literals[0])).toBe(
-      "Sample.tsx:2:11  `Button` の面  「画像を保存」  2文節以上（画像を／保存）",
+      "Sample.tsx:2:11  `Button` の面  「画像を保存」  2文節以上（splitIntoPhrases の分け方: 画像を／保存）",
     );
   });
 });
@@ -245,7 +245,79 @@ describe("どちらにも出さないもの", () => {
   });
 });
 
+describe("同じファイルの値を解いて見るもの", () => {
+  test("鍵が変数の添字は、オブジェクトと並びのすべての値を見る", () => {
+    expect(
+      literalTexts(`
+        const OPTION_LABELS = { symbol: "記号・スペース", digit: "数字" };
+        const DIRECTION_TEXT = {
+          encode: { inputLabel: "エンコードするテキスト" },
+          decode: { inputLabel: "入力" },
+        };
+        const FACES = ["結果をコピー", "コピー"];
+        export function Tile({ direction }) {
+          const text = DIRECTION_TEXT[direction];
+          return (
+            <>
+              {KEYS.map((key) => <Checkbox key={key} label={OPTION_LABELS[key]} />)}
+              <Field label={text.inputLabel}>{() => null}</Field>
+              <Button>{FACES[index]}</Button>
+            </>
+          );
+        }
+      `),
+    ).toEqual(["記号・スペース", "エンコードするテキスト", "結果をコピー"]);
+  });
+
+  test("useMemo が返す式を見る", () => {
+    expect(
+      literalTexts(`
+        export function Tile({ mode }) {
+          const config = useMemo(() => {
+            switch (mode) {
+              case "change":
+                return { labelA: "もとの値 X" };
+              default:
+                return { labelA: "値" };
+            }
+          }, [mode]);
+          return <label htmlFor="a">{config.labelA}</label>;
+        }
+      `),
+    ).toEqual(["もとの値 X"]);
+  });
+});
+
 describe("値で渡すもの", () => {
+  test("理由は、解いた先の式が何から来るかを言う", () => {
+    expect(
+      valueFindings(`
+        import { toSorts } from "./data";
+        const OPTIONS = Object.entries(NAMES).map(([value, label]) => ({ value, label }));
+        function faceOf(status) {
+          return status === "done" ? "コピー済み" : "コピー";
+        }
+        export default function Row({ name, scope, status }) {
+          return (
+            <>
+              <RadioGroup legend="難しさ" options={OPTIONS} />
+              <button type="button">{name}</button>
+              <BrowsableList searchLabel="探す" sorts={toSorts(scope)} />
+              <Button>{faceOf(status)}</Button>
+              <Pager renderItem={({ label }) => <button type="button">{label}</button>} />
+            </>
+          );
+        }
+      `).map(({ reason }) => reason),
+    ).toEqual([
+      "並びを .map して渡すもの",
+      "区切りを受け取らない部品の props",
+      "ほかのモジュールの関数が返す値",
+      "同じファイルの関数が組む文",
+      "部品が関数に渡す引数",
+    ]);
+  });
+
   test("ほかのモジュールの定数・.map・差し込み・字と式を含む要素・広げた props・サーバーで区切る文", () => {
     expect(
       valueFindings(`
@@ -323,6 +395,30 @@ describe("値で渡すもの", () => {
 });
 
 describe("findUnphrasedNames", () => {
+  test("数える .tsx が1つも無いパスを返す", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "unphrased-names-"));
+    try {
+      fs.mkdirSync(path.join(root, "lib"));
+      fs.writeFileSync(path.join(root, "lib", "labels.ts"), "export {};");
+      fs.writeFileSync(
+        path.join(root, "Tile.tsx"),
+        "export const x = <Button>送信</Button>;",
+      );
+      const report = findUnphrasedNames(
+        ["Tile.tsx", "lib", "lib/labels.ts", "missing"],
+        root,
+      );
+      expect(report.fileCount).toBe(1);
+      expect(report.targetsWithoutFiles).toEqual([
+        "lib",
+        "lib/labels.ts",
+        "missing",
+      ]);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   test("ディレクトリの .tsx を数え、試験と .tsx でないファイルを除く", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "unphrased-names-"));
     try {
@@ -339,6 +435,8 @@ describe("findUnphrasedNames", () => {
       expect(report.literals.map((finding) => finding.file)).toEqual([
         path.join("src", "Tile.tsx"),
       ]);
+      expect(report.fileCount).toBe(1);
+      expect(report.targetsWithoutFiles).toEqual([]);
     } finally {
       fs.rmSync(root, { recursive: true, force: true });
     }

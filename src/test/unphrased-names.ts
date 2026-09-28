@@ -9,7 +9,8 @@
  * - 値で渡すもの（測るもの）: 字でも区切りの並びでもないもの。中身をここで確かめられないので、位置ごとに返す。
  *
  * 見る位置は、名前と面の props、選択肢と組の並びの要素の名前、素の `label`・`legend`・`button`・`summary` の子。
- * どれも三項演算子・`&&`・`||`・`??` の枝と、同じファイルの `const` を名前で渡したものの中まで見る。
+ * どれも三項演算子・`&&`・`||`・`??` の枝と、同じファイルの `const` を名前で渡したものの中まで見る
+ * （そのプロパティと添字、`useMemo` が返す式を含む。鍵が変数の添字は、なりうるすべての値を見る）。
  * 区切りを受け取らない部品の `label` と、名前を受け取る部品の中で受け取った名前をそのまま中の部品へ渡す所は
  * どちらにも出さない。
  *
@@ -360,15 +361,21 @@ function returnedExpressions(
 }
 
 /**
- * 式を、同じファイルに書いた値の式まで解く（`const` の名前・そのプロパティ・並びの添字）。解けなければ
- * undefined。
+ * 式を、同じファイルに書いた値の式まで解き、なりうる値の式を並べて返す。`const` の名前・そのプロパティと添字・
+ * `useMemo` が返す式・条件の枝をたどる。鍵が変数の添字（`LABELS[key]`）は、相手のオブジェクトか並びのすべての
+ * 値をなりうる値とする。解けない所は、その式をそのまま返す。
  */
-function resolveLocalValue(
+function resolveLocalValues(
   expression: ts.Expression,
   depth = 0,
-): ts.Expression | undefined {
-  if (depth > 20) return undefined;
+): ts.Expression[] {
   const node = unwrap(expression);
+  if (depth > 20) return [node];
+  const branches: ts.Expression[] = [];
+  forEachBranch(node, (branch) => branches.push(branch));
+  if (branches.length !== 1 || branches[0] !== node) {
+    return branches.flatMap((branch) => resolveLocalValues(branch, depth + 1));
+  }
   if (ts.isIdentifier(node)) {
     const binding = resolveBinding(node);
     if (
@@ -377,27 +384,82 @@ function resolveLocalValue(
       binding.declaration.initializer &&
       (binding.declaration.parent.flags & ts.NodeFlags.Const) !== 0
     ) {
-      const initializer = unwrap(binding.declaration.initializer);
-      return resolveLocalValue(initializer, depth + 1) ?? initializer;
+      return resolveLocalValues(binding.declaration.initializer, depth + 1);
     }
-    return undefined;
-  }
-  if (ts.isPropertyAccessExpression(node)) {
-    const object = resolveLocalValue(node.expression, depth + 1);
-    if (!object || !ts.isObjectLiteralExpression(object)) return undefined;
-    const property = findProperty(object, node.name.text);
-    if (!property) return undefined;
-    return resolveLocalValue(property, depth + 1) ?? unwrap(property);
+    return [node];
   }
   if (
-    ts.isElementAccessExpression(node) &&
-    ts.isNumericLiteral(node.argumentExpression)
+    ts.isCallExpression(node) &&
+    ts.isIdentifier(node.expression) &&
+    MEMO_HOOKS.has(node.expression.text)
   ) {
-    const array = resolveLocalValue(node.expression, depth + 1);
-    if (!array || !ts.isArrayLiteralExpression(array)) return undefined;
-    const element = array.elements[Number(node.argumentExpression.text)];
-    if (!element || ts.isSpreadElement(element)) return undefined;
-    return resolveLocalValue(element, depth + 1) ?? unwrap(element);
+    const factory = node.arguments[0];
+    if (
+      factory &&
+      (ts.isArrowFunction(factory) || ts.isFunctionExpression(factory))
+    ) {
+      return returnedExpressions(factory).flatMap((returned) =>
+        resolveLocalValues(returned, depth + 1),
+      );
+    }
+    return [node];
+  }
+  if (
+    ts.isPropertyAccessExpression(node) ||
+    ts.isElementAccessExpression(node)
+  ) {
+    const key = ts.isPropertyAccessExpression(node)
+      ? node.name.text
+      : literalKey(node.argumentExpression);
+    const containers = resolveLocalValues(node.expression, depth + 1);
+    const members: ts.Expression[] = [];
+    for (const container of containers) {
+      const values = memberValues(container, key);
+      if (values === undefined) return [node];
+      members.push(...values);
+    }
+    return members.flatMap((member) => resolveLocalValues(member, depth + 1));
+  }
+  return [node];
+}
+
+/** 添字の鍵が字か数ならその字。変数なら undefined。 */
+function literalKey(argument: ts.Expression): string | undefined {
+  const node = unwrap(argument);
+  return ts.isStringLiteral(node) ||
+    ts.isNumericLiteral(node) ||
+    ts.isNoSubstitutionTemplateLiteral(node)
+    ? node.text
+    : undefined;
+}
+
+/**
+ * オブジェクトか並びの、鍵の値。鍵が undefined（変数の鍵）なら、すべての値。相手がオブジェクトでも並びでも
+ * ないか、値を広げて持つなら undefined（解けない）。
+ */
+function memberValues(
+  container: ts.Expression,
+  key: string | undefined,
+): ts.Expression[] | undefined {
+  if (ts.isObjectLiteralExpression(container)) {
+    if (key !== undefined) {
+      const property = findProperty(container, key);
+      return property ? [property] : [];
+    }
+    const values: ts.Expression[] = [];
+    for (const property of container.properties) {
+      if (ts.isPropertyAssignment(property)) values.push(property.initializer);
+      else if (ts.isShorthandPropertyAssignment(property)) {
+        values.push(property.name);
+      } else return undefined;
+    }
+    return values;
+  }
+  if (ts.isArrayLiteralExpression(container)) {
+    if (container.elements.some(ts.isSpreadElement)) return undefined;
+    if (key === undefined) return [...container.elements];
+    const element = container.elements[Number(key)];
+    return element ? [element] : [];
   }
   return undefined;
 }
@@ -443,14 +505,17 @@ function valueReason(expression: ts.Expression): string {
         : "";
     if (name === "splitIntoPhrases") return "サーバーで区切る文";
     if (ITERATION_METHODS.has(name)) return "並びを .map して渡すもの";
-    return "呼び出しの値";
+    if (ts.isIdentifier(callee) && resolveBinding(callee)?.kind === "import") {
+      return "ほかのモジュールの関数が返す値";
+    }
+    return "同じファイルの関数が組む文";
   }
   if (
     ts.isJsxElement(node) ||
     ts.isJsxSelfClosingElement(node) ||
     ts.isJsxFragment(node)
   ) {
-    return "要素";
+    return "ほかの部品で組む要素";
   }
   let root: ts.Expression = node;
   while (
@@ -463,9 +528,13 @@ function valueReason(expression: ts.Expression): string {
   if (ts.isIdentifier(root)) {
     const binding = resolveBinding(root);
     if (binding?.kind === "import") return "ほかのモジュールの値";
-    if (binding?.kind === "parameter" && iteratedArray(binding.fn)) {
-      return "並びを .map して渡すもの";
+    if (binding?.kind === "parameter") {
+      if (iteratedArray(binding.fn)) return "並びを .map して渡すもの";
+      return /^[A-Z]/.test(functionName(binding.fn) ?? "")
+        ? "区切りを受け取らない部品の props"
+        : "部品が関数に渡す引数";
     }
+    if (binding?.kind === "variable") return "状態や変数";
   }
   return "値";
 }
@@ -517,7 +586,7 @@ function checkText(
       node,
       position,
       text,
-      `2文節以上（${phrases.join("／")}）`,
+      `2文節以上（splitIntoPhrases の分け方: ${phrases.join("／")}）`,
     );
   }
 }
@@ -541,14 +610,11 @@ function checkPhraseArray(
       passesThrough = true;
       continue;
     }
-    const node = ts.isSpreadElement(element)
-      ? undefined
-      : (resolveLocalValue(expression) ?? unwrap(expression));
-    if (
-      node &&
-      (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node))
-    ) {
-      phrases.push(node.text);
+    const values = ts.isSpreadElement(element)
+      ? []
+      : resolveLocalValues(expression);
+    if (values.length === 1 && isTextLiteral(values[0])) {
+      phrases.push(values[0].text);
       continue;
     }
     record(
@@ -573,46 +639,59 @@ function checkPhraseArray(
   }
 }
 
+/**
+ * 名前の位置の式を同じファイルの値まで解き、なりうる値ごとに check を当てる。check が扱わない値は、部品の中の
+ * 受け渡しでなければ、値で渡すものとして式の位置に出す。
+ */
+function forEachValue(
+  context: FileContext,
+  expression: ts.Expression,
+  position: string,
+  check: (value: ts.Expression) => boolean,
+): void {
+  for (const value of resolveLocalValues(expression)) {
+    if (check(value) || fromComponentProps(value)) continue;
+    record(
+      context,
+      "values",
+      expression,
+      position,
+      sourceText(context, expression),
+      valueReason(value),
+    );
+  }
+}
+
+function isTextLiteral(
+  node: ts.Expression,
+): node is ts.StringLiteral | ts.NoSubstitutionTemplateLiteral {
+  return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node);
+}
+
 /** 名前を渡す位置の式（字か区切りの並びか要素）。 */
 function checkName(
   context: FileContext,
   expression: ts.Expression,
   position: string,
 ): void {
-  forEachBranch(expression, (branch) => {
-    if (
-      ts.isStringLiteral(branch) ||
-      ts.isNoSubstitutionTemplateLiteral(branch)
-    ) {
-      checkText(context, branch, branch.text, position);
-      return;
+  forEachValue(context, expression, position, (value) => {
+    if (isTextLiteral(value)) {
+      checkText(context, value, value.text, position);
+      return true;
     }
-    if (ts.isArrayLiteralExpression(branch)) {
-      checkPhraseArray(context, branch, position);
-      return;
+    if (ts.isArrayLiteralExpression(value)) {
+      checkPhraseArray(context, value, position);
+      return true;
     }
     if (
-      ts.isJsxElement(branch) ||
-      ts.isJsxSelfClosingElement(branch) ||
-      ts.isJsxFragment(branch)
+      ts.isJsxElement(value) ||
+      ts.isJsxSelfClosingElement(value) ||
+      ts.isJsxFragment(value)
     ) {
-      checkJsx(context, branch, position);
-      return;
+      checkJsx(context, value, position);
+      return true;
     }
-    const local = resolveLocalValue(branch);
-    if (local) {
-      checkName(context, local, position);
-      return;
-    }
-    if (fromComponentProps(branch)) return;
-    record(
-      context,
-      "values",
-      branch,
-      position,
-      sourceText(context, branch),
-      valueReason(branch),
-    );
+    return false;
   });
 }
 
@@ -622,35 +701,22 @@ function checkChoice(
   expression: ts.Expression,
   position: string,
 ): void {
-  forEachBranch(expression, (branch) => {
-    const node = ts.isObjectLiteralExpression(branch)
-      ? branch
-      : resolveLocalValue(branch);
-    if (node && ts.isObjectLiteralExpression(node)) {
-      const key = CHOICE_NAME_KEYS.find((k) => findProperty(node, k));
-      if (key) {
-        checkName(context, findProperty(node, key)!, position);
-      } else if (node.properties.some(ts.isSpreadAssignment)) {
-        record(
-          context,
-          "values",
-          node,
-          position,
-          sourceText(context, node),
-          "広げて渡す要素",
-        );
-      }
-      return;
+  forEachValue(context, expression, position, (value) => {
+    if (!ts.isObjectLiteralExpression(value)) return false;
+    const key = CHOICE_NAME_KEYS.find((k) => findProperty(value, k));
+    if (key) {
+      checkName(context, findProperty(value, key)!, position);
+    } else if (value.properties.some(ts.isSpreadAssignment)) {
+      record(
+        context,
+        "values",
+        value,
+        position,
+        sourceText(context, value),
+        "広げて渡す要素",
+      );
     }
-    if (fromComponentProps(branch)) return;
-    record(
-      context,
-      "values",
-      branch,
-      position,
-      sourceText(context, branch),
-      valueReason(branch),
-    );
+    return true;
   });
 }
 
@@ -661,29 +727,16 @@ function checkList(
   position: string,
   checkItem: (element: ts.Expression) => void,
 ): void {
-  forEachBranch(expression, (branch) => {
-    const node = ts.isArrayLiteralExpression(branch)
-      ? branch
-      : resolveLocalValue(branch);
-    if (node && ts.isArrayLiteralExpression(node)) {
-      for (const element of node.elements) {
-        if (ts.isSpreadElement(element)) {
-          checkList(context, element.expression, position, checkItem);
-        } else {
-          checkItem(element);
-        }
+  forEachValue(context, expression, position, (value) => {
+    if (!ts.isArrayLiteralExpression(value)) return false;
+    for (const element of value.elements) {
+      if (ts.isSpreadElement(element)) {
+        checkList(context, element.expression, position, checkItem);
+      } else {
+        checkItem(element);
       }
-      return;
     }
-    if (fromComponentProps(branch)) return;
-    record(
-      context,
-      "values",
-      branch,
-      position,
-      sourceText(context, branch),
-      valueReason(branch),
-    );
+    return true;
   });
 }
 
@@ -692,31 +745,18 @@ function checkGroup(
   expression: ts.Expression,
   position: string,
 ): void {
-  forEachBranch(expression, (branch) => {
-    const node = ts.isObjectLiteralExpression(branch)
-      ? branch
-      : resolveLocalValue(branch);
-    if (node && ts.isObjectLiteralExpression(node)) {
-      const legend = findProperty(node, "legend");
-      if (legend) checkName(context, legend, `${position} の \`legend\``);
-      const options = findProperty(node, "options");
-      if (options) {
-        const optionPosition = `${position} の \`options\` の名前`;
-        checkList(context, options, optionPosition, (element) =>
-          checkChoice(context, element, optionPosition),
-        );
-      }
-      return;
+  forEachValue(context, expression, position, (value) => {
+    if (!ts.isObjectLiteralExpression(value)) return false;
+    const legend = findProperty(value, "legend");
+    if (legend) checkName(context, legend, `${position} の \`legend\``);
+    const options = findProperty(value, "options");
+    if (options) {
+      const optionPosition = `${position} の \`options\` の名前`;
+      checkList(context, options, optionPosition, (element) =>
+        checkChoice(context, element, optionPosition),
+      );
     }
-    if (fromComponentProps(branch)) return;
-    record(
-      context,
-      "values",
-      branch,
-      position,
-      sourceText(context, branch),
-      valueReason(branch),
-    );
+    return true;
   });
 }
 
@@ -802,7 +842,14 @@ function checkJsx(
     checkContent(context, node.children, node, position);
     return;
   }
-  record(context, "values", node, position, sourceText(context, node), "要素");
+  record(
+    context,
+    "values",
+    node,
+    position,
+    sourceText(context, node),
+    "ほかの部品で組む要素",
+  );
 }
 
 /** 式のどの枝も要素か（字を持たない枝は除く）。 */
@@ -1054,6 +1101,7 @@ function isTestFile(file: string): boolean {
 }
 
 function collectFiles(target: string): string[] {
+  if (!fs.existsSync(target)) return [];
   const stat = fs.statSync(target);
   if (stat.isFile()) return target.endsWith(".tsx") ? [target] : [];
   return fs
@@ -1068,6 +1116,13 @@ function collectFiles(target: string): string[] {
     });
 }
 
+export interface PhrasedNameCount extends PhrasedNameReport {
+  /** 数えた `.tsx` の数。 */
+  fileCount: number;
+  /** 数える `.tsx` が1つも無かったパス（無いパス・`.ts` のファイル・`.tsx` の無いディレクトリ）。 */
+  targetsWithoutFiles: string[];
+}
+
 /**
  * ファイルかディレクトリのパスを受け、その中の `.tsx`（試験を除く）を数える。パスは root からの相対で出す。
  * ファイルを直に渡したときは、試験のファイルでも数える。
@@ -1075,17 +1130,19 @@ function collectFiles(target: string): string[] {
 export function findUnphrasedNames(
   targets: readonly string[],
   root: string = process.cwd(),
-): PhrasedNameReport {
+): PhrasedNameCount {
   const report: PhrasedNameReport = {
     literals: [],
     values: [],
     literalCount: 0,
   };
-  const files = [
-    ...new Set(
-      targets.flatMap((target) => collectFiles(path.resolve(root, target))),
-    ),
-  ];
+  const targetsWithoutFiles: string[] = [];
+  const files = new Set<string>();
+  for (const target of targets) {
+    const found = collectFiles(path.resolve(root, target));
+    if (found.length === 0) targetsWithoutFiles.push(target);
+    for (const file of found) files.add(file);
+  }
   for (const file of files) {
     analyzeSource(
       fs.readFileSync(file, "utf8"),
@@ -1093,7 +1150,7 @@ export function findUnphrasedNames(
       report,
     );
   }
-  return report;
+  return { ...report, fileCount: files.size, targetsWithoutFiles };
 }
 
 /** 1件を1行にする（`パス:行:字 位置 「字か式」 理由`）。 */
