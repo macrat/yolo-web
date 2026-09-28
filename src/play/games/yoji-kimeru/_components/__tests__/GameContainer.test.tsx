@@ -272,12 +272,14 @@ describe("GameContainer", () => {
       throw new Error("not called");
     });
     render(<GameContainer crossCategoryItems={[]} />);
-    await screen.findByText(/#42/);
-    const saved = JSON.parse(
-      window.localStorage.getItem("yoji-kimeru-hint-height") ?? "null",
-    );
-    expect(saved).toMatchObject({ difficulty: "intermediate" });
-    expect(Object.values(saved.heights)).toHaveLength(1);
+    // 高さは描いたあとの effect で覚えるので、問題が画面に出たことではなく、記録が書かれたことを待つ。
+    await waitFor(() => {
+      const saved = JSON.parse(
+        window.localStorage.getItem("yoji-kimeru-hint-height") ?? "null",
+      );
+      expect(saved).toMatchObject({ difficulty: "intermediate" });
+      expect(Object.values(saved.heights)).toHaveLength(1);
+    });
   });
 
   test("keeps the hint strip's height when the last guess wins, so only the result moves", async () => {
