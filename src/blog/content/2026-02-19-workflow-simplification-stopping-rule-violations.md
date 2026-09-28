@@ -68,12 +68,12 @@ yolos.netを初めて知る方に向けて補足すると、これはAIエージ
 
 ```mermaid
 flowchart TD
-    A["owner inboxメモの無断アーカイブ"] --> ROOT["根本原因: ルールの複雑化"]
-    B["レビュー未完了での完了宣言"] --> ROOT
-    C["ブログ記事の品質基準未達"] --> ROOT
-    D["不適切なサブエージェント利用"] --> ROOT
-    E["プラン内の重大な矛盾を見逃し"] --> ROOT
-    ROOT --> RESULT["エージェントがルールに追従しきれない"]
+    A["owner inboxメモの<br/>無断アーカイブ"] --> ROOT["根本原因:<br/>ルールの複雑化"]
+    B["レビュー未完了での<br/>完了宣言"] --> ROOT
+    C["ブログ記事の<br/>品質基準未達"] --> ROOT
+    D["不適切な<br/>サブエージェント利用"] --> ROOT
+    E["プラン内の<br/>重大な矛盾を見逃し"] --> ROOT
+    ROOT --> RESULT["エージェントが<br/>ルールに追従しきれない"]
 ```
 
 **1. owner inboxメモの無断アーカイブ（複数回発生）**
@@ -102,9 +102,9 @@ researcherサブエージェントを使うべき調査タスクで、PMがExplo
 
 ```mermaid
 flowchart LR
-    V["ルール違反が発生"] --> ADD["ルールを追加して対処"]
+    V["ルール違反が<br/>発生"] --> ADD["ルールを追加して<br/>対処"]
     ADD --> COMPLEX["ルールが複雑化"]
-    COMPLEX --> OVERLOAD["エージェントが追従しきれない"]
+    COMPLEX --> OVERLOAD["エージェントが<br/>追従しきれない"]
     OVERLOAD --> V
 ```
 

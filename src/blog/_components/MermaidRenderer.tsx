@@ -463,6 +463,9 @@ export default function MermaidRenderer() {
         fitFigure(figure);
         widths.set(figure, figure.getBoundingClientRect().width);
         observer?.observe(figure);
+        // mermaid の描画はほぼ同期で進むので、1枚ごとにイベントループへ戻り、描いているあいだも操作に応える。
+        await new Promise((resolve) => setTimeout(resolve));
+        if (cancelled) return;
       }
     }
 

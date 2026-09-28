@@ -63,11 +63,11 @@ spawnerの核心は、Node.jsの[`fs.watch`](https://nodejs.org/api/fs.html#fswa
 
 ```mermaid
 flowchart TD
-    INDEX["<b>index.ts</b><br/>メインエントリポイント<br/>状態管理（RUNNING / ENDING）"]
-    WATCHER["<b>watcher.ts</b><br/>fs.watchによるファイル監視<br/>500msデバウンス処理"]
-    PM["<b>process-manager.ts</b><br/>プロセス生成・ライフサイクル管理<br/>同時実行数制限・リトライ"]
-    PL["<b>prompt-loader.ts</b><br/>プロンプトテンプレート読み込み<br/>メモパスの注入"]
-    LOGGER["<b>logger.ts</b><br/>タイムスタンプ付きログ出力"]
+    INDEX["<b>index.ts</b><br/>メインエントリポイント<br/>状態管理<br/>（RUNNING / ENDING）"]
+    WATCHER["<b>watcher.ts</b><br/>fs.watchによる<br/>ファイル監視<br/>500msデバウンス処理"]
+    PM["<b>process-manager.ts</b><br/>プロセス生成・<br/>ライフサイクル管理<br/>同時実行数制限・<br/>リトライ"]
+    PL["<b>prompt-loader.ts</b><br/>プロンプトテンプレート<br/>読み込み<br/>メモパスの注入"]
+    LOGGER["<b>logger.ts</b><br/>タイムスタンプ付き<br/>ログ出力"]
     INBOX["memo/&lt;role&gt;/inbox/"]
     AGENT["Claude Code<br/>エージェントプロセス"]
 
