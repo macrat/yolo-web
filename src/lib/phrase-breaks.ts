@@ -9,9 +9,9 @@
  *   続きだけで行を作らない。
  * - 最初の文節の、最初の空白より前には、字の種類が変わって語が始まる所の折り所を足す。この部分は行の頭から始まるので、
  *   この折り所は、この部分が1行に収まらないときの代わりにだけ使われる。
- * - 見出しの狭い行に収まらない幅の文節には、語の切れ目の折り所を足す。収まらない文節をブラウザが字の所で割ると、
- *   1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。<wbr> の折り所に優先の順は無いので、
- *   この折り所は、文節が1行に収まる広い行でも、行の終わりに来れば使われる。
+ * - 見出しの狭い行に収まらない幅の文節には、語と語の切れ目（漢字か片仮名の語の頭と、「〜する」の頭）の折り所を足す。
+ *   収まらない文節をブラウザが字の所で割ると、1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。
+ *   <wbr> の折り所に優先の順は無く、文節が1行に収まる広い行でも行の終わりに来れば使われるので、語の中には置かない。
  * BudouX の分け方の表は大きいので、クライアントのバンドルに入れないよう、区切りはサーバーで作る。
  * クライアントの部品から読み込むとビルドが止まる（server-only）。クライアントの部品が描く見出しには、
  * サーバーの page.tsx がここで作った区切りを props で渡す。
@@ -20,9 +20,9 @@
 import "server-only";
 import { jaModel, loadDefaultJapaneseParser } from "budoux";
 
-/** 行の頭に置かない字。閉じ括弧・句読点・感嘆符と疑問符・リーダ・中点類・小書きの仮名・長音符・繰り返し記号。 */
+/** 行の頭に置かない字。閉じ括弧・句読点・感嘆符と疑問符・リーダ・ダッシュ・中点類・小書きの仮名・長音符・繰り返し記号。 */
 const NO_LINE_START =
-  /^[)\]}）］｝〕〉》」』】〙〗〟’”»、。，．,.！？!?‼⁇⁈⁉…‥・：；:;ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿーゝゞヽヾ々〻]/u;
+  /^[)\]}）］｝〕〉》」』】〙〗〟’”»、。，．,.！？!?‼⁇⁈⁉…‥—―─・：；:;ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿーゝゞヽヾ々〻]/u;
 
 /** 行の終わりに置かない字。開き括弧。 */
 const NO_LINE_END = /[(\[{（［｛〔〈《「『【〘〖〝‘“«]$/u;
@@ -310,44 +310,24 @@ function canStandAlone(chars: string[]): boolean {
 /** サ変の動詞の頭（「リリース|しました」「表示|されない」）。 */
 const SURU_VERB = /^[しさすせ]/u;
 
-/** 片仮名の語どうしの語の境目を折り所にする、前後の語の字の数の下限（「バリ|データー」のような割り方を除く）。 */
-const MIN_KATAKANA_WORD = 3;
-
 /**
- * 文節の中の所の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
- * wordStart は、そこが語の境目なら前後の語の字の数。
- * 0: 語の境目で、字の種類が変わって漢字か片仮名の語が始まる所（「思考|バイアス」）と、3字以上の片仮名の語どうしの所
- *    （「オンライン|ツール」）。
- * 1: 語の境目で、漢字か片仮名の語からサ変の動詞に移る所（「リリース|しました」）。
- * 2: 平仮名どうしの所（「教えて|くれない」）。語の境目は平仮名の続きを正しく見分けない（「教え|てく|れ|ない」）ので、
- *    字ごとの所を候補にし、BudouX の度合いで選ぶ。
- * 3: 片仮名どうしの所。1行に収まらない片仮名の語（「ハイドレーション」）をブラウザが字の所で割ると、行頭の長音符や
- *    小書きの仮名が出るので、禁則を満たす所で割る。
- * 漢字どうしの所（「漢字|力」）と、漢字か片仮名の語から助詞や送り仮名に移る所（「ツール|を」）は語を割るので使わない。
+ * 文節の中の語の境目の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
+ * 0: 字の種類が変わって漢字か片仮名の語が始まる所（「思考|バイアス」「JSON整形・|フォーマッター」）。
+ * 1: 漢字か片仮名の語からサ変の動詞に移る所（「リリース|しました」）。
+ * どちらも語と語の切れ目なので、文節が1行に収まる広い行で使われても語を割らない（`<wbr>` には優先の順が無く、
+ * 行の終わりに来た折り所は幅によらず使われる）。語の中（片仮名の語の中・平仮名の続きの中）と、漢字どうしの所、
+ * 助詞や送り仮名の前には置かない。語が1行に入らないときは、ブラウザがその語の中で折る。
  */
-function wordBreakRank(
-  before: string,
-  after: string,
-  wordStart: { before: number; after: number } | undefined,
-): number | undefined {
+function wordBreakRank(before: string, after: string): number | undefined {
   const left = scriptOf(before);
   const right = scriptOf(after);
-  if (left === "katakana" && right === "katakana") {
-    return wordStart &&
-      wordStart.before >= MIN_KATAKANA_WORD &&
-      wordStart.after >= MIN_KATAKANA_WORD
-      ? 0
-      : 3;
-  }
-  if (!wordStart)
-    return right === "hiragana" && left === "hiragana" ? 2 : undefined;
-  if (right === "han" || right === "katakana") {
-    return left !== right ? 0 : undefined;
-  }
-  if (right === "hiragana") {
-    if (left === "hiragana") return 2;
-    if ((left === "han" || left === "katakana") && SURU_VERB.test(after))
-      return 1;
+  if ((right === "han" || right === "katakana") && left !== right) return 0;
+  if (
+    right === "hiragana" &&
+    (left === "han" || left === "katakana") &&
+    SURU_VERB.test(after)
+  ) {
+    return 1;
   }
   return undefined;
 }
@@ -358,7 +338,7 @@ let scorer: ((sentence: string) => number[]) | undefined;
  * BudouX の日本語のモデルが、文の各位置（1 から）を文節の境目とみなす度合い。parse は 0 を超える所だけを境目に
  * するが、ここでは境目に満たない所どうしを比べるために値そのものを返す。
  */
-function boundaryScores(sentence: string): number[] {
+export function boundaryScores(sentence: string): number[] {
   if (!scorer) {
     const model = new Map(
       Object.entries(jaModel).map(([name, table]) => [
@@ -403,11 +383,11 @@ function boundaryScores(sentence: string): number[] {
 }
 
 /**
- * 見出しの狭い行（NARROWEST_HEADING_LINE）に収まらない幅の文節を、語の切れ目で収まるまで分ける（「教えて|くれない」
+ * 見出しの狭い行（NARROWEST_HEADING_LINE）に収まらない幅の文節を、語の切れ目で収まるまで分ける（「思考|バイアスと」
  * 「リリース|しました:」）。収まらない切れ端ごとに、語の切れ目のうち、禁則を満たし、丸括弧の中でなく、分けた切れ端の
  * どちらもが1行を作ってよい所（canStandAlone）から、順位（wordBreakRank）、BudouX の度合いの順にいちばん良い所で
  * 分ける。どの切れ端も、分けられる所が無ければそのまま残す。
- * 語の境目は Intl.Segmenter で見る。
+ * 語の境目は Intl.Segmenter で見る。分けられる所が無い語はそのまま残し、1行に入らなければブラウザがその中で折る。
  */
 function splitWidePhraseAtWords(phrase: string): string[] {
   const chars = toGraphemes(phrase);
@@ -419,25 +399,16 @@ function splitWidePhraseAtWords(phrase: string): string[] {
     unit += ch.length;
   }
   const scores = boundaryScores(phrase);
-  const wordStarts = new Map<number, { before: number; after: number }>();
-  let position = 0;
-  let previousLength = 0;
-  for (const { segment } of words.segment(phrase)) {
-    const length = toGraphemes(segment).length;
-    wordStarts.set(position, { before: previousLength, after: length });
-    position += length;
-    previousLength = length;
-  }
   const candidates: { index: number; rank: number; score: number }[] = [];
-  for (let index = 1; index < chars.length; index += 1) {
-    if (depths[index] > 0) continue;
-    const rank = wordBreakRank(
-      chars[index - 1],
-      chars[index],
-      wordStarts.get(index),
-    );
-    if (rank === undefined) continue;
-    candidates.push({ index, rank, score: scores[unitOffsets[index]] });
+  let index = 0;
+  for (const { segment } of words.segment(phrase)) {
+    if (index > 0 && depths[index] === 0) {
+      const rank = wordBreakRank(chars[index - 1], chars[index]);
+      if (rank !== undefined) {
+        candidates.push({ index, rank, score: scores[unitOffsets[index]] });
+      }
+    }
+    index += toGraphemes(segment).length;
   }
   const split = (from: number, to: number): number[] => {
     const piece = chars.slice(from, to);
@@ -465,7 +436,8 @@ interface PhraseOptions {
   /**
    * 組む先が表のセルか（DESIGN.md §4）。表のセルは丸括弧の中も文節で折る。表のセルの括弧は読み仮名や数でなく説明を
    * 囲み、中にも文節がある。開き括弧の直後と閉じ括弧の直前で折らない禁則は残る。列の幅はいちばん長い文節で決まるので、
-   * 見出しのための語の切れ目の折り所は足さない。
+   * 見出しだけのための足し引き（中点・英字の語の後ろ、閉じ括弧の後ろの続き、広い文節の中の語の切れ目）はしない。
+   * 最初の文節の字の種類の変わり目の折り所は、見出しと同じく置く。
    */
   tableCell?: boolean;
 }

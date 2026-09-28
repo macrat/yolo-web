@@ -1,6 +1,10 @@
 import { loadDefaultJapaneseParser } from "budoux";
 import { describe, expect, test } from "vitest";
-import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
+import {
+  boundaryScores,
+  followsPhraseRules,
+  splitIntoPhrases,
+} from "@/lib/phrase-breaks";
 import { quizBySlug } from "@/play/quiz/registry";
 
 const characterPersonalityTypeNames = (
@@ -187,12 +191,12 @@ describe("splitIntoPhrases", () => {
     expect(phrases[phrases.indexOf("「yolos.net」") + 1]).toMatch(/^に/u);
   });
 
-  test("見出しの狭い行に収まらない幅の文節は、1行を作れる切れ端になる語の切れ目と、禁則を満たす片仮名の字の所で分ける", () => {
-    expect(
-      splitIntoPhrases(
-        "デザイン移行で旧トークンを消してもビルドは教えてくれない",
-      ).slice(-2),
-    ).toEqual(["教えて", "くれない"]);
+  test("見出しの狭い行に収まらない幅の文節は、漢字か片仮名の語の頭と「〜する」の頭でだけ分ける", () => {
+    expect(splitIntoPhrases("思考バイアスとコンテキスト")).toEqual([
+      "思考",
+      "バイアスと",
+      "コンテキスト",
+    ]);
     expect(splitIntoPhrases("リリースしました: 漢字力診断")).toEqual([
       "リリース",
       "しました: ",
@@ -203,14 +207,43 @@ describe("splitIntoPhrases", () => {
       "ジャンルも",
       "試してみよう",
     ]);
-    expect(splitIntoPhrases("伝統色カラーパレット")).toEqual([
-      "伝統色",
-      "カラー",
-      "パレット",
-    ]);
-    for (const piece of splitIntoPhrases("Next.jsハイドレーション不整合")) {
-      expect(piece).not.toMatch(NO_LINE_START);
-      expect([...piece].length).toBeGreaterThan(1);
+  });
+
+  test("語の中（片仮名の語の中・平仮名の続きの中）には折り所を足さない", () => {
+    expect(
+      splitIntoPhrases(
+        "デザイン移行で旧トークンを消してもビルドは教えてくれない",
+      ).at(-1),
+    ).toBe("教えてくれない");
+    expect(splitIntoPhrases("AIが指示を守らないなら、")).toContain(
+      "守らないなら、",
+    );
+    expect(
+      splitIntoPhrases("JSON整形・フォーマッターの使い方ガイド"),
+    ).toContain("フォーマッターの");
+    expect(splitIntoPhrases("プログラマティックSEO戦略の実践")).toContain(
+      "プログラマティックSEO",
+    );
+  });
+
+  test("ダッシュで始まる文節を作らない", () => {
+    for (const piece of splitIntoPhrases(
+      "Cron式 早見表 — フィールド・特殊文字・実用パターン一覧",
+    ).slice(1)) {
+      expect(piece).not.toMatch(/^[—―─]/u);
+    }
+    expect(followsPhraseRules(["消した話", "——バッジは"])).toBe(false);
+  });
+
+  test("折り所の順位に使う BudouX の度合いは、parse の境目で 0 を超え、ほかの所では 0 以下", () => {
+    for (const text of headings) {
+      const kept = new Set(boundaryOffsets(budoux.parse(text)));
+      const scores = boundaryScores(text);
+      for (let offset = 1; offset < text.length; offset += 1) {
+        expect(scores[offset] > 0, `${text} の ${offset}`).toBe(
+          kept.has(offset),
+        );
+      }
     }
   });
 

@@ -53,4 +53,17 @@ describe("PhrasedText", () => {
     expect(heading).toHaveAttribute("id", "result-title");
     expect(heading).toHaveAttribute("data-heading-font", "fallback");
   });
+
+  test("ダッシュの前の空白を折れない空白にし、ダッシュだけの行を作らない", () => {
+    render(
+      <PhrasedText
+        as="h2"
+        phrases={["Cron式 早見表 — フィールド・", "一覧"]}
+      />,
+    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading.innerHTML).toBe(
+      "Cron式 早見表\u00A0— フィールド・<wbr>一覧".replace("\u00A0", "&nbsp;"),
+    );
+  });
 });
