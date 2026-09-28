@@ -8,14 +8,16 @@
  * - 書体は字の範囲で分ける。U+0000-007F は IBM Plex Sans、ほかは和文の書体で、名前と数字の結果は Zen Antique
  *   （Zen Antique に無い字を含むときは和文を丸ごと BIZ UDGothic）、補助情報・読み・副題は BIZ UDPGothic。
  *   Satori は書体の並びを渡すと字ごとに書体を選び分けないので、字の範囲ごとのまとまりに書体を1つずつ渡す。
- * - 行は、ここで描くのと同じ書体のファイルの送り幅で測って決め、1行ずつ描く。どの字も、見出しと同じ文節の区切り
- *   （splitIntoPhrases）で折る。1行に収まらない文節だけを、字の範囲のまとまりで分け、それでも収まらないまとまりを
- *   字の所で折る。文節の頭の空白は前の文節の終わりに移し、行の終わりの空白は描かない。行を決めてから描くので、
- *   名前の段を選ぶときに数えた行の数と、描いた行の数が同じになる。
+ * - 行は、ここで描くのと同じ書体のファイルの送り幅で測って決め、1行ずつ描く。どの字も、画面の見出しと同じ所で折る:
+ *   文節の切れ目（splitIntoPhrases）・文節の中の空白の後ろ（ダッシュの前を除く）・閉じ括弧の直後。1行に収まらない
+ *   単位だけを、字の範囲のまとまりで分け、それでも収まらないまとまりを字の所で折る。文節の頭の空白は前の文節の終わりに
+ *   移し、行の終わりの空白は描かない。行を決めてから描くので、名前の段を選ぶときに数えた行の数と、描いた行の数が
+ *   同じになる。
  *
  * 書体を取れないときは例外を投げる。画像はビルドで書き出すので、違う書体の画像が出荷される前にビルドが止まる。
  */
 import "server-only";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
@@ -55,6 +57,7 @@ import {
   TOP_RULE_Y,
   nameLineHeight,
 } from "@/lib/share-image-frame";
+import * as frame from "@/lib/share-image-frame";
 
 /** 画像に書く中身。 */
 export interface ShareImageContent {
@@ -75,16 +78,12 @@ export interface ShareImageContent {
   swatch?: string;
 }
 
-export const SHARE_IMAGE_SIZE = {
+const SHARE_IMAGE_SIZE = {
   width: SHARE_IMAGE_WIDTH,
   height: SHARE_IMAGE_HEIGHT,
 };
-export const SHARE_IMAGE_CONTENT_TYPE = "image/png";
 
-/**
- * 画像の代替テキスト。画像に書いてある字を、書いてある順に言う。1ページだけを描く画像のルート（道具・トップなど）は、
- * これを `alt` に書き出す。
- */
+/** 画像の代替テキスト。画像に書いてある字を、書いてある順に言う。 */
 export function shareImageAlt(content: ShareImageContent): string {
   return [
     SITE_NAME,
@@ -98,26 +97,72 @@ export function shareImageAlt(content: ShareImageContent): string {
     .join(" ");
 }
 
+/** 値を、オブジェクトのキーを名前の順に並べた JSON にする。ビルドをまたいで同じ字になる。 */
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+  if (value !== null && typeof value === "object") {
+    return `{${Object.keys(value)
+      .sort()
+      .filter((key) => (value as Record<string, unknown>)[key] !== undefined)
+      .map(
+        (key) =>
+          `${JSON.stringify(key)}:${stableJson((value as Record<string, unknown>)[key])}`,
+      )
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+/** 枠の寸法のモジュールの値（関数を除く）。版の値 SHARE_IMAGE_VERSION を含む。 */
+const FRAME_VALUES = Object.fromEntries(
+  Object.entries(frame).filter(([, value]) => typeof value !== "function"),
+);
+
 /**
- * 動的なセグメントの画像のルート（1つのファイルが多くのページの画像を描くもの）の代替テキスト。画像の種類を言う
- * （「ブログの記事の題と yolos.net を書いた画像」）。what は、画像に書いた名前が何の名前かを言う語。
- *
- * 規約のファイルの `alt` はファイルごとに1つの文しか出せない。ページごとの文を出す `generateImageMetadata` は、
- * 動的なセグメントの下では画像の URL に id のセグメントを足し、Next.js 16.3 はそのルートの親の
- * パラメータを列挙しないので、画像をビルドで書き出せず、最初の要求のときに描くことになる。画像をビルドで書き出し、
- * 書体を取れないときにビルドで止めるほうを取り、代替テキストは画像の種類を言う文にする。
+ * 画像の URL に付ける版。中身と枠の寸法から作るので、名前や組み方の値を変えたページだけ URL が変わり、SNS が
+ * 画像を取り直す。
  */
-export function shareImageAltByKind(what: string): string {
-  return `${what}と ${SITE_NAME} を書いた画像`;
+function shareImageVersion(content: ShareImageContent): string {
+  return createHash("sha256")
+    .update(stableJson(content) + stableJson(FRAME_VALUES))
+    .digest("hex")
+    .slice(0, 16);
 }
 
 /**
- * ページの画像の URL。`og:image` と同じ URL で、構造化データの `image` など、画像を指す所はどれもここから取る。
- * pagePath はページの URL のパス（`/blog/markdown-cheatsheet`）。
+ * ページの画像の URL。画像はページの URL の下の Route Handler `opengraph-image` が描く。`og:image`・`twitter:image`・
+ * 構造化データの `image` など、画像を指す所はどれもここから取る。pagePath はページの URL のパス
+ * （`/blog/markdown-cheatsheet`）。
  */
-export function shareImageUrl(pagePath: string): string {
+export function shareImageUrl(
+  pagePath: string,
+  content: ShareImageContent,
+): string {
   const base = pagePath === "/" ? "" : pagePath;
-  return `${BASE_URL}${base}/opengraph-image`;
+  return `${BASE_URL}${base}/opengraph-image?v=${shareImageVersion(content)}`;
+}
+
+/**
+ * ページの `generateMetadata` が `openGraph.images` に渡す画像。画像の Route Handler と同じ中身から作るので、
+ * 代替テキストが画像に書いた字と食い違わない。Next.js は `twitter:image` をこれから補う。
+ */
+export interface ShareOpenGraphImage {
+  url: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
+export function shareOpenGraphImage(
+  pagePath: string,
+  content: ShareImageContent,
+): ShareOpenGraphImage {
+  return {
+    url: shareImageUrl(pagePath, content),
+    width: SHARE_IMAGE_WIDTH,
+    height: SHARE_IMAGE_HEIGHT,
+    alt: shareImageAlt(content),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -283,21 +328,58 @@ function moveLeadingSpaces(phrases: readonly string[]): string[] {
   return moved.filter((phrase) => phrase !== "");
 }
 
+/** 直後で折れる閉じ括弧（ブラウザは見出しの文節の中でも、ここで折る）。 */
+const CLOSING_BRACKET = /[」』）)]/u;
 /**
- * 行に詰める単位。1行に収まる文節はそのまま、収まらない文節は字の範囲のまとまりに、それでも収まらないまとまりは字に
+ * 前で折らない字。ダッシュ（「—」「──」「--」。画面の見出しはダッシュの前の空白を折れない空白にする）と、行の頭に
+ * 置かない約物。
+ */
+const NO_BREAK_BEFORE = /^(?:[—―─]|--|[、。，．,.！？!?」』）)…‥・ー])/u;
+
+/**
+ * 文節を、画面の見出しが文節の中でも折る所で分ける。空白の後ろ（ダッシュの前を除く）と、閉じ括弧の直後。
+ */
+function splitAtInnerBreaks(phrase: string): string[] {
+  const pieces: string[] = [];
+  let current = "";
+  const chars = [...phrase];
+  chars.forEach((char, index) => {
+    current += char;
+    const rest = chars.slice(index + 1).join("");
+    const breaksAfter =
+      (/\s/u.test(char) && !/^\s/u.test(rest)) || CLOSING_BRACKET.test(char);
+    if (breaksAfter && rest !== "" && !NO_BREAK_BEFORE.test(rest)) {
+      pieces.push(current);
+      current = "";
+    }
+  });
+  if (current !== "") pieces.push(current);
+  return pieces;
+}
+
+/**
+ * 文を、画面の見出しが折る所（DESIGN.md §4）で分けた単位。文節の切れ目・文節の中の空白の後ろ・閉じ括弧の直後。
+ * 文節の頭の空白は前の単位の終わりに付く。
+ */
+export function lineBreakUnits(text: string): string[] {
+  return moveLeadingSpaces(splitIntoPhrases(text)).flatMap(splitAtInnerBreaks);
+}
+
+/**
+ * 行に詰める単位。1行に収まる単位はそのまま、収まらない単位は字の範囲のまとまりに、それでも収まらないまとまりは字に
  * 分ける。
  */
 function breakUnits(
-  pieces: readonly string[],
+  units: readonly string[],
   style: TextStyle,
   maxWidth: number,
   fonts: LoadedFonts,
 ): string[] {
   const fits = (text: string) =>
     measure(text.replace(TRAILING_SPACES, ""), style, fonts) <= maxWidth;
-  return pieces.flatMap((phrase) => {
-    if (fits(phrase)) return [phrase];
-    return toRuns(phrase, style.jaFamily).flatMap(({ text }) =>
+  return units.flatMap((unit) => {
+    if (fits(unit)) return [unit];
+    return toRuns(unit, style.jaFamily).flatMap(({ text }) =>
       fits(text) ? [text] : graphemes(text),
     );
   });
@@ -334,28 +416,27 @@ function fillLines(
     }));
 }
 
-/** 文のどの文節も、幅 maxWidth の1行に収まるか。 */
-function everyPhraseFits(
+/** 文のどの単位（lineBreakUnits）も、幅 maxWidth の1行に収まるか。 */
+function everyUnitFits(
   text: string,
   style: TextStyle,
   maxWidth: number,
   fonts: LoadedFonts,
 ): boolean {
-  return splitIntoPhrases(text).every(
-    (phrase) => measure(phrase.trim(), style, fonts) <= maxWidth,
+  return lineBreakUnits(text).every(
+    (unit) => measure(unit.trim(), style, fonts) <= maxWidth,
   );
 }
 
-/** 文を、見出しと同じ文節の区切りで、幅 maxWidth の行に折る。 */
+/** 文を、画面の見出しと同じ折り所で、幅 maxWidth の行に折る。 */
 function breakText(
   text: string,
   style: TextStyle,
   maxWidth: number,
   fonts: LoadedFonts,
 ): Line[] {
-  const phrases = moveLeadingSpaces(splitIntoPhrases(text));
   return fillLines(
-    breakUnits(phrases, style, maxWidth, fonts),
+    breakUnits(lineBreakUnits(text), style, maxWidth, fonts),
     style,
     maxWidth,
     fonts,
@@ -498,8 +579,8 @@ function truncatedSubtitle(
 }
 
 /**
- * 中身の組みを決める。名前の段は、名前が3行以内に収まり、中身が枠の縦に収まるいちばん大きい段。そのうち、どの文節も
- * 1行に収まる段があればそれを選び、文節の中で折るのは、どの段でも収まらない文節があるときだけにする（§4）。
+ * 中身の組みを決める。名前の段は、名前が3行以内に収まり、中身が枠の縦に収まるいちばん大きい段。そのうち、折り所の
+ * どの単位も1行に収まる段があればそれを選び、単位の中で折るのは、どの段でも収まらない単位があるときだけにする（§4）。
  * いちばん下の段でも3行を超えるときは、いちばん下の段のまま行を増やす。いちばん下の段でも枠の縦に収まらないときは、
  * 副題を切る。
  */
@@ -550,7 +631,7 @@ function layoutShareImage(
     candidates.find(
       (candidate) =>
         fitsFrame(candidate) &&
-        everyPhraseFits(
+        everyUnitFits(
           content.name,
           nameStyle(candidate.size),
           columnWidth,

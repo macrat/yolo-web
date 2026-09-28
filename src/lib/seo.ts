@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 // 各フィーチャーのメタデータの型を受け取って組む関数を、この共有層に集める。
 import type { ToolMeta } from "@/tools/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+// 画像の描き方は server-only なので、型だけを読む（Breadcrumb などクライアントの部品もこのファイルを読む）。
+import type { ShareOpenGraphImage } from "@/lib/share-image";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
   return {
@@ -60,7 +62,11 @@ interface BlogPostMetaForSeo {
   image?: string;
 }
 
-export function generateBlogPostMetadata(post: BlogPostMetaForSeo): Metadata {
+/** 記事のメタデータ。shareImage は記事の画像（`shareOpenGraphImage` が作る値）で、`openGraph.images` に渡す。 */
+export function generateBlogPostMetadata(
+  post: BlogPostMetaForSeo,
+  shareImage: ShareOpenGraphImage,
+): Metadata {
   return {
     title: `${post.title} | ${SITE_NAME}`,
     description: post.description,
@@ -73,6 +79,7 @@ export function generateBlogPostMetadata(post: BlogPostMetaForSeo): Metadata {
       siteName: SITE_NAME,
       publishedTime: post.published_at,
       modifiedTime: post.updated_at,
+      images: [shareImage],
     },
     twitter: {
       card: "summary_large_image",

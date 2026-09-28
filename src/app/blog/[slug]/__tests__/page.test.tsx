@@ -141,15 +141,33 @@ describe("app/blog/[slug]/page", () => {
   });
 
   describe("構造化データ", () => {
-    it("記事の JSON-LD の image が、ページの画像の URL（og:image と同じ）であること", async () => {
-      const { default: BlogPostPage, generateStaticParams } =
-        await import("../page");
-      const { shareImageUrl } = await import("@/lib/share-image");
+    it("記事の JSON-LD の image と openGraph.images の url が、同じ画像の URL であること", async () => {
+      const {
+        default: BlogPostPage,
+        generateMetadata,
+        generateStaticParams,
+      } = await import("../page");
       const [{ slug }] = generateStaticParams();
-      const page = await BlogPostPage({ params: Promise.resolve({ slug }) });
+      const params = Promise.resolve({ slug });
+      const page = await BlogPostPage({ params });
       const [script] = page.props.children;
       const jsonLd = JSON.parse(script.props.dangerouslySetInnerHTML.__html);
-      expect(jsonLd.image).toBe(shareImageUrl(`/blog/${slug}`));
+      const metadata = await generateMetadata({ params });
+      const images = metadata.openGraph?.images as { url: string }[];
+      expect(images).toHaveLength(1);
+      expect(jsonLd.image).toBe(images[0].url);
+      expect(jsonLd.image).toMatch(
+        new RegExp(`/blog/${slug}/opengraph-image\\?v=[0-9a-f]{16}$`),
+      );
+    }, 60_000); // 記事の本文を Shiki で組むので、初めの1回は既定の時間を超えうる。
+
+    it("記事のディレクトリに規約の画像のファイルを置かない（画像は Route Handler が描く）", () => {
+      const dir = path.resolve(__dirname, "..");
+      expect(fs.existsSync(path.join(dir, "opengraph-image.tsx"))).toBe(false);
+      expect(fs.existsSync(path.join(dir, "twitter-image.tsx"))).toBe(false);
+      expect(
+        fs.existsSync(path.join(dir, "opengraph-image", "route.tsx")),
+      ).toBe(true);
     });
   });
 

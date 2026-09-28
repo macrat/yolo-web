@@ -18,7 +18,8 @@ import {
 } from "@/lib/seo";
 import { formatDate } from "@/lib/date";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
-import { shareImageUrl } from "@/lib/share-image";
+import { shareOpenGraphImage } from "@/lib/share-image";
+import { blogShareImageContent } from "@/blog/_lib/share-image-content";
 import Breadcrumb from "@/components/Breadcrumb";
 import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
@@ -42,7 +43,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
-  return generateBlogPostMetadata(post);
+  return generateBlogPostMetadata(
+    post,
+    shareOpenGraphImage(`/blog/${slug}`, blogShareImageContent(post)),
+  );
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -64,7 +68,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   const jsonLd = generateBlogPostJsonLd({
     ...post,
-    image: shareImageUrl(`/blog/${slug}`),
+    image: shareOpenGraphImage(`/blog/${slug}`, blogShareImageContent(post))
+      .url,
   });
 
   return (

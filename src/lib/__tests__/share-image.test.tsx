@@ -4,12 +4,14 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import sharp from "sharp";
 import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
+import { CATEGORY_LABELS, getAllBlogPosts } from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import {
+  lineBreakUnits,
   renderShareImage,
   shareImageAlt,
-  shareImageAltByKind,
+  shareOpenGraphImage,
   shareImageUrl,
   type Block,
   type ShareImageContent,
@@ -53,10 +55,33 @@ const INPUTS: Record<string, ShareImageContent> = {
   longestBlogTitle: {
     aux: "ブログ",
     name: "Next.js複数root layoutで not-found.tsx が効かない -- global-not-found.js での解決",
-    subtitle: "開発",
+    subtitle: "開発ノート",
   },
-  /** character-personality でいちばん長いタイプ名（30字）。鉤括弧を含む。 */
+  /** ブログの題。最初の語「Gitコマンド」の後ろの空白で折れ、「Git」だけの行を作らない。 */
+  gitCheatsheet: {
+    aux: "ブログ",
+    name: "Gitコマンド 早見表 — 用途別のコマンド一覧",
+    subtitle: "ツールガイド",
+  },
+  /** ブログの題（67字）。文節の中の空白で折れる。 */
+  seoBlogTitle: {
+    aux: "ブログ",
+    name: "Next.jsサイトのSEOメタデータ完全対策: OGP・canonical・Twitter Card・JSON-LDセキュリティまで",
+    subtitle: "開発ノート",
+  },
+  /** ブログの題。1つの単位（「切り替えられるようになりました」）が 72px では1行に収まらない。 */
+  unitLimitedTitle: {
+    aux: "ブログ",
+    name: "ダークモードを手動で切り替えられるようになりました",
+    subtitle: "開発ノート",
+  },
+  /** character-personality でいちばん長いタイプ名（guardian-charger、35字）。 */
   longestTypeName: {
+    aux: "あなたに似たキャラ診断の結果",
+    name: "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者",
+  },
+  /** character-personality の、鉤括弧を含むタイプ名（30字）。 */
+  typeNameWithBrackets: {
     aux: "あなたに似たキャラ診断の結果",
     name: "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家",
   },
@@ -465,15 +490,30 @@ describe("中身", () => {
 });
 
 describe("名前", () => {
-  /** 文節の頭（頭の空白を前の文節に移したあと）の、元の文の中の位置。 */
-  function phraseStarts(text: string): Set<number> {
-    const starts = new Set<number>();
+  /**
+   * 画面の見出しが折る所（DESIGN.md §4）の、元の文の中の位置。文節の頭（頭の空白を前の文節に移したあと）・空白の
+   * 後ろ（ダッシュの前を除く）・閉じ括弧の直後。
+   */
+  function screenBreaks(text: string): Set<number> {
+    const breaks = new Set<number>();
     let offset = 0;
     for (const phrase of splitIntoPhrases(text)) {
-      starts.add(offset + (phrase.length - phrase.trimStart().length));
+      breaks.add(offset + (phrase.length - phrase.trimStart().length));
       offset += phrase.length;
     }
-    return starts;
+    for (let index = 1; index < text.length; index++) {
+      const before = text[index - 1];
+      const rest = text.slice(index);
+      if (
+        /\s/u.test(before) &&
+        /^\S/u.test(rest) &&
+        !/^(?:[—―─]|--)/u.test(rest)
+      ) {
+        breaks.add(index);
+      }
+      if (/[」』）)]/u.test(before)) breaks.add(index);
+    }
+    return breaks;
   }
 
   /** 名前の2行目からの各行が、元の文のどこから始まるか。 */
@@ -491,35 +531,66 @@ describe("名前", () => {
 
   const nameBlock = (layout: ShareImageLayout) =>
     layout.column.find((block) => block.kind === "name")!;
+  const lineTexts = (block: Block) =>
+    block.lines.map((line) => line.runs.map((run) => run.text).join(""));
 
   test.each(cases().filter((key) => key !== "longWord"))(
-    "%s: 文節の切れ目でだけ折れる",
+    "%s: 画面の見出しが折る所（文節の切れ目・空白の後ろ・閉じ括弧の直後）でだけ折れる",
     (key) => {
       const { name } = INPUTS[key];
-      const starts = phraseStarts(name);
+      const breaks = screenBreaks(name);
       for (const start of lineStarts(name, nameBlock(rendered[key].layout))) {
-        expect(starts.has(start), `${name} を ${start} で折った`).toBe(true);
+        expect(breaks.has(start), `${name} を ${start} で折った`).toBe(true);
       }
     },
   );
 
-  test("1行に収まらない語の中でだけ、文節の切れ目でない所で折れる", () => {
+  test("1行に収まらない語の中でだけ、画面の折り所でない所で折れる", () => {
     const { name } = INPUTS.longWord;
     const word =
       "Supercalifragilisticexpialidociousandevenlongerwordthatcannotfit";
     const wordStart = name.indexOf(word);
-    const starts = phraseStarts(name);
-    const breaks = lineStarts(name, nameBlock(rendered.longWord.layout));
-    expect(breaks.length).toBeGreaterThan(0);
-    for (const start of breaks) {
+    const breaks = screenBreaks(name);
+    const starts = lineStarts(name, nameBlock(rendered.longWord.layout));
+    expect(starts.length).toBeGreaterThan(0);
+    for (const start of starts) {
       const insideWord = start > wordStart && start < wordStart + word.length;
-      expect(starts.has(start) || insideWord, `${start}`).toBe(true);
+      expect(breaks.has(start) || insideWord, `${start}`).toBe(true);
     }
     expect(
-      breaks.some(
+      starts.some(
         (start) => start > wordStart && start < wordStart + word.length,
       ),
     ).toBe(true);
+  });
+
+  test("最初の語を割らず、画面の h1 と同じく空白の後ろで折る（「Git」だけの行を作らない）", () => {
+    const lines = lineTexts(nameBlock(rendered.gitCheatsheet.layout));
+    expect(lines[0].startsWith("Gitコマンド")).toBe(true);
+    expect(lines.every((line) => line !== "Git")).toBe(true);
+  });
+
+  /** 名前を1行で組んだときの幅（字の大きさ 1px あたり）。 */
+  async function emWidth(text: string): Promise<number> {
+    const { layout } = await renderShareImage({ name: text });
+    const block = nameBlock(layout);
+    return block.lines.reduce((sum, line) => sum + line.width, 0) / block.size;
+  }
+
+  test("折り所のどの単位も1行に収まる段のうち、いちばん大きい段を選ぶ（1段上では単位の中で折ることになる）", async () => {
+    const { layout } = rendered.unitLimitedTitle;
+    const widths = await Promise.all(
+      lineBreakUnits(INPUTS.unitLimitedTitle.name).map((unit) =>
+        emWidth(unit.trim()),
+      ),
+    );
+    const widest = Math.max(...widths);
+    const chosen = NAME_SIZES.indexOf(
+      layout.nameSize as (typeof NAME_SIZES)[number],
+    );
+    expect(chosen).toBeGreaterThan(0);
+    expect(widest * layout.nameSize).toBeLessThanOrEqual(CONTENT_WIDTH);
+    expect(widest * NAME_SIZES[chosen - 1]).toBeGreaterThan(CONTENT_WIDTH);
   });
 
   test.each(cases())(
@@ -742,6 +813,24 @@ describe("副題", () => {
   });
 });
 
+describe("ブログのすべての題", () => {
+  // 組みだけを見るので PNG は読まない。記事の画像のルートと同じ中身で組む。
+  test.each(getAllBlogPosts().map((post) => [post.slug, post] as const))(
+    "%s: 名前が3行以内で、中身が枠の縦に収まり、副題を切らない",
+    async (_, post) => {
+      const { layout } = await renderShareImage({
+        aux: "ブログ",
+        name: post.title,
+        subtitle: CATEGORY_LABELS[post.category],
+      });
+      const name = layout.column.find((block) => block.kind === "name")!;
+      expect(name.lines.length).toBeLessThanOrEqual(NAME_MAX_LINES);
+      expect(layout.height).toBeLessThanOrEqual(CONTENT_MAX_HEIGHT);
+      expect(layout.subtitleTruncated).toBe(false);
+    },
+  );
+});
+
 describe("代替テキスト・URL", () => {
   test("代替テキストは画像に書いてある字を、書いてある順に言う", () => {
     expect(
@@ -760,15 +849,43 @@ describe("代替テキスト・URL", () => {
     );
   });
 
-  test("動的なセグメントの代替テキストは、画像の種類を言う", () => {
-    expect(shareImageAltByKind("ブログの記事の題")).toBe(
-      "ブログの記事の題と yolos.net を書いた画像",
+  const post = {
+    aux: "ブログ",
+    name: "Gitコマンド 早見表",
+    subtitle: "ツールガイド",
+  };
+
+  test("画像の URL は、ページの URL の下の opengraph-image に版（?v=）を付けたもの", () => {
+    expect(shareImageUrl("/blog/x", post)).toMatch(
+      new RegExp(`^${BASE_URL}/blog/x/opengraph-image\\?v=[0-9a-f]{16}$`),
+    );
+    expect(shareImageUrl("/", post)).toMatch(
+      new RegExp(`^${BASE_URL}/opengraph-image\\?v=[0-9a-f]{16}$`),
     );
   });
 
-  test("画像の URL は、ページの URL の下の opengraph-image", () => {
-    expect(shareImageUrl("/blog/x")).toBe(`${BASE_URL}/blog/x/opengraph-image`);
-    expect(shareImageUrl("/")).toBe(`${BASE_URL}/opengraph-image`);
+  test("版は、中身を変えたときだけ変わる（キーの順には依らない）", () => {
+    const version = (content: ShareImageContent) =>
+      shareImageUrl("/blog/x", content).split("?v=")[1];
+    expect(version(post)).toBe(version({ ...post }));
+    expect(version(post)).toBe(
+      version({ subtitle: post.subtitle, name: post.name, aux: post.aux }),
+    );
+    expect(version({ ...post, name: "Gitコマンド 早見表 — 用途別" })).not.toBe(
+      version(post),
+    );
+    expect(version({ ...post, subtitle: "開発ノート" })).not.toBe(
+      version(post),
+    );
+  });
+
+  test("openGraph.images に渡す画像は、URL・大きさ・画像に書いた字の代替テキストを持つ", () => {
+    expect(shareOpenGraphImage("/blog/x", post)).toEqual({
+      url: shareImageUrl("/blog/x", post),
+      width: 1200,
+      height: 630,
+      alt: "yolos.net ブログ Gitコマンド 早見表 ツールガイド",
+    });
   });
 });
 

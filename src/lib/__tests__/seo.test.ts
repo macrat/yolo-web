@@ -1,4 +1,5 @@
 import { expect, test, describe } from "vitest";
+import { shareOpenGraphImage } from "@/lib/share-image";
 import {
   generateGameJsonLd,
   generateBreadcrumbJsonLd,
@@ -432,61 +433,72 @@ describe("generateBlogPostMetadata", () => {
     updated_at: "2026-02-16T10:00:00+09:00",
     tags: ["テスト"],
   };
+  const shareImage = shareOpenGraphImage("/blog/test-article", {
+    aux: "ブログ",
+    name: "テスト記事",
+    subtitle: "開発ノート",
+  });
 
   test("titleに記事タイトルとサイト名を含む", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     expect(result.title).toContain("テスト記事");
     expect(result.title).toContain("yolos.net");
   });
 
   test("canonical URLが絶対URLで正しいパスを含む", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const canonical = result.alternates?.canonical as string;
     expect(canonical).toContain("/blog/test-article");
     expect(canonical).toMatch(/^https:\/\//);
   });
 
   test("og:urlが存在しcanonicalと一致する", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.url).toBeDefined();
     expect(og?.url).toBe(result.alternates?.canonical);
   });
 
   test("og:titleが存在する", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.title).toBeDefined();
   });
 
   test("og:descriptionが存在する", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.description).toBeDefined();
   });
 
   test("og:siteNameがyolos.netである", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.siteName).toBe("yolos.net");
   });
 
   test("openGraph.typeがarticleである", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.type).toBe("article");
   });
 
   test("OGP publishedTimeが含まれる", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.publishedTime).toBe("2026-02-15T10:00:00+09:00");
   });
 
   test("OGP modifiedTimeが含まれる", () => {
-    const result = generateBlogPostMetadata(blogData);
+    const result = generateBlogPostMetadata(blogData, shareImage);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.modifiedTime).toBe("2026-02-16T10:00:00+09:00");
+  });
+
+  test("openGraph.images に記事の画像を渡す", () => {
+    const result = generateBlogPostMetadata(blogData, shareImage);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.images).toEqual([shareImage]);
   });
 });
 
@@ -865,14 +877,20 @@ describe("factory functions include twitter metadata", () => {
   });
 
   test("generateBlogPostMetadata includes twitter", () => {
-    const result = generateBlogPostMetadata({
-      title: "テスト記事",
-      slug: "test-article",
-      description: "テスト記事の説明",
-      published_at: "2026-02-15T10:00:00+09:00",
-      updated_at: "2026-02-15T10:00:00+09:00",
-      tags: ["テスト"],
-    });
+    const result = generateBlogPostMetadata(
+      {
+        title: "テスト記事",
+        slug: "test-article",
+        description: "テスト記事の説明",
+        published_at: "2026-02-15T10:00:00+09:00",
+        updated_at: "2026-02-15T10:00:00+09:00",
+        tags: ["テスト"],
+      },
+      shareOpenGraphImage("/blog/test-article", {
+        aux: "ブログ",
+        name: "テスト記事",
+      }),
+    );
 
     expect(result.twitter).toMatchObject({
       card: "summary_large_image",

@@ -6,8 +6,6 @@ import { afterEach, beforeEach } from "vitest";
  * Provide a stable localStorage implementation that survives vi.useFakeTimers().
  * In vitest 4 + jsdom, fake timers can replace window globals including localStorage,
  * causing "not a function" errors. This mock avoids that issue.
- * Tests that run in the node environment (`@vitest-environment node`, e.g. the ones that
- * render PNGs with next/og, whose WebAssembly rejects jsdom's typed arrays) have no window.
  */
 function createLocalStorageMock(): Storage {
   let store: Record<string, string> = {};
@@ -37,6 +35,8 @@ function createLocalStorageMock(): Storage {
 const localStorageMock = createLocalStorageMock();
 
 beforeEach(() => {
+  // Tests in the node environment (`@vitest-environment node`, e.g. the ones that render PNGs
+  // with next/og, whose WebAssembly rejects jsdom's typed arrays) have no window to mock.
   if (typeof window === "undefined") return;
   Object.defineProperty(window, "localStorage", {
     value: localStorageMock,

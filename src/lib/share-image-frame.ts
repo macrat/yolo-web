@@ -8,6 +8,12 @@
  * 同じ寸法になる。`next/og` を読まないので、クライアントの部品からも import できる。
  */
 
+/**
+ * 描き方の版。画像の URL の版（`?v=`）は、中身とこのモジュールの値から作る。描き方のコード（書体・字の組み方）だけを
+ * 変えたときは、この値を1つ上げて、SNS に画像を取り直させる。
+ */
+export const SHARE_IMAGE_VERSION = 1;
+
 /** 画像の大きさ。カードがふつうに見られる幅（500〜600px）のおよそ2倍。 */
 export const SHARE_IMAGE_WIDTH = 1200;
 export const SHARE_IMAGE_HEIGHT = 630;
