@@ -1,7 +1,7 @@
 /**
  * サイト共通の Metadata と Viewport。
  *
- * ルートのレイアウト（src/app/layout.tsx・src/app/global-not-found.js）から import して使う。
+ * ルートのレイアウト（src/app/layout.tsx）から import して使う。
  */
 
 import type { Metadata, Viewport } from "next";

@@ -86,7 +86,7 @@
   --leading-heading: 1.25;
 
   /* §3 書体の並び。欧文・数字（U+0000-007F）は IBM Plex Sans が組み、ほかの字は和文の書体へ落ちる。
-   * --font-zen-antique と --font-plex-sans は、ルートのレイアウト（layout.tsx・global-not-found.js）が
+   * --font-zen-antique と --font-plex-sans は、ルートのレイアウト（layout.tsx）が
    * next/font で <html> に置く。 */
   --font-ja-body:
     "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",

@@ -1,7 +1,8 @@
 /**
  * AI 運営の告知（constitution 規則3・DESIGN.md §9）が、通常のページ・404・410 のどれにも出ることの検査。
  *
- * 通常のページと 404 は、<html> を描くルートのレイアウトが SiteFrame を置き、その下端が告知を出す。
+ * 通常のページと 404 は、<html> を描くルートのレイアウトの中に描かれる。ルートのレイアウトが SiteFrame を置き、
+ * その下端が告知を出す。
  * 410 は middleware が静的な HTML を返すので、その下端に同じ文言があることを見る。
  */
 import { describe, test, expect, vi } from "vitest";
@@ -19,7 +20,7 @@ vi.mock("next/navigation", () => ({
 
 const APP_DIR = resolve(__dirname, "..");
 
-/** <html> の要素を描くファイル（ルートのレイアウトと global-not-found）。コメントの「<html>」は拾わない。 */
+/** <html> の要素を描くファイル。コメントの「<html>」は拾わない。 */
 const rootDocuments = fg
   .sync(["**/*.{tsx,jsx,js}"], { cwd: APP_DIR, ignore: ["**/__tests__/**"] })
   .filter((file) =>
@@ -33,8 +34,8 @@ describe("AI 運営の告知がどのページにも出る", () => {
     }
   });
 
-  test("<html> を描くファイルは、通常のページのレイアウトと 404 の2つ", () => {
-    expect(rootDocuments.sort()).toEqual(["global-not-found.js", "layout.tsx"]);
+  test("<html> を描くファイルは、ルートのレイアウトの1つだけ", () => {
+    expect(rootDocuments).toEqual(["layout.tsx"]);
   });
 
   test.each(rootDocuments)("%s は SiteFrame の中にページを置く", (file) => {

@@ -6,10 +6,6 @@ const nextConfig: NextConfig = {
   // 本プロジェクトでは CLAUDE.md が Claude Code の動作指示そのものであり、
   // 外部ツールがそこへ書き込むと指示の完全性が損なわれるので、公式の opt-out で無効化する。
   agentRules: false,
-  experimental: {
-    // どのルートにも一致しない URL の 404 を src/app/global-not-found.js で描く。
-    globalNotFound: true,
-  },
   async redirects() {
     // なくなったブログの分類は、行き先の分類が無いので /blog へ送る。
     const oldCategories = [

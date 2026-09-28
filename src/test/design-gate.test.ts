@@ -5,9 +5,9 @@
  * 「目で確かめる」が担う。この検査はそれを肩代わりしない。
  *
  * ── 対象 ──────────────────────────────────────────────────────────────
- *   `src/**\/*.module.css`・`src/app/globals.css`・`src/**\/*.tsx`・`src/app/global-not-found.js` を
- *   広域 glob で走査する。ページを足しても列挙漏れで検査から外れないようにするため。除外はテスト
- *   （IGNORE）と、理由を添えた個別の許容（ALLOWLIST）だけにする。
+ *   `src/**\/*.module.css`・`src/app/globals.css`・`src/**\/*.tsx` を広域 glob で走査する。
+ *   ページを足しても列挙漏れで検査から外れないようにするため。除外はテスト（IGNORE）と、
+ *   理由を添えた個別の許容（ALLOWLIST）だけにする。
  *
  *   削除記事へ返す 410 のページ（`src/middleware.ts`）は、CSS と HTML をテンプレート文字列に
  *   埋め込むので analyzeCss/analyzeTsx が効かない。analyzeEmbeddedDesign が生テキストへ的を絞った
@@ -54,11 +54,7 @@ const DESIGN_CSS_GLOBS = [
   // トークン定義と要素の既定（*.module.css ではないので明示する）。
   "src/app/globals.css",
 ];
-const DESIGN_TSX_GLOBS = [
-  "src/**/*.tsx",
-  // 404 のルート。Next.js が拡張子 .js で読むファイル名なので明示する。
-  "src/app/global-not-found.js",
-];
+const DESIGN_TSX_GLOBS = ["src/**/*.tsx"];
 // テストはテスト文字列に禁止語を含むので走査しない。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
 

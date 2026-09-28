@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { HEADER_NAV_ITEMS } from "@/lib/site-frame";
-import GlobalNotFound from "../global-not-found-content";
+import NotFound, { metadata } from "../not-found";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-test("404 page renders heading", () => {
-  render(<GlobalNotFound />);
+test("404 のページは主見出しを持つ", () => {
+  render(<NotFound />);
   expect(
     screen.getByRole("heading", {
       level: 1,
@@ -14,8 +14,13 @@ test("404 page renders heading", () => {
   ).toBeInTheDocument();
 });
 
+test("404 のページはルートのレイアウトの robots を受け継がない（Next が足す noindex だけが出る）", () => {
+  expect(metadata.robots).toBeNull();
+  expect(metadata.title).toBe("ページが見つかりません | yolos.net");
+});
+
 test("404 の一覧へのリンクは、上端のナビと同じ名前と行き先を持つ", () => {
-  render(<GlobalNotFound />);
+  render(<NotFound />);
 
   expect(screen.getByRole("link", { name: "ホーム" })).toHaveAttribute(
     "href",
@@ -37,7 +42,7 @@ test("404 の一覧へのリンクは、上端のナビと同じ名前と行き�
 });
 
 test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
-  render(<GlobalNotFound />);
+  render(<NotFound />);
   const headings: string[][] = [
     ["ページが", "見つかりません"],
     ["主要", "コンテンツ"],
