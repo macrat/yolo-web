@@ -6,7 +6,6 @@ import DateCalculatorTile from "../DateCalculatorTile";
 
 // ------------------------------------------------------------
 // DateCalculatorTile テスト
-// cycle-228 T-21: DateCalculatorPage.test.tsx の振る舞いを移植・拡張
 //
 // テスト方針:
 // - variant="full" は3セクション全表示（diff/add/wareki）

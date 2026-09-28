@@ -3,8 +3,6 @@
 /**
  * LineBreakRemoverTile — 改行削除ツールの単一正典タイル
  *
- * cycle-228 T-4 で LineBreakRemoverPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。

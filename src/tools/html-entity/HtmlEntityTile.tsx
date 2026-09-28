@@ -3,8 +3,6 @@
 /**
  * HtmlEntityTile — HTML エンティティ変換の単一正典タイル
  *
- * cycle-227 T-1 で HtmlEntityPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。

@@ -1,5 +1,5 @@
 /**
- * LineBreakRemoverTile のユニットテスト（TDD: 実装前に書く）
+ * LineBreakRemoverTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（3モード ラジオボタンの組表示・チェックボックス表示）

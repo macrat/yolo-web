@@ -3,8 +3,6 @@
 /**
  * CronParserTile — cron-parser の単一正典タイル
  *
- * cycle-228 T-28: CronParserPage.tsx（571行）を Panel ルートのタイルへ移植。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。

@@ -1,17 +1,14 @@
 /**
  * TextDiffTile — text-diff 単一正典タイル 回帰テスト
  *
- * cycle-228 T-23 で TextDiffPage.tsx を Panel ルートのタイルへ移植。
- * 旧 TextDiffPage.test.tsx の振る舞いを全移植し以下を拡張:
- *   - variant 別テスト（full / line / word / char）
- *   - 複数インスタンス同居時の DOM id 一意性確認
+ * テスト観点:
+ *   - 差分の振る舞いと variant 別の表示（full / line / word / char）
+ *   - 複数インスタンス同居時の DOM id 一意性
  *   - CSS トークン検証（TextDiffTile.module.css）
- *   - A-1: ルートが Panel（section タグ）であること
- *
- * 個別論点:
- *   ①-2: 件数・ラベル一致（line/word/char モード別に適切なカウント表示）
- *   ①-12: 空入力「差分なし」誤表示解消（両方空のときは入力待ち状態）
- *   ②-15: コピーボタンは存在しない（知る対象）
+ *   - ルートが Panel（section タグ）であること
+ *   - 件数とラベルが mode ごとの単位（行/単語/文字）で一致すること
+ *   - 両入力とも空のときは「差分なし」を出さず、入力待ちの状態にすること
+ *   - コピーのボタンを持たないこと
  */
 
 import { render, screen, fireEvent } from "@testing-library/react";

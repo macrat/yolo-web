@@ -3,8 +3,6 @@
 /**
  * PasswordGeneratorTile — パスワード生成の単一正典タイル
  *
- * cycle-228 T-11 で PasswordGeneratorPage.tsx をタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（DESIGN.md §1 準拠）。

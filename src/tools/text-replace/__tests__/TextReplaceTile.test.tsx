@@ -1,5 +1,5 @@
 /**
- * TextReplaceTile のユニットテスト（TDD: 実装前に書く）
+ * TextReplaceTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full での基本レンダリング（3つのチェックボックス・入出力欄・role=status）

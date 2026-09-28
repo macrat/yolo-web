@@ -3,8 +3,6 @@
 /**
  * ByteCounterTile — バイト数計算ツールの単一正典タイル
  *
- * cycle-228 T-2: ByteCounterPage.tsx を廃止し、Panel ルートのタイルへ統一。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。

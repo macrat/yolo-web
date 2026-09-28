@@ -1,5 +1,5 @@
 /**
- * CsvConverterTile のユニットテスト（TDD: 実装前に書く）
+ * CsvConverterTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（入力形式・出力形式 Select が表示される）

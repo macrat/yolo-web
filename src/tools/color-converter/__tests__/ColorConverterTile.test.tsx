@@ -1,8 +1,6 @@
 /**
  * ColorConverterTile — 単一正典タイルのテスト
  *
- * cycle-228 T-15: ColorConverterPage.test.tsx の振る舞いを移植・拡張。
- *
  * テスト項目:
  * - variant="full": ラジオボタンの組表示・全モード切替・変換ロジック・コピー等
  * - variant="hex": ラジオボタンの組非表示・HEX ラベル表示・変換動作・defaultInput プリフィル

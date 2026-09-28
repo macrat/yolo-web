@@ -3,8 +3,6 @@
 /**
  * CsvConverterTile — CSV/TSV/JSON/Markdown表の相互変換ツールの単一正典タイル
  *
- * cycle-228 T-16: CsvConverterPage.tsx をタイル化したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。

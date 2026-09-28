@@ -1,7 +1,6 @@
 /**
- * CronParserTile の回帰テスト（cycle-228 T-28 単一正典タイル化）
+ * CronParserTile の回帰テスト
  *
- * 旧 CronParserPage.test.tsx の振る舞いを移植・拡張。
  * variant 別（full/parser/builder 固定）・複数インスタンス id 一意性・
  * プリセット・次回実行リストの振る舞いを網羅する。
  * CSS トークン検証はファイル先頭の import { readFileSync } from "fs" を使用。

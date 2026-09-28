@@ -1,8 +1,7 @@
 /**
- * ByteCounterTile のユニットテスト（TDD: 実装前に記述）
+ * ByteCounterTile のユニットテスト
  *
- * 旧 ByteCounterPage.test.tsx の観点を移植・拡張し、
- * タイルアーキテクチャ要件（A-1〜A-7）と恒久要件チェックリストを網羅する。
+ * 数え方の振る舞いと、タイルアーキテクチャ要件（A-1〜A-7）と恒久要件チェックリストを網羅する。
  *
  * V-1: variant=full での基本レンダリング（Panel ルート・全統計表示）
  * V-2: variant=compact での基本レンダリング（主要統計のみ・バイト分布なし）

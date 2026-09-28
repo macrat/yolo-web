@@ -1,10 +1,8 @@
 /**
- * RegexTesterTile ユニットテスト（TDD: 実装前に書く）
+ * RegexTesterTile ユニットテスト
  *
- * タイル正典化（cycle-228 T-29）の要件検証。
- * 旧 RegexTesterPage.test.tsx の振る舞いを移植し、Tile 固有要件（Panel ルート・useId・複数インスタンス）を拡張。
- *
- * Worker モックは旧テストの作法を引き継ぐ。
+ * 照合・置換の振る舞いと、タイルとしての要件（Panel ルート・useId・複数インスタンス）を確かめる。
+ * Worker はモックに置き換える。
  */
 
 import { render, screen, fireEvent, act } from "@testing-library/react";

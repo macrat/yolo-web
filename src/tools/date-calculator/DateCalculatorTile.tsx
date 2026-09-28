@@ -3,15 +3,13 @@
 /**
  * DateCalculatorTile — 日付計算の単一正典タイル
  *
- * cycle-228 T-21: DateCalculatorPage.tsx を Panel ルートのタイルへ作り直し。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
  * - **1ツール n タイル = variant**: full / diff / add / wareki は同一コンポーネントの
  *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（8個超の hardcoded id を移行）。
+ *   同居しても id 重複・label 誤結合が起きない。
  * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: dateDiff/addDays/toWareki/fromWareki が唯一のロジック源。
  *

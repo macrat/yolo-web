@@ -37,9 +37,8 @@
   gap: 0.5rem;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ）
-   HtmlEntityPage.module.css では sr-only だったが、UrlEncodeTile に揃えて
-   視覚的にも薄く表示する（情報は隠さない原則） */
+/* 変換結果のサマリを読み上げるライブリージョン。読み上げと同じ文を画面にも薄く出し、
+   目で見る来訪者にも同じ情報を渡す。 */
 .statusSummary {
   font-size: 0.8rem;
   color: var(--ink-2);

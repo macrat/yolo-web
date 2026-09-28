@@ -1,8 +1,6 @@
 /**
  * BmiCalculatorTile 回帰テスト
  *
- * cycle-228 T-6: BmiCalculatorPage.test.tsx の振る舞いを Tile へ移植・拡張
- *
  * E-1: 基本レンダリング
  * E-2: 入力→結果更新
  * E-3: 空入力時の挙動

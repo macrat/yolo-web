@@ -13,8 +13,6 @@ import { meta } from "../meta";
 
 // ============================================================
 // HashGeneratorTile テスト
-// cycle-228 T-17: HashGeneratorPage.test.tsx の振る舞いを
-// HashGeneratorTile に移植・拡張
 // ============================================================
 
 describe("HashGeneratorTile", () => {
@@ -383,7 +381,6 @@ describe("HashGeneratorTile", () => {
 
 // ============================================================
 // G-2 / G-4: meta.ts の文字列整合テスト
-// 旧 HashGeneratorPage.test.tsx の describe("meta.ts content validation") を移植
 // ============================================================
 describe("meta.ts content validation", () => {
   // G-2: howItWorks 冒頭に「ハッシュとは何か・何に使うか」の平易な導入文が存在する

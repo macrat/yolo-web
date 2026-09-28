@@ -1,5 +1,5 @@
 /**
- * HtmlEntityTile のユニットテスト（TDD: 実装前に作成）
+ * HtmlEntityTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（方向のラジオボタンが表示される）

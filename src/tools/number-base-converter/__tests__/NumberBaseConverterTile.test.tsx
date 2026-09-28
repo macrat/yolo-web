@@ -1,9 +1,8 @@
 /**
  * NumberBaseConverterTile — 回帰テスト
- * 旧 NumberBaseConverterPage.test.tsx の振る舞いを Tile 向けに移植・拡張。
  *
  * テスト群:
- * - T-full-*: variant="full" の振る舞い（旧 E-1〜E-12 相当）
+ * - T-full-*: variant="full" の振る舞い
  * - T-bin-hex-*: variant="bin-hex" の振る舞い（2進→16進固定）
  * - T-multi-*: 複数インスタンス同居時の DOM id 一意性
  * - T-css-*: CSS トークン検証

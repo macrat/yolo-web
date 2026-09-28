@@ -3,8 +3,6 @@
 /**
  * FullwidthConverterTile — 全角半角変換の単一正典タイル
  *
- * cycle-227 T-3 で FullwidthConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。

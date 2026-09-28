@@ -1,5 +1,5 @@
 /**
- * UrlEncodeTile のユニットテスト（T-1 TDD: 実装前に書く）
+ * UrlEncodeTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（方向のラジオボタンが表示される）

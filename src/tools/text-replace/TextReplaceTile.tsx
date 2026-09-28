@@ -3,8 +3,6 @@
 /**
  * TextReplaceTile — テキスト置換ツールの単一正典タイル
  *
- * cycle-228 T-5 で TextReplacePage.tsx を Panel ルートのタイルへ再実装。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。

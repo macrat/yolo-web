@@ -78,9 +78,8 @@ export interface GameMeta {
   legend?: GameLegend;
 
   /**
-   * FAQ: Q&A形式の配列
-   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
-   * answerはプレーンテキストのみ（HTML・特殊記法不可）。
+   * よくある質問。ページの「よくある質問」の節と FAQPage の JSON-LD の元になる。
+   * answer はプレーンテキストのみ（HTML・特殊記法不可）。
    */
   faq?: Array<{
     question: string;

@@ -1,5 +1,5 @@
 /**
- * BusinessEmailTile のユニットテスト（TDD: 実装前に書く）
+ * BusinessEmailTile のユニットテスト
  *
  * 検証観点:
  * - T-1: variant=full での基本レンダリング

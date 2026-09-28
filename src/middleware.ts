@@ -13,25 +13,24 @@ import {
 /**
  * 削除済みブログ記事のスラッグ一覧。
  * これらのURLに対して HTTP 410 Gone を返す。
- * cycle番号はそのスラッグが削除された際のサイクルを示す。
  */
 export const DELETED_BLOG_SLUGS: readonly string[] = [
-  "ai-agent-site-strategy-formulation", // cycle-66で3部作に置換
-  "ai-agent-bias-and-context-engineering", // cycle-68でスラッグ変更
-  "forced-ideation-1728-combinations", // cycle-68でスラッグ変更
-  "ai-agent-workflow-limits-when-4-skills-break", // cycle-68でスラッグ変更
-  "nextjs-static-page-split-for-tools", // cycle-84で削除、改良版記事あり
-  "achievement-system-multi-agent-incidents", // cycle-84で削除
-  "character-fortune-text-art", // cycle-84で削除
-  "music-personality-design", // cycle-84で削除
-  "q43-humor-fortune-portal", // cycle-84で削除
-  "password-security-guide", // cycle-88で削除
-  "hash-generator-guide", // cycle-88で削除
-  "unit-converter-guide", // cycle-89で削除
-  "rss-feed", // cycle-89で削除
-  "html-sql-cheatsheets", // cycle-89で削除
-  "web-developer-tools-guide", // cycle-90で削除
-  "quality-improvement-and-restructure-design", // cycle-15で短期間公開後削除
+  "ai-agent-site-strategy-formulation", // 3部作の記事に置き換え
+  "ai-agent-bias-and-context-engineering", // スラッグを変更
+  "forced-ideation-1728-combinations", // スラッグを変更
+  "ai-agent-workflow-limits-when-4-skills-break", // スラッグを変更
+  "nextjs-static-page-split-for-tools", // 改良版の記事あり
+  "achievement-system-multi-agent-incidents",
+  "character-fortune-text-art",
+  "music-personality-design",
+  "q43-humor-fortune-portal",
+  "password-security-guide",
+  "hash-generator-guide",
+  "unit-converter-guide",
+  "rss-feed",
+  "html-sql-cheatsheets",
+  "web-developer-tools-guide",
+  "quality-improvement-and-restructure-design", // 短期間公開後削除
   "site-name-yolos-net", // 短期間公開後削除
   "tools-expansion-27", // 短期間公開後削除
   "traditional-colors-dictionary", // 短期間公開後削除

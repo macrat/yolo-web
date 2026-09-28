@@ -59,7 +59,6 @@ const BUDGETS = {
     "/play": 140 * 1024, // 140 KB (yoji-data expanded to 402 entries)
     "/dictionary": 50 * 1024, // 50 KB
     "/blog": 20 * 1024, // 20 KB
-    // /quiz and /fortune have been migrated to /play (cycle-102 B-206)
   } as Record<string, number>,
 
   /**
@@ -75,9 +74,7 @@ const BUDGETS = {
  * the uncategorisedMax budget.
  */
 const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
-  // トップ `/`。診断中心の軽量な着地面（cycle-277 T6-c で道具箱ダッシュボード
-  // から置き換え済み。道具箱自体は cycle-279 フェーズ R で完全撤去）。
-  // ルートはカテゴリに属さないため未分類 whitelist に残す
+  // トップ `/`。軽量な着地面で、カテゴリに属さないため未分類 whitelist に置く
   // （予算免除ではなく uncategorisedMax 50KB の対象＝軽量であることをこのテストが担保する）。
   "/",
   "/about",

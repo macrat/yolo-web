@@ -1,5 +1,5 @@
 /**
- * SqlFormatterTile のユニットテスト（TDD: 実装前に書く）
+ * SqlFormatterTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（全機能が表示される）

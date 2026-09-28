@@ -1,13 +1,13 @@
 /**
  * PasswordGeneratorTile 回帰テスト
  *
- * PasswordGeneratorPage.test.tsx の振る舞いを移植・拡張。
- * 主な追加観点:
+ * 主な観点:
+ * - 生成と強度の振る舞い
  * - [A-1] Panel がルートであること
  * - [A-6] useId ベースの id 一意性（複数インスタンス）
  * - variant="full" の全機能保持
  * - 複数インスタンスで DOM id 重複なし
- * - E-12 相当の CSS トークン検証
+ * - CSS トークン検証
  *
  * CSS トークン検証は `import { readFileSync } from "fs"` で書く（require() は eslint error）。
  */

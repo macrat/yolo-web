@@ -3,13 +3,11 @@
 /**
  * BmiCalculatorTile — BMI計算の単一正典タイル
  *
- * cycle-228 T-6: BmiCalculatorPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
  * - **1ツール 1 タイル = variant full のみ**: BMI計算は独立した compact モードが
- *   成立しないため、full のみの variant 設計とする（作業指示 §3 に従う）。
+ *   成立しないため、full のみの variant 設計とする。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
  *   同居しても id 重複・label 誤結合が起きない。
  * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。

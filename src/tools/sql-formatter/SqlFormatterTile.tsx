@@ -3,8 +3,6 @@
 /**
  * SqlFormatterTile — SQL整形・圧縮の単一正典タイル
  *
- * cycle-228 T-13: SqlFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）

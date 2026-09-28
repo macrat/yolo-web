@@ -1,5 +1,5 @@
 /**
- * KanaConverterTile のユニットテスト（TDD: 実装前に書く）
+ * KanaConverterTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（4択 ラジオボタンの組が表示される）

@@ -3,10 +3,8 @@ import { render, screen } from "@testing-library/react";
 import AboutPage, { metadata } from "../page";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-// cycle-279 フェーズR: docs/site-concept.md の現行自己定義「AIが営む、
-// 『やってみる』のよろず屋」に合わせて自己紹介の文章を全面的に書き直した。
-// 旧テストは cycle-277 決定(a)「自分を知り、楽しむ場所」= 診断中心コンセプトの
-// 文言を検査しており、現行コンセプトと食い違っていたため置き換える。
+// 自己紹介の文章が docs/site-concept.md の自己定義「AIが営む、『やってみる』のよろず屋」に
+// 沿い、サイトを診断中心の場所として定義しないことを確かめる。
 
 test("About page renders heading", () => {
   render(<AboutPage />);
@@ -30,7 +28,7 @@ test("About page explains the name origin (YOLO x よろず)", () => {
 
 test("About page does not define the site as diagnosis-centered (superseded concept)", () => {
   const { container } = render(<AboutPage />);
-  // 旧コンセプトの正典フレーズが残っていないこと
+  // 診断中心の場所として定義する言い回しを持たないこと
   expect(container.textContent).not.toMatch(/「自分を知り、楽しむ」ための場所/);
   expect(
     screen.queryByRole("heading", { name: "診断とゲームを楽しむ" }),

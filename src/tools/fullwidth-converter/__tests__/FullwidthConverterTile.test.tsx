@@ -1,5 +1,5 @@
 /**
- * FullwidthConverterTile ユニットテスト（T-3 TDD: 実装前に書く）
+ * FullwidthConverterTile ユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（方向のラジオボタン・checkbox 3個が表示される）

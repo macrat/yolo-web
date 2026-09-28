@@ -3,8 +3,6 @@
 /**
  * HashGeneratorTile — ハッシュ生成ツールの単一正典タイル
  *
- * cycle-228 T-17 で HashGeneratorPage.tsx を Panel ルートのタイルへ統合したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。

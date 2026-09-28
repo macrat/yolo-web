@@ -1,8 +1,6 @@
 /**
  * UnitConverterTile 回帰テスト
  *
- * 旧 UnitConverterPage.test.tsx の全ケースを移植・拡張。
- *
  * T-1: 基本レンダリング（Panel ルート確認・必須コントロール存在）
  * T-2: 入力→結果更新
  * T-3: 空入力時の挙動

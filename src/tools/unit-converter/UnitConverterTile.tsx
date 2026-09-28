@@ -3,8 +3,6 @@
 /**
  * UnitConverterTile — 単位変換の単一正典タイル
  *
- * cycle-228 T-20: UnitConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。

@@ -3,8 +3,6 @@
 /**
  * RegexTesterTile — 正規表現テスター 単一正典タイル
  *
- * cycle-228 T-29: RegexTesterPage.tsx → Panel ルートのタイルへ再構築。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
