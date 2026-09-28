@@ -45,7 +45,7 @@ import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResu
 import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
-import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { revealControl } from "@/lib/reveal";
 import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
 import HintBar, { hintLineCount } from "./HintBar";
 import GameBoard from "./GameBoard";

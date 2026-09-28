@@ -10,7 +10,8 @@ import GameContainer from "@/play/games/yoji-kimeru/_components/GameContainer";
 import type { EvaluateResponse } from "@/play/games/yoji-kimeru/_lib/types";
 import { trackContentEnd } from "@/lib/analytics";
 
-vi.mock("@/play/games/shared/_lib/revealControl", () => ({
+vi.mock("@/lib/reveal", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/reveal")>()),
   revealControl: vi.fn(),
 }));
 

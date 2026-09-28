@@ -3,7 +3,8 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import GameContainer from "@/play/games/kanji-kanaru/_components/GameContainer";
 import type { GuessFeedback } from "@/play/games/kanji-kanaru/_lib/types";
 
-vi.mock("@/play/games/shared/_lib/revealControl", () => ({
+vi.mock("@/lib/reveal", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/reveal")>()),
   revealControl: vi.fn(),
 }));
 

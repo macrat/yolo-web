@@ -69,19 +69,6 @@ const EMBEDDED_DESIGN_FILES = ["src/middleware.ts"];
 
 /** 理由を添えて個別に許す宣言。 */
 const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
-  // ローディングスピナーの回転リング。円でなければ回転が見えず、読み込み中を示せないため、
-  // この2ファイルのスピナーだけ円を許す。操作に使う部品（トグル・スライダーのつまみ・進捗ドット等）は
-  // ここに含めない。
-  {
-    fileEndsWith:
-      "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
-    declaration: "border-radius: 50%",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/yoji-kimeru/_components/styles/GameContainer.module.css",
-    declaration: "border-radius: 50%",
-  },
   // ラジオボタンの円。§5 が丸い形を許すのは §6 のラジオボタン（色見本を選ぶ組の選択済みの円を含む）だけ。
   {
     fileEndsWith: "src/components/ChoiceRow/ChoiceRow.module.css",
@@ -130,51 +117,6 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
     fileEndsWith:
       "src/play/games/nakamawake/_components/SolvedGroups.module.css",
     declaration: ".purple { background: var(--wairo-fuji); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/ResultModal.module.css",
-    declaration: ".yellow { background: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/ResultModal.module.css",
-    declaration: ".green { background: var(--wairo-moegi); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/ResultModal.module.css",
-    declaration: ".blue { background: var(--wairo-ai); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/ResultModal.module.css",
-    declaration: ".purple { background: var(--wairo-fuji); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
-    declaration: ".swatchYellow { background: var(--wairo-yamabuki); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
-    declaration: ".swatchGreen { background: var(--wairo-moegi); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
-    declaration: ".swatchBlue { background: var(--wairo-ai); }",
-  },
-  {
-    fileEndsWith:
-      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
-    declaration: ".swatchPurple { background: var(--wairo-fuji); }",
-  },
-  {
-    fileEndsWith: "src/play/games/nakamawake/_components/StatsModal.module.css",
-    declaration:
-      ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
   },
   // yoji-kimeru の判定フィードバック色（成果物＝ゲームの駒の中身）。cellCorrect/
   // legendChipCorrect は selector 名に "Correct" を含み STATE_SELECTOR_RE で

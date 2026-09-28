@@ -45,8 +45,9 @@ import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import ProgressBar from "@/components/ProgressBar";
 import ShareButtons from "@/components/ShareButtons";
-import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { revealControl } from "@/lib/reveal";
 import {
+  releaseSavedLayout,
   resultAreaNames,
   savedLayoutScript,
 } from "@/play/games/shared/_lib/savedLayout";
@@ -67,6 +68,8 @@ const RESULT_AREA = resultAreaNames("irodori");
 /** 端末に今日の記録があるとき、本体の前のスクリプトが書く値の名前。値は、記録を戻すまで盤を見せない visibility。 */
 const SAVED_DAY_PROPERTY = "--irodori-saved-day";
 
+const SAVED_LAYOUT_STYLE_ID = "irodori-saved-layout";
+
 /**
  * サーバーの HTML で本体の前に置くスクリプト。
  * - 解き終えた回: 前に同じ画面で描いた結果の区画の高さを本体を描く前に取っておき、読み込むあいだ1問目の盤を
@@ -75,7 +78,7 @@ const SAVED_DAY_PROPERTY = "--irodori-saved-day";
  *   見本とスライダーを、場所を取ったまま見せない（違う問の盤を見せない）。
  */
 const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
-  styleId: "irodori-saved-layout",
+  styleId: SAVED_LAYOUT_STYLE_ID,
   historyKeyPrefix: HISTORY_KEY,
   finishedStatuses: ["completed"],
   resultArea: RESULT_AREA,
@@ -211,6 +214,9 @@ export default function GameContainer({
     },
     [initialSliderValues],
   );
+
+  // 取っておいた場所の値は、このページから離れるときに外す。
+  useEffect(() => () => releaseSavedLayout(SAVED_LAYOUT_STYLE_ID), []);
 
   // 水和で引き継いだ回には、端末の記録を水和が済んでから当てる。
   useEffect(() => {

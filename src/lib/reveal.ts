@@ -58,6 +58,24 @@ export function revealResult(operations: Element, result: Element): void {
   scrollInstantly(Math.ceil(Math.min(toOperationsAtTop, toResultBottom)));
 }
 
+/**
+ * 操作のあと、次に使うコントロールが画面の外に出ていたら、その下端が画面の下端から 8px 上に来るまで送る。
+ * コントロールが画面の中にあれば送らない。
+ *
+ * context には、コントロールと一緒に見せたいもの（選んだ語の並びなど）を渡す。コントロールと context の
+ * どちらかが画面の外にあれば送る。送ったあとの位置はいつもコントロールの下端で決まるので、両方が画面に
+ * 入らないときはコントロールが入ることを先にする。
+ */
+export function revealControl(control: Element, context?: Element): void {
+  const range = visibleRange();
+  const contextInside = context ? isInside(context, range) : true;
+  if (isInside(control, range) && contextInside) return;
+
+  scrollInstantly(
+    control.getBoundingClientRect().bottom - (range.bottom - REVEAL_GAP),
+  );
+}
+
 /** フォーカスのリングの上と下の辺の位置。リングはボックスの太い線の外に出る（§6）ので、その張り出しを含める。 */
 function ringEdgesOf(box: Element): VisibleRange {
   const style = getComputedStyle(box);

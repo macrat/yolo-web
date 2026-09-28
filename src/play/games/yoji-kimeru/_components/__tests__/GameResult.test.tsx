@@ -7,7 +7,8 @@ import type {
   YojiGameStats,
 } from "@/play/games/yoji-kimeru/_lib/types";
 
-vi.mock("@/play/games/shared/_lib/revealControl", () => ({
+vi.mock("@/lib/reveal", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/reveal")>()),
   revealControl: vi.fn(),
 }));
 
@@ -131,8 +132,7 @@ describe("GameResult", () => {
   });
 
   test("moves the focus to the box only when it appears for the last guess", async () => {
-    const { revealControl } =
-      await import("@/play/games/shared/_lib/revealControl");
+    const { revealControl } = await import("@/lib/reveal");
     const { unmount } = renderResult("won", 3, false);
     expect(document.activeElement).toBe(document.body);
     expect(revealControl).not.toHaveBeenCalled();

@@ -44,7 +44,7 @@ import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
-import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { revealControl } from "@/lib/reveal";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
 import GuessInput from "./GuessInput";

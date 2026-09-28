@@ -2,10 +2,6 @@ import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import GameLayout from "../GameLayout";
 import type { GameMeta } from "@/play/games/types";
-import {
-  GAME_TITLE_ID,
-  gameTitleRef,
-} from "@/play/games/shared/_lib/gameTitle";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // RecommendedContent をモックしてテストを安定させる
@@ -109,18 +105,6 @@ test("h1 はゲーム名で、パンくずのあとに h1・要約・凡例の�
   expect(following(breadcrumb, heading)).toBeTruthy();
   expect(following(heading, summary)).toBeTruthy();
   expect(following(summary, legend)).toBeTruthy();
-});
-
-test("h1 は、ゲームの部品がダイアログを閉じたときのフォーカスの戻り先になる", () => {
-  render(
-    <GameLayout meta={mockMeta}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  const heading = screen.getByRole("heading", { level: 1 });
-  expect(heading).toHaveAttribute("id", GAME_TITLE_ID);
-  expect(heading).toHaveAttribute("tabindex", "-1");
-  expect(gameTitleRef.current).toBe(heading);
 });
 
 test("凡例は名前を持ち、印と意味の語を legend の順に並べる", () => {

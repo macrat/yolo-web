@@ -8,7 +8,7 @@ import type { ItemListItem } from "@/components/ItemList";
 import NextPuzzleTime from "@/play/games/shared/_components/new/NextPuzzleTime";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
-import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { revealControl } from "@/lib/reveal";
 import type {
   Difficulty,
   YojiEntry,

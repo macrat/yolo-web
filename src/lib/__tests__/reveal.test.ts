@@ -1,5 +1,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import {
+  revealControl,
   revealFocusedFrame,
   revealResult,
   trackScrollBeforeTab,
@@ -30,6 +31,97 @@ describe("visibleRange", () => {
   test("visualViewport があれば、その上端の位置と高さで測る", () => {
     vi.stubGlobal("visualViewport", { offsetTop: 120, height: 280 });
     expect(visibleRange()).toEqual({ top: 120, bottom: 400 });
+  });
+});
+
+describe("revealControl", () => {
+  beforeEach(() => {
+    vi.stubGlobal("innerHeight", 667);
+  });
+
+  test("コントロールが画面の中にあれば送らない", () => {
+    revealControl(box(512, 560));
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test("下端がちょうど画面の下端でも、画面の中として送らない", () => {
+    revealControl(box(619, 667));
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test("画面の下へ出ていれば、下端が画面の下端から 8px 上に来るまで送る", () => {
+    revealControl(box(640, 688));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: 29,
+      behavior: "instant",
+    });
+  });
+
+  test("画面の上へ出ていれば、下端が画面の下端から 8px 上に来るまで戻す", () => {
+    revealControl(box(-60, -12));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: -671,
+      behavior: "instant",
+    });
+  });
+
+  test("文字盤で縮んだ画面の下端（offsetTop + height）で測る", () => {
+    vi.stubGlobal("visualViewport", { offsetTop: 0, height: 400 });
+    revealControl(box(420, 468));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: 76,
+      behavior: "instant",
+    });
+  });
+
+  test("visualViewport が送られているときは offsetTop を足した位置を下端にする", () => {
+    vi.stubGlobal("visualViewport", { offsetTop: 100, height: 400 });
+    revealControl(box(420, 468));
+    expect(window.scrollBy).not.toHaveBeenCalled();
+
+    revealControl(box(460, 520));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: 28,
+      behavior: "instant",
+    });
+  });
+
+  test("innerHeight の中でも visualViewport の外なら送る", () => {
+    vi.stubGlobal("visualViewport", { offsetTop: 0, height: 400 });
+    revealControl(box(500, 548));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: 156,
+      behavior: "instant",
+    });
+  });
+
+  test("端数の距離を丸めずに送る", () => {
+    revealControl(box(640.4, 688.6));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: 688.6 - 659,
+      behavior: "instant",
+    });
+  });
+
+  test("コントロールと context がどちらも画面の中なら送らない", () => {
+    revealControl(box(600, 644), box(200, 300));
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test("コントロールが画面の中でも context が上に出ていれば、コントロールの下端を画面の下端から 8px 上に置く", () => {
+    revealControl(box(400, 444), box(-40, 50));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: -215,
+      behavior: "instant",
+    });
+  });
+
+  test("両方が入らないときも、コントロールの下端で位置を決め、コントロールを画面に入れる", () => {
+    revealControl(box(769, 813), box(-100, 200));
+    expect(window.scrollBy).toHaveBeenCalledWith({
+      top: 154,
+      behavior: "instant",
+    });
   });
 });
 

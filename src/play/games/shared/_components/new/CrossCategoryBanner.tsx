@@ -10,7 +10,7 @@ interface CrossCategoryBannerProps {
 }
 
 /**
- * ゲームを終えたダイアログで、ゲームでない遊び（運勢・診断・クイズ）を並べる。行は名前と種別を持つ。
+ * ゲームを解き終えた結果の下で、ゲームでない遊び（運勢・診断・クイズ）を並べる。行は名前と種別を持つ。
  * 並べるものが無いときは何も描かない。
  */
 export function CrossCategoryBanner({ items }: CrossCategoryBannerProps) {
@@ -23,7 +23,7 @@ export function CrossCategoryBanner({ items }: CrossCategoryBannerProps) {
       <p id={labelId} className={styles.label}>
         他のコンテンツも試してみよう
       </p>
-      {/* ダイアログの枠と二重にならないよう、一覧はボックスを持たない。 */}
+      {/* 区画は上の罫線で区切るので、一覧もボックスを持たず罫線で区切る。 */}
       <ItemList labelledBy={labelId} items={items} boxed={false} />
     </div>
   );

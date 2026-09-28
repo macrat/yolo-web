@@ -212,3 +212,15 @@ describe("イロドリの盤", () => {
     expect(trackContentEnd).not.toHaveBeenCalled();
   });
 });
+
+describe("取っておいた場所", () => {
+  test("ほかのページへ移ると、本体の前のスクリプトが取っておいた場所の値を外す", () => {
+    const style = document.createElement("style");
+    style.id = "irodori-saved-layout";
+    document.head.append(style);
+    const { unmount } = renderGame();
+    expect(document.getElementById("irodori-saved-layout")).not.toBeNull();
+    unmount();
+    expect(document.getElementById("irodori-saved-layout")).toBeNull();
+  });
+});

@@ -1,5 +1,5 @@
 /**
- * ゲームを終えたダイアログに並べる、ほかの分類の遊びの行を選ぶ。
+ * ゲームを解き終えた結果の下に並べる、ほかの分類の遊びの行を選ぶ。
  *
  * 各ゲームの page.tsx（サーバー）で呼び、遊びの登録と分類の語をクライアントに持ち込まない。
  */
@@ -68,7 +68,7 @@ export function computeCrossCategoryItems(gameSlug: string): ItemListItem[] {
 }
 
 /**
- * 遊びを行にする。行は名前と種別だけを持ち、ダイアログの中で結果を押し下げないよう説明を持たない。
+ * 遊びを行にする。行は名前と種別だけを持ち、説明を持たない。
  */
 function contentToItem(content: PlayContentMeta): ItemListItem {
   return {

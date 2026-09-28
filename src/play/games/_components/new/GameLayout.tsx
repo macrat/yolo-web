@@ -7,7 +7,6 @@ import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
-import { GAME_TITLE_ID } from "@/play/games/shared/_lib/gameTitle";
 import RelatedGames from "./RelatedGames";
 import styles from "./GameLayout.module.css";
 
@@ -45,11 +44,8 @@ export default function GameLayout({
         ]}
       />
       <header className={styles.header}>
-        {/* 自分で開いたダイアログを閉じたとき、ゲームの部品がフォーカスをここへ戻す。 */}
         <PhrasedText
           as="h1"
-          id={GAME_TITLE_ID}
-          tabIndex={-1}
           phrases={splitIntoPhrases(meta.title)}
           {...headingFontAttr(meta.title)}
         />

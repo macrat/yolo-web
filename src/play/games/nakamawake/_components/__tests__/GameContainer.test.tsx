@@ -3,11 +3,12 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import GameContainer from "../GameContainer";
 import type { NakamawakePuzzle } from "@/play/games/nakamawake/_lib/types";
-import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { revealControl } from "@/lib/reveal";
 import { trackContentEnd } from "@/lib/analytics";
 import { canSetInZenAntique } from "@/lib/zen-antique-charset";
 
-vi.mock("@/play/games/shared/_lib/revealControl", () => ({
+vi.mock("@/lib/reveal", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/reveal")>()),
   revealControl: vi.fn(),
 }));
 vi.mock("@/lib/analytics", () => ({

@@ -34,7 +34,7 @@ import {
   HISTORY_KEY,
 } from "@/play/games/nakamawake/_lib/storage";
 import { generateShareText } from "@/play/games/nakamawake/_lib/share";
-import { revealControl } from "@/play/games/shared/_lib/revealControl";
+import { revealControl } from "@/lib/reveal";
 import {
   releaseSavedLayout,
   resultAreaNames,
