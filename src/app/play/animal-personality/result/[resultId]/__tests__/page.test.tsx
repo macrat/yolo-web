@@ -78,7 +78,6 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
       shortDescription: "日本にしかいない動物12タイプで性格診断",
       type: "personality",
       questionCount: 10,
-      accentColor: "#16a34a",
       category: "personality",
     },
     results: [
@@ -86,7 +85,6 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
         id: "nihon-zaru",
         title: "ニホンザル——温泉を発明した革命児",
         description: "ニホンザルの説明テキスト。",
-        icon: "🐒",
         detailedContent: {
           variant: "animal-personality" as const,
           catchphrase: "テストキャッチコピー",
@@ -105,7 +103,6 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
         id: "hondo-tanuki",
         title: "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
         description: "ホンドタヌキの説明テキスト。",
-        icon: "🦡",
         detailedContent: {
           variant: "animal-personality" as const,
           catchphrase: "タヌキキャッチコピー",

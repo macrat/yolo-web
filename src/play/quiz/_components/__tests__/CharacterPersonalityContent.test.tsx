@@ -50,9 +50,9 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
       questionCount: 12,
     },
     results: [
-      { id: "blazing-strategist", title: "炎の戦略家", icon: "🔥" },
-      { id: "blazing-poet", title: "炎の詩人", icon: "📜" },
-      { id: "gentle-fortress", title: "静かなる要塞", icon: "🏰" },
+      { id: "blazing-strategist", title: "炎の戦略家" },
+      { id: "blazing-poet", title: "炎の詩人" },
+      { id: "gentle-fortress", title: "静かなる要塞" },
     ],
   },
   CHARACTER_PERSONALITY_TYPE_IDS: [
@@ -292,8 +292,8 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
       json: async () => ({
         label: "最強コンビ",
         description: "火花散る刺激的な関係",
-        myType: { title: "炎の戦略家", icon: "🔥" },
-        friendType: { title: "炎の詩人", icon: "📜" },
+        myType: { title: "炎の戦略家" },
+        friendType: { title: "炎の詩人" },
       }),
     });
 

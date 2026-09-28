@@ -12,8 +12,6 @@ describe("QuizMeta faq field", () => {
       type: "knowledge",
       category: "knowledge",
       questionCount: 5,
-      icon: "🧪",
-      accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
     };
@@ -30,8 +28,6 @@ describe("QuizMeta faq field", () => {
       type: "knowledge",
       category: "knowledge",
       questionCount: 5,
-      icon: "🧪",
-      accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
       faq: [

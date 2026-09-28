@@ -67,7 +67,6 @@ vi.mock("@/play/quiz/data/character-fortune", () => ({
       shortDescription: "あなたを守護するキャラクターを診断",
       type: "personality",
       questionCount: 10,
-      accentColor: "#8b5cf6",
       category: "personality",
     },
     results: [
@@ -75,7 +74,6 @@ vi.mock("@/play/quiz/data/character-fortune", () => ({
         id: "commander",
         title: "司令官キャラ",
         description: "司令官の説明",
-        icon: "⚔️",
         detailedContent: {
           variant: "character-fortune" as const,
           characterIntro: "自己紹介テキスト",
@@ -91,7 +89,6 @@ vi.mock("@/play/quiz/data/character-fortune", () => ({
         id: "professor",
         title: "教授キャラ",
         description: "教授の説明",
-        icon: "📚",
         detailedContent: {
           variant: "character-fortune" as const,
           characterIntro: "教授の自己紹介",

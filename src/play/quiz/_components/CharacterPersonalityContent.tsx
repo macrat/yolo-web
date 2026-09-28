@@ -38,8 +38,8 @@ const allTypes = CHARACTER_PERSONALITY_TYPE_IDS.flatMap((typeId) => {
 interface CompatibilityApiResponse {
   label: string;
   description: string;
-  myType: { title: string; icon?: string };
-  friendType: { title: string; icon?: string };
+  myType: { title: string };
+  friendType: { title: string };
 }
 
 interface CharacterPersonalityContentProps {
@@ -141,12 +141,10 @@ function CompatibilityArea({
         myType={{
           id: resultId,
           title: compatibilityData.myType.title,
-          icon: compatibilityData.myType.icon,
         }}
         friendType={{
           id: referrerTypeId,
           title: compatibilityData.friendType.title,
-          icon: compatibilityData.friendType.icon,
         }}
         compatibility={compatibility}
         quizTitle={QUIZ_TITLE}

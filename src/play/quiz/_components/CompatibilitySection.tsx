@@ -12,7 +12,6 @@ import styles from "./CompatibilitySection.module.css";
 interface TypeInfo {
   id: string;
   title: string;
-  icon?: string;
 }
 
 /**

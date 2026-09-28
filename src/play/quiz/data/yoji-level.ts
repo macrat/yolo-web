@@ -10,8 +10,6 @@ const yojiLevelQuiz: QuizDefinition = {
     type: "knowledge",
     category: "knowledge",
     questionCount: 10,
-    icon: "四",
-    accentColor: "#7c3aed",
     keywords: [
       "四字熟語",
       "クイズ",
@@ -187,7 +185,6 @@ const yojiLevelQuiz: QuizDefinition = {
       title: "四字熟語ビギナー",
       description:
         "まだまだ伸びしろたっぷり! まずは日常でよく使われる四字熟語から覚えてみましょう。四字熟語辞典で楽しく学べます。",
-      icon: "\u{1F331}",
       minScore: 0,
       recommendation: "四字熟語辞典で学ぼう",
       recommendationLink: "/dictionary/yoji",
@@ -197,7 +194,6 @@ const yojiLevelQuiz: QuizDefinition = {
       title: "四字熟語見習い",
       description:
         "基本的な四字熟語はバッチリ! もう少し難しい四字熟語にも挑戦してみましょう。四字キメルで遊びながら覚えるのがおすすめです。",
-      icon: "\u{1F4DD}",
       minScore: 3,
       recommendation: "四字キメルで遊びながら覚えよう",
       recommendationLink: "/play/yoji-kimeru",
@@ -207,7 +203,6 @@ const yojiLevelQuiz: QuizDefinition = {
       title: "四字熟語中級者",
       description:
         "なかなかの四字熟語力です! 日頃から言葉に親しんでいることがうかがえます。さらに上を目指して語彙力を磨きましょう。",
-      icon: "\u{1F4D6}",
       minScore: 5,
       recommendation: "四字熟語辞典でさらに知識を深めよう",
       recommendationLink: "/dictionary/yoji",
@@ -217,7 +212,6 @@ const yojiLevelQuiz: QuizDefinition = {
       title: "四字熟語上級者",
       description:
         "かなりの語彙力の持ち主! 難しい四字熟語もスラスラ答えられる実力者です。四字キメルであなたの実力を存分に発揮しましょう。",
-      icon: "\u{1F393}",
       minScore: 7,
       recommendation: "四字キメルで実力を試そう",
       recommendationLink: "/play/yoji-kimeru",
@@ -227,7 +221,6 @@ const yojiLevelQuiz: QuizDefinition = {
       title: "四字熟語マスター",
       description:
         "素晴らしい四字熟語力! ほぼ完璧に四字熟語を使いこなすあなたは、まさに四字熟語マスターです。その知識を周りの人にも分けてあげましょう!",
-      icon: "\u{1F451}",
       minScore: 9,
       recommendation: "四字熟語辞典を制覇しよう",
       recommendationLink: "/dictionary/yoji",

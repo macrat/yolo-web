@@ -31,8 +31,6 @@ const musicPersonalityQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 10,
-    icon: "\u{1F3B5}",
-    accentColor: "#7c3aed",
     keywords: [
       "音楽",
       "性格診断",
@@ -353,8 +351,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "フェス一番乗り族",
       description:
         "あなたの音楽ライフは常に「次」を向いている。新譜が出れば最速で聴き、フェスの先行チケットは発売0.3秒で確保済み。Spotifyの「今年のまとめ」では、誰よりも多くの新曲を聴いた証が刻まれる。問題は1つだけ。来月にはもう今月のお気に入りを忘れていること。でも大丈夫、あなたにとって音楽は「出会い続ける」ことそのものだから。次のフェスでまた新しい「人生の1曲」を見つけるでしょう。",
-      color: "#f43f5e",
-      icon: "\u{1F3AA}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "新曲より先に次のフェスが決まってる",
@@ -381,8 +377,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "プレイリスト伝道師",
       description:
         "あなたは「この曲を聴いてほしい」という使命感で生きている。友達のLINEに突然URLが飛んできたら、十中八九あなたの仕業。プレイリストの説明文まで丁寧に書くその姿は、もはや音楽キュレーター。「聴いた?」のフォローアップも忘れない。問題は、相手が本当に聴いたかどうかを確認するまで眠れないこと。でも安心してください。あなたの布教は確実に誰かの人生のBGMを変えています。",
-      color: "#f97316",
-      icon: "\u{1F4E2}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "URLと「聴いた?」がセットで届く人",
@@ -409,8 +403,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "ひとり開拓民",
       description:
         "あなたは音楽の未踏の地を1人で歩く探検家。Spotifyの「あなたへのおすすめ」の先にある「おすすめのおすすめ」まで掘り進む。月間リスナー3桁のアーティストを見つけた時の喜びは、トレジャーハンターが秘宝を発見した瞬間に等しい。問題は、好きなバンドがメジャーデビューすると微妙に複雑な気持ちになること。「売れる前から知ってたんだけど」と言いたいのを我慢する日々です。",
-      color: "#8b5cf6",
-      icon: "\u{1F3D4}\u{FE0F}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "月間リスナー3桁のアーティストに喜ぶ人",
@@ -437,8 +429,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "リピート戦士",
       description:
         "あなたの再生回数は統計的外れ値。同じアルバムを100周してもまだ新しい発見がある（と本気で思っている）。Spotifyの「今年のまとめ」では、トップ5が去年と完全に一致している。問題は、友達に「まだそれ聴いてるの?」と言われること。でもいいじゃないですか。名作映画を何度も観る人は「通」と呼ばれるのに、音楽だと「しつこい」と言われるのは不公平です。あなたは正しい。",
-      color: "#ef4444",
-      icon: "\u{2694}\u{FE0F}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "同じ曲を100周してもまだ飽きない人",
@@ -465,8 +455,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "作業用BGM職人",
       description:
         "あなたにとって音楽は「空気」である。最高の褒め言葉は「あ、BGM変わってたんだ。気づかなかった」。シーン別プレイリストの作り込みは異常で、「雨の日の午後3時・カフェ・やや眠い」というプレイリストが存在する。問題は、音楽の趣味を聞かれると答えに困ること。好きなのは「場面と音楽の組み合わせ」であって、特定の曲やアーティストではないから。あなたは音楽の建築家です。",
-      color: "#06b6d4",
-      icon: "\u{1F3A7}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "BGMで場の空気を設計する建築家",
@@ -493,8 +481,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "カラオケ癒し枠",
       description:
         "あなたがいるだけでカラオケの空気が和む。選曲は「みんなが口ずさめる曲」が鉄則。マイクを独占しないし、人の歌にはちゃんとタンバリンを入れる。音楽は「一緒に楽しむもの」というあなたの哲学は、実は一番贅沢な音楽の味わい方。問題は、1人カラオケの存在意義が理解できないこと。音楽は分かち合ってこそ完成すると、あなたの全身が叫んでいます。",
-      color: "#10b981",
-      icon: "\u{1F3A4}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "タンバリンで全員を幸せにできる人",
@@ -521,8 +507,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "深夜シャッフル系",
       description:
         "午前2時、暗い部屋、シャッフル再生。これがあなたの音楽儀式。自分では曲を選ばない。アルゴリズムと偶然に身を委ね、流れてきた曲に人生の意味を見出す。たまに全く聴いたことのない曲が流れてきて「これは運命だ」と確信する。問題は、翌朝その曲のタイトルを思い出せないこと。でも大丈夫。また今夜、シャッフルの神様が届けてくれます。",
-      color: "#6366f1",
-      icon: "\u{1F319}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "深夜2時のシャッフルに人生を委ねる人",
@@ -549,8 +533,6 @@ const musicPersonalityQuiz: QuizDefinition = {
       title: "歌詞の一節で生きてる人",
       description:
         "あなたにとって音楽は「音」ではなく「言葉」。メロディより先に歌詞が耳に入る。心に刺さった一節はスクショしてカメラロールに保存してある。通勤中にイヤホンで泣いたことが3回以上ある。問題は、人に好きな曲を説明しようとすると歌詞を朗読し始めてしまうこと。でもそれでいい。あなたが音楽から受け取っているものは、他の7タイプの誰よりも深い。たぶん。",
-      color: "#a855f7",
-      icon: "\u{1F4DD}",
       detailedContent: {
         variant: "music-personality",
         catchphrase: "歌詞スクショがカメラロールを占領してる人",

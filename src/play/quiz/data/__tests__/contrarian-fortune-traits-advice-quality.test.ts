@@ -9,8 +9,6 @@
  *
  * Q3: thirdPartyNote must use third-party perspective.
  *     At least 6 out of 8 must contain second/third-person keywords.
- *
- * Q4: coreSentence must contain the "普通" or "一般" reversal frame.
  */
 import { describe, it, expect } from "vitest";
 import type { ContrarianFortuneDetailedContent } from "../../types";
@@ -82,45 +80,6 @@ describe("Q3: thirdPartyNote must convey third-party perspective", () => {
       thirdPartyNotes.length,
       `Only ${thirdPartyNotes.length}/8 thirdPartyNotes contain third-party keywords. Need at least 6.`,
     ).toBeGreaterThanOrEqual(6);
-  });
-});
-
-describe("Q4: coreSentence must contain the reversal frame", () => {
-  /**
-   * Pattern for the "普通の占いなら〜だが" reversal frame structure.
-   */
-  const REVERSAL_FRAME_PATTERN = /普通|一般|通常|ふつう/;
-
-  it("at least 6 out of 8 coreSentences contain a reversal frame keyword", () => {
-    const withFrame = allResults.filter((r) => {
-      const dc = r.detailedContent as ContrarianFortuneDetailedContent;
-      return REVERSAL_FRAME_PATTERN.test(dc?.coreSentence ?? "");
-    });
-
-    expect(
-      withFrame.length,
-      `Only ${withFrame.length}/8 coreSentences contain reversal frame keywords. Need at least 6.`,
-    ).toBeGreaterThanOrEqual(6);
-  });
-});
-
-describe("Q5-pre: coreSentence must use second person (あなた) or omit subject", () => {
-  /**
-   * coreSentenceは受検者視点（二人称「あなた」または主語省略）で書かれているべき。
-   * 「このタイプは/には/の」という三人称表現は使用禁止。
-   * 全8件で満たすこと。
-   */
-  it("no coreSentence must contain 'このタイプ'", () => {
-    const violations: string[] = [];
-    for (const result of allResults) {
-      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
-      if (dc?.coreSentence?.includes("このタイプ")) {
-        violations.push(
-          `${result.id}: coreSentence contains 'このタイプ': "${dc.coreSentence}"`,
-        );
-      }
-    }
-    expect(violations, violations.join("\n")).toHaveLength(0);
   });
 });
 

@@ -52,12 +52,10 @@ function JapaneseCultureResultExtra({
             myType={{
               id: myResult.id,
               title: myResult.title,
-              icon: myResult.icon,
             }}
             friendType={{
               id: friendResult.id,
               title: friendResult.title,
-              icon: friendResult.icon,
             }}
             compatibility={compatibility}
             quizTitle={quiz.meta.title}

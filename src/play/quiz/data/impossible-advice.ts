@@ -24,8 +24,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 7,
-    icon: "\u{1F4A1}",
-    accentColor: "#7c3aed",
     keywords: [
       "達成困難",
       "アドバイス",
@@ -257,8 +255,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "時間魔術師見習い",
       description:
         "あなたには時間が足りていません。正確には、時間はあるのに消えています。\n\n\u3010本日のアドバイス\u3011\n毎朝4時に起きて、最初の2時間を\u300E何もしない時間\u300Fとして確保してください。スマホを見たら失格。目を閉じるのも禁止（寝るので）。\n\nこれを1年続けると時間の使い方が劇的に変わります。主に睡眠時間が劇的に減るという形で。",
-      icon: "\u23F0",
-      color: "#7c3aed",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {
@@ -281,8 +277,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "重力と戦う者",
       description:
         "あなたの体は重力に対して降伏交渉中です。まだ間に合います。\n\n\u3010本日のアドバイス\u3011\n全ての移動を1.5倍速で行ってください。歩くときは早歩き、階段は一段飛ばし、椅子に座るときはスクワット3回。エレベーターではその場で足踏み。\n\n1週間後、体力がつく前に靴底が減ります。",
-      icon: "\u{1F3CB}\uFE0F",
-      color: "#c2410c",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {
@@ -305,8 +299,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "デジタル修行僧",
       description:
         "あなたの集中力は、通知音のたびに蒸発しています。\n\n\u3010本日のアドバイス\u3011\n毎週日曜を\u300Eデジタル断食の日\u300Fにしてください。スマホ、PC、電子レンジのタイマー表示まで、すべてのデジタル表示から目を背けます。時間は太陽の位置で判断。曇りの日は時間の概念を手放してください。\n\n3ヶ月後、太陽の高さから時刻を15分以内の誤差で当てられるようになります。それ以外のスキルは特に身につきません。",
-      icon: "\u{1F4F5}",
-      color: "#047857",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {
@@ -329,8 +321,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "睡眠建築家",
       description:
         "あなたの最大の課題は睡眠です。寝たいのに寝られない、起きたいのに起きられない。\n\n\u3010本日のアドバイス\u3011\n寝室の温度を18.3\u00B0Cに固定し（NASA推奨）、枕の角度を分度器で15度に調整。就寝1時間前からブルーライトカットメガネを装着し、布団に入ったら羊ではなく素数を数えてください。\n\nこれらすべてを守ると、準備に疲れてすぐ寝られます。",
-      icon: "\u{1F634}",
-      color: "#1e40af",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {
@@ -353,8 +343,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "会話の侍",
       description:
         "あなたの課題は対人関係です。言いたいことが言えない、言わなくていいことを言ってしまう。\n\n\u3010本日のアドバイス\u3011\nすべての会話を俳句（5-7-5）で行ってください。\u300E今日の会議（5）議題が多くて（7）帰りたい（5）\u300F。断り文句も俳句にすると角が立ちません。\n\n相手も俳句で返し始める頃には、職場の人間関係が文学的なものに昇華されています。",
-      icon: "\u2694\uFE0F",
-      color: "#db2777",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {
@@ -377,8 +365,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "天候操作係",
       description:
         "あなたのストレスは、自分ではどうにもならないものに由来しています。\n\n\u3010本日のアドバイス\u3011\n毎朝、窓の外を見る前にその日の天気を\u300E宣言\u300Fしてください。実際の天気と一致したらあなたには天候操作の才能があります。\n\n1年続けると的中率は約30%になります。これは日本の平均晴天率とほぼ同じですが、\u300E意外と当たる人\u300Fという評判は得られます。",
-      icon: "\u{1F326}\uFE0F",
-      color: "#0e7490",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {
@@ -401,8 +387,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
       title: "おやつの哲学者",
       description:
         "あなたのストレス解消法は食にあります。ただし量ではなく、タイミングの問題です。\n\n\u3010本日のアドバイス\u3011\nすべての間食を\u300E哲学的行為\u300Fとして行ってください。チョコを食べる前に\u300Eなぜ今チョコなのか\u300Fを30秒考え、食べた後に\u300Eチョコとは何だったのか\u300Fを30秒振り返ります。\n\n1ヶ月後、おやつの回数は変わりませんが、一粒の満足度が哲学的に深まります。",
-      icon: "\u{1F369}",
-      color: "#b45309",
       recommendation:
         "\u203B このアドバイスは実行しなくても運気に影響はありません。笑っていただければ十分です。",
       detailedContent: {

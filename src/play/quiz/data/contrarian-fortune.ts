@@ -33,8 +33,6 @@ const contrarianFortuneQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 8,
-    icon: "\u{1F504}",
-    accentColor: "#f59e0b",
     keywords: [
       "逆張り",
       "運勢",
@@ -294,13 +292,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "逆オプティミスト",
       description:
         "一般的な占いなら「今日は素晴らしい一日になるでしょう!」と言うところですが、実は逆です。今日は何かうまくいかないことが起きるでしょう。そしてそれこそがあなたの幸運です。転んだ先に四つ葉のクローバーがある人生。コメディ映画の序盤だと思ってお楽しみください。",
-      color: "#b45309",
-      icon: "\u{1F504}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "転んだ先に四つ葉のクローバーがある人。",
-        coreSentence:
-          "普通の占いなら「今日は最高の一日!」と言うところですが、あなたは失敗からこそ運を拾います。",
         behaviors: [
           "電車が遅延して乗り換えを逃したとき、「今日のエピソード1話目だ」と心の中でちょっと笑っている。",
           "何かうまくいかなかった話を友人にしたら、気づいたら爆笑の鉄板ネタに昇華されていた。",
@@ -322,13 +316,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "考えすぎ予報士",
       description:
         "一般的な占いなら「直感を信じましょう」と言うところですが、あなたの場合は逆です。考えれば考えるほど外れるという宇宙の法則が適用されています。今日のアドバイス: 3秒以上悩んだらコインを投げてください。コインの結果も無視して直感で決めるのが最善です。",
-      color: "#7c3aed",
-      icon: "\u{1F9E0}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "考え始めると、宇宙の果てまで思考が飛んでいく。",
-        coreSentence:
-          "普通の占いなら「直感を信じよう!」と言いますが、あなたには逆効果です。考えるほど迷宮に入ります。",
         behaviors: [
           "ランチのメニューを決めるのに3分かかった。でも食べ終わると「これでよかった」と納得している。",
           "LINEの返信を5回書き直してから送ったら、相手から「了解!」の1語が返ってきた。",
@@ -350,13 +340,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "宇宙規模の心配性",
       description:
         "一般的な占いなら「心配は無用です!」と言うところですが、あなたの心配のスケールは宇宙レベルなので、その助言では足りません。「明日の天気」ではなく「太陽の寿命」を心配するあなたには、50億年後にカレンダーをセットすることをお勧めします。",
-      color: "#1e40af",
-      icon: "\u{1F30C}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "心配のスケールが、ちょっと太陽系を超えている。",
-        coreSentence:
-          "一般的な占いなら「心配は無用!」と言うところですが、あなたには通じません。心配のスケールが宇宙レベルなので。",
         behaviors: [
           "ニュースを見ていたら気づいたら「地球温暖化のその先の地球」を調べていて1時間経っていた。",
           "旅行の準備中「でも飛行機が…」「でも現地で…」と心配リストが増え続ける。それでも行く。",
@@ -378,13 +364,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "パラドクスの達人",
       description:
         "一般的な占いなら「今日の運勢は大吉!」と断言するところですが、あなたの運勢は量子力学的状態にあり、観測するまで確定しません。つまり、この占いを読んだ時点で運勢が確定してしまいました。読まなければ永遠に大吉の可能性があったのに。",
-      color: "#047857",
-      icon: "\u{267E}\u{FE0F}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "「AかBか」に、いつもCを持ち込んでくる人。",
-        coreSentence:
-          "普通の占いなら「答えはひとつ!」と断言しますが、あなたには量子状態の運勢が適用されています。",
         behaviors: [
           "「好きな食べ物は?」と聞かれて「そのときの気分によって変わる」と答え、相手が少し困っていた。",
           "「どっちが好き?」という二択に「状況による」と返してしまうのが標準仕様。",
@@ -402,13 +384,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "うっかり預言者",
       description:
         "一般的な占いなら占い師があなたの未来を予言しますが、実はあなた自身が占い師より正確な予言者です。ただし自覚がないため、重要な予言を「ただの独り言」として処理しています。今日ふと口にした言葉をメモしてください。3日以内に1つは当たります。",
-      color: "#db2777",
-      icon: "\u{1F52E}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "一番正確な預言者は、本人だということに気づいていない。",
-        coreSentence:
-          "一般的な占いなら占い師が予言しますが、あなたこそが一番当たる預言者です。自覚がないだけで。",
         behaviors: [
           "「なんとなく今日は傘持っていこう」と出かけたら昼から雨が降ってきた。荷物にはなったが濡れなかった。",
           "友人が「実は…」と話し始める前に、なんとなく内容を予測していた。当たっていた。",
@@ -433,13 +411,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "平穏なるカオス",
       description:
         "一般的な占いなら「波乱の一日に注意!」と言うところですが、あなたの場合、波乱はあなたの周囲で勝手に起きて勝手に収まります。台風の目のように静かなあなたは、嵐の中で紅茶をすすっていてください。お茶が入る頃には問題の半分は自然解決しています。",
-      color: "#0e7490",
-      icon: "\u{1F375}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "嵐の中で紅茶をすすっている人。",
-        coreSentence:
-          "普通の占いなら「波乱に注意!」と言うところですが、あなたの周りで起きた波乱は大抵自然に収まります。",
         behaviors: [
           "周りが「どうする、どうする」と慌てているとき、一人だけおやつを食べ始めていた。",
           "緊急事態だと判明した瞬間、なぜかまず紅茶を淹れた。お茶が入る頃には問題が半分解決していた。",
@@ -457,13 +431,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "逆張りの星の下に",
       description:
         "一般的な占いなら「周りに合わせると吉」と言うところですが、あなたの星は正反対を指しています。みんなが右に行くとき左に行くのがあなたの運命です。誰もいない道には渋滞がないのです。心の中で小さくガッツポーズするだけで十分です。",
-      color: "#c2410c",
-      icon: "\u{2B50}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "みんなが右に行くとき、左の道に獣道を見つける人。",
-        coreSentence:
-          "普通の占いなら「周りに合わせると吉」と言いますが、あなたの星は正反対を指しています。",
         behaviors: [
           "行列ができている店を見て「今じゃなくていいか」と判断し、空いた時間にゆっくり行く。",
           "「これ今みんなハマってるよ」と勧められたコンテンツを、流行が落ち着いてからひっそり楽しんでいた。",
@@ -487,13 +457,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
       title: "日常の神託者",
       description:
         "一般的な占いなら壮大なビジョンや運命の転換点を予言するところですが、あなたの神託はもっと身近です。コンビニの新商品、信号のタイミング、自販機のお釣り。この小さな発見の積み重ねが、実は最も確実な幸福への道です。今日見かけた「なんでもないもの」に3秒だけ注目してください。",
-      color: "#6b7280",
-      icon: "\u{1F4CE}",
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "コンビニの新商品に、運命を見る人。",
-        coreSentence:
-          "一般的な占いなら壮大な運命を語りますが、あなたの神託はもっと身近で、もっと確実です。",
         behaviors: [
           "コンビニに入るたびに新商品コーナーを確認している。「これ知ってる?」と誰かに伝えたくなる。",
           "道を歩いていて「この木、前より大きくなった気がする」とふと気づき、少し嬉しくなった。",

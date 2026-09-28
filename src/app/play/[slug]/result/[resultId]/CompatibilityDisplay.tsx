@@ -6,8 +6,8 @@ interface CompatibilityDisplayProps {
   quizSlug: string;
   quizTitle: string;
   compatibility: { label: string; description: string };
-  myType: { id: string; title: string; icon?: string };
-  friendType: { id: string; title: string; icon?: string };
+  myType: { id: string; title: string };
+  friendType: { id: string; title: string };
 }
 
 /**

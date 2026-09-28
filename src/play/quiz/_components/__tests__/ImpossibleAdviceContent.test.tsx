@@ -53,21 +53,18 @@ const sampleAllResults: QuizResult[] = [
     title: "完璧主義の迷宮",
     description: "説明1",
     color: "#7c3aed",
-    icon: "🌀",
   },
   {
     id: "overthinking",
     title: "考えすぎのループ",
     description: "説明2",
     color: "#0891b2",
-    icon: "💭",
   },
   {
     id: "comparison",
     title: "比較の罠",
     description: "説明3",
     color: "#dc2626",
-    icon: "⚖️",
   },
 ];
 

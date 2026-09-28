@@ -10,8 +10,6 @@ const kanjiLevelQuiz: QuizDefinition = {
     type: "knowledge",
     category: "knowledge",
     questionCount: 10,
-    icon: "漢",
-    accentColor: "#2563eb",
     keywords: [
       "漢字",
       "難読漢字",
@@ -182,7 +180,6 @@ const kanjiLevelQuiz: QuizDefinition = {
       title: "漢字ビギナー",
       description:
         "まだまだ伸びしろたっぷり! 日常の中で漢字に触れる機会を増やしてみましょう。読書や漢字ドリルがおすすめです。",
-      icon: "🌱",
       minScore: 0,
       recommendation: "漢字辞典で漢字の世界を探検しよう",
       recommendationLink: "/dictionary/kanji",
@@ -192,7 +189,6 @@ const kanjiLevelQuiz: QuizDefinition = {
       title: "漢字の卵",
       description:
         "基本的な難読漢字はバッチリ! もう少し難しい漢字にも挑戦してみましょう。四字熟語の学習もおすすめです。",
-      icon: "🥚",
       minScore: 3,
       recommendation: "四字熟語辞典でさらにレベルアップ",
       recommendationLink: "/dictionary/yoji",
@@ -202,7 +198,6 @@ const kanjiLevelQuiz: QuizDefinition = {
       title: "漢字中級者",
       description:
         "なかなかの漢字力です! 日常的に漢字に親しんでいることがうかがえます。さらに上を目指して学習を続けましょう。",
-      icon: "📖",
       minScore: 5,
       recommendation: "漢字カナールで毎日の漢字トレーニング",
       recommendationLink: "/play/kanji-kanaru",
@@ -212,7 +207,6 @@ const kanjiLevelQuiz: QuizDefinition = {
       title: "漢字上級者",
       description:
         "かなりの漢字通! 難読漢字もスラスラ読める実力の持ち主です。漢字検定にも挑戦できるレベルでしょう。",
-      icon: "🎓",
       minScore: 7,
       recommendation: "漢字カナールであなたの実力を試そう",
       recommendationLink: "/play/kanji-kanaru",
@@ -222,7 +216,6 @@ const kanjiLevelQuiz: QuizDefinition = {
       title: "漢字マスター",
       description:
         "素晴らしい漢字力! 難読漢字をほぼ完璧に読みこなすあなたは、まさに漢字マスターです。周りの人にも自慢できますね!",
-      icon: "👑",
       minScore: 9,
       recommendation: "漢字辞典であなたの知識をさらに深めよう",
       recommendationLink: "/dictionary/kanji",

@@ -86,13 +86,12 @@ vi.mock("next/dynamic", async () => {
           );
       } else if (loaderStr.includes("ContrarianFortuneContent")) {
         // ContrarianFortuneContent を data-testid を持つスタブで代替
-        // coreSentence / persona / thirdPartyNote を表示して実装通りの動作を検証できるようにする
+        // persona / thirdPartyNote を表示して実装通りの動作を検証できるようにする
         cachedComp = (props: Record<string, unknown>) => {
           const dc = props.detailedContent as Record<string, unknown>;
           return React.createElement(
             "div",
             { "data-testid": "contrarian-fortune-content" },
-            React.createElement("div", null, String(dc?.coreSentence ?? "")),
             React.createElement("div", null, String(dc?.persona ?? "")),
             React.createElement("div", null, String(dc?.thirdPartyNote ?? "")),
           );
@@ -212,13 +211,11 @@ vi.mock("@/play/quiz/data/traditional-color", () => ({
         id: "ai-iro",
         title: "藍色",
         color: "#1e3a5f",
-        icon: "🔵",
       },
       {
         id: "kurenai",
         title: "紅色",
         color: "#c0392b",
-        icon: "🔴",
       },
     ],
   },
@@ -230,19 +227,16 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
     meta: {
       slug: "music-personality",
       title: "音楽性格診断",
-      accentColor: "#7c3aed",
       questionCount: 10,
     },
     results: [
       {
         id: "festival-pioneer",
         title: "フェス一番乗り族",
-        icon: "🎪",
       },
       {
         id: "playlist-evangelist",
         title: "プレイリスト伝道師",
-        icon: "🎧",
       },
     ],
   },
@@ -265,14 +259,12 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
     meta: {
       slug: "animal-personality",
       title: "日本にしかいない動物で性格診断",
-      accentColor: "#16a34a",
       questionCount: 10,
     },
     results: [
       {
         id: "nihon-zaru",
         title: "ニホンザル",
-        icon: "🐵",
         detailedContent: {
           variant: "animal-personality",
           catchphrase: "テストキャッチコピー",
@@ -285,7 +277,6 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
       {
         id: "hondo-tanuki",
         title: "ホンドタヌキ",
-        icon: "🦝",
         detailedContent: {
           variant: "animal-personality",
           catchphrase: "タヌキキャッチコピー",
@@ -316,7 +307,6 @@ vi.mock("@/play/quiz/data/impossible-advice", () => ({
     meta: {
       slug: "impossible-advice",
       title: "達成困難アドバイス診断",
-      accentColor: "#7c3aed",
       questionCount: 7,
     },
     results: [
@@ -325,14 +315,12 @@ vi.mock("@/play/quiz/data/impossible-advice", () => ({
         title: "時間魔術師見習い",
         description: "説明1",
         color: "#7c3aed",
-        icon: "⏰",
       },
       {
         id: "gravityfighter",
         title: "重力と戦う者",
         description: "説明2",
         color: "#dc2626",
-        icon: "💪",
       },
     ],
   },
@@ -344,7 +332,6 @@ vi.mock("@/play/quiz/data/unexpected-compatibility", () => ({
     meta: {
       slug: "unexpected-compatibility",
       title: "斜め上の相性診断",
-      accentColor: "#0891b2",
       questionCount: 8,
     },
     results: [
@@ -353,14 +340,12 @@ vi.mock("@/play/quiz/data/unexpected-compatibility", () => ({
         title: "自動販売機",
         description: "説明1",
         color: "#0891b2",
-        icon: "🥤",
       },
       {
         id: "oldclock",
         title: "古い掛け時計",
         description: "説明2",
         color: "#92400e",
-        icon: "🕰️",
       },
     ],
   },
@@ -410,7 +395,6 @@ const baseResult: QuizResult = {
   id: "type-a",
   title: "テスト結果",
   description: "テスト用の結果説明です。",
-  icon: "🧪",
 };
 
 /**
@@ -438,7 +422,6 @@ describe("ResultCard - 結果のボックス", () => {
     id: "type-a",
     title: "炎の詩人",
     description: "炎の詩人の説明です。",
-    icon: "🦊",
     color: "#c0392b",
   };
 
@@ -707,26 +690,22 @@ describe("ResultCard - Standard variant すべてのタイプの一覧", () => {
     id: "type-a",
     title: "タイプA",
     description: "タイプAの説明です。",
-    icon: "🅰️",
   };
   const allTypes: QuizResult[] = [
     {
       id: "type-a",
       title: "タイプA",
       description: "タイプAの説明",
-      icon: "🅰️",
     },
     {
       id: "type-b",
       title: "タイプB",
       description: "タイプBの説明",
-      icon: "🅱️",
     },
     {
       id: "type-c",
       title: "タイプC",
       description: "タイプCの説明",
-      icon: "🌟",
     },
   ];
 
@@ -810,7 +789,6 @@ describe("ResultCard - contrarian-fortune variant", () => {
   const contrarianContent: ContrarianFortuneDetailedContent = {
     variant: "contrarian-fortune",
     catchphrase: "これがキャッチフレーズです",
-    coreSentence: "これがコアセンテンスです。",
     behaviors: ["逆張りあるある1", "逆張りあるある2"],
     persona: "ペルソナのテキストです。",
     thirdPartyNote: "第三者ノートのテキストです。",
@@ -844,7 +822,7 @@ describe("ResultCard - contrarian-fortune variant", () => {
     expect(screen.getByText("これがキャッチフレーズです")).toBeInTheDocument();
   });
 
-  test("ContrarianFortuneContent に coreSentence / persona / thirdPartyNote が渡されること", () => {
+  test("ContrarianFortuneContent に persona / thirdPartyNote が渡されること", () => {
     render(
       <ResultCard
         {...defaultProps}
@@ -853,7 +831,6 @@ describe("ResultCard - contrarian-fortune variant", () => {
       />,
     );
     // スタブコンポーネントがこれらのフィールドを表示する
-    expect(screen.getByText("これがコアセンテンスです。")).toBeInTheDocument();
     expect(screen.getByText("ペルソナのテキストです。")).toBeInTheDocument();
     expect(
       screen.getByText("第三者ノートのテキストです。"),
@@ -969,7 +946,6 @@ describe("ResultCard - humorMetrics省略時", () => {
     const contrarianContentNoMetrics: ContrarianFortuneDetailedContent = {
       variant: "contrarian-fortune",
       catchphrase: "キャッチフレーズ",
-      coreSentence: "コアセンテンス",
       behaviors: ["あるある1"],
       persona: "ペルソナ",
       thirdPartyNote: "第三者ノート",
@@ -989,7 +965,6 @@ describe("ResultCard - humorMetrics省略時", () => {
     const contrarianContentEmptyMetrics: ContrarianFortuneDetailedContent = {
       variant: "contrarian-fortune",
       catchphrase: "キャッチフレーズ",
-      coreSentence: "コアセンテンス",
       behaviors: ["あるある1"],
       persona: "ペルソナ",
       thirdPartyNote: "第三者ノート",
@@ -1022,7 +997,6 @@ describe("ResultCard - animal-personality variant", () => {
     id: "nihon-zaru",
     title: "ニホンザル——温泉を発明した革命児",
     description: "あなたはニホンザルタイプです。",
-    icon: "🐵",
   };
 
   const animalProps = {
@@ -1125,7 +1099,6 @@ describe("ResultCard - catchphrase に色を入れない", () => {
     id: "nihon-zaru",
     title: "ニホンザル",
     description: "説明文",
-    icon: "🐵",
   };
 
   const musicContent: MusicPersonalityDetailedContent = {
@@ -1140,7 +1113,6 @@ describe("ResultCard - catchphrase に色を入れない", () => {
     id: "festival-pioneer",
     title: "フェス一番乗り族",
     description: "フェス説明文",
-    icon: "🎪",
   };
 
   test("animal-personality: キャッチコピーがインラインスタイルを持たないこと", () => {
@@ -1190,7 +1162,6 @@ describe("ResultCard - music-personality variant", () => {
     id: "festival-pioneer",
     title: "フェス一番乗り族",
     description: "あなたはフェス一番乗り族タイプです。",
-    icon: "🎪",
   };
 
   const musicProps = {
@@ -1270,7 +1241,6 @@ describe("ResultCard - traditional-color variant", () => {
     title: "藍色",
     description: "あなたは藍色タイプです。",
     color: "#1e3a5f",
-    icon: "🔵",
   };
 
   const traditionalColorProps = {
@@ -1364,7 +1334,6 @@ describe("ResultCard - yoji-personality variant", () => {
     title: "四面楚歌",
     description: "あなたは四面楚歌タイプです。",
     color: "#8b5cf6",
-    icon: "🏯",
   };
 
   const yojiProps = {
@@ -1434,7 +1403,6 @@ describe("ResultCard - unexpected-compatibility variant", () => {
     title: "自動販売機",
     description: "あなたと相性が良い存在は自動販売機です。",
     color: "#0891b2",
-    icon: "🥤",
   };
 
   const unexpectedProps = {
@@ -1502,7 +1470,6 @@ describe("ResultCard - allResults prop", () => {
       title: "自動販売機",
       description: "テスト説明",
       color: "#0891b2",
-      icon: "🥤",
     };
     const allResultsMock: QuizResult[] = [
       { id: "vendingmachine", title: "自動販売機", description: "説明1" },
@@ -1538,7 +1505,6 @@ describe("ResultCard - allResults prop", () => {
       title: "時間魔術師見習い",
       description: "テスト説明",
       color: "#7c3aed",
-      icon: "⏰",
     };
     const allResultsMock: QuizResult[] = [
       { id: "timemagician", title: "時間魔術師見習い", description: "説明1" },
@@ -1579,7 +1545,6 @@ describe("ResultCard - impossible-advice variant", () => {
     title: "時間魔術師見習い",
     description: "あなたと相性が良い診断タイプは時間魔術師見習いです。",
     color: "#7c3aed",
-    icon: "⏰",
   };
 
   const impossibleProps = {

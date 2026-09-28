@@ -30,10 +30,6 @@ export interface GameMeta {
   shortDescription: string;
   /** Longer description (~60 chars, used on game list page and search index) */
   description: string;
-  /** Icon emoji */
-  icon: string;
-  /** Theme color (CSS hex) */
-  accentColor: string;
   /** Difficulty label */
   difficulty: string;
   /** Keywords for search index */

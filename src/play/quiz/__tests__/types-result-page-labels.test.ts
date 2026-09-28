@@ -16,8 +16,6 @@ describe("QuizMeta resultPageLabels field", () => {
       type: "personality",
       category: "personality",
       questionCount: 5,
-      icon: "🧪",
-      accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
     };
@@ -33,8 +31,6 @@ describe("QuizMeta resultPageLabels field", () => {
       type: "personality",
       category: "personality",
       questionCount: 5,
-      icon: "🧪",
-      accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
       resultPageLabels: {
@@ -62,8 +58,6 @@ describe("QuizMeta resultPageLabels field", () => {
       type: "personality",
       category: "personality",
       questionCount: 5,
-      icon: "🧪",
-      accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
       resultPageLabels: {

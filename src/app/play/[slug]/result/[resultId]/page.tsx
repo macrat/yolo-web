@@ -166,8 +166,8 @@ export default async function PlayQuizResultPage({
   let compatData:
     | {
         compatibility: { label: string; description: string };
-        myType: { id: string; title: string; icon?: string };
-        friendType: { id: string; title: string; icon?: string };
+        myType: { id: string; title: string };
+        friendType: { id: string; title: string };
       }
     | undefined;
 
@@ -184,12 +184,10 @@ export default async function PlayQuizResultPage({
         myType: {
           id: myResult2.id,
           title: resultNameWithReading(myResult2),
-          icon: myResult2.icon,
         },
         friendType: {
           id: friendResult2.id,
           title: resultNameWithReading(friendResult2),
-          icon: friendResult2.icon,
         },
       };
     }

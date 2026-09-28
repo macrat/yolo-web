@@ -26,26 +26,22 @@ vi.mock("@/play/quiz/data/yoji-personality", () => ({
     meta: {
       slug: "yoji-personality",
       title: "あなたを四字熟語に例えると?",
-      accentColor: "#b91c1c",
       questionCount: 8,
     },
     results: [
       {
         id: "shoshikantetsu",
         title: "初志貫徹",
-        icon: "🎯",
         color: "#1e40af",
       },
       {
         id: "tenshinranman",
         title: "天真爛漫",
-        icon: "☀️",
         color: "#f59e0b",
       },
       {
         id: "sessatakuma",
         title: "切磋琢磨",
-        icon: "💪",
         color: "#059669",
       },
     ],

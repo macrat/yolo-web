@@ -23,8 +23,6 @@ const traditionalColorQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 8,
-    icon: "\u{1F3A8}",
-    accentColor: "#0d5661",
     keywords: [
       "伝統色",
       "日本の色",
@@ -287,7 +285,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "知的で深みのあるあなたは、藍色のように奥深い魅力を持っています。探究心が強く、物事の本質を見抜く力があります。静かな知性で周りの人を導く存在です。",
       color: "#0d5661",
-      icon: "\u{1F30A}",
       recommendation: "藍色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/ai",
       detailedContent: {
@@ -313,7 +310,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "情熱的でエネルギッシュなあなたは、朱色のように力強い輝きを放っています。行動力があり、周りの人にも元気を与える太陽のような存在です。",
       color: "#ab3b3a",
-      icon: "\u{1F525}",
       recommendation: "朱色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors",
       detailedContent: {
@@ -339,7 +335,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "爽やかで生命力にあふれるあなたは、若草色のようにフレッシュな魅力があります。前向きで成長し続ける姿勢が、周りの人に希望を与えます。",
       color: "#C3D825",
-      icon: "\u{1F331}",
       recommendation: "日本の伝統色を探索する",
       recommendationLink: "/dictionary/colors",
       detailedContent: {
@@ -365,7 +360,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "繊細で優雅なあなたは、藤色のように美しく上品な雰囲気を持っています。感受性が豊かで、芸術的なセンスに恵まれた人です。",
       color: "#8b81c3",
-      icon: "\u{1F33A}",
       recommendation: "藤色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/fuji",
       detailedContent: {
@@ -391,7 +385,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "明るく社交的なあなたは、山吹色のように温かい輝きで周りを照らします。コミュニケーション上手で、人を笑顔にする天性の才能があります。",
       color: "#ffb11b",
-      icon: "\u2728",
       recommendation: "山吹色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/yamabuki",
       detailedContent: {
@@ -417,7 +410,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "落ち着きのあるあなたは、紺色のように深い信頼感を与えます。責任感が強く、周りの人から頼られるしっかり者です。",
       color: "#0f2540",
-      icon: "\u{1F319}",
       recommendation: "紺色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/kon",
       detailedContent: {
@@ -443,7 +435,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "温かく包容力のあるあなたは、桜色のように優しい安らぎを与えます。思いやりがあり、誰からも愛される人柄の持ち主です。",
       color: "#fedfe1",
-      icon: "\u{1F338}",
       recommendation: "桜色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/sakura",
       detailedContent: {
@@ -469,7 +460,6 @@ const traditionalColorQuiz: QuizDefinition = {
       description:
         "独創的で自由な精神の持ち主であるあなたは、翡翠色のように神秘的な魅力があります。型にはまらない発想力で、新しい道を切り拓く開拓者です。",
       color: "#38B48B",
-      icon: "\u{1F48E}",
       recommendation: "日本の伝統色を探索する",
       recommendationLink: "/dictionary/colors",
       detailedContent: {

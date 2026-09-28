@@ -50,8 +50,6 @@ const characterPersonalityQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 12,
-    icon: "\u{1F3AD}",
-    accentColor: "#7c3aed",
     keywords: [
       "キャラ診断",
       "性格診断",

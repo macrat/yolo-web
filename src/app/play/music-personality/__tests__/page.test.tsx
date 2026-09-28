@@ -23,7 +23,6 @@ vi.mock("@/play/quiz/registry", () => ({
           slug: "music-personality",
           type: "personality",
           questionCount: 10,
-          accentColor: "#7c3aed",
           category: "personality",
         },
         results: [
@@ -64,7 +63,6 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
       slug: "music-personality",
       type: "personality",
       questionCount: 10,
-      accentColor: "#7c3aed",
       category: "personality",
     },
     results: [

@@ -105,7 +105,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
       shortDescription: "日常の行動パターン12問から診断",
       type: "personality",
       questionCount: 12,
-      accentColor: "#7c3aed",
       category: "personality",
     },
     results: [
@@ -113,7 +112,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
         id: "blazing-strategist",
         title: "締切3分前の頭脳司令塔",
         description: "blazing-strategistの説明テキスト。",
-        icon: "🔥",
         color: "#ef4444",
         detailedContent: {
           variant: "character-personality" as const,
@@ -132,7 +130,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
         id: "blazing-poet",
         title: "全力疾走の途中で空を見る詩人",
         description: "blazing-poetの説明テキスト。",
-        icon: "🌟",
         color: "#f59e0b",
         detailedContent: {
           variant: "character-personality" as const,

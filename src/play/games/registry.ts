@@ -8,8 +8,6 @@ const gameEntries: GameMeta[] = [
     shortDescription: "毎日1つの漢字を推理するパズル",
     description:
       "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
-    icon: "\u{1F4DA}",
-    accentColor: "#3d7a2f",
     difficulty: "初級〜中級",
     keywords: ["漢字", "パズル", "デイリー", "推理"],
     statsKey: "kanji-kanaru-stats",
@@ -69,8 +67,6 @@ const gameEntries: GameMeta[] = [
     shortDescription: "毎日1つの四字熟語を当てるパズル",
     description:
       "毎日1つの四字熟語を当てるパズルゲーム。4文字の漢字を推理しよう!",
-    icon: "\u{1F3AF}",
-    accentColor: "#9a8533",
     difficulty: "中級〜上級",
     keywords: ["四字熟語", "パズル", "デイリー", "漢字"],
     statsKey: "yoji-kimeru-stats",
@@ -132,8 +128,6 @@ const gameEntries: GameMeta[] = [
     shortDescription: "16個の言葉を4グループに分けるパズル",
     description:
       "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう!",
-    icon: "\u{1F9E9}",
-    accentColor: "#8a5a9a",
     difficulty: "初級〜上級",
     keywords: ["仲間分け", "グループ", "パズル", "言葉"],
     statsKey: "nakamawake-stats",
@@ -190,8 +184,6 @@ const gameEntries: GameMeta[] = [
     shortDescription: "毎日5つの色を作って色彩感覚を鍛えよう",
     description:
       "毎日5つのお題の色に、色相・彩度・明度のスライダーで近い色を作る。お題と作った色を並べて見比べ、近さが点数になる。",
-    icon: "\u{1F3A8}",
-    accentColor: "#c2185b",
     difficulty: "初級〜上級",
     keywords: ["色", "カラー", "色彩", "デイリー"],
     statsKey: "irodori-stats",

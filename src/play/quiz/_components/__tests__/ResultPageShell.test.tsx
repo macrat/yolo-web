@@ -50,8 +50,6 @@ const mockQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 5,
-    icon: "🧪",
-    accentColor: "#ff5733",
     keywords: ["テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
   },
@@ -63,7 +61,6 @@ const mockResult: QuizResult = {
   id: "result-a",
   title: "テスト結果タイトル",
   description: "テスト結果の説明",
-  icon: "🎯",
   color: "#ff5733",
 };
 
@@ -115,8 +112,6 @@ test("タイプ名を h1 に1度だけ出し、文節のあいだの <wbr> の�
   expect(
     container.textContent?.split("締切3分前に本気出す炎の司令塔").length,
   ).toBe(2);
-  // 絵文字（result.icon）は描かない（DESIGN.md §5）
-  expect(screen.queryByText("🎯")).not.toBeInTheDocument();
 });
 
 test("読みにくい語を持つタイプは、読みを h1 の外のすぐ下に添える", () => {

@@ -26,19 +26,16 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
     meta: {
       slug: "animal-personality",
       title: "日本にしかいない動物で性格診断",
-      accentColor: "#16a34a",
       questionCount: 10,
     },
     results: [
       {
         id: "nihon-zaru",
         title: "ニホンザル",
-        icon: "🐵",
       },
       {
         id: "hondo-tanuki",
         title: "ホンドタヌキ",
-        icon: "🦝",
       },
     ],
   },

@@ -204,8 +204,6 @@ const mockPlayRecommendations: PlayContentMeta[] = [
     title: "テスト占いコンテンツ",
     description: "テスト用の占いコンテンツです",
     shortDescription: "テスト占い",
-    icon: "🔮",
-    accentColor: "#8B5CF6",
     keywords: ["占い", "テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
     contentType: "fortune",

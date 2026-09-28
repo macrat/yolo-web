@@ -1,5 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { getContrastTextColor } from "../color-utils";
+import traditionalColorQuiz from "../quiz/data/traditional-color";
 
 describe("getContrastTextColor", () => {
   // 暗い色 — 白文字のコントラスト比が4.5:1以上になるはずの色
@@ -47,7 +48,6 @@ describe("getContrastTextColor", () => {
     expect(getContrastTextColor("#595959")).toBe("#ffffff");
   });
 
-  // accentColorとして実際に使われる色のテスト
   test("占い系の紫系色(#6c5ce7)に対して白(#ffffff)を返す", () => {
     expect(getContrastTextColor("#6c5ce7")).toBe("#ffffff");
   });
@@ -58,53 +58,10 @@ describe("getContrastTextColor", () => {
 });
 
 /**
- * 全19種のコンテンツのaccentColorに対してWCAG AA（4.5:1）を満たすテキスト色が
- * 選択されることを検証する。
- *
- * accentColor一覧（registry.tsおよび各データファイルより）:
- * ゲーム4種:
- *   kanji-kanaru: #3d7a2f, yoji-kimeru: #9a8533, nakamawake: #8a5a9a, irodori: #c2185b
- * クイズ14種:
- *   kanji-level: #2563eb, kotowaza-level: #d97706, yoji-level: #7c3aed,
- *   traditional-color: #0d5661, yoji-personality: #b91c1c, impossible-advice: #7c3aed,
- *   contrarian-fortune: #f59e0b, unexpected-compatibility: #0891b2,
- *   music-personality: #7c3aed, character-fortune: #7c3aed,
- *   animal-personality: #16a34a, science-thinking: #4f46e5,
- *   japanese-culture: #b91c1c, character-personality: #7c3aed
- * Fortune 1種:
- *   daily: #7c3aed
+ * 伝統色診断の結果の色（札の記号面の地になる）すべてに対して、WCAG AA（4.5:1）を満たす
+ * 字の色が選ばれることを確かめる。
  */
-describe("全19種のaccentColorに対するWCAG AAコントラスト比検証", () => {
-  /**
-   * 各エントリは [コンテンツ名, accentColor, 期待するテキスト色] の形式。
-   * テキスト色は getContrastTextColor が返す値（"#ffffff" or "#1a1a1a"）。
-   * WCAG AA（4.5:1）を満たす色が返されることを検証する。
-   */
-  const allAccentColors: { name: string; color: string }[] = [
-    // ゲーム
-    { name: "kanji-kanaru", color: "#3d7a2f" },
-    { name: "yoji-kimeru", color: "#9a8533" },
-    { name: "nakamawake", color: "#8a5a9a" },
-    { name: "irodori", color: "#c2185b" },
-    // クイズ
-    { name: "kanji-level", color: "#2563eb" },
-    { name: "kotowaza-level", color: "#d97706" },
-    { name: "yoji-level", color: "#7c3aed" },
-    { name: "traditional-color", color: "#0d5661" },
-    { name: "yoji-personality", color: "#b91c1c" },
-    { name: "impossible-advice", color: "#7c3aed" },
-    { name: "contrarian-fortune", color: "#f59e0b" },
-    { name: "unexpected-compatibility", color: "#0891b2" },
-    { name: "music-personality", color: "#7c3aed" },
-    { name: "character-fortune", color: "#7c3aed" },
-    { name: "animal-personality", color: "#16a34a" },
-    { name: "science-thinking", color: "#4f46e5" },
-    { name: "japanese-culture", color: "#b91c1c" },
-    { name: "character-personality", color: "#7c3aed" },
-    // Fortune
-    { name: "daily (fortune)", color: "#7c3aed" },
-  ];
-
+describe("伝統色診断の結果の色に対するWCAG AAコントラスト比検証", () => {
   /** WCAG 2.1の相対輝度計算（テスト内での検証用） */
   function sRGBChannelToLinear(channel8bit: number): number {
     const sRGB = channel8bit / 255;
@@ -132,8 +89,9 @@ describe("全19種のaccentColorに対するWCAG AAコントラスト比検証",
     return (lighter + 0.05) / (darker + 0.05);
   }
 
-  for (const { name, color } of allAccentColors) {
-    test(`${name}(${color})のCTAテキスト色がWCAG AA（4.5:1）を満たす`, () => {
+  for (const { id: name, color } of traditionalColorQuiz.results) {
+    test(`${name}(${color})の字の色がWCAG AA（4.5:1）を満たす`, () => {
+      if (!color) throw new Error(`${name}: color がない`);
       const textColor = getContrastTextColor(color);
       const ratio = getContrastRatio(color, textColor);
       expect(

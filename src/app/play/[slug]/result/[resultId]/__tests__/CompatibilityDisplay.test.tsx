@@ -12,8 +12,8 @@ describe("CompatibilityDisplay", () => {
           label: "最高の相性",
           description: "相性の説明",
         }}
-        myType={{ id: "type-a", title: "タイプA", icon: "🌟" }}
-        friendType={{ id: "type-b", title: "タイプB", icon: "🎯" }}
+        myType={{ id: "type-a", title: "タイプA" }}
+        friendType={{ id: "type-b", title: "タイプB" }}
       />,
     );
 

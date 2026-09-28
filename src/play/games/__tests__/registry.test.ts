@@ -29,17 +29,9 @@ describe("allGameMetas", () => {
       expect(meta.title).toBeTruthy();
       expect(meta.shortDescription).toBeTruthy();
       expect(meta.description).toBeTruthy();
-      expect(meta.icon).toBeTruthy();
-      expect(meta.accentColor).toBeTruthy();
       expect(meta.difficulty).toBeTruthy();
       expect(meta.statsKey).toBeTruthy();
       expect(meta.ogpSubtitle).toBeTruthy();
-    }
-  });
-
-  test("accentColor is a valid hex color", () => {
-    for (const meta of allGameMetas) {
-      expect(meta.accentColor).toMatch(/^#[0-9a-fA-F]{6}$/);
     }
   });
 

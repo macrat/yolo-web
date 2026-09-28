@@ -2,7 +2,7 @@
  * ContrarianFortuneContent コンポーネントのテスト。
  *
  * テスト対象:
- * - behaviors / persona / thirdPartyNote の3セクション表示と、説明と重なる coreSentence を出さないこと
+ * - behaviors / persona / thirdPartyNote の3セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
  * - すべてのタイプ（OtherTypesNav）
  * - 置く面（placement）による見出しの階層（h2/h3）
@@ -37,8 +37,6 @@ vi.mock("next/link", () => ({
 const sampleContent: ContrarianFortuneDetailedContent = {
   variant: "contrarian-fortune",
   catchphrase: "「みんなと違う」が生きがいの人",
-  coreSentence:
-    "流行を追わないのではなく、流行を避けることで自分を定義している。",
   behaviors: [
     "人気のカフェに行かない理由を3つ以上言える。",
     "「みんながいいって言うから」という理由だけで何かを避ける。",
@@ -65,44 +63,24 @@ const sampleAllResults: QuizResult[] = [
     title: "逆張りマスター",
     description: "説明1",
     color: "#7c3aed",
-    icon: "🔄",
   },
   {
     id: "unique",
     title: "マイウェイ型",
     description: "説明2",
     color: "#0891b2",
-    icon: "🌊",
   },
   {
     id: "classic",
     title: "王道無視型",
     description: "説明3",
     color: "#dc2626",
-    icon: "🎭",
   },
 ];
 
 const sampleQuizSlug = "contrarian-fortune";
 
 describe("ContrarianFortuneContent - 基本レンダリング", () => {
-  it("説明と同じことを言う coreSentence を出さないこと", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        placement="resultPage"
-      />,
-    );
-    expect(
-      screen.queryByText(
-        "流行を追わないのではなく、流行を避けることで自分を定義している。",
-      ),
-    ).not.toBeInTheDocument();
-  });
-
   it("behaviorsセクションが表示されること", () => {
     render(
       <ContrarianFortuneContent

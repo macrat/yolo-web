@@ -26,19 +26,16 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
     meta: {
       slug: "music-personality",
       title: "音楽性格診断",
-      accentColor: "#7c3aed",
       questionCount: 10,
     },
     results: [
       {
         id: "festival-pioneer",
         title: "フェス一番乗り族",
-        icon: "🎪",
       },
       {
         id: "playlist-evangelist",
         title: "プレイリスト伝道師",
-        icon: "📢",
       },
     ],
   },
@@ -228,19 +225,5 @@ describe("MusicPersonalityContent - 全タイプリンク", () => {
       "a[href*='/play/music-personality/result/']",
     );
     expect(links.length).toBeGreaterThanOrEqual(2);
-  });
-
-  it("すべてのタイプの絵文字アイコン（r.icon）が描画されないこと", () => {
-    // 絵文字を置かない（DESIGN.md §5）。各タイプはタイトルの文言で見分ける。
-    render(
-      <MusicPersonalityContent
-        content={sampleContent}
-        resultId="festival-pioneer"
-        placement="resultPage"
-      />,
-    );
-    // モックデータの icon: "🎪" / "📢" がリスト中に出ないこと
-    expect(screen.queryByText("🎪")).toBeNull();
-    expect(screen.queryByText("📢")).toBeNull();
   });
 });

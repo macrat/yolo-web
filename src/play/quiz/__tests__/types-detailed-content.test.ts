@@ -48,7 +48,6 @@ describe("ContrarianFortuneDetailedContent", () => {
     const content: ContrarianFortuneDetailedContent = {
       variant: "contrarian-fortune",
       catchphrase: "逆張りの天才",
-      coreSentence: "流行に背を向けて独自の道を行く、真のオリジナル。",
       behaviors: ["みんながAと言えばBを選ぶ", "ランキング上位は避ける"],
       persona:
         "このタイプの人は常に一歩引いた視点で物事を見ている。流行を追うことに意味を感じず、独自の美学で選択し続ける。周囲が熱狂するほど冷静になれるのが特技。ユーモアと皮肉が混ざった独特の表現で場を和ませることも多い。",
@@ -65,7 +64,6 @@ describe("ContrarianFortuneDetailedContent", () => {
     const content: ContrarianFortuneDetailedContent = {
       variant: "contrarian-fortune",
       catchphrase: "逆張り指数MAX",
-      coreSentence: "逆を行くことが美学。",
       behaviors: ["定番を避ける"],
       persona: "説明文",
       thirdPartyNote: "第三者視点",
@@ -95,7 +93,6 @@ describe("DetailedContent union type", () => {
     const content: DetailedContent = {
       variant: "contrarian-fortune",
       catchphrase: "キャッチコピー",
-      coreSentence: "核心文",
       behaviors: ["あるある"],
       persona: "人物像",
       thirdPartyNote: "第三者視点",
@@ -113,7 +110,6 @@ describe("DetailedContent union type", () => {
       {
         variant: "contrarian-fortune",
         catchphrase: "cp",
-        coreSentence: "cs",
         behaviors: [],
         persona: "p",
         thirdPartyNote: "t",
@@ -650,7 +646,6 @@ describe("QuizResult.detailedContent with DetailedContent union", () => {
       detailedContent: {
         variant: "contrarian-fortune",
         catchphrase: "キャッチコピー",
-        coreSentence: "核心文",
         behaviors: ["あるある"],
         persona: "人物像",
         thirdPartyNote: "第三者視点",

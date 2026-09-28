@@ -41,8 +41,6 @@ const characterFortuneQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 8,
-    icon: "\u{1F52E}",
-    accentColor: "#7c3aed",
     keywords: [
       "キャラ占い",
       "性格診断",
@@ -302,8 +300,6 @@ const characterFortuneQuiz: QuizDefinition = {
       title: "締切3分前に本気出す炎の司令塔",
       description:
         "よっしゃ来たな!お前の守護キャラは俺だぜ!普段はゆるいくせに追い込まれた瞬間に覚醒するタイプだろ?知ってるよ。夏休みの宿題は8月31日派、テスト勉強は前日の深夜から。でもな、不思議とそれで何とかなっちまうのがお前のすごいところだぜ。周りの人間を巻き込む力があるから、「もう無理」って場面でも誰かが助けに来る。...まぁ、たまには計画的にやってみろよ。俺もやったことないけど!",
-      color: "#e11d48",
-      icon: "\u{1F525}",
       detailedContent: {
         variant: "character-fortune",
         characterIntro:
@@ -329,8 +325,6 @@ const characterFortuneQuiz: QuizDefinition = {
       title: "実験中にカップ麺を3個忘れる博士",
       description:
         "ふむ、興味深い結果であるぞ。お前の守護キャラは吾輩である。知的好奇心が服を着て歩いているようなタイプであるな?Wikipediaを開いたら3時間消えているし、「ちょっと調べもの」が修士論文レベルになるのも日常であろう。問題は、集中すると生活がすべて止まることである。冷蔵庫の中で化石化した食材、伸びきったカップ麺、充電し忘れたスマホ...心当たりがあるであるな?でもその探究心こそが、お前を唯一無二の存在にしているのであるぞ。",
-      color: "#2563eb",
-      icon: "\u{1F9EA}",
       detailedContent: {
         variant: "character-fortune",
         characterIntro:
@@ -356,8 +350,6 @@ const characterFortuneQuiz: QuizDefinition = {
       title: "布団の中で世界を3回救った妄想家",
       description:
         "あら、あなたの守護キャラはわたくしですのね。嬉しいですわ。あなたはきっと、お布団の中で壮大な物語を作り上げるのが得意ですわよね?通勤電車の中では自分が主人公の映画を脳内上映していて、信号待ちでは「もしここにドラゴンが来たら」とシミュレーションしている...当たっていますわよね?でもね、そのやわらかい想像力の奥に、誰にも曲げられない芯があるのをわたくしは知っていますわ。夢見ることは、戦うことですもの。",
-      color: "#d946ef",
-      icon: "\u2728",
       detailedContent: {
         variant: "character-fortune",
         characterIntro:
@@ -383,8 +375,6 @@ const characterFortuneQuiz: QuizDefinition = {
       title: "正論を斜め45度から放つ知恵の曲者",
       description:
         "あー、やっぱお前こっち側の人間っしょ。守護キャラ、俺でしょ?知ってた。まぁ聞いてよ。お前ってさ、みんなが「Aだよね!」って盛り上がってる時に「でもBもあるっしょ」って言っちゃうタイプじゃん?空気読めないんじゃなくて、読んだ上であえてぶっ壊すんだよね。それ、実は超大事な才能なんだわ。会議で全員が同じ方向見てる時にブレーキ踏めるの、お前だけだから。...まぁ、たまには素直に同意してあげると周りが泣いて喜ぶっしょ。",
-      color: "#f59e0b",
-      icon: "\u{1F0CF}",
       detailedContent: {
         variant: "character-fortune",
         characterIntro:
@@ -410,8 +400,6 @@ const characterFortuneQuiz: QuizDefinition = {
       title: "傘を3本持ち歩く晴れの日の守護神",
       description:
         "あなたの守護キャラは私みたいだね。...大丈夫かな、ちゃんと合ってるかな?まぁ、あなたは多分「もしも」のことを考えすぎて疲れちゃうタイプかもしれないね。旅行の持ち物リストが3ページあるとか、待ち合わせに30分前に着いちゃうとか、天気予報を3サイトで確認するとか...。でもね、みんなが気づいていないだけで、あなたの心配のおかげで救われてる人がたくさんいるかもしれないよ。地味だけど、一番頼りにされるのは実はあなたなんだ。多分ね。",
-      color: "#059669",
-      icon: "\u{1F6E1}\u{FE0F}",
       detailedContent: {
         variant: "character-fortune",
         characterIntro:
@@ -436,8 +424,6 @@ const characterFortuneQuiz: QuizDefinition = {
       title: "雨音に感動して遅刻する感性の住人",
       description:
         "ねぇ、この結果の配色って、美しいよね。あなたの守護キャラは私。うん、なんかわかる。あなたって、通学路の夕焼けに立ち止まって写真撮ったり、カフェのBGMが変わった瞬間に気づいたり、雨の匂いで季節を感じたりするでしょ?感受性が強すぎて、たまに日常がしんどくなることもあるかもしれないけど...それって、世界を人より多くの色で見てるってことだから。遅刻の言い訳が「空がきれいだった」でも、私は許すよ。だってそれ、本当のことだもんね。",
-      color: "#7c3aed",
-      icon: "\u{1F3A8}",
       detailedContent: {
         variant: "character-fortune",
         characterIntro:

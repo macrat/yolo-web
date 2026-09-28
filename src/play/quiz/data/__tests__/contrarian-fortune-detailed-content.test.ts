@@ -4,7 +4,6 @@
  * Each result must have a valid ContrarianFortuneDetailedContent with:
  *   - variant: "contrarian-fortune"
  *   - catchphrase: 10-50 chars, non-empty
- *   - coreSentence: 20-100 chars, non-empty, contains reversal frame
  *   - behaviors: 3-5 items, each non-empty (10-150 chars)
  *   - persona: 150-250 chars
  *   - thirdPartyNote: non-empty string
@@ -54,20 +53,6 @@ describe("contrarian-fortune detailedContent", () => {
         dc.catchphrase.length,
         `${result.id}: catchphrase must be at most 50 chars`,
       ).toBeLessThanOrEqual(50);
-    }
-  });
-
-  it("coreSentence is 20-100 chars and non-empty", () => {
-    for (const result of allResults) {
-      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
-      expect(
-        dc.coreSentence.length,
-        `${result.id}: coreSentence must be at least 20 chars`,
-      ).toBeGreaterThanOrEqual(20);
-      expect(
-        dc.coreSentence.length,
-        `${result.id}: coreSentence must be at most 100 chars`,
-      ).toBeLessThanOrEqual(100);
     }
   });
 

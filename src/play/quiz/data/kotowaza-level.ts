@@ -11,8 +11,6 @@ const kotowazaLevelQuiz: QuizDefinition = {
     type: "knowledge",
     category: "knowledge",
     questionCount: 10,
-    icon: "諺",
-    accentColor: "#d97706",
     keywords: [
       "ことわざ",
       "慣用句",
@@ -189,7 +187,6 @@ const kotowazaLevelQuiz: QuizDefinition = {
       title: "ことわざビギナー",
       description:
         "まだまだ伸びしろたっぷり! ことわざや慣用句は日常会話の中にたくさん隠れています。まずは身近な表現から意識して使ってみましょう。",
-      icon: "\u{1F331}",
       minScore: 0,
       recommendation: "漢字力診断にも挑戦してみよう",
       recommendationLink: "/play/kanji-level",
@@ -199,7 +196,6 @@ const kotowazaLevelQuiz: QuizDefinition = {
       title: "ことわざ見習い",
       description:
         "基本的なことわざはバッチリ! 日本語の表現力をさらに伸ばすために、本や新聞でことわざ・慣用句を探してみましょう。",
-      icon: "\u{1F4DD}",
       minScore: 3,
       recommendation: "四字熟語力診断で語彙力をさらに試そう",
       recommendationLink: "/play/yoji-level",
@@ -209,7 +205,6 @@ const kotowazaLevelQuiz: QuizDefinition = {
       title: "ことわざ中級者",
       description:
         "なかなかのことわざ力です! 由来や語源まで知ると、ことわざの世界がもっと面白くなりますよ。",
-      icon: "\u{1F4D6}",
       minScore: 5,
       recommendation: "漢字力診断であなたの漢字力も確認しよう",
       recommendationLink: "/play/kanji-level",
@@ -219,7 +214,6 @@ const kotowazaLevelQuiz: QuizDefinition = {
       title: "ことわざ上級者",
       description:
         "かなりの語彙力の持ち主! ことわざや慣用句を自在に使いこなせる実力者です。会話や文章で的確に使えると表現に深みが出ますね。",
-      icon: "\u{1F393}",
       minScore: 7,
       recommendation: "四字熟語力診断にも挑戦しよう",
       recommendationLink: "/play/yoji-level",
@@ -229,7 +223,6 @@ const kotowazaLevelQuiz: QuizDefinition = {
       title: "ことわざマスター",
       description:
         "素晴らしいことわざ力! ことわざ・慣用句をほぼ完璧に理解しているあなたは、まさにことわざマスターです。",
-      icon: "\u{1F451}",
       minScore: 9,
       recommendation: "漢字力診断で漢字力も確認しよう",
       recommendationLink: "/play/kanji-level",

@@ -24,8 +24,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 8,
-    icon: "\u{1F52E}",
-    accentColor: "#b91c1c",
     keywords: [
       "四字熟語",
       "性格診断",
@@ -279,8 +277,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "初志貫徹",
       description:
         "最初の志を最後まで貫くこと。あなたは一度決めたことをぶれずにやり遂げる強い意志の持ち主です。その揺るぎない信念が、周りの人にも勇気を与えています。",
-      color: "#1e40af",
-      icon: "\u{1F3AF}",
       recommendation: "四字熟語辞典で「初志貫徹」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/初志貫徹",
       detailedContent: {
@@ -307,8 +303,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "天真爛漫",
       description:
         "飾り気がなく無邪気なこと。あなたは純粋で自由な心の持ち主で、周りの人を自然と笑顔にする力があります。その天真爛漫な魅力をいつまでも大切にしてください。",
-      color: "#f59e0b",
-      icon: "\u{2600}\u{FE0F}",
       recommendation: "四字熟語辞典で「天真爛漫」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/天真爛漫",
       detailedContent: {
@@ -335,8 +329,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "切磋琢磨",
       description:
         "互いに競い合い高め合うこと。あなたは仲間と共に成長することに喜びを感じる努力家です。その向上心とチームワークが、あなたとあなたの周りを輝かせています。",
-      color: "#059669",
-      icon: "\u{1F4AA}",
       recommendation: "四字熟語辞典で「切磋琢磨」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/切磋琢磨",
       detailedContent: {
@@ -364,8 +356,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "一期一会",
       description:
         "一生に一度の出会いを大切にすること。あなたは人との出会いや一瞬一瞬を大切にする繊細な感性の持ち主です。その温かいまなざしが、かけがえのない縁を結んでいます。",
-      color: "#db2777",
-      icon: "\u{1F338}",
       recommendation: "四字熟語辞典で「一期一会」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/一期一会",
       detailedContent: {
@@ -395,8 +385,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "臨機応変",
       description:
         "その場に応じて適切に対応すること。あなたは柔軟な発想と高い適応力を持ち、どんな状況でも最善の一手を見つけられる人です。その機転の良さが多くの人を助けています。",
-      color: "#7c3aed",
-      icon: "\u{1F3AD}",
       recommendation: "四字熟語辞典で「臨機応変」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/臨機応変",
       detailedContent: {
@@ -425,8 +413,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "明鏡止水",
       description:
         "静かで澄み切った心。あなたは穏やかで冷静な心の持ち主で、周りの人に安心感を与える存在です。その澄んだ心が、物事の本質を見抜く力の源になっています。",
-      color: "#0891b2",
-      icon: "\u{1FAB7}",
       recommendation: "四字熟語辞典で「明鏡止水」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/明鏡止水",
       detailedContent: {
@@ -455,8 +441,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "以心伝心",
       description:
         "言葉なしに心が通じ合うこと。あなたは周囲の気持ちを敏感に察する共感力に優れた人です。その思いやりと温かさが、深い信頼関係を築く力になっています。",
-      color: "#e11d48",
-      icon: "\u{1F495}",
       recommendation: "四字熟語辞典で「以心伝心」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/以心伝心",
       detailedContent: {
@@ -485,8 +469,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "勇往邁進",
       description:
         "恐れず勇ましく前に進むこと。あなたは困難を恐れず果敢に挑戦するリーダー気質の持ち主です。その行動力と勇気が、周りの人にも前に進む力を与えています。",
-      color: "#ea580c",
-      icon: "\u{1F525}",
       recommendation: "四字熟語辞典で「勇往邁進」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/勇往邁進",
       detailedContent: {

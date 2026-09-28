@@ -18,8 +18,6 @@ const mockMeta: GameMeta = {
   title: "テストゲーム",
   shortDescription: "テスト用ゲーム",
   description: "テスト用のゲームの説明です。",
-  icon: "\u{1F3AE}",
-  accentColor: "#ff0000",
   difficulty: "初級",
   keywords: ["テスト"],
   statsKey: "test-game-stats",

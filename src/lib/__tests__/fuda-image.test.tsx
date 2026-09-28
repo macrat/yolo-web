@@ -122,7 +122,7 @@ describe("renderFudaImage", () => {
   });
 
   test("絵文字（§5）を画像に持ち込まない", async () => {
-    // クイズデータの result.icon は絵文字。札にはタイプ名の先頭書記素だけを立てる。
+    // 札にはタイプ名の先頭書記素だけを立てる。
     const { element } = await render({
       id: "blazing-strategist",
       title: "締切3分前に5手先を読む炎の策士",

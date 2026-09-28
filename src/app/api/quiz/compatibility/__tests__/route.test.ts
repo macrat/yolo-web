@@ -32,12 +32,10 @@ describe("GET /api/quiz/compatibility", () => {
     expect(data.label.length).toBeGreaterThan(0);
     expect(typeof data.description).toBe("string");
     expect(data.description.length).toBeGreaterThan(0);
-    expect(typeof data.myType).toBe("object");
-    expect(typeof data.myType.title).toBe("string");
-    expect(typeof data.myType.icon).toBe("string");
-    expect(typeof data.friendType).toBe("object");
-    expect(typeof data.friendType.title).toBe("string");
-    expect(typeof data.friendType.icon).toBe("string");
+    expect(data.myType).toEqual({ title: "締切3分前に5手先を読む炎の策士" });
+    expect(data.friendType).toEqual({
+      title: "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家",
+    });
   });
 
   test("returns same compatibility data regardless of typeA/typeB order", async () => {

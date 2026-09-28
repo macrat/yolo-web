@@ -57,8 +57,6 @@ const personalityQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 3,
-    icon: "S",
-    accentColor: "#000",
     keywords: [],
     publishedAt: "2026-01-01",
   },

@@ -8,8 +8,6 @@ const baseFields = {
   title: "テストコンテンツ",
   description: "テスト用の説明文です。",
   shortDescription: "短い説明",
-  icon: "🎮",
-  accentColor: "#FF0000",
   keywords: ["テスト", "コンテンツ"],
   publishedAt: "2025-01-01T00:00:00+09:00",
 } satisfies Omit<PlayContentMeta, "contentType" | "category">;

@@ -56,21 +56,18 @@ const sampleAllResults: QuizResult[] = [
     title: "自動販売機",
     description: "説明1",
     color: "#0891b2",
-    icon: "🥤",
   },
   {
     id: "oldclock",
     title: "古い掛け時計",
     description: "説明2",
     color: "#92400e",
-    icon: "🕰️",
   },
   {
     id: "streetlight",
     title: "街灯",
     description: "説明3",
     color: "#ca8a04",
-    icon: "💡",
   },
 ];
 

@@ -214,7 +214,7 @@ describe("word-sense-personality — results", () => {
     }
   });
 
-  it("each result has a non-empty title, description, color, icon", () => {
+  it("each result has a non-empty title and description", () => {
     for (const result of wordSensePersonalityQuiz.results) {
       expect(
         result.title.length,
@@ -224,8 +224,6 @@ describe("word-sense-personality — results", () => {
         result.description.length,
         `Empty description for ${result.id}`,
       ).toBeGreaterThan(0);
-      expect(result.color, `Missing color for ${result.id}`).toBeTruthy();
-      expect(result.icon, `Missing icon for ${result.id}`).toBeTruthy();
     }
   });
 

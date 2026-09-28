@@ -27,10 +27,9 @@ const results: QuizResult[] = [
     id: "type-a",
     title: "タイプA",
     description: "説明A",
-    icon: "🅰️",
     color: "#111111",
   },
-  { id: "type-b", title: "タイプB", description: "説明B", icon: "🅱️" },
+  { id: "type-b", title: "タイプB", description: "説明B" },
   { id: "type-c", title: "タイプC", description: "説明C" },
 ];
 

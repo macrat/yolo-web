@@ -49,8 +49,6 @@ export interface ContrarianFortuneDetailedContent {
   variant: "contrarian-fortune";
   /** タイプのキャッチコピー（一行、10-50字） */
   catchphrase: string;
-  /** 逆張りコンセプトの核心を伝える1-2文（20-100字） */
-  coreSentence: string;
   /** あるある箇条書き（3-5項目、具体的シーンで笑えるトーン） */
   behaviors: string[];
   /** タイプの人物像（散文150-250字、内面・動機の解説、ユーモアトーンの締め含む） */
@@ -269,10 +267,8 @@ export type QuizResult = {
    */
   reading?: { word: string; kana: string };
   description: string;
-  /** Theme color hex (used for personality type) */
+  /** 結果そのものの色（CSS hex）。結果そのものが色である診断だけが持つ */
   color?: string;
-  /** Icon emoji */
-  icon?: string;
   /** knowledge type: minimum score to get this result */
   minScore?: number;
   /** Recommendation text for related content */
@@ -303,8 +299,6 @@ export interface QuizMeta {
   /** PlayContentMeta のカテゴリへの変換に使用する明示的フィールド。"knowledge" | "personality" に限定（クイズに fortune は存在しない） */
   category: "knowledge" | "personality";
   questionCount: number;
-  icon: string;
-  accentColor: string;
   keywords: string[];
   /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;

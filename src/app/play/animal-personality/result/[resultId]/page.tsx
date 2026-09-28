@@ -117,8 +117,8 @@ export default async function AnimalPersonalityResultPage({
   let compatData:
     | {
         compatibility: { label: string; description: string };
-        myType: { id: string; title: string; icon?: string };
-        friendType: { id: string; title: string; icon?: string };
+        myType: { id: string; title: string };
+        friendType: { id: string; title: string };
       }
     | undefined;
 
@@ -129,11 +129,10 @@ export default async function AnimalPersonalityResultPage({
     if (myResult && friendResult && compat) {
       compatData = {
         compatibility: { label: compat.label, description: compat.description },
-        myType: { id: myResult.id, title: myResult.title, icon: myResult.icon },
+        myType: { id: myResult.id, title: myResult.title },
         friendType: {
           id: friendResult.id,
           title: friendResult.title,
-          icon: friendResult.icon,
         },
       };
     }

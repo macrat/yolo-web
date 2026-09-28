@@ -83,7 +83,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "知識クイズの短い説明",
           type: "knowledge",
           questionCount: 10,
-          accentColor: "#FF0000",
           category: "general",
         },
         results: [
@@ -91,7 +90,6 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-a",
             title: "Aタイプ",
             description: "Aタイプの説明",
-            icon: "A",
           },
         ],
       },
@@ -104,7 +102,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "性格診断の短い説明",
           type: "personality",
           questionCount: 8,
-          accentColor: "#0000FF",
           category: "personality",
         },
         results: [
@@ -112,7 +109,6 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-x",
             title: "Xタイプ",
             description: "Xタイプの説明",
-            icon: "X",
           },
         ],
       },
@@ -125,7 +121,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "言葉診断の短い説明",
           type: "personality",
           questionCount: 10,
-          accentColor: "#0000FF",
           category: "personality",
         },
         results: [
@@ -134,7 +129,6 @@ vi.mock("@/play/quiz/registry", () => ({
             title: "和顔愛語タイプ",
             reading: { word: "和顔愛語", kana: "わがんあいご" },
             description: "和顔愛語タイプの説明",
-            icon: "Y",
           },
         ],
       },
@@ -147,7 +141,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "言葉センス診断の短い説明",
           type: "personality",
           questionCount: 10,
-          accentColor: "#0000FF",
           category: "personality",
         },
         results: [
@@ -156,7 +149,6 @@ vi.mock("@/play/quiz/registry", () => ({
             title: "和顔愛語タイプ",
             reading: { word: "和顔愛語", kana: "わがんあいご" },
             description: "和顔愛語タイプの説明",
-            icon: "Z",
           },
         ],
       },
@@ -170,7 +162,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "天気で性格診断の短い説明",
           type: "personality",
           questionCount: 8,
-          accentColor: "#0000FF",
           category: "personality",
         },
         results: [
@@ -178,7 +169,6 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-s",
             title: "晴れタイプ",
             description: "晴れタイプの説明",
-            icon: "S",
           },
         ],
       },
@@ -191,7 +181,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "詳細診断の短い説明",
           type: "personality",
           questionCount: 5,
-          accentColor: "#00FF00",
           category: "personality",
         },
         results: [
@@ -199,7 +188,6 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-detail",
             title: "詳細タイプ",
             description: "詳細タイプの説明",
-            icon: "D",
             detailedContent: {
               traits: ["特徴1", "特徴2"],
               behaviors: ["あるある1", "あるある2"],

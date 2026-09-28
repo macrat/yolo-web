@@ -26,26 +26,22 @@ vi.mock("@/play/quiz/data/traditional-color", () => ({
     meta: {
       slug: "traditional-color",
       title: "日本の伝統色診断",
-      accentColor: "#0d5661",
       questionCount: 8,
     },
     results: [
       {
         id: "ai",
         title: "藍色(あいいろ)",
-        icon: "🌊",
         color: "#0d5661",
       },
       {
         id: "shu",
         title: "朱色(しゅいろ)",
-        icon: "🔥",
         color: "#ab3b3a",
       },
       {
         id: "sakura",
         title: "桜色(さくらいろ)",
-        icon: "🌸",
         color: "#fedfe1",
       },
     ],

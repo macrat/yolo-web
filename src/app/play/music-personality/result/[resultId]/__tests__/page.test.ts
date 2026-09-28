@@ -75,11 +75,6 @@ describe("music-personality 専用結果ページ: 相性データ", () => {
 });
 
 describe("music-personality クイズメタデータ", () => {
-  it("accentColor が定義されている", () => {
-    expect(musicPersonalityQuiz.meta.accentColor).toBeTruthy();
-    expect(typeof musicPersonalityQuiz.meta.accentColor).toBe("string");
-  });
-
   it("slug が 'music-personality'", () => {
     expect(musicPersonalityQuiz.meta.slug).toBe("music-personality");
   });

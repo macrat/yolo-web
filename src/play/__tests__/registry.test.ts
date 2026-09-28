@@ -29,8 +29,6 @@ describe("gameMetaToPlayContentMeta", () => {
     expect(playMeta.title).toBe(gameMeta.title);
     expect(playMeta.description).toBe(gameMeta.description);
     expect(playMeta.shortDescription).toBe(gameMeta.shortDescription);
-    expect(playMeta.icon).toBe(gameMeta.icon);
-    expect(playMeta.accentColor).toBe(gameMeta.accentColor);
     expect(playMeta.keywords).toBe(gameMeta.keywords);
     expect(playMeta.publishedAt).toBe(gameMeta.publishedAt);
   });
@@ -79,8 +77,6 @@ describe("quizMetaToPlayContentMeta", () => {
     expect(playMeta.title).toBe(quizMeta.title);
     expect(playMeta.description).toBe(quizMeta.description);
     expect(playMeta.shortDescription).toBe(quizMeta.shortDescription);
-    expect(playMeta.icon).toBe(quizMeta.icon);
-    expect(playMeta.accentColor).toBe(quizMeta.accentColor);
     expect(playMeta.keywords).toBe(quizMeta.keywords);
     expect(playMeta.publishedAt).toBe(quizMeta.publishedAt);
   });
@@ -127,10 +123,6 @@ describe("fortunePlayContentMeta", () => {
 
   test("has correct title", () => {
     expect(fortunePlayContentMeta.title).toBe("今日のユーモア運勢");
-  });
-
-  test("has correct accentColor", () => {
-    expect(fortunePlayContentMeta.accentColor).toBe("#7c3aed");
   });
 });
 

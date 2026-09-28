@@ -115,7 +115,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     });
   });
 
-  test("地は常に紙（PAPER）で全面ベタ塗りの accentColor は無い", async () => {
+  test("地は常に紙（PAPER）で、全面のベタ塗りは無い", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -307,27 +307,27 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(typeof ogpImageModule.createOgpImageResponse).toBe("function");
   });
 
-  test("OgpImageConfig は title/reading/subtitle のみ（accentColor/icon を持たない）", async () => {
+  test("OgpImageConfig は title/reading/subtitle のみ（色や絵文字を受け取らない）", async () => {
     const { createOgpImageResponse } = await getModule();
     // 型レベルの契約: 余剰プロパティは TypeScript が弾く。ここでは実行時に title だけ・
-    // subtitle 付きの両ケースが成立することを確認する（accentColor/icon は要らない）。
+    // subtitle 付きの両ケースが成立することを確認する。
     await expect(
       createOgpImageResponse({ title: "T", subtitle: "S" }),
     ).resolves.toBeDefined();
   });
 
-  test("余剰プロパティ（icon/accentColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
+  test("余剰プロパティ（icon/backgroundColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
     const { createOgpImageResponse } = await getModule();
-    // コンパイル時契約: OgpImageConfig の余剰プロパティ検査が効くことを @ts-expect-error で
-    // 恒久固定する。将来 icon/accentColor を型に復活させると @ts-expect-error が未使用となり
-    // tsc（noUnusedLocals 相当の未使用ディレクティブ検査）が fail する——型レベルで検知する。実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
+    // コンパイル時契約: OgpImageConfig の余剰プロパティ検査が効くことを @ts-expect-error で固定する。
+    // 型がこれらを受け取るようになると @ts-expect-error が未使用となり tsc が fail する。
+    // 実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
     await expect(
       // @ts-expect-error icon は型に無い（絵文字を持たない・§5）
       createOgpImageResponse({ title: "T", icon: "🧪" }),
     ).resolves.toBeDefined();
     await expect(
-      // @ts-expect-error accentColor は型に無い（地は常に紙・§10）
-      createOgpImageResponse({ title: "T", accentColor: "#e74c3c" }),
+      // @ts-expect-error backgroundColor は型に無い（地は常に紙・§10）
+      createOgpImageResponse({ title: "T", backgroundColor: "#e74c3c" }),
     ).resolves.toBeDefined();
   });
 });
