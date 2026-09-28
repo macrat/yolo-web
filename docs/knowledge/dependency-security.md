@@ -12,7 +12,7 @@ Dependabot の high/medium/low は CVSS(最悪ケース)評価であって、こ
 
 3問すべてを通って「他の来訪者を害せる」に至ったものだけを最優先で個別対応する。それ以外は下記の一括更新でまとめて処理する(「直さない」ではない)。到達性は優先度を決めるためのもので、対応範囲を狭める根拠にはならない。
 
-根拠: 実測（cycle-286）。open 20件(high 3 はすべて development scope)を3問で分類し、20件すべてが「他の来訪者を害せない」に落ちた(判定表は `docs/cycles/cycle-286/reachability.md`)。
+根拠: 確認（cycle-286）。open 20件(high 3 はすべて development scope)の依存と入力の経路を読んで3問で分類し、20件すべてが「他の来訪者を害せない」に落ちた(判定表は `docs/cycles/cycle-286/reachability.md`)。
 
 ## 一括更新は「検証」で安全にする
 

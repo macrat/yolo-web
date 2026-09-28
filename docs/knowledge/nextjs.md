@@ -1,6 +1,6 @@
 # Next.js 固有の技術知見
 
-このプロジェクト（Next.js の App Router と Turbopack）で確かめた、Next.js とその周辺（ビルド・開発サーバー・水和・Vercel への配備）の非自明な動作と対処。各項の末尾の「根拠」に、実測か推論かと、根拠になったサイクルを書く。
+このプロジェクト（Next.js の App Router と Turbopack）で確かめた、Next.js とその周辺（ビルド・開発サーバー・水和・Vercel への配備）の非自明な動作と対処。各項の末尾の「根拠」に、実測・確認・推論の別と、根拠になったサイクルを書く。
 
 ---
 
@@ -54,7 +54,7 @@ const [fortune, setFortune] = useState(computeFortune);
 const fortune = useSyncExternalStore(subscribe, getSnapshot, () => null);
 ```
 
-**根拠**: 食い違いは実測（cycle-83・106 のナカマワケ、cycle-127 の運勢、cycle-158 の `Math.random()`、cycle-217 では curl で取ったサーバーの HTML の色が取るたびに変わった）。`useSyncExternalStore` の形は cycle-127 の修正で使ったもの。lint の規則がエラーになることは `npx eslint --print-config` で確かめた（cycle-316）。
+**根拠**: 食い違いは実測（cycle-83・106 のナカマワケ、cycle-127 の運勢、cycle-158 の `Math.random()`、cycle-217 では curl で取ったサーバーの HTML の色が取るたびに変わった）。`useSyncExternalStore` の形は、cycle-127 の修正で使ったもの（実測）。lint の規則がエラーになることは、`npx eslint --print-config` の出力で確認（cycle-316）。
 
 ---
 
@@ -82,7 +82,7 @@ Vercel に配備するとき、ISR のペイロードの上限は 19.07MB。一�
 
 Next.js 16 では `middleware.ts` のファイルの規約が deprecated になり、`proxy.ts` が勧められている。Next.js 16.3.0 は `middleware.ts` があると、ビルドと開発サーバーで `The "middleware" file convention is deprecated. Please use "proxy" instead.` と警告し、移すための codemod（`npx @next/codemod@canary middleware-to-proxy .`）を案内する。`middleware.ts` と `proxy.ts` の両方があるとエラーで止まる。このプロジェクトは `src/middleware.ts`（削除した記事に 410 を返す）を使っていて、まだ `proxy.ts` に移していない。
 
-**根拠**: deprecated であることは cycle-89 で `middleware.ts` を作ったときに確かめた。警告の文言と両方あるときのエラーは、Next.js 16.3.0 のソース（`node_modules/next/dist/build/index.js`・`server/lib/router-utils/setup-dev-bundler.js`）で確かめた（cycle-316）。
+**根拠**: 確認（deprecated であることは cycle-89 で `middleware.ts` を作ったときに確かめた。警告の文言と両方あるときのエラーは、cycle-316 に Next.js 16.3.0 のソースの `node_modules/next/dist/build/index.js`・`server/lib/router-utils/setup-dev-bundler.js` で確かめた）。
 
 ---
 
@@ -122,7 +122,7 @@ Next.js 16 の `next build` の既定は Turbopack で、その出力には Webp
 - `next build --experimental-analyze` で Turbopack 向けのバンドルの分析を使う
 - ルートごとの比較が要らなければ、`.next/static/chunks/` の合計の大きさなどの粗い指標で代える
 
-**根拠**: 列が出ないことは実測（cycle-185 で移行の前後の First Load JS を比べられず、`.next/static/chunks/` の合計 6.0MB を記録した）。2つのオプションが Next.js 16.3.0 にあることは `npx next build --help` で確かめた（cycle-316）が、`--webpack` で列が出ることは推論（このプロジェクトでは試していない）。
+**根拠**: 列が出ないことは実測（cycle-185 で移行の前後の First Load JS を比べられず、`.next/static/chunks/` の合計 6.0MB を記録した）。2つのオプションが Next.js 16.3.0 にあることは `npx next build --help` の出力で確認（cycle-316）。`--webpack` で列が出ることは推論（このプロジェクトでは試していない）。
 
 ---
 

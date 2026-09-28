@@ -34,7 +34,7 @@ CSS Modules のコンパイラは、セレクタの中の**すべてのクラス
 
 ## 2. テーマはトークンで追従させる
 
-サイトのテーマは端末の設定に従い、`src/app/globals.css` が `@media (prefers-color-scheme: dark)` の中でトークン（`--paper`・`--ink` など）の値を切り替える。`<html>` や `<body>` にテーマのクラスは付かない（実測・cycle-316。実機で両方のテーマを表示し、`src/` にテーマのクラスが残っていないことを確かめた）。
+サイトのテーマは端末の設定に従い、`src/app/globals.css` が `@media (prefers-color-scheme: dark)` の中でトークン（`--paper`・`--ink` など）の値を切り替える。`<html>` や `<body>` にテーマのクラスは付かない（cycle-316。実機で両方のテーマを表示したのは実測、`src/` にテーマのクラスが無いことはソースで確認）。
 
 そのため部品の CSS Modules は、トークンを使うだけで light と dark の両方に追従する。テーマのクラスを参照するセレクタは、どこにも一致しない（推論・cycle-316）。
 

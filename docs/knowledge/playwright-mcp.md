@@ -1,6 +1,6 @@
 # Playwright MCP ツールの挙動と安全な使い方
 
-サブエージェント（reviewer・researcher など）や PM が Playwright MCP（`mcp__playwright__*`）や、リポジトリの `playwright` ライブラリで書いたスクリプトで実機を確かめるときの落とし穴と安全策。ダークの画面の撮り方、クラウドのコンテナの Chromium で WebKit の折り方を近似して測る方法、本番ビルドを並行して確かめる段取りも扱う。各項の末尾の「根拠」に、実測か推論かと、根拠になったサイクルを書く。
+サブエージェント（reviewer・researcher など）や PM が Playwright MCP（`mcp__playwright__*`）や、リポジトリの `playwright` ライブラリで書いたスクリプトで実機を確かめるときの落とし穴と安全策。ダークの画面の撮り方、クラウドのコンテナの Chromium で WebKit の折り方を近似して測る方法、本番ビルドを並行して確かめる段取りも扱う。各項の末尾の「根拠」に、実測・確認・推論の別と、根拠になったサイクルを書く。
 
 ## 無限に待つ JS がエージェントを長時間止める（最重要）
 
@@ -28,7 +28,7 @@
 
 バックグラウンドで起動したサブエージェントは MCP のツールを使えない。Playwright MCP や Google Analytics の MCP を使うサブエージェントは、フォアグラウンドで起動する。
 
-**根拠**: 実測（cycle-123 で、バックグラウンドで起動したサブエージェントから GA の MCP ツールを使えなかった。Claude Code の公式ドキュメントにも、バックグラウンドのサブエージェントでは MCP ツールを使えないと書かれている）。
+**根拠**: 実測（cycle-123 で、バックグラウンドで起動したサブエージェントから GA の MCP ツールを使えなかった。Claude Code の公式ドキュメントに、バックグラウンドのサブエージェントでは MCP ツールを使えないと書かれていることも確認した）。
 
 ## クラウドのコンテナでは MCP のブラウザが起動しない
 
@@ -48,7 +48,7 @@ claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出し�
 2. `page.goto` より前に `page.emulateMedia({ colorScheme: "dark" })` も呼ぶ
 3. `page.goto` のあと、`page.waitForFunction(() => document.documentElement.classList.contains("dark"))` で `<html class="dark">` が付いたのを確かめてから撮る。待ちがタイムアウトしたら、ファイル名に `_dark-FAILED` を付けて保存し、`process.exit(1)` で非ゼロで終わる
 
-**根拠**: クラスで切り替える仕組みでライトのまま撮れることと、上の手順で撮れることは実測（cycle-216、当時このサイトは next-themes を使っていた）。いまのサイトが端末の設定だけに従うことと `--dark` の確かめ方は、`src/app/globals.css` と `.claude/skills/take-screenshot/scripts/take.ts` で確かめた（cycle-316）。
+**根拠**: クラスで切り替える仕組みでライトのまま撮れることと、上の手順で撮れることは実測（cycle-216、当時このサイトは next-themes を使っていた）。いまのサイトが端末の設定だけに従うことと `--dark` の確かめ方は、`src/app/globals.css` と `.claude/skills/take-screenshot/scripts/take.ts` を読んで確認（cycle-316）。
 
 ## WebKit の折り方を Chromium で近似して測る
 
@@ -83,4 +83,4 @@ claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出し�
 - 複数のエージェントが同じ作業ツリーで並行して動くときは、作業ツリーの `.next` をほかのエージェントがビルドし直し、起動中のサーバーが `ChunkLoadError` を出すことがある。確かめるコミットを `git worktree add` で別に取り出し、そこでビルドして起動する。worktree の `node_modules` はシンボリックリンクにすると Turbopack が拒むので、`cp -al` でハードリンクの写しを置く。片付けで止めるサーバーは、起動したときに控えた自分の PID か、`/proc/<pid>/cwd` が自分の worktree を指すものに限る。`pkill -f next-server` はほかのエージェントのサーバーまで止め、その確かめを途中で壊す。
 - worktree で本番のビルドをすると、1つにつき 2GB 台の場所を使う（`.next` が大半）。コンテナの書ける場所には上限があり、並行するエージェントが別々にビルドすると埋まって、ビルドが `ENOSPC` で落ちる。確かめ終えた `.next` と worktree はすぐ消し、前と後を比べるときも2つを同時に置かず、1つずつビルドして測る。並行する負荷でブログのページの静的生成が 60 秒を超えて落ちることもあるので、そのときは負荷の低い時に組み直す。
 
-**根拠**: 起動と `curl` での確かめ方は cycle-227 の実機検証で使った段取り。`ChunkLoadError`・シンボリックリンクの拒否・場所の使い切り・静的生成のタイムアウトは実測（cycle-316）。
+**根拠**: 起動と `curl` での確かめ方は、cycle-227 の実機検証で使って動いた段取りで実測。`ChunkLoadError`・シンボリックリンクの拒否・場所の使い切り・静的生成のタイムアウトは実測（cycle-316）。
