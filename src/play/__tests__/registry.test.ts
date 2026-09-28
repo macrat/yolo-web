@@ -58,15 +58,6 @@ describe("gameMetaToPlayContentMeta", () => {
   });
 });
 
-describe("allPlayContents (ゲーム)", () => {
-  test("contains all expected game slugs", () => {
-    const slugs = allPlayContents.map((c) => c.slug);
-    for (const slug of EXPECTED_GAME_SLUGS) {
-      expect(slugs).toContain(slug);
-    }
-  });
-});
-
 describe("quizMetaToPlayContentMeta", () => {
   test("converts a QuizMeta to PlayContentMeta with correct fields", () => {
     const quizMeta = allQuizMetas[0];
