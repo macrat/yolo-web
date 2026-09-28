@@ -136,10 +136,12 @@ describe("Field", () => {
     expect(followsPhraseRules([...phrases, "（必須）"])).toBe(true);
   });
 
-  it("必須でない文字列の名前は区切らずに組む", () => {
+  it("必須でない文字列の名前は、区切りの無い1つの文節として文節で折るクラスで組む", () => {
     const { container } = render(
       <Field label="名前">{(c) => <Input {...c} />}</Field>,
     );
-    expect(container.querySelector("label")!.innerHTML).toBe("名前");
+    const name = container.querySelector("label > span")!;
+    expect(name.innerHTML).toBe("名前");
+    expect(name).toHaveClass(phrasedStyles.phrased);
   });
 });

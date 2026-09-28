@@ -60,7 +60,7 @@ describe("Accordion", () => {
     expect(followsPhraseRules(phrases)).toBe(true);
   });
 
-  it("文字列のラベルは区切らずにラベルの span に組む", () => {
+  it("文字列のラベルは1つの文節として、同じく文節で折るクラスで組む", () => {
     const { container } = render(
       <Accordion summary="目次">
         <p>中身</p>
@@ -68,6 +68,17 @@ describe("Accordion", () => {
     );
     const label = container.querySelector("summary > span")!;
     expect(label.innerHTML).toBe("目次");
+    expect(label).toHaveClass(phrasedStyles.phrased, styles.label);
+  });
+
+  it("要素のラベルはラベルの span に包んでそのまま組む", () => {
+    const { container } = render(
+      <Accordion summary={<b>目次</b>}>
+        <p>中身</p>
+      </Accordion>,
+    );
+    const label = container.querySelector("summary > span")!;
+    expect(label.innerHTML).toBe("<b>目次</b>");
     expect(label).toHaveClass(styles.label);
     expect(label).not.toHaveClass(phrasedStyles.phrased);
   });

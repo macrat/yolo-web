@@ -8,7 +8,7 @@ const accepted = () => Promise.resolve({ kind: "accepted" as const });
 describe("GuessInput", () => {
   test("the field has a visible label that names the difficulty and the remaining guesses", () => {
     render(<GuessInput label={LABEL} onSubmit={accepted} />);
-    expect(screen.getByText(LABEL).tagName).toBe("LABEL");
+    expect(screen.getByText(LABEL).closest("label")).not.toBeNull();
     expect(screen.getByRole("textbox", { name: LABEL })).toBeInTheDocument();
   });
 

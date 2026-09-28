@@ -20,7 +20,7 @@ import styles from "./ListControls.module.css";
 
 /** ラジオボタンの組1つ。絞り込みの組の選択肢には「すべて」を含めない（部品が先頭に足す）。 */
 export interface ListControlsGroup {
-  /** 組の名前。区切りの並びを渡すと文節で折る（PhrasedText）。 */
+  /** 組の名前。見出しと同じく文節で折る（PhrasedName）。 */
   legend: PhrasedName;
   options: BrowseChoice[];
   value: string;
@@ -28,7 +28,7 @@ export interface ListControlsGroup {
 }
 
 interface ListControlsProps {
-  /** 名前の欄のラベル。何で探せるかを言う（§7）。区切りの並びを渡すと文節で折る（PhrasedText）。 */
+  /** 名前の欄のラベル。何で探せるかを言う（§7）。見出しと同じく文節で折る（PhrasedName）。 */
   searchLabel: PhrasedName;
   /** 名前の欄の要素。一覧の操作のあとに、親がここへフォーカスを移す。 */
   searchRef?: Ref<HTMLInputElement>;

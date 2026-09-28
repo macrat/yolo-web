@@ -10,7 +10,7 @@ import PhrasedText, {
 import styles from "./FileDropZone.module.css";
 
 interface FileDropZoneProps {
-  /** 何のファイルを選ぶ欄かを言うラベル。欄の上に置く。区切りの並びを渡すと文節で折る（PhrasedText）。 */
+  /** 何のファイルを選ぶ欄かを言うラベル。欄の上に置く。見出しと同じく文節で折る（PhrasedName）。 */
   label: PhrasedName;
 
   /** ファイルが選ばれたときに呼ぶ。サイズの上限を超えたときは呼ばず、onError を呼ぶ。 */

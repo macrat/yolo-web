@@ -21,7 +21,7 @@ describe("RadioGroup", () => {
     );
     const group = screen.getByRole("radiogroup", { name: "並び順" });
     expect(group.tagName).toBe("FIELDSET");
-    expect(screen.getByText("並び順").tagName).toBe("LEGEND");
+    expect(group.querySelector("legend")).toHaveTextContent("並び順");
   });
 
   it("value の選択肢だけが選ばれている", () => {

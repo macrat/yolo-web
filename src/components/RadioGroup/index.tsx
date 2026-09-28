@@ -4,7 +4,7 @@ import Radio from "@/components/Radio";
 import styles from "./RadioGroup.module.css";
 
 export interface RadioGroupOption {
-  /** 円の右に本文の大きさで組むラベル。区切りの並び（文字列の配列）を渡すと文節で折る（PhrasedText）。 */
+  /** 円の右に本文の大きさで組むラベル。文字列と区切りの並び（文字列の配列）は文節で折る（PhrasedText）。 */
   label: ReactNode | readonly string[];
   /** 選択肢を一意に識別する値。 */
   value: string;
@@ -12,7 +12,7 @@ export interface RadioGroupOption {
 
 interface RadioGroupProps {
   /**
-   * 組の名前。選択肢の上に見出しとして見せ、読み上げでも組の名前になる。区切りの並び（文字列の配列）を渡すと
+   * 組の名前。選択肢の上に見出しとして見せ、読み上げでも組の名前になる。文字列と区切りの並び（文字列の配列）は
    * 文節で折る（PhrasedText）。
    */
   legend: ReactNode | readonly string[];
@@ -66,7 +66,7 @@ export default function RadioGroup({
             key={option.value}
             name={id}
             value={option.value}
-            label={renderPhrasedName(option.label)}
+            label={option.label}
             checked={option.value === value}
             onChange={() => onChange(option.value)}
           />

@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { joinDashes } from "@/lib/phrase-dashes";
 
-const NBSP = " ";
-const WJ = "⁠";
+const NBSP = "\u00A0";
+const WJ = "\u2060";
 
 describe("joinDashes", () => {
   test("「—」の前の空白を折れない空白にし、後ろの空白は残す", () => {

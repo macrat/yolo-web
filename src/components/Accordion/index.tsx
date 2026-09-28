@@ -5,7 +5,7 @@ import styles from "./Accordion.module.css";
 
 interface AccordionProps {
   /**
-   * 開閉の行に置くラベル。三角の右に本文の大きさで組む。区切りの並び（文字列の配列）を渡すと、見出しと同じく
+   * 開閉の行に置くラベル。三角の右に本文の大きさで組む。文字列と区切りの並び（文字列の配列）は、見出しと同じく
    * 文節で折る（PhrasedText）。
    */
   summary: ReactNode | readonly string[];

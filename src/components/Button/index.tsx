@@ -1,4 +1,5 @@
-import { useId, type ComponentPropsWithRef } from "react";
+import { useId, type ComponentPropsWithRef, type ReactNode } from "react";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./Button.module.css";
 
 /**
@@ -18,12 +19,31 @@ interface ButtonOwnProps {
    * ボタンの説明として読ませる。
    */
   disabledReason?: string;
-  /** ボタンに表示する内容 */
-  children: React.ReactNode;
+  /**
+   * ボタンの面。字だけの面（「計算」「{n}件を表示」）は1つの文節として、見出しと同じく語の中で折らずに組む
+   * （PhrasedText）。要素を含む面は、その要素が折り方を持つ。
+   */
+  children: ReactNode;
 }
 
 type ButtonProps = ButtonOwnProps &
   Omit<ComponentPropsWithRef<"button">, keyof ButtonOwnProps>;
+
+/** 面が字だけなら、その字を1続きの文にしたもの。JSX で字と値を並べた面（配列）も1つの文にする。 */
+function faceText(children: ReactNode): string | undefined {
+  if (typeof children === "string" || typeof children === "number") {
+    return String(children);
+  }
+  if (
+    Array.isArray(children) &&
+    children.every(
+      (child) => typeof child === "string" || typeof child === "number",
+    )
+  ) {
+    return children.join("");
+  }
+  return undefined;
+}
 
 const variantClassMap: Record<ButtonVariant, string> = {
   default: styles.variantDefault,
@@ -45,6 +65,7 @@ function Button({
   ...rest
 }: ButtonProps) {
   const reasonId = useId();
+  const text = faceText(children);
   const showReason = Boolean(disabled && disabledReason);
 
   const classes = [styles.button, variantClassMap[variant], className]
@@ -82,7 +103,11 @@ function Button({
       data-inverted={variant === "primary" ? "" : undefined}
       {...rest}
     >
-      {children}
+      {text === undefined ? (
+        children
+      ) : (
+        <PhrasedText as="span" phrases={[text]} />
+      )}
     </button>
   );
 

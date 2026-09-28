@@ -1,6 +1,9 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import Checkbox from "../index";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 describe("Checkbox", () => {
@@ -64,5 +67,35 @@ describe("Checkbox", () => {
       "連続する<wbr>改行を<wbr>まとめる",
     );
     expect(followsPhraseRules(phrases)).toBe(true);
+  });
+
+  it("文字列のラベルは1つの文節として文節で折るクラスで組み、要素のラベルはそのまま組む", () => {
+    const { container } = render(
+      <>
+        <Checkbox label="記号を含める" />
+        <Checkbox
+          label={
+            <>
+              <code>g</code> 全体
+            </>
+          }
+        />
+      </>,
+    );
+    const [plain, element] = container.querySelectorAll("label");
+    const plainLabel = plain.lastElementChild!;
+    expect(plainLabel.innerHTML).toBe("記号を含める");
+    expect(plainLabel).toHaveClass(phrasedStyles.phrased);
+    const elementLabel = element.lastElementChild!;
+    expect(elementLabel.innerHTML).toBe("<code>g</code> 全体");
+    expect(elementLabel).not.toHaveClass(phrasedStyles.phrased);
+  });
+
+  it("ラベルの折り方は PhrasedText だけが持ち、auto-phrase に頼らない", () => {
+    const css = readFileSync(
+      resolve(__dirname, "../../ChoiceRow/ChoiceRow.module.css"),
+      "utf-8",
+    );
+    expect(css).not.toMatch(/auto-phrase/);
   });
 });

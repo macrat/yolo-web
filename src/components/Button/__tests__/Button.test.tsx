@@ -4,6 +4,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import Button from "@/components/Button";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 
 describe("Button", () => {
   test("children が描画される", () => {
@@ -127,5 +128,52 @@ describe("Button", () => {
       </>,
     );
     expect(screen.getByRole("button")).toHaveAccessibleDescription("注記 理由");
+  });
+
+  test("字だけの面は1つの文節として、文節で折るクラスの span で組む", () => {
+    render(<Button>今日に設定</Button>);
+    const face = screen.getByRole("button", {
+      name: "今日に設定",
+    }).firstElementChild!;
+    expect(face.tagName).toBe("SPAN");
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face.innerHTML).toBe("今日に設定");
+  });
+
+  test("字と値を並べた面も、<wbr> を置かずに1つの文節として組む", () => {
+    const count = 12;
+    const label = "件";
+    render(
+      <Button>
+        {count}
+        {label}を表示
+      </Button>,
+    );
+    const face = screen.getByRole("button", {
+      name: "12件を表示",
+    }).firstElementChild!;
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face.innerHTML).toBe("12件を表示");
+  });
+
+  test("要素を含む面はそのまま組む", () => {
+    render(
+      <Button>
+        <span className="face">送信</span>
+      </Button>,
+    );
+    const face = screen.getByRole("button", {
+      name: "送信",
+    }).firstElementChild!;
+    expect(face).toHaveClass("face");
+    expect(face).not.toHaveClass(phrasedStyles.phrased);
+  });
+
+  test("面の字の折り方は PhrasedText だけが持ち、auto-phrase に頼らない", () => {
+    const css = readFileSync(
+      resolve(__dirname, "../Button.module.css"),
+      "utf-8",
+    );
+    expect(css).not.toMatch(/auto-phrase/);
   });
 });

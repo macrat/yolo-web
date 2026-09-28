@@ -4,7 +4,7 @@ import styles from "./PhrasedText.module.css";
 
 /** 区切りを組む要素。見出しと、見出しの外で文節で折るもの（コントロールの名前・リンク・表のセル）。 */
 type PhrasedTag =
-  "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "p" | "th" | "td";
+  "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "th" | "td";
 
 interface PhrasedTextOwnProps<T extends PhrasedTag> {
   /** 組む要素。 */
@@ -53,8 +53,8 @@ export default function PhrasedText<T extends PhrasedTag>({
 }
 
 /**
- * コントロールの名前。区切りの並びを渡すと文節で折り、文字列を渡すと区切らずに組む（1文節の名前は区切りが
- * 要らない）。
+ * コントロールの名前。区切りの並びを渡すとそのあいだで文節で折り、文字列を渡すと区切りの無い1つの文節として
+ * 組む（1文節の名前は区切りが要らない）。どちらも見出しと同じく語の中で折らず、行頭の禁則を厳しい側で組む。
  */
 export type PhrasedName = string | readonly string[];
 
@@ -63,23 +63,30 @@ export function phrasedNameText(name: PhrasedName): string {
   return typeof name === "string" ? name : name.join("");
 }
 
-function isPhrases(content: unknown): content is readonly string[] {
+function isPhrasedName(content: unknown): content is PhrasedName {
   return (
-    Array.isArray(content) &&
-    content.every((phrase) => typeof phrase === "string")
+    typeof content === "string" ||
+    (Array.isArray(content) &&
+      content.every((phrase) => typeof phrase === "string"))
   );
 }
 
 /**
- * コントロールの名前を組む。区切りの並び（文字列の配列）なら PhrasedText の span で文節で折って組み、
- * 文字列や要素はそのまま返す。名前に文字列のほかに要素も受け取る部品が使う。
+ * コントロールの名前を組む。文字列と区切りの並びは PhrasedText の span で文節で折って組み（文字列は1つの
+ * 文節）、要素はそのまま返す（クラスを渡したときは span で包む）。名前に文字列のほかに要素も受け取る部品が使う。
  */
 export function renderPhrasedName(
   content: ReactNode | readonly string[],
   className?: string,
 ): ReactNode {
-  if (isPhrases(content)) {
-    return <PhrasedText as="span" phrases={content} className={className} />;
+  if (isPhrasedName(content)) {
+    return (
+      <PhrasedText
+        as="span"
+        phrases={typeof content === "string" ? [content] : content}
+        className={className}
+      />
+    );
   }
   return className === undefined ? (
     content

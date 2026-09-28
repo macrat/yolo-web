@@ -142,30 +142,36 @@ describe("renderPhrasedName", () => {
     expect(span.innerHTML).toBe("生年月日<wbr>（必須）");
   });
 
-  test("文字列と要素は区切らずにそのまま組む", () => {
-    const { container } = render(
-      <>
-        <label>{renderPhrasedName("名前")}</label>
-        <label>{renderPhrasedName(<b>太字</b>)}</label>
-      </>,
-    );
-    const [plain, element] = container.querySelectorAll("label");
-    expect(plain.innerHTML).toBe("名前");
-    expect(element.innerHTML).toBe("<b>太字</b>");
+  test("文字列は区切りの無い1つの文節として PhrasedText の span で組む", () => {
+    const { container } = render(<label>{renderPhrasedName("名前")}</label>);
+    const span = container.querySelector("label > span")!;
+    expect(span).toHaveClass(styles.phrased);
+    expect(span.innerHTML).toBe("名前");
   });
 
-  test("クラスを渡すと、区切りの並びは PhrasedText に、ほかは包む span に付ける", () => {
+  test("要素はそのまま返す", () => {
+    const { container } = render(
+      <label>{renderPhrasedName(<b>太字</b>)}</label>,
+    );
+    expect(container.querySelector("label")!.innerHTML).toBe("<b>太字</b>");
+  });
+
+  test("クラスを渡すと、文字列と区切りの並びは PhrasedText に、要素は包む span に付ける", () => {
     const { container } = render(
       <>
-        <p>{renderPhrasedName(["カテゴリから", "探す"], "label")}</p>
-        <p>{renderPhrasedName("目次", "label")}</p>
+        <div>{renderPhrasedName(["カテゴリから", "探す"], "label")}</div>
+        <div>{renderPhrasedName("目次", "label")}</div>
+        <div>{renderPhrasedName(<b>太字</b>, "label")}</div>
       </>,
     );
-    const [phrased, plain] = container.querySelectorAll("p");
+    const [phrased, plain, element] = container.querySelectorAll("div");
     expect(phrased.innerHTML).toBe(
       `<span class="${styles.phrased} label">カテゴリから<wbr>探す</span>`,
     );
-    expect(plain.innerHTML).toBe('<span class="label">目次</span>');
+    expect(plain.innerHTML).toBe(
+      `<span class="${styles.phrased} label">目次</span>`,
+    );
+    expect(element.innerHTML).toBe('<span class="label"><b>太字</b></span>');
   });
 });
 

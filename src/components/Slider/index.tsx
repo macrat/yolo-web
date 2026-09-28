@@ -21,7 +21,7 @@ export { trackPosition, type TrackStop } from "./trackPosition";
 export { textEm } from "./textWidth";
 
 export interface SliderItem {
-  /** 見えるラベル。スライダーの名前にもなる。区切りの並びを渡すと文節で折る（PhrasedText） */
+  /** 見えるラベル。スライダーの名前にもなる。見出しと同じく文節で折る（PhrasedName） */
   label: PhrasedName;
   value: number;
   min: number;

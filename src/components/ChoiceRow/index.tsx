@@ -1,10 +1,14 @@
 import { useId, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { renderPhrasedName } from "@/components/PhrasedText";
 import styles from "./ChoiceRow.module.css";
 
 interface ChoiceRowOwnProps {
   type: "checkbox" | "radio";
-  /** 行に置くラベル。形の右に本文の大きさで組む。 */
-  label: ReactNode;
+  /**
+   * 行に置くラベル。形の右に本文の大きさで組む。文字列と区切りの並び（文字列の配列）は、見出しと同じく文節で
+   * 折る（PhrasedText）。
+   */
+  label: ReactNode | readonly string[];
   /**
    * 無効のときに、なぜ選べないかを言う文（§6 無効）。disabled のときだけ、行の横に出して
    * 入力の説明として読ませる。
@@ -55,7 +59,7 @@ export default function ChoiceRow({
         className={`${styles.mark} ${type === "radio" ? styles.radio : ""}`}
         aria-hidden="true"
       />
-      <span className={styles.label}>{label}</span>
+      {renderPhrasedName(label, styles.label)}
     </label>
   );
   if (disabledReason === undefined) return row;

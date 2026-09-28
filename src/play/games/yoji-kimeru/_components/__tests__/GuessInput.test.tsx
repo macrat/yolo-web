@@ -12,7 +12,7 @@ describe("GuessInput", () => {
     expect(screen.getByRole("textbox", { name: LABEL })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "送信" })).toBeInTheDocument();
     // 見えるラベルを持ち、プレースホルダに頼らない（DESIGN.md §8）。
-    expect(screen.getByText(LABEL).tagName).toBe("LABEL");
+    expect(screen.getByText(LABEL).closest("label")).not.toBeNull();
   });
 
   test("ties an input error to the field", async () => {
