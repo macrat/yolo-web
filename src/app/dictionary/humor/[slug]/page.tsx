@@ -30,7 +30,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const entry = getEntryBySlug(slug);
-  if (!entry) return {};
+  if (!entry) notFound();
   return generateHumorDictEntryMetadata(entry);
 }
 

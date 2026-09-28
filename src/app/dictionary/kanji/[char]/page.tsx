@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { char } = await params;
   const decoded = decodeURIComponent(char);
   const kanji = getKanjiByChar(decoded);
-  if (!kanji) return {};
+  if (!kanji) notFound();
   return generateKanjiPageMetadata(kanji);
 }
 

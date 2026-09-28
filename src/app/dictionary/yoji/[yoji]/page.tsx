@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { yoji: yojiParam } = await params;
   const decoded = decodeURIComponent(yojiParam);
   const yoji = getYojiByYoji(decoded);
-  if (!yoji) return {};
+  if (!yoji) notFound();
   return generateYojiPageMetadata(yoji);
 }
 

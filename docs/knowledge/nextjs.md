@@ -184,10 +184,13 @@ Next.js 16.3.0 の Turbopack のビルドでは、`next/font/google` に `adjust
 
 ---
 
-## 13. 404 の応答には Next が `noindex` を足すので、ルートのレイアウトの `robots` を受け継ぐと robots が2つ出る
+## 13. 404 の応答の題と robots は、`not-found.tsx` とページの `generateMetadata` の両方で決まる
 
-404 を返すとき（`not-found.tsx` を描くとき）、Next.js は `<meta name="robots" content="noindex"/>` を自分で足す。`not-found.tsx` の `metadata` が `robots` を書かないと、ルートのレイアウトの `metadata.robots`（このサイトでは `index, follow, max-image-preview:large`）も受け継がれ、robots の meta が2つ出る。`robots: { index: false }` を書いても、Next が足すものと `metadata` のもので `noindex` が2つになる。
+404 を返すとき（`not-found.tsx` を描くとき）、Next.js は `<meta name="robots" content="noindex"/>` を自分で足す。このとき題と robots がずれる道が2つある。
 
-**対処**: `not-found.tsx` の `metadata` に `robots: null` を書く。受け継いだ `robots` が消え、Next が足す `noindex` の1つだけが出る。ほかのページの `robots` は変わらない。確かめるときは本番のビルドを `next start` で起こし、404 の URL と通常のページの HTML で `<meta name="robots"` を数える。
+- `not-found.tsx` の `metadata` が `robots` を書かないと、ルートのレイアウトの `metadata.robots`（このサイトでは `index, follow, max-image-preview:large`）も受け継がれ、robots の meta が2つ出る。`robots: { index: false }` を書いても、Next が足すものと `metadata` のもので `noindex` が2つになる。
+- 動的ルートのページ本体が該当なしで `notFound()` を呼んでも、同じページの `generateMetadata` が該当なしで `{}` を返すと、サーバーの HTML は正しいまま、読み込みのあとに題がルートのレイアウトの既定（`yolos.net`）に変わり、robots がルートのレイアウトの `index, follow…` と `noindex` の2つになる。サーバーの HTML だけを見る確かめ方では見つからない。
 
-**根拠**: 実測（cycle-316。T5-22 の設計の調べ（`docs/cycles/cycle-316/t5-design.md` の 0-8）で、受け継いだときに2つ出ること、`robots: null` で `/zz-not-exist`・`/dictionary/kanji/zz`・`/tools/zz` の `noindex` が1つになり `/tools/base64` の `index, follow, max-image-preview:large` が変わらないことを確かめた。`robots: { index: false }` で `noindex` が2つになることは、同じ調べのレビューの再ビルドで確かめた。T5-22 の実装のビルドで、5つの 404 の URL の HTML の robots が `noindex` の1つだけであることを確かめた）。
+**対処**: `not-found.tsx` の `metadata` に `robots: null` を書く。受け継いだ `robots` が消え、Next が足す `noindex` の1つだけが出る。ほかのページの `robots` は変わらない。あわせて、動的ルートの `generateMetadata` は、該当なしのときに `{}` を返さず `notFound()` を呼ぶ。そうすると読み込みのあとも `not-found.tsx` の題と `noindex` の1つが保たれる。確かめるときは本番のビルドを `next start` で起こし、404 の URL と通常のページについて、HTML の `<meta name="robots"` を数えるのに加え、実際のブラウザで開いて読み込みのあとの `document.title` と robots の meta を数える。
+
+**根拠**: 実測（cycle-316。T5-22 の設計の調べ（`docs/cycles/cycle-316/t5-design.md` の 0-8）で、受け継いだときに2つ出ること、`robots: null` で `/zz-not-exist`・`/dictionary/kanji/zz`・`/tools/zz` の `noindex` が1つになり `/tools/base64` の `index, follow, max-image-preview:large` が変わらないことを確かめた。`robots: { index: false }` で `noindex` が2つになることは、同じ調べのレビューの再ビルドで確かめた。T5-22 の実装のビルドで、5つの 404 の URL の HTML の robots が `noindex` の1つだけであることを確かめた。T5-22b で、`generateMetadata` が `{}` を返すブログ・辞典・遊びの16ルートの 17 URL で、読み込みのあとに題が `yolos.net` になり robots が2つ並ぶことと、`notFound()` を呼ぶように直したあとは読み込みのあとも題が「ページが見つかりません | yolos.net」、robots が `noindex` の1つだけになることを確かめた）。

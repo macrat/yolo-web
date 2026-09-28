@@ -47,11 +47,12 @@ describe("ImpossibleAdviceResultPage", () => {
       expect(metadata.openGraph).toBeDefined();
     });
 
-    it("存在しないresultIdに対して空オブジェクトを返す", async () => {
-      const metadata = await generateMetadata({
-        params: Promise.resolve({ resultId: "nonexistent" }),
-      });
-      expect(metadata).toEqual({});
+    it("存在しないresultIdに対してnotFoundを呼ぶ", async () => {
+      await expect(
+        generateMetadata({
+          params: Promise.resolve({ resultId: "nonexistent" }),
+        }),
+      ).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
     });
 
     it("robots.indexがtrueに設定される", async () => {

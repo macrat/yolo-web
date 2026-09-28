@@ -42,7 +42,7 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { resultId } = await params;
   const result = quiz.results.find((r) => r.id === resultId);
-  if (!result) return {};
+  if (!result) notFound();
 
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const withParam =

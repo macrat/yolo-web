@@ -135,9 +135,9 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { slug, resultId } = await params;
   const quiz = quizBySlug.get(slug);
-  if (!quiz) return {};
+  if (!quiz) notFound();
   const result = quiz.results.find((r) => r.id === resultId);
-  if (!result) return {};
+  if (!result) notFound();
 
   const compat = await resolveCompatibility(slug, quiz, resultId, searchParams);
 

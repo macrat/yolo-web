@@ -20,7 +20,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const color = getColorBySlug(slug);
-  if (!color) return {};
+  if (!color) notFound();
   return generateColorPageMetadata(color);
 }
 

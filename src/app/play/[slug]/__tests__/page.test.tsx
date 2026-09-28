@@ -77,12 +77,13 @@ describe("play/[slug]/page", () => {
       expect(metadata.title).toContain("漢字力診断");
     });
 
-    it("returns empty object for unknown slug", async () => {
-      const metadata = await generateMetadata({
-        params: Promise.resolve({ slug: "nonexistent-slug" }),
-        searchParams: Promise.resolve({}),
-      });
-      expect(metadata).toEqual({});
+    it("calls notFound for unknown slug", async () => {
+      await expect(
+        generateMetadata({
+          params: Promise.resolve({ slug: "nonexistent-slug" }),
+          searchParams: Promise.resolve({}),
+        }),
+      ).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
     });
 
     it("uses /play/ canonical URL (not /quiz/)", async () => {

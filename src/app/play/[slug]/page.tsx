@@ -25,7 +25,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const meta = playContentBySlug.get(slug);
-  if (!meta) return {};
+  if (!meta) notFound();
   return generatePlayMetadata(meta);
 }
 

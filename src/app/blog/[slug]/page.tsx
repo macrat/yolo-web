@@ -42,7 +42,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
-  if (!post) return {};
+  if (!post) notFound();
   return generateBlogPostMetadata(
     post,
     shareOpenGraphImage(`/blog/${slug}`, blogShareImageContent(post)),

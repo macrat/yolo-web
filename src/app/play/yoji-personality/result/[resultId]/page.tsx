@@ -29,7 +29,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { resultId } = await params;
   const result = quiz.results.find((r) => r.id === resultId);
-  if (!result) return {};
+  if (!result) notFound();
 
   const FULL_WIDTH_LIMIT = 60;
   const candidateTitle = `${result.title} | ${quiz.meta.title}の結果`;
