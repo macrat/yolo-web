@@ -717,9 +717,8 @@ function checkChoice(
   forEachValue(context, expression, position, (value) => {
     if (!ts.isObjectLiteralExpression(value)) return false;
     const key = CHOICE_NAME_KEYS.find((k) => findProperty(value, k));
-    if (key) {
-      checkName(context, findProperty(value, key)!, position);
-    } else if (value.properties.some(ts.isSpreadAssignment)) {
+    if (key) checkName(context, findProperty(value, key)!, position);
+    if (spreadsOverKeys(value, CHOICE_NAME_KEYS)) {
       record(
         context,
         "values",
@@ -760,25 +759,30 @@ function checkGroup(
 ): void {
   forEachValue(context, expression, position, (value) => {
     if (!ts.isObjectLiteralExpression(value)) return false;
-    if (value.properties.some(ts.isSpreadAssignment)) {
-      record(
-        context,
-        "values",
-        value,
-        position,
-        sourceText(context, value),
-        "広げて渡す要素",
-      );
-      return true;
-    }
+    const legendPosition = `${position} の \`legend\``;
+    const optionPosition = `${position} の \`options\` の名前`;
     const legend = findProperty(value, "legend");
-    if (legend) checkName(context, legend, `${position} の \`legend\``);
+    if (legend) checkName(context, legend, legendPosition);
     const options = findProperty(value, "options");
     if (options) {
-      const optionPosition = `${position} の \`options\` の名前`;
       checkList(context, options, optionPosition, (element) =>
         checkChoice(context, element, optionPosition),
       );
+    }
+    for (const [key, keyPosition] of [
+      ["legend", legendPosition],
+      ["options", optionPosition],
+    ]) {
+      if (spreadsOverKeys(value, [key])) {
+        record(
+          context,
+          "values",
+          value,
+          keyPosition,
+          sourceText(context, value),
+          "広げて渡す要素",
+        );
+      }
     }
     return true;
   });
@@ -808,14 +812,50 @@ function openingOf(
   return ts.isJsxElement(element) ? element.openingElement : element;
 }
 
+/** 名前の属性。同じ名前が2つあれば、後ろ（効くほう）。 */
 function attribute(
   element: ts.JsxOpeningLikeElement,
   name: string,
 ): ts.JsxAttribute | undefined {
-  return element.attributes.properties.find(
+  return element.attributes.properties.findLast(
     (property): property is ts.JsxAttribute =>
       ts.isJsxAttribute(property) && property.name.getText() === name,
   );
+}
+
+/**
+ * 名前の属性のどれよりも後ろで広げた props。広げた props は前の属性を上書きしうるので、その位置の値になりうる。
+ * 名前の属性が無ければ、どこかで広げた props。
+ */
+function spreadOverAttributes(
+  element: ts.JsxOpeningLikeElement,
+  names: readonly string[],
+): ts.JsxSpreadAttribute | undefined {
+  const properties = element.attributes.properties;
+  const lastNamed = properties.findLastIndex(
+    (property) =>
+      ts.isJsxAttribute(property) && names.includes(property.name.getText()),
+  );
+  const lastSpread = properties.findLastIndex(ts.isJsxSpreadAttribute);
+  return lastSpread > lastNamed
+    ? (properties[lastSpread] as ts.JsxSpreadAttribute)
+    : undefined;
+}
+
+/** オブジェクトの中で、鍵の値のどれよりも後ろ（鍵が無ければどこか）に値を広げているか。 */
+function spreadsOverKeys(
+  object: ts.ObjectLiteralExpression,
+  keys: readonly string[],
+): boolean {
+  const properties = object.properties;
+  const lastKey = properties.findLastIndex(
+    (property) =>
+      (ts.isPropertyAssignment(property) ||
+        ts.isShorthandPropertyAssignment(property)) &&
+      (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) &&
+      keys.includes(property.name.text),
+  );
+  return properties.findLastIndex(ts.isSpreadAssignment) > lastKey;
 }
 
 function attributeValue(attr: ts.JsxAttribute): ts.Expression | undefined {
@@ -975,20 +1015,15 @@ function checkContent(
   );
 }
 
-function hasSpread(
-  element: ts.JsxOpeningLikeElement,
-): ts.JsxSpreadAttribute | undefined {
-  return element.attributes.properties.find(ts.isJsxSpreadAttribute);
-}
-
 function checkElement(
   context: FileContext,
   element: ts.JsxElement | ts.JsxSelfClosingElement,
 ): void {
   const opening = openingOf(element);
   const name = tagName(opening);
-  const spread = hasSpread(opening);
-  const recordSpread = (position: string) => {
+  /** 見る位置の props を後ろで広げていれば、その位置の値で渡すものに出す。 */
+  const recordSpread = (props: readonly string[], position: string) => {
+    const spread = spreadOverAttributes(opening, props);
     if (spread && !fromComponentProps(spread.expression)) {
       record(
         context,
@@ -1012,12 +1047,13 @@ function checkElement(
     const position = "`Button` の面";
     const phrases = attribute(opening, "phrases");
     const phrasesValue = phrases && attributeValue(phrases);
-    if (phrasesValue) {
-      checkName(context, phrasesValue, position);
-    } else if (ts.isJsxElement(element) && element.children.length > 0) {
+    if (phrasesValue) checkName(context, phrasesValue, position);
+    // 要素の子は広げた props の children より強いので、子を書いた面は広げた props から来ない。
+    const hasChildren = ts.isJsxElement(element) && element.children.length > 0;
+    if (hasChildren) {
       checkContent(context, element.children, element, position);
     } else {
-      recordSpread(position);
+      recordSpread(["phrases"], position);
     }
     return;
   }
@@ -1037,8 +1073,8 @@ function checkElement(
       const target = attribute(opening, "target");
       const targetValue = target && attributeValue(target);
       if (targetValue) checkName(context, targetValue, position);
-      else recordSpread(position);
     }
+    recordSpread(["target", "targetPhrases", "showTarget"], position);
     return;
   }
 
@@ -1069,13 +1105,9 @@ function checkElement(
         table === CHOICE_PROPS
           ? `\`${name}\` の \`${prop}\` の名前`
           : `\`${name}\` の \`${prop}\``;
+      recordSpread([prop], position);
       const attr = attribute(opening, prop);
-      if (!attr) {
-        if (table === NAME_PROPS) recordSpread(position);
-        continue;
-      }
-      if (!attr.initializer) continue;
-      const value = attributeValue(attr);
+      const value = attr && attributeValue(attr);
       if (value) check(value, position);
     }
   }

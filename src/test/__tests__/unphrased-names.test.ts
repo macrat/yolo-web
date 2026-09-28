@@ -287,7 +287,11 @@ describe("同じファイルの値を解いて見るもの", () => {
         }
       `).map(({ position, source }) => [position, source]),
     ).toEqual([
-      ["`ListControls` の `kindGroup`", "{ ...BASE_GROUP }"],
+      ["`ListControls` の `kindGroup` の `legend`", "{ ...BASE_GROUP }"],
+      [
+        "`ListControls` の `kindGroup` の `options` の名前",
+        "{ ...BASE_GROUP }",
+      ],
       ["`Field` の `label`", "CONFIG.label"],
       ["`Checkbox` の `label`", "EMPTY[key]"],
     ]);
@@ -313,6 +317,53 @@ describe("同じファイルの値を解いて見るもの", () => {
 });
 
 describe("値で渡すもの", () => {
+  test("広げた props は、後ろで書いていない見る位置のそれぞれに出す", () => {
+    expect(
+      valueFindings(`
+        export function Sample({ sample, extra }) {
+          return (
+            <>
+              <BrowsableList {...sample.list} />
+              <ListControls searchLabel="探す" {...extra} kindGroup={{ legend: "種別", options: [] }} />
+              <Field label="名前" {...extra}>{() => null}</Field>
+              <Field {...extra} label="名前">{() => null}</Field>
+              <Button {...extra} />
+              <Button {...extra}>送信</Button>
+            </>
+          );
+        }
+      `).map(({ position, source }) => [position, source]),
+    ).toEqual([
+      ["`BrowsableList` の `searchLabel`", "{...sample.list}"],
+      ["`BrowsableList` の `sorts` の名前", "{...sample.list}"],
+      ["`BrowsableList` の `kindGroup`", "{...sample.list}"],
+      ["`ListControls` の `searchLabel`", "{...extra}"],
+      ["`ListControls` の `sortGroup`", "{...extra}"],
+      ["`ListControls` の `filterGroups`", "{...extra}"],
+      ["`Field` の `label`", "{...extra}"],
+      ["`Button` の面", "{...extra}"],
+    ]);
+  });
+
+  test("選択肢と組のオブジェクトは、名前の欄より後ろで広げていれば値で渡すものに出す", () => {
+    expect(
+      valueFindings(`
+        export const x = (
+          <>
+            <RadioGroup legend="向き" options={[{ label: "古い", ...LOCAL }, { ...LOCAL, label: "新しい" }]} />
+            <ListControls searchLabel="探す" kindGroup={{ legend: "種別", ...BASE, options: [] }} />
+          </>
+        );
+      `).map(({ position, source }) => [position, source]),
+    ).toEqual([
+      ["`RadioGroup` の `options` の名前", '{ label: "古い", ...LOCAL }'],
+      [
+        "`ListControls` の `kindGroup` の `legend`",
+        '{ legend: "種別", ...BASE, options: [] }',
+      ],
+    ]);
+  });
+
   test("理由は、解いた先の式が何から来るかを言う", () => {
     expect(
       valueFindings(`
