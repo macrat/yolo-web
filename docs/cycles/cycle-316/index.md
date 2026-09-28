@@ -299,7 +299,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 
 - T5-4 のあとの診断のプレイ面の値（T5a に渡す。画面の高さ 667、px。「はじめる」の下端と、進みの帯の上端から最後の選択肢まで＋8）: character-personality 372/491・472/555、word-sense-personality 372/491・453/504、traditional-color 416/533・286/286、kanji-level 330/374・286/286、animal-personality 416/491・421/421、science-thinking 457/533・395/453、music-personality 330/405・344/421、character-fortune 372/491・427/453、contrarian-fortune 330/405・286/344、impossible-advice 372/491・344/369、japanese-culture 416/533・421/453、kotowaza-level 372/460・318/350、unexpected-compatibility 330/449・286/318、yoji-level 330/374・318/350、yoji-personality 416/533・344/395（どれも 375/320 の順）。文字サイズ 200% では、変更の前も後も「はじめる」はどの診断でも最初の画面の外。
 - T5-4 の途中の状態と受け持ち: FAQ の線が2本に見え見出しが 17.6px のまま → T5-3c。結果のページで「他のジャンルも試してみよう」の上にだけ全幅の罫線が入る・「他のクイズ・診断も」の上が 16px に詰まる → T5-6。daily の間隔 → T5-19。ゲームの関連の見出しが上の一覧に寄る → T5-20b。`next build --webpack` で結果のページ3本の `export const CTA_TEXT` が型の検査に落ちる（既定のビルドは通る）→ T5-6。結果のページの共有のハッシュタグが題から作られてダッシュを含む → T5-6。
-- 共有の画像の行の折り方が、題「理系思考タイプ診断 — あなたはどの科学者型？」を「…科学者／型？」と折り、行の頭に「？」の前の字を1つだけ残す形になる（T5-4 の実測）。画像の折り方も §4 の禁則に従うこと（行の頭に「？」「」」などを置かない）を、T6-2 の直しで確かめる。
+- プレイ面の共有の画像（まだ古い `src/lib/ogp-image.tsx` で描く `src/app/play/[slug]/opengraph-image.tsx`）は、題を1つの字の並びとして渡すので「…科学者／型？」と字の所で折れる。新しい描き方（`share-image.tsx`）では「科学者型？」が1つの単位で、この折れは出ない（review-t6-2-3.md）。プレイ面を T6-3 で新しい描き方に移すと無くなる。
 
 ## サイクル終了時のチェックリスト
 
