@@ -2,7 +2,7 @@ import type { IrodoriGameStats, IrodoriGameHistory } from "./types";
 import { ROUNDS_PER_GAME } from "./daily";
 
 const STATS_KEY = "irodori-stats";
-const HISTORY_KEY = "irodori-history";
+export const HISTORY_KEY = "irodori-history";
 
 /**
  * Default stats for a new player.

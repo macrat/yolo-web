@@ -9,13 +9,11 @@ import {
   type Ref,
 } from "react";
 import { trackGradient, type TrackStop } from "./trackPosition";
+import { textEm } from "./textWidth";
 import styles from "./Slider.module.css";
 
-export {
-  trackPosition,
-  trackPositionPx,
-  type TrackStop,
-} from "./trackPosition";
+export { trackPosition, type TrackStop } from "./trackPosition";
+export { textEm } from "./textWidth";
 
 export interface SliderItem {
   /** 見えるラベル。スライダーの名前にもなる */
@@ -46,31 +44,41 @@ interface SliderProps {
   items: readonly SliderItem[];
 }
 
-/**
- * 半角の字（数字・記号・欧字）の幅の見積もり（em）。本文の書体（IBM Plex Sans）の数字は 0.6em で桁が揃う。
- * 組みの切り替えの幅を em だけで決めると、Web フォントの読み込みの前と後で切り替わる幅が変わらない。
- */
-const NARROW_CHAR_EM = 0.6;
-
-/** 字の幅を em で見積もる。和字は 1em、半角の字は NARROW_CHAR_EM とする。 */
-function textEm(text: string): number {
-  let width = 0;
-  for (const ch of text)
-    width += /[\u0000-\u024f]/.test(ch) ? NARROW_CHAR_EM : 1;
-  return Math.round(width * 100) / 100;
-}
-
 function format(item: SliderItem, value: number): string {
   return item.formatValue ? item.formatValue(value) : String(value);
 }
 
-/** とりうる値のうち、いちばん長い言い方。値の場所がいつもこの幅を取る。 */
+/** とりうる値のうち、いちばん幅の広い言い方。値の場所がいつもこの幅を取る。 */
 function longestValue(item: SliderItem): string {
   const step = item.step ?? 1;
   const candidates = [item.min, item.max, item.max - step, item.min + step];
   return candidates
     .map((value) => format(item, value))
-    .reduce((a, b) => (b.length > a.length ? b : a));
+    .reduce((a, b) => (textEm(b) > textEm(a) ? b : a));
+}
+
+/** 小数の刻みでも浮動小数の誤差を残さないよう、刻みと最小の値の小数の桁で丸める。 */
+function decimals(value: number): number {
+  const text = String(value);
+  const point = text.indexOf(".");
+  return point === -1 ? 0 : text.length - point - 1;
+}
+
+/**
+ * value から direction の向きに1刻み動かした値。ネイティブの矢印のキーと同じく、最小の値から刻みの格子に揃え、
+ * 最小と最大のあいだに収める。
+ */
+export function stepValue(
+  value: number,
+  direction: -1 | 1,
+  min: number,
+  max: number,
+  step: number,
+): number {
+  const places = Math.max(decimals(step), decimals(min));
+  const index = Math.round((value - min) / step) + direction;
+  const next = Number((min + index * step).toFixed(places));
+  return Math.min(Math.max(next, min), max);
 }
 
 /**
@@ -79,7 +87,9 @@ function longestValue(item: SliderItem): string {
  *
  * 並びは、1行の組み（ラベル・溝・− 値 ＋）で溝が 5rem に届かないとき、並び全体を2行の組み（1行目にラベルと
  * − 値 ＋、2行目に溝）にする。切り替えはコンテナクエリで CSS だけで行うので、サーバーの HTML のまま最初の描画から
- * 正しい組みで描き、幅や文字の大きさが変わるとブラウザが組み直す（Slider.module.css）。
+ * 正しい組みで描き、幅や文字の大きさが変わるとブラウザが組み直す（Slider.module.css）。ラベルと値の列は、字の幅の
+ * 上限の見積もり（textWidth.ts）に固定するので、1行の組みの溝の長さは、どの字でも、Web フォントを読む前も後も、
+ * コンテナクエリが問う幅と等しい。
  *
  * − と ＋ は、押してもフォーカスを動かさず（Tab の順にも入れない）、端では aria-disabled で無効にして、その形に
  * あったフォーカスも落とさない。押して変えた値は、使う側の onChange を直に呼んで渡す。新しい値は読み上げの知らせで
@@ -95,15 +105,18 @@ export default function Slider({ items }: SliderProps) {
   const valueWidth = Math.max(
     ...items.map((item) => textEm(longestValue(item))),
   );
-  // 1行の組みで溝のほかが取る幅: ラベル・ラベルのあとの 16px・− と ＋ の 88px・値・溝の右の 8px。
-  const fixedWidth = `calc(${labelWidth}em + ${valueWidth}em + 112px)`;
+  // 1行の組みで溝のほかが取る幅: ラベル・ラベルのあとの 16px・− と ＋ の 88px・値・値の左右の 4px ずつ・
+  // 溝の右の 8px。
+  const fixedWidth = `calc(${labelWidth}em + ${valueWidth}em + 120px)`;
 
   const step = (index: number, direction: -1 | 1) => {
     const item = items[index];
-    const size = item.step ?? 1;
-    const next = Math.min(
-      Math.max(item.value + direction * size, item.min),
+    const next = stepValue(
+      item.value,
+      direction,
+      item.min,
       item.max,
+      item.step ?? 1,
     );
     if (next === item.value) return;
     item.onChange(next);
@@ -126,6 +139,7 @@ export default function Slider({ items }: SliderProps) {
       style={
         {
           "--slider-fixed": fixedWidth,
+          "--slider-label": `${labelWidth}em`,
           "--slider-value": `${valueWidth}em`,
         } as CSSProperties
       }
@@ -180,10 +194,7 @@ export default function Slider({ items }: SliderProps) {
                 <span className={styles.shape} aria-hidden="true" />
               </button>
               <span className={styles.value} aria-hidden="true">
-                <span className={styles.valueSpace}>{longestValue(item)}</span>
-                <span className={styles.valueText}>
-                  {format(item, item.value)}
-                </span>
+                {format(item, item.value)}
               </span>
               <button
                 type="button"

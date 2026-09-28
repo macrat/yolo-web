@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
-import Slider, { trackPosition, trackPositionPx } from "..";
+import Slider, { stepValue, textEm, trackPosition } from "..";
 
 function Controlled({
   initial,
@@ -44,11 +44,9 @@ function Controlled({
 const status = () => screen.getByRole("status");
 
 describe("つまみの中心の対応", () => {
-  test("端の値はつまみの半分の幅だけ内側、真ん中の値は溝の真ん中を指す", () => {
-    expect(trackPositionPx(0, 0, 360, 200)).toBe(8);
-    expect(trackPositionPx(360, 0, 360, 200)).toBe(192);
-    expect(trackPositionPx(180, 0, 360, 200)).toBe(100);
-    expect(trackPositionPx(-10, 0, 360, 200)).toBe(8);
+  test("範囲の外の値は端の値の位置に置く", () => {
+    expect(trackPosition(-10, 0, 360)).toBe("calc(8px + (100% - 16px) * 0)");
+    expect(trackPosition(400, 0, 360)).toBe("calc(8px + (100% - 16px) * 1)");
   });
 
   test("溝の色の止まりは、同じ対応を CSS の長さで言う", () => {
@@ -170,25 +168,73 @@ describe("− と ＋", () => {
   });
 });
 
-describe("値の字", () => {
-  test("値の場所は、とりうるいちばん長い値の幅をいつも取る", () => {
-    const { container, rerender } = render(<Controlled initial={9} />);
-    const space = () =>
-      container.querySelector('[aria-hidden="true"] > span')?.textContent;
-    expect(space()).toBe("360");
-    rerender(<Controlled initial={100} />);
-    expect(space()).toBe("360");
-    render(
-      <Controlled
-        initial={95}
-        min={10}
-        max={100}
-        step={5}
-        format={(value) => `${value}%`}
+describe("字の幅の上限の見積もり", () => {
+  test("数字は等幅の 0.6em、数字でない半角の字は 1em、和字は 1.03em で数える", () => {
+    expect(textEm("360")).toBe(1.8);
+    expect(textEm("100%")).toBe(2.8);
+    expect(textEm("1.5 MB")).toBe(5.2);
+    expect(textEm("色相")).toBe(2.06);
+    expect(textEm("パスワードの長さ")).toBe(8.24);
+  });
+
+  test("並びは、ラベルと値の列の見積もりと、溝のほかの 120px を、溝のほかの幅として持つ", () => {
+    const { container } = render(
+      <Slider
+        items={[
+          {
+            label: "品質",
+            value: 80,
+            min: 10,
+            max: 100,
+            step: 5,
+            formatValue: (value) => `${value}%`,
+            onChange: () => {},
+            decreaseLabel: "品質を5%下げる",
+            increaseLabel: "品質を5%上げる",
+          },
+        ]}
       />,
     );
-    expect(screen.getAllByText("100%", { exact: true }).length).toBeGreaterThan(
-      0,
+    const group = container.firstElementChild as HTMLElement;
+    expect(group.style.getPropertyValue("--slider-label")).toBe("2.06em");
+    expect(group.style.getPropertyValue("--slider-value")).toBe("2.8em");
+    expect(group.style.getPropertyValue("--slider-fixed")).toBe(
+      "calc(2.06em + 2.8em + 120px)",
     );
+  });
+
+  test("パスワードの生成の文字数（8〜128）は、いちばん広い値「128」の幅を取る", () => {
+    const { container } = render(
+      <Slider
+        items={[
+          {
+            label: "文字数",
+            value: 16,
+            min: 8,
+            max: 128,
+            onChange: () => {},
+            decreaseLabel: "文字数を1減らす",
+            increaseLabel: "文字数を1増やす",
+          },
+        ]}
+      />,
+    );
+    const group = container.firstElementChild as HTMLElement;
+    expect(group.style.getPropertyValue("--slider-value")).toBe("1.8em");
+    expect(group.style.getPropertyValue("--slider-label")).toBe("3.09em");
+  });
+});
+
+describe("刻みの格子", () => {
+  test("格子から外れた値は、ネイティブの矢印のキーと同じく格子に揃えて動く", () => {
+    expect(stepValue(82, 1, 10, 100, 5)).toBe(85);
+    expect(stepValue(82, -1, 10, 100, 5)).toBe(75);
+    expect(stepValue(100, 1, 10, 100, 5)).toBe(100);
+  });
+
+  test("小数の刻みでも浮動小数の誤差を持たない", () => {
+    expect(stepValue(0.2, 1, 0, 1, 0.1)).toBe(0.3);
+    expect(stepValue(0.7, -1, 0, 1, 0.1)).toBe(0.6);
+    expect(stepValue(1.25, 1, 0.05, 2, 0.1)).toBe(1.35);
   });
 });

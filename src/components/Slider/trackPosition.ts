@@ -19,22 +19,6 @@ export function trackPosition(value: number, min: number, max: number): string {
   return `calc(${THUMB_WIDTH / 2}px + (100% - ${THUMB_WIDTH}px) * ${fraction})`;
 }
 
-/**
- * 値にあたる溝の上の位置を、溝の幅 trackWidth（px）に対する px で言う。trackPosition と同じ対応を、数で確かめる
- * ためのもの。
- */
-export function trackPositionPx(
-  value: number,
-  min: number,
-  max: number,
-  trackWidth: number,
-): number {
-  return (
-    THUMB_WIDTH / 2 +
-    (trackWidth - THUMB_WIDTH) * travelFraction(value, min, max)
-  );
-}
-
 export interface TrackStop {
   /** 止まりが指す値 */
   value: number;

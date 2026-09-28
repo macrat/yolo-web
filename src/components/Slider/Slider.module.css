@@ -6,10 +6,14 @@
  * （--slider-fixed。部品が並びの字の数から決める）を除いたものである。コンテナクエリの条件に var() は書けない
  * ので、問い合わせる入れ物の幅そのものを「並びの幅 − 溝のほかの幅」にし、中の並びはその分だけ右へはみ出させて
  * 元の幅に戻す。入れ物の幅がそのまま1行の組みの溝の長さになり、それが 5rem に届かなければ2行の組みにする。
+ *
+ * 並びは送りの位置の目印（scroll anchoring）にしない。Chromium は、スライダーを目印にして読み込み直しの送りの位置を
+ * 戻すと、数 px ずれた所に戻す（イロドリの 375px で 4〜10px）。並びを外すと、前後の要素が目印になり、同じ所に戻る。
  */
 .container {
   container: slider / inline-size;
   width: calc(100% - var(--slider-fixed));
+  overflow-anchor: none;
 }
 
 .sliders {
@@ -29,6 +33,8 @@
 /* ラベルは本文の大きさで溝の横に置き、溝の押せる範囲とのあいだを 8px あける（§5）。溝の押せる範囲は左へ
  * 8px 張り出すので、ラベルのあとに 16px を取る。 */
 .label {
+  box-sizing: content-box;
+  width: var(--slider-label);
   padding-inline-end: var(--space-16);
   color: var(--ink);
 }
@@ -88,24 +94,17 @@
   inset: calc(2 * var(--rule-w));
 }
 
-/* いまの値。とりうるいちばん長い値の場所をいつも取り、右で揃えて桁をそろえる（§3）。幅は、字の見積もり
- * （--slider-value）と、いちばん長い値を置いた幅の広いほうで、Web フォントを読む前も後も変わらない。 */
+/* いまの値。とりうるいちばん幅の広い値の見積もり（--slider-value）の幅にいつも固定し、右で揃えて桁をそろえる
+ * （§3）。値の字はコントロールでないので、hover の線・無効の枠・フォーカスのリングが触れないよう、左右の − と ＋ の
+ * 押せる範囲から 4px 離す（§6）。 */
 .value {
   display: grid;
-  min-width: var(--slider-value);
+  width: var(--slider-value);
+  margin-inline: 4px;
   justify-items: end;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.valueSpace,
-.valueText {
-  grid-area: 1 / 1;
-}
-
-.valueSpace {
-  visibility: hidden;
 }
 
 /* 2行の組み。1行目の左にラベル、右端に − と値と ＋、そのすぐ下に並びの幅いっぱいの溝を置き、項目のあいだを
@@ -119,6 +118,7 @@
   .label {
     grid-row: 1;
     grid-column: 1;
+    width: auto;
     padding-inline-end: 0;
   }
 
