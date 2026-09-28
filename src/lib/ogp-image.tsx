@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/token-hex";
 
 /**
  * 共通OGP生成器の設定（共有カード＝シェア unfurl の1枚）。

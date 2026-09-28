@@ -5,7 +5,7 @@ import {
   ogpSize,
   ogpContentType,
 } from "@/lib/ogp-image";
-import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/token-hex";
 import { WAIRO_HEX, pickResultWairoColor } from "@/lib/wairoHex";
 import { pickResultSymbol } from "@/lib/fudaSymbol";
 import { getContrastTextColor } from "@/play/color-utils";
@@ -26,12 +26,6 @@ import { getContrastTextColor } from "@/play/color-utils";
 
 /** OG は横長 1200×630 を流用（PM 確定・リンクプレビューと保存カードを単一の真実で兼用）。 */
 const FUDA_SIZE = ogpSize;
-
-/**
- * 紙・罫・墨の色は中立モジュール {@link import("@/lib/utsuwaHex")} を単一の真実とする（PAPER/INK/… は
- * そこから import）。乖離ガードテスト（`__tests__/wairoHex.test.ts`）は utsuwaHex を検査対象に、
- * globals.css の light トークン（PAPER↔--paper 等）との一致を担保する。
- */
 
 /** 店号（札単体で出所が読めるように）。 */
 const SHOP_NAME = "yolos.net";

@@ -1,4 +1,5 @@
 import { expect, test, describe, vi, beforeEach } from "vitest";
+import { PAPER, INK } from "../token-hex";
 
 // Track calls to ImageResponse for assertions
 let imageResponseCalls: Array<{ element: unknown; options: unknown }> = [];
@@ -30,10 +31,6 @@ function makeTtfBuffer(extraBytes = 4): ArrayBuffer {
   view[3] = 0x00;
   return buf;
 }
-
-/** 器の色（utsuwaHex の SSoT と一致させる）。画像の色の検証に使う。 */
-const PAPER = "#fcfcfc";
-const INK = "#0b0b0b";
 
 /** JSX 風ツリーから文字列の子（テキストノード）をすべて集める。 */
 function collectText(node: unknown, out: string[] = []): string[] {

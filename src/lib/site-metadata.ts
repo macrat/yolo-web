@@ -6,7 +6,7 @@
 
 import type { Metadata, Viewport } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
-import { PAPER, PAPER_DARK } from "@/lib/utsuwaHex";
+import { PAPER, PAPER_DARK } from "@/lib/token-hex";
 
 /** theme-color は端末のテーマごとの --paper（DESIGN.md §10）。 */
 export const sharedViewport: Viewport = {

@@ -1,16 +1,11 @@
 /**
- * OKLCH → sRGB(hex) 変換ユーティリティ。
+ * OKLCH → sRGB(hex) の変換。
  *
- * 用途: 正典トークンは oklch（`globals.css`）で定義されるが、Satori（OG 画像生成）は
- * oklch を解釈できないため、成果物パレット（和色）を hex に固定して渡す必要がある
- * （`src/lib/wairoHex.ts`）。さらに、oklch→sRGB のガモット外クリップによる
- * 「正典 oklch と hex 表のサイレント乖離」を検知するテスト（wairoHex.test.ts）でも
- * 同じ変換を使う——生成と検査を同一ロジックにすることで、一致は構成上保証され、
- * 将来 globals.css の oklch を変えたら hex 表と食い違ってテストが落ちる。
+ * トークンは `globals.css` に oklch で定義されている。oklch を読めない所へ渡す hex の表
+ * `token-hex.ts` が globals.css と一致することを、テストがこの変換で確かめる。
  *
- * 変換式は CSS Color 4 / OKLab の標準係数に従う。ガモット外の色は
- * チャンネル単位でクランプする（CSS のクロマ低減マッピングとは厳密には異なるが、
- * 和色8色はいずれもほぼ sRGB 内で、クランプ結果がそのまま Satori へ渡る実 hex になる）。
+ * 変換式は CSS Color 4 / OKLab の標準係数に従う。sRGB の外の色はチャンネルごとに
+ * 0..1 に収める（CSS のクロマを下げる写像とは厳密には異なる）。
  */
 
 /** OKLCH 三要素（L=0..1・C=クロマ・H=色相 deg）。 */

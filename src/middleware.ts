@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { PAPER, PAPER_DARK } from "@/lib/utsuwaHex";
+import { PAPER, PAPER_DARK } from "@/lib/token-hex";
 import { SITE_NAME } from "@/lib/constants";
 import {
   AI_NOTICE,
@@ -156,7 +156,7 @@ function frameLinks(links: readonly SiteLink[]): string {
  * 規則は SiteFrame・SkipLink・Header・Footer・FrameLink の CSS と同じ宣言で書き、トークンは
  * GONE_PAGE_TOKENS から取る。上端・下端の文字と行き先、AI 運営の告知は `@/lib/site-frame` から取る。
  * テーマはほかのページと同じく端末の設定に従う（§10）。theme-color の値は、meta が CSS のトークンを
- * 読めないので `@/lib/utsuwaHex` から取る。
+ * 読めないので `@/lib/token-hex` から取る。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>

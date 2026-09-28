@@ -12,7 +12,7 @@
  *   大きく置く（紙の縁を作らず二重角丸を避ける）。
  *
  * ## 色
- * PAPER / INK は {@link file://../src/lib/utsuwaHex.ts} から import し、サイトの色と一致させる。
+ * PAPER / INK は {@link file://../src/lib/token-hex.ts} から import し、サイトの色と一致させる。
  *
  * ## 字形（y）の取り方
  * SVG favicon は環境に Noto Serif JP が無いと字形が崩れるため、`<text>` ではなく **glyph を
@@ -29,7 +29,7 @@ import opentype from "opentype.js";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import { PAPER, INK } from "../src/lib/utsuwaHex";
+import { PAPER, INK } from "../src/lib/token-hex";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.resolve(HERE, "../public");
