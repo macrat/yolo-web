@@ -1,5 +1,10 @@
 import { describe, test, expect } from "vitest";
-import { formatJson, minifyJson, validateJson } from "../logic";
+import {
+  formatJson,
+  minifyJson,
+  isValidJson,
+  findJsonErrorPosition,
+} from "../logic";
 
 describe("formatJson", () => {
   test("formats JSON with 2 spaces", () => {
@@ -36,31 +41,54 @@ describe("minifyJson", () => {
   });
 });
 
-describe("validateJson", () => {
-  test("returns valid for correct JSON", () => {
-    const result = validateJson('{"key": "value"}');
-    expect(result.valid).toBe(true);
-    expect(result.error).toBeUndefined();
+describe("isValidJson", () => {
+  test.each(['{"key": "value"}', "[1, 2, 3]", '"hello"', "42", "true", "null"])(
+    "%s は正しい",
+    (input) => {
+      expect(isValidJson(input)).toBe(true);
+    },
+  );
+
+  test.each(["", "{bad}"])("%j は正しくない", (input) => {
+    expect(isValidJson(input)).toBe(false);
+  });
+});
+
+describe("findJsonErrorPosition", () => {
+  test.each([
+    ["Python の True", '{"a": True}', 1, 7],
+    ["Python の None", '{"a": None}', 1, 7],
+    ["undefined", '{"a": undefined}', 1, 7],
+    ["NaN", '{"a": NaN}', 1, 7],
+    ["行のコメント", '{\n  // 説明\n  "a": 1\n}', 2, 3],
+    ["範囲のコメント", '{"a": 1 /* 説明 */}', 1, 9],
+    ["配列の末尾のカンマ", "[1, 2,]", 1, 7],
+    ["オブジェクトの末尾のカンマ", '{\n  "a": 1,\n}', 3, 1],
+    ["引用符の無い鍵", "{a: 1}", 1, 2],
+    ["引用符の無い値", '{"a": abc}', 1, 7],
+    ["単引用符", "{'a': 1}", 1, 2],
+    ["打ち誤りのリテラル", '{"a": tru}', 1, 10],
+    ["閉じていない文字列", '{"a": "abc', 1, 11],
+    ["文字列の中の改行", '{"a": "ab\ncd"}', 1, 10],
+    ["閉じていないオブジェクト", '{"a": 1', 1, 8],
+    ["カンマの抜け", '{"a": 1 "b": 2}', 1, 9],
+    ["先頭の0", "[01]", 1, 3],
+    ["誤った逃がし", '["\\x"]', 1, 4],
+    ["値のあとの余計な字", '{"a": 1} x', 1, 10],
+  ])("%s は、合わない最初の字の行と字を返す", (_, input, line, column) => {
+    expect(isValidJson(input)).toBe(false);
+    expect(findJsonErrorPosition(input)).toEqual({ line, column });
   });
 
-  test("returns invalid with error message for bad JSON", () => {
-    const result = validateJson("{bad}");
-    expect(result.valid).toBe(false);
-    expect(result.error).toBeDefined();
+  test("字はコードポイントで数え、絵文字も1字にする", () => {
+    expect(findJsonErrorPosition('["😀", x]')).toEqual({ line: 1, column: 7 });
   });
 
-  test("validates arrays", () => {
-    expect(validateJson("[1, 2, 3]").valid).toBe(true);
-  });
-
-  test("validates primitives", () => {
-    expect(validateJson('"hello"').valid).toBe(true);
-    expect(validateJson("42").valid).toBe(true);
-    expect(validateJson("true").valid).toBe(true);
-    expect(validateJson("null").valid).toBe(true);
-  });
-
-  test("rejects empty string", () => {
-    expect(validateJson("").valid).toBe(false);
+  test.each([
+    '{"a": [1, 2.5e-3, -0, "\\u00e9\\n"], "b": {"c": null}}',
+    ' \n\t{"深い": [[[{"x": true}]]]}\r\n',
+  ])("正しい JSON では null を返す", (input) => {
+    expect(isValidJson(input)).toBe(true);
+    expect(findJsonErrorPosition(input)).toBeNull();
   });
 });

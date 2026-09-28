@@ -340,13 +340,24 @@ hr {
   padding: 0 0.25em;
 }
 
-/* コードのボックス。折り返さず、ボックスの中で横に送る。タブは2字の幅で、字下げの深い行も狭い画面に収まる。 */
+/* コードのボックス。行を持つコードは、行と字下げが構造を見せるので折り返さず、ボックスの中で横に送る。タブは
+ * 2字の幅で、字下げの深い行も狭い画面に収まる。 */
 :where(pre) {
   tab-size: 2;
   background: var(--paper-2);
   border: var(--rule-w) solid var(--rule);
   padding: var(--box-padding);
   overflow-x: auto;
+}
+
+/* 行を持たない1続きのコード（圧縮した JSON など）。1行が画面の何十倍にも伸びて見渡せないので、コードの
+ * ボックスの幅で、どの字のあいだでも折り返す。等幅のまま、本文の中のコード片の地と余白は持たない。 */
+.continuous-code {
+  display: block;
+  padding: 0;
+  background: none;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 /* 表は外枠を持たず、行どうし・列どうしを細い線で区切る。セルの余白は罫線を挟んだ字どうしを離すもので、

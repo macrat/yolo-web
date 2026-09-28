@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FocusEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import Button from "@/components/Button";
 import CopyButton from "@/components/CopyButton";
@@ -8,8 +8,14 @@ import Field from "@/components/Field";
 import ResultBox from "@/components/ResultBox";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
-import { revealFocusedFrame, revealResult } from "@/lib/reveal";
-import { formatJson, minifyJson, validateJson, type IndentType } from "./logic";
+import { revealResult } from "@/lib/reveal";
+import {
+  findJsonErrorPosition,
+  formatJson,
+  isValidJson,
+  minifyJson,
+  type IndentType,
+} from "./logic";
 import styles from "./JsonFormatterTile.module.css";
 
 /** 操作が生んだ結果。整形と圧縮はコード、検証は文で出す。 */
@@ -41,23 +47,15 @@ function keepTogether(text: string): string {
 }
 
 /**
- * JSON.parse の英語のエラーを、どこが誤りかを添えた日本語の文にする。英語の生のエラーは来訪者に見せない。
- * 位置を言わないエンジン（Safari の JavaScriptCore）では、位置を添えずに言う。
+ * 合わない JSON に、どこが誤りかを添えた日本語の文を返す。位置は道具が自分で読んで求めるので、エンジンの誤りの
+ * 文（英語で、ブラウザと誤りの種類によって位置を言わない）に頼らず、どのブラウザでも同じ行と字を言う。
  */
-function toJapaneseJsonError(rawError: string): string {
-  const lineColMatch = rawError.match(/line\s+(\d+)\s+column\s+(\d+)/i);
-  if (lineColMatch) {
-    const line = keepTogether(`${lineColMatch[1]}行目`);
-    const column = keepTogether(`${lineColMatch[2]}文字目付近`);
-    return `${INVALID_JSON_ERROR}（${line}、${column}）`;
-  }
-  const positionMatch = rawError.match(/position\s+(\d+)/i);
-  if (positionMatch) {
-    // エンジンの位置は0から数えるので、来訪者が数える1からの数にする。
-    const column = keepTogether(`${Number(positionMatch[1]) + 1}文字目付近`);
-    return `${INVALID_JSON_ERROR}（先頭から${column}）`;
-  }
-  return INVALID_JSON_ERROR;
+function invalidJsonMessage(input: string): string {
+  const position = findJsonErrorPosition(input);
+  if (!position) return INVALID_JSON_ERROR;
+  const line = keepTogether(`${position.line}行目`);
+  const column = keepTogether(`${position.column}文字目付近`);
+  return `${INVALID_JSON_ERROR}（${line}、${column}）`;
 }
 
 /**
@@ -68,8 +66,7 @@ function toJapaneseJsonError(rawError: string): string {
  * 整形した JSON は字下げが中身なので、折り返さずボックスの中で横に送る（§5）。圧縮した JSON は改行を持たない
  * 1続きの文字列なので、ボックスの幅で、どの字のあいだでも折り返し、送らずに終わりまで読める。
  *
- * 結果が画面に入りきらないときは、操作の並びを画面の上に置き、その下に結果を見せる（§8）。キーボードでコードの区画に
- * 着いたときは、ボックスの頭とフォーカスのリングの上の辺から見せる。
+ * 結果が画面に入りきらないときは、操作の並びを画面の上に置き、その下に結果を見せる（§8）。
  */
 export default function JsonFormatterTile() {
   const [input, setInput] = useState("");
@@ -103,8 +100,8 @@ export default function JsonFormatterTile() {
     }
     try {
       showResult(operate(input));
-    } catch (e) {
-      showError(toJapaneseJsonError(e instanceof Error ? e.message : ""));
+    } catch {
+      showError(invalidJsonMessage(input));
     }
   }
 
@@ -119,20 +116,9 @@ export default function JsonFormatterTile() {
 
   const handleValidate = () =>
     runOperation((text) => {
-      const validation = validateJson(text);
-      if (!validation.valid) throw new Error(validation.error ?? "");
+      if (!isValidJson(text)) throw new SyntaxError("invalid JSON");
       return { kind: "valid" };
     });
-
-  // キーボードでコードの区画に着いたら、ボックスの頭とリングの上の辺から見せる。マウスで押して着いたとき
-  // （字を選ぶときなど）は、押した所を動かさない。
-  function handleResultFocus(event: FocusEvent<HTMLElement>): void {
-    const target = event.target;
-    if (target === event.currentTarget || !target.matches(":focus-visible")) {
-      return;
-    }
-    revealFocusedFrame(event.currentTarget);
-  }
 
   useEffect(() => {
     if (run === 0 || !operationsRef.current || !resultRef.current) return;
@@ -199,7 +185,6 @@ export default function JsonFormatterTile() {
             caption={RESULT_CAPTIONS[result.kind]}
             kind="code"
             appear
-            onFocus={handleResultFocus}
             copyButton={
               <CopyButton
                 text={result.code}
@@ -213,7 +198,7 @@ export default function JsonFormatterTile() {
                 <code>{result.code}</code>
               </pre>
             ) : (
-              <code className={styles.continuous}>{result.code}</code>
+              <code className="continuous-code">{result.code}</code>
             )}
           </ResultBox>
         ))}

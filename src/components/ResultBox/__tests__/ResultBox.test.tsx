@@ -1,9 +1,15 @@
 import { act, createRef } from "react";
-import { describe, expect, test, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import ResultBox from "@/components/ResultBox";
+import { revealFocusedFrame } from "@/lib/reveal";
+
+vi.mock("@/lib/reveal", () => ({
+  revealFocusedFrame: vi.fn(),
+  trackScrollBeforeTab: () => () => {},
+}));
 
 const phrases = ["先頭を", "走りながら", "「全員来てるか！」と"];
 
@@ -203,5 +209,81 @@ describe("ResultBox", () => {
     const frame = screen.getByRole("table").parentElement!;
     expect(frame.hasAttribute("tabindex")).toBe(false);
     expect(frame.hasAttribute("aria-label")).toBe(false);
+  });
+
+  describe("キーボードで中身の区画に着いたとき", () => {
+    beforeEach(() => {
+      vi.mocked(revealFocusedFrame).mockClear();
+    });
+
+    interface Arrival {
+      /** キーボードで着いたか（:focus-visible）。 */
+      keyboard: boolean;
+      /** フォーカスがどこから来たか。 */
+      from: "before" | "after" | "copy";
+    }
+
+    function arrive({ keyboard, from }: Arrival) {
+      const onFocus = vi.fn();
+      render(
+        <>
+          <button type="button">前</button>
+          <ResultBox
+            caption="整形したJSON"
+            kind="code"
+            onFocus={onFocus}
+            copyButton={<button type="button">コピー</button>}
+          >
+            <pre>code</pre>
+          </ResultBox>
+          <button type="button">後</button>
+        </>,
+      );
+      const box = screen.getByRole("region", { name: "整形したJSON" });
+      const region = screen.getByText("code").parentElement!;
+      region.tabIndex = 0;
+      const matches = region.matches.bind(region);
+      vi.spyOn(region, "matches").mockImplementation((selector) =>
+        selector === ":focus-visible" ? keyboard : matches(selector),
+      );
+      const names = { before: "前", after: "後", copy: "コピー" } as const;
+      const previous = screen.getByRole("button", { name: names[from] });
+      if (from === "copy") {
+        fireEvent.focus(previous);
+      } else {
+        fireEvent.focus(region, { relatedTarget: previous });
+      }
+      return { box, onFocus };
+    }
+
+    test("前から着くと、前から着いたとして送り直しを頼む", () => {
+      const { box, onFocus } = arrive({ keyboard: true, from: "before" });
+      expect(revealFocusedFrame).toHaveBeenCalledWith(
+        box,
+        false,
+        expect.any(Number),
+      );
+      expect(onFocus).toHaveBeenCalledTimes(1);
+    });
+
+    test("後ろから戻ってくると、後ろから着いたとして送り直しを頼む", () => {
+      const { box } = arrive({ keyboard: true, from: "after" });
+      expect(revealFocusedFrame).toHaveBeenCalledWith(
+        box,
+        true,
+        expect.any(Number),
+      );
+    });
+
+    test("マウスで押して着いたときは、押した所を動かさない", () => {
+      arrive({ keyboard: false, from: "before" });
+      expect(revealFocusedFrame).not.toHaveBeenCalled();
+    });
+
+    test("コピーのボタンに着いたときは何もしない", () => {
+      const { onFocus } = arrive({ keyboard: true, from: "copy" });
+      expect(revealFocusedFrame).not.toHaveBeenCalled();
+      expect(onFocus).toHaveBeenCalledTimes(1);
+    });
   });
 });

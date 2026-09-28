@@ -9,6 +9,8 @@
   resize: none;
 }
 
+/* コードを書く欄。タブはコードのボックスと同じ2字の幅にし、貼ったコードが欄と結果で同じ字下げに見える（§5）。 */
 .mono {
   font-family: var(--font-mono);
+  tab-size: 2;
 }

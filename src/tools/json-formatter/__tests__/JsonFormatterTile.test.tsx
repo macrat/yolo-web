@@ -141,6 +141,47 @@ describe("JsonFormatterTile", () => {
       expect(text).toContain("3\u2060行\u2060目");
     });
 
+    function alertText(): string {
+      return (screen.getByRole("alert").textContent ?? "").replaceAll(
+        "\u2060",
+        "",
+      );
+    }
+
+    test.each([
+      [
+        "位置を言わないエンジンの文（Safari）",
+        'JSON Parse error: Unexpected identifier "True"',
+      ],
+      [
+        "位置を言わない V8 の文",
+        'Unexpected token \'T\', "{"a": True}" is not valid JSON',
+      ],
+      ["position だけの文", "Unexpected token T in JSON at position 99"],
+    ])("%sでも、道具が読んだ行と字を言う", (_, engineMessage) => {
+      vi.spyOn(JSON, "parse").mockImplementation(() => {
+        throw new SyntaxError(engineMessage);
+      });
+      render(<JsonFormatterTile />);
+      enter('{"a": True}');
+      press("整形");
+      expect(alertText()).toBe(
+        "JSONの形式が正しくありません。（1行目、7文字目付近）",
+      );
+      vi.restoreAllMocks();
+    });
+
+    test.each([
+      ["Python の値", '{\n  "a": None\n}', "2行目、8文字目付近"],
+      ["コメント", '{\n  // 説明\n  "a": 1\n}', "2行目、3文字目付近"],
+      ["末尾のカンマ", "[1, 2,]", "1行目、7文字目付近"],
+    ])("%sの誤りの位置を言う", (_, input, position) => {
+      render(<JsonFormatterTile />);
+      enter(input);
+      press("検証");
+      expect(alertText()).toBe(`JSONの形式が正しくありません。（${position}）`);
+    });
+
     test("同じ誤りのまま押し直すと、エラーの文を入れ直す", () => {
       render(<JsonFormatterTile />);
       enter("{invalid}");

@@ -20,13 +20,3 @@
   flex-wrap: wrap;
   gap: var(--space-16);
 }
-
-/* 圧縮した JSON は改行を持たない1続きの文字列なので、コードのボックスの幅で、どの字のあいだでも折り返す。
- * 等幅のまま、本文の中のコード片の地と余白は持たない。 */
-.continuous {
-  display: block;
-  padding: 0;
-  background: none;
-  white-space: pre-wrap;
-  word-break: break-all;
-}

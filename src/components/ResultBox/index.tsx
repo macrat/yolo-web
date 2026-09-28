@@ -5,9 +5,11 @@ import {
   useId,
   useRef,
   type ComponentPropsWithRef,
+  type FocusEvent,
   type ReactNode,
 } from "react";
 import PhrasedText from "@/components/PhrasedText";
+import { revealFocusedFrame, trackScrollBeforeTab } from "@/lib/reveal";
 import { markScrollFrame, SCROLL_FRAME_LABELS } from "@/lib/scroll-frame";
 import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ResultBox.module.css";
@@ -72,6 +74,7 @@ export default function ResultBox({
   kind,
   appear = false,
   children,
+  onFocus,
   ...rest
 }: ResultBoxProps) {
   const id = useId();
@@ -92,6 +95,27 @@ export default function ResultBox({
     for (const content of body.children) observer.observe(content);
     return () => observer.disconnect();
   }, [kind, children]);
+
+  // 中身を横に送る区画を持つボックスは、キーボードで区画に着いたときに送り直すため、Tab を押した時点の画面の
+  // 位置を覚える。
+  useEffect(() => (kind ? trackScrollBeforeTab() : undefined), [kind]);
+
+  // キーボードで中身の区画（横に送るコード・表）に着いたら、リングの辺を画面に入れる（§6）。前から着いたら
+  // 上の辺、後ろから戻ってきたら下の辺で、どちらも着く前から見えていれば画面を動かさない。マウスで押して
+  // 着いたとき（字を選ぶときなど）は、押した所を動かさない。
+  function handleFocus(event: FocusEvent<HTMLElement>): void {
+    onFocus?.(event);
+    const region = bodyRef.current;
+    if (!region || event.target !== region) return;
+    if (!region.matches(":focus-visible")) return;
+    const from = event.relatedTarget;
+    const arrivedFromAfter =
+      from instanceof Node &&
+      (region.compareDocumentPosition(from) &
+        Node.DOCUMENT_POSITION_FOLLOWING) !==
+        0;
+    revealFocusedFrame(event.currentTarget, arrivedFromAfter, event.timeStamp);
+  }
 
   const classes = [styles.box, kind && styles[kind], appear && styles.appears]
     .filter(Boolean)
@@ -118,6 +142,7 @@ export default function ResultBox({
     <section
       className={classes}
       aria-labelledby={heading ? headingId : captionId}
+      onFocus={handleFocus}
       {...rest}
     >
       <div className={styles.head}>

@@ -1,5 +1,10 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import { revealFocusedFrame, revealResult, visibleRange } from "../reveal";
+import {
+  revealFocusedFrame,
+  revealResult,
+  trackScrollBeforeTab,
+  visibleRange,
+} from "../reveal";
 
 function box(top: number, bottom: number): Element {
   return {
@@ -61,35 +66,88 @@ describe("revealResult", () => {
 });
 
 describe("revealFocusedFrame", () => {
+  let frames: (() => void)[];
+  let stopTracking: () => void;
+
+  // 着く前の画面の位置で Tab を押し、ブラウザがフォーカスの送りを済ませてから知らせが来る。
+  function pressTabThenBrowserScrolls(from: number, to: number): number {
+    vi.stubGlobal("scrollY", from);
+    const tab = new KeyboardEvent("keydown", { key: "Tab" });
+    window.dispatchEvent(tab);
+    vi.stubGlobal("scrollY", to);
+    return tab.timeStamp + 5;
+  }
+
+  function paint(): void {
+    for (const frame of frames.splice(0)) frame();
+  }
+
   beforeEach(() => {
+    frames = [];
     vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
-      callback();
-      return 0;
+      frames.push(callback);
+      return frames.length;
     });
     vi.stubGlobal("getComputedStyle", () => ({
       outlineOffset: "3px",
       outlineWidth: "3px",
     }));
+    vi.stubGlobal("scrollX", 0);
+    vi.stubGlobal("scrollTo", vi.fn());
+    stopTracking = trackScrollBeforeTab();
   });
 
-  test("リングの上端が画面の上に隠れていれば、上端から 8px 下に来るまで送る", () => {
-    revealFocusedFrame(box(-7000, 3000));
+  afterEach(() => {
+    stopTracking();
+  });
+
+  test("前から着き、着く前にリングの上の辺が画面にあれば、着く前の位置に戻して動かさない", () => {
+    // 着く前はボックスの上端が 300px（リングは 294px）。ブラウザが 296px 送って上端が 4px に来た。
+    const focusTime = pressTabThenBrowserScrolls(500, 796);
+    revealFocusedFrame(box(4, 3000), false, focusTime);
+    paint();
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      left: 0,
+      top: 500,
+      behavior: "instant",
+    });
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test("前から着き、リングの上の辺が着く前も画面の外なら、上端から 8px 下に来るまで送る", () => {
+    const focusTime = pressTabThenBrowserScrolls(500, 500);
+    revealFocusedFrame(box(-7000, 3000), false, focusTime);
+    paint();
     expect(window.scrollBy).toHaveBeenCalledWith({
       top: -7014,
       behavior: "instant",
     });
   });
 
-  test("リングの上端が画面の下にあれば、上端から 8px 下に来るまで送る", () => {
-    revealFocusedFrame(box(700, 3000));
+  test("後ろから戻り、着く前にリングの下の辺が画面にあれば、動かさない", () => {
+    const focusTime = pressTabThenBrowserScrolls(900, 900);
+    revealFocusedFrame(box(-3000, 400), true, focusTime);
+    paint();
+    expect(window.scrollTo).not.toHaveBeenCalled();
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test("後ろから戻り、リングの下の辺が画面の外なら、下端から 8px 上に来るまで送る", () => {
+    // ブラウザが区画を真ん中に寄せたあと、リングの下の辺は 3006px にある。
+    const focusTime = pressTabThenBrowserScrolls(9000, 5000);
+    revealFocusedFrame(box(-3000, 3000), true, focusTime);
+    paint();
     expect(window.scrollBy).toHaveBeenCalledWith({
-      top: 686,
+      top: 2414,
       behavior: "instant",
     });
   });
 
-  test("リングの上端が画面にあれば送らない", () => {
-    revealFocusedFrame(box(100, 3000));
+  test("Tab を押さずに着いたときは、いまの位置を着く前の位置とする", () => {
+    vi.stubGlobal("scrollY", 500);
+    revealFocusedFrame(box(100, 3000), false, 1e9);
+    paint();
+    expect(window.scrollTo).not.toHaveBeenCalled();
     expect(window.scrollBy).not.toHaveBeenCalled();
   });
 });
