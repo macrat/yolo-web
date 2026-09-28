@@ -11,17 +11,15 @@ import { pickResultSymbol } from "@/lib/fudaSymbol";
 import { getContrastTextColor } from "@/play/color-utils";
 
 /**
- * 札（Tsutsumi）画像レンダラ — 「見せたくなる結果」を単独で持ち帰れる 1 枚の PNG にする
- * （包み・札・印）。
+ * 札画像レンダラ — 診断などの結果を単独で持ち帰れる 1 枚の PNG にする。
  *
- * 構図は画面の {@link import("@/components/Tsutsumi").default Tsutsumi} と同じ視覚言語で組む
- * （並べて「別物に見えない」こと）——紙の地に、和色の記号面を一つ、店号・品名・タイプ名を
- * 墨で、印を一つだけ。器（紙・罫・墨）は静かに、成果物（和色の記号面と結果の言葉）が主役。
+ * 紙の地に、和色の記号面を一つ、店号・品名・タイプ名を墨で、印を一つだけ置く。
+ * 紙・罫・墨は静かに保ち、和色の記号面と結果の言葉を主役にする。
  *
  * Satori 制約への対応:
  * - Satori は oklch を解釈できない → 和色は {@link WAIRO_HEX}（light 固定 hex）で渡す。
- * - 印の円環は SVG `<circle>` 一本ストロークで描く（画面の {@link import("@/components/In").default In}
- *   と同じ流儀・墨一色・回転 ±8° 内・幅は包み幅の 1/5 以下）。
+ * - 印の円環は SVG `<circle>` 一本ストロークで描く（墨一色・回転 ±8° 内・
+ *   幅は札幅の 1/5 以下）。
  * - 結果の言葉を組む明朝は Noto Serif JP を CDN から取得。取得失敗時は
  *   ゴシックへ素直にフォールバック（描画は成立させ、書体だけ譲る）。
  */
@@ -30,7 +28,7 @@ import { getContrastTextColor } from "@/play/color-utils";
 const FUDA_SIZE = ogpSize;
 
 /**
- * 器の色は中立モジュール {@link import("@/lib/utsuwaHex")} を単一の真実とする（PAPER/INK/… は
+ * 紙・罫・墨の色は中立モジュール {@link import("@/lib/utsuwaHex")} を単一の真実とする（PAPER/INK/… は
  * そこから import）。乖離ガードテスト（`__tests__/wairoHex.test.ts`）は utsuwaHex を検査対象に、
  * globals.css の light トークン（PAPER↔--paper 等）との一致を担保する。
  */
@@ -68,14 +66,14 @@ export interface FudaImageResult {
    * 記号面の地色に使うコンテンツ固有の hex（例 伝統色の "#0d5661"）。
    *
    * 通常の結果（character-personality 等）は記号面の地を id のハッシュで和色8色へ写像する
-   * （{@link pickResultWairoColor}・成果物パレット）。しかし「色そのものが中身の面」
+   * （{@link pickResultWairoColor}）。しかし「色そのものが中身の面」
    * ——伝統色診断の結果色や伝統色辞典の色——では、その固有 hex こそが中身であり、和色8色へ
    * 丸めると別の色＝別物になってしまう。そこでこのフィールドが指定されたときは記号面の地に
    * その hex をそのまま使い、前景（記号）色は AA を満たす墨/白を {@link getContrastTextColor} で
    * 算出する（DESIGN.md §2「色の範囲を制限しない」）。未指定時は和色8色へ写像する。
    *
    * なお全面ベタ塗りではなく、あくまで囲まれた 300×300 の記号面の中だけに色を閉じる
-   * （器＝紙・罫・墨へ色を漏らさない・DESIGN.md §1）。
+   * （紙・罫・墨へ色を漏らさない・DESIGN.md §1）。
    */
   colorOverride?: string;
   /** 印の一字。省略時は {@link DEFAULT_SEAL_CHAR}（"診"）。 */
@@ -152,13 +150,13 @@ export async function renderFudaImage(
         flexDirection: "column",
         backgroundColor: PAPER,
         color: INK,
-        // 器は罫で包む（構造の主役は罫・角丸 0）。
+        // 外枠は罫で囲む（構造の主役は罫・角丸 0）。
         border: `2px solid ${RULE}`,
         padding: "56px 64px",
         fontFamily: gothicFamily,
       }}
     >
-      {/* のれん帯: 店号（出所）＋品名（何の結果か）。一本罫で下から仕切る。 */}
+      {/* 見出し帯: 店号（出所）＋品名（何の結果か）。一本罫で下から仕切る。 */}
       <div
         style={{
           display: "flex",
@@ -191,7 +189,7 @@ export async function renderFudaImage(
         ) : null}
       </div>
 
-      {/* 主部: 記号面（和色の地・成果物の主役）＋ 結果の言葉（紙の上・墨）。 */}
+      {/* 主部: 記号面（和色の地・札の主役）＋ 結果の言葉（紙の上・墨）。 */}
       <div
         style={{
           display: "flex",
@@ -214,7 +212,7 @@ export async function renderFudaImage(
             backgroundColor: symbolBg,
             color: symbolOn,
             // 記号面は必ず罫で囲む。紙地に極めて近い
-            // 伝統色（白練 #fcfaf2・胡粉 #fffffb 等）でも色面が紙地に埋没しないよう、器外枠と
+            // 伝統色（白練 #fcfaf2・胡粉 #fffffb 等）でも色面が紙地に埋没しないよう、外枠と
             // 同じ SSoT 色（RULE）で1px の枠を回す。角丸 0。両経路（colorOverride/
             // 和色）で同一の記号面 div なので、どの札にも同じ罫が回る。
             border: `1px solid ${RULE}`,
@@ -233,7 +231,7 @@ export async function renderFudaImage(
           </div>
         </div>
 
-        {/* 結果の言葉: タイプ名を明朝で大きく組む（器は静か・墨）。 */}
+        {/* 結果の言葉: タイプ名を明朝で大きく組む（墨）。 */}
         <div
           style={{
             display: "flex",
@@ -255,8 +253,8 @@ export async function renderFudaImage(
         </div>
       </div>
 
-      {/* 印: 成果物に一つだけ・右上に捺す。墨一色の円環＋一字・回転 ±8° 内・幅は包み幅の 1/5 以下
-            （100/1200 ≒ 8%）。SVG 一本ストロークで円環を描く（画面の In と同じ流儀）。 */}
+      {/* 印: 札に一つだけ・右上に捺す。墨一色の円環＋一字・回転 ±8° 内・幅は札幅の 1/5 以下
+            （100/1200 ≒ 8%）。SVG 一本ストロークで円環を描く。 */}
       <div
         style={{
           position: "absolute",

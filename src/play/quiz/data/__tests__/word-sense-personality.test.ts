@@ -125,7 +125,7 @@ describe("word-sense-personality — questions", () => {
     }
   });
 
-  // 配点の構造（docs/cycles/cycle-303/redesign-v2.md A-3）:
+  // 配点の構造:
   //   - pure（強度3）: 他タイプの声を帯びない単一 voice。エントリは1つ（主 signal のみ、値3）。
   //   - blended（強度2）: 主が明確だが文が近傍タイプの性質を帯びる。エントリは2つ（主2＋副1）。
   // 「固定影結合を作らない・副点は文が実際に帯びる性質からのみ」という設計原則の構造ガード。

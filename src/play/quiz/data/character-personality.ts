@@ -565,7 +565,7 @@ function tallyArchetypes(
 /**
  * Determine the character-personality result type from quiz answers.
  *
- * count ベースの軸判定(docs/cycles/cycle-295/design.md §B-mech):
+ * count ベースの軸判定:
  *   1. 主signal被選択回数 count と 配点合計 score を集計。
  *   2. (count, score) の辞書式順で軸を決める(count が主・score が同点タイブレーク)。
  *      なお同点はアーキタイプ正準 index(ARCHETYPE_IDS の順)で決定的に決着。

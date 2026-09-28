@@ -111,10 +111,6 @@ export const quizQuestionCountBySlug: Map<string, number> = new Map(
   allQuizMetas.map((q) => [q.slug, q.questionCount]),
 );
 
-// 旧トップページ専用だった getHeroPickupContents / getDefaultTabContents /
-// getNonFortuneContents は cycle-232（トップの道具箱化・Phase 10.3）で
-// 旧トップとともに削除した。
-
 /**
  * /play ページの「イチオシ」セクションに表示するコンテンツとおすすめ理由のペア。
  * PlayFeaturedItem は内部専用の型（export しない）。
