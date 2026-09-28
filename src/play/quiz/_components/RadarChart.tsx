@@ -202,13 +202,14 @@ function placeLabels(
 
 /**
  * 字を添える行の数を決めて図を組む。字は補助情報の大きさのまま縮めず、字を線にも多角形にもほかの字にも重ねずに
- * 置けるいちばん大きい半径で多角形を描く。図の高さは、多角形と字の全体が入る高さにする。
+ * 置けるいちばん大きい半径で多角形を描く。図の高さは、多角形と字の全体が入る高さにする。図の幅がその字を
+ * 置くのに足りず、どの半径でも置けなければ null。
  */
 function layoutWithLines(
   frame: RadarFrame,
   total: number,
   showValues: boolean,
-): RadarLayout {
+): RadarLayout | null {
   const { width, lineHeight } = frame;
   const lines = showValues ? 2 : 1;
   const widths = frame.nameWidths.map((name, i) =>
@@ -220,10 +221,10 @@ function layoutWithLines(
     radius = Math.max(0, radius - RADIUS_STEP);
     boxes = placeLabels(radius, frame, total, widths, lines * lineHeight);
   }
-  const placed = boxes ?? [];
+  if (!boxes) return null;
 
-  const extentTop = Math.min(-radius, ...placed.map((box) => box.top));
-  const extentBottom = Math.max(radius, ...placed.map((box) => box.bottom));
+  const extentTop = Math.min(-radius, ...boxes.map((box) => box.top));
+  const extentBottom = Math.max(radius, ...boxes.map((box) => box.bottom));
   return {
     width,
     height: extentBottom - extentTop,
@@ -231,7 +232,7 @@ function layoutWithLines(
     cy: -extentTop,
     radius,
     showValues,
-    labels: placed.map((box) => ({
+    labels: boxes.map((box) => ({
       x: width / 2 + (box.left + box.right) / 2,
       top: box.top - extentTop,
     })),
@@ -239,11 +240,18 @@ function layoutWithLines(
 }
 
 /**
- * 図を組む。数値を添えた組みで多角形の半径が下限に届かなければ、数値を外した組みにする。
+ * 図を組む。数値を添えた組みで多角形の半径が下限に届かなければ、数値を外した組みにする。軸の名前だけでも
+ * 図の幅に置けなければ null。
  */
-export function layoutRadar(frame: RadarFrame, total: number): RadarLayout {
+export function layoutRadar(
+  frame: RadarFrame,
+  total: number,
+): RadarLayout | null {
   const withValues = layoutWithLines(frame, total, true);
-  if (withValues.radius >= MIN_RADIUS_WITH_VALUES * frame.lineHeight) {
+  if (
+    withValues &&
+    withValues.radius >= MIN_RADIUS_WITH_VALUES * frame.lineHeight
+  ) {
     return withValues;
   }
   return layoutWithLines(frame, total, false);
@@ -264,15 +272,20 @@ function sameWidths(a: readonly number[], b: readonly number[]): boolean {
   return a.length === b.length && a.every((width, i) => width === b[i]);
 }
 
-function sameFrame(a: RadarFrame | null, b: RadarFrame): boolean {
+function sameFrame(a: RadarFrame, b: RadarFrame): boolean {
   return (
-    a !== null &&
     a.width === b.width &&
     a.lineHeight === b.lineHeight &&
     a.gap === b.gap &&
     sameWidths(a.nameWidths, b.nameWidths) &&
     sameWidths(a.valueWidths, b.valueWidths)
   );
+}
+
+/** 測った値と、それを測ったときの軸 */
+interface Measured {
+  axes: readonly RadarChartAxis[];
+  frame: RadarFrame;
 }
 
 interface RadarChartProps {
@@ -286,11 +299,12 @@ interface RadarChartProps {
  * 頂点は多角形の角で分かるので、点を置かない。格子と軸は細い線で引く。
  *
  * 軸の名前と数値は補助情報の大きさで紙の上に添え、図を縮めても字は小さくしない。字の幅と行の高さを描く前に
- * 測り、それが収まる大きさで多角形を描く。幅か字の大きさが変わったら測り直す。
+ * 測り、それが収まる大きさで多角形を描く。幅か字の大きさか軸が変わったら測り直し、いまの軸で測った値でだけ
+ * 組む。図の幅が軸の名前を置くのに足りなければ図を描かない。同じ値はスコアの帯が字で言っている。
  */
 export default function RadarChart({ axes, label }: RadarChartProps) {
   const figureRef = useRef<HTMLDivElement>(null);
-  const [frame, setFrame] = useState<RadarFrame | null>(null);
+  const [measured, setMeasured] = useState<Measured | null>(null);
 
   useLayoutEffect(() => {
     const figure = figureRef.current;
@@ -311,7 +325,13 @@ export default function RadarChart({ axes, label }: RadarChartProps) {
         nameWidths: widths("name"),
         valueWidths: widths("value"),
       };
-      setFrame((current) => (sameFrame(current, next) ? current : next));
+      setMeasured((current) =>
+        current !== null &&
+        current.axes === axes &&
+        sameFrame(current.frame, next)
+          ? current
+          : { axes, frame: next },
+      );
     };
     measure();
     if (typeof ResizeObserver === "undefined") return;
@@ -327,8 +347,8 @@ export default function RadarChart({ axes, label }: RadarChartProps) {
   const ratios = axes.map(
     (axis) => Math.min(Math.max(axis.percent, 0), 100) / 100,
   );
+  const frame = measured?.axes === axes ? measured.frame : null;
   const layout = frame ? layoutRadar(frame, axes.length) : null;
-  const lineHeight = frame?.lineHeight ?? 0;
 
   return (
     <div ref={figureRef} className={styles.figure}>
@@ -342,7 +362,7 @@ export default function RadarChart({ axes, label }: RadarChartProps) {
           </span>
         </span>
       ))}
-      {layout && (
+      {frame && layout && (
         <svg
           className={styles.chart}
           width={layout.width}
@@ -389,7 +409,7 @@ export default function RadarChart({ axes, label }: RadarChartProps) {
               >
                 <tspan
                   x={placement.x}
-                  y={placement.top + lineHeight / 2}
+                  y={placement.top + frame.lineHeight / 2}
                   dominantBaseline="central"
                 >
                   {axis.label}
@@ -397,7 +417,7 @@ export default function RadarChart({ axes, label }: RadarChartProps) {
                 {layout.showValues && (
                   <tspan
                     x={placement.x}
-                    y={placement.top + (lineHeight * 3) / 2}
+                    y={placement.top + (frame.lineHeight * 3) / 2}
                     dominantBaseline="central"
                   >
                     {axis.percent}%

@@ -1,6 +1,11 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, test } from "vitest";
-import RadarChart, { layoutRadar, type RadarFrame } from "../RadarChart";
+import { act, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import RadarChart, {
+  layoutRadar,
+  type RadarChartAxis,
+  type RadarFrame,
+  type RadarLayout,
+} from "../RadarChart";
 
 // 375px の既定の字の大きさ（14px・行の高さ 17.5px）で測った値に近いもの
 const frame: RadarFrame = {
@@ -20,6 +25,12 @@ const narrowLarge: RadarFrame = {
   valueWidths: [60, 60, 67, 60, 60],
 };
 
+function layoutOf(f: RadarFrame, total = 5): RadarLayout {
+  const layout = layoutRadar(f, total);
+  if (!layout) throw new Error("図を組めない");
+  return layout;
+}
+
 function labelWidths(f: RadarFrame, showValues: boolean): number[] {
   return f.nameWidths.map((width, i) =>
     showValues ? Math.max(width, f.valueWidths[i]) : width,
@@ -34,7 +45,7 @@ interface Rect {
 }
 
 function labelRects(f: RadarFrame): Rect[] {
-  const layout = layoutRadar(f, 5);
+  const layout = layoutOf(f);
   const widths = labelWidths(f, layout.showValues);
   const height = (layout.showValues ? 2 : 1) * f.lineHeight;
   return layout.labels.map((label, i) => ({
@@ -59,7 +70,7 @@ function inside(
 describe("layoutRadar", () => {
   test("字は図の幅に収まり、ほかの字にも、格子の外周の多角形にも重ならない", () => {
     for (const f of [frame, narrowLarge]) {
-      const layout = layoutRadar(f, 5);
+      const layout = layoutOf(f);
       const rects = labelRects(f);
       const outline = Array.from({ length: 5 }, (_, i): [number, number] => {
         const angle = (2 * Math.PI * i) / 5 - Math.PI / 2;
@@ -100,20 +111,26 @@ describe("layoutRadar", () => {
   });
 
   test("多角形が添えた字より十分に大きければ、名前の下に数値を添える", () => {
-    const layout = layoutRadar(frame, 5);
+    const layout = layoutOf(frame);
     expect(layout.showValues).toBe(true);
     expect(layout.radius).toBeGreaterThanOrEqual(4 * frame.lineHeight);
   });
 
   test("狭い画面で字が大きいときは、数値を外して多角形に幅を回す", () => {
-    const layout = layoutRadar(narrowLarge, 5);
+    const layout = layoutOf(narrowLarge);
     expect(layout.showValues).toBe(false);
     expect(layout.radius).toBeLessThan(4 * narrowLarge.lineHeight);
   });
 
+  test("軸の名前を置く幅が図に無ければ、組めないことを返す", () => {
+    for (const width of [0, 60, 90]) {
+      expect(layoutRadar({ ...frame, width }, 5)).toBeNull();
+    }
+  });
+
   test("図の高さは、多角形と添えた字の全体を含む", () => {
     for (const f of [frame, narrowLarge]) {
-      const layout = layoutRadar(f, 5);
+      const layout = layoutOf(f);
       for (const rect of labelRects(f)) {
         expect(rect.top).toBeGreaterThanOrEqual(-0.001);
         expect(rect.bottom).toBeLessThanOrEqual(layout.height + 0.001);
@@ -146,5 +163,104 @@ describe("RadarChart", () => {
     expect(container.querySelectorAll("circle")).toHaveLength(0);
     expect(container.querySelectorAll("[data-radar-data]")).toHaveLength(1);
     expect(container.querySelector("svg")?.textContent).toContain("理論");
+  });
+});
+
+describe("RadarChart を測り直す", () => {
+  const axes5: RadarChartAxis[] = [
+    { label: "理論", percent: 75 },
+    { label: "実験", percent: 58 },
+    { label: "数値化", percent: 100 },
+    { label: "観察", percent: 24 },
+    { label: "創造", percent: 0 },
+  ];
+
+  /** 図の幅と、字1つあたりの幅（14px の字）。測りの字の幅は字数から出す。 */
+  let figureWidth = 320;
+  const observers: ResizeObserverCallback[] = [];
+
+  function stubMeasurement() {
+    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(
+      () => figureWidth,
+    );
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      function (this: HTMLElement) {
+        const width = (this.textContent ?? "").length * 14;
+        return {
+          width,
+          height: 17.5,
+          x: 0,
+          y: 0,
+          top: 0,
+          left: 0,
+          right: width,
+          bottom: 17.5,
+          toJSON: () => ({}),
+        };
+      },
+    );
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(callback: ResizeObserverCallback) {
+          observers.push(callback);
+        }
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+  }
+
+  function resizeTo(width: number) {
+    figureWidth = width;
+    act(() => {
+      for (const callback of observers) {
+        callback([], {} as ResizeObserver);
+      }
+    });
+  }
+
+  function labelCount(container: HTMLElement): number {
+    return container.querySelectorAll("svg text").length;
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    observers.length = 0;
+    figureWidth = 320;
+  });
+
+  test("幅が変わるたびに組み直し、名前を置けない幅では図を描かず、広がればまた描く", () => {
+    stubMeasurement();
+    const { container } = render(
+      <RadarChart label="5つの軸のレーダー" axes={axes5} />,
+    );
+    expect(labelCount(container)).toBe(5);
+
+    for (const width of [266, 0, 400, 40, 320, 0, 266]) {
+      resizeTo(width);
+      const svg = container.querySelector("svg");
+      if (width < 60) {
+        expect(svg).toBeNull();
+      } else {
+        expect(svg?.getAttribute("width")).toBe(String(width));
+        expect(labelCount(container)).toBe(5);
+      }
+    }
+    expect(labelCount(container)).toBe(5);
+  });
+
+  test("軸の数が変わっても、前の軸で測った値では組まず、いまの軸で測り直して描く", () => {
+    stubMeasurement();
+    const { container, rerender } = render(
+      <RadarChart label="レーダー" axes={axes5} />,
+    );
+    expect(labelCount(container)).toBe(5);
+    rerender(<RadarChart label="レーダー" axes={axes5.slice(0, 3)} />);
+    expect(labelCount(container)).toBe(3);
+    rerender(<RadarChart label="レーダー" axes={axes5} />);
+    expect(labelCount(container)).toBe(5);
   });
 });
