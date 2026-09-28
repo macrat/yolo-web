@@ -59,6 +59,7 @@ t6-design.md 4章が求める、タスクごとの画像の比較と測った数
   - `src/app/dictionary/humor/[slug]/opengraph-image/route.tsx`（30語）。`page.tsx` の `generateMetadata` が画像の値を作り、`generateHumorDictEntryMetadata` に型だけで渡す。
   - `src/app/play/[slug]/opengraph-image/route.tsx`（`getAllQuizSlugs()` の15本。music-personality を含み、`contentType` が quiz でなければ 404）。`/play/[slug]` と `/play/music-personality` の `page.tsx` が画像の値を作り、`generatePlayMetadata` に型だけで渡す。`/play/daily` は渡さず、自分の規約のファイルを使う。`generatePlayMetadata` は `twitter.images` の明示をやめ、使う所の無かった `overrides` の引数も外した。
 - `twitter-image.tsx` 38本（道具36本・privacy・ユーモア辞典）を消し、`src/app/tools/__tests__/page-coverage.test.ts` の `REQUIRED_FILES` を `page.tsx` と `opengraph-image.tsx` にした。ユーモア辞典の画像の試験は、Route Handler の `GET` とページの `openGraph.images` を試す形に書き直した。
+- 消した `play/[slug]/opengraph-image.tsx` だけが使っていた `getAllPlaySlugs`（`src/play/registry.ts`）とその試験を消した。20本の数とゲームの slug は、`allPlayContents` の試験が確かめている。
 - 画像に書く87の中身（道具36・診断とクイズ15・daily・ゲーム4・ユーモア30・privacy）を実際の書体で描き、4書体に無い字は0件、副題を切った画像も0件（代替テキストが画像の字と一致する）。
 
 完了の条件ごとの測り（HEAD にこのタスクの変更を重ねた本番のビルドを `next start` で配信して測った）:

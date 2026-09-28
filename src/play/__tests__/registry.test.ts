@@ -6,7 +6,6 @@ import {
   allPlayContents,
   playContentBySlug,
   getPlayContentsByCategory,
-  getAllPlaySlugs,
   DAILY_UPDATE_SLUGS,
   PLAY_FEATURED_ITEMS,
 } from "../registry";
@@ -206,16 +205,6 @@ describe("getPlayContentsByCategory (ゲーム)", () => {
   test("returns all 4 games for category 'game'", () => {
     const results = getPlayContentsByCategory("game");
     expect(results).toHaveLength(4);
-  });
-});
-
-describe("getAllPlaySlugs", () => {
-  test("returns slugs for all 20 contents", () => {
-    const slugs = getAllPlaySlugs();
-    expect(slugs).toHaveLength(20);
-    for (const slug of EXPECTED_GAME_SLUGS) {
-      expect(slugs).toContain(slug);
-    }
   });
 });
 

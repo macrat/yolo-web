@@ -98,11 +98,6 @@ export function getPlayContentsByCategory(
   return allPlayContents.filter((c) => c.category === category);
 }
 
-/** 全 PlayContent のスラグ配列を返す */
-export function getAllPlaySlugs(): string[] {
-  return allPlayContents.map((c) => c.slug);
-}
-
 /**
  * slug → questionCount のルックアップマップ（クイズの問数表示用）。
  * /play 配下の一覧・レイアウトコンポーネントから参照される共有マップ。
