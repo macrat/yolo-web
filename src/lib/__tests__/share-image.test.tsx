@@ -709,6 +709,48 @@ describe("字で割るときの禁則", () => {
     return lineTextsOf(layout.aux!)[0].length;
   }
 
+  /** 補助情報の1行に、字 char が何字入るか。 */
+  async function perAuxLine(char: string): Promise<number> {
+    const { layout } = await renderShareImage({
+      aux: char.repeat(400),
+      name: "x",
+    });
+    return lineTextsOf(layout.aux!)[0].length;
+  }
+
+  /** 補助情報の行が、禁則を破らず、中身の枠の幅を超えないこと。 */
+  function expectAuxLinesKeepRules(layout: ShareImageLayout, aux: string) {
+    const lines = lineTextsOf(layout.aux!);
+    expect(lines.join("")).toBe(aux);
+    for (const [index, line] of lines.entries()) {
+      expect(cannotStartLine(line), line).toBe(false);
+      expect(cannotEndLine(line), line).toBe(false);
+      expect(layout.aux!.lines[index].width, line).toBeLessThanOrEqual(
+        CONTENT_WIDTH,
+      );
+    }
+  }
+
+  test("丸括弧の中の、1行近い欧文の続きの直後の「?！」を、前の字ごと次の行へ送る", async () => {
+    // 「?」が1行目の終わりの前後に来る長さを並べて試す。
+    const perLine = await perAuxLine("a");
+    for (let count = perLine - 4; count <= perLine + 2; count++) {
+      const aux = "（" + "a".repeat(count) + "?！カカカカ）";
+      const { layout } = await renderShareImage({ aux, name: "x" });
+      expect(layout.aux!.lines.length).toBeGreaterThan(1);
+      expectAuxLinesKeepRules(layout, aux);
+    }
+  });
+
+  test("字の範囲のまとまりに禁則の字が付いて1行を超えるときは、そのまとまりの中で折る", async () => {
+    const perLine = await perAuxLine("カ");
+    for (let count = perLine - 4; count <= perLine; count++) {
+      const aux = "（" + "a".repeat(20) + "、" + "カ".repeat(count) + "）";
+      const { layout } = await renderShareImage({ aux, name: "x" });
+      expectAuxLinesKeepRules(layout, aux);
+    }
+  });
+
   test.each(["？", "、", "」", "ー"])(
     "補助情報の1行を「カ」で満たした直後の「%s」を、次の行の頭に置かない",
     async (tail) => {
