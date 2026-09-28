@@ -7,9 +7,8 @@
  * 「色そのものが中身の面」）。記号は色名の先頭字（pickResultSymbol が title 先頭を拾う）、
  * のれん帯の品名に hex コード、下部に色名（よみ）を出す。
  *
- * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。店の看板印「試」は
- * 内容 fuda には使わない。サイトの identity 標章（頭字 y）は ogp-image・favicon にあり、
- * 内容 fuda の印はこれとは別（内容を表す字）。
+ * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。サイトの標章（頭字 y。
+ * ogp-image・favicon）とは別の、内容を表す字。
  */
 
 import {
@@ -51,7 +50,7 @@ export default async function OpenGraphImage({ params }: Props) {
     title,
     // 品名にその色の hex コードを出す。色が無ければ品名行は省く（undefined）。
     productName: color?.hex,
-    // 地色はその伝統色 hex。色が無ければ colorOverride 未指定＝従来の和色経路へフォールバック。
+    // 地色はその伝統色 hex。色が無ければ colorOverride を渡さず、fuda-image の既定の地（和色）にする。
     colorOverride: color?.hex,
     sealChar: CONTENT_SEAL_CHAR,
   });

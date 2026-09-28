@@ -4,7 +4,7 @@
  * この面は共有レンダラ {@link renderFudaImage}（札）で組み、その伝統色の hex を
  * `colorOverride`、印を内容印 CONTENT_SEAL_CHAR（＝内容を表す一字「色」）で渡す。ここでは
  * import が通り generateStaticParams が全色 slug を返すこと・メタ export が正しいこと・
- * 内容印が「色」で店の看板印「試」ではないことを確認する（非ネットワーク部分）。
+ * 内容印が「色」であることを確認する（非ネットワーク部分）。
  * 記号面の固有色・前景コントラストの検証は
  * 共有レンダラのテスト（src/lib/__tests__/fuda-image.test.tsx）で網羅する。
  */
@@ -29,10 +29,8 @@ describe("dictionary/colors opengraph-image", () => {
     expect(params[0]).toHaveProperty("slug");
   });
 
-  it("内容印が内容を表す一字「色」で、店の看板印「試」ではない", async () => {
+  it("内容印が内容を表す一字「色」である", async () => {
     const mod = await import("../opengraph-image");
     expect(mod.CONTENT_SEAL_CHAR).toBe("色");
-    // 店の看板印「試」は内容 fuda に使わない。
-    expect(mod.CONTENT_SEAL_CHAR).not.toBe("試");
   });
 });

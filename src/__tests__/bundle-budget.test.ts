@@ -55,8 +55,8 @@ const BUDGETS = {
    */
   categories: {
     "/tools": 60 * 1024, // 60 KB
-    // /play includes games (4), quizzes (14), and fortune (1) = 19 total contents
-    "/play": 140 * 1024, // 140 KB (yoji-data expanded to 402 entries)
+    // /play covers games, quizzes and fortune
+    "/play": 140 * 1024, // 140 KB
     "/dictionary": 50 * 1024, // 50 KB
     "/blog": 20 * 1024, // 20 KB
   } as Record<string, number>,
@@ -289,11 +289,10 @@ function getLargeChunks(threshold: number): ChunkInfo[] {
 
 /**
  * Route Group プレフィックスを除去して正規化されたルートを返す。
- * Next.js App Router の Route Group (例: (legacy), (marketing)) はビルド出力パスに
+ * Next.js App Router の Route Group (例: (marketing)) はビルド出力パスに
  * そのまま現れるため、カテゴリ判定・ホワイトリスト照合の前に除去する。
- * 例: /(legacy)/tools/slug -> /tools/slug
- * フェーズ R・C1 で唯一の Route Group だった (new) も src/app/ 直下へ平坦化済みのため、
- * 現時点で本リポジトリに Route Group は存在しない（将来の再導入に備えた防御的コード）。
+ * 例: /(marketing)/tools/slug -> /tools/slug
+ * いまの src/app に Route Group は無いが、置いたときにもカテゴリを判定できるよう除く。
  */
 function normaliseRoute(route: string): string {
   const parts = route.split("/").filter(Boolean);
@@ -412,7 +411,7 @@ describe.skipIf(!buildExists)("Bundle budget", () => {
     const unknownUncategorised: RouteSize[] = [];
 
     for (const rs of uncategorised) {
-      // Route Group プレフィックス (例: /(legacy)/) を除去して照合する
+      // Route Group プレフィックス (例: /(marketing)/) を除去して照合する
       if (UNCATEGORISED_WHITELIST.has(normaliseRoute(rs.route))) {
         knownUncategorised.push(rs);
       } else {

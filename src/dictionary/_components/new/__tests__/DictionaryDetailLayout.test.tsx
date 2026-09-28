@@ -4,10 +4,8 @@ import DictionaryDetailLayout from "../DictionaryDetailLayout";
 import type { DictionaryMeta } from "@/dictionary/_lib/types";
 import type { PlayContentMeta } from "@/play/types";
 
-// (new) フォーク版のテスト。legacy 版テストから「信頼度バッジを描画する」
-// テストを除外（(new) では当該バッジを撤去・AI 注記は Footer が担保）。
-// 残り（breadcrumb/children/FAQ/valueProposition/ShareButtons/JSON-LD 個数/
-// PlayRecommendBlock）を踏襲する。
+// 辞典の詳細ページの枠が breadcrumb・children・FAQ・valueProposition・
+// ShareButtons・JSON-LD の個数・PlayRecommendBlock を描くことを確かめる。
 
 const mockMeta: DictionaryMeta = {
   slug: "test-dict",
@@ -147,7 +145,7 @@ test("DictionaryDetailLayout renders ShareButtons", () => {
       <div>Content</div>
     </DictionaryDetailLayout>,
   );
-  // (new) ShareButtons renders buttons with visible labels; the copy button label is "URLをコピー"
+  // ShareButtons renders buttons with visible labels; the copy button label is "URLをコピー"
   expect(screen.getByText("URLをコピー")).toBeInTheDocument();
 });
 
@@ -167,7 +165,6 @@ test("DictionaryDetailLayout outputs single JSON-LD script tag for object", () =
     'script[type="application/ld+json"]',
   );
   // 1 for the jsonLd prop + 1 from Breadcrumb component + 1 from FaqSection (FAQPage JSON-LD) = 3 total
-  // 信頼度バッジ撤去では JSON-LD 個数は変化しない（当該バッジは JSON-LD を出さない）
   expect(scripts.length).toBe(3);
   // The first script should contain the DefinedTerm JSON-LD
   expect(scripts[0].textContent).toContain("DefinedTerm");
