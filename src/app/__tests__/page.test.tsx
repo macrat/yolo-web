@@ -1,34 +1,29 @@
 /**
- * トップページ（よろず屋の店先）のテスト
+ * トップページのテスト。
  *
- * 検証観点:
- * - 名乗り: h1 がページに1つ（サイト名）・site-concept の軸「やってみるサイト」・
- *   AI 運営の明示（constitution rule 3）
- * - 目玉（今日のためしどころ）: 成長エンジンの診断 character-personality を単一区画で立て、
- *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達／入口ボタン／
- *   結果のタイプ数「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
- * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
- *   /play への全リンク導線
- * - 辞典棚・道具棚（+ /tools 全リンク）・読みもの棚（/blog）の入口が実在ルートを指す
- * - DESIGN.md §5: 絵文字を持ち込まない
- * - metadata: 店先の description / OGP / twitter / canonical・noindex の不在
+ * - 名乗り: h1 はページに1つでサイト名。「やってみるサイト」と AI が運営していることの明示（constitution rule 3）
+ * - 目玉（今日のためしどころ）: character-personality をセクションで立て、レジストリの名前で実在のパスへ向かう。
+ *   目玉の文の数（12問・24タイプ）は診断データの値と一致する
+ * - 分野ごとのセクション: 診断・占い・あそび（目玉の診断は並べない）・辞典・道具・読みものの入口が実在のルートを指す
+ * - ページはセクションを並べ、どの見出しも文節の区切りで組む（DESIGN.md §4・§5）
+ * - 絵文字を持たない（§5）
+ * - metadata: description・OGP・twitter・canonical と、noindex を持たないこと
  */
 import { expect, test } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
+import sectionStyles from "@/components/Section/Section.module.css";
 import Home, { metadata } from "../page";
 import { playContentBySlug } from "@/play/registry";
 import { quizBySlug, getResultIdsForQuiz } from "@/play/quiz/registry";
 import { getContentPath } from "@/play/paths";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { followsPhraseRules } from "@/lib/phrase-breaks";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
-/** 目玉（今日のためしどころ）に立てる診断の slug（page.tsx の HERO_SLUG と同期）。 */
+/** 目玉（今日のためしどころ）に立てる診断の slug（page.tsx の HERO_SLUG）。 */
 const HERO_SLUG = "character-personality";
 
-/**
- * 「診断・占い・あそび」棚に並ぶ品書きの slug（page.tsx の FEATURED_PLAY と同期）。
- * 目玉に立てた character-personality は品書きから外す（同一診断を同じページで二度立てない）。
- */
+/** 「診断・占い・あそび」のセクションに並ぶ slug（page.tsx の FEATURED_PLAY）。目玉の診断は入らない。 */
 const EXPECTED_FEATURED_SLUGS = [
   "word-sense-personality",
   "animal-personality",
@@ -38,7 +33,7 @@ const EXPECTED_FEATURED_SLUGS = [
   "nakamawake",
 ];
 
-// ===== 自己紹介（店の名乗り） =====
+// ===== 名乗り =====
 
 test("h1 はページに1つで、サイト名を表示する", () => {
   render(<Home />);
@@ -49,11 +44,9 @@ test("h1 はページに1つで、サイト名を表示する", () => {
 
 test("site-concept の軸（やってみるサイト）と AI 運営の明示（rule 3）がある", () => {
   render(<Home />);
-  // 一言は文節ごとの span（inline-block）で組んでいるため、各文節を個別に検証する
-  // （折り返しを文節境界だけで起こす。site-concept の軸「やってみるサイト」を含む）。
+  // 一言は文節ごとの span で組むので、文節ごとに確かめる。
   expect(screen.getByText("読むだけのサイトではなく、")).toBeInTheDocument();
   expect(screen.getByText("やってみるサイト。")).toBeInTheDocument();
-  // 運営者を店の見立て（「店主」）でなく平明な言葉で言う。
   expect(
     screen.getByText(/運営しているのは人ではなくAIです/),
   ).toBeInTheDocument();
@@ -62,64 +55,55 @@ test("site-concept の軸（やってみるサイト）と AI 運営の明示（
   ).toBeInTheDocument();
 });
 
-// ===== 目玉（今日のためしどころ・焦点） =====
+// ===== 目玉（今日のためしどころ） =====
 
-test("目玉は成長エンジンの診断を単一区画で立て、レジストリ由来のタイトルで実在パスへ向かう", () => {
+test("目玉は診断をセクションで立て、レジストリの名前の見出しと、実在のパスへの入口を持つ", () => {
   render(<Home />);
   const hero = screen.getByRole("region", { name: "あなたに似たキャラ診断" });
   const content = playContentBySlug.get(HERO_SLUG);
   expect(content, `"${HERO_SLUG}" がレジストリに存在しない`).toBeDefined();
-  // 目玉の見出しはレジストリ由来のタイトル
   const heading = within(hero).getByRole("heading", { level: 2 });
   expect(heading).toHaveTextContent(content!.title);
-  // 入口ボタン「やってみる」は診断の正規パスへ
   const cta = within(hero).getByRole("link", { name: /やってみる/ });
   expect(cta).toHaveAttribute("href", getContentPath(content!));
 });
 
-test("目玉は『札にして持ち帰れる』と結果タイプ数を店先で伝える", () => {
+test("目玉は、結果を札にして持ち帰れることと、結果のタイプ数を言う", () => {
   render(<Home />);
   const hero = screen.getByRole("region", { name: "あなたに似たキャラ診断" });
-  // 持ち帰り（札）を店先で明示
   expect(within(hero).getByText(/札にして持ち帰れます/)).toBeInTheDocument();
-  // 結果タイプ数（実情報）
   expect(within(hero).getByText("24タイプ")).toBeInTheDocument();
 });
 
 test("目玉のコピーの数値は診断データの正典値と一致する（12問・24タイプ）", () => {
-  // トップに書いた「12の問い」「24タイプ」が診断データの実値とずれないことを機械ガードする
-  // （データが変わればこのテストが落ち、店先コピーの更新を強制する）。
+  // データが変わればこのテストが落ち、目玉の文を直すことになる。
   const quiz = quizBySlug.get(HERO_SLUG);
   expect(quiz?.meta.questionCount).toBe(12);
   expect(getResultIdsForQuiz(HERO_SLUG)).toHaveLength(24);
 });
 
-// ===== 診断・占い・あそび棚（品書き） =====
+// ===== 分野ごとのセクション =====
 
-test("診断・占い・あそび棚の品書きは想定の slug がレジストリに実在する", () => {
-  // page.tsx が参照する slug がすべてレジストリ（単一情報源）に存在することを保証する
-  // （存在しない slug は描画時に除外され、静かに欠落するため）。
+test("「診断・占い・あそび」の slug はどれもレジストリにあり、目玉の診断を含まない", () => {
+  // レジストリに無い slug は page.tsx が並べないので、ここで欠けていないことを確かめる。
   for (const slug of EXPECTED_FEATURED_SLUGS) {
     expect(
       playContentBySlug.get(slug),
       `"${slug}" がレジストリに存在しない`,
     ).toBeDefined();
   }
-  // 目玉に立てた診断は品書きから外す（同じページで同一診断を二度立てない）。
   expect(EXPECTED_FEATURED_SLUGS).not.toContain(HERO_SLUG);
 });
 
-test("各品書きの品名は正規パスへのリンクで、レジストリ由来のタイトルを持つ", () => {
+test("「診断・占い・あそび」の行の名前は、レジストリの名前で実在のパスへのリンク", () => {
   const { container } = render(<Home />);
   for (const slug of EXPECTED_FEATURED_SLUGS) {
     const content = playContentBySlug.get(slug);
     if (content === undefined) continue;
-    // href（正規パス = 単一情報源 paths.ts 由来）でリンクを特定し、
-    // タイトルがレジストリ由来で描画されていることを確認する。
     const link = container.querySelector<HTMLAnchorElement>(
       `a[href="${getContentPath(content)}"]`,
     );
-    expect(link, `"${slug}" の品名リンクが見つからない`).not.toBeNull();
+    expect(link, `"${slug}" の行のリンクが見つからない`).not.toBeNull();
     expect(link?.textContent ?? "").toContain(content.title);
   }
 });
@@ -132,9 +116,7 @@ test("「すべての診断・占い・ゲームを見る」→ /play への導�
   expect(allLink).toHaveAttribute("href", "/play");
 });
 
-// ===== 辞典棚・道具棚・読みもの棚（実在ルートへの入口） =====
-
-test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ルートを指す", () => {
+test("辞典のセクションは漢字・四字熟語・伝統色・ユーモアの実在ルートを指す", () => {
   render(<Home />);
   const cases: [string, string][] = [
     ["漢字辞典", "/dictionary/kanji"],
@@ -148,7 +130,7 @@ test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ル�
   }
 });
 
-test("道具棚は代表的なツールの入口と /tools への全リンクを持つ", () => {
+test("道具のセクションは代表的な道具の入口と /tools への全リンクを持つ", () => {
   render(<Home />);
   const cases: [string, string][] = [
     ["文字数カウント", "/tools/char-count"],
@@ -164,34 +146,33 @@ test("道具棚は代表的なツールの入口と /tools への全リンクを
   expect(allTools).toHaveAttribute("href", "/tools");
 });
 
-test("読みもの棚はブログ（/blog）への入口を持つ", () => {
+test("読みもののセクションはブログ（/blog）への入口を持つ", () => {
   render(<Home />);
   const blog = screen.getByRole("link", { name: "ブログ" });
   expect(blog).toHaveAttribute("href", "/blog");
 });
 
-// ===== トップに絵文字を持ち込まない（DESIGN.md §5） =====
+// ===== 絵文字（DESIGN.md §5） =====
 
 test("ページに絵文字を含まない（DESIGN.md §5）", () => {
   const { container } = render(<Home />);
   expect(container.textContent ?? "").not.toMatch(/\p{Extended_Pictographic}/u);
 });
 
-// ===== metadata（店構え） =====
+// ===== metadata =====
 
 test("metadata title はサイト名そのもの", () => {
   expect(metadata.title).toBe(SITE_NAME);
 });
 
-test("metadata description は店構え（よろず屋・やってみる）で、ツールを集めたサイトという自己定義ではない", () => {
+test("metadata description はよろず屋として名乗り、ツールを集めたサイトとは言わない", () => {
   const description = metadata.description as string;
   expect(description).toMatch(/よろず屋/);
   expect(description).toMatch(/ためして/);
-  // 「無料のオンラインツールを集めたサイト」型の自己定義ではない
   expect(description).not.toMatch(/ツールを集めたサイト/);
 });
 
-test("OGP / twitter description も店構えで、canonical はサイトルート", () => {
+test("OGP と twitter の description もよろず屋として名乗り、URL はサイトのルート", () => {
   const og = metadata.openGraph as Record<string, unknown>;
   const twitter = metadata.twitter as Record<string, unknown>;
   for (const description of [og.description, twitter.description]) {
@@ -208,9 +189,53 @@ test("canonical はサイトルートで、noindex（robots）が紛れ込んで
   expect(metadata.robots).toBeUndefined();
 });
 
-test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+// ===== ページの割り方と見出しの折り方（DESIGN.md §4・§5） =====
+
+test("ページはセクションを並べ、名乗り・目玉・分野ごとの4つの順に置く", () => {
+  const { container } = render(<Home />);
+  const sections = Array.from(container.children);
+  expect(sections).toHaveLength(6);
+  for (const section of sections) {
+    expect(section.tagName).toBe("SECTION");
+    expect(section).toHaveClass(sectionStyles.section);
+  }
+  expect(
+    within(sections[0] as HTMLElement).getByRole("heading", { level: 1 }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("region", {
+      name: playContentBySlug.get(HERO_SLUG)!.title,
+    }),
+  ).toBe(sections[1]);
+});
+
+test("どの見出しも文節の区切りで組み、auto-phrase に任せない", () => {
   render(<Home />);
-  const headings: string[][] = [["診断・", "占い・", "あそび"]];
+  const headings = screen.getAllByRole("heading");
+  expect(headings).toHaveLength(6);
+  for (const heading of headings) {
+    expect(heading, heading.textContent ?? "").toHaveClass(
+      phrasedStyles.phrased,
+    );
+  }
+});
+
+test("データから作る目玉の見出しは splitIntoPhrases の区切りで折れる", () => {
+  render(<Home />);
+  const title = playContentBySlug.get(HERO_SLUG)!.title;
+  const heading = screen.getByRole("heading", { level: 2, name: title });
+  expect(heading.innerHTML).toBe(splitIntoPhrases(title).join("<wbr>"));
+});
+
+test("手で分けた見出しは、書き手が分けた文節の切れ目でだけ折れる", () => {
+  render(<Home />);
+  const headings: string[][] = [
+    ["yolos.", "net"],
+    ["診断・", "占い・", "あそび"],
+    ["辞典"],
+    ["道具"],
+    ["読みもの"],
+  ];
   for (const phrases of headings) {
     expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
     const heading = screen.getByRole("heading", { name: phrases.join("") });

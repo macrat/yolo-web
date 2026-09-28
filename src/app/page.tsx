@@ -2,29 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { playContentBySlug } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import styles from "./page.module.css";
 
 /**
- * トップページ
+ * トップページ。同じ形の行を並べただけの索引にせず、焦点（目玉）のあるページにする
+ * （site-concept「その場でためして持ち帰れる」）。ページはセクションを上から並べる（DESIGN.md §5 ページの割り方）。
  *
- * 同じ形の行を並べただけの索引にせず、焦点（目玉）のあるページにする。紙・墨・罫と組版だけで
- * 「階層と焦点」を作る（site-concept「その場でためして持ち帰れる」）:
- *
- * 1. 名乗り（compact）: サイト名（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせ、
- *    説明の羅列はしない（具体は目玉と行の一覧が担う）。AI 明示は Footer が常時持つため、
- *    ここは短い一言に留める（§9「AI 運営を正直に、簡潔に示す」）。
- * 2. 目玉（今日のためしどころ・above the fold）: 成長エンジンの「あなたに似たキャラ診断」を
- *    単一の独立した区画（罫で囲う・地は --paper・影/色地/角丸/グラデ/ピルなし・§5）として立てる。
- *    中は誘い（診断名・具体の一言・結果のタイプ数・入口ボタン「やってみる →」44px・ピルなし）。
- * 3. 分野ごとのセクション: 目玉の後ろに、残りの体験・辞典・道具・読みものを、見出しと行の一覧
- *    （ItemList）で並べる。ここはサイトにあるものの幅を示す部分なので、静かに組む。
- *    目玉に立てた診断は一覧から外す（同じページで同一診断を二度立てない）。
- *
- * インライン style は使わない（色・角丸はすべてトークン経由で module.css に置く）。
+ * 1. 名乗り: 主見出しのサイト名と一言、AI が運営していることの明示（§9）。説明を並べず、具体は目玉と一覧が担う。
+ * 2. 目玉（今日のためしどころ）: いちばん多くの来訪者が遊ぶ診断を、セクションの見出しと入口で立てる。
+ * 3. 分野ごとのセクション: 残りの遊び・辞典・道具・読みものを、見出しと行の一覧（ItemList）で並べる。
+ *    サイトにあるものの幅を示す部分なので、静かに組む。目玉に立てた診断は一覧に入れない。
  */
 
 const TOP_DESCRIPTION =
@@ -51,23 +45,19 @@ export const metadata: Metadata = {
 };
 
 /**
- * 目玉（今日のためしどころ）に立てる診断。成長エンジン＝実測集客首位の
- * character-personality をページの焦点にする。名前・遷移先はレジストリ（単一情報源）から
- * 引き、コピーの具体（問数「12」・タイプ数「24」）は診断データの正典値と一致する
- * （page.test.tsx が questionCount / result 数の一致を機械ガードし、乖離を防ぐ）。
+ * 目玉（今日のためしどころ）に立てる診断。名前と遷移先はレジストリから引く。目玉の文に書いた問数「12」と
+ * タイプ数「24」は、診断データの値と一致することを page.test.tsx が確かめる。
  */
 const HERO_SLUG = "character-personality";
 const heroContent: PlayContentMeta | undefined =
   playContentBySlug.get(HERO_SLUG);
 
 /**
- * 「診断・占い・あそび」のセクションに並べる体験の入口。
- * 名前（title）と遷移先（href）はレジストリ（単一情報源）から描画時に引き、ここでは
- * slug と、トップページのために書いた「ひとこと」・補助情報だけを持つ（コピーの重複と乖離を防ぐ）。
+ * 「診断・占い・あそび」のセクションに並べる体験の入口。名前と遷移先はレジストリから描画時に引き、ここでは
+ * slug と、トップページのために書いた一言と補助情報だけを持つ。
  *
- * character-personality は目玉に立てたため、ここからは外す（同一診断を同じページで
- * 二度立てない）。性格・キャラ診断で発見の幅を、contrarian-fortune で占い枠を、
- * nakamawake であそび（毎日更新のパズル）を添え、見出しの言う分野を実体で満たす。全リストは /play。
+ * 性格・キャラの診断で発見の幅を、contrarian-fortune で占いを、nakamawake で毎日更新のパズルを見せ、
+ * 見出しの言う分野を実際の入口で満たす。すべての入口は /play にある。
  */
 const FEATURED_PLAY: { slug: string; description: string; fact?: string }[] = [
   {
@@ -97,10 +87,7 @@ const FEATURED_PLAY: { slug: string; description: string; fact?: string }[] = [
   },
 ];
 
-/**
- * FEATURED_PLAY の slug をレジストリ（単一情報源）で解決し、行の一覧の行に変換する。
- * レジストリに存在しない slug は描画時に静かに脱落させず、ここで除外する（型で保証）。
- */
+/** FEATURED_PLAY の slug をレジストリで解決し、行の一覧の行にする。レジストリに無い slug は並べない。 */
 const featuredPlayItems: ItemListItem[] = FEATURED_PLAY.flatMap((entry) => {
   const content: PlayContentMeta | undefined = playContentBySlug.get(
     entry.slug,
@@ -116,7 +103,7 @@ const featuredPlayItems: ItemListItem[] = FEATURED_PLAY.flatMap((entry) => {
   ];
 });
 
-/** 「辞典」のセクション（参照ではなく引いて使う支え層）。リンク先は実在ルートのみ。 */
+/** 「辞典」のセクション。 */
 const DICTIONARY_ITEMS: ItemListItem[] = [
   {
     name: "漢字辞典",
@@ -140,7 +127,7 @@ const DICTIONARY_ITEMS: ItemListItem[] = [
   },
 ];
 
-/** 「道具」のセクション。代表的な道具の入口。全一覧は /tools。 */
+/** 「道具」のセクション。代表的な道具の入口で、すべての道具は /tools にある。 */
 const TOOL_ITEMS: ItemListItem[] = [
   {
     name: "文字数カウント",
@@ -174,56 +161,56 @@ const READING_ITEMS: ItemListItem[] = [
   },
 ];
 
+/**
+ * サイト名はドメイン名なので、ラベルを区切る「.」の後ろで折る（「yolos.／net」）。1行に入らない狭い画面でも、
+ * 語の途中で割れない。
+ */
+const SITE_NAME_PHRASES = SITE_NAME.split(/(?<=\.)/);
+
+const HERO_HEADING_ID = "hero-heading";
+
 export default function Home() {
   return (
-    <div className={styles.page}>
-      {/* 名乗り（compact）: サイト名（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせる。 */}
-      <div className={styles.intro}>
-        <h1 className={styles.title}>{SITE_NAME}</h1>
-        {/* 一言は文節の塊（span=inline-block）で組み、折り返しを文節境界だけで起こす。
-            「やってみるサイト」「よろず屋です」等が途中で割れると日本語の組版が乱れ信頼を壊す（§4）。 */}
-        <p className={styles.lead}>
-          <span className={styles.phrase}>読むだけのサイトではなく、</span>
-          <span className={styles.phrase}>やってみるサイト。</span>
-          <span className={styles.phrase}>AIが営む、よろず屋です。</span>
-        </p>
-        {/* AI 運営の明示（constitution rule 3・正直の開示であって「実験」を価値として売り込まない）。
-            詳細な注記は Footer が常時表示するため一言に。来訪者に解読を強いない平明な言い方にする。 */}
-        <p className={styles.aiNotice}>
-          運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。
-        </p>
-      </div>
+    <>
+      <Section>
+        <div className={styles.intro}>
+          <PhrasedText as="h1" phrases={SITE_NAME_PHRASES} />
+          <p>
+            <span className={styles.phrase}>読むだけのサイトではなく、</span>
+            <span className={styles.phrase}>やってみるサイト。</span>
+            <span className={styles.phrase}>AIが営む、よろず屋です。</span>
+          </p>
+          <p className={styles.aiNotice}>
+            運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。
+          </p>
+        </div>
+      </Section>
 
-      {/*
-       * 目玉（今日のためしどころ）: 成長エンジンの診断を単一区画で大きく見せる焦点。
-       * 罫で囲った一区画（地は --paper）——影・色地・角丸・ピルなし（§5）。
-       * レジストリ解決に失敗した場合は目玉を出さない（型の安全側・実在は page.test.tsx が保証）。
-       */}
       {heroContent ? (
-        <section className={styles.hero} aria-labelledby="hero-heading">
+        <Section aria-labelledby={HERO_HEADING_ID}>
           <p className={styles.heroKicker}>今日のためしどころ</p>
-          <h2 id="hero-heading" className={styles.heroTitle}>
-            {heroContent.title}
-          </h2>
+          <PhrasedText
+            as="h2"
+            id={HERO_HEADING_ID}
+            className={styles.heroTitle}
+            phrases={splitIntoPhrases(heroContent.title)}
+            {...headingFontAttr(heroContent.title)}
+          />
           <p className={styles.heroLede}>
             12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
           </p>
           <p className={styles.heroFacts}>24タイプ</p>
-          <p className={styles.heroAction}>
-            <Link
-              href={getContentPath(heroContent)}
-              className={styles.heroLink}
-              data-inverted
-            >
-              やってみる →
-            </Link>
-          </p>
-        </section>
+          <Link
+            href={getContentPath(heroContent)}
+            className={styles.heroLink}
+            data-inverted
+          >
+            やってみる →
+          </Link>
+        </Section>
       ) : null}
 
-      {/* 分野ごとのセクション。ここは静かに、サイトにあるものの幅を示す。 */}
-      {/* 診断・占い・あそび（目玉の診断は除く） */}
-      <section className={styles.section}>
+      <Section>
         <PhrasedText
           as="h2"
           id="section-play"
@@ -240,21 +227,25 @@ export default function Home() {
             すべての診断・占い・ゲームを見る
           </Link>
         </p>
-      </section>
+      </Section>
 
-      {/* 辞典（引いて使う支え層） */}
-      <section className={styles.section}>
-        <h2 id="section-dictionary" className={styles.sectionHeading}>
-          辞典
-        </h2>
+      <Section>
+        <PhrasedText
+          as="h2"
+          id="section-dictionary"
+          className={styles.sectionHeading}
+          phrases={["辞典"]}
+        />
         <ItemList labelledBy="section-dictionary" items={DICTIONARY_ITEMS} />
-      </section>
+      </Section>
 
-      {/* 道具（実務の結果） */}
-      <section className={styles.section}>
-        <h2 id="section-tools" className={styles.sectionHeading}>
-          道具
-        </h2>
+      <Section>
+        <PhrasedText
+          as="h2"
+          id="section-tools"
+          className={styles.sectionHeading}
+          phrases={["道具"]}
+        />
         <ItemList labelledBy="section-tools" items={TOOL_ITEMS} />
         <p className={styles.seeAll}>
           <Link
@@ -265,15 +256,17 @@ export default function Home() {
             すべての道具を見る
           </Link>
         </p>
-      </section>
+      </Section>
 
-      {/* 読みもの（ブログ） */}
-      <section className={styles.section}>
-        <h2 id="section-reading" className={styles.sectionHeading}>
-          読みもの
-        </h2>
+      <Section>
+        <PhrasedText
+          as="h2"
+          id="section-reading"
+          className={styles.sectionHeading}
+          phrases={["読みもの"]}
+        />
         <ItemList labelledBy="section-reading" items={READING_ITEMS} />
-      </section>
-    </div>
+      </Section>
+    </>
   );
 }
