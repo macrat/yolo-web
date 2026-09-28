@@ -33,37 +33,26 @@ claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出し�
 
 ## WebKit の折り方を Chromium で近似して測る
 
-コンテナには Chromium しか無いので、WebKit（iOS の Safari）で見出しがどこで折れるかは、Chromium で近似して測る。近似が成り立つのは、見出しを WebKit と Chromium の両方で同じに効く機能（`<wbr>`・`word-break: keep-all`・`overflow-wrap: anywhere`）で組み、字の幅を Web フォント（どちらのエンジンにも同じファイル）が決めるときである。Chromium でしか効かない `word-break: auto-phrase` が効いていると、Chromium だけが辞書で折り、WebKit と違う行になる。
+コンテナには Chromium しか無いので、WebKit（iOS の Safari）で見出しとコントロールの名前がどこで折れるかは、Chromium で近似して測る。測る手順と合否の基準は `frontend-design` スキルの「見出しとコントロールの名前の折り方を測る」にあり、ここには近似が成り立つ前提とスクリプトの書き方の要点を置く。
 
-1. 測る見出しの字の Web フォントの分割ファイルが読み込まれるのを待つ（`document.fonts.load` に見出しの書体の名前（`"Zen Antique"`）と見出しの字を渡して待ち、`document.fonts.check` が真になってから測る）。見出しの要素とその中の計算値の `word-break` が `keep-all` で、`auto-phrase` が効いていないことを確かめる。
-2. 見出しの字を1字ずつ（サロゲートペアの字も1字として、コードポイントごとに）Range で行の位置を取り、行に分ける。行の切れ目を、次の3つに分ける。
-   - **折り所での折れ**: 見出しの中の `<wbr>` の所（文節の切れ目と、最初の文節の中の語の切れ目）か、閉じ括弧の直後。
-   - **文節の中の語の切れ目での折れ**: 折り所でなく、`Intl.Segmenter("ja", { granularity: "word" })` の語の切れ目のうち、次の語が漢字・片仮名・開き括弧で始まり、前の語が数字で終わらない所。
-   - **語の中の折れ**: どちらでもない所。
+近似が成り立つ前提:
 
-   そのうえで、見出しごとに次を数える。
-   - 文節の中で折れた見出し（折り所でない所で折れたもの。あとの2つを合わせる）
-   - 語の中で折れた見出し
-   - 1字だけの行（字が1つだけの行。その字がどの文節の字かは問わない）
-   - 禁則の破れ（行頭に置かない字（閉じ括弧・句読点・！？・…・中点・小書きの仮名・長音符・繰り返し記号（々・ゝ・ヽ など））で始まる行か、開き括弧で終わる行）
-   - 丸括弧の中の折れ（丸括弧で囲んだ一続きの中で折れたもの）
-   - 見出しの幅からのはみ出し
-
-   行の切れ目を決めるのは `<wbr>` と Web フォントの字の幅なので、これを WebKit の近似とする。
-
-3. `<wbr>` を持たず `word-break: auto-phrase` で折れている見出しは、WebKit では `auto-phrase` が効かず `normal` で折れるので、Chromium でその見出しに `word-break: normal` を当てて近似する。
-4. 近似で拾えない差（読み上げ・実機の拡大）は、実機の iOS の Safari で確かめる項目にして残す。
+- 要素を、WebKit と Chromium の両方で同じに効く機能（`<wbr>`・`word-break: keep-all`・`overflow-wrap: anywhere`・`line-break: strict`）で組んでいる。Chromium でしか効かない `word-break: auto-phrase` が効いていると、Chromium だけが辞書で折り、WebKit と違う行になる。
+- 見出しの和文（Zen Antique）と、見出しとコントロールの名前の欧文と数字（IBM Plex Sans）の字の幅は、どちらのエンジンにも同じ Web フォントのファイルが決める。
+- コントロールの名前の和文は本文の書体で組み、端末の書体が字の幅を決める。コンテナの Chromium（`/opt/pw-browsers/chromium-1194`）で本文の並びを組むと、和文は WenQuanYi Zen Hei に落ち（`fc-match "sans-serif:lang=ja"`）、16px で仮名が 16.4px、漢字と約物が 16.0px になる。iOS のヒラギノも和文をほぼ全角で組むので字の幅は近く、コンテナのほうがわずかに広いので、折れを多めに数える側の近似になる。
 
 書き方の要点:
 
-- 字の分割ファイルは、ページにその字が出てもすぐには読まれない。`document.fonts.ready` は読み込みが始まっていない字を待たないので、`document.fonts.load` に字を渡して読み込みを始めさせる。待ちは上の「無限待機」の決まりどおり、タイムアウトと競わせる（例 `Promise.race([document.fonts.load('400 24px "Zen Antique"', text), new Promise((r) => setTimeout(r, 5000))])`）。そのあと `document.fonts.check` が偽なら、その見出しは測らずに、測れなかったことを記録する。
-- 行に分けるのは、見出しの中のテキストノードを順に辿り、字ごとに `range.setStart(node, i); range.setEnd(node, i + ch.length)` とした `range.getClientRects()` の最初の矩形の `top` を読む。字は `for (const ch of node.data)` でコードポイントごとに取り、UTF-16 の位置 `i` を `ch.length` ずつ足す。`i + 1` で進めると、サロゲートペアの字（「𠮟」など）の半分の矩形を読み、行の切れ目を誤る。`top` が前の字より行の高さの半分以上下がった所が、行の切れ目である。`<wbr>` の要素は字を持たないので、行の位置を読むのはテキストノードだけでよい。
-- 折り所のうち `<wbr>` の所は、見出しの子を順に辿り、`<wbr>` の要素を見たら、次のテキストノードの頭を折り所として控えて分ける。閉じ括弧の直後は、`keep-all` でも Unicode の改行の規則で折れる所なので、`<wbr>` が無くても折り所に数える。
+- 字の分割ファイルは、ページにその字が出てもすぐには読まれない。`document.fonts.ready` は読み込みが始まっていない字を待たないので、`document.fonts.load` に字を渡して読み込みを始めさせる。待ちは上の「無限待機」の決まりどおり、タイムアウトと競わせる（例 `Promise.race([document.fonts.load('400 24px "Zen Antique"', text), new Promise((r) => setTimeout(r, 5000))])`）。IBM Plex Sans も同じく、`document.fonts.load('400 16px "IBM Plex Sans"', text)` で要素の欧文と数字を渡して待つ。そのあと `document.fonts.check` が偽なら、その要素は測らずに、測れなかったことを記録する。
+- 行に分けるのは、要素の中のテキストノードを順に辿り、字ごとに `range.setStart(node, i); range.setEnd(node, i + ch.length)` とした `range.getClientRects()` の最初の矩形の `top` を読む。字は `for (const ch of node.data)` でコードポイントごとに取り、UTF-16 の位置 `i` を `ch.length` ずつ足す。`i + 1` で進めると、サロゲートペアの字（「𠮟」など）の半分の矩形を読み、行の切れ目を誤る。`top` が前の字より行の高さの半分以上下がった所が、行の切れ目である。`<wbr>` の要素は字を持たないので、行の位置を読むのはテキストノードだけでよい。
+- 折り所のうち `<wbr>` の所は、要素の子を順に辿り、`<wbr>` の要素を見たら、次のテキストノードの頭を折り所として控えて分ける。閉じ括弧の直後は、`keep-all` でも Unicode の改行の規則で折れる所なので、`<wbr>` が無くても折り所に数える。
 - 1字だけの行は、行に分けたあとの字の数（コードポイントの数）が1の行である。区切りの関数が最後の1字の文節を前につないでも、文節の中の折れで1字の行が出ることがあるので、文節でなく行の字で数える。
-- 丸括弧の中の折れは、見出しの頭から丸括弧の開きと閉じを数え、開いたままの所にある行の切れ目である。
-- はみ出しは、見出しの要素の `scrollWidth` が `clientWidth` を超えるか、行の矩形の右端が見出しの右端を超えるかで見る。
-- 読み上げの名前は、CDP の `Accessibility.getFullAXTree` で見出しの名前を読み、元の文と比べる。Chromium は `<wbr>` ごとに名前へ空白を1つ入れる（`locator.ariaSnapshot()` は空白をまとめて見せるので、この差が見えない）。
-- 「200%」は CDP の `Page.setFontSizes` で既定の文字サイズを 32px にして作る（上の節）。
+- 丸括弧の中の折れは、要素の頭から丸括弧の開きと閉じを数え、開いたままの所にある行の切れ目である。
+- はみ出しは、要素の `scrollWidth` が `clientWidth` を超えるか、行の矩形の右端が要素の右端を超えるかで見る。
+- 名前に括弧で数を添えたものの折れは、行の切れ目のうち、名前の中の語の切れ目（`Intl.Segmenter` の語の境目）と始め括弧の直前のどちらでもない所を数える。
+- `line-break` は、要素の `getComputedStyle(el).lineBreak` を読む。
+- 読み上げの名前は、CDP の `Accessibility.getFullAXTree` で要素の名前を読み、元の文と比べる。Chromium は `<wbr>` ごとに名前へ空白を1つ入れる（`locator.ariaSnapshot()` は空白をまとめて見せるので、この差が見えない）。
+- 「200%」は既定の文字サイズを 32px にして作る（作り方と `Page.setFontSizes` の注意は上の節）。
 
 ## 本番ビルドの実機検証の段取り
 
