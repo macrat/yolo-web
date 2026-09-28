@@ -6,7 +6,6 @@ import {
   loadHistory,
   saveHistory,
   loadTodayGame,
-  saveTodayGame,
 } from "../storage";
 import type {
   YojiGameStats,
@@ -428,97 +427,5 @@ describe("loadTodayGame", () => {
     expect(game).not.toBeNull();
     expect(game!.status).toBe("won");
     expect(game!.guessCount).toBe(2);
-  });
-});
-
-describe("saveTodayGame", () => {
-  test("saves a new game record with difficulty", () => {
-    saveTodayGame(
-      "2026-03-01",
-      {
-        guesses: ["一期一会"],
-        status: "won",
-        guessCount: 1,
-      },
-      "beginner",
-    );
-    const history = loadHistory("beginner");
-    expect(history["2026-03-01"]).toEqual({
-      guesses: ["一期一会"],
-      status: "won",
-      guessCount: 1,
-    });
-  });
-
-  test("saves game record with feedbacks", () => {
-    const feedbacks: YojiGuessFeedback[] = [
-      {
-        guess: "一期一会",
-        charFeedbacks: ["correct", "correct", "correct", "correct"],
-      },
-    ];
-    saveTodayGame(
-      "2026-03-01",
-      {
-        guesses: ["一期一会"],
-        feedbacks,
-        status: "won",
-        guessCount: 1,
-      },
-      "beginner",
-    );
-    const history = loadHistory("beginner");
-    expect(history["2026-03-01"]!.feedbacks).toEqual(feedbacks);
-  });
-
-  test("preserves existing game records within same difficulty", () => {
-    saveTodayGame(
-      "2026-03-01",
-      {
-        guesses: ["一期一会"],
-        status: "won",
-        guessCount: 1,
-      },
-      "intermediate",
-    );
-    saveTodayGame(
-      "2026-03-02",
-      {
-        guesses: ["花鳥風月", "切磋琢磨"],
-        status: "won",
-        guessCount: 2,
-      },
-      "intermediate",
-    );
-    const history = loadHistory("intermediate");
-    expect(Object.keys(history)).toHaveLength(2);
-    expect(history["2026-03-01"]).toBeDefined();
-    expect(history["2026-03-02"]).toBeDefined();
-  });
-
-  test("different difficulties maintain separate histories", () => {
-    saveTodayGame(
-      "2026-03-01",
-      {
-        guesses: ["一期一会"],
-        status: "won",
-        guessCount: 1,
-      },
-      "beginner",
-    );
-    saveTodayGame(
-      "2026-03-01",
-      {
-        guesses: ["花鳥風月", "切磋琢磨"],
-        status: "won",
-        guessCount: 2,
-      },
-      "advanced",
-    );
-
-    const beginnerHistory = loadHistory("beginner");
-    const advancedHistory = loadHistory("advanced");
-    expect(beginnerHistory["2026-03-01"]!.guessCount).toBe(1);
-    expect(advancedHistory["2026-03-01"]!.guessCount).toBe(2);
   });
 });

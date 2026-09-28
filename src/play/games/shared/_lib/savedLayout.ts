@@ -47,9 +47,11 @@ interface SavedLayoutBaseOptions {
   /**
    * 回の記録のキー。難易度を選べるゲームでは、難易度ごとの記録のキーの頭（キーは頭と難易度をつないだもの）。
    * 難易度の無いゲームでは、記録のキーそのもの。記録は日付（"YYYY-MM-DD"）ごとの回を持ち、回は status
-   * （"playing"・"won"・"lost"）を持つ。
+   * （"playing" と、解き終えた回の finishedStatuses）を持つ。
    */
   historyKeyPrefix: string;
+  /** 推測の行を積まないゲームで、解き終えた回の status（既定: "won" と "lost"）。 */
+  finishedStatuses?: string[];
   /**
    * 解き終えた回の結果の区画。入力欄を見せない値と、前に同じ日・同じ難易度・同じ画面の幅と字の大きさで描いた
    * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。
@@ -65,20 +67,33 @@ interface SavedLayoutBaseOptions {
    * 最後の値）。
    */
   byRecordLength?: { field: string; property: string; values: string[] }[];
+  /**
+   * 前に同じ日・同じ難易度・同じ画面の幅と字の大きさで描いたときの高さ（saveResultHeight が storageKey に
+   * 覚えたもの）を書く区画。文字を大きくしたときに行が折り返して高さが行の数で決まらない区画（四字キメルの
+   * ヒントの帯など）で、描いた高さをそのまま取っておく。遊んでいる回でも解き終えた回でも書く。
+   */
+  rememberedHeights?: { property: string; storageKey: string }[];
 }
 
 /**
  * 推測の行を盤に積むゲームの値。回の記録が推測の判定の並び（feedbacks）を持つゲームで、3つをそろえて渡す。
  * 渡すと、推測が1つも無い回には何も書かず、送れる数に届かない「lost」の回は途中の回として扱う。渡さない
- * ゲームでは、status が "won" か "lost" の回を解き終えた回とし、結果の区画の値だけを書く。
+ * ゲームでは、status が finishedStatuses のどれかの回を解き終えた回とし、結果の区画の値だけを書く。
  */
 interface GuessRowsOptions {
   /** 1回に送れる推測の数。 */
   maxGuesses: number;
   /** 盤の行の数（遊んでいる回は次の推測を入れる行を含む）を書く値の名前。 */
   boardRowsProperty: string;
-  /** 推測の回数で決まる値（四字キメルのヒントの帯の行の数など）。values[推測の回数] を書く。 */
-  byGuessCount?: { property: string; values: readonly number[] }[];
+  /**
+   * 推測の回数で決まる値（四字キメルのヒントの帯の行の数など）。values[推測の回数] を書く。解き終えた回で値が
+   * 違うものは、finishedValues[推測の回数] を書く。
+   */
+  byGuessCount?: {
+    property: string;
+    values: readonly number[];
+    finishedValues?: readonly number[];
+  }[];
 }
 
 /** 結果の区画の高さの記録。同じ日・同じ難易度・同じ画面の幅と字の大きさのときだけ使う。 */
@@ -103,6 +118,10 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
   let today: string;
   let difficulty = "";
   let resultHeight: Partial<ResultHeightRecord> | null = null;
+  const remembered: {
+    property: string;
+    record: Partial<ResultHeightRecord> | null;
+  }[] = [];
   try {
     if (options.difficultyKey !== undefined) {
       const saved = localStorage.getItem(options.difficultyKey);
@@ -124,6 +143,14 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
         localStorage.getItem(options.resultArea.storageKey) ?? "null",
       ) as Partial<ResultHeightRecord> | null;
     }
+    for (const { property, storageKey } of options.rememberedHeights ?? []) {
+      remembered.push({
+        property,
+        record: JSON.parse(
+          localStorage.getItem(storageKey) ?? "null",
+        ) as Partial<ResultHeightRecord> | null,
+      });
+    }
   } catch {
     return;
   }
@@ -141,11 +168,17 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
     values.push(
       `${options.boardRowsProperty}:${guessCount + (finished ? 0 : 1)}`,
     );
-    for (const { property, values: byCount } of options.byGuessCount ?? []) {
-      values.push(`${property}:${byCount[guessCount]}`);
+    for (const {
+      property,
+      values: byCount,
+      finishedValues,
+    } of options.byGuessCount ?? []) {
+      const byCountNow = finished && finishedValues ? finishedValues : byCount;
+      values.push(`${property}:${byCountNow[guessCount]}`);
     }
   } else {
-    finished = entry?.status === "won" || entry?.status === "lost";
+    const finishedStatuses = options.finishedStatuses ?? ["won", "lost"];
+    finished = finishedStatuses.indexOf(String(entry?.status)) !== -1;
   }
   for (const { field, propertyPrefix, value } of options.byRecordItem ?? []) {
     const items = entry?.[field];
@@ -160,19 +193,23 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
       `${property}:${byLength[Math.min(items.length, byLength.length - 1)]}`,
     );
   }
+  // 覚えた高さは、同じ日・同じ難易度・同じ画面の幅と字の大きさで描いたときのものだけを使う。
+  const fontSize = getComputedStyle(document.documentElement).fontSize;
+  const matches = (record: Partial<ResultHeightRecord> | null): boolean =>
+    record !== null &&
+    record.date === today &&
+    record.difficulty === difficulty &&
+    record.viewportWidth === window.innerWidth &&
+    record.fontSize === fontSize &&
+    typeof record.height === "number";
+  for (const { property, record } of remembered) {
+    if (matches(record)) values.push(`${property}:${record!.height}px`);
+  }
   if (finished && options.resultArea) {
     values.push(`${options.resultArea.inputVisibilityProperty}:hidden`);
-    if (
-      resultHeight &&
-      resultHeight.date === today &&
-      resultHeight.difficulty === difficulty &&
-      resultHeight.viewportWidth === window.innerWidth &&
-      resultHeight.fontSize ===
-        getComputedStyle(document.documentElement).fontSize &&
-      typeof resultHeight.height === "number"
-    ) {
+    if (matches(resultHeight)) {
       values.push(
-        `${options.resultArea.heightProperty}:${resultHeight.height}px`,
+        `${options.resultArea.heightProperty}:${resultHeight!.height}px`,
       );
     }
   }
@@ -185,7 +222,9 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
 
 /** サーバーの HTML で本体の前に置くスクリプトの文。 */
 export function savedLayoutScript(options: SavedLayoutOptions): string {
-  return `(${reserveSavedLayout.toString()})(${JSON.stringify(options)})`;
+  // 設定の文字列に「</script>」があってもスクリプトを閉じないよう、「<」を JSON の書き方（\u003c）で書く。
+  const json = JSON.stringify(options).replace(/</g, "\\u003c");
+  return `(${reserveSavedLayout.toString()})(${json})`;
 }
 
 /** 本体の前のスクリプトが取っておいた場所を外す。 */
@@ -194,7 +233,8 @@ export function releaseSavedLayout(styleId: string): void {
 }
 
 /**
- * 解き終えた回の結果の区画の高さを覚えておく。開き直したとき、本体の前のスクリプトがこの高さを取っておく。
+ * 描いた区画の高さを覚えておく（解き終えた回の結果の区画・rememberedHeights の区画）。開き直したとき、本体の前の
+ * スクリプトがこの高さを取っておく。
  * 高さは画面の幅と字の大きさで変わるので、その2つも一緒に覚え、同じときだけ使う。
  */
 export function saveResultHeight(

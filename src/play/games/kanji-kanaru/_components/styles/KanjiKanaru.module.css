@@ -223,8 +223,11 @@
   word-break: keep-all;
 }
 
+/* 見出しの列の幅は、太字の4字（字の幅が 1em を少し超える）と右の余白で決め、表の幅が足りなくても縮めない。
+ * どの表の見出しの列も同じ幅になり、2つの表で値の始まりがそろう。 */
 .resultTable th {
-  width: 4em;
+  width: calc(4.1em + var(--space-8));
+  min-width: calc(4.1em + var(--space-8));
 }
 
 /* 数と単位（「8日」「88%」）は離さない（§8）。 */

@@ -23,6 +23,7 @@ describe("ReservedResultArea", () => {
     );
     const content = screen.getByText("入力欄").parentElement!;
     expect(content.className).toMatch(/waiting/);
+    expect(content.parentElement!.className).toMatch(/waitingArea/);
     // 部品の CSS が読む決まった名前の値に、このゲームの値の名前を写す。
     const style = content.parentElement!.getAttribute("style");
     expect(style).toContain(
@@ -43,7 +44,10 @@ describe("ReservedResultArea", () => {
         <p>結果</p>
       </ReservedResultArea>,
     );
-    expect(screen.getByText("結果").parentElement!.className).toBe("");
+    const content = screen.getByText("結果").parentElement!;
+    expect(content.className).toBe("");
+    // 結果が出たら、取っておいた高さを使わない（覚えた高さと合わなくても、結果の下に空きを残さない）。
+    expect(content.parentElement!.className).toBe("");
     const saved = JSON.parse(localStorage.getItem(NAMES.storageKey)!);
     expect(saved).toMatchObject({
       date: "2026-09-27",

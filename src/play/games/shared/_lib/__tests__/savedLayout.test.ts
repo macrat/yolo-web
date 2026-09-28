@@ -163,6 +163,22 @@ describe("reserveSavedLayout", () => {
     expect(reserve(NAKAMA)).toBe(":root{--game-input-visibility:hidden}");
   });
 
+  test("a game with its own finished status reserves the result area only for that status", () => {
+    const IRODORI: SavedLayoutOptions = {
+      ...NAKAMA,
+      finishedStatuses: ["completed"],
+    };
+    saveTodayWithoutDifficulty("playing");
+    expect(reserve(IRODORI)).toBeNull();
+    saveTodayWithoutDifficulty("won");
+    expect(reserve(IRODORI)).toBeNull();
+    saveTodayWithoutDifficulty("completed");
+    saveResultHeight("game-result-height", today, "", 1320);
+    expect(reserve(IRODORI)).toBe(
+      ":root{--game-input-visibility:hidden;--game-result-height:1320px}",
+    );
+  });
+
   test("writes a value for each item of a list in the record", () => {
     const options: SavedLayoutOptions = {
       ...NAKAMA,
@@ -200,5 +216,51 @@ describe("reserveSavedLayout", () => {
     expect(document.getElementById(STYLE_ID)?.textContent).toBe(
       ":root{--board-rows:4;--hint-lines:3}",
     );
+  });
+
+  test("writes a remembered height measured on the same day, difficulty and screen, playing or finished", () => {
+    const options: SavedLayoutOptions = {
+      styleId: STYLE_ID,
+      difficultyKey: "game-difficulty",
+      historyKeyPrefix: "game-history-",
+      maxGuesses: 6,
+      boardRowsProperty: "--board-rows",
+      rememberedHeights: [
+        { property: "--hint-height", storageKey: "game-hint-height" },
+      ],
+    };
+    saveToday("intermediate", 3, "playing");
+    saveResultHeight("game-hint-height", today, "intermediate", 99.2);
+    expect(reserve(options)).toBe(":root{--board-rows:4;--hint-height:100px}");
+    saveResultHeight("game-hint-height", "2000-01-01", "intermediate", 99);
+    expect(reserve(options)).toBe(":root{--board-rows:4}");
+  });
+
+  test("uses the finished values by guess count for a finished game", () => {
+    const options: SavedLayoutOptions = {
+      ...YOJI,
+      byGuessCount: [
+        {
+          property: "--hint-lines",
+          values: [2, 2, 2, 3, 4, 4, 4],
+          finishedValues: [1, 1, 1, 2, 3, 4, 4],
+        },
+      ],
+    };
+    saveToday("intermediate", 3, "won");
+    expect(reserve(options)).toBe(":root{--board-rows:3;--hint-lines:2}");
+  });
+
+  test("the script cannot close its <script> element, whatever the strings hold", () => {
+    const script = savedLayoutScript({
+      ...YOJI,
+      styleId: "</script><script>alert(1)</script>",
+    });
+    expect(script).not.toContain("<");
+    saveToday("intermediate", 3, "playing");
+    new Function(script)();
+    expect(
+      document.getElementById("</script><script>alert(1)</script>"),
+    ).not.toBeNull();
   });
 });

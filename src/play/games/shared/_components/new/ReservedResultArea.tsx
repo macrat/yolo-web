@@ -25,8 +25,8 @@ interface ReservedResultAreaProps {
  * 入力欄か、解き終えたらその場所に替わる結果の区画（DESIGN.md §8「結果は、それを生んだ操作の直後」）。
  *
  * 解き終えた回を開き直したときは、本体の前のスクリプト（savedLayoutScript）が書いた値で、前に同じ画面で描いた
- * 結果の区画の高さを取っておき、読み込むあいだは入力欄を見せない。結果を出しているあいだは、その高さを覚えて
- * おく。結果の中の案内が端末の記録を読んであとから出ても、覚えるのは出たあとの高さである。
+ * 結果の区画の高さを、結果が出るまで取っておき、読み込むあいだは入力欄を見せない。結果が出たら取っておくのを
+ * やめ、結果の高さのままにする。結果を出しているあいだは、その高さを覚えておく。
  */
 export default function ReservedResultArea({
   names,
@@ -40,13 +40,16 @@ export default function ReservedResultArea({
   useEffect(() => {
     const content = contentRef.current;
     if (!showsResult || !content) return;
-    const save = () =>
+    const save = () => {
+      // ページを離れるときに外された区画は高さ0を返す。それを覚えると、戻ったときに場所を取っておけない。
+      if (!content.isConnected) return;
       saveResultHeight(
         names.storageKey,
         date,
         difficulty,
         content.getBoundingClientRect().height,
       );
+    };
     save();
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(save);
@@ -61,7 +64,10 @@ export default function ReservedResultArea({
   } as CSSProperties;
 
   return (
-    <div className={styles.area} style={reserved}>
+    <div
+      className={showsResult ? undefined : styles.waitingArea}
+      style={reserved}
+    >
       <div
         ref={contentRef}
         className={showsResult ? undefined : styles.waiting}

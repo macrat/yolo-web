@@ -62,7 +62,8 @@ export default function GuessInput({
       setUnavailable(true);
     } else {
       setError(null);
-      setValue("");
+      // 判定を待つあいだに次の字を打ち始めていたら、それを消さない。送った字のままのときだけ空にする。
+      setValue((current) => (current.trim() === trimmed ? "" : current));
     }
     inputRef.current?.focus();
   }, [value, onSubmit, submitting, loading]);

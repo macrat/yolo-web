@@ -205,19 +205,6 @@ export function loadTodayGame(
 }
 
 /**
- * Save today's game record into history for a given difficulty.
- */
-export function saveTodayGame(
-  date: string,
-  game: YojiGameHistory[string],
-  difficulty: Difficulty,
-): void {
-  const history = loadHistory(difficulty);
-  history[date] = game;
-  saveHistory(history, difficulty);
-}
-
-/**
  * 来訪者が選んだ難易度。記録が無いか読めないときは中級。
  */
 export function loadDifficulty(): Difficulty {

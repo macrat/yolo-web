@@ -36,7 +36,10 @@ import {
 import {
   releaseSavedLayout,
   resultAreaNames,
+  saveResultHeight,
+  reserveSavedLayout,
   savedLayoutScript,
+  type SavedLayoutOptions,
 } from "@/play/games/shared/_lib/savedLayout";
 import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
 import type { ItemListItem } from "@/components/ItemList";
@@ -60,9 +63,10 @@ const LOAD_FAILED_MESSAGE =
 
 const SAVED_LAYOUT_STYLE_ID = "yoji-kimeru-saved-rows";
 const RESULT_AREA = resultAreaNames("yoji-kimeru");
+const HINT_HEIGHT_KEY = "yoji-kimeru-hint-height";
 
-/** サーバーの HTML で本体の前に置き、端末に記録した今日の回の行と結果の区画の高さを、本体を描く前に取っておく。 */
-const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
+/** 端末に記録した今日の回の行と結果の区画の高さを、本体を描く前に取っておくための設定。 */
+const SAVED_LAYOUT_OPTIONS: SavedLayoutOptions = {
   styleId: SAVED_LAYOUT_STYLE_ID,
   difficultyKey: DIFFICULTY_KEY,
   historyKeyPrefix: HISTORY_KEY_PREFIX,
@@ -74,10 +78,20 @@ const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
       values: Array.from({ length: MAX_GUESSES + 1 }, (_, count) =>
         hintLineCount(count),
       ),
+      finishedValues: Array.from({ length: MAX_GUESSES + 1 }, (_, count) =>
+        hintLineCount(count, true),
+      ),
     },
   ],
+  // 文字を大きくするとヒントの行が折り返し、高さが行の数で決まらないので、前に描いた高さも取っておく。
+  rememberedHeights: [
+    { property: "--yoji-kimeru-hint-height", storageKey: HINT_HEIGHT_KEY },
+  ],
   resultArea: RESULT_AREA,
-});
+};
+
+/** サーバーの HTML で本体の前に置くスクリプト。 */
+const SAVED_LAYOUT_SCRIPT = savedLayoutScript(SAVED_LAYOUT_OPTIONS);
 
 /**
  * 問題の手がかり（読み・分類・出典・難しさ）をサーバーから受け取る。答えの四字熟語は含まれない。
@@ -195,7 +209,19 @@ export default function GameContainer({
   const [resultAppears, setResultAppears] = useState(false);
 
   const isServerRendered = useIsServerRendered();
+  // サイトの中のリンクで移ってきたときや戻ってきたときは、ブラウザで新しく描くので本体の前のスクリプトが動かない。
+  // 最初の描画の前にここで同じ値を書き、ブラウザが戻す送りの位置に、開き直したときと同じ中身が来るようにする。
+  useState(() => {
+    if (!isServerRendered) {
+      releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
+      reserveSavedLayout(SAVED_LAYOUT_OPTIONS);
+    }
+    return null;
+  });
+  // ほかのページへ移ったら、取っておいた値を残さない。
+  useEffect(() => () => releaseSavedLayout(SAVED_LAYOUT_STYLE_ID), []);
   const fieldRef = useRef<HTMLInputElement>(null);
+  const hintStripRef = useRef<HTMLDivElement>(null);
   /** 推測が盤に加わったあと、入力欄が画面の外なら画面に入れる。 */
   const revealFieldRef = useRef(false);
 
@@ -278,6 +304,27 @@ export default function GameContainer({
       releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
     }
   }, [loading, gameState.status]);
+
+  // 読み込んだあとのヒントの帯の高さを覚えておく。開き直したとき、本体の前のスクリプトがこの高さを取っておく。
+  useEffect(() => {
+    const strip = hintStripRef.current;
+    if (loading || !strip) return;
+    const save = () => {
+      // ページを離れるときに外された帯は高さ0を返すので、覚えない。
+      if (!strip.isConnected) return;
+      saveResultHeight(
+        HINT_HEIGHT_KEY,
+        todayStr,
+        difficulty,
+        strip.getBoundingClientRect().height,
+      );
+    };
+    save();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(save);
+    observer.observe(strip);
+    return () => observer.disconnect();
+  }, [loading, todayStr, difficulty]);
 
   // 送った推測も、判定を待たずに1回として数える（盤の行・ヒント・残りの回数）。
   const guessCount = gameState.guesses.length + (pendingGuess === null ? 0 : 1);
@@ -405,7 +452,12 @@ export default function GameContainer({
         />
       )}
       <div className={styles.game}>
-        <HintBar guessCount={guessCount} hint={loading ? null : puzzleData} />
+        <HintBar
+          guessCount={guessCount}
+          hint={loading ? null : puzzleData}
+          finished={!loading && gameState.status !== "playing"}
+          stripRef={hintStripRef}
+        />
         <GameBoard
           guesses={gameState.guesses}
           pendingGuess={pendingGuess}

@@ -119,6 +119,27 @@ describe("GameContainer", () => {
     ).not.toBeInTheDocument();
   });
 
+  test("a character typed while the judgment is pending stays in the field when the judgment returns", async () => {
+    let respond: (response: Response) => void = () => {};
+    mockApi(
+      false,
+      () =>
+        new Promise<Response>((resolve) => {
+          respond = resolve;
+        }),
+    );
+    render(<GameContainer crossCategoryItems={[]} />);
+    const input = await screen.findByRole("textbox");
+    await waitFor(() => expect(input).toBeEnabled());
+    fireEvent.change(input, { target: { value: "川" } });
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+    await screen.findByRole("cell", { name: "部首: 判定しています" });
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "林" } });
+    respond(Response.json({ feedback: MISS, isCorrect: false }));
+    await screen.findByRole("cell", { name: "部首: 不一致" });
+    expect(screen.getByRole("textbox")).toHaveValue("林");
+  });
+
   test("a failed evaluation takes the waiting row away and leaves the character in the field", async () => {
     mockApi(false, () => Promise.resolve(new Response(null, { status: 500 })));
     render(<GameContainer crossCategoryItems={[]} />);
@@ -148,6 +169,45 @@ describe("GameContainer", () => {
     expect(screen.getByText("1回目で当てました。")).toBeInTheDocument();
     expect(trackContentEnd).toHaveBeenCalledTimes(1);
     expect(trackContentEnd).toHaveBeenCalledWith("kanji-kanaru", "game", true);
+  });
+
+  test("mounted in the browser (a link inside the site), it reserves the saved day before the first render and releases it on leaving", () => {
+    mockApi(true);
+    const today = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+    localStorage.setItem(
+      "kanji-kanaru-history-intermediate",
+      JSON.stringify({
+        [today]: {
+          guesses: ["川"],
+          feedbacks: [MISS],
+          status: "won",
+          guessCount: 1,
+        },
+      }),
+    );
+    let styleAtFirstRender: string | null = null;
+    function Probe() {
+      styleAtFirstRender ??=
+        document.getElementById("kanji-kanaru-saved-layout")?.textContent ?? "";
+      return null;
+    }
+    const { unmount } = render(
+      <>
+        <GameContainer crossCategoryItems={[]} />
+        <Probe />
+      </>,
+    );
+    expect(styleAtFirstRender).toContain("--kanji-kanaru-board-rows:1");
+    expect(styleAtFirstRender).toContain(
+      "--kanji-kanaru-input-visibility:hidden",
+    );
+    unmount();
+    expect(document.getElementById("kanji-kanaru-saved-layout")).toBeNull();
   });
 
   test("reopening a finished game shows the result without sending the game end again", async () => {

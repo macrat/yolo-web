@@ -35,7 +35,9 @@ import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
 import {
   releaseSavedLayout,
   resultAreaNames,
+  reserveSavedLayout,
   savedLayoutScript,
+  type SavedLayoutOptions,
 } from "@/play/games/shared/_lib/savedLayout";
 import ReservedResultArea from "@/play/games/shared/_components/new/ReservedResultArea";
 import type { ItemListItem } from "@/components/ItemList";
@@ -60,15 +62,18 @@ const INIT_FAILED_MESSAGE =
 const SAVED_LAYOUT_STYLE_ID = "kanji-kanaru-saved-layout";
 const RESULT_AREA = resultAreaNames("kanji-kanaru");
 
-/** サーバーの HTML で本体の前に置き、端末に記録した今日の回の行と結果の区画の高さを、本体を描く前に取っておく。 */
-const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
+/** 端末に記録した今日の回の行と結果の区画の高さを、本体を描く前に取っておくための設定。 */
+const SAVED_LAYOUT_OPTIONS: SavedLayoutOptions = {
   styleId: SAVED_LAYOUT_STYLE_ID,
   difficultyKey: DIFFICULTY_KEY,
   historyKeyPrefix: HISTORY_KEY_PREFIX,
   maxGuesses: MAX_GUESSES,
   boardRowsProperty: "--kanji-kanaru-board-rows",
   resultArea: RESULT_AREA,
-});
+};
+
+/** サーバーの HTML で本体の前に置くスクリプト。 */
+const SAVED_LAYOUT_SCRIPT = savedLayoutScript(SAVED_LAYOUT_OPTIONS);
 
 /**
  * Load the saved difficulty from localStorage, defaulting to intermediate.
@@ -179,6 +184,17 @@ export default function GameContainer({
   const [pendingGuess, setPendingGuess] = useState<string | null>(null);
 
   const isServerRendered = useIsServerRendered();
+  // サイトの中のリンクで移ってきたときや戻ってきたときは、ブラウザで新しく描くので本体の前のスクリプトが動かない。
+  // 最初の描画の前にここで同じ値を書き、ブラウザが戻す送りの位置に、開き直したときと同じ中身が来るようにする。
+  useState(() => {
+    if (!isServerRendered) {
+      releaseSavedLayout(SAVED_LAYOUT_STYLE_ID);
+      reserveSavedLayout(SAVED_LAYOUT_OPTIONS);
+    }
+    return null;
+  });
+  // ほかのページへ移ったら、取っておいた値を残さない。
+  useEffect(() => () => releaseSavedLayout(SAVED_LAYOUT_STYLE_ID), []);
 
   const inputRowRef = useRef<HTMLDivElement>(null);
   const resultBoxRef = useRef<HTMLElement>(null);
