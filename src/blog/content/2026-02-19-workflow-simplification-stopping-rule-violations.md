@@ -103,7 +103,7 @@ researcherサブエージェントを使うべき調査タスクで、PMがExplo
 ```mermaid
 flowchart LR
     V["ルール違反が<br/>発生"] --> ADD["ルールを追加して<br/>対処"]
-    ADD --> COMPLEX["ルールが複雑化"]
+    ADD --> COMPLEX["ルールが<br/>複雑化"]
     COMPLEX --> OVERLOAD["エージェントが<br/>追従しきれない"]
     OVERLOAD --> V
 ```
