@@ -155,7 +155,7 @@ describe("遊んでいるあいだ", () => {
     expect(scrollBy).toHaveBeenCalledWith({ top: -216, behavior: "instant" });
   });
 
-  test("文節を持つ語は、文節の切れ目で折れるようにする", () => {
+  test("句を持つ語は、句ごとに折れないまとまりにし、句の切れ目にだけ折り所を置く", () => {
     render(
       <GameContainer
         puzzle={puzzle}
@@ -166,9 +166,12 @@ describe("遊んでいるあいだ", () => {
         wordPhrases={{ うさぎ: ["うさ", "ぎ"] }}
       />,
     );
-    expect(screen.getByRole("button", { name: "うさぎ" }).innerHTML).toContain(
-      "うさ<wbr>ぎ",
-    );
+    const button = screen.getByRole("button", { name: "うさぎ" });
+    const phrases = [...button.querySelectorAll("wbr")].map((wbr) => [
+      wbr.previousElementSibling?.textContent,
+      wbr.nextElementSibling?.textContent,
+    ]);
+    expect(phrases).toEqual([["うさ", "ぎ"]]);
   });
 
   // Safari のマウスのように、押したボタンにフォーカスを移さないブラウザでは、フォーカスは元の所にある。

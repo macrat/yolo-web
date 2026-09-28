@@ -18,7 +18,7 @@ interface Props {
 }
 
 /**
- * まだ組になっていない語の格子。語を押して選び、選んだかどうかは語の上の四角の塗りで示す
+ * まだ組になっていない語の格子。語を押して選び、選んだかどうかは語に添えた四角の塗りで示す
  * （DESIGN.md §6 チェックボックスと同じ形）。列の数は、その列の数のときにマスの中で語の字が使える幅で決める
  * （WordGrid.module.css）。
  */
@@ -43,11 +43,7 @@ export default function WordGrid({
             {words.map((word) => (
               <button
                 key={word}
-                className={
-                  wordPhrases[word]
-                    ? `${styles.wordButton} ${styles.phrased}`
-                    : styles.wordButton
-                }
+                className={styles.wordButton}
                 data-thick-frame
                 style={reservedDisplay && { display: reservedDisplay(word) }}
                 onClick={() => onWordToggle(word)}
@@ -56,14 +52,16 @@ export default function WordGrid({
                 type="button"
               >
                 <span className={styles.mark} aria-hidden="true" />
-                {wordPhrases[word]
-                  ? wordPhrases[word].map((phrase, index) => (
-                      <Fragment key={index}>
-                        {index > 0 && <wbr />}
-                        {phrase}
-                      </Fragment>
-                    ))
-                  : word}
+                <span>
+                  {wordPhrases[word]
+                    ? wordPhrases[word].map((phrase, index) => (
+                        <Fragment key={index}>
+                          {index > 0 && <wbr />}
+                          <span className={styles.phrase}>{phrase}</span>
+                        </Fragment>
+                      ))
+                    : word}
+                </span>
               </button>
             ))}
           </div>

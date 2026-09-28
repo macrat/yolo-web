@@ -85,10 +85,15 @@ export function dailyOrder<T>(arr: T[], seed: string): T[] {
 /** 句の終わりの字。ことわざの句は助詞（「が」「も」「に」「から」「より」など）や「ば」「て」で終わる。 */
 const PHRASE_ENDINGS = /[がもはにをのばてりら]$/;
 
+/** 語のマスの1行にいつも入る字の数（WordGrid の列の数の決まり）。句はこの字の数までにする。 */
+const PHRASE_MAX_LENGTH = 4;
+
 /**
  * 語を文節に分けた並び（splitIntoPhrases）が、ことわざのように句を並べた語のものなら、その並びを返す。句を
  * 並べた語は、漢字を含み、最後のほかのどの句も2字以上で助詞などで終わる。そうでない語（「は｜まぐり」
  * 「たい｜焼き」のように1つの語を分けたもの）は null。
+ * 語のマスは句の切れ目でだけ折るので、マスの1行に入らない長い句（「棒に当たる」）は、語の切れ目で2字以上の
+ * 句に分け直す（「棒に｜当たる」）。
  */
 export function sayingPhrases(phrases: string[]): string[] | null {
   if (phrases.length < 2 || !/\p{Script=Han}/u.test(phrases.join(""))) {
@@ -96,7 +101,36 @@ export function sayingPhrases(phrases: string[]): string[] | null {
   }
   const isPhrase = (phrase: string) =>
     phrase.length >= 2 && PHRASE_ENDINGS.test(phrase);
-  return phrases.slice(0, -1).every(isPhrase) ? phrases : null;
+  return phrases.slice(0, -1).every(isPhrase)
+    ? phrases.flatMap(fitPhrase)
+    : null;
+}
+
+/**
+ * 句が1行に入らないとき、仮名から漢字に移る所（「棒に｜当たる」）のうち、どちらの側も2字以上になり真ん中に
+ * いちばん近い所で2つに分ける。
+ */
+function fitPhrase(phrase: string): string[] {
+  if (phrase.length <= PHRASE_MAX_LENGTH) return [phrase];
+  const chars = [...phrase];
+  const cuts = chars
+    .map((_, index) => index)
+    .filter(
+      (index) =>
+        index >= 2 &&
+        chars.length - index >= 2 &&
+        /\p{Script=Hiragana}/u.test(chars[index - 1]) &&
+        /\p{Script=Han}/u.test(chars[index]),
+    )
+    .sort(
+      (a, b) => Math.abs(a - chars.length / 2) - Math.abs(b - chars.length / 2),
+    );
+  if (cuts.length === 0) return [phrase];
+  const cut = cuts[0];
+  return [
+    chars.slice(0, cut).join(""),
+    ...fitPhrase(chars.slice(cut).join("")),
+  ];
 }
 
 /**
