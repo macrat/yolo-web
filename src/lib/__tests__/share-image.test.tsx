@@ -102,7 +102,6 @@ const INPUTS: Record<string, ShareImageContent> = {
     reading: "toki #eea9a9",
     subtitle: "テキストとBase64の相互変換 (UTF-8 対応)",
   },
-  /** Zen Antique に無い字を含む名前。 */
   /** Zen Antique に無く BIZ UDGothic にある字を含む名前。 */
   missingFromZenAntique: {
     aux: "漢字辞典",
@@ -112,8 +111,8 @@ const INPUTS: Record<string, ShareImageContent> = {
   missingFromBizUdGothic: {
     aux: "伝統色辞典",
     name: "纁",
-    reading: "sohi #b35c44",
-    swatch: "#b35c44",
+    reading: "sohi #ed784a",
+    swatch: "#ed784a",
   },
   /** 「——」を持つ名前。 */
   dash: {
