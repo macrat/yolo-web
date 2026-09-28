@@ -7,12 +7,12 @@
  * 字の組み方:
  * - 書体は字の範囲で分ける。U+0000-007F は IBM Plex Sans、ほかは和文の書体で、名前と数字の結果は Zen Antique
  *   （Zen Antique に無い字を含むときは和文を丸ごと BIZ UDGothic）、補助情報・読み・副題は BIZ UDPGothic。
- *   Satori は書体の並びを渡すと字ごとに書体を選び分けないので、字の範囲ごとのまとまりに書体を1つずつ渡す。
+ *   Satori は書体の並びを渡すと字ごとに書体を選び分けないので、字の範囲で分けた書体のまとまりに書体を1つずつ渡す。
  * - 行は、ここで描くのと同じ書体のファイルの送り幅で測って決め、1行ずつ描く。どの字も、画面の見出しと同じ所で折る:
  *   文節の切れ目（splitIntoPhrases）・文節の中の空白の後ろ（ダッシュの前を除く）・閉じ括弧の直後。1行に収まらない
- *   単位だけを、字の範囲のまとまりで分け、それでも収まらないまとまりを字の所で折る。文節の頭の空白は前の文節の終わりに
- *   移し、行の終わりの空白は描かない。行を決めてから描くので、名前の段を選ぶときに数えた行の数と、描いた行の数が
- *   同じになる。
+ *   単位だけを、割れない字の組（境で割っても禁則を破らない字の並び）を書体のまとまりごとに集めて分け、収まらない
+ *   集まりは組に、それでも収まらない組は字に分ける（breakUnits）。文節の頭の空白は前の文節の終わりに移し、行の
+ *   終わりの空白は描かない。行を決めてから描くので、名前の段を選ぶときに数えた行の数と、描いた行の数が同じになる。
  *
  * 書体を取れないときは例外を投げる。画像はビルドで書き出すので、違う書体の画像が出荷される前にビルドが止まる。
  */
@@ -238,7 +238,7 @@ function loadFonts(): Promise<LoadedFonts> {
 // 行を決める
 // ---------------------------------------------------------------------------
 
-/** 字の範囲で分けたまとまり。1つの書体で組む。 */
+/** 書体のまとまり。字の範囲で分けた字の並びで、1つの書体で組む。 */
 interface Run {
   text: string;
   family: Family;
@@ -349,14 +349,20 @@ export function lineBreakUnits(text: string): string[] {
 }
 
 /**
- * text を、字の所で割っても行の頭と終わりの禁則（§4）を破らないまとまりに分ける。行の頭に置かない字は前の字に、
- * 行の終わりに置かない字の後ろの字はその字に付ける。
+ * text を、割れない字の組に分ける。組の境で割れば、行の頭と終わりの禁則（§4）を破らない。行の頭に置かない字と
+ * 空白は前の字に付け、行の終わりに置かない字（空白を除いた終わりで見る）の後ろの字はその字に付ける。空白は行の頭に
+ * 来ても描かないので、空白の前で割る意味は無い。
  */
 function unbreakableClusters(text: string): string[] {
   const clusters: string[] = [];
   for (const char of graphemes(text)) {
     const last = clusters.at(-1);
-    if (last !== undefined && (cannotStartLine(char) || cannotEndLine(last))) {
+    if (
+      last !== undefined &&
+      (/\s/u.test(char) ||
+        cannotStartLine(char) ||
+        cannotEndLine(last.trimEnd()))
+    ) {
       clusters[clusters.length - 1] = last + char;
     } else {
       clusters.push(char);
@@ -366,9 +372,10 @@ function unbreakableClusters(text: string): string[] {
 }
 
 /**
- * 行に詰める単位。1行に収まる単位はそのまま、収まらない単位は字の範囲のまとまりで分け、それでも収まらないまとまりは
- * 字で分ける。どこで分けるときも、禁則を破らないまとまり（unbreakableClusters）の境でだけ分ける。字の範囲のまとまりの
- * 端に禁則の字が付いて1行に収まらなくなったときは、そのまとまりも字で分ける。どの切れ端も1行に収まる。
+ * 行に詰める単位。1行に収まる単位はそのまま使う。収まらない単位は、割れない字の組を書体のまとまりごとに集め、
+ * 1行に収まる集まりはそのまま、収まらない集まりは組に、それでも収まらない組は字に分ける。どの切れ端も1行に収まる。
+ * 組を字に分けるのは、行の頭に置かない字が1行より長く続くときだけで、画面の見出しも、ほかに折り所が無ければ禁則の
+ * 字の前で折って枠に収める。
  */
 function breakUnits(
   units: readonly string[],
@@ -380,7 +387,7 @@ function breakUnits(
     measure(text.replace(TRAILING_SPACES, ""), style, fonts) <= maxWidth;
   return units.flatMap((unit) => {
     if (fits(unit)) return [unit];
-    // まとまりを、その頭の字が属する字の範囲のまとまりごとに集める。
+    // 各組を、その頭の字が属する書体のまとまりの集まりに入れる。
     const runOfOffset: number[] = [];
     toRuns(unit, style.jaFamily).forEach(({ text }, runIndex) => {
       for (let i = 0; i < text.length; i++) runOfOffset.push(runIndex);
@@ -397,7 +404,10 @@ function breakUnits(
     }
     return groups.flatMap((clusters) => {
       const joined = clusters.join("");
-      return fits(joined) ? [joined] : clusters;
+      if (fits(joined)) return [joined];
+      return clusters.flatMap((cluster) =>
+        fits(cluster) ? [cluster] : graphemes(cluster),
+      );
     });
   });
 }

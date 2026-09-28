@@ -751,6 +751,47 @@ describe("字で割るときの禁則", () => {
     }
   });
 
+  test.each([
+    [
+      "開き括弧の後ろの空白",
+      "カ",
+      (count: number) => "（" + "カ".repeat(count) + "「 ab」）",
+    ],
+    [
+      "行の頭に置かない全角の字の前の空白",
+      "カ",
+      (count: number) => "（" + "カ".repeat(count) + " ？カカ）",
+    ],
+    [
+      "行の頭に置かない欧文の字の前の空白",
+      "a",
+      (count: number) => "（" + "a".repeat(count) + " ?bb）",
+    ],
+  ] as const)("%s: 空白の隣でも禁則を破らない", async (_, char, auxOf) => {
+    // 禁則の字と空白が1行目の終わりの前後に来る長さを並べて試す。
+    const perLine = await perAuxLine(char);
+    for (let count = perLine - 4; count <= perLine + 2; count++) {
+      const aux = auxOf(count);
+      const { layout } = await renderShareImage({ aux, name: "x" });
+      if (count === perLine + 2) {
+        expect(layout.aux!.lines.length).toBeGreaterThan(1);
+      }
+      expectAuxLinesKeepRules(layout, aux);
+    }
+  });
+
+  test("行の頭に置かない字が1行より長く続くときは、その中で折り、どの行も枠の幅を超えない", async () => {
+    const perLine = await perAuxLine("ー");
+    const aux = "わ" + "ー".repeat(perLine + 8) + "！";
+    const { layout } = await renderShareImage({ aux, name: "x" });
+    const lines = lineTextsOf(layout.aux!);
+    expect(lines.length).toBeGreaterThan(1);
+    expect(lines.join("")).toBe(aux);
+    for (const line of layout.aux!.lines) {
+      expect(line.width).toBeLessThanOrEqual(CONTENT_WIDTH);
+    }
+  });
+
   test.each(["？", "、", "」", "ー"])(
     "補助情報の1行を「カ」で満たした直後の「%s」を、次の行の頭に置かない",
     async (tail) => {
