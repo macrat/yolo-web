@@ -105,11 +105,6 @@
   margin: 0;
 }
 
-/* 全文コピーボタンを全幅に */
-.copyAllButton {
-  width: 100%;
-}
-
 @media (max-width: 640px) {
   .formGrid {
     grid-template-columns: 1fr;

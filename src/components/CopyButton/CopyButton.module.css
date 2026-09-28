@@ -14,8 +14,10 @@
   flex-grow: 1;
 }
 
+/* 幅いっぱいに置くボタンは、升ごと置いた幅いっぱいに広げる。 */
 .stretch {
   --copy-button-align: stretch;
+  display: grid;
 }
 
 .copy > * {
@@ -54,9 +56,10 @@
   line-height: 1.4;
 }
 
-/* 押す前の面に出す、何を写すかの名前は、升の最小の幅を決めない。 */
-.targetName {
-  overflow-wrap: anywhere;
+/* 1つの文節だけでも升に入らないときに限り、その文節の中で折る（§4）。 */
+.face,
+.reserve {
+  overflow-wrap: break-word;
 }
 
 /* プライマリでないボタンは、字の左右の余白と、字を並びの左端に置く張り出しを持つ（globals.css の

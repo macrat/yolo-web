@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import Button from "@/components/Button";
 import {
   useCopyToClipboard,
@@ -60,6 +60,11 @@ interface CopyButtonProps {
    * ボタンに使う。
    */
   showTarget?: boolean;
+  /**
+   * showTarget の面に出す何を写すかを、文節に分けたもの（「メール」「全文」）。面の字はこの切れ目と「を」の
+   * 後ろで折れる。省くと target を1つの文節として扱う。
+   */
+  targetPhrases?: readonly string[];
   variant?: "default" | "primary";
   align?: CopyButtonAlign;
   disabled?: boolean;
@@ -93,6 +98,7 @@ export default function CopyButton({
   text,
   target,
   showTarget = false,
+  targetPhrases = [target],
   variant = "default",
   align = "start",
   disabled,
@@ -102,14 +108,19 @@ export default function CopyButton({
   const { copy, status } = useCopyToClipboard();
   const [announcement, setAnnouncement] = useState({ id: 0, message: "" });
 
-  // 面の字の折り所は語の切れ目だけに置く。何を写すかも出す面は「を」の後ろで折れ、それでも収まらない何を
-  // 写すかの名前はその中で折れる。押したあとの面は「コピー」と「済み」「失敗」のあいだでだけ折れる。
+  // 面の字の折り所は語の切れ目だけに置く。何を写すかも出す面は文節の切れ目と「を」の
+  // 後ろで折れる。押したあとの面は「コピー」と「済み」「失敗」のあいだでだけ折れる。
   const renderFace = (faceStatus: CopyStatus): ReactNode =>
     faceStatus === "idle" ? (
       showTarget ? (
         <>
-          <span className={styles.targetName}>{target}を</span>
-          <wbr />
+          {targetPhrases.map((phrase, index) => (
+            <Fragment key={index}>
+              {index > 0 && <wbr />}
+              {phrase}
+            </Fragment>
+          ))}
+          を<wbr />
           {COPY_FACES.idle}
         </>
       ) : (

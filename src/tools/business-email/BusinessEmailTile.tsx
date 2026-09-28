@@ -317,10 +317,10 @@ export default function BusinessEmailTile({
         <CopyButton
           text={`件名: ${generated.subject}\n\n${generated.body}`}
           target="メール全文"
+          targetPhrases={["メール", "全文"]}
           showTarget
           variant="primary"
           align="stretch"
-          className={styles.copyAllButton}
         />
       </div>
     </Panel>
