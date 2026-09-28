@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
+import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
 import AnimalPersonalityContent from "@/play/quiz/_components/AnimalPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";

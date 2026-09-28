@@ -33,7 +33,7 @@ interface ResultPageShellProps {
   /** 添えた段落のすぐ下に置く、この診断を遊ぶ誘いのボタンの文言。 */
   ctaText: string;
   /**
-   * 誘いのあとに続く、ルートごとの詳しい読みもの。タイプが詳しい読みもの（detailedContent）を持つときに、
+   * 誘いのあとに続く、ルートごとの読みもの（詳しい読みものと、?with= で受け取った相性）。渡したときに、
    * セクション「このタイプについて」に置く。
    */
   children?: React.ReactNode;
@@ -47,7 +47,7 @@ interface ResultPageShellProps {
  * 結果のページを組む。上から、何の診断の結果かの行・タイプ名の h1・読み・色見本、添えた段落・診断への誘い・
  * タイプの説明、ルートごとの読みもの（セクション「このタイプについて」）、すべてのタイプ、共有の区画、関連の区画。
  * 誘いを説明の前に置き、共有のリンクから来た来訪者が、最初の画面でタイプ名と添えた段落と誘いを見られるように
- * する。読みものとすべてのタイプは、タイプが詳しい読みものを持つときだけ置く。
+ * する。読みもののセクションはルートが中身を渡したときに、すべてのタイプはタイプが詳しい読みものを持つときに置く。
  *
  * タイプ名は、サーバーで作った文節の区切りで折る（DESIGN.md §4）。読みは見出しの折れを避けるため h1 に
  * 入れず、すぐ下に補助情報として添える。共有の操作はページに1か所だけ置き、何を共有するかを見出しが言う（§8）。
@@ -114,17 +114,15 @@ export default function ResultPageShell({
           {description && <p className={styles.description}>{description}</p>}
         </div>
 
+        {children && <ReadingSection>{children}</ReadingSection>}
         {result.detailedContent && (
-          <>
-            <ReadingSection>{children}</ReadingSection>
-            <OtherTypesNav
-              quizSlug={slug}
-              currentResultId={result.id}
-              results={quiz.results}
-              placement="resultPage"
-              showSwatch={swatch !== undefined}
-            />
-          </>
+          <OtherTypesNav
+            quizSlug={slug}
+            currentResultId={result.id}
+            results={quiz.results}
+            placement="resultPage"
+            showSwatch={swatch !== undefined}
+          />
         )}
 
         <section className={styles.share} aria-labelledby={SHARE_HEADING_ID}>

@@ -30,7 +30,7 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
 }));
 
 // Mock CompatibilityDisplay
-vi.mock("@/app/play/[slug]/result/[resultId]/CompatibilityDisplay", () => ({
+vi.mock("@/play/quiz/_components/CompatibilityDisplay", () => ({
   default: () => <div data-testid="compatibility-display" />,
 }));
 

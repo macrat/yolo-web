@@ -157,6 +157,22 @@ vi.mock("@/play/quiz/registry", () => ({
       },
     ],
     [
+      "japanese-culture",
+      {
+        meta: {
+          title: "日本文化診断",
+          shortDescription: "日本文化診断の短い説明",
+          type: "personality",
+          questionCount: 18,
+          category: "personality",
+        },
+        results: [
+          { id: "sado", title: "茶道タイプ", description: "茶道タイプの説明" },
+          { id: "shodo", title: "書道タイプ", description: "書道タイプの説明" },
+        ],
+      },
+    ],
+    [
       "personality-with-detailed",
       {
         meta: {
@@ -189,9 +205,13 @@ vi.mock("@/play/quiz/registry", () => ({
   getResultIdsForQuiz: vi.fn(() => ["result-a"]),
 }));
 
-// Mock music-personality
-vi.mock("@/play/quiz/data/music-personality", () => ({
-  getCompatibility: vi.fn(() => undefined),
+// Mock japanese-culture
+vi.mock("@/play/quiz/data/japanese-culture", () => ({
+  isValidCultureTypeId: (id: string) => ["sado", "shodo"].includes(id),
+  getCompatibility: (a: string, b: string) =>
+    [a, b].sort().join("--") === "sado--shodo"
+      ? { label: "静と筆の調和", description: "茶道と書道の相性の説明" }
+      : undefined,
 }));
 
 describe("PlayQuizResultPage 診断への誘い", () => {
@@ -338,5 +358,82 @@ describe("ページの題と共有の文", () => {
     const metadata = await generateMetadata({ params });
     expect(metadata.title).toBe("和顔愛語（わがんあいご）タイプ | yolos.net");
     expect(metadata.openGraph?.title).toBe("和顔愛語（わがんあいご）タイプ");
+  });
+});
+
+describe("相性の共有のリンク（?with=）", () => {
+  const params = Promise.resolve({
+    slug: "japanese-culture",
+    resultId: "sado",
+  });
+
+  it("相性を持つ診断で友達のタイプを受け取ると、相性の名前を小見出し（h3）にして相性を出し、そのあとに誘いを置く", async () => {
+    render(
+      await PlayQuizResultPage({
+        params,
+        searchParams: Promise.resolve({ with: "shodo" }),
+      }),
+    );
+
+    const label = screen.getByRole("heading", {
+      level: 3,
+      name: "静と筆の調和",
+    });
+    expect(
+      screen.getByText("「茶道タイプ」と「書道タイプ」の相性"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("茶道と書道の相性の説明")).toBeInTheDocument();
+    const ctas = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
+    expect(ctas).toHaveLength(2);
+    expect(
+      label.compareDocumentPosition(ctas[1]) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("友達のタイプが無い・正しくないときや、相性を持たない診断では、相性を出さない", async () => {
+    for (const [pageParams, searchParams] of [
+      [params, undefined],
+      [params, Promise.resolve({ with: "unknown" })],
+      [params, Promise.resolve({ with: ["shodo"] })],
+      [
+        Promise.resolve({ slug: "personality-quiz", resultId: "result-x" }),
+        Promise.resolve({ with: "result-x" }),
+      ],
+    ] as const) {
+      const { unmount } = render(
+        await PlayQuizResultPage({ params: pageParams, searchParams }),
+      );
+      expect(screen.queryByText(/の相性$/)).toBeNull();
+      expect(
+        screen.getAllByText("あなたはどのタイプ? 診断してみよう"),
+      ).toHaveLength(1);
+      unmount();
+    }
+  });
+
+  it("相性のページは検索に載せず、題と説明で相性を言い、正規の URL はタイプの結果のページ", async () => {
+    const metadata = await generateMetadata({
+      params,
+      searchParams: Promise.resolve({ with: "shodo" }),
+    });
+    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.title).toBe(
+      "茶道タイプ x 書道タイプ - 静と筆の調和 | yolos.net",
+    );
+    expect(metadata.description).toBe("茶道と書道の相性の説明");
+    expect(metadata.alternates?.canonical).toMatch(
+      /\/play\/japanese-culture\/result\/sado$/,
+    );
+  });
+
+  it("詳しい読みものを持つタイプは、相性を出さないページを検索に載せる", async () => {
+    const detailed = Promise.resolve({
+      slug: "personality-with-detailed",
+      resultId: "result-detail",
+    });
+    expect((await generateMetadata({ params: detailed })).robots).toEqual({
+      index: true,
+      follow: true,
+    });
   });
 });

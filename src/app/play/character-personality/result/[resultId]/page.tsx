@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
+import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
 import CharacterPersonalityContent from "@/play/quiz/_components/CharacterPersonalityContent";
 import InviteFriendButton from "@/play/quiz/_components/InviteFriendButton";
 import { contentIdForQuiz } from "@/play/quiz/contentId";

@@ -78,7 +78,7 @@ function renderShell(
       ctaText="あなたはどのタイプ? 診断してみよう"
       {...props}
     >
-      {props.children ?? <div>子コンテンツ</div>}
+      {"children" in props ? props.children : <div>子コンテンツ</div>}
     </ResultPageShell>,
   );
 }
@@ -257,11 +257,22 @@ test("結果の色を渡したときは、すべてのタイプの行も色見�
   expect(allTypes.querySelectorAll("[style*='background']")).toHaveLength(2);
 });
 
-test("詳しい読みものを持たないタイプは、読みもののセクションもすべてのタイプも置かない", () => {
+test("ルートが中身を渡さないときは、読みもののセクションを置かない", () => {
   renderShell({ quiz: readingQuiz, result: mockResult, children: undefined });
   expect(
     screen.queryByRole("region", { name: "このタイプについて" }),
   ).toBeNull();
+  expect(screen.queryByRole("heading", { name: /^すべてのタイプ/ })).toBeNull();
+});
+
+test("詳しい読みものを持たないタイプでも、ルートが中身（相性など）を渡せば読みもののセクションに置き、すべてのタイプは置かない", () => {
+  renderShell({
+    quiz: readingQuiz,
+    result: mockResult,
+    children: <div data-testid="child-content">相性</div>,
+  });
+  const reading = screen.getByRole("region", { name: "このタイプについて" });
+  expect(within(reading).getByTestId("child-content")).toBeInTheDocument();
   expect(screen.queryByRole("heading", { name: /^すべてのタイプ/ })).toBeNull();
 });
 
