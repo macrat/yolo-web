@@ -34,7 +34,7 @@ describe("GET /api/quiz/compatibility", () => {
     expect(data.description.length).toBeGreaterThan(0);
     expect(data.myType).toEqual({ title: "締切3分前に5手先を読む炎の策士" });
     expect(data.friendType).toEqual({
-      title: "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家",
+      title: "「大丈夫？」と聞きながら自分が一番疲れている守護芸術家",
     });
   });
 

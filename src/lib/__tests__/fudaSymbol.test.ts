@@ -21,10 +21,12 @@ describe("pickResultSymbol — 記号面の1字", () => {
       pickResultSymbol("「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係"),
     ).toBe("悪");
     expect(
-      pickResultSymbol("「王道でいく理由ある?」と言いながら意図的に外す曲者"),
+      pickResultSymbol("「王道でいく理由ある？」と言いながら意図的に外す曲者"),
     ).toBe("王");
     expect(
-      pickResultSymbol("「大丈夫?」と聞きながら自分が一番疲れている守護芸術家"),
+      pickResultSymbol(
+        "「大丈夫？」と聞きながら自分が一番疲れている守護芸術家",
+      ),
     ).toBe("大");
     expect(pickResultSymbol("「考えるより動け」を文字通り実践する覇王")).toBe(
       "考",
