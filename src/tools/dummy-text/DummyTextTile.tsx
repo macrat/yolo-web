@@ -9,8 +9,8 @@
  * - **1ツール n タイル = variant**: full / 2固定言語 は同一コンポーネントの
  *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: generateText が唯一のロジック源（再実装・改変禁止）。
  *
  * ## variant
@@ -19,9 +19,9 @@
  * - `"lorem"`: 言語を Lorem Ipsum に固定し、ラジオボタンの組を出さない。
  * - `"japanese"`: 言語を日本語に固定し、ラジオボタンの組を出さない。
  *
- * 固定 variant でも段落数・文数コントロール・コピーボタンは維持（G-3 feature-preserving）。
+ * 固定 variant でも段落数・文数コントロール・コピーボタンは維持する。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -45,7 +45,7 @@ import styles from "./DummyTextTile.module.css";
 /** variant prop: 表示バリエーションの設定差。別実装ではない。 */
 export type DummyTextTileVariant = "full" | "lorem" | "japanese";
 
-/** 言語選択の options 配列（C-5: value は options 内の値であること） */
+/** 言語選択の options 配列（value は options 内の値であること） */
 const LANGUAGE_OPTIONS: { label: string; value: TextLanguage }[] = [
   { label: "Lorem Ipsum", value: "lorem" },
   { label: "日本語", value: "japanese" },
@@ -101,7 +101,7 @@ export default function DummyTextTile({
   const wordCount = useMemo(() => countGeneratedWords(output), [output]);
   const charCount = useMemo(() => countGeneratedChars(output), [output]);
 
-  // C-3: スクリーンリーダーへ通知する統計サマリ（実テキストノード）
+  // スクリーンリーダーへ通知する統計サマリ（実テキストノード）
   // 日本語モードでは文字数のみ（文数は pool[0] の2文問題で入力値と一致せず廃止）
   // Lorem モードでは「単語数」を表示（英語はスペース区切りで単語数が有意味）
   const statusSummary =
@@ -147,7 +147,7 @@ export default function DummyTextTile({
         </div>
       )}
 
-      {/* 設定行: 段落数・文数（固定 variant でも維持: G-3 feature-preserving） */}
+      {/* 設定行: 段落数・文数（固定 variant でも維持） */}
       <div className={styles.settingsRow}>
         <div className={styles.numberField}>
           <label htmlFor={paragraphsId} className={styles.numberLabel}>
@@ -207,7 +207,7 @@ export default function DummyTextTile({
           />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"
@@ -218,7 +218,7 @@ export default function DummyTextTile({
           {statusSummary}
         </div>
 
-        {/* A-1: Textarea コンポーネント使用（readOnly 出力欄） */}
+        {/* Textarea コンポーネント使用（readOnly 出力欄） */}
         <Textarea
           id={outputId}
           aria-label="生成結果"

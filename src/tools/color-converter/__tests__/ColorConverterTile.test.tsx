@@ -36,7 +36,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("E-1: 基本レンダリング (variant=full)", () => {
+describe("基本レンダリング (variant=full)", () => {
   it("コンポーネントが正常にレンダリングされる", () => {
     render(<ColorConverterTile />);
     // ラジオボタンの組が存在すること
@@ -51,7 +51,7 @@ describe("E-1: 基本レンダリング (variant=full)", () => {
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
-  it("Panel ルートを持つこと (A-1 要件)", () => {
+  it("Panel ルートを持つこと", () => {
     const { container } = render(<ColorConverterTile />);
     // Panel は section タグがデフォルト
     const root = container.firstChild;
@@ -63,7 +63,7 @@ describe("E-1: 基本レンダリング (variant=full)", () => {
   });
 });
 
-describe("E-2: 入力→結果更新 (変換ボタン押下)", () => {
+describe("入力→結果更新 (変換ボタン押下)", () => {
   it("HEX 入力後に変換ボタンを押すと結果が表示される", () => {
     render(<ColorConverterTile />);
     const input = screen.getByLabelText(/HEX値/);
@@ -93,7 +93,7 @@ describe("E-2: 入力→結果更新 (変換ボタン押下)", () => {
   });
 });
 
-describe("E-3: 空入力の挙動", () => {
+describe("空入力の挙動", () => {
   it("初期状態では結果カードが表示されず、エラーも表示されない", () => {
     render(<ColorConverterTile />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
@@ -110,7 +110,7 @@ describe("E-3: 空入力の挙動", () => {
   });
 });
 
-describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
+describe("変換ロジックの正確性 (UI 経由)", () => {
   it("HEX #3498db → RGB / HSL が正しく変換される", () => {
     render(<ColorConverterTile />);
     const input = screen.getByLabelText(/HEX値/);
@@ -147,7 +147,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     expect(screen.getByText(/^rgb\(/)).toBeInTheDocument();
   });
 
-  it("代表入力 #ff0000 → rgb(255,0,0) / hsl(0,100%,50%) が正しい (G-5)", () => {
+  it("代表入力 #ff0000 → rgb(255,0,0) / hsl(0,100%,50%) が正しい", () => {
     render(<ColorConverterTile />);
     const input = screen.getByLabelText(/HEX値/);
     fireEvent.change(input, { target: { value: "#ff0000" } });
@@ -156,7 +156,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     expect(screen.getByText("hsl(0, 100%, 50%)")).toBeInTheDocument();
   });
 
-  it("代表入力 rgb(255,0,0) → #ff0000 / hsl(0,100%,50%) が正しい (G-5)", () => {
+  it("代表入力 rgb(255,0,0) → #ff0000 / hsl(0,100%,50%) が正しい", () => {
     render(<ColorConverterTile />);
     fireEvent.click(screen.getByRole("radio", { name: "RGB" }));
     const input = screen.getByLabelText(/RGB値/);
@@ -166,7 +166,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     expect(screen.getByText("hsl(0, 100%, 50%)")).toBeInTheDocument();
   });
 
-  it("代表入力 hsl(0,100%,50%) → #ff0000 / rgb(255,0,0) が正しい (G-5)", () => {
+  it("代表入力 hsl(0,100%,50%) → #ff0000 / rgb(255,0,0) が正しい", () => {
     render(<ColorConverterTile />);
     fireEvent.click(screen.getByRole("radio", { name: "HSL" }));
     const input = screen.getByLabelText(/HSL値/);
@@ -177,7 +177,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
   });
 });
 
-describe("E-5: ARIA 属性", () => {
+describe("ARIA 属性", () => {
   it("ラジオボタンの組が role='radiogroup' を持つ", () => {
     render(<ColorConverterTile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
@@ -196,7 +196,7 @@ describe("E-5: ARIA 属性", () => {
     expect(status).toHaveAttribute("aria-live", "polite");
   });
 
-  it("変換後 status 要素に実テキストノードが入る (C-3 要件)", () => {
+  it("変換後 status 要素に実テキストノードが入る", () => {
     render(<ColorConverterTile />);
     const input = screen.getByLabelText(/HEX値/);
     fireEvent.change(input, { target: { value: "#ff0000" } });
@@ -205,14 +205,14 @@ describe("E-5: ARIA 属性", () => {
     expect(status.textContent).not.toBe("");
   });
 
-  it("カラーピッカーにアクセシブル名が付いている (C-4 要件)", () => {
+  it("カラーピッカーにアクセシブル名が付いている", () => {
     render(<ColorConverterTile />);
     const picker = screen.getByLabelText("カラーピッカー");
     expect(picker).toBeInTheDocument();
   });
 });
 
-describe("E-6: コピーボタンの文言変化 (複数ターゲット)", () => {
+describe("コピーボタンの文言変化 (複数ターゲット)", () => {
   it("変換前はコピーボタンが disabled である", () => {
     render(<ColorConverterTile />);
     const copyButtons = screen.queryAllByRole("button", { name: /コピー/ });
@@ -236,7 +236,7 @@ describe("E-6: コピーボタンの文言変化 (複数ターゲット)", () =>
   });
 });
 
-describe("E-7: コピーボタン disabled 状態", () => {
+describe("コピーボタン disabled 状態", () => {
   it("結果が空のとき、すべてのコピーボタンが disabled になる", () => {
     render(<ColorConverterTile />);
     const copyButtons = screen.queryAllByRole("button", { name: /コピー/ });
@@ -258,7 +258,7 @@ describe("E-7: コピーボタン disabled 状態", () => {
   });
 });
 
-describe("E-8: clipboard 不在時の silent fail", () => {
+describe("clipboard 不在時の silent fail", () => {
   it("navigator.clipboard が存在しない環境でもエラーを投げない", async () => {
     Object.defineProperty(navigator, "clipboard", {
       value: undefined,
@@ -279,7 +279,7 @@ describe("E-8: clipboard 不在時の silent fail", () => {
   });
 });
 
-describe("G-1: 入力修正時のエラー状態クリア", () => {
+describe("入力修正時のエラー状態クリア", () => {
   it("不正入力→変換→入力修正でエラーバナーが消える", () => {
     render(<ColorConverterTile />);
     const input = screen.getByLabelText(/HEX値/);
@@ -387,7 +387,7 @@ describe("variant='hsl': 固定 HSL モード", () => {
   });
 });
 
-describe("複数インスタンス同居時の id 一意性 (A-6 要件)", () => {
+describe("複数インスタンス同居時の id 一意性", () => {
   it("2つのインスタンスの id が重複しない", () => {
     render(
       <>
@@ -416,7 +416,7 @@ describe("複数インスタンス同居時の id 一意性 (A-6 要件)", () =>
   });
 });
 
-describe("E-12: CSS トークン検証", () => {
+describe("CSS トークン検証", () => {
   const cssPath = path.resolve(__dirname, "../ColorConverterTile.module.css");
 
   it("--color-* 旧トークンが存在しない", () => {
@@ -439,7 +439,7 @@ describe("E-12: CSS トークン検証", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("box-shadow が存在しない (B-6 要件)", () => {
+  it("box-shadow が存在しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/box-shadow/);
   });

@@ -5,26 +5,25 @@
  *
  * ## 設計原則
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）
- * - **1ツール 1実装**: variant prop の設定差のみでバリエーションを表現（A-5）
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>
+ * - **1ツール 1実装**: variant prop の設定差のみでバリエーションを表現
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）
+ *   同居しても id 重複・label 誤結合が起きない
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する
  * - **logic.ts 共有エンジン**: formatSql / minifySql が唯一のロジック源（再実装禁止）
  *
  * ## variant
  *
  * - `"full"` (デフォルト): format/minify + インデント Select + 大文字化チェックボックス + コピー
- *   （詳細ページ・道具箱両方で使用）
  *
  * ## 使い方
  *
  * ```tsx
- * // 詳細ページと道具箱が同一エクスポートを描画する
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <SqlFormatterTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -59,7 +58,7 @@ function getIndentString(indentType: IndentType): string {
  * SQL エンジンが投げるエラーを日本語メッセージに変換する。
  *
  * logic.ts の formatSql / minifySql が返すエラーには英語の技術的な文字列が
- * 混じることがある。来訪者に英語の生エラーを露出しないよう日本語に変換する（A-4）。
+ * 混じることがある。来訪者に英語の生エラーを露出しないよう日本語に変換する。
  */
 function toJapaneseSqlError(rawError: string): string {
   const lineColMatch = rawError.match(/line\s+(\d+)\s+col(?:umn)?\s+(\d+)/i);
@@ -98,7 +97,7 @@ export default function SqlFormatterTile({
   as = "section",
   className,
 }: SqlFormatterTileProps = {}) {
-  // ---------- id インスタンス一意化（A-6: 複数同居時の重複 id・label 誤結合防止） ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const inputId = `${uid}-sql-input`;
   const outputId = `${uid}-sql-output`;
@@ -110,7 +109,7 @@ export default function SqlFormatterTile({
   const [error, setError] = useState("");
   const [indent, setIndent] = useState<IndentType>("2");
   const [uppercase, setUppercase] = useState(true);
-  // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
+  // スクリーンリーダーへ通知するための短いサマリテキスト
   const [statusSummary, setStatusSummary] = useState("");
 
   // ---------- ハンドラ ----------
@@ -127,10 +126,10 @@ export default function SqlFormatterTile({
         uppercase,
       });
       setOutput(formatted);
-      // C-3: 整形成功サマリを role="status" 領域に実テキストとして配置
+      // 整形成功サマリを role="status" 領域に実テキストとして配置
       setStatusSummary("整形しました");
     } catch (e) {
-      // 英語エラーを日本語に変換して表示（A-4）
+      // 英語エラーを日本語に変換して表示
       const rawMsg = e instanceof Error ? e.message : String(e);
       setError(toJapaneseSqlError(rawMsg));
       setOutput("");
@@ -147,10 +146,10 @@ export default function SqlFormatterTile({
     try {
       const minified = minifySql(input);
       setOutput(minified);
-      // C-3: 圧縮成功サマリを role="status" 領域に実テキストとして配置
+      // 圧縮成功サマリを role="status" 領域に実テキストとして配置
       setStatusSummary("圧縮しました");
     } catch (e) {
-      // 英語エラーを日本語に変換して表示（A-4）
+      // 英語エラーを日本語に変換して表示
       const rawMsg = e instanceof Error ? e.message : String(e);
       setError(toJapaneseSqlError(rawMsg));
       setOutput("");
@@ -158,7 +157,7 @@ export default function SqlFormatterTile({
   }, [input]);
 
   // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）(A-1)
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   // variant の型は現在 "full" のみ。将来固定 variant を追加する場合はここに値を増やす。
   // data-variant に渡すことで参照し、未使用変数警告を回避する。
   return (
@@ -229,7 +228,7 @@ export default function SqlFormatterTile({
               disabled={!output}
             />
           </div>
-          {/* C-3: role="status" aria-live="polite" で動的通知。
+          {/* role="status" aria-live="polite" で動的通知。
               実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。
               readOnly textarea をラップするだけでは値変化が読み上げられないため分離する。 */}
           <div
@@ -252,7 +251,7 @@ export default function SqlFormatterTile({
         </div>
       </div>
 
-      {/* エラー表示: A-4 ErrorMessage を使用。空のときは非表示 */}
+      {/* エラー表示: ErrorMessage を使用。空のときは非表示 */}
       {error && <ErrorMessage message={error} />}
     </Panel>
   );

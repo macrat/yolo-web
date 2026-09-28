@@ -1,4 +1,4 @@
-// Common field keys shared across most templates (U-01: defined as constants)
+// Common field keys shared across most templates (defined as constants)
 export const COMMON_FIELD_KEYS = [
   "recipientCompany",
   "recipientName",
@@ -91,7 +91,7 @@ const senderNameField: TemplateField = {
   placeholder: "鈴木花子",
 };
 
-// --- Template data (12 templates, D-04: all use modern format starting with お世話になっております) ---
+// --- Template data (12 templates, all use modern format starting with お世話になっております) ---
 
 const TEMPLATES: EmailTemplate[] = [
   // === お礼 (thanks) ===

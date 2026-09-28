@@ -5,23 +5,23 @@
  *
  * ## 設計原則
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。
  * - **1ツール n タイル = variant**: full / 固定カテゴリ系は同一コンポーネントの
- *   設定差で表現。別実装を作らない（A-3・分裂ゼロ）。
+ *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: convert / getAllCategories が唯一のロジック源。
  *
  * ## variant
  *
  * - `"full"` (デフォルト): カテゴリのラジオボタンの組を出し、全カテゴリをユーザーが
- *   切り替えられる。道具箱・詳細ページ共通。
+ *   切り替えられる。
  *
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <UnitConverterTile variant="full" />
  * ```
  */
@@ -74,7 +74,7 @@ export default function UnitConverterTile({
   as = "section",
   className,
 }: UnitConverterTileProps = {}) {
-  // ---------- id インスタンス一意化（A-6: 複数同居時の重複 id・label 誤結合防止） ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const valueInputId = `${uid}-value`;
 
@@ -93,7 +93,7 @@ export default function UnitConverterTile({
   const isValidInput = value.trim() !== "" && !isNaN(numericValue);
   const hasInput = value.trim() !== "";
 
-  /** カテゴリ変更時: 単位をそのカテゴリの最初の2つにリセット（G-1: カテゴリ切替後に古い結果が残らない） */
+  /** カテゴリ変更時: 単位をそのカテゴリの最初の2つにリセット（カテゴリ切替後に古い結果が残らない） */
   const handleCategoryChange = useCallback((newCategory: string) => {
     const cat = categories.find((c) => c.id === newCategory)!;
     setCategory(newCategory as UnitCategory);
@@ -142,7 +142,7 @@ export default function UnitConverterTile({
   void variant;
 
   // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）（A-1）
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       {/* カテゴリの切り替え */}
@@ -214,7 +214,7 @@ export default function UnitConverterTile({
         {/* 変換先 */}
         <div className={styles.unitGroup}>
           <p className={styles.groupLabel}>結果</p>
-          {/* 結果表示エリア — C-3: role="status" aria-live="polite" のライブリージョン + 実テキストノードのサマリ */}
+          {/* 結果表示エリア — role="status" aria-live="polite" のライブリージョン + 実テキストノードのサマリ */}
           <div
             role="status"
             aria-live="polite"

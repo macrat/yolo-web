@@ -70,7 +70,7 @@
   min-height: 1.5rem;
 }
 
-/* C-3 準拠: ライブリージョン。視覚的には非表示だが SR には読み上げられる。 */
+/* ライブリージョン。視覚的には非表示だが SR には読み上げられる。 */
 .statusSummary {
   position: absolute;
   width: 1px;

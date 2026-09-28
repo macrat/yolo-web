@@ -20,7 +20,7 @@
  * - `"bin-hex"`: 入力基数を2進数に固定し、16進数結果を中心に表示する。
  *   ラジオボタンの組を出さず、「2進数 → 16進数」の変換器として一目で分かる。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力カードの値は role="status" aria-live="polite" のライブリージョンから
  *   テキストサマリで通知する（readOnly 出力欄の変化は SR が読み上げないため）。
@@ -139,7 +139,7 @@ export default function NumberBaseConverterTile({
     setInput(e.target.value);
   }
 
-  // C-3: 変換成功/失敗をスクリーンリーダーに通知するサマリテキスト
+  // 変換成功/失敗をスクリーンリーダーに通知するサマリテキスト
   const statusSummary =
     result.success && input.trim()
       ? "変換しました"
@@ -184,10 +184,10 @@ export default function NumberBaseConverterTile({
         />
       </div>
 
-      {/* エラー表示: A-4 ErrorMessage を使用。logic.ts が日本語エラーを返す */}
+      {/* エラー表示: ErrorMessage を使用。logic.ts が日本語エラーを返す */}
       {result.error && <ErrorMessage message={result.error} />}
 
-      {/* C-3: role="status" aria-live="polite" — 実テキストノードのサマリを配置
+      {/* role="status" aria-live="polite" — 実テキストノードのサマリを配置
           readOnly な表示欄をラップするだけではフォーム値の変化がSRに読み上げられないため、
           別途サマリテキストを持つライブリージョンを設ける */}
       <div

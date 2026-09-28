@@ -68,9 +68,9 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // A-1: アーキテクチャ — ルート要素が Panel
+  // アーキテクチャ — ルート要素が Panel
   // -------------------------------------------------------
-  it("A-1: ルート要素が Panel (section) でレンダリングされる", () => {
+  it("ルート要素が Panel (section) でレンダリングされる", () => {
     const { container } = render(<ImageBase64Tile />);
     // Panel はデフォルトで section をレンダリングする
     const section = container.querySelector("section");
@@ -79,15 +79,15 @@ describe("ImageBase64Tile", () => {
     expect(container.firstChild?.nodeName).toBe("SECTION");
   });
 
-  it("A-1: as='div' を渡すとルートが div になる", () => {
+  it("as='div' を渡すとルートが div になる", () => {
     const { container } = render(<ImageBase64Tile as="div" />);
     expect(container.firstChild?.nodeName).toBe("DIV");
   });
 
   // -------------------------------------------------------
-  // E-1: 基本レンダリング (variant="full")
+  // 基本レンダリング (variant="full")
   // -------------------------------------------------------
-  it("E-1: variant=full — ToolPageLayout なしでコンポーネントが正常に描画される", () => {
+  it("variant=full — ToolPageLayout なしでコンポーネントが正常に描画される", () => {
     render(<ImageBase64Tile variant="full" />);
     // ラジオボタンの組（モード切替）が存在する
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
@@ -122,9 +122,9 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // E-2: ファイル選択後の結果表示 (variant=full / encode)
+  // ファイル選択後の結果表示 (variant=full / encode)
   // -------------------------------------------------------
-  it("E-2: ファイル選択後にBase64出力欄とData URI出力欄が表示される", async () => {
+  it("ファイル選択後にBase64出力欄とData URI出力欄が表示される", async () => {
     render(<ImageBase64Tile variant="full" />);
 
     const fileInput = document.querySelector(
@@ -160,18 +160,18 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // E-3: 空入力
+  // 空入力
   // -------------------------------------------------------
-  it("E-3: 初期状態でエラーは表示されない・出力欄は存在しない", () => {
+  it("初期状態でエラーは表示されない・出力欄は存在しない", () => {
     render(<ImageBase64Tile />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Base64")).not.toBeInTheDocument();
   });
 
   // -------------------------------------------------------
-  // E-4: 変換ロジックの正確性
+  // 変換ロジックの正確性
   // -------------------------------------------------------
-  it("E-4: エンコード後のBase64値が出力欄に表示される", async () => {
+  it("エンコード後のBase64値が出力欄に表示される", async () => {
     render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
@@ -189,7 +189,7 @@ describe("ImageBase64Tile", () => {
     });
   });
 
-  it("E-4: デコードモードでBase64文字列から画像プレビューが表示される", async () => {
+  it("デコードモードでBase64文字列から画像プレビューが表示される", async () => {
     render(<ImageBase64Tile variant="full" />);
 
     // デコードモードに切り替え
@@ -230,16 +230,16 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // E-5: ARIA
+  // ARIA
   // -------------------------------------------------------
-  it("E-5: ラジオボタンの組が見出しを名前として持つ", () => {
+  it("ラジオボタンの組が見出しを名前として持つ", () => {
     render(<ImageBase64Tile variant="full" />);
     expect(
       screen.getByRole("radiogroup", { name: "変換の向き" }),
     ).toBeInTheDocument();
   });
 
-  it("E-5: エンコード結果欄に実テキストを持つ独立した role=status 要素が存在する（C-3 準拠）", async () => {
+  it("エンコード結果欄に実テキストを持つ独立した role=status 要素が存在する", async () => {
     render(<ImageBase64Tile variant="full" />);
 
     const fileInput = document.querySelector(
@@ -252,18 +252,18 @@ describe("ImageBase64Tile", () => {
     });
 
     await waitFor(() => {
-      // C-3: role=status の要素が存在し、aria-live=polite を持つ
+      // role=status の要素が存在し、aria-live=polite を持つ
       const statusEls = screen.getAllByRole("status");
       expect(statusEls.length).toBeGreaterThanOrEqual(1);
       statusEls.forEach((el) => {
         expect(el).toHaveAttribute("aria-live", "polite");
       });
 
-      // C-3: readOnly textarea 自体に role=status が付与されていない（禁止パターン）
+      // readOnly textarea 自体に role=status が付与されていない（禁止パターン）
       const textareas = document.querySelectorAll("textarea[role='status']");
       expect(textareas.length).toBe(0);
 
-      // C-3: サマリ用 role=status 要素に実テキストノードがある（Base64に変換しました 等）
+      // サマリ用 role=status 要素に実テキストノードがある（Base64に変換しました 等）
       const summaryEl = statusEls.find(
         (el) => el.tagName !== "TEXTAREA" && el.textContent?.trim() !== "",
       );
@@ -272,9 +272,9 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // E-6: コピー文言変化
+  // コピー文言変化
   // -------------------------------------------------------
-  it("E-6: コピーボタン押下後に「コピー済み」に文言が変化する", async () => {
+  it("コピーボタン押下後に「コピー済み」に文言が変化する", async () => {
     render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
@@ -300,9 +300,9 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // E-7: コピー disabled 状態
+  // コピー disabled 状態
   // -------------------------------------------------------
-  it("E-7: 結果が空のときコピーボタンが存在しない（disabled ではなく非表示）", () => {
+  it("結果が空のときコピーボタンが存在しない（disabled ではなく非表示）", () => {
     render(<ImageBase64Tile />);
     // エンコード結果がない状態ではコピーボタンは存在しない
     expect(
@@ -311,9 +311,9 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // E-8: clipboard 不在時の silent fail
+  // clipboard 不在時の silent fail
   // -------------------------------------------------------
-  it("E-8: clipboard 不在時でもクラッシュしない", async () => {
+  it("clipboard 不在時でもクラッシュしない", async () => {
     const rejectClipboard = vi
       .fn()
       .mockRejectedValue(new Error("Clipboard unavailable"));
@@ -601,7 +601,7 @@ describe("ImageBase64Tile", () => {
     expect(screen.getByLabelText("画像ファイル")).toBeInTheDocument();
   });
 
-  it("モード切替: モード切替後に古い結果が残らない (G-1 準拠)", async () => {
+  it("モード切替: モード切替後に古い結果が残らない", async () => {
     render(<ImageBase64Tile variant="full" />);
 
     // ファイルを選択してエンコード結果を表示
@@ -653,9 +653,9 @@ describe("ImageBase64Tile", () => {
   });
 
   // -------------------------------------------------------
-  // D-4: アンマウント後 setState 防止（世代ガード）
+  // アンマウント後 setState 防止（世代ガード）
   // -------------------------------------------------------
-  it("D-4: アンマウント後に setState が呼ばれてもクラッシュしない", async () => {
+  it("アンマウント後に setState が呼ばれてもクラッシュしない", async () => {
     // FileReader の onload を遅延させてアンマウント後に発火させる
     let resolveLoad: (() => void) | null = null;
     class DelayedFileReader {
@@ -702,7 +702,7 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   // CSS トークン検証 (readFileSync パターン)
   // -------------------------------------------------------
-  it("CSS: 旧トークン --color-* が存在しない (B-1)", () => {
+  it("CSS: 旧トークン --color-* が存在しない", () => {
     const css = readFileSync(
       join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
       "utf-8",
@@ -710,7 +710,7 @@ describe("ImageBase64Tile", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("CSS: --accent 直塗りが存在しない (B-3)", () => {
+  it("CSS: --accent 直塗りが存在しない", () => {
     const css = readFileSync(
       join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
       "utf-8",
@@ -725,7 +725,7 @@ describe("ImageBase64Tile", () => {
     expect(violations).toHaveLength(0);
   });
 
-  it("CSS: font-weight: 700 が存在しない (B-4)", () => {
+  it("CSS: font-weight: 700 が存在しない", () => {
     const css = readFileSync(
       join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
       "utf-8",

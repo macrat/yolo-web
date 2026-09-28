@@ -207,7 +207,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     );
   });
 
-  // T-full-15: 基数切替後に古い結果が残らない（G-1 要件）
+  // T-full-15: 基数切替後に古い結果が残らない
   test("T-full-15: clears input when base is changed", () => {
     render(<NumberBaseConverterTile variant="full" />);
 
@@ -342,7 +342,7 @@ describe("NumberBaseConverterTile (複数インスタンス同居)", () => {
 });
 
 describe("NumberBaseConverterTile (CSS トークン検証)", () => {
-  // T-css-1: 旧 --color-* トークン不使用・--accent 直塗り禁止・font-weight 700 禁止
+  // T-css-1: --color-* トークン不使用・--accent 直塗り禁止・font-weight 700 禁止
   test("T-css-1: CSS does not use deprecated --color-* tokens or forbidden styles", () => {
     const css = readFileSync(
       join(__dirname, "..", "NumberBaseConverterTile.module.css"),

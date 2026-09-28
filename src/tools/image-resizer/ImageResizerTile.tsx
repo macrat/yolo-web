@@ -27,7 +27,7 @@
  * GIF受け取り時に「アニメーションGIFはリサイズ後にアニメーションが失われる」旨を
  * role="status"（advisory = polite）で表示。処理自体は継続可能。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" の div にリサイズ完了サマリテキストを置く。
  * - GIF 警告も role="status" aria-live="polite"（処理を妨げない注意 → alert は過剰）。
@@ -94,7 +94,7 @@ export default function ImageResizerTile({
   const formatId = `${uid}-output-format`;
   const qualityId = `${uid}-output-quality`;
 
-  // ---------- アンマウント後 setState 防止（D-4） ----------
+  // ---------- アンマウント後 setState 防止 ----------
   const isMounted = useRef(true);
   useEffect(() => {
     isMounted.current = true;
@@ -152,7 +152,7 @@ export default function ImageResizerTile({
       return;
     }
 
-    // 個別論点①-5: GIF誤誘導解消
+    // GIF はアニメーションが失われることを知らせる
     if (file.type === "image/gif") {
       setGifWarning(true);
     }
@@ -164,7 +164,7 @@ export default function ImageResizerTile({
 
     const reader = new FileReader();
     reader.onload = () => {
-      // アンマウント後は何もしない（D-4）
+      // アンマウント後は何もしない
       if (!isMounted.current) return;
       // 古い処理は無視（連続ドロップ安全性）
       if (currentProcessId !== processIdRef.current) return;
@@ -341,7 +341,7 @@ export default function ImageResizerTile({
         fileName,
       });
 
-      // C-3: ライブリージョン用の実テキストサマリ
+      // ライブリージョン用の実テキストサマリ
       setResultSummary(
         `リサイズ完了: ${newWidth}×${newHeight}px（推定 ${formatFileSize(estimatedSize)}）`,
       );
@@ -395,7 +395,7 @@ export default function ImageResizerTile({
         {/* エラー表示 */}
         {error && <ErrorMessage message={error} />}
 
-        {/* GIF警告（個別論点①-5: アニメーション消失の明示）
+        {/* GIF警告（アニメーション消失の明示）
          * GIF受け取り時の注意（advisory）のため role="status"（polite）を使用。
          * 処理を妨げない注意であり role="alert"（assertive）は過剰なため不使用。
          */}
@@ -552,7 +552,7 @@ export default function ImageResizerTile({
           </>
         )}
 
-        {/* C-3: ライブリージョン — 実テキストノードのサマリ */}
+        {/* ライブリージョン — 実テキストノードのサマリ */}
         <div
           role="status"
           aria-live="polite"

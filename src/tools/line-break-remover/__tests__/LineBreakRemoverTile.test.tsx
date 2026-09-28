@@ -189,7 +189,7 @@ describe("V-5: variant=full での変換", () => {
     expect(output.value).toBe("行1行2\n\n段落2");
   });
 
-  it("モード切替後に古い結果が残らない（G-1）", () => {
+  it("モード切替後に古い結果が残らない", () => {
     render(<LineBreakRemoverTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "a\nb" } });
@@ -419,7 +419,7 @@ describe("V-13: デフォルト variant", () => {
   });
 });
 
-// --- V-14: CSS トークン検証（旧 E-12 相当の回帰ガード） ---
+// --- V-14: CSS トークン検証 ---
 describe("V-14: CSS トークン検証", () => {
   const cssPath = join(__dirname, "..", "LineBreakRemoverTile.module.css");
 

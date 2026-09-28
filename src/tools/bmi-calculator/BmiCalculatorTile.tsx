@@ -22,11 +22,11 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <BmiCalculatorTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" の div にサマリテキストを置く
  *   （計算結果はライブリージョン内に配置してスクリーンリーダーに通知）
@@ -70,8 +70,8 @@ export interface BmiCalculatorTileProps {
 /**
  * BmiCalculatorTile — BMI計算ツールの単一実装（全機能のタイル）。
  *
- * コピーボタン: なし（T-4b 確定: BMI値・判定区分は読んで知る対象）
- * ライブリージョン: role="status" aria-live="polite" + 実テキストノードのサマリ（C-3 準拠）
+ * コピーボタン: なし（BMI値・判定区分は読んで知る対象）
+ * ライブリージョン: role="status" aria-live="polite" + 実テキストノードのサマリ
  */
 export default function BmiCalculatorTile({
   variant = "full",
@@ -114,7 +114,7 @@ export default function BmiCalculatorTile({
 
   const categoryClass = result ? CATEGORY_CLASS_MAP[result.categoryLevel] : "";
 
-  /** ライブリージョンに入れる実テキストノードのサマリ（C-3 準拠） */
+  /** ライブリージョンに入れる実テキストノードのサマリ */
   const liveSummary = result ? `BMI ${result.bmi}（${result.category}）` : "";
 
   // ---------- Render ----------
@@ -171,10 +171,10 @@ export default function BmiCalculatorTile({
         </div>
       </div>
 
-      {/* エラー表示（A-4: 日本語の ErrorMessage を使用） */}
+      {/* エラー表示（日本語の ErrorMessage を使用） */}
       {error && <ErrorMessage message={error} />}
 
-      {/* C-3: ライブリージョン（実テキストノードのサマリ）
+      {/* ライブリージョン（実テキストノードのサマリ）
        *   計算前は空文字、計算後はサマリテキストを入れてスクリーンリーダーに通知する */}
       <div role="status" aria-live="polite" aria-atomic="true">
         <span className={styles.resultSummary}>{liveSummary}</span>

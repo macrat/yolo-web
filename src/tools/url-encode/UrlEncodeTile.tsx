@@ -23,13 +23,13 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <UrlEncodeTile variant="full" />
  * <UrlEncodeTile variant="encode" />
  * <UrlEncodeTile variant="decode" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -56,7 +56,7 @@ const DIRECTION_OPTIONS: { label: string; value: Direction }[] = [
   { label: "デコード", value: "decode" },
 ];
 
-/** エラーを日本語に変換する（A-4 準拠: 英語生エラーを露出しない） */
+/** エラーを日本語に変換する（英語生エラーを露出しない） */
 function toJapaneseError(direction: Direction): string {
   if (direction === "decode") {
     return "不正な URL エンコード文字列です。パーセント記号に続く 2 桁の 16 進数を確認してください。";
@@ -124,7 +124,7 @@ export default function UrlEncodeTile({
       ? toJapaneseError(direction)
       : "";
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const statusSummary = (() => {
     if (!input) return "";
     if (errorMessage) return "";
@@ -193,7 +193,7 @@ export default function UrlEncodeTile({
         />
       </div>
 
-      {/* エラー表示（A-4 準拠: 日本語化済みメッセージを渡す） */}
+      {/* エラー表示（日本語化済みメッセージを渡す） */}
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
       {/* 出力欄 */}
@@ -210,7 +210,7 @@ export default function UrlEncodeTile({
           />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"

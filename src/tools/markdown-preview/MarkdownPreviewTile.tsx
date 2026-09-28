@@ -9,8 +9,8 @@
  * - **variant prop のみでバリエーション**: 現時点では "full" のみ（2ペイン）。
  *   別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（[A-6]）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（[A-2]）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: renderMarkdown / sanitizeHtml が唯一のロジック源。
  *   sanitizeHtml を経由しない HTML 描画経路を絶対に作らない（XSS 防御）。
  *
@@ -22,7 +22,7 @@
  * - SSR: getServerSnapshot() が false を返す → プレビュー非表示
  * - CSR: getSnapshot() が true を返す → プレビューを描画
  * この対称性により hydration mismatch が発生しない。
- * 複数インスタンスが道具箱で同居しても hydration エラーが出ない。
+ * 複数インスタンスが同一ページに同居しても hydration エラーが出ない。
  *
  * ## variant
  *
@@ -32,17 +32,17 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <MarkdownPreviewTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" にはサマリテキストのみを配置し、
- *   スクリーンリーダーへの変化通知を実現する（C-3）。
+ *   スクリーンリーダーへの変化通知を実現する。
  * - プレビュー本体（dangerouslySetInnerHTML）はライブリージョン外の
  *   role="region" に配置することで、キー入力毎に Markdown 全体が
- *   再読み上げされることを防ぐ（C-3）。
+ *   再読み上げされることを防ぐ。
  */
 
 import { useId, useMemo, useSyncExternalStore } from "react";
@@ -118,7 +118,7 @@ export default function MarkdownPreviewTile({
   // variant は将来拡張のために受け取る。現在は "full" のみ。
   void variant;
 
-  // ---------- id インスタンス一意化（[A-6]: 複数同居時の重複 id・label 誤結合防止） ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const inputId = `${uid}-input`;
 
@@ -136,7 +136,7 @@ export default function MarkdownPreviewTile({
     return renderMarkdown(input);
   }, [input, isMounted]);
 
-  // C-3: プレビュー状態のサマリ（実テキストノード）
+  // プレビュー状態のサマリ（実テキストノード）
   // role="status" 領域に短いサマリのみを配置し、スクリーンリーダーへの変化通知を実現。
   // プレビュー本体はライブリージョン外（role="region"）に配置するため、
   // キー入力毎に Markdown 全体が再読み上げされることを防ぐ。
@@ -188,7 +188,7 @@ export default function MarkdownPreviewTile({
             />
           </div>
 
-          {/* C-3: role="status" にはサマリのみ配置（視覚上は非表示）。
+          {/* role="status" にはサマリのみ配置（視覚上は非表示）。
               プレビュー本体はこの外に配置することで、スクリーンリーダーが
               キー入力毎に Markdown 全体を再読み上げすることを防ぐ。 */}
           <div
@@ -200,11 +200,11 @@ export default function MarkdownPreviewTile({
             {statusSummary}
           </div>
 
-          {/* エラー表示: A-4 準拠（ErrorMessage 経由・日本語メッセージ） */}
+          {/* エラー表示（ErrorMessage 経由・日本語メッセージ） */}
           {result.error ? (
             <ErrorMessage message={result.error} />
           ) : (
-            /* プレビュー本体: ライブリージョン外の role="region" に配置（C-3） */
+            /* プレビュー本体: ライブリージョン外の role="region" に配置 */
             <div
               role="region"
               aria-label="Markdownプレビュー"

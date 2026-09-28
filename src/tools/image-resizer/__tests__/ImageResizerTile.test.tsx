@@ -2,21 +2,21 @@
  * ImageResizerTile 単一正典タイル回帰テスト
  *
  * テスト観点:
- * - E-1: 基本レンダリング（ドロップゾーン存在・Panel ルート）
- * - E-2: ファイル選択後のリサイズコントロール表示
- * - E-3: 初期状態
- * - E-4: ファイル選択後の幅/高さ設定・Canvas drawImage 呼び出し
- * - E-5: ARIA属性（ラジオボタンの組・ライブリージョン）
- * - E-6/E-7/E-8: コピーボタンなし（download 主体）
- * - E-12: CSSトークン検証
- * - A-1: Panel ルート確認
- * - A-6: useId ベースのインスタンス一意 id（複数インスタンス同居）
- * - 個別論点①-5: GIF警告
+ * - 基本レンダリング（ドロップゾーン存在・Panel ルート）
+ * - ファイル選択後のリサイズコントロール表示
+ * - 初期状態
+ * - ファイル選択後の幅/高さ設定・Canvas drawImage 呼び出し
+ * - ARIA属性（ラジオボタンの組・ライブリージョン）
+ * - コピーボタンなし（download 主体）
+ * - CSSトークン検証
+ * - Panel ルート確認
+ * - useId ベースのインスタンス一意 id（複数インスタンス同居）
+ * - GIF警告
  * - エラーハンドリング
  * - モード切替（dimensions/percent）
  * - 縦横比を保つチェックボックス
  * - ダウンロード機能
- * - D-4: 非同期処理アンマウント後 setState 防止
+ * - 非同期処理アンマウント後 setState 防止
  */
 
 import { readFileSync } from "node:fs";
@@ -163,25 +163,25 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // A-1: Panel ルート確認
+  // Panel ルート確認
   // -------------------------------------------------------
-  it("A-1: ルート要素が Panel（section タグ）であること", () => {
+  it("ルート要素が Panel（section タグ）であること", () => {
     const { container } = render(<ImageResizerTile />);
     // Panel は section タグでレンダリングされる
     const root = container.firstChild as HTMLElement;
     expect(root.tagName.toLowerCase()).toBe("section");
   });
 
-  it("A-1: as='div' を渡すと div タグになること", () => {
+  it("as='div' を渡すと div タグになること", () => {
     const { container } = render(<ImageResizerTile as="div" />);
     const root = container.firstChild as HTMLElement;
     expect(root.tagName.toLowerCase()).toBe("div");
   });
 
   // -------------------------------------------------------
-  // E-1: 基本レンダリング
+  // 基本レンダリング
   // -------------------------------------------------------
-  it("E-1: 初期描画で画像ファイルを選ぶ欄が存在する", () => {
+  it("初期描画で画像ファイルを選ぶ欄が存在する", () => {
     render(<ImageResizerTile />);
     expect(screen.getByLabelText("画像ファイル")).toHaveAttribute(
       "type",
@@ -190,9 +190,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-3: 空入力・初期状態の挙動
+  // 空入力・初期状態の挙動
   // -------------------------------------------------------
-  it("E-3: 初期状態でエラーは非表示、リサイズコントロールは未表示", () => {
+  it("初期状態でエラーは非表示、リサイズコントロールは未表示", () => {
     render(<ImageResizerTile />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(
@@ -201,9 +201,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-2: 入力→結果更新
+  // 入力→結果更新
   // -------------------------------------------------------
-  it("E-2: ファイル選択後にリサイズコントロールが表示される", async () => {
+  it("ファイル選択後にリサイズコントロールが表示される", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -219,9 +219,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-4: 変換ロジックの正確性（UI経由）
+  // 変換ロジックの正確性（UI経由）
   // -------------------------------------------------------
-  it("E-4: ファイル選択後に幅入力に元画像幅がセットされる", async () => {
+  it("ファイル選択後に幅入力に元画像幅がセットされる", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -235,7 +235,7 @@ describe("ImageResizerTile", () => {
     expect(widthInput.value).toBe(String(IMAGE_WIDTH));
   });
 
-  it("E-4b: リサイズ実行で Canvas drawImage が呼ばれる", async () => {
+  it("リサイズ実行で Canvas drawImage が呼ばれる", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -256,12 +256,11 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // B-593: h1→h3 飛び是正の回帰防止
-  // ツール本体セクション見出しは h2（見出しレベル2）であること。
+  // ツール本体セクション見出しは h1 の直下なので h2（見出しレベル2）であること。
   // これらの見出しは初期描画では出ず、ファイル選択後に表示されるため、
   // 既存テストと同じ描画セットアップ（selectFileAndWaitImageLoad）を再利用する。
   // -------------------------------------------------------
-  it("B-593: ファイル選択後の本体セクション見出しが h2（見出しレベル2）である", async () => {
+  it("ファイル選択後の本体セクション見出しが h2（見出しレベル2）である", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -293,9 +292,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-5: ARIA属性
+  // ARIA属性
   // -------------------------------------------------------
-  it("E-5: ラジオボタンの組が見出しを名前として持つ", async () => {
+  it("ラジオボタンの組が見出しを名前として持つ", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -310,7 +309,7 @@ describe("ImageResizerTile", () => {
     ).toBeInTheDocument();
   });
 
-  it("E-5b: リサイズ後に role=status aria-live=polite の要素が存在しサマリテキストを含む", async () => {
+  it("リサイズ後に role=status aria-live=polite の要素が存在しサマリテキストを含む", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -339,9 +338,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-6/E-7/E-8: コピーボタンなし（T-4b: image-resizer は download 主体）
+  // コピーボタンなし（image-resizer は download 主体）
   // -------------------------------------------------------
-  it("E-6/E-7/E-8: N/A - image-resizer はコピーボタンを持たない（download 主体）", () => {
+  it("image-resizer はコピーボタンを持たない（download 主体）", () => {
     render(<ImageResizerTile />);
     expect(
       screen.queryByRole("button", { name: /コピー/i }),
@@ -349,9 +348,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // A-6: 複数インスタンス id 一意性テスト
+  // 複数インスタンス id 一意性テスト
   // -------------------------------------------------------
-  it("A-6: 複数インスタンスを同居させたとき id が重複しない", async () => {
+  it("複数インスタンスを同居させたとき id が重複しない", async () => {
     const { container } = render(
       <div>
         <ImageResizerTile />
@@ -372,9 +371,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // 個別論点: GIF誤誘導解消（①-5）
+  // GIF のアニメーションが失われることの警告
   // -------------------------------------------------------
-  it("GIF個別論点①-5: GIF/アニメーション画像に警告メッセージを表示する", async () => {
+  it("GIF/アニメーション画像に警告メッセージを表示する", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -534,42 +533,42 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-12: CSSトークン検証（新タイルの CSS を対象とする）
+  // CSSトークン検証（新タイルの CSS を対象とする）
   // -------------------------------------------------------
-  it("E-12: CSS に --color-* 旧トークンが存在しない", () => {
+  it("CSS に --color-* 旧トークンが存在しない", () => {
     const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("E-12: CSS に --accent 直塗り (background.*--accent) が存在しない", () => {
+  it("CSS に --accent 直塗り (background.*--accent) が存在しない", () => {
     const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/background(?:-color)?:\s*var\(--accent\)/);
   });
 
-  it("E-12: CSS に font-weight: 700 が存在しない", () => {
+  it("CSS に font-weight: 700 が存在しない", () => {
     const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("E-12: CSS にハードコードhex色値 (#xxxxxx) が存在しない", () => {
+  it("CSS にハードコードhex色値 (#xxxxxx) が存在しない", () => {
     const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
   });
 
-  it("E-12: CSS にハードコードrgb/rgba色値が存在しない", () => {
+  it("CSS にハードコードrgb/rgba色値が存在しない", () => {
     const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/\brgba?\s*\(/);
   });
 
   // -------------------------------------------------------
-  // D-4 実証: handleResize の連続実行で古い結果が新しい結果を上書きしない
+  // handleResize の連続実行で古い結果が新しい結果を上書きしない
   // -------------------------------------------------------
-  it("D-4 実証: handleResize 連続実行で stale な古い結果が最新結果を上書きしない（resizeIdRef ガード）", async () => {
+  it("handleResize 連続実行で stale な古い結果が最新結果を上書きしない（resizeIdRef ガード）", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -668,9 +667,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-11: 既存 logic.ts テスト PASS 維持確認（スモークテスト）
+  // 既存 logic.ts テスト PASS 維持確認（スモークテスト）
   // -------------------------------------------------------
-  it("E-11: logic.ts のエクスポートが正常に参照できる", async () => {
+  it("logic.ts のエクスポートが正常に参照できる", async () => {
     const { calculateDimensions, formatFileSize } = await import("../logic");
     expect(calculateDimensions(800, 600, 400, null, true)).toEqual({
       width: 400,

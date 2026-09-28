@@ -49,7 +49,7 @@
   color: var(--ink);
 }
 
-/* 有効だがタイポの可能性: --accent の文字と罫で「確認して」と目を引く（①-4 矛盾シグナル解消） */
+/* 有効だがタイポの可能性: --accent の文字と罫で「確認して」と目を引く（有効と提案が食い違って見えないようにする） */
 .badgeValidWithSuggestion {
   composes: badge;
   background-color: var(--paper-2);

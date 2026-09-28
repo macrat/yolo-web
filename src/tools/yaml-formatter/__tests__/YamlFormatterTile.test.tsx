@@ -23,26 +23,26 @@ describe("YamlFormatterTile", () => {
     // 各テスト前にコピー状態をリセット
   });
 
-  // E-1: 基本レンダリング (variant="full")
+  // 基本レンダリング (variant="full")
   test("renders without crashing (variant=full)", () => {
     render(<YamlFormatterTile variant="full" />);
     expect(screen.getByLabelText("入力")).toBeInTheDocument();
   });
 
-  // E-10: 入力欄・出力欄が確定提示方式で最初から見える
+  // 入力欄・出力欄が確定提示方式で最初から見える
   test("shows input and output areas on initial render", () => {
     render(<YamlFormatterTile variant="full" />);
     expect(screen.getByLabelText("入力")).toBeInTheDocument();
     expect(screen.getByLabelText("出力")).toBeInTheDocument();
   });
 
-  // E-3: 空入力時はエラーが表示されない
+  // 空入力時はエラーが表示されない
   test("shows no error on empty input", () => {
     render(<YamlFormatterTile variant="full" />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  // E-2: 変換ボタンで出力が更新される（YAML整形モード）
+  // 変換ボタンで出力が更新される（YAML整形モード）
   test("formats YAML when 変換 button is clicked", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -53,7 +53,7 @@ describe("YamlFormatterTile", () => {
     expect(output.value).toContain("age: 30");
   });
 
-  // E-2: 検証ボタンで有効YAMLのとき日本語の成功メッセージが表示される
+  // 検証ボタンで有効YAMLのとき日本語の成功メッセージが表示される
   test("shows Japanese validation success when 検証 is clicked with valid YAML", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -67,7 +67,7 @@ describe("YamlFormatterTile", () => {
     expect(output.value).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
   });
 
-  // E-4: YAML → JSON 変換の正確性
+  // YAML → JSON 変換の正確性
   test("converts YAML to JSON correctly", () => {
     render(<YamlFormatterTile variant="full" />);
     // モード切替: YAML → JSON
@@ -81,7 +81,7 @@ describe("YamlFormatterTile", () => {
     expect(parsed).toEqual({ name: "test", age: 30 });
   });
 
-  // E-4: JSON → YAML 変換の正確性
+  // JSON → YAML 変換の正確性
   test("converts JSON to YAML correctly", () => {
     render(<YamlFormatterTile variant="full" />);
     // モード切替: JSON → YAML
@@ -97,7 +97,7 @@ describe("YamlFormatterTile", () => {
     expect(output.value).toContain("age: 30");
   });
 
-  // E-4: 無効なYAMLでエラー表示（日本語メッセージ必須）
+  // 無効なYAMLでエラー表示（日本語メッセージ必須）
   test("shows error for invalid YAML input", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -106,7 +106,7 @@ describe("YamlFormatterTile", () => {
     expect(screen.getByRole("alert")).toBeInTheDocument();
   });
 
-  // A-4: エラー文言は英語の生パーサーエラーを露出しない（日本語で表示）
+  // エラー文言は英語の生パーサーエラーを露出しない（日本語で表示）
   test("shows Japanese error message, not raw English YAML parser error", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -121,7 +121,7 @@ describe("YamlFormatterTile", () => {
     expect(alert.textContent).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
   });
 
-  // A-4: 検証ボタンでも無効YAML時に日本語エラーが出る
+  // 検証ボタンでも無効YAML時に日本語エラーが出る
   test("shows Japanese error when 検証 is clicked with invalid YAML", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -134,7 +134,7 @@ describe("YamlFormatterTile", () => {
     expect(alert.textContent).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
   });
 
-  // E-5: ARIA — role="status" aria-live="polite" 領域が存在する
+  // ARIA — role="status" aria-live="polite" 領域が存在する
   test("has role=status region with aria-live=polite", () => {
     render(<YamlFormatterTile variant="full" />);
     const statusRegion = screen.getByRole("status");
@@ -142,7 +142,7 @@ describe("YamlFormatterTile", () => {
     expect(statusRegion).toHaveAttribute("aria-live", "polite");
   });
 
-  // E-5a: C-3 — 変換後に role="status" 領域に実テキストサマリが表示される
+  // 変換後に role="status" 領域に実テキストサマリが表示される
   test("shows summary text in role=status region after formatting", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -152,7 +152,7 @@ describe("YamlFormatterTile", () => {
     expect(statusRegion.textContent).not.toBe("");
   });
 
-  // E-5b: C-3 — 検証後に role="status" 領域に実テキストサマリが表示される
+  // 検証後に role="status" 領域に実テキストサマリが表示される
   test("shows summary text in role=status region after validation", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -162,14 +162,14 @@ describe("YamlFormatterTile", () => {
     expect(statusRegion.textContent).not.toBe("");
   });
 
-  // E-7: 出力が空のときコピーボタンが disabled
+  // 出力が空のときコピーボタンが disabled
   test("copy button is disabled when output is empty", () => {
     render(<YamlFormatterTile variant="full" />);
     const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).toBeDisabled();
   });
 
-  // E-7: 出力があるときコピーボタンが enabled
+  // 出力があるときコピーボタンが enabled
   test("copy button is enabled when output has content", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -179,7 +179,7 @@ describe("YamlFormatterTile", () => {
     expect(copyButton).not.toBeDisabled();
   });
 
-  // E-6: 押す前は「コピー」
+  // 押す前は「コピー」
   test("copy button label is コピー when not copied", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");
@@ -201,7 +201,7 @@ describe("YamlFormatterTile", () => {
     expect(writeText).toHaveBeenCalledTimes(1);
   });
 
-  // E-8: navigator.clipboard が存在しない環境でコピーが例外を投げない
+  // navigator.clipboard が存在しない環境でコピーが例外を投げない
   test("does not throw when navigator.clipboard is absent", async () => {
     const originalClipboard = navigator.clipboard;
     Object.defineProperty(navigator, "clipboard", {
@@ -221,7 +221,7 @@ describe("YamlFormatterTile", () => {
     });
   });
 
-  // A-1: ルート要素が Panel であること（data-testid は不要、Panel は section をレンダリング）
+  // ルート要素が Panel であること（data-testid は不要、Panel は section をレンダリング）
   test("root element is Panel (section tag)", () => {
     const { container } = render(<YamlFormatterTile variant="full" />);
     // Panel デフォルトは <section>
@@ -229,7 +229,7 @@ describe("YamlFormatterTile", () => {
     expect(rootEl.tagName.toLowerCase()).toBe("section");
   });
 
-  // A-6: useId で一意な id が付与される（複数インスタンスで id 重複しない）
+  // useId で一意な id が付与される（複数インスタンスで id 重複しない）
   test("multiple instances have unique input/output ids", () => {
     const { container: c1 } = render(<YamlFormatterTile variant="full" />);
     const { container: c2 } = render(<YamlFormatterTile variant="full" />);
@@ -264,7 +264,7 @@ describe("YamlFormatterTile", () => {
     expect(cssWithoutComments).not.toMatch(/font-weight\s*:\s*700/);
   });
 
-  // G-1: .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
+  // .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
   test("CSS .controlLabel has white-space: nowrap to prevent label wrapping", () => {
     const cssPath = join(
       process.cwd(),
@@ -317,7 +317,7 @@ describe("YamlFormatterTile", () => {
     expect(output.value).toContain("age: 30");
   });
 
-  // モード切替後に古い出力が残らない (G-1)
+  // モード切替後に古い出力が残らない
   test("clears output and error when mode changes", () => {
     render(<YamlFormatterTile variant="full" />);
     const input = screen.getByLabelText("入力");

@@ -21,14 +21,14 @@
  *   「画像 → Base64」の変換器として一目で分かる。
  * - `"decode"`: 方向を decode に固定し、ラジオボタンの組を出さない。
  *
- * ## 非同期安全性（D-4 準拠）
+ * ## 非同期安全性
  *
  * FileReader は Promise ベースではなくコールバックベースのため、アンマウント後に
  * onload が呼ばれると setState が実行されてメモリリークや警告の原因になる。
  * 世代カウンタ（generationRef）を使って古い FileReader 読み込み結果を無視する。
  * 連続ドロップ時も前の読み込み結果が後の結果を上書きしない。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - エンコード出力の readOnly textarea は role="status" 対象外。
  * - 別途 srOnly の role="status" aria-live="polite" div にサマリを置く。
@@ -109,7 +109,7 @@ export default function ImageBase64Tile({
     null,
   );
   const [encodeError, setEncodeError] = useState("");
-  // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
+  // スクリーンリーダーへ通知するための短いサマリテキスト
   const [encodeSummary, setEncodeSummary] = useState("");
 
   // デコードモードの状態
@@ -117,7 +117,7 @@ export default function ImageBase64Tile({
   const [parsedImage, setParsedImage] = useState<ParsedImage | null>(null);
   const [decodeError, setDecodeError] = useState("");
 
-  // ---------- 世代カウンタ（D-4: アンマウント後 setState 防止・連続ドロップ対策） ----------
+  // ---------- 世代カウンタ（アンマウント後 setState 防止・連続ドロップ対策） ----------
   // FileReader は非同期コールバックベースのため、アンマウント後や
   // 連続ドロップ時に古い結果が setState されないよう世代で管理する。
   const generationRef = useRef(0);
@@ -140,7 +140,7 @@ export default function ImageBase64Tile({
       // 世代が一致する場合のみ setState（古い結果の上書き防止）
       if (currentGeneration === generationRef.current) {
         setBase64Result(result);
-        // C-3: 変換成功サマリを role="status" 領域に実テキストとして配置
+        // 変換成功サマリを role="status" 領域に実テキストとして配置
         setEncodeSummary(
           `Base64に変換しました。元サイズ ${formatFileSize(result.originalSize)}、Base64サイズ ${formatFileSize(result.base64Size)}、MIMEタイプ ${result.mimeType}`,
         );
@@ -197,7 +197,7 @@ export default function ImageBase64Tile({
 
   const handleModeChange = useCallback((value: string) => {
     setDynamicMode(value as TabMode);
-    // G-1: モード切替時に古い結果をリセット
+    // モード切替時に古い結果をリセット
     setEncodeError("");
     setDecodeError("");
     setEncodeSummary("");
@@ -238,7 +238,7 @@ export default function ImageBase64Tile({
           {/* 結果表示エリア（ファイル選択後） */}
           {base64Result && (
             <div className={styles.resultArea}>
-              {/* C-3: role="status" aria-live="polite" で動的通知。
+              {/* role="status" aria-live="polite" で動的通知。
                   実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。
                   readOnly textarea をラップするだけでは値変化が読み上げられないため分離する。
                   srOnly で視覚的に隠し SR のみに読ませる。 */}
@@ -285,7 +285,7 @@ export default function ImageBase64Tile({
                     align="end"
                   />
                 </div>
-                {/* A-1: Textarea "mono" バリアント。role=status は textarea に直付与しない（C-3 禁止パターン）。 */}
+                {/* Textarea "mono" バリアント。role=status は textarea に直付与しない（禁止パターン）。 */}
                 <Textarea
                   id={base64OutputId}
                   variant="mono"

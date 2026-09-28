@@ -21,14 +21,14 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <ColorConverterTile variant="full" />
  * <ColorConverterTile variant="hex" />
  * <ColorConverterTile variant="rgb" />
  * <ColorConverterTile variant="hsl" />
  * ```
  *
- * ## アクセシビリティ (C-3 準拠)
+ * ## アクセシビリティ
  *
  * - 変換結果エリアに role="status" aria-live="polite" のライブリージョンを置き
  *   スクリーンリーダーへ変換完了を通知する。
@@ -63,7 +63,7 @@ const MODE_OPTIONS: { label: string; value: InputMode }[] = [
 ];
 
 /**
- * logic.ts が返す英語エラーメッセージを日本語化する（B-2 要件）。
+ * logic.ts が返す英語エラーメッセージを日本語化する。
  * logic.ts のエラーをそのまま ErrorMessage に渡すと英語が露出するため、
  * ここで日本語へ変換する。
  */
@@ -79,7 +79,7 @@ function toJapaneseError(mode: InputMode): string {
 }
 
 /**
- * 変換結果のサマリ文言（C-3: ライブリージョンに実テキストノードを置く要件）。
+ * 変換結果のサマリ文言（ライブリージョンに実テキストノードを置く要件）。
  * スクリーンリーダーはサマリテキストを読み上げ、出力の変化を通知する。
  */
 function buildSummary(result: ColorResult | null): string {
@@ -248,7 +248,7 @@ export default function ColorConverterTile({
             value={inputText}
             onChange={(e) => {
               setInputText(e.target.value);
-              // G-1: 入力内容を書き換えたとき、エラー状態だけクリアする。
+              // 入力内容を書き換えたとき、エラー状態だけクリアする。
               // 来訪者が「直した」操作に即座に応えるために必要。
               // 成功結果は次の「変換」まで保持する（過剰なクリアを防ぐ）。
               if (result && !result.success) setResult(null);
@@ -318,7 +318,7 @@ export default function ColorConverterTile({
         </>
       )}
 
-      {/* C-3: ライブリージョンに実テキストノードのサマリを置く。
+      {/* ライブリージョンに実テキストノードのサマリを置く。
           変換成功/失敗をスクリーンリーダーに通知する。
           .liveRegion は sr-only スタイル（視覚的に非表示、SR 専用）。 */}
       <div

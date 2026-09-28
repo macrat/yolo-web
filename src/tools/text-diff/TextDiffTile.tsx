@@ -21,7 +21,7 @@
  * - `"word"`: モードを単語単位に固定し、ラジオボタンの組を出さない。
  * - `"char"`: モードを文字単位に固定し、ラジオボタンの組を出さない。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" の div にサマリテキストを置く
  *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
@@ -97,10 +97,10 @@ export default function TextDiffTile({
   );
   const hasDiff = hasDifferences(diffParts);
 
-  // ①-12: 両入力とも空のとき「差分なし」を表示しない（未入力状態と区別）
+  // 両入力とも空のとき「差分なし」を表示しない（未入力状態と区別）
   const isEmptyInput = oldText === "" && newText === "";
 
-  // モード別単位文字列（①-2: 件数・ラベル一致）
+  // モード別単位文字列（件数・ラベル一致）
   const modeUnit = useMemo(() => {
     switch (mode) {
       case "line":
@@ -112,7 +112,7 @@ export default function TextDiffTile({
     }
   }, [mode]);
 
-  // ①-2: モード別の追加・削除カウント
+  // モード別の追加・削除カウント
   // line モード: part.value の改行カウント（hunk件数ではなく行数合算）
   // word/char モード: diff ライブラリの part.count を総和する
   const addedCount = useMemo(() => {
@@ -143,8 +143,8 @@ export default function TextDiffTile({
       .reduce((sum, p) => sum + (p.count ?? p.value.length), 0);
   }, [diffParts, mode]);
 
-  // C-3: ライブリージョンに入れる実テキストノードのサマリ
-  // ①-12: isEmptyInput のとき空文字（「差分なし」誤表示しない）
+  // ライブリージョンに入れる実テキストノードのサマリ
+  // isEmptyInput のとき空文字（「差分なし」誤表示しない）
   const summaryText = useMemo(() => {
     if (isEmptyInput) return ""; // 両方空 = 入力待ち状態
     if (hasDiff)
@@ -152,7 +152,7 @@ export default function TextDiffTile({
     return "差分なし"; // 入力あり・差分ゼロの場合のみ表示
   }, [isEmptyInput, hasDiff, addedCount, removedCount, modeUnit]);
 
-  // ①-2: 差分本文に「+」「−」記号を付与（meta.ts howItWorks/FAQ との整合）
+  // 差分本文に「+」「−」記号を付与（meta.ts howItWorks/FAQ との整合）
   // line モード: 各行の先頭に記号を付与
   // word/char モード: span 先頭に記号を付与
   const getDisplayValue = (part: {
@@ -223,9 +223,9 @@ export default function TextDiffTile({
         </div>
       </div>
 
-      {/* C-3: ライブリージョン（サマリのみ aria-live。長文 pre には aria-live なし）
+      {/* ライブリージョン（サマリのみ aria-live。長文 pre には aria-live なし）
        * 実テキストノードのサマリを直接配置（readOnly textarea ラップ不可）
-       * ①-12: isEmptyInput のとき summaryText="" で「差分なし」誤表示しない */}
+       * isEmptyInput のとき summaryText="" で「差分なし」誤表示しない */}
       <div
         role="status"
         aria-live="polite"

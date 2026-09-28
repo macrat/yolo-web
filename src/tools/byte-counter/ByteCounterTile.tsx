@@ -9,8 +9,8 @@
  * - **1ツール n タイル = variant**: full / compact は同一コンポーネントの
  *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6 準拠）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（道具箱に置いても単独で動く）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: analyzeText が唯一のロジック源（再実装・改変禁止）。
  *
  * ## variant
@@ -18,7 +18,7 @@
  * - `"full"` (デフォルト): 全統計表示（バイト数・文字数・行数・単語数）＋バイト分布内訳。
  * - `"compact"`: 主要統計のみ（バイト数・文字数・行数・単語数）。バイト分布を非表示。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" の div にサマリテキストを置く。
  *   aria-atomic は付けない（付けると入力1文字ごとに全統計が読み上げられる）。
@@ -55,7 +55,7 @@ export default function ByteCounterTile({
   as = "section",
   className,
 }: ByteCounterTileProps = {}) {
-  // ---------- id インスタンス一意化（A-6: 複数同居時の重複 id・label 誤結合防止） ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const inputId = `${uid}-input`;
   const liveRegionId = `${uid}-live`;
@@ -66,7 +66,7 @@ export default function ByteCounterTile({
   // ---------- リアルタイム集計（共有エンジン logic.ts を使用・再実装禁止） ----------
   const result = useMemo(() => analyzeText(text), [text]);
 
-  // C-3: ライブリージョンに置くサマリテキスト（簡潔に・全統計でなく要点のみ）
+  // ライブリージョンに置くサマリテキスト（簡潔に・全統計でなく要点のみ）
   // aria-atomic を付けないため、入力変化ごとに全文読み上げにならない
   const summaryText = text
     ? `${result.byteLength}バイト、${result.charCount}文字、${result.lineCount}行`
@@ -92,7 +92,7 @@ export default function ByteCounterTile({
       </div>
 
       {/*
-       * C-3: ライブリージョン（role="status" aria-live="polite"）
+       * ライブリージョン（role="status" aria-live="polite"）
        * サマリテキストのみを置く。aria-atomic は付けない。
        * 詳細統計はこのリージョンの外に配置する。
        * visually-hidden で視覚的には非表示だが SR には読み上げられる。

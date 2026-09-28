@@ -23,14 +23,14 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <LineBreakRemoverTile variant="full" />
  * <LineBreakRemoverTile variant="remove" />
  * <LineBreakRemoverTile variant="replace-space" />
  * <LineBreakRemoverTile variant="smart-pdf" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -123,7 +123,7 @@ export default function LineBreakRemoverTile({
 
   const hasOutput = result.output.length > 0;
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const summaryText = useMemo(() => {
     if (!input || result.error) return "";
     if (mode === "remove")
@@ -208,7 +208,7 @@ export default function LineBreakRemoverTile({
               disabled={!hasOutput}
             />
           </div>
-          {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+          {/* readOnly textarea は role="status" 対象外。
               別途サマリ div を置いてスクリーンリーダーへ通知する。
               視覚的にも表示する（変換件数サマリ）。 */}
           <div
@@ -220,7 +220,7 @@ export default function LineBreakRemoverTile({
             {summaryText}
           </div>
           {/* readOnly textarea はフォーム値変更をスクリーンリーダーに届けないため
-              role="status" は付与しない（C-3 参照）。 */}
+              role="status" は付与しない。 */}
           <Textarea
             id={outputId}
             value={result.output}

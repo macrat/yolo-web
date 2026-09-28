@@ -21,16 +21,16 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <EmailValidatorTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" のライブリージョンに実テキストノードのサマリを置く
  * - バッジアイコン SVG は aria-hidden="true" で装飾専用を宣言
  * - タイポの提案があるときは、判定を「有効（要確認）」と文言で言い、有効と提案が食い違って見えないようにする
- * - ②-15: コピーボタンは実装しない（知る対象のため不要）
+ * - コピーボタンは実装しない（知る対象のため不要）
  */
 
 import { useId, useState } from "react";
@@ -84,7 +84,7 @@ export default function EmailValidatorTile({
   // 空のときは EMPTY_STATE を使い（エラー非表示）、入力があるときのみ検証する
   const result = email.trim() ? validateEmail(email) : EMPTY_STATE;
 
-  /** タイポ提案の有無（①-4 矛盾シグナル解消の判定） */
+  /** タイポ提案の有無（「有効」と提案が食い違って見えないよう「有効（要確認）」にする判定） */
   const hasSuggestion = result.suggestions.length > 0;
 
   // ---------- ハンドラ ----------
@@ -115,7 +115,7 @@ export default function EmailValidatorTile({
       </div>
 
       {/*
-       * ライブリージョン（C-3）:
+       * ライブリージョン:
        * role="status" aria-live="polite" で動的に通知。
        * 実テキストノードのサマリを直接配置（readOnly textarea ラップ禁止）。
        * 結果ボックス全体をライブリージョンとして兼用。
@@ -132,7 +132,7 @@ export default function EmailValidatorTile({
           <>
             {/*
              * 判定バッジのテキスト「有効」「有効（要確認）」「無効」がライブリージョン内の
-             * 実テキストノードとして機能し、C-3 要件を満たす。
+             * 実テキストノードとして読み上げられる。
              */}
             <div
               className={

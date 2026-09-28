@@ -19,11 +19,11 @@
  * - V-15: コピーボタンが空入力時に disabled
  * - V-16: コピーボタンが出力ありのとき有効
  * - V-17: 空入力時モード切替後に古い結果が残らない
- * - V-18: ラジオボタンの組に aria-label が設定されている（C-2）
+ * - V-18: ラジオボタンの組に aria-label が設定されている
  * - V-19: CSS トークン検証（--color-* 不使用・--accent 直塗りなし・bold なし）
- * - V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる（旧 E-6 相当）
+ * - V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる
  * - V-21: コピー後に「コピー済み」が表示される（ラベル遷移）
- * - V-22: clipboard 不在時の silent fail（旧 E-8 相当）
+ * - V-22: clipboard 不在時の silent fail
  */
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -249,7 +249,7 @@ describe("V-13: タイルのルートが section（Panel）", () => {
 });
 
 // --- V-14: ライブリージョン ---
-describe("V-14: ライブリージョン（C-3）", () => {
+describe("V-14: ライブリージョン", () => {
   it("role=status aria-live=polite が存在する", () => {
     render(<KanaConverterTile variant="full" />);
     const statusEl = screen.getByRole("status");
@@ -302,8 +302,8 @@ describe("V-17: モード切替後に古い結果が残らない", () => {
   });
 });
 
-// --- V-18: ラジオボタンの組に aria-label（C-2） ---
-describe("V-18: ラジオボタンの組に aria-label（C-2）", () => {
+// --- V-18: ラジオボタンの組に aria-label ---
+describe("V-18: ラジオボタンの組に aria-label", () => {
   it("variant=full の radiogroup に aria-label が設定されている", () => {
     render(<KanaConverterTile variant="full" />);
     const radiogroup = screen.getByRole("radiogroup");
@@ -344,7 +344,7 @@ describe("デフォルト variant", () => {
   });
 });
 
-// --- V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる（旧 E-6 相当） ---
+// --- V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる ---
 describe("V-20: コピーボタンクリックで出力値が書き込まれる", () => {
   it("クリックで navigator.clipboard.writeText が変換結果で呼ばれる", async () => {
     render(<KanaConverterTile variant="full" />);
@@ -389,7 +389,7 @@ describe("V-21: コピー後 「コピー済み」に遷移する", () => {
   });
 });
 
-// --- V-22: clipboard 不在時の silent fail（旧 E-8 相当） ---
+// --- V-22: clipboard 不在時の silent fail ---
 describe("V-22: clipboard 不在時の silent fail", () => {
   it("navigator.clipboard が undefined でもコピー操作が例外を投げない", async () => {
     const originalClipboard = navigator.clipboard;

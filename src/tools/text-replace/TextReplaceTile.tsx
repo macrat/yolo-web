@@ -9,7 +9,7 @@
  * - **1ツール 1 タイル**: text-replace は正規表現モード等の「設定差」で表現できる
  *   独立したモードがないため variant は "full" のみ。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6 要件）。
+ *   同居しても id 重複・label 誤結合が起きない。
  * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（"use client" 自己完結）。
  * - **logic.ts 共有エンジン**: replaceText が唯一のロジック源。再実装・改変禁止。
  *
@@ -22,11 +22,11 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <TextReplaceTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -62,7 +62,7 @@ export interface TextReplaceTileProps {
   className?: string;
 }
 
-/** エラー文言を日本語に変換する（A-4 準拠: 英語生エラーを露出しない） */
+/** エラー文言を日本語に変換する（英語生エラーを露出しない） */
 function toJapaneseError(rawError: string | undefined): string | undefined {
   if (!rawError) return undefined;
   // ブラウザが返す正規表現エラーは英語のため日本語に変換する
@@ -83,8 +83,7 @@ export default function TextReplaceTile({
   className,
 }: TextReplaceTileProps = {}) {
   // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  // A-6: 現行 TextReplacePage.tsx のハードコード id（source-text / search-input 等）を
-  // useId ベースに移行する
+  // すべての id を useId ベースで作る
   const uid = useId();
   const inputId = `${uid}-input`;
   const searchId = `${uid}-search`;
@@ -109,7 +108,7 @@ export default function TextReplaceTile({
 
   const errorMessage = toJapaneseError(result.error);
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const statusSummary = (() => {
     if (result.error) return "";
     if (!search) return "";
@@ -207,7 +206,7 @@ export default function TextReplaceTile({
         />
       </div>
 
-      {/* 正規表現モード時の補足説明（平易な日本語・G-2 要件） */}
+      {/* 正規表現モード時の補足説明（平易な日本語） */}
       {options.useRegex && (
         <div className={styles.regexHint} role="note" data-testid="regex-hint">
           <p className={styles.regexHintLine}>
@@ -221,7 +220,7 @@ export default function TextReplaceTile({
         </div>
       )}
 
-      {/* エラー表示（A-4 準拠: ErrorMessage・日本語化済み） */}
+      {/* エラー表示（ErrorMessage・日本語化済み） */}
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
       {/* 出力欄 */}
@@ -239,7 +238,7 @@ export default function TextReplaceTile({
         </div>
 
         {/*
-          C-3 準拠: readOnly textarea は role="status" 対象外。
+          readOnly textarea は role="status" 対象外。
           別途サマリ div を置いてスクリーンリーダーへ通知する。
           出力 textarea の外（前）に置くことで DOM 順も正しい。
         */}

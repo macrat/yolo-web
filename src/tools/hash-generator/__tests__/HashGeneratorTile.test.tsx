@@ -27,22 +27,22 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // A-1: ルート要素が Panel（section タグ）であること
+  // ルート要素が Panel（section タグ）であること
   // -------------------------------------------------------
-  test("A-1: root element is a Panel (section tag by default)", () => {
+  test("root element is a Panel (section tag by default)", () => {
     const { container } = render(<HashGeneratorTile />);
     const root = container.firstChild as HTMLElement;
     expect(root.tagName.toLowerCase()).toBe("section");
   });
 
-  test("A-1: as prop changes root tag to div", () => {
+  test("as prop changes root tag to div", () => {
     const { container } = render(<HashGeneratorTile as="div" />);
     const root = container.firstChild as HTMLElement;
     expect(root.tagName.toLowerCase()).toBe("div");
   });
 
   // -------------------------------------------------------
-  // E-1: 基本レンダリング
+  // 基本レンダリング
   // -------------------------------------------------------
   test("renders without crashing", () => {
     render(<HashGeneratorTile />);
@@ -65,7 +65,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-1: format セレクタ
+  // format セレクタ
   // -------------------------------------------------------
   test("renders format selector with hex and base64 options", () => {
     render(<HashGeneratorTile />);
@@ -75,7 +75,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-3: 空入力時は結果が非表示
+  // 空入力時は結果が非表示
   // -------------------------------------------------------
   test("shows no results on initial empty state", () => {
     render(<HashGeneratorTile />);
@@ -85,7 +85,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-2: 入力してハッシュ生成ボタンを押すと全アルゴリズムの結果が表示される
+  // 入力してハッシュ生成ボタンを押すと全アルゴリズムの結果が表示される
   // -------------------------------------------------------
   test("generates hashes for all 4 algorithms when button clicked", async () => {
     render(<HashGeneratorTile />);
@@ -103,7 +103,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-4: SHA-256 の既知値確認 (G-5)
+  // SHA-256 の既知値確認
   // -------------------------------------------------------
   test('generates correct SHA-256 hash for "hello"', async () => {
     render(<HashGeneratorTile />);
@@ -122,16 +122,16 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // C-3: ライブリージョン（role="status" aria-live="polite"）
+  // ライブリージョン（role="status" aria-live="polite"）
   // -------------------------------------------------------
-  test("C-3: has role=status aria-live=polite for results summary", () => {
+  test("has role=status aria-live=polite for results summary", () => {
     render(<HashGeneratorTile />);
     const statusEl = screen.getByRole("status");
     expect(statusEl).toBeInTheDocument();
     expect(statusEl).toHaveAttribute("aria-live", "polite");
   });
 
-  test("C-3: live region shows summary text after hash generation", async () => {
+  test("live region shows summary text after hash generation", async () => {
     render(<HashGeneratorTile />);
     const textarea = screen.getByRole("textbox");
     fireEvent.change(textarea, { target: { value: "hello" } });
@@ -146,7 +146,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-6: コピーボタン
+  // コピーボタン
   // -------------------------------------------------------
   test("copy button aria-label changes after copy", async () => {
     render(<HashGeneratorTile />);
@@ -172,7 +172,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-7: 初期状態でコピーボタンなし
+  // 初期状態でコピーボタンなし
   // -------------------------------------------------------
   test("no copy buttons for hash results in initial state", () => {
     render(<HashGeneratorTile />);
@@ -191,7 +191,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // E-8: クリップボード未対応でも例外にならない
+  // クリップボード未対応でも例外にならない
   // -------------------------------------------------------
   test("does not throw when clipboard is unavailable", async () => {
     Object.defineProperty(navigator, "clipboard", {
@@ -316,9 +316,9 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // A-6: 複数インスタンスで DOM id が一意
+  // 複数インスタンスで DOM id が一意
   // -------------------------------------------------------
-  test("A-6: multiple instances have unique DOM ids (no duplicates)", () => {
+  test("multiple instances have unique DOM ids (no duplicates)", () => {
     const { container } = render(
       <>
         <HashGeneratorTile />
@@ -352,7 +352,7 @@ describe("HashGeneratorTile", () => {
   });
 
   // -------------------------------------------------------
-  // CSS トークン検証（D-1〜D-3 / B-1〜B-4）
+  // CSS トークン検証
   // -------------------------------------------------------
   test("CSS does not use deprecated --color-* tokens", () => {
     const cssPath = resolve(__dirname, "../HashGeneratorTile.module.css");
@@ -372,7 +372,7 @@ describe("HashGeneratorTile", () => {
     expect(css).not.toMatch(/font-weight\s*:\s*700/);
   });
 
-  test("CSS does not add box-shadow (B-6 / A-7)", () => {
+  test("CSS does not add box-shadow", () => {
     const cssPath = resolve(__dirname, "../HashGeneratorTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/box-shadow/);
@@ -380,10 +380,10 @@ describe("HashGeneratorTile", () => {
 });
 
 // ============================================================
-// G-2 / G-4: meta.ts の文字列整合テスト
+// meta.ts の文字列整合テスト
 // ============================================================
 describe("meta.ts content validation", () => {
-  // G-2: howItWorks 冒頭に「ハッシュとは何か・何に使うか」の平易な導入文が存在する
+  // howItWorks 冒頭に「ハッシュとは何か・何に使うか」の平易な導入文が存在する
   test("howItWorks contains intro explaining what a hash is and its uses", () => {
     // 「ハッシュ値」「改ざん検知」「一方向」の3キーワードすべてを含む導入文があること
     expect(meta.howItWorks).toMatch(/ハッシュ値/);
@@ -391,12 +391,12 @@ describe("meta.ts content validation", () => {
     expect(meta.howItWorks).toMatch(/一方向/);
   });
 
-  // G-4: shortDescription が4種類すべてのアルゴリズムを含む（SHA-384の省略是正）
+  // shortDescription が4種類すべてのアルゴリズムを含む（SHA-384 を省かない）
   test("shortDescription includes SHA-384", () => {
     expect(meta.shortDescription).toMatch(/SHA-384/);
   });
 
-  // G-4: shortDescription が SHA-1 / SHA-256 / SHA-512 も含む
+  // shortDescription が SHA-1 / SHA-256 / SHA-512 も含む
   test("shortDescription includes all four algorithms", () => {
     expect(meta.shortDescription).toMatch(/SHA-1/);
     expect(meta.shortDescription).toMatch(/SHA-256/);

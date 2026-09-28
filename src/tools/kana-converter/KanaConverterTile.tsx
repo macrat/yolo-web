@@ -22,7 +22,7 @@
  * - `"to-fullwidth-katakana"`: 半角カナ→全角カナに固定し、ラジオボタンの組を出さない。
  * - `"to-halfwidth-katakana"`: 全角カナ→半角カナに固定し、ラジオボタンの組を出さない。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -104,7 +104,7 @@ export default function KanaConverterTile({
 
   const hasOutput = output.length > 0;
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const statusSummary = hasOutput ? `変換しました（${output.length}文字）` : "";
 
   // ---------- ハンドラ ----------
@@ -161,7 +161,7 @@ export default function KanaConverterTile({
           />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"

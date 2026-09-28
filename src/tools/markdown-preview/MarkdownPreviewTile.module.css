@@ -6,14 +6,14 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* 2ペインレイアウト: 入力 textarea ＋ プレビュー（G-1） */
+/* 2ペインレイアウト: 入力 textarea ＋ プレビュー */
 .panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
-/* w360 対応: 縦積み（G-1） */
+/* w360 対応: 縦積み */
 @media (max-width: 768px) {
   .panels {
     grid-template-columns: 1fr;
@@ -54,7 +54,7 @@
   min-height: 400px;
 }
 
-/* スクリーンリーダー向け非表示テキスト（C-3: 実テキストノードのサマリ） */
+/* スクリーンリーダー向け非表示テキスト（実テキストノードのサマリ） */
 .srOnly {
   position: absolute;
   width: 1px;

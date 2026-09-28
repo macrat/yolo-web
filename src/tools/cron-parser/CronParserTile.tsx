@@ -28,9 +28,9 @@
  * ## アクセシビリティ
  *
  * - モードのラジオボタンの組は、見える見出し（legend）を名前として読ませる
- * - C-3: role="status" aria-live="polite" のライブリージョン+実テキストサマリ
- * - A-4: エラーは ErrorMessage コンポーネント+日本語文言
- * - A-6: 全 DOM id と htmlFor は useId ベースで一意化
+ * - role="status" aria-live="polite" のライブリージョン+実テキストサマリ
+ * - エラーは ErrorMessage コンポーネント+日本語文言
+ * - 全 DOM id と htmlFor は useId ベースで一意化
  * - タッチターゲット: Button/Input min-height 44px（共通部品準拠）
  *
  * ## 共通部品
@@ -109,7 +109,7 @@ const MODE_OPTIONS: { label: string; value: string }[] = [
 // =========================================================
 
 /**
- * 次回実行日時を JST（Asia/Tokyo）固定でフォーマットする（B-472 内包）。
+ * 次回実行日時を JST（Asia/Tokyo）固定でフォーマットする。
  *
  * ブラウザのローカル TZ によらず常に JST で表示するため、
  * Intl.DateTimeFormat に timeZone: "Asia/Tokyo" を明示する。
@@ -127,10 +127,10 @@ function formatDateJst(date: Date): string {
 }
 
 /**
- * parseCron が返すエラーメッセージを日本語に確認・整形し、修正ヒントを添える（A-4 + U-4 低指摘）。
+ * parseCron が返すエラーメッセージを日本語に確認・整形し、修正ヒントを添える。
  *
  * logic.ts の parseCron はすでに日本語エラーを返すが、
- * U-4 低指摘対応として「どうすればよいか」の範囲説明を追記する。
+ * 「どうすればよいか」が分かるよう各フィールドの範囲説明を添える。
  */
 function toJapaneseError(error: string | undefined): string {
   if (!error || error.trim() === "") {
@@ -193,7 +193,7 @@ export default function CronParserTile({
   > | null>(null);
   const [nextExecs, setNextExecs] = useState<Date[]>([]);
 
-  /** C-3 ライブリージョン用サマリテキスト */
+  /** ライブリージョン用サマリテキスト */
   const [liveSummary, setLiveSummary] = useState("");
 
   // --- ビルダーモード ---
@@ -241,7 +241,7 @@ export default function CronParserTile({
       setBDayOfMonth(fields[2]);
       setBMonth(fields[3]);
       setBDayOfWeek(fields[4]);
-      // C-3: ビルダーのプリセット選択時もライブリージョンを更新する
+      // ビルダーのプリセット選択時もライブリージョンを更新する
       const result = parseCron(expression);
       setLiveSummary(
         result.valid ? `ビルダー: ${result.description}` : "無効な式です",
@@ -250,7 +250,7 @@ export default function CronParserTile({
   }, []);
 
   // ---------- ビルダーモードフィールド変更ハンドラ ----------
-  // C-3: 出力変化をライブリージョンに反映
+  // 出力変化をライブリージョンに反映
   const handleBuilderFieldChange = useCallback(
     (
       setter: (v: string) => void,
@@ -296,7 +296,7 @@ export default function CronParserTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* C-3: role="status" aria-live="polite" で実テキストサマリを提供。
+      {/* role="status" aria-live="polite" で実テキストサマリを提供。
        * 解析モード・ビルダーモード両方での出力変化をスクリーンリーダーに通知する。 */}
       <div
         role="status"
@@ -329,7 +329,7 @@ export default function CronParserTile({
             <h2 className={styles.sectionTitle}>Cron式を入力</h2>
             <div className={styles.row}>
               <div className={styles.cronInputWrapper}>
-                {/* A-6: useId で一意化した id を label に結合 */}
+                {/* useId で一意化した id を label に結合 */}
                 <Input
                   id={cronInputId}
                   type="text"
@@ -343,7 +343,7 @@ export default function CronParserTile({
                   error={parseResult !== null && !parseResult.valid}
                 />
               </div>
-              {/* 共通 Button primary バリアント: var(--accent) 地に var(--paper) 文字で塗る（B-3準拠）。*/}
+              {/* 共通 Button primary バリアント: var(--accent) 地に var(--paper) 文字で塗る。*/}
               <Button variant="primary" onClick={handleParse}>
                 解析
               </Button>
@@ -362,7 +362,7 @@ export default function CronParserTile({
             </div>
           </section>
 
-          {/* エラー表示（A-4: ErrorMessage 使用・message は日本語） */}
+          {/* エラー表示（ErrorMessage 使用・message は日本語） */}
           {parseResult && !parseResult.valid && (
             <ErrorMessage message={toJapaneseError(parseResult.error)} />
           )}
@@ -433,7 +433,7 @@ export default function CronParserTile({
               ))}
             </div>
             <div className={styles.fieldGrid}>
-              {/* 分フィールド（A-6: useId ベース id）*/}
+              {/* 分フィールド（useId ベース id）*/}
               <div>
                 <label htmlFor={minuteId} className={styles.fieldLabel}>
                   分 (0-59){" "}
@@ -568,13 +568,13 @@ export default function CronParserTile({
                 {builtResult.description}
               </div>
             )}
-            {/* 生成式のエラー（A-4: ErrorMessage 使用・文言は日本語） */}
+            {/* 生成式のエラー（ErrorMessage 使用・文言は日本語） */}
             {!builtResult.valid && builtResult.error && (
               <ErrorMessage message={toJapaneseError(builtResult.error)} />
             )}
           </section>
 
-          {/* U-4 低指摘: ビルダーにも次回実行予定を表示する（JST固定表示）
+          {/* ビルダーにも次回実行予定を表示する（JST固定表示）
            * 解析モードと同様に、有効な式の場合のみ次回実行を表示する。*/}
           {builtResult.valid &&
             (() => {

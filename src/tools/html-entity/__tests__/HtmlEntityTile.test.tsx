@@ -168,7 +168,7 @@ describe("V-9: a11y（role='status' aria-live='polite'）", () => {
     expect(status).toHaveAttribute("aria-live", "polite");
   });
 
-  it("入力後にサマリテキストが入る（C-3 要件）", () => {
+  it("入力後にサマリテキストが入る", () => {
     render(<HtmlEntityTile variant="full" />);
     fireEvent.change(screen.getByLabelText("テキスト入力"), {
       target: { value: "<b>test</b>" },

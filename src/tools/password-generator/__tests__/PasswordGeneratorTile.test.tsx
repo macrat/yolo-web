@@ -3,8 +3,8 @@
  *
  * 主な観点:
  * - 生成と強度の振る舞い
- * - [A-1] Panel がルートであること
- * - [A-6] useId ベースの id 一意性（複数インスタンス）
+ * - Panel がルートであること
+ * - useId ベースの id 一意性（複数インスタンス）
  * - variant="full" の全機能保持
  * - 複数インスタンスで DOM id 重複なし
  * - CSS トークン検証
@@ -47,27 +47,27 @@ describe("CSS トークン検証", () => {
     return css.replace(/\/\*[\s\S]*?\*\//g, "");
   }
 
-  it("--color-* 旧トークンが存在しない [B-1]", () => {
+  it("--color-* 旧トークンが存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("--accent 直塗り（background-color）が存在しない [B-3]", () => {
+  it("--accent 直塗り（background-color）が存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/background-color\s*:\s*var\(--accent\)/);
   });
 
-  it("--accent 直塗り（color）が存在しない [B-3]", () => {
+  it("--accent 直塗り（color）が存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/(?:^|[;\s])color\s*:\s*var\(--accent\)/m);
   });
 
-  it("非インタラクティブ要素に --r-interactive が使われていない [B-5]", () => {
+  it("非インタラクティブ要素に --r-interactive が使われていない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/border-radius\s*:\s*var\(--r-interactive\)/);
   });
 
-  it("font-weight: 700 が存在しない [B-4]", () => {
+  it("font-weight: 700 が存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/font-weight\s*:\s*700/);
   });
@@ -79,9 +79,9 @@ describe("CSS トークン検証", () => {
 });
 
 // =========================================================
-// [A-1] アーキテクチャ: Panel ルート確認
+// アーキテクチャ: Panel ルート確認
 // =========================================================
-describe("[A-1] Panel ルート確認", () => {
+describe("Panel ルート確認", () => {
   it("ルート要素が Panel（section または div）で、data-tile 等の Panel 特有属性を持つ", () => {
     const { container } = render(<PasswordGeneratorTile />);
     // Panel の index.tsx を見ると styles.panel クラスが付与される
@@ -93,9 +93,9 @@ describe("[A-1] Panel ルート確認", () => {
 });
 
 // =========================================================
-// [A-6] useId ベースの id 一意性（複数インスタンス）
+// useId ベースの id 一意性（複数インスタンス）
 // =========================================================
-describe("[A-6] 複数インスタンスで DOM id 一意性", () => {
+describe("複数インスタンスで DOM id 一意性", () => {
   it("2 つのインスタンスを同一ページに配置しても DOM id が重複しない", () => {
     const { container } = render(
       <>
@@ -386,9 +386,9 @@ describe("文字種のチェックボックス", () => {
 });
 
 // =========================================================
-// UX是正: 全文字種OFFのエラー状態
+// 全文字種OFFのエラー状態
 // =========================================================
-describe("UX是正: 全文字種OFFのエラーフィードバック", () => {
+describe("全文字種OFFのエラーフィードバック", () => {
   it("全文字種をOFFにするとエラーメッセージが表示される", () => {
     render(<PasswordGeneratorTile />);
     fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));

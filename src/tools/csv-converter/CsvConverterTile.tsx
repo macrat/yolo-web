@@ -5,22 +5,21 @@
  *
  * ## 設計原則
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
- * - **1ツール1実装**: この CsvConverterTile.tsx のみが UI を描く（A-3）。
- * - **"use client" で自己完結**: ToolPageLayout に機能依存しない（A-2）。
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。
+ * - **1ツール1実装**: この CsvConverterTile.tsx のみが UI を描く。
+ * - **"use client" で自己完結**: ToolPageLayout に機能依存しない。
  * - **共有エンジン logic.ts**: convert() が唯一のロジック源。再実装・改変禁止。
- * - **id インスタンス一意化**: useId ベースで複数インスタンス同居でも重複しない（A-6）。
+ * - **id インスタンス一意化**: useId ベースで複数インスタンス同居でも重複しない。
  *
  * ## variant
  *
  * - `"full"` (デフォルト): 入力形式・出力形式 Select + 変換ボタン + 2ペイン。
- *   道具箱でも詳細ページでも同一インスタンスとして動作する。
  *
  * ## アクセシビリティ
  *
- * - C-3: role="status" aria-live="polite" + 実テキストサマリで SR に通知。
- * - C-4: コピーボタンの aria-label。
- * - A-6: 全 DOM id は useId ベースのインスタンス一意 id。
+ * - role="status" aria-live="polite" + 実テキストサマリで SR に通知。
+ * - コピーボタンの aria-label。
+ * - 全 DOM id は useId ベースのインスタンス一意 id。
  */
 
 import { useId, useState, useCallback } from "react";
@@ -53,7 +52,7 @@ export interface CsvConverterTileProps {
  *
  * parseJson や parseMarkdown は英語エラーを投げることがある（例: JSON.parse の
  * "Unexpected token..." 等）。日本語サイトとして、生の英語エラーを来訪者に
- * 露出しないよう、変換後に日本語メッセージに整形する（G-2 準拠）。
+ * 露出しないよう、変換後に日本語メッセージに整形する。
  */
 function toJapaneseConvertError(rawError: string): string {
   // "JSONは配列である必要があります" のようにすでに日本語のメッセージはそのまま使う
@@ -112,7 +111,7 @@ export default function CsvConverterTile({
   const [toFormat, setToFormat] = useState<DataFormat>("json");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
-  // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
+  // スクリーンリーダーへ通知するための短いサマリテキスト
   const [statusSummary, setStatusSummary] = useState("");
 
   // ---------- ハンドラ ----------
@@ -126,10 +125,10 @@ export default function CsvConverterTile({
     const result = convert(input, fromFormat, toFormat);
     if (result.success) {
       setOutput(result.output);
-      // C-3: 変換成功サマリを role="status" 領域に実テキストとして配置
+      // 変換成功サマリを role="status" 領域に実テキストとして配置
       setStatusSummary("変換しました");
     } else {
-      // G-2: logic.ts が返すエラーを日本語に変換して表示
+      // logic.ts が返すエラーを日本語に変換して表示
       const rawMsg = result.error ?? "";
       setError(toJapaneseConvertError(rawMsg));
       setOutput("");
@@ -218,7 +217,7 @@ export default function CsvConverterTile({
               disabled={!output}
             />
           </div>
-          {/* C-3: role="status" aria-live="polite" で動的通知。
+          {/* role="status" aria-live="polite" で動的通知。
               実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。
               readOnly textarea をラップするだけでは値変化が読み上げられないため分離する。 */}
           <div
@@ -241,7 +240,7 @@ export default function CsvConverterTile({
         </div>
       </div>
 
-      {/* エラー表示: G-2 ErrorMessage を使用。空のときは非表示 */}
+      {/* エラー表示: ErrorMessage を使用。空のときは非表示 */}
       {error && <ErrorMessage message={error} />}
     </Panel>
   );

@@ -190,8 +190,8 @@ describe("parseCron", () => {
     expect(result.description).toContain("または");
   });
 
-  // B-486 regression: range/list/step/composite in hour/minute must not collapse to "X時Y分"
-  it("B-486: range hour '0 9-17 * * *' does not produce '9時0分'", () => {
+  // range/list/step/composite in hour/minute must not collapse to "X時Y分"
+  it("range hour '0 9-17 * * *' does not produce '9時0分'", () => {
     const result = parseCron("0 9-17 * * *");
     expect(result.valid).toBe(true);
     // Must not be the collapsed wrong form
@@ -209,7 +209,7 @@ describe("parseCron", () => {
     expect(hours).toContain(17);
   });
 
-  it("B-486: list hour '0 9,12,15 * * *' does not produce '9時0分'", () => {
+  it("list hour '0 9,12,15 * * *' does not produce '9時0分'", () => {
     const result = parseCron("0 9,12,15 * * *");
     expect(result.valid).toBe(true);
     // Must not be the collapsed wrong form
@@ -227,7 +227,7 @@ describe("parseCron", () => {
     expect(hours).toContain(15);
   });
 
-  it("B-486: range-step minute '0-30/5 9 * * *' does not produce '9時0分'", () => {
+  it("range-step minute '0-30/5 9 * * *' does not produce '9時0分'", () => {
     const result = parseCron("0-30/5 9 * * *");
     expect(result.valid).toBe(true);
     // Must not be the collapsed wrong form (would show "9時0分" only)
@@ -244,7 +244,7 @@ describe("parseCron", () => {
     expect(minutes).toContain(30);
   });
 
-  it("B-486: wildcard-step minute '*/15 9 * * *' description is already correct and stays correct", () => {
+  it("wildcard-step minute '*/15 9 * * *' description is already correct and stays correct", () => {
     // */15 already works (parseInt("*/15")=NaN avoids the bug), verify it stays correct
     const result = parseCron("*/15 9 * * *");
     expect(result.valid).toBe(true);
@@ -260,7 +260,7 @@ describe("parseCron", () => {
     expect(minutes).toContain(45);
   });
 
-  it("B-486: composite hour '0 9-17,20 * * *' does not produce '9時0分'", () => {
+  it("composite hour '0 9-17,20 * * *' does not produce '9時0分'", () => {
     const result = parseCron("0 9-17,20 * * *");
     expect(result.valid).toBe(true);
     // Must not be the collapsed wrong form
@@ -275,15 +275,15 @@ describe("parseCron", () => {
     expect(hours).toContain(20);
   });
 
-  // B-486 regression: zero-padded single values must be normalized (not rendered as raw strings)
-  it("B-486: zero-padded hour '0 09 * * *' renders as '9時0分' not '09時0分'", () => {
+  // zero-padded single values must be normalized (not rendered as raw strings)
+  it("zero-padded hour '0 09 * * *' renders as '9時0分' not '09時0分'", () => {
     const result = parseCron("0 09 * * *");
     expect(result.valid).toBe(true);
     expect(result.description).toContain("9時0分");
     expect(result.description).not.toContain("09時");
   });
 
-  it("B-486: zero-padded minute '017 9 * * *' renders as '9時17分' not '9時017分'", () => {
+  it("zero-padded minute '017 9 * * *' renders as '9時17分' not '9時017分'", () => {
     const result = parseCron("017 9 * * *");
     expect(result.valid).toBe(true);
     expect(result.description).toContain("9時17分");
@@ -354,7 +354,7 @@ describe("getNextExecutions", () => {
     const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0));
     const results = getNextExecutions("0 9 * * *", 3, from);
     for (const date of results) {
-      // JST壁時計の時:分を確認する（B-472 JST固定化の核心）
+      // JST壁時計の時:分を確認する（JST固定化の核心）
       expect(getJstHour(date)).toBe(9);
       expect(getJstMinute(date)).toBe(0);
     }
@@ -379,7 +379,7 @@ describe("getNextExecutions", () => {
     const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 9 * * 1-5", 5, from);
     for (const date of results) {
-      // JSTの曜日が月〜金であることを確認する（B-472 JST固定化）
+      // JSTの曜日が月〜金であることを確認する（JST固定化）
       const dow = getJstDay(date);
       expect(dow).toBeGreaterThanOrEqual(1);
       expect(dow).toBeLessThanOrEqual(5);
@@ -489,11 +489,11 @@ describe("getNextExecutions", () => {
 });
 
 // =========================================================
-// JST固定化テスト（B-472 真のJST固定化）
+// JST固定化テスト（環境 TZ によらず JST 壁時計でマッチングする）
 // TZ=UTC 環境でも cron 式の時刻がJST壁時計として正しくマッチすることを確認する。
 // これが「表示フォーマットのみのJST化」との本質的な違い。
 // =========================================================
-describe("getNextExecutions - JST固定化（B-472 真のJST固定化）", () => {
+describe("getNextExecutions - JST固定化", () => {
   it("TZ=UTC環境でcron '0 9 * * *' の次回実行がJST 09:00 を返す（虚偽表示の防止）", () => {
     // JST 2026-01-01 00:00 を UTC 時刻として指定
     const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0));

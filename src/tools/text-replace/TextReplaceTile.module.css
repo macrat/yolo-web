@@ -43,7 +43,7 @@
   margin-bottom: 1rem;
 }
 
-/* 正規表現モード時の補足説明（G-2: 平易な日本語） */
+/* 正規表現モード時の補足説明（平易な日本語） */
 .regexHint {
   padding: 0.75rem;
   border: 1px solid var(--rule-strong);
@@ -71,7 +71,7 @@
   justify-content: space-between;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+/* ライブリージョン（実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
   color: var(--ink-2);

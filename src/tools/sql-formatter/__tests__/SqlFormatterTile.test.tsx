@@ -10,7 +10,7 @@
  * - V-6: ARIA（role="status" aria-live="polite"）
  * - V-7: コピーボタンの有効/無効
  * - V-8: id インスタンス一意性（複数インスタンス同居）
- * - V-9: CSS トークン検証（旧 --color-* / font-weight: 700 禁止）
+ * - V-9: CSS トークン検証（--color-* / font-weight: 700 禁止）
  * - V-10: エラー表示（日本語化）
  */
 
@@ -232,7 +232,7 @@ describe("V-8: id インスタンス一意性", () => {
 });
 
 describe("V-9: CSS トークン検証", () => {
-  test("CSS に旧 --color-* トークン・--accent 直塗り・font-weight 700 が含まれない", () => {
+  test("CSS に --color-* トークン・--accent 直塗り・font-weight 700 が含まれない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/sql-formatter/SqlFormatterTile.module.css",

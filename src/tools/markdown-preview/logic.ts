@@ -222,7 +222,7 @@ export function renderMarkdown(input: string): MarkdownResult {
     const html = sanitizeHtml(rawHtml);
     return { success: true, html };
   } catch {
-    // A-4: 英語の例外メッセージをそのまま渡さず、日本語メッセージに変換する
+    // 英語の例外メッセージをそのまま渡さず、日本語メッセージに変換する
     return {
       success: false,
       html: "",

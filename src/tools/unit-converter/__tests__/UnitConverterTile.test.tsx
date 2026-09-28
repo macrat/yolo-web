@@ -127,7 +127,7 @@ describe("T-4: 変換ロジックの正確性", () => {
     expect(result).toHaveTextContent("32");
   });
 
-  test("カテゴリ切替後に古い結果が残らない（G-1要件）", () => {
+  test("カテゴリ切替後に古い結果が残らない", () => {
     render(<UnitConverterTile />);
     // 長さカテゴリで 1000 を入力 → 結果が表示される
     const input = screen.getByLabelText("変換する値");
@@ -320,21 +320,21 @@ describe("T-10: CSS トークン検証", () => {
   );
   const css = readFileSync(cssPath, "utf-8");
 
-  test("旧 --color-* トークンが存在しない（B-1）", () => {
+  test("--color-* トークンが存在しない", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  test("--accent を塗りに直接使っていない（B-3）", () => {
+  test("--accent を塗りに直接使っていない", () => {
     expect(css).not.toMatch(/background[^:]*:[^;]*var\(--accent\)/);
     expect(css).not.toMatch(/color[^:]*:[^;]*var\(--accent\)/);
   });
 
-  test("font-weight: 700 がコメント外のルールに存在しない（B-4）", () => {
+  test("font-weight: 700 がコメント外のルールに存在しない", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/font-weight:\s*700/);
   });
 
-  test("box-shadow が通常要素に使われていない（B-6）", () => {
+  test("box-shadow が通常要素に使われていない", () => {
     const boxShadowMatches = css.match(/box-shadow:/g) ?? [];
     expect(boxShadowMatches).toHaveLength(0);
   });

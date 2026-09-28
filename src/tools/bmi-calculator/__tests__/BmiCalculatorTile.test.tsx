@@ -1,14 +1,14 @@
 /**
  * BmiCalculatorTile 回帰テスト
  *
- * E-1: 基本レンダリング
- * E-2: 入力→結果更新
- * E-3: 空入力時の挙動
- * E-4: 変換ロジックの正確性（UI経由）
- * E-5: ARIA 属性
- * E-13: メーターラベルの線形スケール整合
- * E-14: 複数インスタンスの id 一意性（道具箱同居テスト）
- * E-15: CSS トークン検証（readFileSync 方式）
+ * 基本レンダリング
+ * 入力→結果更新
+ * 空入力時の挙動
+ * 変換ロジックの正確性（UI経由）
+ * ARIA 属性
+ * メーターラベルの線形スケール整合
+ * 複数インスタンスの id 一意性
+ * CSS トークン検証（readFileSync 方式）
  */
 
 import { describe, test, expect } from "vitest";
@@ -17,8 +17,8 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import BmiCalculatorTile from "../BmiCalculatorTile";
 
-// ---- E-1: 基本レンダリング ----
-describe("E-1: 基本レンダリング", () => {
+// ---- 基本レンダリング ----
+describe("基本レンダリング", () => {
   test("コンポーネントが正常にレンダリングされる", () => {
     render(<BmiCalculatorTile />);
     expect(screen.getByLabelText("身長（cm）")).toBeInTheDocument();
@@ -46,8 +46,8 @@ describe("E-1: 基本レンダリング", () => {
   });
 });
 
-// ---- E-2: 入力→結果更新 ----
-describe("E-2: 入力→結果更新", () => {
+// ---- 入力→結果更新 ----
+describe("入力→結果更新", () => {
   test("身長・体重を入力して計算すると結果が表示される", () => {
     render(<BmiCalculatorTile />);
     fireEvent.change(screen.getByLabelText("身長（cm）"), {
@@ -85,8 +85,8 @@ describe("E-2: 入力→結果更新", () => {
   });
 });
 
-// ---- E-3: 空入力時の挙動 ----
-describe("E-3: 空入力時の挙動", () => {
+// ---- 空入力時の挙動 ----
+describe("空入力時の挙動", () => {
   test("何も入力せず計算するとエラーメッセージが表示される", () => {
     render(<BmiCalculatorTile />);
     fireEvent.click(screen.getByRole("button", { name: "計算する" }));
@@ -113,8 +113,8 @@ describe("E-3: 空入力時の挙動", () => {
   });
 });
 
-// ---- E-4: 変換ロジックの正確性（UI経由） ----
-describe("E-4: 変換ロジックの正確性", () => {
+// ---- 変換ロジックの正確性（UI経由） ----
+describe("変換ロジックの正確性", () => {
   function calculate(height: string, weight: string) {
     render(<BmiCalculatorTile />);
     fireEvent.change(screen.getByLabelText("身長（cm）"), {
@@ -156,8 +156,8 @@ describe("E-4: 変換ロジックの正確性", () => {
   });
 });
 
-// ---- E-5: ARIA 属性 ----
-describe("E-5: ARIA 属性", () => {
+// ---- ARIA 属性 ----
+describe("ARIA 属性", () => {
   test("計算結果欄が role='status' と aria-live='polite' を持つ", () => {
     render(<BmiCalculatorTile />);
     fireEvent.change(screen.getByLabelText("身長（cm）"), {
@@ -174,7 +174,7 @@ describe("E-5: ARIA 属性", () => {
 
   test("計算前もライブリージョン要素が DOM に存在する（実テキストノードのサマリ方式）", () => {
     render(<BmiCalculatorTile />);
-    // C-3: ライブリージョンは常にDOMに存在し、計算後にサマリテキストが入る
+    // ライブリージョンは常にDOMに存在し、計算後にサマリテキストが入る
     const liveRegions = document.querySelectorAll('[role="status"]');
     expect(liveRegions.length).toBeGreaterThan(0);
   });
@@ -213,8 +213,8 @@ describe("E-5: ARIA 属性", () => {
   });
 });
 
-// ---- E-13: メーターラベルの線形スケール整合 ----
-describe("E-13: メーターラベルとスケールの整合（回帰テスト）", () => {
+// ---- メーターラベルの線形スケール整合 ----
+describe("メーターラベルとスケールの整合（回帰テスト）", () => {
   function renderAndGetLabels() {
     render(<BmiCalculatorTile />);
     fireEvent.change(screen.getByLabelText("身長（cm）"), {
@@ -265,8 +265,8 @@ describe("E-13: メーターラベルとスケールの整合（回帰テスト�
   });
 });
 
-// ---- E-14: 複数インスタンスの id 一意性 ----
-describe("E-14: 複数インスタンスの id 一意性（道具箱同居テスト）", () => {
+// ---- 複数インスタンスの id 一意性 ----
+describe("複数インスタンスの id 一意性", () => {
   test("2つのインスタンスを同一ページに描画しても DOM id が重複しない", () => {
     render(
       <>
@@ -297,15 +297,15 @@ describe("E-14: 複数インスタンスの id 一意性（道具箱同居テス
   });
 });
 
-// ---- E-15: CSS トークン検証 ----
-describe("E-15: CSS トークン検証", () => {
+// ---- CSS トークン検証 ----
+describe("CSS トークン検証", () => {
   const cssPath = join(
     process.cwd(),
     "src/tools/bmi-calculator/BmiCalculatorTile.module.css",
   );
   const css = readFileSync(cssPath, "utf-8");
 
-  test("旧 --color-* トークンが存在しない", () => {
+  test("--color-* トークンが存在しない", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
@@ -324,27 +324,27 @@ describe("E-15: CSS トークン検証", () => {
     expect(boxShadowMatches).toHaveLength(0);
   });
 
-  test("ハードコードの oklch() 色値が存在しない（B-8: 定義済みトークン外の色禁止）", () => {
+  test("ハードコードの oklch() 色値が存在しない（定義済みトークン外の色禁止）", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/oklch\(/);
   });
 
-  test("ハードコードの #hex 色値が存在しない（B-8: 定義済みトークン外の色禁止）", () => {
+  test("ハードコードの #hex 色値が存在しない（定義済みトークン外の色禁止）", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
   });
 
-  test("ハードコードの rgb()/rgba() 色値が存在しない（B-8: 定義済みトークン外の色禁止）", () => {
+  test("ハードコードの rgb()/rgba() 色値が存在しない（定義済みトークン外の色禁止）", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/rgba?\(/);
   });
 
-  test("ハードコードの border-radius 値が存在しない（B-5: 定義済みトークン外の角丸禁止）", () => {
+  test("ハードコードの border-radius 値が存在しない（定義済みトークン外の角丸禁止）", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/border-radius:\s*[0-9]/);
   });
 
-  test("非インタラクティブ装飾バー(.meterTrack)に --r-interactive を使っていない（B-5）", () => {
+  test("非インタラクティブ装飾バー(.meterTrack)に --r-interactive を使っていない", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     const meterTrackMatch = cssWithoutComments.match(
       /\.meterTrack\s*\{[^}]*\}/,

@@ -20,7 +20,7 @@
   gap: 0.5rem;
 }
 
-/* ラベル折返し防止 (G-1: w360でも折れない) */
+/* ラベル折返し防止 (w360でも折れない) */
 .controlLabel {
   font-size: 0.9rem;
   color: var(--ink);
@@ -65,7 +65,7 @@
   min-height: 1.5rem;
 }
 
-/* C-3: role="status" ライブリージョン（視覚的非表示・SR読み上げ対象） */
+/* role="status" ライブリージョン（視覚的非表示・SR読み上げ対象） */
 .srOnly {
   position: absolute;
   width: 1px;

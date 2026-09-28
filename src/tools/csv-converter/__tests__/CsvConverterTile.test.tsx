@@ -8,7 +8,7 @@
  * - V-4: 変換ボタンで CSV → Markdown 変換が動く
  * - V-5: 無効な JSON 入力でエラーが日本語で表示される（英語エラー露出なし）
  * - V-6: ARIA — role="status" aria-live="polite" 領域が存在する
- * - V-7: 変換後に role="status" 領域に実テキストサマリが表示される（C-3）
+ * - V-7: 変換後に role="status" 領域に実テキストサマリが表示される
  * - V-8: 出力が空のときコピーボタンが disabled
  * - V-9: 出力があるときコピーボタンが enabled
  * - V-10: コピーボタン文言変化（コピー前/後）
@@ -151,7 +151,7 @@ describe("CsvConverterTile", () => {
 
   // V-7: 変換後に role="status" 領域に実テキストサマリが表示される
   describe("V-7: ライブリージョン サマリ", () => {
-    it("変換後に role=status 領域に実テキストサマリが表示される（C-3）", () => {
+    it("変換後に role=status 領域に実テキストサマリが表示される", () => {
       render(<CsvConverterTile variant="full" />);
       const input = screen.getByLabelText("入力データ");
       fireEvent.change(input, { target: { value: "a,b\n1,2" } });

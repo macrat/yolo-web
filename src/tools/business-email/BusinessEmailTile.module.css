@@ -4,7 +4,7 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* C-3: スクリーンリーダー専用サマリ領域（視覚的には非表示） */
+/* スクリーンリーダー専用サマリ領域（視覚的には非表示） */
 .srOnly {
   position: absolute;
   width: 1px;
@@ -59,7 +59,7 @@
   gap: 0.3rem;
 }
 
-/* テキストエリアフィールドは全幅（U-03: span 2） */
+/* テキストエリアフィールドは全幅（span 2） */
 .fieldGroupWide {
   display: flex;
   flex-direction: column;

@@ -5,15 +5,15 @@
  *
  * ## 設計原則
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。
  * - **1ツール 1 variant**: 正規表現テスターはフル機能のみ提供（variant="full" 固定）。
  *   置換セクション等のトグルは UI 内部状態で管理（variant prop の設定差とは別）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（道具箱の複数インスタンス対応）。
- * - **ToolPageLayout 非依存**: "use client" で自己完結し、道具箱に単独で置ける。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: "use client" でタイル単体で機能が完結する。
  * - **Worker ライフサイクル**: useRegexWorker は useRef のみでインスタンスレベルの状態を持ち、
  *   モジュールスコープの共有状態を持たない。複数インスタンスが各自独立した Worker を持つ。
- *   アンマウント時に terminate + clearTimeout が呼ばれる（D-4）。
+ *   アンマウント時に terminate + clearTimeout が呼ばれる。
  *
  * ## variant
  *
@@ -50,7 +50,7 @@ import styles from "./RegexTesterTile.module.css";
 
 /**
  * フラグ4種の定義。
- * description はチェックボックスの下に常時表示する（UX是正(c): タッチ端末でも説明が見える）。
+ * description はチェックボックスの下に常時表示する（タッチ端末でも説明が見えるように）。
  */
 const FLAG_OPTIONS = [
   {
@@ -229,7 +229,7 @@ export default function RegexTesterTile({
 
         {/* === フラグチェックボックス群（説明を常時表示） ===
             title ツールチップはタッチ端末で発動しないため、常時表示の平易な説明を配置。
-            複数選択の意味が強いため checkbox 可（B-9 準拠）。 */}
+            複数選択の意味が強いため checkbox 可。 */}
         <fieldset className={styles.flagsFieldset}>
           <legend className={styles.flagsLegend}>フラグ</legend>
           <div className={styles.flagsRow}>
@@ -277,7 +277,7 @@ export default function RegexTesterTile({
           <ErrorMessage message={matchResult.error} />
         )}
 
-        {/* === マッチ件数サマリ（C-3: role="status" aria-live="polite"） === */}
+        {/* === マッチ件数サマリ（role="status" aria-live="polite"） === */}
         <div role="status" aria-live="polite" aria-label="マッチ件数サマリ">
           {!isProcessing &&
             matchResult?.success &&
@@ -342,7 +342,7 @@ export default function RegexTesterTile({
                   置換文字列
                 </label>
                 {/* Input 共通部品: border-radius/border色/focus outline/min-height(44px) が
-                    DESIGN トークン準拠で自動的に揃う（B-7・C-1 準拠） */}
+                    DESIGN トークン準拠で自動的に揃う */}
                 <Input
                   id={replacementId}
                   type="text"

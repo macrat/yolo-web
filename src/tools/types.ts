@@ -21,7 +21,7 @@ export interface ToolMeta {
 
   /**
    * FAQ: Q&A形式の配列
-   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
+   * FAQPage JSON-LD のデータソースである。
    * answerはプレーンテキストのみ（HTML・特殊記法不可）。
    */
   faq?: Array<{

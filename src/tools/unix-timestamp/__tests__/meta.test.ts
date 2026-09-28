@@ -1,5 +1,5 @@
 /**
- * meta.ts FAQ整合性テスト (G-4: FAQ と実 UI 整合)
+ * meta.ts FAQ整合性テスト (FAQ と実 UI 整合)
  *
  * 実UIは秒/ミリ秒のラジオボタンによる選択であり、
  * FAQ回答文がチェックボックスなどの誤った操作表記を含まないことを保証する。
@@ -7,7 +7,7 @@
 import { describe, test, expect } from "vitest";
 import { meta } from "../meta";
 
-describe("G-4: FAQ と実UI整合", () => {
+describe("FAQ と実UI整合", () => {
   test("FAQ Q1の回答に『チェックボックス』という表記が含まれないこと", () => {
     expect(meta.faq).toBeDefined();
     const q1 = meta.faq!.find((f) =>

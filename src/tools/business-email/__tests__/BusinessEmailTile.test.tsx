@@ -8,7 +8,7 @@
  * - T-4: フィールド入力でプレビューが更新される
  * - T-5: コピー3ターゲット（件名/本文/全体）の振る舞い
  * - T-6: id インスタンス一意性（動的フィールド含む）
- * - T-7: ARIA 要件（C-3 role="status"・C-2 aria-label・A-6）
+ * - T-7: ARIA 要件（role="status"・aria-label）
  * - T-8: カテゴリ切替時に古いプレビューが残らない
  * - T-9: 初期表示でプレースホルダーによるメール生成が破綻しない
  * - T-10: CSS トークン検証
@@ -237,7 +237,7 @@ describe("BusinessEmailTile", () => {
 
   // T-7: ARIA 要件
   describe("T-7: ARIA 要件", () => {
-    it("role=status aria-live=polite の領域が存在する（C-3）", () => {
+    it("role=status aria-live=polite の領域が存在する", () => {
       render(<BusinessEmailTile variant="full" />);
       const statusRegion = screen.getByRole("status");
       expect(statusRegion).toBeInTheDocument();
@@ -312,23 +312,23 @@ describe("BusinessEmailTile", () => {
 
   // T-10: CSS トークン検証
   describe("T-10: CSS トークン検証（デザインシステム準拠）", () => {
-    it("CSS に旧 --color-* トークン・--accent 直塗り・font-weight:700 が含まれない", () => {
+    it("CSS に --color-* トークン・--accent 直塗り・font-weight:700 が含まれない", () => {
       const cssPath = join(
         process.cwd(),
         "src/tools/business-email/BusinessEmailTile.module.css",
       );
       const css = readFileSync(cssPath, "utf-8");
 
-      // 旧トークン --color-* が存在しないこと（B-1）
+      // 旧トークン --color-* が存在しないこと
       expect(css).not.toMatch(/var\(--color-/);
 
-      // --accent 直塗りがないこと（B-3）
+      // --accent 直塗りがないこと
       const accentDirectUse = css.match(
         /(?:background|color)\s*:\s*var\(--accent\)/g,
       );
       expect(accentDirectUse).toBeNull();
 
-      // font-weight: 700 が存在しないこと（B-4）
+      // font-weight: 700 が存在しないこと
       const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
       expect(cssWithoutComments).not.toMatch(/font-weight\s*:\s*700/);
     });

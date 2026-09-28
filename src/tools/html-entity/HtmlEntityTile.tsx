@@ -23,13 +23,13 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <HtmlEntityTile variant="full" />
  * <HtmlEntityTile variant="encode" />
  * <HtmlEntityTile variant="decode" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -54,7 +54,7 @@ const DIRECTION_OPTIONS: { label: string; value: EntityMode }[] = [
 ];
 
 /**
- * 変換結果のサマリ文言（C-3: ライブリージョンに実テキストノードを置く要件）。
+ * 変換結果のサマリ文言（ライブリージョンに実テキストノードを置く要件）。
  * スクリーンリーダーはサマリテキストを読み上げ、出力の変化を通知する。
  */
 function buildSummary(mode: EntityMode, output: string): string {
@@ -166,7 +166,7 @@ export default function HtmlEntityTile({
         />
       </div>
 
-      {/* エラー表示（A-4 準拠: 日本語化済みメッセージを渡す） */}
+      {/* エラー表示（日本語化済みメッセージを渡す） */}
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
       {/* 出力欄 */}
@@ -183,7 +183,7 @@ export default function HtmlEntityTile({
           />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"

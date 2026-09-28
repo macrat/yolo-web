@@ -11,7 +11,7 @@
  * - V-7: id インスタンス一意性（複数インスタンスで id が重複しない）
  * - V-8: checkbox group ラベル関連（role=group + aria-label が存在する）
  * - V-9: checkbox の label と input の関連（htmlFor/id が正しく機能する）
- * - V-10: 出力 readOnly + role=status サマリ（C-3 準拠）
+ * - V-10: 出力 readOnly + role=status サマリ
  * - V-11: コピーボタン disabled/enabled 状態
  * - V-12: コピー後ラベル変化（コピー済み）
  * - V-13: オプション checkbox OFF で対象文字種が変換されない
@@ -243,7 +243,7 @@ describe("V-9: checkbox label/input 関連", () => {
   });
 });
 
-// --- V-10: 出力 readOnly + role=status サマリ（C-3） ---
+// --- V-10: 出力 readOnly + role=status サマリ ---
 describe("V-10: 出力 readOnly + role=status サマリ", () => {
   it("出力 textarea が readOnly である", () => {
     render(<FullwidthConverterTile variant="full" />);

@@ -35,9 +35,9 @@ afterEach(() => {
 });
 
 // =========================================================
-// A-1: タイルのルート要素が Panel であることを確認
+// タイルのルート要素が Panel であることを確認
 // =========================================================
-describe("CronParserTile - A-1 ルート要素が Panel", () => {
+describe("CronParserTile - ルート要素が Panel", () => {
   it("variant=full でレンダリングするとルート要素が section タグ（Panel のデフォルト）", async () => {
     const { container } = await act(async () => {
       return render(<CronParserTile />);
@@ -57,7 +57,7 @@ describe("CronParserTile - A-1 ルート要素が Panel", () => {
 });
 
 // =========================================================
-// 基本レンダリング（E-1 相当）
+// 基本レンダリング
 // =========================================================
 describe("CronParserTile - 基本レンダリング", () => {
   it("コンポーネントが正常にレンダリングされる", async () => {
@@ -140,7 +140,7 @@ describe("CronParserTile - variant=builder 固定", () => {
 });
 
 // =========================================================
-// 入力→結果更新（E-2 相当）
+// 入力→結果更新
 // =========================================================
 describe("CronParserTile - 入力→結果更新", () => {
   it("有効なcron式を入力して解析すると結果が表示される", async () => {
@@ -177,7 +177,7 @@ describe("CronParserTile - 入力→結果更新", () => {
 });
 
 // =========================================================
-// 空入力・エラー（E-3 相当）
+// 空入力・エラー
 // =========================================================
 describe("CronParserTile - 空入力", () => {
   it("初期表示時はエラーが表示されない", async () => {
@@ -208,7 +208,7 @@ describe("CronParserTile - 空入力", () => {
 });
 
 // =========================================================
-// 変換ロジックの正確性（E-4 相当）
+// 変換ロジックの正確性
 // =========================================================
 describe("CronParserTile - 変換ロジック", () => {
   it("'0 9 * * *' を入力すると毎日9時0分の説明が表示される", async () => {
@@ -259,10 +259,10 @@ describe("CronParserTile - 変換ロジック", () => {
 });
 
 // =========================================================
-// ARIA（E-5 相当）
+// ARIA
 // =========================================================
 describe("CronParserTile - ARIA", () => {
-  it("結果表示エリアに role='status' aria-live='polite' が付与されている（C-3）", async () => {
+  it("結果表示エリアに role='status' aria-live='polite' が付与されている", async () => {
     await act(async () => {
       render(<CronParserTile />);
     });
@@ -302,10 +302,10 @@ describe("CronParserTile - ARIA", () => {
 });
 
 // =========================================================
-// コピーボタン（E-6/E-7/E-8 相当）
+// コピーボタン
 // =========================================================
 describe("CronParserTile - コピーボタン", () => {
-  it("解析モードにコピーボタンが存在しない（T-4b 方針）", async () => {
+  it("解析モードにコピーボタンが存在しない", async () => {
     await act(async () => {
       render(<CronParserTile variant="parser" />);
     });
@@ -372,9 +372,9 @@ describe("CronParserTile - コピーボタン", () => {
 });
 
 // =========================================================
-// 複数インスタンス id 一意性（A-6）
+// 複数インスタンス id 一意性
 // =========================================================
-describe("CronParserTile - 複数インスタンス id 一意性（A-6）", () => {
+describe("CronParserTile - 複数インスタンス id 一意性", () => {
   it("同一ページに2つのタイルを置いてもcron式入力欄の id が重複しない", async () => {
     await act(async () => {
       render(
@@ -414,9 +414,9 @@ describe("CronParserTile - 複数インスタンス id 一意性（A-6）", () =
 });
 
 // =========================================================
-// stale サマリリセット（U-4 是正(a)）
+// stale サマリリセット
 // =========================================================
-describe("CronParserTile - staleサマリリセット（U-4 是正(a)）", () => {
+describe("CronParserTile - staleサマリリセット", () => {
   it("解析エラー後にモード切替するとliveSummaryが空になる", async () => {
     await act(async () => {
       render(<CronParserTile variant="full" />);
@@ -446,9 +446,9 @@ describe("CronParserTile - staleサマリリセット（U-4 是正(a)）", () =>
 });
 
 // =========================================================
-// エラーに修正ヒントを添える（U-4 低指摘）
+// エラーに修正ヒントを添える
 // =========================================================
-describe("CronParserTile - エラー修正ヒント（U-4 低指摘）", () => {
+describe("CronParserTile - エラー修正ヒント", () => {
   it("分フィールドが無効なエラーに範囲説明が含まれる", async () => {
     await act(async () => {
       render(<CronParserTile />);
@@ -483,7 +483,7 @@ describe("CronParserTile - エラー修正ヒント（U-4 低指摘）", () => {
 });
 
 // =========================================================
-// ビルダー次回実行表示（U-4 低指摘）
+// ビルダー次回実行表示
 // =========================================================
 describe("CronParserTile - ビルダー次回実行表示", () => {
   it("variant=builder で有効な式の次回実行が表示される", async () => {
@@ -514,7 +514,7 @@ describe("CronParserTile - ビルダー次回実行表示", () => {
 });
 
 // =========================================================
-// ビルダー機能（ビルダー復元 ②-4）
+// ビルダー機能
 // =========================================================
 describe("CronParserTile - ビルダー機能", () => {
   it("ビルダーモードで全フィールドが存在する", async () => {
@@ -577,7 +577,7 @@ describe("CronParserTile - フィールド詳細", () => {
 });
 
 // =========================================================
-// JST固定化（B-472内包）
+// JST固定化
 // =========================================================
 describe("CronParserTile - JST固定化", () => {
   it("次回実行の日時表示がJST (Asia/Tokyo) で表示される", async () => {
@@ -600,10 +600,10 @@ describe("CronParserTile - JST固定化", () => {
 });
 
 // =========================================================
-// 見出しレベル回帰（B-593: h1→h3 飛び是正の回帰防止）
+// 見出しレベル（h1 の次が h2）
 // =========================================================
-describe("CronParserTile - 見出しレベル回帰（B-593）", () => {
-  // B-593: 本体セクション見出しは h1 直下のトップレベルなので h2 が正。
+describe("CronParserTile - 見出しレベル", () => {
+  // 本体セクション見出しは h1 直下のトップレベルなので h2 が正。
   // かつて h3 で描画され h1→h3 とレベルを飛ばしていた回帰を防ぐ。
   it("解析モードの「Cron式を入力」見出しが level 2（h2）である", async () => {
     await act(async () => {
@@ -648,10 +648,10 @@ describe("CronParserTile - 見出しレベル回帰（B-593）", () => {
 });
 
 // =========================================================
-// CSS トークン検証（E-12 相当）
+// CSS トークン検証
 // =========================================================
 describe("CronParserTile - CSS トークン検証", () => {
-  it("CSSファイルに --color-* 旧トークンが存在しない（B-1）", () => {
+  it("CSSファイルに --color-* 旧トークンが存在しない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/cron-parser/CronParserTile.module.css",
@@ -661,7 +661,7 @@ describe("CronParserTile - CSS トークン検証", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("CSSファイルに font-weight: 700 が存在しない（B-4）", () => {
+  it("CSSファイルに font-weight: 700 が存在しない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/cron-parser/CronParserTile.module.css",
@@ -671,7 +671,7 @@ describe("CronParserTile - CSS トークン検証", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("CSSファイルに background系プロパティへの --accent 直塗りが存在しない（B-3）", () => {
+  it("CSSファイルに background系プロパティへの --accent 直塗りが存在しない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/cron-parser/CronParserTile.module.css",
@@ -681,7 +681,7 @@ describe("CronParserTile - CSS トークン検証", () => {
     expect(css).not.toMatch(/background(?:-color)?:\s*var\(--accent\)/);
   });
 
-  it("CSSファイルの非インタラクティブ表示要素に --r-interactive が使われていない（B-5）", () => {
+  it("CSSファイルの非インタラクティブ表示要素に --r-interactive が使われていない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/cron-parser/CronParserTile.module.css",
@@ -696,9 +696,9 @@ describe("CronParserTile - CSS トークン検証", () => {
 });
 
 // =========================================================
-// C-3: ビルダーモードライブリージョン更新
+// ビルダーモードライブリージョン更新
 // =========================================================
-describe("CronParserTile - ビルダーモードC-3ライブリージョン更新", () => {
+describe("CronParserTile - ビルダーモードのライブリージョン更新", () => {
   it("ビルダーモードでフィールドを変更するとライブリージョンが更新される", async () => {
     await act(async () => {
       render(<CronParserTile variant="builder" />);

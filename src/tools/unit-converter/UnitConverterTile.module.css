@@ -36,7 +36,7 @@
 .resultDisplay {
   display: flex;
   align-items: center;
-  min-height: 44px; /* C-1: WCAG 2.5.5 推奨タッチターゲット高さ */
+  min-height: 44px; /* WCAG 2.5.5 推奨タッチターゲット高さ */
   padding: 0.625rem 0.75rem;
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius);

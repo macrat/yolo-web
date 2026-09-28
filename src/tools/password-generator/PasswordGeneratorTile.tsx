@@ -9,8 +9,8 @@
  * - **1ツール 1 タイル = variant="full" のみ**: password-generator はロジックに
  *   独立モード（encode/decode 等）がないため full のみ。variant を無理に増やさない。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（[A-6] 準拠）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（[A-2] 準拠）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: generatePassword / evaluateStrength が唯一のロジック源。
  *   再実装・改変禁止。
  *
@@ -19,7 +19,7 @@
  * crypto.getRandomValues() は SSR とクライアントで異なる値を返すため、
  * useState の初期値を "" にし、useEffect（クライアントのみ）でマウント後に生成する。
  * これにより SSR と CSR の初期 HTML が一致し hydration エラーが防がれる。
- * 道具箱で複数インスタンスが同居する場合も、各インスタンスが独立した useEffect を持つ
+ * 複数インスタンスが同一ページに同居する場合も、各インスタンスが独立した useEffect を持つ
  * ためそれぞれ独立に生成される。
  *
  * ## 秘密情報配慮の ARIA 設計
@@ -109,7 +109,7 @@ export default function PasswordGeneratorTile({
   as = "section",
   className,
 }: PasswordGeneratorTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止）[A-6] ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const lengthSliderId = `${uid}-length`;
 
@@ -141,7 +141,7 @@ export default function PasswordGeneratorTile({
   // 強度: options 変更のたびに動的に再計算（全文字種 OFF 時も正しく weak を返す）
   const strength = evaluateStrength(options);
 
-  // 全文字種 OFF の判定（UX是正: charset=空の生成を防ぐ・エラー表示）
+  // 全文字種 OFF の判定（charset=空の生成を防ぎ、エラーを表示する）
   const noCharset = isNoCharsetSelected(options);
 
   /** パスワード生成ハンドラ */
@@ -159,7 +159,7 @@ export default function PasswordGeneratorTile({
   );
 
   // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）[A-1]
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       {/* オプション群 */}
@@ -211,16 +211,16 @@ export default function PasswordGeneratorTile({
         </div>
       </div>
 
-      {/* UX是正: 全文字種OFFのエラーフィードバック */}
+      {/* 全文字種OFFのエラーフィードバック */}
       {noCharset && (
         <ErrorMessage message="使用する文字の種類を 1 つ以上選んでください" />
       )}
 
       {/* 強度バー
-       * [C-3]: role="status" aria-live="polite" に実テキストノードのサマリを配置
+       * role="status" aria-live="polite" に実テキストノードのサマリを配置
        * evaluateStrength(options) により options 変更で動的に更新される
        * 秘密情報配慮: パスワード <code> ではなく強度ラベル側のみに role="status" を付与
-       * UX是正: 全文字種OFFのとき「—」を表示し「弱い」誤表示を防ぐ */}
+       * 全文字種OFFのとき「—」を表示し「弱い」誤表示を防ぐ */}
       <div role="status" aria-live="polite" className={styles.strengthSection}>
         <div className={styles.strengthLabelRow}>
           <span>強度:</span>
@@ -243,7 +243,7 @@ export default function PasswordGeneratorTile({
       </div>
 
       {/* 生成ボタン
-       * UX是正: 全文字種OFFのとき無効化（charset=空の生成を防ぐ） */}
+       * 全文字種OFFのとき無効化（charset=空の生成を防ぐ） */}
       <div className={styles.generateButton}>
         <Button variant="primary" onClick={handleGenerate} disabled={noCharset}>
           パスワード生成

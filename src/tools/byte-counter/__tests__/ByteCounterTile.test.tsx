@@ -1,7 +1,7 @@
 /**
  * ByteCounterTile のユニットテスト
  *
- * 数え方の振る舞いと、タイルアーキテクチャ要件（A-1〜A-7）と恒久要件チェックリストを網羅する。
+ * 数え方の振る舞いと、タイルアーキテクチャ要件と恒久要件チェックリストを網羅する。
  *
  * V-1: variant=full での基本レンダリング（Panel ルート・全統計表示）
  * V-2: variant=compact での基本レンダリング（主要統計のみ・バイト分布なし）
@@ -12,7 +12,7 @@
  * V-7: 全統計表示（バイト数・文字数・行数・単語数・バイト構成）
  * V-8: バイト構成内訳表示（variant=full）
  * V-9: ARIA（role="status" aria-live="polite" ライブリージョン）
- * V-10: aria-atomic="true" が付いていない（C-3 準拠）
+ * V-10: aria-atomic="true" が付いていない
  * V-11: ライブリージョンにサマリテキストのみ（詳細統計は含まない）
  * V-12: コピーボタンなし（byte-counter は知る対象）
  * V-13: id インスタンス一意性（複数インスタンス同居）
@@ -127,7 +127,7 @@ describe("V-9: ARIA ライブリージョン", () => {
 
 // --- V-10: aria-atomic=true が付いていない ---
 describe("V-10: aria-atomic 非設定", () => {
-  it("status region が aria-atomic=true を持たない（C-3 準拠）", () => {
+  it("status region が aria-atomic=true を持たない", () => {
     render(<ByteCounterTile variant="full" />);
     const statusRegion = screen.getByRole("status");
     expect(statusRegion).not.toHaveAttribute("aria-atomic", "true");

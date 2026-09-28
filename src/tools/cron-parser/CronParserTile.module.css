@@ -154,7 +154,7 @@
 
 /* スクリーンリーダー向け status（実テキストノードのサマリ） */
 .liveRegion {
-  /* C-3: role="status" aria-live="polite" で実テキストノードを保持するため
+  /* role="status" aria-live="polite" で実テキストノードを保持するため
    * readOnly textarea ラップは不可。この div が実テキストを直接持つ。
    * 視覚的には非表示にしない（情報を示すサマリとして表示する） */
   font-size: 0.875rem;

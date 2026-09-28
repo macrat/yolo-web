@@ -45,7 +45,7 @@
   justify-content: space-between;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+/* ライブリージョン（実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
   color: var(--ink-2);

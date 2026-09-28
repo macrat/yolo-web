@@ -4,16 +4,16 @@
  * 検証観点:
  * - V-1: variant=full での基本レンダリング（3つのチェックボックス・入出力欄・role=status）
  * - V-2: 置換ロジック（通常・正規表現・大文字小文字・全置換）
- * - V-3: 置換件数サマリが role=status に表示される（C-3 要件）
- * - V-4: 正規表現エラー時に日本語エラーが表示される（A-4・G-2 要件）
- * - V-5: 正規表現 ON 時に補足説明が表示される（G-2 要件）
- * - V-6: id インスタンス一意性（複数同居で id 重複なし・A-6 要件）
+ * - V-3: 置換件数サマリが role=status に表示される
+ * - V-4: 正規表現エラー時に日本語エラーが表示される
+ * - V-5: 正規表現 ON 時に補足説明が表示される
+ * - V-6: id インスタンス一意性（複数同居で id 重複なし）
  * - V-7: コピーボタン disabled 制御（空出力時）
  * - V-8: コピー動作（コピー文言変化・clipboard 不在 silent fail）
  * - V-9: アクセシビリティ（role=status/aria-live・role=status 外の出力欄）
  * - V-10: CSS トークン検証（--color-* ゼロ・font-weight:700 ゼロ・--accent 直塗りなし）
  * - V-11: variant 未指定（デフォルト=full）
- * - V-12: ルート要素が Panel であること（A-1 要件）
+ * - V-12: ルート要素が Panel であること
  */
 import { readFileSync } from "fs";
 import { resolve } from "path";
@@ -177,7 +177,7 @@ describe("V-3: 置換件数サマリ", () => {
 
 // --- V-4: 正規表現エラー（日本語化） ---
 describe("V-4: 正規表現エラー日本語化", () => {
-  it("不正な正規表現入力時に日本語エラーが表示される（A-4 要件）", () => {
+  it("不正な正規表現入力時に日本語エラーが表示される", () => {
     render(<TextReplaceTile variant="full" />);
     fireEvent.change(screen.getByLabelText("入力テキスト"), {
       target: { value: "test" },
@@ -340,7 +340,7 @@ describe("V-8: コピー動作", () => {
 
 // --- V-9: アクセシビリティ ---
 describe("V-9: アクセシビリティ", () => {
-  it("role=status の外に出力 textarea が存在する（C-3 実テキストノード要件）", () => {
+  it("role=status の外に出力 textarea が存在する（実テキストノード要件）", () => {
     render(<TextReplaceTile variant="full" />);
     const statusEl = screen.getByRole("status");
     const outputTextarea = screen.getByLabelText("置換結果");
@@ -372,7 +372,7 @@ describe("V-10: CSS トークン検証", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("CSS ファイルに --accent 直塗りが存在しない（B-3 要件）", () => {
+  it("CSS ファイルに --accent 直塗りが存在しない", () => {
     const cssPath = resolve(__dirname, "../TextReplaceTile.module.css");
     let css = "";
     try {
@@ -402,7 +402,7 @@ describe("V-11: デフォルト variant", () => {
 });
 
 // --- V-12: Panel ルート要素 ---
-describe("V-12: Panel ルート要素（A-1 要件）", () => {
+describe("V-12: Panel ルート要素", () => {
   it("ルート要素が section タグ（Panel のデフォルト as）", () => {
     const { container } = render(<TextReplaceTile variant="full" />);
     // Panel はデフォルトで section を出力する

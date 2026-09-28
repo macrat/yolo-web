@@ -34,7 +34,7 @@ describe("DateCalculatorTile", () => {
       expect(screen.getByText("和暦・西暦変換")).toBeInTheDocument();
     });
 
-    // B-593: h1→h3 飛び是正の回帰防止 — 本体セクション見出しは常に level:2 であること
+    // 本体セクション見出しは h1 の直下なので常に level:2 であること
     test("本体セクション見出しが見出しレベル2で描画される", () => {
       render(<DateCalculatorTile variant="full" />);
       expect(
@@ -234,7 +234,7 @@ describe("DateCalculatorTile", () => {
       expect(screen.getByLabelText("西暦→和暦 日付入力")).toBeInTheDocument();
     });
 
-    // G-5: 代表入力で結果に明らかな誤りがないか
+    // 代表入力で結果に明らかな誤りがないか
     test("shows correct result for 令和6年1月1日 → 2024-01-01", () => {
       render(<DateCalculatorTile />);
       // 令和6年 = 令和開始2019 + 6 - 1 = 2024年
@@ -353,7 +353,7 @@ describe("DateCalculatorTile", () => {
   });
 
   // ----------------------------------------------------------
-  // A-1: ルート要素が Panel（section/article/div 等）か
+  // ルート要素が Panel（section/article/div 等）か
   // ----------------------------------------------------------
   test("root element is a Panel (section tag by default)", () => {
     const { container } = render(<DateCalculatorTile />);
