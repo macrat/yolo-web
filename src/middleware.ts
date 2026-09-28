@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { PAPER, PAPER_DARK } from "@/lib/token-hex";
 import { SITE_NAME } from "@/lib/constants";
+import { RELEASE_ID } from "@/lib/generated/release-id";
 import {
   AI_NOTICE,
   FOOTER_LINKS,
@@ -135,6 +136,31 @@ function tokenRules(): string {
 }
 
 /**
+ * 見出しの文を、書き手が文節で分けた並び（DESIGN.md §4）。middleware は要求のたびに走るので、BudouX の分け方の表を
+ * 持つ splitIntoPhrases（@/lib/phrase-breaks）を束に入れず、決まった1文の区切りをここに書く。並びが
+ * splitIntoPhrases の結果と同じであることは、__tests__/middleware-gone-slugs.test.ts が確かめる。
+ */
+export const GONE_PAGE_HEADING_PHRASES = [
+  "この",
+  "コンテンツは",
+  "終了しました",
+] as const;
+
+const GONE_PAGE_HEADING = GONE_PAGE_HEADING_PHRASES.join("");
+
+/**
+ * GA の読み込み。ほかのページの GoogleAnalytics（@/components/GoogleAnalytics）と同じ ID と同じ設定で送り、
+ * 消した記事の URL に着いた来訪者の数をほかのページの数と同じ所で見られるようにする。ID が無い環境では何も出さない。
+ */
+function analyticsTags(): string {
+  const id = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+  if (!id) return "";
+  return `<script async src='https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}'></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{analytics_storage:'granted'});gtag('config',${JSON.stringify(id)},{release:${JSON.stringify(RELEASE_ID)}});</script>
+`;
+}
+
+/**
  * 上端・下端のリンク。React の FrameLink と同じ組み方で、現在地を持たない（410 はナビの行き先でない）。
  */
 function frameLink(link: SiteLink, extraClass = ""): string {
@@ -157,6 +183,7 @@ function frameLinks(links: readonly SiteLink[]): string {
  * GONE_PAGE_TOKENS から取る。上端・下端の文字と行き先、AI 運営の告知は `@/lib/site-frame` から取る。
  * テーマはほかのページと同じく端末の設定に従う（§10）。theme-color の値は、meta が CSS のトークンを
  * 読めないので `@/lib/token-hex` から取る。
+ * 見出しは PhrasedText と同じ宣言で組み、文節のあいだの <wbr> で折る（§4）。GA はほかのページと同じものを読み込む。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>
@@ -166,8 +193,8 @@ export function build410Html(): string {
 <meta name='viewport' content='width=device-width, initial-scale=1' />
 <meta name='theme-color' media='(prefers-color-scheme: light)' content='${PAPER}' />
 <meta name='theme-color' media='(prefers-color-scheme: dark)' content='${PAPER_DARK}' />
-<title>このコンテンツは終了しました | ${SITE_NAME}</title>
-<style>
+<title>${GONE_PAGE_HEADING} | ${SITE_NAME}</title>
+${analyticsTags()}<style>
 ${tokenRules()}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{max-width:100vw;overflow-x:clip;background:var(--paper);color:var(--ink)}
@@ -193,7 +220,7 @@ ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:var(--text-box-pad)}
 main{flex:1;display:flex;flex-direction:column;gap:var(--space-24);padding-block:var(--space-48)}
 main:focus{outline:none;box-shadow:none}
 main .link{align-self:flex-start}
-h1{font-family:var(--font-heading);font-size:var(--text-heading-main);font-weight:400;line-height:var(--leading-heading);word-break:auto-phrase}
+h1{font-family:var(--font-heading);font-size:var(--text-heading-main);font-weight:400;line-height:var(--leading-heading);word-break:keep-all;overflow-wrap:anywhere;line-break:strict}
 p{max-width:var(--measure)}
 </style>
 </head>
@@ -204,7 +231,7 @@ ${frameLink({ label: SITE_NAME, href: "/" }, "site-name")}
 <nav aria-label='メインナビゲーション'><ul>${frameLinks(HEADER_NAV_ITEMS)}</ul></nav>
 </div></header>
 <main id='${MAIN_CONTENT_ID}' tabindex='-1' class='container'>
-<h1>このコンテンツは終了しました</h1>
+<h1>${GONE_PAGE_HEADING_PHRASES.join("<wbr>")}</h1>
 <p>お探しのページはすでに削除されており、現在はご覧いただけません。</p>
 <a class='link' href='/' data-text-box='inline'>トップページへ</a>
 </main>

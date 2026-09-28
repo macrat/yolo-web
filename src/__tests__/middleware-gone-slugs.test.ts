@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { readFileSync } from "fs";
 import { resolve } from "path";
@@ -10,8 +10,11 @@ import {
   middleware,
   GONE_PAGE_TOKENS,
   GONE_PAGE_FALLBACK_FONT_FACE,
+  GONE_PAGE_HEADING_PHRASES,
 } from "../middleware";
 import { SITE_NAME } from "@/lib/constants";
+import { RELEASE_ID } from "@/lib/generated/release-id";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import {
   FOOTER_LINKS,
   HEADER_NAV_ITEMS,
@@ -67,9 +70,11 @@ describe("isDeletedBlogSlug", () => {
 });
 
 describe("build410Html", () => {
-  test("「このコンテンツは終了しました」というメッセージを含む", () => {
+  test("題は「このコンテンツは終了しました | サイト名」", () => {
     const html = build410Html();
-    expect(html).toContain("このコンテンツは終了しました");
+    expect(html).toContain(
+      `<title>このコンテンツは終了しました | ${SITE_NAME}</title>`,
+    );
   });
 
   test("トップページへのリンク（href='/'）を含む", () => {
@@ -160,6 +165,55 @@ describe("build410Html の枠（DESIGN.md §5 レイアウト）", () => {
   test("スキップのリンクが中間の main を指す", () => {
     expect(html).toContain(`href='#${MAIN_CONTENT_ID}'`);
     expect(html).toContain(`<main id='${MAIN_CONTENT_ID}' tabindex='-1'`);
+  });
+});
+
+// 見出しを DESIGN.md §4 の文節で折る。区切りは手で書き、splitIntoPhrases の区切りと同じであることを確かめる。
+describe("build410Html の見出しの折り方（DESIGN.md §4）", () => {
+  const html = build410Html();
+
+  test("手で書いた区切りは splitIntoPhrases の区切りと同じ", () => {
+    const text = GONE_PAGE_HEADING_PHRASES.join("");
+    expect(text).toBe("このコンテンツは終了しました");
+    expect(GONE_PAGE_HEADING_PHRASES).toEqual(splitIntoPhrases(text));
+  });
+
+  test("見出しは文節のあいだにだけ <wbr> を置き、字を分ける要素を持たない", () => {
+    expect(html).toContain("<h1>この<wbr>コンテンツは<wbr>終了しました</h1>");
+  });
+
+  test("見出しは語の中で折らず、行頭の禁則を厳しい側で組み、auto-phrase に頼らない", () => {
+    const h1Rule = html.match(/\nh1\{[^}]*\}/)?.[0] ?? "";
+    expect(h1Rule).toContain("word-break:keep-all");
+    expect(h1Rule).toContain("overflow-wrap:anywhere");
+    expect(h1Rule).toContain("line-break:strict");
+    expect(html).not.toContain("auto-phrase");
+  });
+});
+
+// 消した記事の URL に着いた来訪者の数を、ほかのページと同じ GA で数える。
+describe("build410Html の GA", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  test("ID があれば、ほかのページと同じ ID と release で gtag を読み込む", () => {
+    vi.stubEnv("NEXT_PUBLIC_GA_TRACKING_ID", "G-TESTID123");
+    const html = build410Html();
+    const head = html.match(/<head>[\s\S]*<\/head>/)?.[0] ?? "";
+    expect(head).toContain(
+      "<script async src='https://www.googletagmanager.com/gtag/js?id=G-TESTID123'></script>",
+    );
+    expect(head).toContain(
+      `gtag('config',"G-TESTID123",{release:${JSON.stringify(RELEASE_ID)}});`,
+    );
+  });
+
+  test("ID が無ければ GA を読み込まない", () => {
+    vi.stubEnv("NEXT_PUBLIC_GA_TRACKING_ID", "");
+    const html = build410Html();
+    expect(html).not.toContain("googletagmanager");
+    expect(html).not.toContain("gtag(");
   });
 });
 
