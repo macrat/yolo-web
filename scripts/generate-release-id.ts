@@ -6,8 +6,10 @@
  *   `src/lib/generated/release-id.ts` — `export const RELEASE_ID = "..."`
  *
  * The release id is attached to every GA event via `gtag('config', …, { release })`
- * (see src/components/common/GoogleAnalytics.tsx) so BigQuery can slice metrics
- * by deployment ("which release changed the numbers?").
+ * (see src/components/GoogleAnalytics/index.tsx) so BigQuery can slice metrics
+ * by deployment ("which release changed the numbers?"). Because the config call
+ * already attaches it to every event, the per-event params built in
+ * `src/lib/analytics.ts` do not carry `release`.
  *
  * WHY env-var-first resolution:
  * - yolos.net deploys on Vercel, whose build container may be a shallow clone
@@ -24,17 +26,12 @@
  *
  * DETERMINISM: For a given commit (paths 1 and 2), the value is deterministic —
  * same commit → same release id. Only path 3 (no SHA available at all) uses the
- * build-time date, which is acceptable per the design (docs/visitor-value-measurement.md
+ * build-time date, which is acceptable per the design (docs/archive/visitor-value-measurement.md
  * 論点4) because there is no commit to key off.
  *
  * OUTPUT file is committed to git (lint/typecheck works without running prebuild);
- * it is regenerated on every prebuild/predev/pretest to stay in sync.
+ * it is regenerated on every prebuild/predev/pretest/pretypecheck to stay in sync.
  * If manually edited, run `npm run generate:release-id` to revert.
- *
- * 申し送り（波2 builder 向け）: `src/lib/analytics.ts` の track 関数で `release`
- * を再度 event params に積まないこと。GoogleAnalytics.tsx の `gtag('config', …,
- * { release })` で全 GA イベントに自動付与されており、二重付与は冗長になるだけ。
- * analytics.ts 側は `ab_variant` / `experiment_id` の付与に専念する。
  */
 
 import { execFileSync } from "node:child_process";
