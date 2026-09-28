@@ -31,3 +31,11 @@
   font-size: var(--text-body);
   white-space: normal;
 }
+
+/* 既定の文字の大きさの変化を捉える見本。1rem の幅だけを持ち、字の並びにも高さにも加わらない。 */
+.remProbe {
+  position: absolute;
+  inline-size: 1rem;
+  block-size: 0;
+  visibility: hidden;
+}
