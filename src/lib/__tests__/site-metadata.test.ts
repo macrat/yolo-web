@@ -24,8 +24,9 @@ test("sharedMetadata keywords reflect 診断中心コンセプト", () => {
   expect(keywords).toContain("漢字");
   // 実用層のオンライン道具にも少数だけ触れていること
   expect(keywords).toContain("オンラインツール");
-  // 道具を中心とするサイトと読まれる「道具箱」は含まないこと
-  expect(keywords).not.toContain("道具箱");
+  expect(
+    keywords.filter((keyword) => keyword.includes("ツール")).length,
+  ).toBeLessThanOrEqual(2);
 });
 
 test("sharedMetadata includes openGraph configuration", () => {

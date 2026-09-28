@@ -9,11 +9,7 @@
  * (see src/components/common/GoogleAnalytics.tsx) so BigQuery can slice metrics
  * by deployment ("which release changed the numbers?").
  *
- * WHY env-var-first resolution (this script is NOT the same shape as the other
- * prebuild codegen):
- * - The other codegen (generate-toolbox-registry) does NOT touch git at all —
- *   it walks meta.ts. So "the other codegen proves git works at build time" is
- *   NOT a valid argument here.
+ * WHY env-var-first resolution:
  * - yolos.net deploys on Vercel, whose build container may be a shallow clone
  *   or may not ship `git`. Therefore release resolution must NOT depend on
  *   `git rev-parse` alone.
