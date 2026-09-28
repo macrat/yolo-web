@@ -47,3 +47,29 @@ t6-design.md 4章が求める、タスクごとの画像の比較と測った数
 | 72点・Bランク                                    | 96px     | 数字の結果は1行                                  | 23ms            |
 
 - 数字の結果と名前の字の高さは 122px と 87px（1.40倍）。空白は PNG に残る。ブログの86本の題はすべて3行以内で枠に収まり、副題は切れない。1行に収まらない単位は、割れない字の組（行の頭に置かない字と空白は前の字に、行の終わりに置かない字の後ろの字はその字に付けた並び）の境で割り、1行に収まらない組だけを字で割る（禁則の判定は `phrase-breaks.ts` の1か所）。
+
+## T6-3
+
+- 共通の画像のルートを新しい描き方（`share-image.tsx`）に移した。1ページだけのルート（道具36本・privacy・daily・ゲーム4本の42ファイル）は規約のファイル `opengraph-image.tsx` のままで、`alt` を `shareImageAlt(content)`、`size` を `share-image-frame.ts` の値から作る。privacy は名前「プライバシーポリシー」だけにし、副題の「yolos.net」（上端のサイト名の繰り返し）を無くした。
+- 中身を作る関数を面ごとに1つ置いた（どれも `share-image` から型だけを読む）:
+  - 道具: `toolShareImageContent`（`src/tools/_lib/share-image-content.ts`）。補助情報「ツール」・名前（h1 の `name`）・副題（h1 の下の `shortDescription`）。
+  - 遊び: `playShareImageContent`（`src/play/share-image-content.ts`）。補助情報は `resolveDisplayCategory` の「診断」「クイズ」「運勢」「パズル」、名前は `title`、副題は `shortDescription`。ゲームも同じ関数を使うので、画像の副題だけのための `GameMeta.ogpSubtitle` を消した。
+  - ユーモア辞典: `humorShareImageContent`（`src/humor-dict/_lib/share-image-content.ts`）。補助情報「ユーモア辞典」・名前（見出し語）・読み・副題（定義）。
+- b の形（Route Handler。`force-static`・`dynamicParams = false`・`revalidate = false`、無い id は `notFound()`）で2つ組んだ:
+  - `src/app/dictionary/humor/[slug]/opengraph-image/route.tsx`（30語）。`page.tsx` の `generateMetadata` が画像の値を作り、`generateHumorDictEntryMetadata` に型だけで渡す。
+  - `src/app/play/[slug]/opengraph-image/route.tsx`（`getAllQuizSlugs()` の15本。music-personality を含み、`contentType` が quiz でなければ 404）。`/play/[slug]` と `/play/music-personality` の `page.tsx` が画像の値を作り、`generatePlayMetadata` に型だけで渡す。`/play/daily` は渡さず、自分の規約のファイルを使う。`generatePlayMetadata` は `twitter.images` の明示をやめ、使う所の無かった `overrides` の引数も外した。
+- `twitter-image.tsx` 38本（道具36本・privacy・ユーモア辞典）を消し、`src/app/tools/__tests__/page-coverage.test.ts` の `REQUIRED_FILES` を `page.tsx` と `opengraph-image.tsx` にした。ユーモア辞典の画像の試験は、Route Handler の `GET` とページの `openGraph.images` を試す形に書き直した。
+- 画像に書く87の中身（道具36・診断とクイズ15・daily・ゲーム4・ユーモア30・privacy）を実際の書体で描き、4書体に無い字は0件、副題を切った画像も0件（代替テキストが画像の字と一致する）。
+
+完了の条件ごとの測り（HEAD にこのタスクの変更を重ねた本番のビルドを `next start` で配信して測った）:
+
+1. ビルド（exit 0）・`tsc --noEmit`・eslint・prettier・vitest の全件（390ファイル・6360件、1件は skip）が通る。
+2. 4書体の字: 上の87の中身で、描けない字は0件。
+3. 変更の前（fc9b08c のビルド）と後の PNG を並べて見た組: ブログの69字の題（nextjs-global-not-found-for-multiple-root-layouts）と markdown-cheatsheet・道具の base64 と char-count・`/play/character-personality`・`/play/science-thinking`・`/play/music-personality`・daily・irodori・kanji-kanaru・ユーモア辞典の monday・privacy。どれも、上下の横の罫線が x=0〜1199 で途切れず、左右の縦の線が上端から下端まで通り、上下 15px の帯の字の画素が0、中身の枠の右（x>1098）へはみ出す画素が0。空白（「root layoutで not-found.tsx」、science-thinking の副題の全角の空白）は PNG に残る。400px に縮めた PNG で名前・補助情報・サイト名が読める。
+4. `/play/science-thinking` は 84px の2行で「理系思考タイプ診断 —｜あなたはどの科学者型？」と折れ、「科学者型？」は1行に収まる。
+5. 移したルートで `ogp-image.tsx` を import するものは0件。
+6. `src/app` の `twitter-image.tsx` はルートの1本だけ。ビルドの `twitter-image.body` は154枚から1枚になった。
+7. 道具36・privacy・プレイ面20・ユーモア辞典30・ブログ86の173ページのすべてで、`twitter:card` が `summary_large_image`、`og:image` と `twitter:image` が同じ URL と同じ代替テキスト（例「yolos.net 診断 音楽性格診断 音楽の聴き方であなたの性格タイプを診断。友達との相性も！」）で、`og:image`・`twitter:image`・ブログの JSON-LD の `image` の URL はどれも 200 と image/png を返した。
+8. ビルドの `.body` はユーモア辞典30枚、プレイ面20枚（診断とクイズの15本と、daily・ゲーム4本の規約のファイル）。無い語・無い診断の画像の URL は 404。
+9. `/play/music-personality` の `og:image`（`/play/music-personality/opengraph-image?v=4032da9e67ef81de`）は 200 の PNG で `.body` とバイト単位で同じ。PNG は補助情報「診断」・名前「音楽性格診断」・副題の画像である。
+10. `/play/daily` の `og:image` は daily の規約のファイルの画像（Next が付ける hash の URL `/play/daily/opengraph-image?cbe29d0d59b98511`）のままで、中身は新しい描き方の「運勢／今日のユーモア運勢」。

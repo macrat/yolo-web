@@ -507,10 +507,12 @@ interface HumorDictEntryForSeo {
 }
 
 /**
- * ユーモア辞典の個別エントリページ用メタデータを生成する。
+ * ユーモア辞典の語のページのメタデータ。shareImage は語の画像（`shareOpenGraphImage` が作る値）で、
+ * `openGraph.images` に渡す。
  */
 export function generateHumorDictEntryMetadata(
   entry: HumorDictEntryForSeo,
+  shareImage: ShareOpenGraphImage,
 ): Metadata {
   return {
     title: `「${entry.word}」のユーモア定義 - ユーモア辞典 | ${SITE_NAME}`,
@@ -522,6 +524,7 @@ export function generateHumorDictEntryMetadata(
       type: "website",
       url: `${BASE_URL}/dictionary/humor/${entry.slug}`,
       siteName: SITE_NAME,
+      images: [shareImage],
     },
     twitter: {
       card: "summary_large_image",

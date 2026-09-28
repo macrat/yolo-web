@@ -38,8 +38,6 @@ export interface GameMeta {
   statsKey: string;
   /** デイリーゲームかどうか。true のゲームが、解き終えた画面の今日の進み（NextGameBanner）に数えられる。 */
   isDaily?: boolean;
-  /** OGP image subtitle */
-  ogpSubtitle: string;
   /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;
   /** ISO 8601 date-time with timezone. Set when main content is updated. */

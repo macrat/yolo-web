@@ -3,6 +3,8 @@ import musicPersonalityQuiz from "@/play/quiz/data/music-personality";
 import QuizPlayPageLayout from "@/play/quiz/_components/QuizPlayPageLayout";
 import { generatePlayMetadata } from "@/play/seo";
 import { playContentBySlug } from "@/play/registry";
+import { playShareImageContent } from "@/play/share-image-content";
+import { shareOpenGraphImage } from "@/lib/share-image";
 
 const SLUG = "music-personality";
 
@@ -21,7 +23,10 @@ export async function generateStaticParams(): Promise<[]> {
 export async function generateMetadata(): Promise<Metadata> {
   const meta = playContentBySlug.get(SLUG);
   if (!meta) return {};
-  return generatePlayMetadata(meta);
+  return generatePlayMetadata(
+    meta,
+    shareOpenGraphImage(`/play/${SLUG}`, playShareImageContent(meta)),
+  );
 }
 
 export default async function MusicPersonalityPlayPage({

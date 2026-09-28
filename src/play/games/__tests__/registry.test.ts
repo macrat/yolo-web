@@ -31,7 +31,6 @@ describe("allGameMetas", () => {
       expect(meta.description).toBeTruthy();
       expect(meta.difficulty).toBeTruthy();
       expect(meta.statsKey).toBeTruthy();
-      expect(meta.ogpSubtitle).toBeTruthy();
     }
   });
 

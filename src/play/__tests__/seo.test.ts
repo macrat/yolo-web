@@ -1,5 +1,7 @@
 import { describe, test, expect } from "vitest";
+import { shareOpenGraphImage } from "@/lib/share-image";
 import { generatePlayMetadata, generatePlayJsonLd } from "../seo";
+import { playShareImageContent } from "../share-image-content";
 import type { PlayContentMeta } from "../types";
 
 // テスト用の共通フィールド
@@ -130,54 +132,29 @@ describe("generatePlayMetadata — displayCategory（カテゴリ名出し分け
 });
 
 // --------------------------------------------------------
-// generatePlayMetadata — twitter.images
+// generatePlayMetadata — 画像
 // --------------------------------------------------------
 
-describe("generatePlayMetadata — twitter.images", () => {
-  test("twitter.images[0] は /play/<slug>/opengraph-image の完全 URL", () => {
-    const metadata = generatePlayMetadata(gameMeta);
-    // Next.js の型では twitter.images は string[] として扱う
-    const twitterImages = (
-      metadata.twitter as { images?: string[] } | undefined
-    )?.images;
-    expect(twitterImages).toBeDefined();
-    expect(twitterImages![0]).toBe(
-      `https://yolos.net/play/${gameMeta.slug}/opengraph-image`,
+describe("generatePlayMetadata — 画像", () => {
+  test("渡された画像を openGraph.images に入れ、twitter は画像を持たない（Next.js が openGraph から補う）", () => {
+    const shareImage = shareOpenGraphImage(
+      `/play/${quizKnowledgeMeta.slug}`,
+      playShareImageContent(quizKnowledgeMeta),
     );
+    const metadata = generatePlayMetadata(quizKnowledgeMeta, shareImage);
+    const og = metadata.openGraph as Record<string, unknown> | undefined;
+    expect(og?.images).toEqual([shareImage]);
+    expect(
+      (metadata.twitter as Record<string, unknown> | undefined)?.images,
+    ).toBeUndefined();
   });
 
-  test("quiz コンテンツでも twitter.images が正しく設定される", () => {
-    const metadata = generatePlayMetadata(quizKnowledgeMeta);
-    const twitterImages = (
-      metadata.twitter as { images?: string[] } | undefined
-    )?.images;
-    expect(twitterImages![0]).toBe(
-      `https://yolos.net/play/${quizKnowledgeMeta.slug}/opengraph-image`,
-    );
-  });
-});
-
-// --------------------------------------------------------
-// generatePlayMetadata — overrides
-// --------------------------------------------------------
-
-describe("generatePlayMetadata — overrides", () => {
-  test("overrides の title が base の title を上書きする", () => {
-    const overrideTitle = "カスタムタイトル";
-    const metadata = generatePlayMetadata(gameMeta, { title: overrideTitle });
-    expect(metadata.title).toBe(overrideTitle);
-  });
-
-  test("overrides の description が base の description を上書きする", () => {
-    const overrideDescription = "カスタム説明文";
-    const metadata = generatePlayMetadata(gameMeta, {
-      description: overrideDescription,
-    });
-    expect(metadata.description).toBe(overrideDescription);
-  });
-
-  test("overrides なしの場合は base が保持される", () => {
-    const metadata = generatePlayMetadata(gameMeta);
-    expect(metadata.description).toBe(gameMeta.description);
+  test("画像を渡さないページ（占い）は openGraph.images も twitter の画像も持たず、自分の画像のファイルを使う", () => {
+    const metadata = generatePlayMetadata(fortuneMeta);
+    const og = metadata.openGraph as Record<string, unknown> | undefined;
+    expect(og).not.toHaveProperty("images");
+    expect(
+      (metadata.twitter as Record<string, unknown> | undefined)?.images,
+    ).toBeUndefined();
   });
 });

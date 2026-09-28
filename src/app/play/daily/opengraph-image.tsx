@@ -1,16 +1,14 @@
-import {
-  createOgpImageResponse,
-  ogpSize,
-  ogpContentType,
-} from "@/lib/ogp-image";
+import { fortunePlayContentMeta } from "@/play/registry";
+import { playShareImageContent } from "@/play/share-image-content";
+import { createShareImageResponse, shareImageAlt } from "@/lib/share-image";
+import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from "@/lib/share-image-frame";
 
-export const alt = "今日のユーモア運勢";
-export const size = ogpSize;
-export const contentType = ogpContentType;
+const content = playShareImageContent(fortunePlayContentMeta);
 
-/** OGP image for the daily fortune page. */
+export const alt = shareImageAlt(content);
+export const size = { width: SHARE_IMAGE_WIDTH, height: SHARE_IMAGE_HEIGHT };
+export const contentType = "image/png";
+
 export default function OpenGraphImage() {
-  return createOgpImageResponse({
-    title: "今日のユーモア運勢",
-  });
+  return createShareImageResponse(content);
 }

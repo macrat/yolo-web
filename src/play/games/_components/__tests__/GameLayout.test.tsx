@@ -21,7 +21,6 @@ const mockMeta: GameMeta = {
   difficulty: "初級",
   keywords: ["テスト"],
   statsKey: "test-game-stats",
-  ogpSubtitle: "テスト",
   publishedAt: "2026-02-13",
   sitemap: { changeFrequency: "daily", priority: 0.8 },
   seo: {

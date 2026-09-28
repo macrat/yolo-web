@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { getAllQuizSlugs } from "@/play/quiz/registry";
 import { quizBySlug } from "@/play/quiz/registry";
+import { shareOpenGraphImage } from "@/lib/share-image";
+import { playContentBySlug } from "@/play/registry";
+import { playShareImageContent } from "@/play/share-image-content";
 import { generateStaticParams, generateMetadata } from "../page";
 
 describe("play/[slug]/page", () => {
@@ -84,6 +87,20 @@ describe("play/[slug]/page", () => {
           searchParams: Promise.resolve({}),
         }),
       ).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
+    });
+
+    it("passes the quiz's share image to openGraph.images", async () => {
+      const metadata = await generateMetadata({
+        params: Promise.resolve({ slug: "science-thinking" }),
+        searchParams: Promise.resolve({}),
+      });
+      const meta = playContentBySlug.get("science-thinking")!;
+      expect(metadata.openGraph?.images).toEqual([
+        shareOpenGraphImage(
+          "/play/science-thinking",
+          playShareImageContent(meta),
+        ),
+      ]);
     });
 
     it("uses /play/ canonical URL (not /quiz/)", async () => {

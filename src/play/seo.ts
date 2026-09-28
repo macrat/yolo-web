@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import { generateGameJsonLd } from "@/lib/seo";
+// 画像の描き方は server-only なので、型だけを読む。
+import type { ShareOpenGraphImage } from "@/lib/share-image";
 import type { PlayContentMeta } from "./types";
 
 /**
@@ -21,26 +23,21 @@ export function resolveDisplayCategory(meta: PlayContentMeta): string {
 }
 
 /**
- * PlayContentMeta から Next.js の Metadata オブジェクトを生成する。
+ * 遊びのページのメタデータ。
  *
- * - seoTitle が設定されている場合は、title タグと OG タイトルに優先的に使用する。
- *   seoTitle は「${seoTitle} | ${SITE_NAME}」の形式になる。
- * - seoTitle がない場合は従来通り「${title} - ${displayCategory} | ${SITE_NAME}」形式。
+ * title タグと OG の題は、seoTitle があれば「${seoTitle} | ${SITE_NAME}」、無ければ
+ * 「${title} - ${表示カテゴリ} | ${SITE_NAME}」。
  *
- * @param meta - 対象コンテンツのメタデータ
- * @param overrides - 上書きしたい Metadata フィールド（任意）
+ * shareImage はページの画像（`shareOpenGraphImage` が作る値）で、渡されたときだけ `openGraph.images` に入れる。
+ * Next.js は `twitter:image` をこれから補う。渡さないページ（占い）は、自分のディレクトリの画像のファイルを使う。
  */
 export function generatePlayMetadata(
   meta: PlayContentMeta,
-  overrides?: Partial<Metadata>,
+  shareImage?: ShareOpenGraphImage,
 ): Metadata {
   const displayCategory = resolveDisplayCategory(meta);
   const canonicalUrl = `${BASE_URL}/play/${meta.slug}`;
-  // opengraph-image は Next.js の慣例通り同一ディレクトリの規約ファイルを
-  // 使用するため、OGP URL は canonical URL をベースに構築する。
-  const ogImageUrl = `${canonicalUrl}/opengraph-image`;
 
-  // seoTitle が設定されている場合はそれを使用、なければ従来のタイトル形式
   const titleTag = meta.seoTitle
     ? `${meta.seoTitle} | ${SITE_NAME}`
     : `${meta.title} - ${displayCategory} | ${SITE_NAME}`;
@@ -48,7 +45,7 @@ export function generatePlayMetadata(
     ? meta.seoTitle
     : `${meta.title} - ${displayCategory}`;
 
-  const base: Metadata = {
+  return {
     title: titleTag,
     description: meta.description,
     keywords: meta.keywords,
@@ -58,19 +55,17 @@ export function generatePlayMetadata(
       type: "website",
       url: canonicalUrl,
       siteName: SITE_NAME,
+      ...(shareImage ? { images: [shareImage] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle,
       description: meta.description,
-      images: [ogImageUrl],
     },
     alternates: {
       canonical: canonicalUrl,
     },
   };
-
-  return { ...base, ...overrides };
 }
 
 /**

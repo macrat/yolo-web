@@ -13,6 +13,8 @@ import {
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
 import EntryRatingButton from "@/humor-dict/_components/EntryRatingButton";
 import { getDefinitionPreview } from "@/humor-dict/_lib/definition-preview";
+import { humorShareImageContent } from "@/humor-dict/_lib/share-image-content";
+import { shareOpenGraphImage } from "@/lib/share-image";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
@@ -31,7 +33,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const entry = getEntryBySlug(slug);
   if (!entry) notFound();
-  return generateHumorDictEntryMetadata(entry);
+  return generateHumorDictEntryMetadata(
+    entry,
+    shareOpenGraphImage(
+      `/dictionary/humor/${slug}`,
+      humorShareImageContent(entry),
+    ),
+  );
 }
 
 export default async function HumorDictEntryPage({

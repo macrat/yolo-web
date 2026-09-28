@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { quizBySlug, getAllQuizSlugs } from "@/play/quiz/registry";
 import { generatePlayMetadata } from "@/play/seo";
 import { playContentBySlug } from "@/play/registry";
+import { playShareImageContent } from "@/play/share-image-content";
+import { shareOpenGraphImage } from "@/lib/share-image";
 import QuizPlayPageLayout from "@/play/quiz/_components/QuizPlayPageLayout";
 
 type Props = {
@@ -26,7 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const meta = playContentBySlug.get(slug);
   if (!meta) notFound();
-  return generatePlayMetadata(meta);
+  return generatePlayMetadata(
+    meta,
+    shareOpenGraphImage(`/play/${slug}`, playShareImageContent(meta)),
+  );
 }
 
 export default async function PlayQuizPage({ params, searchParams }: Props) {
