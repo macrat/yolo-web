@@ -1,82 +1,55 @@
 /*
- * プライバシーポリシー。
- * 純粋な読み物ページ(規約文)のため、器は罫と組版だけで組む静かな帳面にする。
- * 見出しは globals.css の見出しの規則にまかせ、ここでは
- * 読む面の幅(--measure)・余白(8px スケール)・区切りの罫・墨の濃淡だけを整える。
- * 色付きカード・影・角丸装飾は使わない(§5)。
+ * プライバシーポリシー（/privacy）。最初のセクションにパンくず・主見出し・冒頭の段落を、2つ目からのセクションに
+ * 章を1つずつ置く（DESIGN.md §5）。見出しの大きさは h1・h2・h3 の既定（§4 の主見出し・セクションの見出し・
+ * セクションの中の小見出し）に従う。
  */
 
-.main {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: var(--space-32) var(--space-24) var(--space-64);
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-/* 表題: のれん罫(--rule-strong)で本文と区切り、規約文書としての起点を示す。 */
 .title {
-  margin: var(--space-16) 0 var(--space-32);
-  padding-bottom: var(--space-16);
-  color: var(--ink);
-  border-bottom: 1px solid var(--rule-strong);
+  margin-block-end: var(--space-8);
 }
 
-.section {
-  margin-bottom: var(--space-32);
+.heading {
+  margin-block-end: var(--space-16);
 }
 
-.section:last-of-type {
-  margin-bottom: 0;
-}
-
-/* 章見出し(h2): 一本罫(--rule)で仕切る。のれん罫より軽い区切り。 */
-.sectionTitle {
-  margin: 0 0 var(--space-16);
-  padding-bottom: var(--space-8);
-  color: var(--ink);
-  border-bottom: 1px solid var(--rule);
-}
-
-/* 節見出し(h3): 罫なし・墨の色だけで一段静かに置く。 */
+/* セクションの中の小見出し。上の細い罫線で前の内容と分け、章の見出しのすぐ下に立つものは線を持たない（§5）。 */
 .subheading {
-  margin: var(--space-24) 0 var(--space-8);
-  color: var(--ink);
+  margin-block-start: var(--space-16);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .subheading:first-child {
-  margin-top: 0;
+  margin-block-start: 0;
+  padding-block-start: 0;
+  border-block-start: 0;
 }
 
-/* 読ませる本文。 */
-.section p {
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  line-height: 1.9;
-}
-
-.section p:last-child {
-  margin-bottom: 0;
+.text {
+  max-width: var(--measure);
 }
 
 .list {
-  margin: 0 0 var(--space-16);
-  padding-left: 1.5em;
+  max-width: var(--measure);
+  padding-inline-start: var(--space-24);
 }
 
-.list li {
-  margin-bottom: var(--space-8);
-  color: var(--ink);
-  line-height: 1.9;
+.list li + li {
+  margin-block-start: var(--space-8);
 }
 
-.list li:last-child {
-  margin-bottom: 0;
-}
-
-/* 制定日: 補助情報の墨(--ink-2)で、本文と一本罫(--rule)で仕切る。 */
-.enactmentDate {
-  margin: var(--space-32) 0 0;
-  padding-top: var(--space-24);
+/* 制定日。本文の区切りの細い罫線の下に、補助情報として置く（§4・§5）。 */
+.enacted {
+  max-width: var(--measure);
+  margin-block-start: var(--space-16);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  text-align: right;
-  border-top: 1px solid var(--rule);
 }

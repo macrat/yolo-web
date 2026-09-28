@@ -1,54 +1,22 @@
 /*
- * サイト紹介（/about）。読み物のページなので、幅を --measure に絞り、左揃えで組む。
+ * サイト紹介（/about）。最初のセクションにパンくず・主見出し・冒頭の一言を、2つ目からのセクションに章を1つずつ
+ * 置く（DESIGN.md §5）。見出しの大きさは h1・h2 の既定（§4 の主見出し・セクションの見出し）に従う。
  */
 
-.page {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: var(--space-32) var(--space-24) var(--space-64);
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
 .title {
-  margin: var(--space-16) 0 var(--space-24);
-  color: var(--ink);
+  margin-block-end: var(--space-8);
 }
 
-/* 冒頭の一言（自己紹介の正典・docs/site-concept.md 参照）。本文よりやや大きく見せ場にする。 */
-.lead {
-  margin: 0 0 var(--space-32);
-  color: var(--ink);
-  font-size: 1.25rem; /* 20px */
-  line-height: 1.7;
+.heading {
+  margin-block-end: var(--space-16);
 }
 
-.section {
-  margin-bottom: var(--space-32);
-}
-
-.section:last-child {
-  margin-bottom: 0;
-}
-
-/* 小見出し: 見出しの書体・墨・一本罫で仕切る（dictionary/humor 詳細と同じ流儀で揃える）。 */
-.sectionTitle {
-  font-size: 1.25rem; /* 20px */
-  margin-bottom: var(--space-16);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink);
-}
-
-/* 読ませる本文。 */
 .text {
-  margin: 0 0 var(--space-16);
-  font-size: 1rem;
-  line-height: 1.9;
-  color: var(--ink);
+  max-width: var(--measure);
 }
-
-.text:last-child {
-  margin-bottom: 0;
-}
-
-/* 本文中のリンクは globals.css の既定の a（色・下線・訪問済み）と :focus-visible に委ねる
- * （privacy 等ほかの読み物ページと同じ流儀で揃える）。 */
