@@ -398,9 +398,9 @@ function resolveLocalValues(
       factory &&
       (ts.isArrowFunction(factory) || ts.isFunctionExpression(factory))
     ) {
-      return returnedExpressions(factory).flatMap((returned) =>
-        resolveLocalValues(returned, depth + 1),
-      );
+      const returned = returnedExpressions(factory);
+      if (returned.length === 0) return [node];
+      return returned.flatMap((value) => resolveLocalValues(value, depth + 1));
     }
     return [node];
   }
@@ -435,33 +435,46 @@ function literalKey(argument: ts.Expression): string | undefined {
 
 /**
  * オブジェクトか並びの、鍵の値。鍵が undefined（変数の鍵）なら、すべての値。相手がオブジェクトでも並びでも
- * ないか、値を広げて持つなら undefined（解けない）。
+ * ないとき、値を広げて持つとき、字の鍵の値が無いとき、変数の鍵で値が1つも無いときは undefined（解けない）。
+ * 解けない式は値で渡すものに出るので、見る位置が黙って数えから外れない。
  */
 function memberValues(
   container: ts.Expression,
   key: string | undefined,
 ): ts.Expression[] | undefined {
+  let values: ts.Expression[];
   if (ts.isObjectLiteralExpression(container)) {
-    if (key !== undefined) {
-      const property = findProperty(container, key);
-      return property ? [property] : [];
-    }
-    const values: ts.Expression[] = [];
+    const entries: [string | undefined, ts.Expression][] = [];
     for (const property of container.properties) {
-      if (ts.isPropertyAssignment(property)) values.push(property.initializer);
-      else if (ts.isShorthandPropertyAssignment(property)) {
-        values.push(property.name);
-      } else return undefined;
+      if (ts.isPropertyAssignment(property)) {
+        const name = property.name;
+        entries.push([
+          ts.isIdentifier(name) ||
+          ts.isStringLiteral(name) ||
+          ts.isNumericLiteral(name)
+            ? name.text
+            : undefined,
+          property.initializer,
+        ]);
+      } else if (ts.isShorthandPropertyAssignment(property)) {
+        entries.push([property.name.text, property.name]);
+      } else {
+        return undefined;
+      }
     }
-    return values;
-  }
-  if (ts.isArrayLiteralExpression(container)) {
+    values = entries
+      .filter(([name]) => key === undefined || name === key)
+      .map(([, value]) => value);
+  } else if (ts.isArrayLiteralExpression(container)) {
     if (container.elements.some(ts.isSpreadElement)) return undefined;
-    if (key === undefined) return [...container.elements];
-    const element = container.elements[Number(key)];
-    return element ? [element] : [];
+    values =
+      key === undefined
+        ? [...container.elements]
+        : container.elements.filter((_, index) => String(index) === key);
+  } else {
+    return undefined;
   }
-  return undefined;
+  return values.length > 0 ? values : undefined;
 }
 
 function findProperty(
@@ -747,6 +760,17 @@ function checkGroup(
 ): void {
   forEachValue(context, expression, position, (value) => {
     if (!ts.isObjectLiteralExpression(value)) return false;
+    if (value.properties.some(ts.isSpreadAssignment)) {
+      record(
+        context,
+        "values",
+        value,
+        position,
+        sourceText(context, value),
+        "広げて渡す要素",
+      );
+      return true;
+    }
     const legend = findProperty(value, "legend");
     if (legend) checkName(context, legend, `${position} の \`legend\``);
     const options = findProperty(value, "options");

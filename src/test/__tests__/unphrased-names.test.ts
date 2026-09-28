@@ -269,6 +269,30 @@ describe("同じファイルの値を解いて見るもの", () => {
     ).toEqual(["記号・スペース", "エンコードするテキスト", "結果をコピー"]);
   });
 
+  test("解けない値（広げたオブジェクトの字の鍵・値の無いオブジェクトの変数の鍵）は値で渡すものに出す", () => {
+    expect(
+      valueFindings(`
+        const BASE = { label: "もとの値 X" };
+        const CONFIG = { ...BASE, placeholder: "3000" };
+        const EMPTY = {};
+        const GROUP = { ...BASE_GROUP };
+        export function Tile({ key }) {
+          return (
+            <>
+              <Field label={CONFIG.label}>{() => null}</Field>
+              <Checkbox label={EMPTY[key]} />
+              <ListControls searchLabel="探す" kindGroup={GROUP} />
+            </>
+          );
+        }
+      `).map(({ position, source }) => [position, source]),
+    ).toEqual([
+      ["`ListControls` の `kindGroup`", "{ ...BASE_GROUP }"],
+      ["`Field` の `label`", "CONFIG.label"],
+      ["`Checkbox` の `label`", "EMPTY[key]"],
+    ]);
+  });
+
   test("useMemo が返す式を見る", () => {
     expect(
       literalTexts(`
