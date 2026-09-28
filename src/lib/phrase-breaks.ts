@@ -9,7 +9,8 @@
  *   続きだけで行を作らない。
  * - 最初の文節の、最初の空白より前には、字の種類が変わって語が始まる所の折り所を足す。この部分は行の頭から始まるので、
  *   この折り所は、この部分が1行に収まらないときの代わりにだけ使われる。
- * - 見出しの狭い行に収まらない幅の文節には、語と語の切れ目（漢字か片仮名の語の頭と、「〜する」の頭）の折り所を足す。
+ * - 見出しの狭い行に収まらない幅の文節には、語と語の切れ目（漢字・片仮名・英字の語の頭と、「〜する」の頭）の折り所を
+ *   足す。
  *   収まらない文節をブラウザが字の所で割ると、1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。
  *   <wbr> の折り所に優先の順は無く、文節が1行に収まる広い行でも行の終わりに来れば使われるので、語の中には置かない。
  * BudouX の分け方の表は大きいので、クライアントのバンドルに入れないよう、区切りはサーバーで作る。
@@ -20,9 +21,9 @@
 import "server-only";
 import { jaModel, loadDefaultJapaneseParser } from "budoux";
 
-/** 行の頭に置かない字。閉じ括弧・句読点・感嘆符と疑問符・リーダ・ダッシュ・中点類・小書きの仮名・長音符・繰り返し記号。 */
+/** 行の頭に置かない字。閉じ括弧・句読点・感嘆符と疑問符・リーダ・中点類・小書きの仮名・長音符・繰り返し記号。 */
 const NO_LINE_START =
-  /^[)\]}）］｝〕〉》」』】〙〗〟’”»、。，．,.！？!?‼⁇⁈⁉…‥—―─・：；:;ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿーゝゞヽヾ々〻]/u;
+  /^[)\]}）］｝〕〉》」』】〙〗〟’”»、。，．,.！？!?‼⁇⁈⁉…‥・：；:;ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿーゝゞヽヾ々〻]/u;
 
 /** 行の終わりに置かない字。開き括弧。 */
 const NO_LINE_END = /[(\[{（［｛〔〈《「『【〘〖〝‘“«]$/u;
@@ -30,6 +31,10 @@ const NO_LINE_END = /[(\[{（［｛〔〈《「『【〘〖〝‘“«]$/u;
 /** 数で終わる文。英字に続く数字（「Base64」）は語の一部で、数ではない。 */
 const ENDS_WITH_NUMBER = /(?:^|[^A-Za-z0-9０-９])[0-9０-９]+$/u;
 const STARTS_WITH_SPACE = /^\s/u;
+
+/** ダッシュ（「—」「──」「--」）で始まる文。ダッシュは行の頭に置かず、前の語に付ける。 */
+const STARTS_WITH_DASH = /^(?:[—―─]|--)/u;
+const DASH_CHAR = /^[—―─-]$/u;
 
 /**
  * 丸括弧。読み仮名（「藍色(あいいろ)」）や添えた数（「部首（198）」）を囲み、中は1つのまとまりとして
@@ -63,8 +68,10 @@ let parser: ReturnType<typeof loadDefaultJapaneseParser> | undefined;
  * あいだでは折らない。
  */
 function isUnbreakable(before: string, after: string): boolean {
+  const head = after.trimStart();
   return (
-    NO_LINE_START.test(after) ||
+    NO_LINE_START.test(head) ||
+    STARTS_WITH_DASH.test(head) ||
     NO_LINE_END.test(before) ||
     (ENDS_WITH_NUMBER.test(before) && !STARTS_WITH_SPACE.test(after))
   );
@@ -165,16 +172,76 @@ function isListedHiraganaWord(chars: string[], index: number): boolean {
   return chars[start - 1] === MIDDLE_DOT || chars[end + 1] === MIDDLE_DOT;
 }
 
+interface Word {
+  start: number;
+  end: number;
+  text: string;
+}
+
+/** 片仮名の続きを語に刻んだ切れ端の字の数の下限。これより短い切れ端があれば、その続きの刻みを信じない。 */
+const MIN_KATAKANA_WORD = 3;
+
+/** text を Intl.Segmenter で語に刻み、字の番号で返す。 */
+function wordsOf(text: string): Word[] {
+  const out: Word[] = [];
+  let start = 0;
+  for (const { segment } of words.segment(text)) {
+    const length = toGraphemes(segment).length;
+    out.push({ start, end: start + length, text: segment });
+    start += length;
+  }
+  return out;
+}
+
 /**
- * BudouX の分け方を、見出しの語の切れ目で直す。中点で並べた平仮名の語の中の境目を外し（BudouX は「ひらが|な・
- * カタカナ」と割る）、中点の後ろと、英字を含む語から漢字か片仮名の語に移る所に境目を足す。丸括弧の中には足さない。
+ * 語の頭の位置（字の番号）。Intl.Segmenter の語の境目のうち、片仮名の続きの中の境目は、その続きのどの切れ端も
+ * 3字以上のときだけ採る。辞書に無い外来語は短い切れ端に刻まれる（「リ|ファクタ|リング」「デザイン|トーク|ン」）ので、
+ * その続きの中は語の頭にしない。
+ */
+function wordStartsOf(chars: string[], text: string): Set<number> {
+  const all = wordsOf(text);
+  const starts = new Set(all.map((word) => word.start).filter((i) => i > 0));
+  let run = 0;
+  while (run < chars.length) {
+    if (scriptOf(chars[run]) !== "katakana") {
+      run += 1;
+      continue;
+    }
+    let end = run;
+    while (end < chars.length && scriptOf(chars[end]) === "katakana") end += 1;
+    const inside = all.filter((word) => word.start >= run && word.end <= end);
+    if (inside.some((word) => word.end - word.start < MIN_KATAKANA_WORD)) {
+      for (let index = run + 1; index < end; index += 1) starts.delete(index);
+    }
+    run = end;
+  }
+  return starts;
+}
+
+/** 漢字か片仮名を含む語の中の位置か（BudouX が語の中に置く境目「見た|目」「切り|替え」を見分ける）。 */
+function isInsideWord(words: Word[], index: number): boolean {
+  return words.some(
+    (word) =>
+      word.start < index &&
+      index < word.end &&
+      /[\p{Script=Han}\p{Script=Katakana}]/u.test(word.text),
+  );
+}
+
+/**
+ * BudouX の分け方を、見出しの語の切れ目で直す。漢字か片仮名を含む語の中の境目（「見た|目」「切り|替え」）と、
+ * 中点で並べた平仮名の語の中の境目を外し（BudouX は「ひらが|な・カタカナ」と割る）、ダッシュの後ろ（「ガイド──|シェア」。
+ * ダッシュは前の語に付けて組むので、後ろに折り所が無いと前後の語がまるごと1つになる）と、中点の後ろと、英字を含む語から漢字か片仮名の語に移る所に境目を足す。丸括弧の中には足さない。
  */
 function refineAtWords(chunks: string[]): string[] {
-  const chars = toGraphemes(chunks.join(""));
+  const text = chunks.join("");
+  const chars = toGraphemes(text);
   const depths = parenDepths(chars);
+  const segments = wordsOf(text);
   const offsets = new Set(
     offsetsOf(chunks).filter(
       (offset) =>
+        !isInsideWord(segments, offset) &&
         !(
           scriptOf(chars[offset - 1]) === "hiragana" &&
           scriptOf(chars[offset]) === "hiragana" &&
@@ -195,7 +262,12 @@ function refineAtWords(chunks: string[]): string[] {
       LATIN_WORD_CHAR.test(before) &&
       (scriptOf(after) === "han" || scriptOf(after) === "katakana") &&
       isLatinWordAt(chars, index - 1);
-    if (afterDot || latinToJapanese) offsets.add(index);
+    const afterDash =
+      DASH_CHAR.test(before) &&
+      !DASH_CHAR.test(after) &&
+      !STARTS_WITH_SPACE.test(after) &&
+      (before !== "-" || chars[index - 2] === "-");
+    if (afterDot || latinToJapanese || afterDash) offsets.add(index);
   }
   return cut(chars, offsets);
 }
@@ -280,18 +352,25 @@ function widthOf(chars: string[]): number {
   );
 }
 
-/** 空白で区切った続きのうち、いちばん広いものの幅。空白ではブラウザが折る。 */
+/**
+ * 空白で区切った続きのうち、いちばん広いものの幅。空白ではブラウザが折る。ダッシュの前の空白は、PhrasedText が
+ * 折れない空白にしてダッシュを前の語に付けるので、区切りに数えない。
+ */
 function widestRunWidth(chars: string[]): number {
   let widest = 0;
   let run: string[] = [];
-  for (const ch of [...chars, " "]) {
-    if (STARTS_WITH_SPACE.test(ch)) {
+  const tail = [...chars, " "];
+  tail.forEach((ch, index) => {
+    const breaks =
+      STARTS_WITH_SPACE.test(ch) &&
+      !STARTS_WITH_DASH.test(tail.slice(index).join("").trimStart());
+    if (breaks) {
       widest = Math.max(widest, widthOf(run));
       run = [];
     } else {
       run.push(ch);
     }
-  }
+  });
   return widest;
 }
 
@@ -311,17 +390,20 @@ function canStandAlone(chars: string[]): boolean {
 const SURU_VERB = /^[しさすせ]/u;
 
 /**
- * 文節の中の語の境目の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
- * 0: 字の種類が変わって漢字か片仮名の語が始まる所（「思考|バイアス」「JSON整形・|フォーマッター」）。
+ * 文節の中の語の頭（wordStartsOf）の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
+ * 0: 漢字・片仮名・英字の語が始まる所（「思考|バイアス」「マルチ|エージェント」「プログラマティック|SEO」）。漢字どうしの
+ *    所（「漢字|力」）と、英字の語の中は除く。
  * 1: 漢字か片仮名の語からサ変の動詞に移る所（「リリース|しました」）。
  * どちらも語と語の切れ目なので、文節が1行に収まる広い行で使われても語を割らない（`<wbr>` には優先の順が無く、
- * 行の終わりに来た折り所は幅によらず使われる）。語の中（片仮名の語の中・平仮名の続きの中）と、漢字どうしの所、
- * 助詞や送り仮名の前には置かない。語が1行に入らないときは、ブラウザがその語の中で折る。
+ * 行の終わりに来た折り所は幅によらず使われる）。語の中と、助詞や送り仮名の前には置かない。語が1行に入らないときは、
+ * ブラウザがその語の中で折る。
  */
 function wordBreakRank(before: string, after: string): number | undefined {
   const left = scriptOf(before);
-  const right = scriptOf(after);
-  if ((right === "han" || right === "katakana") && left !== right) return 0;
+  const right = LATIN_LETTER.test(after) ? "latin" : scriptOf(after);
+  if (right === "han" && left !== "han") return 0;
+  if (right === "katakana") return 0;
+  if (right === "latin" && left !== "other") return 0;
   if (
     right === "hiragana" &&
     (left === "han" || left === "katakana") &&
@@ -387,7 +469,7 @@ export function boundaryScores(sentence: string): number[] {
  * 「リリース|しました:」）。収まらない切れ端ごとに、語の切れ目のうち、禁則を満たし、丸括弧の中でなく、分けた切れ端の
  * どちらもが1行を作ってよい所（canStandAlone）から、順位（wordBreakRank）、BudouX の度合いの順にいちばん良い所で
  * 分ける。どの切れ端も、分けられる所が無ければそのまま残す。
- * 語の境目は Intl.Segmenter で見る。分けられる所が無い語はそのまま残し、1行に入らなければブラウザがその中で折る。
+ * 語の頭は wordStartsOf で見る。分けられる所が無い語はそのまま残し、1行に入らなければブラウザがその中で折る。
  */
 function splitWidePhraseAtWords(phrase: string): string[] {
   const chars = toGraphemes(phrase);
@@ -400,15 +482,12 @@ function splitWidePhraseAtWords(phrase: string): string[] {
   }
   const scores = boundaryScores(phrase);
   const candidates: { index: number; rank: number; score: number }[] = [];
-  let index = 0;
-  for (const { segment } of words.segment(phrase)) {
-    if (index > 0 && depths[index] === 0) {
-      const rank = wordBreakRank(chars[index - 1], chars[index]);
-      if (rank !== undefined) {
-        candidates.push({ index, rank, score: scores[unitOffsets[index]] });
-      }
+  for (const index of wordStartsOf(chars, phrase)) {
+    if (depths[index] > 0) continue;
+    const rank = wordBreakRank(chars[index - 1], chars[index]);
+    if (rank !== undefined) {
+      candidates.push({ index, rank, score: scores[unitOffsets[index]] });
     }
-    index += toGraphemes(segment).length;
   }
   const split = (from: number, to: number): number[] => {
     const piece = chars.slice(from, to);

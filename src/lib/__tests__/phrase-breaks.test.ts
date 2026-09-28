@@ -59,6 +59,18 @@ function parenDepth(text: string): number {
   return depth;
 }
 
+const segmenter = new Intl.Segmenter("ja", { granularity: "word" });
+
+/** offset が、漢字か片仮名を含む Intl.Segmenter の語の中か。 */
+function isInsideKanjiOrKatakanaWord(text: string, offset: number): boolean {
+  return [...segmenter.segment(text)].some(
+    ({ segment, index }) =>
+      index < offset &&
+      offset < index + segment.length &&
+      /[\p{Script=Han}\p{Script=Katakana}]/u.test(segment),
+  );
+}
+
 describe("splitIntoPhrases", () => {
   test("character-personality のタイプ名は24件ある", () => {
     expect(characterPersonalityTypeNames).toHaveLength(24);
@@ -124,7 +136,7 @@ describe("splitIntoPhrases", () => {
     }
   });
 
-  test("BudouX の境目を外すのは、禁則・開き括弧・数・丸括弧の中・最後の1字・中点で並べた平仮名の語の中・閉じ括弧の後ろの短い続きの所だけ", () => {
+  test("BudouX の境目を外すのは、禁則・ダッシュの前・開き括弧・数・丸括弧の中・最後の1字・漢字か片仮名を含む語の中・中点で並べた平仮名の語の中・閉じ括弧の後ろの短い続きの所だけ", () => {
     for (const text of headings) {
       const kept = new Set(boundaryOffsets(splitIntoPhrases(text)));
       for (const offset of boundaryOffsets(budoux.parse(text))) {
@@ -137,6 +149,8 @@ describe("splitIntoPhrases", () => {
           /(?:^|[^A-Za-z0-9０-９])[0-9０-９]+$/u.test(before) ||
           parenDepth(before) > 0 ||
           [...after].length === 1 ||
+          /^\s*(?:[—―─]|--)/u.test(after) ||
+          isInsideKanjiOrKatakanaWord(text, offset) ||
           /\p{Script=Hiragana}$/u.test(before) ||
           /[」』）)][^」』）)]{1,2}$/u.test(before);
         expect(allowed, `${text} の ${before}|${after}`).toBe(true);
@@ -221,12 +235,45 @@ describe("splitIntoPhrases", () => {
     expect(
       splitIntoPhrases("JSON整形・フォーマッターの使い方ガイド"),
     ).toContain("フォーマッターの");
-    expect(splitIntoPhrases("プログラマティックSEO戦略の実践")).toContain(
-      "プログラマティックSEO",
-    );
+    for (const piece of splitIntoPhrases(
+      "ゲームインフラのリファクタリング: レジストリパターンの導入",
+    )) {
+      expect(piece).not.toMatch(/^(?:ファクタ|リング|リパターン)/u);
+    }
+  });
+
+  test("見出しの狭い行に収まらない幅の文節は、片仮名の語どうしと英字の語の頭でも分ける", () => {
+    expect(splitIntoPhrases("AIマルチエージェントで")).toEqual([
+      "AI",
+      "マルチ",
+      "エージェントで",
+    ]);
+    expect(splitIntoPhrases("プログラマティックSEO戦略の実践")).toEqual([
+      "プログラマティック",
+      "SEO",
+      "戦略の",
+      "実践",
+    ]);
+  });
+
+  test("BudouX が語の中に置く境目で区切らない", () => {
+    expect(splitIntoPhrases("見た目が同じでも")).toContain("見た目が");
+    expect(
+      splitIntoPhrases(
+        "ダークモードを手動で切り替えられるようになりました",
+      ).some((piece) => piece.endsWith("切り")),
+    ).toBe(false);
   });
 
   test("ダッシュで始まる文節を作らない", () => {
+    for (const text of [
+      "自律運用する -- サイクルドキュメントとレビューループの設計",
+      "SNS最適化ガイド──シェアボタンとOGPの実践",
+    ]) {
+      for (const piece of splitIntoPhrases(text).slice(1)) {
+        expect(piece, text).not.toMatch(/^\s*(?:[—―─]|--)/u);
+      }
+    }
     for (const piece of splitIntoPhrases(
       "Cron式 早見表 — フィールド・特殊文字・実用パターン一覧",
     ).slice(1)) {

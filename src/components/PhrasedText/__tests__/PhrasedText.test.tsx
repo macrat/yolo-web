@@ -66,4 +66,17 @@ describe("PhrasedText", () => {
       "Cron式 早見表\u00A0— フィールド・<wbr>一覧".replace("\u00A0", "&nbsp;"),
     );
   });
+
+  test("空白の無いダッシュと「--」を前の字に付け、ダッシュの中で折らない", () => {
+    render(
+      <PhrasedText
+        as="h2"
+        phrases={["ガイド──シェア", "効かない --", "CSS"]}
+      />,
+    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading.textContent).toBe(
+      "ガイド\u2060─\u2060─シェア効かない\u00A0-\u2060-CSS",
+    );
+  });
 });

@@ -18,9 +18,20 @@ interface PhrasedTextOwnProps<T extends PhrasedTag> {
 type PhrasedTextProps<T extends PhrasedTag> = PhrasedTextOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof PhrasedTextOwnProps<T> | "children">;
 
-/** ダッシュの前の空白。 */
+/** ダッシュ（「—」「──」「--」）の前の空白。 */
 const SPACE_BEFORE_DASH = /[ \t]+(?=[—―─]|--)/gu;
+/** ダッシュの字の前（空白でない字の後ろ）と、ダッシュの字どうしのあいだ。 */
+const INSIDE_OR_BEFORE_DASH =
+  /(?<=[^\s])(?=[—―─])|(?<=[—―─])(?=[—―─])|(?<=[^\s-])(?=--)|(?<=-)(?=-)/gu;
 const NO_BREAK_SPACE = "\u00A0";
+const WORD_JOINER = "\u2060";
+
+/** ダッシュを前の語に付け、ダッシュの中で折れないようにする。 */
+function joinDashes(phrase: string): string {
+  return phrase
+    .replace(SPACE_BEFORE_DASH, NO_BREAK_SPACE)
+    .replace(INSIDE_OR_BEFORE_DASH, WORD_JOINER);
+}
 
 /**
  * 見出しを文節で折って組む（DESIGN.md §4）。渡された並びのあいだにだけ折り所の <wbr> を置き、並びの1つの中では、
@@ -29,9 +40,9 @@ const NO_BREAK_SPACE = "\u00A0";
  * 要素の中は文の字と <wbr> だけにし、字を分ける要素を持たない。見出しの中の要素で読み上げが見出しを分けて
  * 読まないようにし、写した文やページ内の検索が元の文のままになるようにする。
  *
- * ダッシュ（「—」「--」）の前の空白は、折れない空白にして組む。ダッシュは行の頭に置かない字で、前の空白で折れると
- * 「—」が次の行の頭に来るか、後ろの空白でも折れて「—」だけの行ができる。
- */
+ * ダッシュ（「—」「──」「--」）は前の語に付けて組む。前の空白は折れない空白にし、空白の無いダッシュの前と、ダッシュの
+ * 字どうしのあいだには語結合子（U+2060）を置く。ブラウザはダッシュの前と「-」の後ろで折るので、そのままでは
+ * ダッシュが行の頭に来るか、ダッシュだけの行や「-／-」ができる。語結合子は見えず、ページ内の検索も元の文で当たる。 */
 export default function PhrasedText<T extends PhrasedTag>({
   as,
   phrases,
@@ -47,7 +58,7 @@ export default function PhrasedText<T extends PhrasedTag>({
       {phrases.map((phrase, index) => (
         <Fragment key={index}>
           {index > 0 && <wbr />}
-          {phrase.replace(SPACE_BEFORE_DASH, NO_BREAK_SPACE)}
+          {joinDashes(phrase)}
         </Fragment>
       ))}
     </Tag>
