@@ -23,6 +23,7 @@ import ListStatus from "@/components/ListStatus";
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import DisclosureRow from "@/tools/_components/DisclosureRow";
 import { useListBrowseState } from "@/components/hooks/useListBrowseState";
+import { phrasedNameText } from "@/lib/phrased-name";
 import {
   KEIGO_LIST_ITEMS,
   KEIGO_LIST_SPEC,
@@ -166,7 +167,7 @@ export default function KeigoReferenceTile({
                 matched={matched}
                 filtering={filtering}
                 unit="語"
-                sortLabel={SORT.label}
+                sortLabel={phrasedNameText(SORT.name)}
                 announcement={announcement}
                 onClear={clear}
               />

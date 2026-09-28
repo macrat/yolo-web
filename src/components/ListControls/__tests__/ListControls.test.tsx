@@ -5,12 +5,12 @@ import ListControls from "@/components/ListControls";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const KINDS = [
-  { value: "text", label: "文章" },
-  { value: "data", label: "データ" },
+  { value: "text", name: "文章" },
+  { value: "data", name: "データ" },
 ];
 const SORTS = [
-  { value: "kind", label: "種別順" },
-  { value: "new", label: "新しい順" },
+  { value: "kind", name: "種別順" },
+  { value: "new", name: "新しい順" },
 ];
 
 function Harness({
@@ -145,7 +145,7 @@ describe("ListControls", () => {
         filterGroups={[
           {
             legend,
-            options: [{ value: "easy", label: "やさしい" }],
+            options: [{ value: "easy", name: "やさしい" }],
             value: "all",
             onChange: () => {},
           },
@@ -162,5 +162,42 @@ describe("ListControls", () => {
     );
     expect(followsPhraseRules(searchLabel)).toBe(true);
     expect(followsPhraseRules(legend)).toBe(true);
+  });
+
+  test("選択肢の名前の区切りの並びは文節で折り、開閉のボタンのラベルと読み上げの名前は1続きの字で言う", () => {
+    const kindName = ["データの", "変換"];
+    const sortName = ["読みの", "五十音順"];
+    render(
+      <ListControls
+        searchLabel="名前で探す"
+        query=""
+        onQueryChange={() => {}}
+        kindGroup={{
+          legend: "種別",
+          options: [
+            { value: "text", name: "文章" },
+            { value: "data", name: kindName },
+          ],
+          value: "data",
+          onChange: () => {},
+        }}
+        sortGroup={{
+          legend: "並び順",
+          options: [{ value: "reading", name: sortName }],
+          value: "reading",
+          onChange: () => {},
+        }}
+      />,
+    );
+    const kind = screen.getByRole("radio", { name: "データの変換" });
+    expect(kind.closest("label")!.innerHTML).toContain("データの<wbr>変換");
+    expect(screen.getByRole("radio", { name: "読みの五十音順" })).toBeChecked();
+    expect(
+      screen.getByRole("button", {
+        name: "絞り込みと並び順（データの変換、読みの五十音順）",
+      }),
+    ).toBeInTheDocument();
+    expect(followsPhraseRules(kindName)).toBe(true);
+    expect(followsPhraseRules(sortName)).toBe(true);
   });
 });

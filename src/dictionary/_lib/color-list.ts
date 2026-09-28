@@ -149,7 +149,7 @@ const COLOR_KIND_ORDER = COLOR_CATEGORY_ORDER.map(
 
 const SORT_HUE_BY_CATEGORY: BrowseSort = {
   value: "hue",
-  label: "色み順",
+  name: "色み順",
   keys: [
     { by: "kind", order: COLOR_KIND_ORDER },
     {
@@ -163,7 +163,7 @@ const SORT_HUE_BY_CATEGORY: BrowseSort = {
 };
 const SORT_HUE: BrowseSort = {
   value: "hue",
-  label: "色相順",
+  name: "色相順",
   keys: [
     { by: "swatch", channel: "hue", achromaticChroma: ACHROMATIC_CHROMA },
     { by: "swatch", channel: "lightness", desc: true },
@@ -171,7 +171,7 @@ const SORT_HUE: BrowseSort = {
 };
 const SORT_LIGHT: BrowseSort = {
   value: "light",
-  label: "明るい順",
+  name: "明るい順",
   keys: [{ by: "swatch", channel: "lightness", desc: true }],
 };
 

@@ -34,6 +34,7 @@ import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./UnitConverterTile.module.css";
 
 const categories = getAllCategories();
@@ -208,7 +209,7 @@ export default function UnitConverterTile({
             <path d="M3 17h18" />
             <path d="M18 14l3 3-3 3" />
           </svg>
-          入れ替え
+          <PhrasedText as="span" phrases={["入れ替え"]} />
         </Button>
 
         {/* 変換先 */}

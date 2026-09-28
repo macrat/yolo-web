@@ -11,6 +11,7 @@ import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import Field from "@/components/Field";
 import Input from "@/components/Input";
+import PhrasedText from "@/components/PhrasedText";
 import {
   EVALUATE_UNAVAILABLE_MESSAGE,
   type GuessSubmitResult,
@@ -113,8 +114,16 @@ export default function GuessInput({
               {/* 面の字は2つとも同じ場所に重ねて描き、広いほうの幅をいつも取っておく。送っているあいだに
                   ボタンが広がって欄が縮むことがない。見えていない面は読み上げでも読まない。 */}
               <span className={styles.submitFaces}>
-                <span hidden={submitting || undefined}>送信</span>
-                <span hidden={!submitting || undefined}>送信中……</span>
+                <PhrasedText
+                  as="span"
+                  phrases={["送信"]}
+                  hidden={submitting || undefined}
+                />
+                <PhrasedText
+                  as="span"
+                  phrases={["送信中……"]}
+                  hidden={!submitting || undefined}
+                />
               </span>
             </Button>
           </div>

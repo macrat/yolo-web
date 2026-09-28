@@ -7,24 +7,24 @@ const PATH = "/tools/sample";
 
 const SPEC: BrowseSpec = {
   kinds: [
-    { value: "a", label: "甲" },
-    { value: "b", label: "乙" },
+    { value: "a", name: "甲" },
+    { value: "b", name: "乙" },
   ],
   filterGroups: [
     {
       param: "level",
       legend: "難易度",
       options: [
-        { value: "1", label: "初級" },
-        { value: "2", label: "中級" },
+        { value: "1", name: "初級" },
+        { value: "2", name: "中級" },
       ],
     },
   ],
   sorts: [
-    { value: "given", label: "渡した順", keys: [] },
+    { value: "given", name: "渡した順", keys: [] },
     {
       value: "name",
-      label: "名前の逆順",
+      name: "名前の逆順",
       keys: [{ by: "reading", desc: true }],
     },
   ],

@@ -7,6 +7,7 @@
 
 import type { ItemListFact } from "@/components/ItemList";
 import { hexToOklch } from "@/lib/hexToOklch";
+import { phrasedNameText, type PhrasedName } from "@/lib/phrased-name";
 
 /**
  * 一覧のページで絞り込み・並べ替えをする項目。サーバーからクライアントへ全件を渡すので、行に見せる値と、
@@ -69,7 +70,11 @@ export type BrowseSortKey =
 /** ラジオボタンの組の選択肢。 */
 export interface BrowseChoice {
   value: string;
-  label: string;
+  /**
+   * 選択肢の名前。ラジオボタンの横に文節で折って組む。項目の種別の語（BrowseItem の kind）や並び順の語と
+   * 突き合わせる字・開閉のボタンのラベルの字・読み上げの字は、phrasedNameText でこの名前から作る。
+   */
+  name: PhrasedName;
 }
 
 /** 並び順の選択肢。 */
@@ -81,7 +86,8 @@ export interface BrowseSort extends BrowseChoice {
 /** 道具ごとの組。param はクエリの名前で、選択肢に「すべて」は含めない。 */
 export interface BrowseFilterGroup {
   param: string;
-  legend: string;
+  /** 組の名前。見出しと同じく文節で折る（PhrasedName）。 */
+  legend: PhrasedName;
   options: BrowseChoice[];
 }
 
@@ -379,13 +385,14 @@ export function browseItems<T extends BrowseItem>(
   state: BrowseState,
   spec: BrowseSpec,
 ): T[] {
-  const kindLabel = spec.kinds.find((kind) => kind.value === state.kind)?.label;
+  const kindChoice = spec.kinds.find((kind) => kind.value === state.kind);
+  const kindName = kindChoice && phrasedNameText(kindChoice.name);
   const activeFilters = Object.entries(state.filters).filter(
     ([, value]) => value !== ALL,
   );
   const narrowed = items.filter(
     (item) =>
-      (kindLabel === undefined || item.kind === kindLabel) &&
+      (kindName === undefined || item.kind === kindName) &&
       activeFilters.every(
         ([param, value]) => item.filterValues?.[param] === value,
       ),

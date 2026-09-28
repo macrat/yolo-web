@@ -8,11 +8,8 @@ import {
   type MouseEvent,
   type Ref,
 } from "react";
-import {
-  phrasedNameText,
-  renderPhrasedName,
-  type PhrasedName,
-} from "@/components/PhrasedText";
+import { renderPhrasedName } from "@/components/PhrasedText";
+import { phrasedNameText, type PhrasedName } from "@/lib/phrased-name";
 import { trackGradient, type TrackStop } from "./trackPosition";
 import { textEm } from "./textWidth";
 import styles from "./Slider.module.css";

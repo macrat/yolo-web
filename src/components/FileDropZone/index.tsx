@@ -3,10 +3,8 @@
 import { useCallback, useId, useRef, useState } from "react";
 import type { DragEvent, ChangeEvent } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
-import PhrasedText, {
-  renderPhrasedName,
-  type PhrasedName,
-} from "@/components/PhrasedText";
+import PhrasedText, { renderPhrasedName } from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
 import styles from "./FileDropZone.module.css";
 
 interface FileDropZoneProps {

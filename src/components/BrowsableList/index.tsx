@@ -13,6 +13,7 @@ import type {
   BrowseSpec,
   BrowseUnit,
 } from "@/lib/list-browse";
+import { phrasedNameText, type PhrasedName } from "@/lib/phrased-name";
 import { useListBrowseState } from "@/components/hooks/useListBrowseState";
 import styles from "./BrowsableList.module.css";
 
@@ -30,13 +31,13 @@ export interface BrowsableListProps {
   /** 一覧の名前（例「ツールの一覧」）。読み上げで一覧の名前になる。 */
   label: string;
   unit: BrowseUnit;
-  /** 名前の欄のラベル。何で探せるかを言う（例「名前・説明で探す」）。 */
-  searchLabel: string;
+  /** 名前の欄のラベル。何で探せるかを言う（例「名前・説明で探す」）。見出しと同じく文節で折る（PhrasedName）。 */
+  searchLabel: PhrasedName;
   /**
    * 種別の組。同じ軸の索引を一覧の上に置かないときだけ渡す。選択肢は、範囲の中に項目を持つものだけを出し、
-   * それが2つ以上あるときだけ組を出す（§7）。
+   * それが2つ以上あるときだけ組を出す（§7）。組の名前は見出しと同じく文節で折る（PhrasedName）。
    */
-  kindGroup?: { legend: string; options: BrowseChoice[] };
+  kindGroup?: { legend: PhrasedName; options: BrowseChoice[] };
   /** 並び順の選択肢。先頭が既定。比べる値は、行の値から keys のとおりに組む。 */
   sorts: BrowseSort[];
   /** 1ページの件数。説明を持つ行は 50、持たない行は 100（§7）。 */
@@ -76,7 +77,7 @@ export default function BrowsableList({
   const kindOptions = useMemo(
     () =>
       (kindGroup?.options ?? []).filter((option) =>
-        items.some((item) => item.kind === option.label),
+        items.some((item) => item.kind === phrasedNameText(option.name)),
       ),
     [kindGroup, items],
   );
@@ -144,7 +145,9 @@ export default function BrowsableList({
               : undefined
           }
           sortLabel={
-            showSortGroup || items.length === 0 ? undefined : sortChoice?.label
+            showSortGroup || items.length === 0 || sortChoice === undefined
+              ? undefined
+              : phrasedNameText(sortChoice.name)
           }
           announcement={announcement}
           onClear={clear}

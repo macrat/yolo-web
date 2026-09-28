@@ -17,6 +17,7 @@ import { describe, test, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 import UnitConverterTile from "../UnitConverterTile";
 
 // ---- T-1: 基本レンダリング ----
@@ -173,6 +174,14 @@ describe("T-5: ARIA 属性", () => {
     render(<UnitConverterTile />);
     const swapButton = screen.getByLabelText("変換元と変換先の単位を入れ替え");
     expect(swapButton).toBeInTheDocument();
+  });
+
+  test("スワップボタンの面の字「入れ替え」は PhrasedText で1つの文節として組む", () => {
+    render(<UnitConverterTile />);
+    const swapButton = screen.getByLabelText("変換元と変換先の単位を入れ替え");
+    const face = swapButton.querySelector("span");
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face!.innerHTML).toBe("入れ替え");
   });
 
   test("スワップボタンが生グリフ「⇄」を含まず SVG アイコンを使う", () => {

@@ -26,10 +26,10 @@ export interface ListSample {
 const BY_READING: BrowseSortKey = { by: "reading" };
 
 const YOJI_SORTS: BrowseSort[] = [
-  { value: "reading", label: "読みの五十音順", keys: [BY_READING] },
+  { value: "reading", name: "読みの五十音順", keys: [BY_READING] },
   {
     value: "easy",
-    label: "やさしい順",
+    name: "やさしい順",
     keys: [
       { by: "fact", index: 0, order: Object.values(YOJI_DIFFICULTY_LABELS) },
       BY_READING,
@@ -40,10 +40,10 @@ const YOJI_SORTS: BrowseSort[] = [
 const KANJI_SORTS: BrowseSort[] = [
   {
     value: "strokes",
-    label: "画数順",
+    name: "画数順",
     keys: [{ by: "fact", index: 0 }, BY_READING],
   },
-  { value: "reading", label: "読みの五十音順", keys: [BY_READING] },
+  { value: "reading", name: "読みの五十音順", keys: [BY_READING] },
 ];
 
 function yojiItem(entry: YojiEntry): BrowseItem {
@@ -78,7 +78,7 @@ function yojiByReading(count: number, categories?: YojiCategory[]) {
 function categoryChoices(categories: YojiCategory[]) {
   return categories.map((category) => ({
     value: category,
-    label: YOJI_CATEGORY_LABELS[category],
+    name: YOJI_CATEGORY_LABELS[category],
   }));
 }
 
@@ -120,7 +120,7 @@ export const LIST_SAMPLES: Record<string, ListSample> = {
         legend: "学年",
         options: [1, 2].map((grade) => ({
           value: String(grade),
-          label: KANJI_GRADE_LABELS[grade],
+          name: KANJI_GRADE_LABELS[grade],
         })),
       },
       sorts: KANJI_SORTS,

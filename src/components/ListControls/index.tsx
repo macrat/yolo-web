@@ -13,8 +13,8 @@ import {
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import Field from "@/components/Field";
 import Input from "@/components/Input";
-import { phrasedNameText, type PhrasedName } from "@/components/PhrasedText";
-import RadioGroup from "@/components/RadioGroup";
+import { phrasedNameText, type PhrasedName } from "@/lib/phrased-name";
+import RadioGroup, { type RadioGroupOption } from "@/components/RadioGroup";
 import { ALL, controlsLabel, type BrowseChoice } from "@/lib/list-browse";
 import styles from "./ListControls.module.css";
 
@@ -45,11 +45,18 @@ interface ListControlsProps {
 }
 
 function withAll(options: BrowseChoice[]): BrowseChoice[] {
-  return [{ value: ALL, label: "すべて" }, ...options];
+  return [{ value: ALL, name: "すべて" }, ...options];
 }
 
-function selectedLabel(group: ListControlsGroup): string | undefined {
-  return group.options.find((option) => option.value === group.value)?.label;
+/** 組のいま選んでいる選択肢の名前の字。開閉のボタンのラベルに入れる。 */
+function selectedText(group: ListControlsGroup): string | undefined {
+  const selected = group.options.find((option) => option.value === group.value);
+  return selected && phrasedNameText(selected.name);
+}
+
+/** 選択肢をラジオボタンの組の選択肢にする。名前は区切りの並びのまま渡し、ラジオボタンの横で文節で折る。 */
+function radioOptions(options: BrowseChoice[]): RadioGroupOption[] {
+  return options.map(({ value, name }) => ({ value, label: name }));
 }
 
 /**
@@ -132,9 +139,9 @@ export default function ListControls({
     hasFilterGroups: filterGroupsInOrder.length > 0,
     selectedFilters: filterGroupsInOrder
       .filter((group) => group.value !== ALL)
-      .map((group) => selectedLabel(group))
+      .map((group) => selectedText(group))
       .filter((text): text is string => text !== undefined),
-    sortLabel: sortGroup ? selectedLabel(sortGroup) : undefined,
+    sortLabel: sortGroup ? selectedText(sortGroup) : undefined,
   });
 
   return (
@@ -176,7 +183,7 @@ export default function ListControls({
               <RadioGroup
                 key={phrasedNameText(group.legend)}
                 legend={group.legend}
-                options={withAll(group.options)}
+                options={radioOptions(withAll(group.options))}
                 value={group.value}
                 onChange={group.onChange}
               />
@@ -184,7 +191,7 @@ export default function ListControls({
             {sortGroup ? (
               <RadioGroup
                 legend={sortGroup.legend}
-                options={sortGroup.options}
+                options={radioOptions(sortGroup.options)}
                 value={sortGroup.value}
                 onChange={sortGroup.onChange}
               />

@@ -13,6 +13,7 @@ import { getContentPath } from "@/play/paths";
 import { resolveDisplayCategory } from "@/play/seo";
 import { PLAY_KINDS } from "@/play/play-list";
 import { formatDate } from "@/lib/date";
+import { phrasedNameText } from "@/lib/phrased-name";
 
 const navigation = vi.hoisted(() => ({ pathname: "/play" }));
 
@@ -41,7 +42,7 @@ function displayName(slug: string): string {
   return content.shortTitle ?? content.title;
 }
 
-const kindOrder = PLAY_KINDS.map((kind) => kind.label);
+const kindOrder = PLAY_KINDS.map((kind) => phrasedNameText(kind.name));
 
 describe("app/play/page.tsx", () => {
   test("パンくずの2つ目と h1 が、上端のナビと同じ「遊び」である", () => {

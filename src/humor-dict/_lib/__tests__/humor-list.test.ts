@@ -7,6 +7,7 @@ import {
   humorListMetadata,
   humorListPageParams,
 } from "../humor-list";
+import { phrasedNameText } from "@/lib/phrased-name";
 
 describe("humorListItems", () => {
   test("全件を持ち、行は語と読み・語義の冒頭の一文を持つ", () => {
@@ -19,7 +20,9 @@ describe("humorListItems", () => {
   });
 
   test("並び順は五十音順だけ", () => {
-    expect(HUMOR_LIST_SORTS.map((sort) => sort.label)).toEqual(["五十音順"]);
+    expect(HUMOR_LIST_SORTS.map((sort) => phrasedNameText(sort.name))).toEqual([
+      "五十音順",
+    ]);
   });
 });
 

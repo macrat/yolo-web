@@ -29,19 +29,19 @@ function item(name: string, extra: Partial<BrowseItem> = {}): BrowseItem {
 const KIND_ORDER = ["文章", "データ"];
 const BY_READING: BrowseSort = {
   value: "reading",
-  label: "五十音順",
+  name: "五十音順",
   keys: [{ by: "reading" }],
 };
 
 const spec: BrowseSpec = {
   kinds: [
-    { value: "text", label: "文章" },
-    { value: "data", label: "データ" },
+    { value: "text", name: "文章" },
+    { value: "data", name: "データ" },
   ],
   sorts: [
     {
       value: "kind",
-      label: "種別順",
+      name: "種別順",
       keys: [
         { by: "kind", order: KIND_ORDER },
         { by: "fact", index: 0, desc: true },
@@ -49,7 +49,7 @@ const spec: BrowseSpec = {
     },
     {
       value: "new",
-      label: "新しい順",
+      name: "新しい順",
       keys: [{ by: "fact", index: 0, desc: true }],
     },
   ],
@@ -58,8 +58,8 @@ const spec: BrowseSpec = {
       param: "level",
       legend: "難易度",
       options: [
-        { value: "1", label: "初級" },
-        { value: "2", label: "中級" },
+        { value: "1", name: "初級" },
+        { value: "2", name: "中級" },
       ],
     },
   ],
@@ -142,7 +142,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(reversed, {
         value: "given",
-        label: "渡した順",
+        name: "渡した順",
         keys: [],
       }),
     ).toEqual(reversed);
@@ -155,7 +155,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(strokes, {
         value: "stroke",
-        label: "画数順",
+        name: "画数順",
         keys: [{ by: "fact", index: 0 }],
       }).map((entry) => entry.name),
     ).toEqual(["4画", "5画", "12画"]);
@@ -165,7 +165,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(levels, {
         value: "easy",
-        label: "やさしい順",
+        name: "やさしい順",
         keys: [{ by: "fact", index: 0, order: ["初級", "中級", "上級"] }],
       }).map((entry) => entry.name),
     ).toEqual(["初級", "中級", "上級"]);
@@ -182,7 +182,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(items, {
         value: "newest",
-        label: "新しい順",
+        name: "新しい順",
         keys: [{ by: "factTime", index: 0, desc: true }],
       }).map((entry) => entry.name),
     ).toEqual([
@@ -203,7 +203,7 @@ describe("sortBrowseItems", () => {
     ];
     const byHue: BrowseSort = {
       value: "hue",
-      label: "色み順",
+      name: "色み順",
       keys: [
         { by: "kind", order: ["暖色", "寒色", "無彩色"] },
         { by: "swatch", channel: "hue", achromaticKind: "無彩色" },
@@ -220,7 +220,7 @@ describe("sortBrowseItems", () => {
     ]);
     const byLightness: BrowseSort = {
       value: "light",
-      label: "明るい順",
+      name: "明るい順",
       keys: [{ by: "swatch", channel: "lightness", desc: true }],
     };
     expect(
@@ -244,7 +244,7 @@ describe("sortBrowseItems", () => {
       { by: "swatch", channel: "lightness", desc: true },
     ];
     expect(
-      sortBrowseItems(colors, { value: "hue", label: "色み順", keys }).map(
+      sortBrowseItems(colors, { value: "hue", name: "色み順", keys }).map(
         (entry) => entry.name,
       ),
     ).toEqual(["山吹", "黄", "胡粉", "溝鼠", "緑", "利休鼠"]);
@@ -253,7 +253,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(colors, {
         value: "hue",
-        label: "色み順",
+        name: "色み順",
         keys: [keys[0], { by: "swatch", channel: "hue" }],
       }).map((entry) => entry.name),
     ).toEqual(["山吹", "胡粉", "溝鼠", "黄", "緑", "利休鼠"]);
@@ -277,7 +277,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(colors, {
         value: "hue",
-        label: "色み順",
+        name: "色み順",
         keys: hueKeys,
       }).map((entry) => entry.name),
     ).toEqual([
@@ -296,7 +296,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(purples, {
         value: "hue",
-        label: "色相順",
+        name: "色相順",
         keys: [{ by: "swatch", channel: "hue" }],
       }).map((entry) => entry.name),
     ).toEqual(["#8000ff", "#ff00ff", "#ff0080"]);
@@ -315,7 +315,7 @@ describe("sortBrowseItems", () => {
     expect(
       sortBrowseItems(items, {
         value: "kind",
-        label: "種別順",
+        name: "種別順",
         keys: [{ by: "kind", order: KIND_ORDER, desc: true }],
       }).map((entry) => entry.name),
     ).toEqual(["無し", "水", "火", "種別外"]);
@@ -428,6 +428,18 @@ describe("browseItems", () => {
       filterValues: { level: "2" },
     }),
   ];
+
+  test("種別の名前を区切りの並びで持つ選択肢も、名前の1続きの字で項目の種別と突き合わせる", () => {
+    const phrasedSpec: BrowseSpec = {
+      ...spec,
+      kinds: [{ value: "data", name: ["デー", "タ"] }],
+    };
+    expect(
+      browseItems(items, state({ kind: "data" }), phrasedSpec).map(
+        (e) => e.name,
+      ),
+    ).toEqual(["JSON整形", "json から CSV"]);
+  });
 
   test("既定の状態では既定の並び順で全件", () => {
     expect(browseItems(items, state(), spec).map((e) => e.name)).toEqual([

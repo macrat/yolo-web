@@ -22,6 +22,7 @@ import {
   kanjiReadings,
   type KanjiListScope,
 } from "../kanji-list";
+import { phrasedNameText } from "@/lib/phrased-name";
 
 const allScopes = (): KanjiListScope[] => [
   { type: "all" },
@@ -192,7 +193,7 @@ describe("kanjiListItems", () => {
 describe("kanjiListSorts", () => {
   test("範囲ごとの既定とほかの並び順", () => {
     const labels = (scope: KanjiListScope) =>
-      kanjiListSorts(scope).map((sort) => sort.label);
+      kanjiListSorts(scope).map((sort) => phrasedNameText(sort.name));
     expect(labels({ type: "all" })).toEqual([
       "学年順",
       "画数順",

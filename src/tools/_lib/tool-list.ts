@@ -16,6 +16,7 @@ import {
   type BrowseItem,
   type BrowseSort,
 } from "@/lib/list-browse";
+import { phrasedNameText } from "@/lib/phrased-name";
 import { TOOL_CATEGORIES, toolCategoryLabel } from "@/tools/categories";
 import { allToolMetas } from "@/tools/registry";
 import type { ToolMeta } from "@/tools/types";
@@ -38,7 +39,7 @@ export const TOOL_LIST_PER_PAGE = 50;
 
 /** 種別。行に見せる語と同じ語で、並びが種別順の順になる。値はクエリの `kind` に書く。 */
 export const TOOL_KINDS: BrowseChoice[] = TOOL_CATEGORIES.map(
-  ({ value, label }) => ({ value, label }),
+  ({ value, label }) => ({ value, name: label }),
 );
 
 /**
@@ -49,15 +50,18 @@ export const TOOL_KINDS: BrowseChoice[] = TOOL_CATEGORIES.map(
 export const TOOL_SORTS: BrowseSort[] = [
   {
     value: "kind",
-    label: "種別順",
+    name: "種別順",
     keys: [
-      { by: "kind", order: TOOL_KINDS.map((choice) => choice.label) },
+      {
+        by: "kind",
+        order: TOOL_KINDS.map((choice) => phrasedNameText(choice.name)),
+      },
       { by: "fact", index: 0, desc: true },
     ],
   },
   {
     value: "newest",
-    label: "新しい順",
+    name: "新しい順",
     keys: [{ by: "fact", index: 0, desc: true }],
   },
 ];

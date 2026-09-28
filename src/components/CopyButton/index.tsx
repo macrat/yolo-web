@@ -1,14 +1,15 @@
 "use client";
 
-import { Fragment, useState, type ReactNode } from "react";
+import { useState } from "react";
 import Button from "@/components/Button";
+import PhrasedText from "@/components/PhrasedText";
 import {
   useCopyToClipboard,
   type CopyStatus,
 } from "@/components/hooks/useCopyToClipboard";
 import styles from "./CopyButton.module.css";
 
-/** 押したあとの面で「コピー」に続ける語。面の字は、この語の前でだけ折れる。 */
+/** 押したあとの面で「コピー」に続ける語。押したあとの面は「コピー」とこの語の2つの文節で組む。 */
 const FACE_SUFFIXES: Record<Exclude<CopyStatus, "idle">, string> = {
   copied: "済み",
   failed: "失敗",
@@ -61,8 +62,8 @@ interface CopyButtonProps {
    */
   showTarget?: boolean;
   /**
-   * showTarget の面に出す何を写すかを、文節に分けたもの（「メール」「全文」）。面の字はこの切れ目と「を」の
-   * 後ろで折れる。省くと target を1つの文節として扱う。
+   * showTarget の面に出す何を写すかを、書き手が文節で分けた区切りの並び（「メール」「全文」）。面の字は
+   * この切れ目と「を」の後ろで折れる。省くと target を1つの文節として扱うので、2文節以上の target は並びを渡す。
    */
   targetPhrases?: readonly string[];
   variant?: "default" | "primary";
@@ -108,31 +109,19 @@ export default function CopyButton({
   const { copy, status } = useCopyToClipboard();
   const [announcement, setAnnouncement] = useState({ id: 0, message: "" });
 
-  // 面の字の折り所は語の切れ目だけに置く。何を写すかも出す面は文節の切れ目と「を」の
-  // 後ろで折れる。押したあとの面は「コピー」と「済み」「失敗」のあいだでだけ折れる。
-  const renderFace = (faceStatus: CopyStatus): ReactNode =>
-    faceStatus === "idle" ? (
-      showTarget ? (
-        <>
-          {targetPhrases.map((phrase, index) => (
-            <Fragment key={index}>
-              {index > 0 && <wbr />}
-              {phrase}
-            </Fragment>
-          ))}
-          を<wbr />
-          {COPY_FACES.idle}
-        </>
-      ) : (
-        COPY_FACES.idle
-      )
-    ) : (
-      <>
-        {COPY_FACES.idle}
-        <wbr />
-        {FACE_SUFFIXES[faceStatus]}
-      </>
-    );
+  // 面の字の区切りの並び。何を写すかも出す面は、何を写すかの文節と「を」の後ろで折れる。押したあとの面は
+  // 「コピー」と「済み」「失敗」のあいだでだけ折れる。
+  const facePhrases = (faceStatus: CopyStatus): readonly string[] => {
+    if (faceStatus !== "idle") {
+      return [COPY_FACES.idle, FACE_SUFFIXES[faceStatus]];
+    }
+    if (!showTarget) return [COPY_FACES.idle];
+    return [
+      ...targetPhrases.slice(0, -1),
+      `${targetPhrases[targetPhrases.length - 1]}を`,
+      COPY_FACES.idle,
+    ];
+  };
 
   async function handleClick(): Promise<void> {
     const copied = await copy(text);
@@ -155,13 +144,16 @@ export default function CopyButton({
         disabledReason={disabledReason}
         onClick={() => void handleClick()}
         aria-label={accessibleName(target, status)}
-      >
-        <span className={styles.face}>{renderFace(status)}</span>
-      </Button>
+        phrases={facePhrases(status)}
+      />
       {COPY_STATUSES.map((faceStatus) => (
-        <span key={faceStatus} className={styles.reserve} aria-hidden="true">
-          {renderFace(faceStatus)}
-        </span>
+        <PhrasedText
+          key={faceStatus}
+          as="span"
+          phrases={facePhrases(faceStatus)}
+          className={styles.reserve}
+          aria-hidden="true"
+        />
       ))}
       <span aria-live="polite" className="visually-hidden">
         <span key={announcement.id}>

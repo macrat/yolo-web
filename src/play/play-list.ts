@@ -16,6 +16,7 @@ import {
   type BrowseItem,
   type BrowseSort,
 } from "@/lib/list-browse";
+import { phrasedNameText } from "@/lib/phrased-name";
 import { playFacts } from "./listItems";
 import { allPlayContents } from "./registry";
 import { resolveDisplayCategory } from "./seo";
@@ -41,10 +42,10 @@ export const PLAY_LIST_PER_PAGE = 50;
  * 種別。行に見せる語と同じ語で、並びが種別順の順になる。値はクエリの `kind` に書く。
  */
 export const PLAY_KINDS: BrowseChoice[] = [
-  { value: "fortune", label: "運勢" },
-  { value: "personality", label: "診断" },
-  { value: "knowledge", label: "クイズ" },
-  { value: "puzzle", label: "パズル" },
+  { value: "fortune", name: "運勢" },
+  { value: "personality", name: "診断" },
+  { value: "knowledge", name: "クイズ" },
+  { value: "puzzle", name: "パズル" },
 ];
 
 /**
@@ -55,15 +56,18 @@ export const PLAY_KINDS: BrowseChoice[] = [
 export const PLAY_SORTS: BrowseSort[] = [
   {
     value: "kind",
-    label: "種別順",
+    name: "種別順",
     keys: [
-      { by: "kind", order: PLAY_KINDS.map((choice) => choice.label) },
+      {
+        by: "kind",
+        order: PLAY_KINDS.map((choice) => phrasedNameText(choice.name)),
+      },
       { by: "fact", index: 0, desc: true },
     ],
   },
   {
     value: "newest",
-    label: "新しい順",
+    name: "新しい順",
     keys: [{ by: "fact", index: 0, desc: true }],
   },
 ];

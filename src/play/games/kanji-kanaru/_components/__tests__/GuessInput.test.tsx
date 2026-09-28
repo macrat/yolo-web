@@ -1,6 +1,7 @@
 import { expect, test, describe, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import GuessInput from "@/play/games/kanji-kanaru/_components/GuessInput";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 
 const LABEL = "中級の漢字を1字入力（あと6回）";
 const accepted = () => Promise.resolve({ kind: "accepted" as const });
@@ -10,6 +11,25 @@ describe("GuessInput", () => {
     render(<GuessInput label={LABEL} onSubmit={accepted} />);
     expect(screen.getByText(LABEL).closest("label")).not.toBeNull();
     expect(screen.getByRole("textbox", { name: LABEL })).toBeInTheDocument();
+  });
+
+  test("a label given as phrases breaks only between them, and the field's name is the whole label", () => {
+    const phrases = ["中級の", "漢字を", "1字", "入力", "（あと6回）"];
+    const { container } = render(
+      <GuessInput label={phrases} onSubmit={accepted} />,
+    );
+    expect(screen.getByRole("textbox", { name: LABEL })).toBeInTheDocument();
+    expect(container.querySelector("label")!.innerHTML).toContain(
+      phrases.join("<wbr>"),
+    );
+  });
+
+  test("both faces of the submit button are laid out as one phrase each by PhrasedText", () => {
+    render(<GuessInput label={LABEL} onSubmit={accepted} />);
+    const faces = [
+      ...screen.getByRole("button", { name: "送信" }).querySelectorAll("span"),
+    ].filter((span) => span.classList.contains(phrasedStyles.phrased));
+    expect(faces.map((span) => span.innerHTML)).toEqual(["送信", "送信中……"]);
   });
 
   test("calls onSubmit with the input value", async () => {

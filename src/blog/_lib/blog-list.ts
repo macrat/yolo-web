@@ -59,10 +59,10 @@ export function blogListPosts(scope: BlogListScope): BlogPostMeta[] {
 export const BLOG_SORTS: BrowseSort[] = [
   {
     value: "newest",
-    label: "新しい順",
+    name: "新しい順",
     keys: [{ by: "factTime", index: 0, desc: true }],
   },
-  { value: "oldest", label: "古い順", keys: [{ by: "factTime", index: 0 }] },
+  { value: "oldest", name: "古い順", keys: [{ by: "factTime", index: 0 }] },
 ];
 
 function blogItem(post: BlogPostMeta): BrowseItem {

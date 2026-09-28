@@ -1,6 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import GuessInput from "@/play/games/yoji-kimeru/_components/GuessInput";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 
 const LABEL = "中級の四字熟語を入力（あと6回）";
 
@@ -13,6 +14,15 @@ describe("GuessInput", () => {
     expect(screen.getByRole("button", { name: "送信" })).toBeInTheDocument();
     // 見えるラベルを持ち、プレースホルダに頼らない（DESIGN.md §8）。
     expect(screen.getByText(LABEL).closest("label")).not.toBeNull();
+  });
+
+  test("both faces of the submit button are laid out as one phrase each by PhrasedText", () => {
+    const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
+    render(<GuessInput label={LABEL} onSubmit={onSubmit} submitting={false} />);
+    const faces = [
+      ...screen.getByRole("button", { name: "送信" }).querySelectorAll("span"),
+    ].filter((span) => span.classList.contains(phrasedStyles.phrased));
+    expect(faces.map((span) => span.innerHTML)).toEqual(["送信", "送信中……"]);
   });
 
   test("ties an input error to the field", async () => {

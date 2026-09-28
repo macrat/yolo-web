@@ -1,9 +1,7 @@
 import { useId, type ReactNode } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
-import PhrasedText, {
-  renderPhrasedName,
-  type PhrasedName,
-} from "@/components/PhrasedText";
+import PhrasedText, { renderPhrasedName } from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
 import styles from "./Field.module.css";
 
 /** Field が中の入力欄に渡す属性。そのまま Input・Select・Textarea に広げる。 */

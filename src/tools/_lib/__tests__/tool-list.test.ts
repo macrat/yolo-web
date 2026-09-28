@@ -13,7 +13,7 @@ describe("ツールの種別", () => {
       "色",
     ]);
     expect(TOOL_KINDS).toEqual(
-      TOOL_CATEGORIES.map(({ value, label }) => ({ value, label })),
+      TOOL_CATEGORIES.map(({ value, label }) => ({ value, name: label })),
     );
   });
 

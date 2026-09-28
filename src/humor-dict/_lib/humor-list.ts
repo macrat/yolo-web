@@ -29,7 +29,7 @@ export const HUMOR_LIST_PER_PAGE = 50;
  * 言う（§7）。
  */
 export const HUMOR_LIST_SORTS: BrowseSort[] = [
-  { value: "reading", label: "五十音順", keys: [{ by: "reading" }] },
+  { value: "reading", name: "五十音順", keys: [{ by: "reading" }] },
 ];
 
 /**

@@ -1224,13 +1224,13 @@ const CATEGORY_NAMES = KEIGO_CATEGORIES.map((category) => category.name);
 export const KEIGO_LIST_SPEC: BrowseSpec = {
   kinds: KEIGO_CATEGORIES.map((category) => ({
     value: category.id,
-    label: category.name,
+    name: category.name,
   })),
   filterGroups: [],
   sorts: [
     {
       value: "category",
-      label: "分類順",
+      name: "分類順",
       keys: [{ by: "kind", order: CATEGORY_NAMES }],
     },
   ],

@@ -184,16 +184,16 @@ const BY_READING: BrowseSortKey = { by: "reading" };
 
 const SORT_READING: BrowseSort = {
   value: "reading",
-  label: "読みの五十音順",
+  name: "読みの五十音順",
   keys: [BY_READING],
 };
 
 function gradeSort(then: BrowseSortKey): BrowseSort {
-  return { value: "grade", label: "学年順", keys: [BY_GRADE, then] };
+  return { value: "grade", name: "学年順", keys: [BY_GRADE, then] };
 }
 
 function strokeSort(then: BrowseSortKey): BrowseSort {
-  return { value: "stroke", label: "画数順", keys: [BY_STROKE, then] };
+  return { value: "stroke", name: "画数順", keys: [BY_STROKE, then] };
 }
 
 /** 範囲の漢字が2つ以上の学年にまたがるか。1つなら、行は学年を出さず、学年で並べる順も持たない（§7）。 */

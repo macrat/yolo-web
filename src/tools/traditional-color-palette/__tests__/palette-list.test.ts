@@ -6,6 +6,7 @@ import {
 } from "@/lib/list-browse";
 import { hexToOklch } from "@/lib/hexToOklch";
 import { PALETTE_ITEMS, PALETTE_SPEC, type PaletteItem } from "../palette-list";
+import { phrasedNameText } from "@/lib/phrased-name";
 
 function search(change: Partial<BrowseState>): PaletteItem[] {
   return browseItems(
@@ -18,11 +19,12 @@ function search(change: Partial<BrowseState>): PaletteItem[] {
 describe("色の格子の一覧", () => {
   test("全色を持ち、既定は色み順で、色みの並びの順に並ぶ", () => {
     expect(PALETTE_ITEMS).toHaveLength(250);
-    expect(PALETTE_SPEC.sorts.map((sort) => sort.label)).toEqual([
-      "色み順",
-      "明るい順",
-    ]);
-    const kindOrder = PALETTE_SPEC.kinds.map((kind) => kind.label);
+    expect(
+      PALETTE_SPEC.sorts.map((sort) => phrasedNameText(sort.name)),
+    ).toEqual(["色み順", "明るい順"]);
+    const kindOrder = PALETTE_SPEC.kinds.map((kind) =>
+      phrasedNameText(kind.name),
+    );
     const positions = PALETTE_ITEMS.map((item) =>
       kindOrder.indexOf(item.kind!),
     );

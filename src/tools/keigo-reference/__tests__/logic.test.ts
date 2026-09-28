@@ -14,6 +14,7 @@ import {
   KEIGO_LIST_SPEC,
   type KeigoListItem,
 } from "../logic";
+import { phrasedNameText } from "@/lib/phrased-name";
 
 function search(change: Partial<BrowseState>): KeigoListItem[] {
   return browseItems(
@@ -118,7 +119,9 @@ describe("早見表の一覧", () => {
   });
 
   test("並び順は分類順だけで、分類の中はデータの順のまま", () => {
-    expect(KEIGO_LIST_SPEC.sorts.map((sort) => sort.label)).toEqual(["分類順"]);
+    expect(
+      KEIGO_LIST_SPEC.sorts.map((sort) => phrasedNameText(sort.name)),
+    ).toEqual(["分類順"]);
     const order = getKeigoCategories().map((category) => category.id);
     const expected = order.flatMap((category) =>
       getEntriesByCategory(category).map((entry) => entry.id),

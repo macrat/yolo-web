@@ -19,17 +19,25 @@ interface ButtonOwnProps {
    * ボタンの説明として読ませる。
    */
   disabledReason?: string;
-  /**
-   * ボタンの面。字だけの面（「計算」「{n}件を表示」）は1つの文節として、見出しと同じく語の中で折らずに組む
-   * （PhrasedText）。要素を含む面は、その要素が折り方を持つ。
-   */
-  children: ReactNode;
 }
 
-type ButtonProps = ButtonOwnProps &
-  Omit<ComponentPropsWithRef<"button">, keyof ButtonOwnProps>;
+/**
+ * ボタンの面。面の字は見出しと同じく文節で折り、語の中で折らない（PhrasedText）。phrases と children は
+ * どちらか一方だけを渡す。
+ * - phrases: 2文節以上の面。書き手が文節で分けた区切りの並び（「画像を」「保存」）を渡し、そのあいだで折る。
+ *   並びは followsPhraseRules（@/lib/phrase-breaks）と同じ禁則を満たす。
+ * - children: 1文節の面（「計算」「{n}件を表示」）は字で渡し、1つの文節として組む。要素を含む面は、その要素が
+ *   折り方を持つ（面の字を PhrasedText の span で組む）。
+ */
+type ButtonFace =
+  | { phrases: readonly string[]; children?: never }
+  | { children: ReactNode; phrases?: never };
 
-/** 面が字だけなら、その字を1続きの文にしたもの。JSX で字と値を並べた面（配列）も1つの文にする。 */
+type ButtonProps = ButtonOwnProps &
+  ButtonFace &
+  Omit<ComponentPropsWithRef<"button">, keyof ButtonOwnProps | "children">;
+
+/** children の面が字だけなら、その字を1続きの文にしたもの。JSX で字と値を並べた面（配列）も1つの文にする。 */
 function faceText(children: ReactNode): string | undefined {
   if (typeof children === "string" || typeof children === "number") {
     return String(children);
@@ -57,6 +65,7 @@ const variantClassMap: Record<ButtonVariant, string> = {
 function Button({
   variant = "default",
   disabledReason,
+  phrases,
   children,
   className,
   disabled,
@@ -66,6 +75,7 @@ function Button({
 }: ButtonProps) {
   const reasonId = useId();
   const text = faceText(children);
+  const facePhrases = phrases ?? (text === undefined ? undefined : [text]);
   const showReason = Boolean(disabled && disabledReason);
 
   const classes = [styles.button, variantClassMap[variant], className]
@@ -103,10 +113,10 @@ function Button({
       data-inverted={variant === "primary" ? "" : undefined}
       {...rest}
     >
-      {text === undefined ? (
+      {facePhrases === undefined ? (
         children
       ) : (
-        <PhrasedText as="span" phrases={[text]} />
+        <PhrasedText as="span" phrases={facePhrases} />
       )}
     </button>
   );

@@ -20,7 +20,7 @@ import {
 export const PALETTE_SPEC: BrowseSpec = {
   kinds: colorListCategories().map((category) => ({
     value: category,
-    label: COLOR_CATEGORY_LABELS[category],
+    name: COLOR_CATEGORY_LABELS[category],
   })),
   filterGroups: [],
   sorts: colorListSorts({ type: "all" }),

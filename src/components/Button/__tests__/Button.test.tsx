@@ -156,6 +156,21 @@ describe("Button", () => {
     expect(face.innerHTML).toBe("12件を表示");
   });
 
+  test("phrases の面は並びのあいだにだけ <wbr> を置き、読み上げの名前は元の文のまま", () => {
+    render(<Button phrases={["画像を", "保存"]} />);
+    const button = screen.getByRole("button", { name: "画像を保存" });
+    const face = button.firstElementChild!;
+    expect(face.tagName).toBe("SPAN");
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face.innerHTML).toBe("画像を<wbr>保存");
+    expect(button.querySelectorAll("wbr")).toHaveLength(1);
+  });
+
+  test("phrases と children は両方を渡せない", () => {
+    // @ts-expect-error 面は phrases と children のどちらか一方だけを受け取る
+    render(<Button phrases={["画像を", "保存"]}>画像を保存</Button>);
+  });
+
   test("要素を含む面はそのまま組む", () => {
     render(
       <Button>

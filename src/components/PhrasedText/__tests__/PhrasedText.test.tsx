@@ -2,10 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
-import PhrasedText, {
-  phrasedNameText,
-  renderPhrasedName,
-} from "@/components/PhrasedText";
+import PhrasedText, { renderPhrasedName } from "@/components/PhrasedText";
 import styles from "@/components/PhrasedText/PhrasedText.module.css";
 import { joinDashes } from "@/lib/phrase-dashes";
 
@@ -172,12 +169,5 @@ describe("renderPhrasedName", () => {
       `<span class="${styles.phrased} label">目次</span>`,
     );
     expect(element.innerHTML).toBe('<span class="label"><b>太字</b></span>');
-  });
-});
-
-describe("phrasedNameText", () => {
-  test("区切りの並びは1続きの文にし、文字列はそのまま返す", () => {
-    expect(phrasedNameText(["品質の", "目安"])).toBe("品質の目安");
-    expect(phrasedNameText("品質")).toBe("品質");
   });
 });

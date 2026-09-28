@@ -11,6 +11,7 @@ import {
   colorListSorts,
   type ColorListScope,
 } from "../color-list";
+import { phrasedNameText } from "@/lib/phrased-name";
 
 const lightness = (hex: string | undefined) => hexToOklch(hex ?? "").l;
 
@@ -84,7 +85,7 @@ describe("colorListItems", () => {
 describe("colorListSorts", () => {
   test("トップは色み順・明るい順、色みは色相順・明るい順、無彩色は明るい順だけ", () => {
     const labels = (scope: ColorListScope) =>
-      colorListSorts(scope).map((sort) => sort.label);
+      colorListSorts(scope).map((sort) => phrasedNameText(sort.name));
     expect(labels({ type: "all" })).toEqual(["色み順", "明るい順"]);
     expect(labels({ type: "category", category: "red" })).toEqual([
       "色相順",

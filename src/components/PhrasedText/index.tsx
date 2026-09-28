@@ -1,5 +1,6 @@
 import { Fragment, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { joinDashes } from "@/lib/phrase-dashes";
+import type { PhrasedName } from "@/lib/phrased-name";
 import styles from "./PhrasedText.module.css";
 
 /** 区切りを組む要素。見出しと、見出しの外で文節で折るもの（コントロールの名前・リンク・表のセル）。 */
@@ -52,17 +53,6 @@ export default function PhrasedText<T extends PhrasedTag>({
   );
 }
 
-/**
- * コントロールの名前。区切りの並びを渡すとそのあいだで文節で折り、文字列を渡すと区切りの無い1つの文節として
- * 組む（1文節の名前は区切りが要らない）。どちらも見出しと同じく語の中で折らず、行頭の禁則を厳しい側で組む。
- */
-export type PhrasedName = string | readonly string[];
-
-/** 名前の字を1続きの文にしたもの。読み上げの知らせや字の幅の見積もりに使う。 */
-export function phrasedNameText(name: PhrasedName): string {
-  return typeof name === "string" ? name : name.join("");
-}
-
 function isPhrasedName(content: unknown): content is PhrasedName {
   return (
     typeof content === "string" ||
@@ -72,8 +62,9 @@ function isPhrasedName(content: unknown): content is PhrasedName {
 }
 
 /**
- * コントロールの名前を組む。文字列と区切りの並びは PhrasedText の span で文節で折って組み（文字列は1つの
- * 文節）、要素はそのまま返す（クラスを渡したときは span で包む）。名前に文字列のほかに要素も受け取る部品が使う。
+ * コントロールの名前（PhrasedName）を組む。文字列と区切りの並びは PhrasedText の span で文節で折って組み（文字列は
+ * 1つの文節）、要素はそのまま返す（クラスを渡したときは span で包む）。名前に文字列のほかに要素も受け取る部品が
+ * 使う。2文節以上の名前は、使う側が文節で分けた区切りの並びで渡す（文字列は1行に収まらないと語の中で折れる）。
  */
 export function renderPhrasedName(
   content: ReactNode | readonly string[],

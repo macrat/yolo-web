@@ -38,15 +38,15 @@ function props(change: Partial<BrowsableListProps> = {}): BrowsableListProps {
     kindGroup: {
       legend: "種別",
       options: [
-        { value: "text", label: "文章" },
-        { value: "data", label: "データ" },
+        { value: "text", name: "文章" },
+        { value: "data", name: "データ" },
       ],
     },
     sorts: [
-      { value: "number", label: "番号順", keys: [{ by: "fact", index: 0 }] },
+      { value: "number", name: "番号順", keys: [{ by: "fact", index: 0 }] },
       {
         value: "reverse",
-        label: "逆順",
+        name: "逆順",
         keys: [{ by: "fact", index: 0, desc: true }],
       },
     ],
@@ -335,9 +335,9 @@ describe("BrowsableList", () => {
     const kindGroup = {
       legend: "種別",
       options: [
-        { value: "text", label: "文章" },
-        { value: "data", label: "データ" },
-        { value: "image", label: "画像" },
+        { value: "text", name: "文章" },
+        { value: "data", name: "データ" },
+        { value: "image", name: "画像" },
       ],
     };
     const { unmount } = render(<BrowsableList {...props({ kindGroup })} />);
@@ -355,6 +355,36 @@ describe("BrowsableList", () => {
     expect(
       screen.queryByRole("radiogroup", { name: "種別" }),
     ).not.toBeInTheDocument();
+  });
+
+  test("名前を区切りの並びで渡すと文節で折り、種別の突き合わせと件数の行の並び順は1続きの字で行う", () => {
+    const searchLabel = ["名前・", "説明で", "探す"];
+    const kindGroup = {
+      legend: ["種別で", "絞る"],
+      options: [
+        { value: "text", name: "文章" },
+        { value: "data", name: ["データ"] },
+      ],
+    };
+    const { unmount } = render(
+      <BrowsableList {...props({ searchLabel, kindGroup })} />,
+    );
+    const search = screen.getByRole("searchbox", { name: "名前・説明で探す" });
+    expect(search.closest("div")!.querySelector("label")!.innerHTML).toContain(
+      "名前・<wbr>説明で<wbr>探す",
+    );
+    const group = screen.getByRole("radiogroup", { name: "種別で絞る" });
+    expect(group.querySelector("legend")!.innerHTML).toContain(
+      "種別で<wbr>絞る",
+    );
+    fireEvent.click(screen.getByRole("radio", { name: "データ" }));
+    expect(countLine()).toHaveTextContent("50件（全101件）");
+    unmount();
+
+    visit(BASE);
+    const sorts = [{ value: "number", name: ["番号の", "順"], keys: [] }];
+    render(<BrowsableList {...props({ items: makeItems(10), sorts })} />);
+    expect(countLine()).toHaveTextContent("全10件・番号の順");
   });
 
   test("ほかのページから一覧を開いたときは、フォーカスを件数の行へ移さない", () => {

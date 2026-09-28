@@ -25,23 +25,23 @@ const ORIGINS: YojiOrigin[] = ["日本", "中国", "不明"];
  * 一覧と同じ、読みの五十音順とやさしい順。
  */
 export const YOJI_SEARCH_SPEC: BrowseSpec = {
-  kinds: Object.entries(YOJI_CATEGORY_LABELS).map(([value, label]) => ({
+  kinds: Object.entries(YOJI_CATEGORY_LABELS).map(([value, name]) => ({
     value,
-    label,
+    name,
   })),
   filterGroups: [
     {
       param: "level",
       legend: "難易度",
-      options: Object.entries(YOJI_DIFFICULTY_LABELS).map(([value, label]) => ({
+      options: Object.entries(YOJI_DIFFICULTY_LABELS).map(([value, name]) => ({
         value,
-        label,
+        name,
       })),
     },
     {
       param: "origin",
       legend: "出典",
-      options: ORIGINS.map((origin) => ({ value: origin, label: origin })),
+      options: ORIGINS.map((origin) => ({ value: origin, name: origin })),
     },
   ],
   sorts: YOJI_LIST_SORTS,

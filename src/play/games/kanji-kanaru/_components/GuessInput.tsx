@@ -5,6 +5,8 @@ import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import Field from "@/components/Field";
 import Input from "@/components/Input";
+import PhrasedText from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
 import {
   EVALUATE_UNAVAILABLE_MESSAGE,
   type GuessSubmitResult,
@@ -14,8 +16,11 @@ import styles from "./styles/KanjiKanaru.module.css";
 const EMPTY_INPUT_MESSAGE = "漢字を1文字入力してください";
 
 interface GuessInputProps {
-  /** 欄のラベル。いまの難易度と残りの回数を言う（「中級の漢字を1字入力（あと6回）」）。 */
-  label: string;
+  /**
+   * 欄のラベル。いまの難易度と残りの回数を言う（「中級の漢字を1字入力（あと6回）」）。文節で分けた区切りの並びで
+   * 渡し、そのあいだで折る（PhrasedName）。
+   */
+  label: PhrasedName;
   onSubmit: (kanji: string) => Promise<GuessSubmitResult>;
   /** 送信中か。送信のボタンを押せなくし、字で言う。欄は無効にせず、文字盤を閉じさせない。 */
   submitting?: boolean;
@@ -113,8 +118,16 @@ export default function GuessInput({
               {/* 面の字は2つとも同じ場所に重ねて描き、広いほうの幅をいつも取っておく。送っているあいだに
                   ボタンが広がって欄が縮むことがない。見えていない面は読み上げでも読まない。 */}
               <span className={styles.submitFaces}>
-                <span hidden={submitting || undefined}>送信</span>
-                <span hidden={!submitting || undefined}>送信中……</span>
+                <PhrasedText
+                  as="span"
+                  phrases={["送信"]}
+                  hidden={submitting || undefined}
+                />
+                <PhrasedText
+                  as="span"
+                  phrases={["送信中……"]}
+                  hidden={!submitting || undefined}
+                />
               </span>
             </Button>
           </div>
