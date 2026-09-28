@@ -69,7 +69,7 @@ export default function FudaActions({
     typeof window !== "undefined"
       ? `${window.location.origin}/play/${quizSlug}/result/${resultId}`
       : `/play/${quizSlug}/result/${resultId}`;
-  const shareText = `${quizName}の結果は「${resultTitle}」でした!`;
+  const shareText = `${quizName}の結果は「${resultTitle}」でした！`;
 
   /**
    * 固定 URL から札の PNG を取って File にする。取れなかったとき（!res.ok・通信の失敗）は例外を投げ、

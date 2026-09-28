@@ -44,7 +44,7 @@ type CompatibilitySectionProps = Placement & {
 export default function CompatibilitySection(props: CompatibilitySectionProps) {
   const { myType, friendType, compatibility, quizTitle, quizSlug } = props;
   const hashtag = quizTitle.replace(/\s/g, "");
-  const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした! #${hashtag} #yolosnet`;
+  const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした！　#${hashtag} #yolosnet`;
 
   let caption: string;
   let heading: ReactNode;

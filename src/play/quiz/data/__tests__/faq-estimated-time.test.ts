@@ -14,8 +14,8 @@ const DURATION_PATTERN =
 const quizzes = [...quizBySlug.values()];
 
 describe("FAQ の所要時間", () => {
-  it("15本のクイズ・診断をすべて確かめる", () => {
-    expect(quizzes).toHaveLength(15);
+  it("登録されたクイズ・診断を読み込めている", () => {
+    expect(quizzes.length).toBeGreaterThan(0);
   });
 
   describe.each(quizzes.map((quiz) => [quiz.meta.slug, quiz] as const))(

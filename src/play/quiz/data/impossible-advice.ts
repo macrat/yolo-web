@@ -56,7 +56,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
       },
       {
         question: "診断は何問で終わりますか？",
-        answer: "7問で完了します。所要時間は約2分です。",
+        answer: "7問で完了します。所要時間は約1分です。",
       },
       {
         question: "何度も受けると毎回同じ結果になりますか？",
@@ -68,7 +68,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "友人と待ち合わせ。15分前に着いたらどう過ごす?",
+      text: "友人と待ち合わせ。15分前に着いたらどう過ごす？",
       choices: [
         {
           id: "q1-a",
@@ -94,7 +94,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "旅行の計画を立てるとき、最初にすることは?",
+      text: "旅行の計画を立てるとき、最初にすることは？",
       choices: [
         {
           id: "q2-a",
@@ -120,7 +120,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
     },
     {
       id: "q3",
-      text: "突然1時間の自由時間ができた。何をする?",
+      text: "突然1時間の自由時間ができた。何をする？",
       choices: [
         {
           id: "q3-a",
@@ -146,7 +146,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
     },
     {
       id: "q4",
-      text: "レストランでメニューを選ぶとき、決め手になるのは?",
+      text: "レストランでメニューを選ぶとき、決め手になるのは？",
       choices: [
         {
           id: "q4-a",
@@ -172,7 +172,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "理想の自分を動物に例えると?",
+      text: "理想の自分を動物に例えると？",
       choices: [
         {
           id: "q5-a",
@@ -198,7 +198,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "日曜の夜、明日が月曜だと気づいたときの気持ちは?",
+      text: "日曜の夜、明日が月曜だと気づいたときの気持ちは？",
       choices: [
         {
           id: "q6-a",
@@ -224,7 +224,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
     },
     {
       id: "q7",
-      text: "電車で隣の人が寝て寄りかかってきた。どうする?",
+      text: "電車で隣の人が寝て寄りかかってきた。どうする？",
       choices: [
         {
           id: "q7-a",

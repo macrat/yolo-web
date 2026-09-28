@@ -445,7 +445,8 @@ describe("ResultCard - 結果のボックス", () => {
       "日本の伝統色診断の結果",
     );
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
-      /^日本の伝統色診断の結果は「炎の詩人」でした! #あなたを日本の伝統色に例えると？ #yolosnet$/,
+      /^日本の伝統色診断の結果は「炎の詩人」でした！　#あなたを日本の伝統色に例えると？ #yolosnet$/,
+      { normalizeWhitespace: false },
     );
   });
 
@@ -1646,7 +1647,8 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
   test("共有の文は、読みにくい語の後ろに読みを添えたタイプ名で言う", () => {
     render(<ResultCard {...wordSenseProps} />);
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
-      /^言葉の感覚診断の結果は「一字千金（いちじせんきん）タイプ」でした! #言葉の感覚診断 #yolosnet$/,
+      /^言葉の感覚診断の結果は「一字千金（いちじせんきん）タイプ」でした！　#言葉の感覚診断 #yolosnet$/,
+      { normalizeWhitespace: false },
     );
   });
 
@@ -1658,7 +1660,8 @@ describe("ResultCard - 真の残余同点の開示ブロック", () => {
       />,
     );
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
-      /^言葉の感覚診断の結果は「一字千金タイプ」でした! #言葉の感覚診断 #yolosnet$/,
+      /^言葉の感覚診断の結果は「一字千金タイプ」でした！　#言葉の感覚診断 #yolosnet$/,
+      { normalizeWhitespace: false },
     );
   });
 

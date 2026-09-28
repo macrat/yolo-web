@@ -60,8 +60,8 @@ describe("countReadingChars", () => {
 });
 
 describe("getEstimatedMinutes", () => {
-  it("黙読の速さで読む時間と、1問ごとに答える時間を足して、分に切り上げる", () => {
-    // 1000字を読む2分と、10問に答える30秒で、2.5分 → 3分。
+  it("黙読の速さで読む時間と、1問ごとに答える時間を足して、分に四捨五入する", () => {
+    // 1000字を読む2分と、10問に答える30秒で、ちょうど2.5分 → 3分。
     const quiz = makeQuiz(
       "personality",
       Array.from({ length: 10 }, (_, i) => makeQuestion(`q${i}`, 100, [])),
@@ -71,21 +71,21 @@ describe("getEstimatedMinutes", () => {
     expect(getEstimatedMinutes(quiz)).toBe(3);
   });
 
-  it("ちょうど分に届くときは、その分のままにする", () => {
-    // 450字を読む54秒と、2問に答える6秒で、ちょうど1分。
-    const quiz = makeQuiz("personality", [
-      makeQuestion("q1", 225, []),
-      makeQuestion("q2", 225, []),
-    ]);
-    expect(getEstimatedMinutes(quiz)).toBe(1);
+  it("半分に満たない端数は切り捨て、見積もりにいちばん近い分を言う", () => {
+    // 1751字を読む210.12秒と、10問に答える30秒で、4.002分 → 4分。
+    const quiz = makeQuiz(
+      "personality",
+      Array.from({ length: 10 }, (_, i) =>
+        makeQuestion(`q${i}`, i === 0 ? 176 : 175, []),
+      ),
+    );
+    expect(getEstimatedMinutes(quiz)).toBe(4);
   });
 
-  it("分を少しでも超えたら、次の分に切り上げる", () => {
-    const quiz = makeQuiz("personality", [
-      makeQuestion("q1", 226, []),
-      makeQuestion("q2", 225, []),
-    ]);
-    expect(getEstimatedMinutes(quiz)).toBe(2);
+  it("1分に満たないときは1分と言う", () => {
+    // 10字を読む1.2秒と、1問に答える3秒。
+    const quiz = makeQuiz("personality", [makeQuestion("q1", 10, [])]);
+    expect(getEstimatedMinutes(quiz)).toBe(1);
   });
 });
 

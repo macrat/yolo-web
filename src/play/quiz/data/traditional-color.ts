@@ -67,7 +67,7 @@ const traditionalColorQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "休日の過ごし方は?",
+      text: "休日の過ごし方は？",
       choices: [
         {
           id: "q1-a",
@@ -93,7 +93,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "好きな季節は?",
+      text: "好きな季節は？",
       choices: [
         {
           id: "q2-a",
@@ -119,7 +119,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q3",
-      text: "大切にしていることは?",
+      text: "大切にしていることは？",
       choices: [
         {
           id: "q3-a",
@@ -145,7 +145,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q4",
-      text: "友人からどう思われている?",
+      text: "友人からどう思われている？",
       choices: [
         {
           id: "q4-a",
@@ -174,7 +174,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "好きな時間帯は?",
+      text: "好きな時間帯は？",
       choices: [
         {
           id: "q5-a",
@@ -200,7 +200,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "旅行するなら?",
+      text: "旅行するなら？",
       choices: [
         {
           id: "q6-a",
@@ -226,7 +226,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q7",
-      text: "もらって嬉しいプレゼントは?",
+      text: "もらって嬉しいプレゼントは？",
       choices: [
         {
           id: "q7-a",
@@ -252,7 +252,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q8",
-      text: "座右の銘に近いのは?",
+      text: "座右の銘に近いのは？",
       choices: [
         {
           id: "q8-a",

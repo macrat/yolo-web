@@ -278,7 +278,7 @@ describe("ShareButtons", () => {
     });
   });
   describe("結果の共有", () => {
-    const quizText = "診断Xの結果は「タイプA」でした! #診断X #yolosnet";
+    const quizText = "診断Xの結果は「タイプA」でした！　#診断X #yolosnet";
     const gameText = "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet";
 
     test("文を渡すと、X・LINE・コピーに文と URL を渡し、コピーは「結果をコピー」になる", async () => {

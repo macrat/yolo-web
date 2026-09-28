@@ -379,7 +379,7 @@ export default function ResultCard({
 }: ResultCardProps) {
   const shareHeadingId = useId();
   // ハッシュタグは、これまでの共有と同じ語で数えられるよう、題から作る。
-  const shareText = `${quizName}の結果は「${resultNameWithReading(result)}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quizName}の結果は「${resultNameWithReading(result)}」でした！　#${quizTitle.replace(/\s/g, "")} #yolosnet`;
   // 札の画像のボタンの知らせ。区画の知らせの行を1つにするため、共有のボタンの知らせの行に出す。
   const [fudaNotice, setFudaNotice] = useState<string[]>([]);
   const catchphrase = catchphraseOf(detailedContent);

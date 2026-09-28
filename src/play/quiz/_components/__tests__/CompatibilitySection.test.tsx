@@ -26,7 +26,7 @@ describe("CompatibilitySection", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("説明の文")).toBeInTheDocument();
     expect(screen.getByTestId("share")).toHaveTextContent(
-      "私は「タイプA」、友達は「タイプB」。相性は「静と動の名コンビ」でした!",
+      "私は「タイプA」、友達は「タイプB」。相性は「静と動の名コンビ」でした！",
     );
   });
 
