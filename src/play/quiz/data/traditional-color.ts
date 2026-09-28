@@ -14,7 +14,7 @@ function colorTypeName(
 const traditionalColorQuiz: QuizDefinition = {
   meta: {
     slug: "traditional-color",
-    title: "あなたを日本の伝統色に例えると?",
+    title: "あなたを日本の伝統色に例えると？",
     // タイトルが16文字と長いためカード表示用の短縮タイトルを設定
     shortTitle: "日本の伝統色診断",
     description:
@@ -40,8 +40,7 @@ const traditionalColorQuiz: QuizDefinition = {
     faq: [
       {
         question: "何問の質問に答えますか？",
-        answer:
-          "8問の質問に答えると結果が表示されます。所要時間は1〜2分程度です。",
+        answer: "8問の質問に答えると結果が表示されます。所要時間は約1分です。",
       },
       {
         question: "結果は何種類ありますか？",

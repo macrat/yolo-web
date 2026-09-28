@@ -79,6 +79,11 @@ test("開始の画面は、事実の行 → 一文 →「はじめる」→ 説�
   expect(positions).toEqual([...positions].sort((a, b) => a - b));
 });
 
+test("事実の行の所要時間は、読む字数から見積もった目安を言う", () => {
+  renderQuiz();
+  expect(screen.getByText("約1分")).toBeInTheDocument();
+});
+
 test("説明は開始の画面だけに出て、設問の画面には出ない", async () => {
   renderQuiz();
   expect(screen.getByText(DESCRIPTION)).toBeInTheDocument();

@@ -16,7 +16,7 @@ import type { QuizDefinition } from "../types";
 const yojiPersonalityQuiz: QuizDefinition = {
   meta: {
     slug: "yoji-personality",
-    title: "あなたを四字熟語に例えると?",
+    title: "あなたを四字熟語に例えると？",
     shortTitle: "四字熟語で性格診断",
     description:
       "8つの質問に答えて、あなたの性格に一致する四字熟語を判定します。努力家?自由人?リーダー?8タイプの中から1つが決まります。",
@@ -37,7 +37,8 @@ const yojiPersonalityQuiz: QuizDefinition = {
       { label: "四字熟語辞典で詳しく見る", href: "/dictionary/yoji" },
       { label: "四字キメルで遊ぶ", href: "/play/yoji-kimeru" },
     ],
-    seoTitle: "あなたを四字熟語に例えると? 無料・心理テスト | 四字熟語性格診断",
+    seoTitle:
+      "あなたを四字熟語に例えると？　無料・心理テスト | 四字熟語性格診断",
     faq: [
       {
         question: "診断結果の四字熟語は何種類ありますか？",

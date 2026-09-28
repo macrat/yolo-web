@@ -436,7 +436,7 @@ describe("ResultCard - 結果のボックス", () => {
     render(
       <ResultCard
         {...defaultProps}
-        quizTitle="あなたを日本の伝統色に例えると?"
+        quizTitle="あなたを日本の伝統色に例えると？"
         quizName="日本の伝統色診断"
         result={typeResult}
       />,
@@ -445,7 +445,7 @@ describe("ResultCard - 結果のボックス", () => {
       "日本の伝統色診断の結果",
     );
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
-      /^日本の伝統色診断の結果は「炎の詩人」でした! #あなたを日本の伝統色に例えると\? #yolosnet$/,
+      /^日本の伝統色診断の結果は「炎の詩人」でした! #あなたを日本の伝統色に例えると？ #yolosnet$/,
     );
   });
 

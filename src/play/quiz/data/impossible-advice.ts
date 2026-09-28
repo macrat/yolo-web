@@ -56,7 +56,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
       },
       {
         question: "診断は何問で終わりますか？",
-        answer: "7問で完了します。所要時間は1〜2分程度です。",
+        answer: "7問で完了します。所要時間は約2分です。",
       },
       {
         question: "何度も受けると毎回同じ結果になりますか？",

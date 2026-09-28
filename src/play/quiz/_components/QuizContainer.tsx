@@ -122,7 +122,7 @@ export default function QuizContainer({
   if (phase === "intro") {
     const questionCount = quiz.meta.questionCount;
     const resultTypeCount = quiz.results.length;
-    const estimatedTime = getEstimatedTime(questionCount);
+    const estimatedTime = getEstimatedTime(quiz);
     const typeLabel = quiz.meta.type === "knowledge" ? "知識クイズ" : "診断";
 
     // 開始の画面は、事実の行 → 一文 →「はじめる」→ 説明 → 関連の入口の順に積む。「はじめる」を狭い画面でも
