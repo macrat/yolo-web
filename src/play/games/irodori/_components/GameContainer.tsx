@@ -2,6 +2,7 @@
 
 import { trackContentEnd } from "@/lib/analytics";
 import {
+  type CSSProperties,
   useState,
   useCallback,
   useEffect,
@@ -63,17 +64,31 @@ import styles from "./GameContainer.module.css";
 
 const RESULT_AREA = resultAreaNames("irodori");
 
+/** 端末に今日の記録があるとき、本体の前のスクリプトが書く値の名前。値は、記録を戻すまで盤を見せない visibility。 */
+const SAVED_DAY_PROPERTY = "--irodori-saved-day";
+
 /**
- * サーバーの HTML で本体の前に置くスクリプト。解き終えた回を開き直したとき、前に同じ画面で描いた結果の区画の
- * 高さを本体を描く前に取っておき、読み込むあいだ1問目の盤を見せない。途中の回は、どの問でも盤の高さが同じ
- * なので、取っておくものが無い。
+ * サーバーの HTML で本体の前に置くスクリプト。
+ * - 解き終えた回: 前に同じ画面で描いた結果の区画の高さを本体を描く前に取っておき、読み込むあいだ1問目の盤を
+ *   見せない。
+ * - 途中の回: 盤の高さはどの問でも同じなので場所は取らず、記録を戻すまで、サーバーが描いた1問目の進み具合と
+ *   見本とスライダーを、場所を取ったまま見せない（違う問の盤を見せない）。
  */
 const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
   styleId: "irodori-saved-layout",
   historyKeyPrefix: HISTORY_KEY,
   finishedStatuses: ["completed"],
   resultArea: RESULT_AREA,
+  byRecordLength: [
+    { field: "scores", property: SAVED_DAY_PROPERTY, values: ["hidden"] },
+  ],
 });
+
+/** 記録を戻すまでの盤の見せ方。記録の無い初めての来訪者では、値が無いので見せる。 */
+const RESTORING_STYLE: CSSProperties = {
+  visibility:
+    `var(${SAVED_DAY_PROPERTY}, visible)` as CSSProperties["visibility"],
+};
 
 interface GameContainerProps {
   colors: IrodoriColor[];
@@ -328,6 +343,8 @@ export default function GameContainer({
   }, [gameState]);
 
   const completed = gameState.status === "completed";
+  // 端末の記録を当て終えたか（成績を読むのは記録を当てるときと同じ）。
+  const restored = stats !== null;
   const round = gameState.rounds[gameState.currentRound];
   const madeColor =
     phase === "judged" && round?.answer
@@ -349,15 +366,20 @@ export default function GameContainer({
           date={todayStr}
         >
           {!completed && (
-            <ProgressBar
-              current={gameState.currentRound + 1}
-              total={ROUNDS_PER_GAME}
-              label="問の進み具合"
-            />
+            <div style={restored ? undefined : RESTORING_STYLE}>
+              <ProgressBar
+                current={gameState.currentRound + 1}
+                total={ROUNDS_PER_GAME}
+                label="問の進み具合"
+              />
+            </div>
           )}
           <div className={styles.stack}>
             {!completed && round && (
-              <div className={styles.board}>
+              <div
+                className={styles.board}
+                style={restored ? undefined : RESTORING_STYLE}
+              >
                 <ColorPair target={round.target.hex} made={madeColor} />
                 {phase === "play" ? (
                   <>

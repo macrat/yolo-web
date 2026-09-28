@@ -169,10 +169,11 @@ describe("− と ＋", () => {
 });
 
 describe("字の幅の上限の見積もり", () => {
-  test("数字は等幅の 0.6em、数字でない半角の字は 1em、和字は 1.03em で数える", () => {
+  test("数字は等幅の 0.6em、数字でない半角の字は 1.05em、和字は 1.03em で数える", () => {
     expect(textEm("360")).toBe(1.8);
-    expect(textEm("100%")).toBe(2.8);
-    expect(textEm("1.5 MB")).toBe(5.2);
+    expect(textEm("100%")).toBe(2.85);
+    expect(textEm("@")).toBe(1.05);
+    expect(textEm("1.5 MB")).toBe(5.4);
     expect(textEm("色相")).toBe(2.06);
     expect(textEm("パスワードの長さ")).toBe(8.24);
   });
@@ -197,9 +198,9 @@ describe("字の幅の上限の見積もり", () => {
     );
     const group = container.firstElementChild as HTMLElement;
     expect(group.style.getPropertyValue("--slider-label")).toBe("2.06em");
-    expect(group.style.getPropertyValue("--slider-value")).toBe("2.8em");
+    expect(group.style.getPropertyValue("--slider-value")).toBe("2.85em");
     expect(group.style.getPropertyValue("--slider-fixed")).toBe(
-      "calc(2.06em + 2.8em + 120px)",
+      "calc(2.06em + 2.85em + 120px)",
     );
   });
 

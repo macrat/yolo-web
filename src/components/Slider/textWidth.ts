@@ -9,10 +9,10 @@
 const DIGIT_EM = 0.6;
 
 /**
- * 数字でない半角の字（記号・欧字・空白）。IBM Plex Sans でいちばん広い字（「%」0.93em・「M」「W」など）を
- * 下回らないよう、1em とする。
+ * 数字でない半角の字（記号・欧字・空白）。本文の書体と代わりの書体のどちらでも、いちばん広い字（「@」は代わりの
+ * 書体で 1.016em、「%」「M」「W」はそれより狭い）を下回らないよう、1.05em とする。
  */
-const OTHER_NARROW_EM = 1;
+const OTHER_NARROW_EM = 1.05;
 
 /**
  * 和字。漢字は全角の 1em だが、和文の書体によっては仮名や長音符が 1em をわずかに超えて組まれる（「パスワードの
@@ -25,7 +25,7 @@ export function textEm(text: string): number {
   let width = 0;
   for (const ch of text) {
     if (/[0-9]/.test(ch)) width += DIGIT_EM;
-    else if (/[\u0000-ɏ]/.test(ch)) width += OTHER_NARROW_EM;
+    else if (/[\u0000-\u024f]/.test(ch)) width += OTHER_NARROW_EM;
     else width += WIDE_EM;
   }
   return Math.round(width * 100) / 100;
