@@ -1,171 +1,140 @@
 # Next.js 固有の技術知見
 
-このプロジェクト（Next.js App Router使用）で蓄積されたNext.js固有の非自明な動作と注意点をまとめたドキュメント。
+このプロジェクト（Next.js の App Router と Turbopack）で確かめた、Next.js とその周辺（ビルド・開発サーバー・水和・Vercel への配備）の非自明な動作と対処。各項の末尾の「根拠」に、実測か推論かと、根拠になったサイクルを書く。
 
 ---
 
-## 1. 専用ルート追加後のdevサーバー再起動
+## 1. 専用ルートを足したあとの開発サーバーは、動的ルートで描いてしまう
 
-Next.js App Routerはルーティングマニフェストをビルド時に生成する。新しい専用ルート（例: `/play/xxx/result/[resultId]/`）を追加した場合、devサーバーを再起動しないと動的ルート（`[slug]`）がそのままレンダリングされる偽陽性が発生する。
+動的ルート（`/play/[slug]/result/[resultId]/`）と同じ階層に専用ルート（例: `/play/animal-personality/result/[resultId]/`）を足しても、起動したままの開発サーバーは専用ルートではなく動的ルートで描く。本番のビルドでは専用ルートが使われるので、開発サーバーでは正しく動いているように見えて本番と違う画面を確かめることになる。
 
-**影響**: devサーバー上での確認結果が本番と異なる。専用ルートが動的ルートにフォールバックしているのに正常動作しているように見える。
+**対処**: 専用ルートを足したあとの見た目の確認やレビューは、`npm run build && npx next start` で本番のビルドを起動して行う。
 
-**対処**: 専用ルート追加後のビジュアル確認やレビューは `npm run build && npx next start` で本番ビルドのサーバーを起動して行うこと。devサーバーでは確認不可。
-
-出典: cycle-149, 150, 151, 152, 153
+**根拠**: 実測（cycle-149 で動的ルートで描かれ、開発サーバーの再起動で解消した。cycle-150 で本番のビルドでは専用ルートで描かれることを確かめた）。原因をルーティングの表がビルドのときに作られるためとするのは推論。
 
 ---
 
-## 2. 共有コンポーネントからの巨大データの静的インポート禁止
+## 2. 共有の Client Component から巨大なデータを静的に import しない
 
-`"use client"` の共有コンポーネント（例: `ResultCard.tsx`）から巨大なJSONデータを静的importすると、そのデータが全ページのクライアントバンドルに含まれてバンドルバジェットを超過する。
-
-**影響**: `/play/[slug]` のようなページが149KB → バジェット超過（cycle-153で実際に発生）。
+`"use client"` の共有コンポーネント（例: `src/play/quiz/_components/ResultCard.tsx`）から巨大な JSON やデータのモジュールを静的に import すると、そのデータがそのコンポーネントを使う全ページのクライアントのバンドルに入り、`src/__tests__/bundle-budget.test.ts` の予算を超える。
 
 **対処**:
 
-- データはpropsで親（Server Component）から渡す
-- コンポーネントが必要とする場合はdynamic importでコード分割する
+- データは親の Server Component で選び、props で渡す
+- コンポーネント自身が必要とする場合は dynamic import でコードを分ける
 
-出典: cycle-107, 108, 148, 152, 153
-
----
-
-## 3. CSSカスタムプロパティのフォールバック値
-
-CSS変数（`var(--type-color)` 等）にフォールバック値を設定しないと、SSR時やpropsが未設定のときに値が透明・未定義になりテキストが消えたり背景が見えなくなる問題が発生する。
-
-**対処**: 常に `var(--type-color, #374151)` のようにフォールバック値を設定すること。ダークモードでも視認性を確認すること。
-
-出典: cycle-147, 148, 150, 151, 153
+**根拠**: 実測（cycle-153 で `ResultCard.tsx` がクイズのデータを import して `/play/[slug]` が 149KB になり予算の 140KB を超え、props に替えて収めた。cycle-107・108 で `GameContainer.tsx` が全パズルのデータを静的に import してクライアントに送っていたのを、`page.tsx` で当日の分だけ選んで渡す形に替えた）。
 
 ---
 
-## 4. localStorageを参照するClient Componentのハイドレーション不整合
+## 3. 値を外から渡す CSS カスタムプロパティにはフォールバック値を付ける
 
-`useState` の初期化関数内で `localStorage` や `typeof window` を参照すると、SSRとクライアント初回レンダリングの出力が異なりハイドレーションエラーが発生する。
+インラインスタイルや props から渡す前提の CSS 変数（`var(--type-color)` 等）にフォールバック値が無いと、値が渡らなかったとき（props の未設定など）に宣言が無効になる。そのプロパティは、継承するもの（`color`）は親の値に、継承しないもの（`background-color`・`border-color`）は初期値（透明・`currentColor`）になり、地と文字の組み合わせが崩れて文字や背景が見えなくなる。
 
-**影響**: Reactのハイドレーション警告、画面のちらつき（フラッシュ）、クライアントサイド再レンダリングへのフォールバックによるパフォーマンス低下。
+**対処**: `var(--type-color, #374151)` のようにフォールバック値を付け、ダークでも見えることを確かめる。
 
-**対処**: `useState<T>(null)` で初期値をnullとし、`useEffect` 内でlocalStorageから読み込んでstateを更新する。SSR時とHydration時に同じ（null）出力となり不整合が解消される。
+**根拠**: 推論（CSS の仕様から。cycle-150 のレビューで指摘され、cycle-151・153 の実装で適用した）。
+
+---
+
+## 4. 端末の値で初期表示を決める Client Component は、水和で食い違う
+
+`useState` の初期化関数で `localStorage`・`Math.random()`・`typeof window` を使うと、サーバーで描いた出力とクライアントの最初の描画が食い違い、水和の不一致になる。React の警告、画面のちらつき、クライアントでの描き直しによる遅れが出る。`suppressHydrationWarning` は警告を消すだけで食い違いと描き直しは残るので、対処にならない。
+
+**対処**: サーバーと水和の最初の描画では同じ値（`null` など）を描き、端末の値は水和のあとに当てる。形は2つある。
+
+- **`useSyncExternalStore`**: 第3引数の `getServerSnapshot` が `null` を返すと、React はサーバーと水和のあいだその値で描き、水和のあと `getSnapshot` の値で描き直す。`getSnapshot` は値が変わらないあいだ同じ参照を返す（毎回新しい値を返すと描き直しが止まらない）。用例は `src/play/fortune/fortuneStore.ts` と `src/components/hooks/useIsServerRendered.ts`。
+- **`useState(null)` と `useEffect`**: 水和のあとの `useEffect` で端末の値を読んで state に入れる。eslint-config-next が有効にする `react-hooks/set-state-in-effect` がこの `setState` をエラーにするので、外の値を水和のあとに読むためだと理由を添えて、その行だけ無効にする（用例は `src/play/games/nakamawake/_components/GameContainer.tsx`）。
 
 ```tsx
-// NG: SSRとクライアントで初期値が異なる
+// NG: サーバーとクライアントで初期値が違う
 const [fortune, setFortune] = useState(computeFortune);
 
-// OK: SSR/Hydration時はnull、マウント後に計算
-const [fortune, setFortune] = useState<Fortune | null>(null);
-useEffect(() => {
-  setFortune(computeFortune());
-}, []);
+// OK: サーバーと水和では null、水和のあとに端末の値で描く
+const fortune = useSyncExternalStore(subscribe, getSnapshot, () => null);
 ```
 
-`suppressHydrationWarning` は根本解決ではなく、不整合自体が残りパフォーマンス低下が解消されないため採用しないこと。
-
-出典: cycle-83, 106, 127, 158
+**根拠**: 食い違いは実測（cycle-83・106 のナカマワケ、cycle-127 の運勢、cycle-158 の `Math.random()`、cycle-217 では curl で取ったサーバーの HTML の色が取るたびに変わった）。`useSyncExternalStore` の形は cycle-127 の修正で使ったもの。lint の規則がエラーになることは `npx eslint --print-config` で確かめた（cycle-316）。
 
 ---
 
-## 5. Server Componentで `new Date()` を使うと静的レンダリング時にビルド時の日付で固定される
+## 5. Server Component の `new Date()` は、静的に描かれるとビルドの日付で固まる
 
-Server Component（`page.tsx`）で `new Date()` を呼び出すと、Next.jsの静的最適化によりビルド時の日付が固定される。日替わりコンテンツを提供するページで問題になる。
+Server Component（`page.tsx`）で `new Date()` を呼んでも、そのページが静的に描かれるとビルドのときの日付で固まる。日替わりの内容を出すページで問題になる。
 
-**対処**: 日替わりコンテンツを扱うServer Componentには `export const dynamic = "force-dynamic"` を設定してリクエストごとに実行されるようにする。
+**対処**: 日替わりの内容を出すページには `export const dynamic = "force-dynamic"` を置き、リクエストごとに描く（用例は `src/app/play/nakamawake/page.tsx`・`src/app/play/irodori/page.tsx`）。Server Component は実行するマシンのシステムのタイムゾーン（UTC など）で動くので、日本時間の日付は `Intl.DateTimeFormat` に `timeZone: "Asia/Tokyo"` を渡して求める。
 
-また、Server Componentはビルドマシンのシステムタイムゾーンで実行されるため、JSTの日付計算が必要なときは `Intl.DateTimeFormat` を使って明示的にタイムゾーンを指定すること（`timeZone: "Asia/Tokyo"`）。
-
-出典: cycle-106, 108
+**根拠**: 推論（Next.js の静的レンダリングの仕様から。cycle-106 でタイムゾーン未指定の `new Date()` が日本時間とずれる原因だと突き止め、cycle-108 で `force-dynamic` と `timeZone` の指定を入れた）。
 
 ---
 
-## 6. ISRペイロードの上限（Vercel）
+## 6. Vercel の ISR のペイロードは 19.07MB が上限
 
-Vercelにデプロイする場合、ISRペイロードの上限は19.07MB。一覧ページで全件の本文HTML（`contentHtml`）を含むデータを返すと超過する（cycle-67でmemosページが24.86MBに達してデプロイ失敗）。
+Vercel に配備するとき、ISR のペイロードの上限は 19.07MB。一覧ページで全件の本文の HTML（`contentHtml`）を含むデータを返すと超える。
 
-**対処**: 一覧ページには一覧表示に必要な最小限のフィールドのみを含む型（Summary型）を定義し、本文や不要なフィールドをサーバー側で除外してからクライアントに送る。
+**対処**: 一覧ページには一覧に要るフィールドだけの型（Summary 型）を定義し、本文などをサーバーの側で外してからクライアントに送る。
 
-出典: cycle-67
-
----
-
-## 7. Next.js 16でmiddleware.tsはdeprecated
-
-Next.js 16では `middleware.ts` はdeprecatedとなり `proxy.ts` へのリネームが推奨されている。
-
-2026-05時点で当プロジェクトはすでに **Next.js 16.2.3 を使用中**であり、`src/middleware.ts` も依然として存在している。これは「将来の課題」ではなく**現在対応が必要な状態**。`proxy.ts` への移行作業が必要。
-
-出典: cycle-89
+**根拠**: 実測（cycle-67 で memos の一覧ページが 24.86MB になって配備が失敗し、Summary 型に絞って 1.1MB に下がった）。
 
 ---
 
-## 8. 古い next-server プロセスの残存によるキャッシュ提供問題
+## 7. Next.js 16 では `middleware.ts` は deprecated で、`proxy.ts` への名前の変更が勧められている
 
-dev/build/start を繰り返すと、複数の `next-server` プロセスが残存することがある。古いプロセスが port 3000 を listen していると、最新ビルドの変更が反映されず、`x-nextjs-cache: HIT` + `x-nextjs-prerender: 1` ヘッダ付きで古いキャッシュ（404を含む）を返し続ける。`Cache-Control: s-maxage=31536000` の TTL があるため、最大1年間キャッシュされ続ける。
+Next.js 16 では `middleware.ts` のファイルの規約が deprecated になり、`proxy.ts` が勧められている。Next.js 16.3.0 は `middleware.ts` があると、ビルドと開発サーバーで `The "middleware" file convention is deprecated. Please use "proxy" instead.` と警告し、移すための codemod（`npx @next/codemod@canary middleware-to-proxy .`）を案内する。`middleware.ts` と `proxy.ts` の両方があるとエラーで止まる。このプロジェクトは `src/middleware.ts`（削除した記事に 410 を返す）を使っていて、まだ `proxy.ts` に移していない。
 
-**ファイル系統と挙動の乖離**: `.next/server/app/(new)/.../page.js` には最新ビルド成果物が存在するのに、port 3000 で listen している next-server は古いビルド時点のキャッシュを保持している、という乖離が起きる。
+**根拠**: deprecated であることは cycle-89 で `middleware.ts` を作ったときに確かめた。警告の文言と両方あるときのエラーは、Next.js 16.3.0 のソース（`node_modules/next/dist/build/index.js`・`server/lib/router-utils/setup-dev-bundler.js`）で確かめた（cycle-316）。
 
-**該当タイミング**:
+---
 
-- 新しいルートを追加した直後
-- 開発中に長時間 dev server を立ち上げっぱなしにした後
-- Playwright実機検証で原因不明の404に遭遇した時
+## 8. 古い `next-server` が残っていると、古いビルドを配り続ける
 
-**解消手順**:
+dev・build・start を繰り返すと、`next-server` のプロセスが残ることがある。古いプロセスがポートで待ち受けていると、`.next/server/app/.../page.js` には最新のビルドがあるのに、そのプロセスは起動したときのビルドの出力（404 を含む）を `x-nextjs-cache: HIT`・`x-nextjs-prerender: 1`・`Cache-Control: s-maxage=31536000` の付いた応答で返し続け、変更が反映されない。止めるまで直らない。
+
+**当たりやすいとき**:
+
+- 新しいルートを足した直後
+- 開発サーバーを長く起動したままにしたあと
+- Playwright での確認で、原因のわからない 404 に当たったとき
+
+**解消の手順**:
 
 ```bash
-pkill -f "next-server"     # 古いプロセスを全 kill
-npm run build              # 最新コードで再ビルド
-npm run start &            # 新しい next-server を起動
-curl -I http://localhost:3000/path  # HTTP 200 を確認
+ps -eo pid,ppid,args | grep next-server   # 残っているプロセスを探す
+kill <PID>                                # 自分が起動したものだけ止める
+npm run build                             # 最新のコードでビルドし直す
+npm run start &                           # 新しい next-server を起動する
+curl -I http://localhost:3000/path        # 200 が返ることを確かめる
 ```
 
-出典: cycle-177 (2026-05発見)
+止めるのは、起動したときに控えた自分の PID か、`/proc/<pid>/cwd` が自分の作業ツリーを指すものに限る。`pkill -f next-server` は、同じコンテナで動くほかのエージェントのサーバーまで止める（`docs/knowledge/playwright-mcp.md` の「本番ビルドの実機検証の段取り」）。
+
+**根拠**: 実測（cycle-177 で、確かめるルートが 404 を返し続けた原因が古い `next-server` の残存だった）。
 
 ---
 
-## 9. Next.js 16 Turbopack デフォルト化と per-route First Load JS 出力欠落
+## 9. Turbopack の `next build` は、ルートごとの First Load JS を出さない
 
-Next.js 16 系（本プロジェクトでは 16.2.4）から `next build` のデフォルトが Turbopack になった。Turbopack ビルドの出力には Webpack のような per-route の "First Load JS Size" カラムが出ない。
-
-**影響**: バンドルサイズ比較を per-route 単位で行う計画（移行前後の First Load JS 差分など）が、デフォルトの `npm run build` では実行不能になる。cycle-185 B-334-4-7 で発覚。
+Next.js 16 の `next build` の既定は Turbopack で、その出力には Webpack のビルドが出すルートごとの「First Load JS」の列が無い。ルートごとにバンドルの大きさを前後で比べる計画は、既定の `npm run build` では実行できない。
 
 **対処**:
 
-- per-route 単位で比較したい場合は `next build --webpack` で Webpack mode に切り替える（per-route First Load JS Size カラムが復活する）
-- または `next build --experimental-analyze` で Turbopack 互換の bundle analyzer を起動する
-- 比較が必須でない場合は `.next/static/chunks/` 合計サイズなどの粗いメトリクスで代替する
+- `next build --webpack` で Webpack のビルドに切り替える（ルートごとの列が出る）
+- `next build --experimental-analyze` で Turbopack 向けのバンドルの分析を使う
+- ルートごとの比較が要らなければ、`.next/static/chunks/` の合計の大きさなどの粗い指標で代える
 
-出典: cycle-185
-
----
-
-## 10. next-themes（attribute=class）環境での Playwright ダークモード撮影
-
-next-themes を `attribute="class"` + `enableSystem` で使うサイト（`<html class="dark">` でダーク適用）では、Playwright の `page.emulateMedia({ colorScheme: 'dark' })` **単独**ではダークテーマが確実に適用されない。
-
-**原因**: next-themes はハイドレーション後に `localStorage['theme']` を読んでクラスを付与する。`emulateMedia` は OS の `prefers-color-scheme` を変えるだけなので、`defaultTheme="system"` 時はページロード順や Next.js のキャッシュ最適化によって silent-light（見た目は light なのにファイル名だけ dark）になる場合がある。
-
-**確実な dark 撮影手順**:
-
-1. `context.addInitScript(() => { localStorage.setItem('theme', 'dark'); })` を `browser.newContext()` 直後（`page.goto` より前）に呼んで、localStorage を事前注入する
-2. `page.emulateMedia({ colorScheme: 'dark' })` を `page.goto` より前に呼ぶ（保険）
-3. `page.goto` 後に `page.waitForFunction(() => document.documentElement.classList.contains('dark'))` で `<html class="dark">` の付与を確認してから撮影する
-
-**失敗検知の二重化**: `waitForFunction` がタイムアウトした場合は、ファイル名を `_dark-FAILED` にして保存し、かつ `process.exit(1)` で非ゼロ終了する。これにより「ログを見落とした silent-light」を構造的に防げる。
-
-出典: cycle-216 B-463（T-2 レビュー派生 / NIT-1・NIT-2）
+**根拠**: 列が出ないことは実測（cycle-185 で移行の前後の First Load JS を比べられず、`.next/static/chunks/` の合計 6.0MB を記録した）。2つのオプションが Next.js 16.3.0 にあることは `npx next build --help` で確かめた（cycle-316）が、`--webpack` で列が出ることは推論（このプロジェクトでは試していない）。
 
 ---
 
-## 11. `"use client"` から server 専用のモジュールを import すると、ビルドが壊れるか、黙って client にバンドルされる
+## 10. `"use client"` からサーバー専用のモジュールを import すると、ビルドが壊れるか、黙って client にバンドルされる
 
-`"use client"` なコンポーネントが、サーバー専用処理（`fs`・DB・Node 組み込み）を **推移的に** 掴むモジュールを import すると、Turbopack がそれをクライアントバンドルのモジュールグラフに含めようとして失敗する。エラーは `the chunking context (unknown) does not support external modules (request: node:fs)`。Node 組み込みを掴まないモジュール（大きい表を持つだけのものなど）は、エラーにならず、そのまま client のバンドルに入って来訪者に配られる。
+`"use client"` のコンポーネントが、サーバー専用の処理（`fs`・DB・Node の組み込み）を**推移的に**掴むモジュールを import すると、Turbopack がそれをクライアントのバンドルのモジュールグラフに入れようとして失敗する。エラーは `the chunking context (unknown) does not support external modules (request: node:fs)`。Node の組み込みを掴まないモジュール（大きい表を持つだけのものなど）は、エラーにならず、そのまま client のバンドルに入って来訪者に配られる。
 
-非自明な肝は **トップレベル副作用** にある。import 先のユーティリティがモジュールのトップレベルで `fs` 読み込み等を実行していると、その関数を一度も呼ばなくても（コンポーネントを描画するだけ・値として import するだけで）`fs` 依存が確定してグラフに載る。型のみの `import type` はトランスパイル時に消去されるので載らない（「関数を呼ぶつもりがない値 import」と「型としてしか使わない import」は別物で、前者は載り後者は載らない）。セクション2（巨大データの静的インポート）は、client で使うデータをどう読み込むかの問題だが、本項は、サーバーだけで使うはずのモジュールが client の側に入ってしまう問題である。Node 組み込みを掴むモジュールならビルドが止まり、掴まないモジュールならビルドは通ってバンドルが黙って膨らむ。
+非自明な肝は**トップレベルの副作用**にある。import 先のユーティリティがモジュールのトップレベルで `fs` の読み込みなどを実行していると、その関数を一度も呼ばなくても（コンポーネントを描くだけ・値として import するだけで）`fs` への依存が確定してグラフに載る。型だけの `import type` はトランスパイルで消えるので載らない。§2 は client で使うデータの読み込み方の問題で、本項は server だけで使うはずのモジュールが client の側に入る問題である。
 
-**実例（cycle-224）**: `"use client"` の storybook（`StorybookContent.tsx`）が `RelatedBlogPosts` を import → `@/lib/cross-links`（トップレベルで `getAllBlogPosts()` を実行）→ `@/blog/_lib/blog`（`node:fs` でマークダウンを読む）。
+**実例**: `"use client"` の storybook（`src/app/storybook/StorybookContent.tsx`）が `RelatedBlogPosts` を import すると、`@/lib/cross-links`（トップレベルで `getAllBlogPosts()` を実行）→ `@/blog/_lib/blog`（`node:fs` でマークダウンを読む）とたどってビルドが落ちる。
 
-**対処**: サーバー専用部品は Server Component（親）で描画し、Client Component には `ReactNode`（children/props）として注入する（Next.js 公式 "Interleaving Server and Client Components"）。注入された ReactNode は親（server）側で評価されるので client バンドルに載らない。
+**対処**: サーバー専用の部品は親の Server Component で描き、Client Component には `ReactNode`（children や props）として渡す（Next.js 公式の "Interleaving Server and Client Components"）。渡した ReactNode は親（server）の側で評価されるので client のバンドルに載らない。`StorybookContent.tsx` は `RelatedBlogPosts` の描画結果をこの形で `src/app/storybook/page.tsx` から受け取る。
 
 ```tsx
 // page.tsx (Server Component)
@@ -178,37 +147,37 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 }
 ```
 
-**予防**: サーバー専用モジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import された瞬間にビルドが止まる。Node 組み込みを掴まないモジュールでは、これが黙ってバンドルされるのを止める唯一の手になる。Next.js が解決するのでパッケージは要らない。vitest では解決できないので、`vitest.config.mts` の `resolve.alias` で `next/dist/compiled/server-only/empty.js` に向ける。`tsx` で動かすスクリプトは `server-only` を解決できないので、`server-only` を置いたモジュールを読み込めない。
+**予防**: サーバー専用のモジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import されたときにビルドが止まる。Node の組み込みを掴まないモジュールでは、これが黙ってバンドルされるのを止める唯一の手になる。Next.js が解決するのでパッケージは要らない。vitest では解決できないので、`vitest.config.mts` の `resolve.alias` で `next/dist/compiled/server-only/empty.js` に向ける。`tsx` で動かすスクリプトは `server-only` を解決できないので、`server-only` を置いたモジュールを読み込めない。
 
-止まったときのメッセージは、Next.js 16.3 の Turbopack では「client から server-only を読み込んだ」とは出ないことがある。そのモジュールに和文のコメントがあると、エラーの箇所のコードを抜き出して色付けする処理が和文の字の途中のバイトで切って落ち、`thread 'tokio-rt-worker' panicked at crates/next-code-frame/src/highlight.rs … end byte index 93 is not a char boundary; it is inside 'ダ'` と `[Error: Panic in async function]` だけが出る（cycle-316 の `src/lib/phrase-breaks.ts` で再現）。この panic を見たら、Turbopack の不具合と決めつけず、`server-only` を置いたモジュールを `"use client"` の側から読み込んでいないかを先に確かめる。
+止まったときのメッセージは、Next.js 16.3 の Turbopack では「client から server-only を読み込んだ」とは出ないことがある。そのモジュールに和文のコメントがあると、エラーの箇所のコードを抜き出して色付けする処理が和文の字の途中のバイトで切って落ち、`thread 'tokio-rt-worker' panicked at crates/next-code-frame/src/highlight.rs … end byte index 93 is not a char boundary; it is inside 'ダ'` と `[Error: Panic in async function]` だけが出る。この panic を見たら、Turbopack の不具合と決めつけず、`server-only` を置いたモジュールを `"use client"` の側から読み込んでいないかを先に確かめる。
 
-**検証タイミングの教訓**: この種のバグは型チェック・単体テストでは表面化せず `next build` で初めて落ちる。storybook 等の開発者向けページ（noindex）でも client/server 境界は本番ビルドに効く。ページやコンポーネントを追加したら、早い段階で `npm run build` を一度通して潜在バグを最短で顕在化させること（cycle-224 では build 確認が後回しになり、storybook 追加時に混入した本バグが数セッション潜在した）。
+この種の誤りは型チェックと単体テストでは表に出ず、`next build` で初めて落ちる。storybook のような開発者向けのページ（noindex）でも、client と server の境界は本番のビルドに効く。
 
-出典: cycle-224・cycle-316
+**根拠**: 実測（cycle-224 で storybook の追加から混入し、`next build` まで数セッション気付かなかった。panic のメッセージは cycle-316 の `src/lib/phrase-breaks.ts` で再現した）。
 
 ---
 
-## 12. `.next/dev/types/` の型ファイルが古いか壊れていると、commit と push の typecheck が落ちる
+## 11. `.next/dev/types/` の型ファイルが古いか壊れていると、commit と push の typecheck が落ちる
 
-`tsconfig.json` の `include` には `.next/dev/types/**/*.ts` が含まれる。`next dev` はここに `validator.ts`（その時点の全ルートファイルへの相対 import）と `routes.d.ts` を生成する。`.next/` は git 管理外なので git status に出ず、`npm run build` は別系統の `.next/types/` を作り直して通るため、「build は通るのに commit や push だけが落ちる」形で現れる。壊れ方は2つある。
+`tsconfig.json` の `include` には `.next/dev/types/**/*.ts` が含まれる。`next dev` はここに `validator.ts`（その時点の全ルートのファイルへの相対 import）と `routes.d.ts` を生成する。`.next/` は git の管理の外なので git status に出ず、`npm run build` は別の `.next/types/` を作り直して通るため、「build は通るのに commit や push だけが落ちる」形で現れる。壊れ方は2つある。
 
 - **古いパス**: ルートの `page.tsx` を `git mv`（例: route group をまたぐ移動）すると、`validator.ts` が移動前のパスを参照したまま残り、`TS2307: Cannot find module '.../page.js'` で落ちる。
 - **書きかけ**: `next dev` が、親のエージェントが終わったあとも動き続けていると（親プロセスが 1 になった孤児）、作業ツリーの変更に合わせて `routes.d.ts` を書き直し続け、途中の状態の `routes.d.ts` が `TS1146: Declaration expected`・`TS1161: Unterminated regular expression literal` で落ちる。
 
-**対処**: 孤児の `next dev` とその子の `next-server` を止め（`ps -o ppid=` が 1 で、cwd がリポジトリのもの）、`rm -rf .next/dev/types` してから typecheck・commit・push する。ファイルが無ければ include の glob はマッチゼロで、エラーにならない。
+**対処**: 孤児の `next dev` とその子の `next-server` を止め（`ps -o ppid=` が 1 で、cwd がリポジトリのもの）、`rm -rf .next/dev/types` してから typecheck・commit・push する。ファイルが無ければ include の glob はマッチがゼロで、エラーにならない。
 
-**予防**: ルートを移動・リネームしたあとは、`next dev` で確かめたあとに `rm -rf .next/dev` を挟んでから commit する。サブエージェントに dev サーバーを使わせるときは、終える前に自分の起動した `next dev` と子の `next-server` の両方を止めるよう指示する。
+**予防**: ルートを移動・リネームしたあとは、`next dev` で確かめたあとに `rm -rf .next/dev` を挟んでから commit する。サブエージェントに開発サーバーを使わせるときは、終える前に自分の起動した `next dev` と子の `next-server` の両方を止めるよう指示する。
 
-出典: cycle-265・cycle-316
+**根拠**: 実測（古いパスは cycle-265、書きかけは cycle-316）。
 
 ---
 
-## 13. Turbopack の `next/font/google` は `adjustFontFallback: false` だけでは自動の代わりの書体を止めない
+## 12. Turbopack の `next/font/google` は `adjustFontFallback: false` だけでは自動の代わりの書体を止めない
 
-Next.js 16.3.0 の Turbopack ビルドでは、`next/font/google` に `adjustFontFallback: false` を渡しても、`"<書体名> Fallback"` の `@font-face`（`local("Times New Roman")` などにメトリクスを合わせたもの）が生成され、CSS 変数の値にもその名前が入る。`next/font/local` の `adjustFontFallback: false` は効く。
+Next.js 16.3.0 の Turbopack のビルドでは、`next/font/google` に `adjustFontFallback: false` を渡しても、`"<書体名> Fallback"` の `@font-face`（`local("Times New Roman")` などにメトリクスを合わせたもの）が生成され、CSS 変数の値にもその名前が入る。`next/font/local` の `adjustFontFallback: false` は効く。
 
 **影響**: 自動の代わりの書体は `unicode-range` を持たないので、読み込みのあいだ和文の中の「——」「……」まで欧文の書体で描かれる。
 
 **対処**: `fallback: []` も一緒に渡す。Turbopack は `fallback` が指定されると自動の代わりの書体を作らず、変数の値は `"<書体名>"` だけになる。確かめるときは `npx next build --experimental-build-mode=compile` のあと、`.next/static/chunks/*.css` で `Fallback` を探す。
 
-出典: cycle-316
+**根拠**: 実測（cycle-316）。
