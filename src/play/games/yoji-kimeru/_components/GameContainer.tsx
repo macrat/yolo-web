@@ -207,6 +207,11 @@ export default function GameContainer({
   const [pendingGuess, setPendingGuess] = useState<string | null>(null);
   /** 結果が来訪者の最後の推測に応えて現れたか。開き直したときの結果は動かさない。 */
   const [resultAppears, setResultAppears] = useState(false);
+  /**
+   * 最後の推測で解き終えたときの、ヒントの帯の高さ。解き終えると次に出るヒントの行が消えるが、その推測に
+   * 応えて動くのは結果の登場だけにするため（DESIGN.md §11）、帯はこの高さを保つ。
+   */
+  const [heldHintHeight, setHeldHintHeight] = useState<number | null>(null);
 
   const isServerRendered = useIsServerRendered();
   // サイトの中のリンクで移ってきたときや戻ってきたときは、ブラウザで新しく描くので本体の前のスクリプトが動かない。
@@ -234,6 +239,7 @@ export default function GameContainer({
       setLoadFailed(false);
       setAddedRow(null);
       setResultAppears(false);
+      setHeldHintHeight(null);
       setGameState(freshGame(todayStr, 0));
 
       try {
@@ -399,6 +405,9 @@ export default function GameContainer({
           // 結果が出る推測では、結果の登場だけが動く（DESIGN.md §11）。
           setAddedRow(null);
           setResultAppears(true);
+          setHeldHintHeight(
+            hintStripRef.current?.getBoundingClientRect().height ?? null,
+          );
           // 遊び終えたことは、来訪者がその場で解き終えたときにだけ送る。解き終えた回を開き直したときは送らない。
           trackContentEnd("yoji-kimeru", "game", newStatus === "won");
           const yesterday = new Date();
@@ -457,6 +466,7 @@ export default function GameContainer({
           hint={loading ? null : puzzleData}
           finished={!loading && gameState.status !== "playing"}
           stripRef={hintStripRef}
+          heldHeight={heldHintHeight}
         />
         <GameBoard
           guesses={gameState.guesses}

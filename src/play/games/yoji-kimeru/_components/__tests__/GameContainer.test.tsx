@@ -213,4 +213,92 @@ describe("GameContainer", () => {
     // 解き終えた回を開き直しただけでは、遊び終えたことを送らない。
     expect(trackContentEnd).not.toHaveBeenCalled();
   });
+
+  test("mounted in the browser (a link inside the site), it reserves the saved day before the first render and releases it on leaving", () => {
+    mockFetch(() => {
+      throw new Error("not called");
+    });
+    const today = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+    window.localStorage.setItem(
+      "yoji-kimeru-history-intermediate",
+      JSON.stringify({
+        [today]: {
+          guesses: ["花鳥風月", "一石二鳥"],
+          feedbacks: [
+            {
+              guess: "花鳥風月",
+              charFeedbacks: ["absent", "absent", "absent", "absent"],
+            },
+            {
+              guess: "一石二鳥",
+              charFeedbacks: ["correct", "correct", "correct", "correct"],
+            },
+          ],
+          status: "won",
+          guessCount: 2,
+        },
+      }),
+    );
+    let styleAtFirstRender: string | null = null;
+    function Probe() {
+      styleAtFirstRender ??=
+        document.getElementById("yoji-kimeru-saved-rows")?.textContent ?? "";
+      return null;
+    }
+    const { unmount } = render(
+      <>
+        <GameContainer crossCategoryItems={[]} />
+        <Probe />
+      </>,
+    );
+    expect(styleAtFirstRender).toContain("--yoji-kimeru-board-rows:2");
+    // 2回で解き終えた回は、次に出るヒントの行を持たない（1行）。
+    expect(styleAtFirstRender).toContain("--yoji-kimeru-hint-lines:1");
+    expect(styleAtFirstRender).toContain(
+      "--yoji-kimeru-input-visibility:hidden",
+    );
+    unmount();
+    expect(document.getElementById("yoji-kimeru-saved-rows")).toBeNull();
+  });
+
+  test("remembers the hint strip's height for the day, so a reopened page can keep it", async () => {
+    mockFetch(() => {
+      throw new Error("not called");
+    });
+    render(<GameContainer crossCategoryItems={[]} />);
+    await screen.findByText(/#42/);
+    const saved = JSON.parse(
+      window.localStorage.getItem("yoji-kimeru-hint-height") ?? "null",
+    );
+    expect(saved).toMatchObject({ difficulty: "intermediate" });
+    expect(Object.values(saved.heights)).toHaveLength(1);
+  });
+
+  test("keeps the hint strip's height when the last guess wins, so only the result moves", async () => {
+    mockFetch(
+      (g) =>
+        ({
+          feedback: {
+            guess: g,
+            charFeedbacks: ["correct", "correct", "correct", "correct"],
+          },
+          isCorrect: true,
+          targetYoji: answer,
+        }) as EvaluateResponse,
+    );
+    render(<GameContainer crossCategoryItems={[]} />);
+    await screen.findByText(/#42/);
+    const strip = screen.getByRole("status", { name: "ヒント" });
+    const heightBefore = 52;
+    strip.getBoundingClientRect = () => new DOMRect(0, 0, 300, heightBefore);
+    guess("一石二鳥");
+    await screen.findByRole("heading", { name: "この結果を共有" });
+    expect(screen.queryByText(/回目のあとに/)).not.toBeInTheDocument();
+    expect(strip.style.minHeight).toBe(`${heightBefore}px`);
+  });
 });

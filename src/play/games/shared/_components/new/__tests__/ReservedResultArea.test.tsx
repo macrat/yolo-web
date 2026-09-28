@@ -49,11 +49,12 @@ describe("ReservedResultArea", () => {
     // 結果が出たら、取っておいた高さを使わない（覚えた高さと合わなくても、結果の下に空きを残さない）。
     expect(content.parentElement!.className).toBe("");
     const saved = JSON.parse(localStorage.getItem(NAMES.storageKey)!);
-    expect(saved).toMatchObject({
+    expect(saved).toEqual({
       date: "2026-09-27",
       difficulty: "advanced",
-      viewportWidth: window.innerWidth,
-      height: 0,
+      heights: {
+        [`${window.innerWidth}|${getComputedStyle(document.documentElement).fontSize}`]: 0,
+      },
     });
   });
 });

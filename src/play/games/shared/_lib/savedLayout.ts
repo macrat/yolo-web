@@ -54,7 +54,8 @@ interface SavedLayoutBaseOptions {
   finishedStatuses?: string[];
   /**
    * 解き終えた回の結果の区画。入力欄を見せない値と、前に同じ日・同じ難易度・同じ画面の幅と字の大きさで描いた
-   * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。
+   * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。その大きさで描いたことが無ければ、同じ字の
+   * 大きさでいちばん近い幅で描いた高さから見積もる。
    */
   resultArea?: ResultAreaNames;
   /**
@@ -96,13 +97,14 @@ interface GuessRowsOptions {
   }[];
 }
 
-/** 結果の区画の高さの記録。同じ日・同じ難易度・同じ画面の幅と字の大きさのときだけ使う。 */
+/**
+ * 描いた区画の高さの記録。同じ日・同じ難易度のときだけ使い、画面の幅と字の大きさ（"375|16px"）ごとに高さを
+ * 持つ。
+ */
 interface ResultHeightRecord {
   date: string;
   difficulty: string;
-  viewportWidth: number;
-  fontSize: string;
-  height: number;
+  heights: Record<string, number>;
 }
 
 /**
@@ -193,24 +195,59 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
       `${property}:${byLength[Math.min(items.length, byLength.length - 1)]}`,
     );
   }
-  // 覚えた高さは、同じ日・同じ難易度・同じ画面の幅と字の大きさで描いたときのものだけを使う。
+  // 覚えた高さは、同じ日・同じ難易度のものだけを使う。同じ画面の幅と字の大きさで描いた高さがあればそれを使う。
+  // 結果の区画は、無ければ同じ字の大きさでいちばん近い幅の高さを、文の組まれる幅の比で見積もって使う。
   const fontSize = getComputedStyle(document.documentElement).fontSize;
-  const matches = (record: Partial<ResultHeightRecord> | null): boolean =>
-    record !== null &&
-    record.date === today &&
-    record.difficulty === difficulty &&
-    record.viewportWidth === window.innerWidth &&
-    record.fontSize === fontSize &&
-    typeof record.height === "number";
+  const rootPx = parseFloat(fontSize) || 16;
+  // 文の組まれる幅: コンテナの左右（画面の端からの 16px・線・内側の余白）と結果のボックスの線と内側の余白を
+  // 除いた幅で、本文の幅（40rem）を超えない。
+  const textWidth = (width: number): number =>
+    Math.max(1, Math.min(width - (width < 45 * rootPx ? 54 : 70), 40 * rootPx));
+  const heightFor = (
+    record: Partial<ResultHeightRecord> | null,
+    estimate: boolean,
+  ): number | null => {
+    if (
+      !record ||
+      record.date !== today ||
+      record.difficulty !== difficulty ||
+      !record.heights
+    ) {
+      return null;
+    }
+    const exact = record.heights[`${window.innerWidth}|${fontSize}`];
+    if (typeof exact === "number") return exact;
+    if (!estimate) return null;
+    let nearest: { width: number; height: number } | null = null;
+    for (const key of Object.keys(record.heights)) {
+      const [width, font] = key.split("|");
+      const height = record.heights[key];
+      if (font !== fontSize || typeof height !== "number") continue;
+      const w = Number(width);
+      if (
+        !nearest ||
+        Math.abs(w - window.innerWidth) <
+          Math.abs(nearest.width - window.innerWidth)
+      ) {
+        nearest = { width: w, height };
+      }
+    }
+    if (!nearest) return null;
+    return Math.round(
+      (nearest.height * textWidth(nearest.width)) /
+        textWidth(window.innerWidth),
+    );
+  };
   for (const { property, record } of remembered) {
-    if (matches(record)) values.push(`${property}:${record!.height}px`);
+    // 行の短い区画（ヒントの帯）は幅で高さが比例しないので、同じ大きさの画面で描いた高さだけを使う。
+    const height = heightFor(record, false);
+    if (height !== null) values.push(`${property}:${height}px`);
   }
   if (finished && options.resultArea) {
     values.push(`${options.resultArea.inputVisibilityProperty}:hidden`);
-    if (matches(resultHeight)) {
-      values.push(
-        `${options.resultArea.heightProperty}:${resultHeight!.height}px`,
-      );
+    const height = heightFor(resultHeight, true);
+    if (height !== null) {
+      values.push(`${options.resultArea.heightProperty}:${height}px`);
     }
   }
   if (values.length === 0) return;
@@ -234,8 +271,8 @@ export function releaseSavedLayout(styleId: string): void {
 
 /**
  * 描いた区画の高さを覚えておく（解き終えた回の結果の区画・rememberedHeights の区画）。開き直したとき、本体の前の
- * スクリプトがこの高さを取っておく。
- * 高さは画面の幅と字の大きさで変わるので、その2つも一緒に覚え、同じときだけ使う。
+ * スクリプトがこの高さを取っておく。高さは画面の幅と字の大きさで変わるので、その組ごとに覚える。同じ日・同じ
+ * 難易度のあいだは、ほかの組の高さも残す（別の大きさの画面で開いたときの見積もりに使う）。
  */
 export function saveResultHeight(
   key: string,
@@ -243,14 +280,22 @@ export function saveResultHeight(
   difficulty: string,
   height: number,
 ): void {
-  const record: ResultHeightRecord = {
-    date,
-    difficulty,
-    viewportWidth: window.innerWidth,
-    fontSize: getComputedStyle(document.documentElement).fontSize,
-    height: Math.ceil(height),
-  };
+  const size = `${window.innerWidth}|${getComputedStyle(document.documentElement).fontSize}`;
   try {
+    let heights: Record<string, number> = {};
+    const saved = JSON.parse(
+      window.localStorage.getItem(key) ?? "null",
+    ) as Partial<ResultHeightRecord> | null;
+    if (
+      saved &&
+      saved.date === date &&
+      saved.difficulty === difficulty &&
+      saved.heights
+    ) {
+      heights = saved.heights;
+    }
+    heights[size] = Math.ceil(height);
+    const record: ResultHeightRecord = { date, difficulty, heights };
     window.localStorage.setItem(key, JSON.stringify(record));
   } catch {
     // 覚えておけなくても、開き直したときに結果が出たあと下が動くだけで、遊ぶことはできる。

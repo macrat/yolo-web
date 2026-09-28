@@ -252,7 +252,11 @@ describe("解き終えたとき", () => {
       window.localStorage.getItem("nakamawake-result-height") ?? "null",
     );
     expect(saved).toMatchObject({ date: TODAY, difficulty: "" });
-    expect(typeof saved.height).toBe("number");
+    // 高さは画面の幅と字の大きさの組ごとに覚える。
+    expect(
+      Object.values(saved.heights).every((h) => typeof h === "number"),
+    ).toBe(true);
+    expect(Object.keys(saved.heights)).toHaveLength(1);
   });
 
   test("解き終えたことを1回だけ記録する", () => {

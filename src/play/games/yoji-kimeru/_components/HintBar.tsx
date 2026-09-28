@@ -28,6 +28,8 @@ interface HintBarProps {
   finished: boolean;
   /** ヒントの帯。描いた高さを覚えておき、開き直したときに取っておく。 */
   stripRef?: Ref<HTMLDivElement>;
+  /** 保つ帯の高さ（px）。最後の推測で解き終えたとき、帯が縮んで盤が動かないようにする。 */
+  heldHeight?: number | null;
 }
 
 /** 推測の回数ごとに増えるヒントと、それが出る回。 */
@@ -59,6 +61,7 @@ export default function HintBar({
   hint,
   finished,
   stripRef,
+  heldHeight = null,
 }: HintBarProps) {
   // 次に出るヒントは、問題を読み込んで回が分かってから言う。読み込むあいだは、解き終えた回かどうかが分からない。
   const next =
@@ -70,6 +73,7 @@ export default function HintBar({
     <div
       ref={stripRef}
       className={styles.hints}
+      style={heldHeight === null ? undefined : { minHeight: heldHeight }}
       role="status"
       aria-label="ヒント"
     >

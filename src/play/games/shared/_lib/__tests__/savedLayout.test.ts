@@ -103,29 +103,68 @@ describe("reserveSavedLayout", () => {
     );
   });
 
-  test("does not use a result height measured on another screen, day or difficulty", () => {
+  test("does not use a result height measured on another day, difficulty or text size", () => {
     saveToday("intermediate", 6, "lost");
-    const measured = { date: today, difficulty: "intermediate" };
-    for (const other of [
-      { viewportWidth: 1 },
-      { fontSize: "32px" },
-      { date: "2000-01-01" },
-      { difficulty: "advanced" },
+    const font = getComputedStyle(document.documentElement).fontSize;
+    for (const record of [
+      {
+        date: "2000-01-01",
+        difficulty: "intermediate",
+        heights: { [`${window.innerWidth}|${font}`]: 900 },
+      },
+      {
+        date: today,
+        difficulty: "advanced",
+        heights: { [`${window.innerWidth}|${font}`]: 900 },
+      },
+      {
+        date: today,
+        difficulty: "intermediate",
+        heights: { [`${window.innerWidth}|32px`]: 900 },
+      },
     ]) {
-      localStorage.setItem(
-        "game-result-height",
-        JSON.stringify({
-          ...measured,
-          viewportWidth: window.innerWidth,
-          fontSize: getComputedStyle(document.documentElement).fontSize,
-          height: 900,
-          ...other,
-        }),
-      );
+      localStorage.setItem("game-result-height", JSON.stringify(record));
       expect(reserve(KANJI)).toBe(
         ":root{--board-rows:6;--game-input-visibility:hidden}",
       );
     }
+  });
+
+  test("on a screen size never measured, estimates from the nearest width, scaled by the text width", () => {
+    saveToday("intermediate", 2, "won");
+    const font = getComputedStyle(document.documentElement).fontSize;
+    // jsdom の画面の幅は 1024px（文の幅は本文の幅 640px）。375px（文の幅 321px）で 1000px だった結果を見積もる。
+    localStorage.setItem(
+      "game-result-height",
+      JSON.stringify({
+        date: today,
+        difficulty: "intermediate",
+        heights: { [`375|${font}`]: 1000, [`320|${font}`]: 1500 },
+      }),
+    );
+    expect(reserve(KANJI)).toBe(
+      `:root{--board-rows:2;--game-input-visibility:hidden;--game-result-height:${Math.round((1000 * 321) / 640)}px}`,
+    );
+  });
+
+  test("prefers the height measured on this exact screen size, and keeps the other sizes when saving", () => {
+    saveToday("intermediate", 2, "won");
+    const font = getComputedStyle(document.documentElement).fontSize;
+    localStorage.setItem(
+      "game-result-height",
+      JSON.stringify({
+        date: today,
+        difficulty: "intermediate",
+        heights: { [`375|${font}`]: 1000 },
+      }),
+    );
+    saveResultHeight("game-result-height", today, "intermediate", 700);
+    expect(
+      JSON.parse(localStorage.getItem("game-result-height")!).heights,
+    ).toEqual({ [`375|${font}`]: 1000, [`${window.innerWidth}|${font}`]: 700 });
+    expect(reserve(KANJI)).toBe(
+      ":root{--board-rows:2;--game-input-visibility:hidden;--game-result-height:700px}",
+    );
   });
 
   test("names the result area values after the game", () => {
@@ -256,7 +295,8 @@ describe("reserveSavedLayout", () => {
       ...YOJI,
       styleId: "</script><script>alert(1)</script>",
     });
-    expect(script).not.toContain("<");
+    // 設定の文字列の「<」は \u003c になり、スクリプトの中に「</」が現れない。
+    expect(script).not.toContain("</");
     saveToday("intermediate", 3, "playing");
     new Function(script)();
     expect(
