@@ -8,24 +8,26 @@ import { charsMissingFromZenAntique } from "@/lib/zen-antique-charset";
 import type { CompatibilityEntry } from "../types";
 import { quizBySlug } from "../registry";
 import { solvedScreenReadingHeadings } from "../readingHeadings";
-import { compatibilityMatrix as animalPersonality } from "../data/animal-personality";
-import { compatibilityMatrix as characterFortune } from "../data/character-fortune";
-import { compatibilityMatrix as characterPersonality } from "../data/character-personality";
-import { compatibilityMatrix as japaneseCulture } from "../data/japanese-culture";
-import { compatibilityMatrix as musicPersonality } from "../data/music-personality";
-import { compatibilityMatrix as wordSensePersonality } from "../data/word-sense-personality";
 
-const compatibilityMatrices: Record<
+/** 診断のデータのモジュールのうち、相性の表を持つもの。同じ表を再び書き出すモジュールは1つにまとめる。 */
+const dataModules = import.meta.glob("../data/*.ts", {
+  eager: true,
+}) as Record<
   string,
-  Record<string, CompatibilityEntry>
-> = {
-  "animal-personality": animalPersonality,
-  "character-fortune": characterFortune,
-  "character-personality": characterPersonality,
-  "japanese-culture": japaneseCulture,
-  "music-personality": musicPersonality,
-  "word-sense-personality": wordSensePersonality,
-};
+  { compatibilityMatrix?: Record<string, CompatibilityEntry> }
+>;
+const compatibilityMatrices = new Map<
+  Record<string, CompatibilityEntry>,
+  string
+>();
+for (const [path, module] of Object.entries(dataModules)) {
+  if (
+    module.compatibilityMatrix &&
+    !compatibilityMatrices.has(module.compatibilityMatrix)
+  ) {
+    compatibilityMatrices.set(module.compatibilityMatrix, path);
+  }
+}
 
 function missingIn(texts: readonly string[]): string[] {
   return texts.flatMap((text) =>
@@ -44,8 +46,12 @@ describe("診断のデータから来る見出しの字が、すべて見出し�
     });
   }
 
-  for (const [slug, matrix] of Object.entries(compatibilityMatrices)) {
-    test(`${slug}: 相性の名前`, () => {
+  test("相性の表を持つ診断のデータがある", () => {
+    expect(compatibilityMatrices.size).toBeGreaterThan(0);
+  });
+
+  for (const [matrix, path] of compatibilityMatrices) {
+    test(`${path}: 相性の名前`, () => {
       expect(
         missingIn(Object.values(matrix).map((entry) => entry.label)),
       ).toEqual([]);

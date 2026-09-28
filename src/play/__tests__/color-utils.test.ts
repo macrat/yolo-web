@@ -48,7 +48,7 @@ describe("getContrastTextColor", () => {
     expect(getContrastTextColor("#595959")).toBe("#ffffff");
   });
 
-  test("占い系の紫系色(#6c5ce7)に対して白(#ffffff)を返す", () => {
+  test("紫(#6c5ce7)に対して白(#ffffff)を返す", () => {
     expect(getContrastTextColor("#6c5ce7")).toBe("#ffffff");
   });
 

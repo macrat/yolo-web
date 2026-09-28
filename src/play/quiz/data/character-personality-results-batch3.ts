@@ -6,21 +6,12 @@
  *   #22 data-fortress      (guardian × professor)
  *   #23 vibe-rebel         (artist × trickster)
  *   #24 guardian-charger   (guardian × commander)
- *
- * Color blending reference (Q25 archetype colors):
- *   commander  = #e11d48
- *   professor  = #2563eb
- *   dreamer    = #d946ef
- *   trickster  = #f59e0b
- *   guardian   = #059669
- *   artist     = #7c3aed
  */
 
 export const resultsBatch3 = [
   {
     // #21 — artist × artist (同型強化: 純粋アーティスト)
     // artist語り口を基調。感性・内省・「言葉にできない」感覚が二重強化。
-    // color: artist純粋 → #7c3aed そのまま
     id: "ultimate-artist",
     title: "「うーん、なんか違う」を1000回繰り返す美の追求者",
     description:
@@ -44,7 +35,6 @@ export const resultsBatch3 = [
     // #22 — guardian × professor (論理的守護者)
     // guardian語り口を基調（不安げ・丁寧）、professorの論理性をブレンド。
     // 「気のせいかも」で済ませられない、データで安心を得る性格。
-    // color: guardian=#059669とprofessor=#2563eb の中間 → #1a7a8f（青緑）
     id: "data-fortress",
     title: "心配の原因を全部データで証明してから対策する論理的守護者",
     description:
@@ -68,7 +58,6 @@ export const resultsBatch3 = [
     // #23 — artist × trickster (野生の芸術家)
     // artist語り口を基調（感性・柔らか）、tricksterの「っしょ」「逆張り」をブレンド。
     // 「計算して逆張り」(#14)との差別化: 本能で動いたら結果的に異端になっていた。
-    // color: artist=#7c3aedとtrickster=#f59e0b の中間 → #b96c4a（テラコッタ系）
     id: "vibe-rebel",
     title: "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家",
     description:
@@ -92,7 +81,6 @@ export const resultsBatch3 = [
     // #24 — guardian × commander (前に出る守護者)
     // guardian語り口を基調（重い責任感・不安）、commanderの行動力をブレンド。
     // 「前進が目的」(#4)との差別化: 守るために必要な時だけ前に出る慎重な守護者。
-    // color: guardian=#059669とcommander=#e11d48 の中間 → #6b7e58（深緑がかったオリーブ）
     id: "guardian-charger",
     title:
       "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者",

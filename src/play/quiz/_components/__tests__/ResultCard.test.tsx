@@ -314,13 +314,11 @@ vi.mock("@/play/quiz/data/impossible-advice", () => ({
         id: "timemagician",
         title: "時間魔術師見習い",
         description: "説明1",
-        color: "#7c3aed",
       },
       {
         id: "gravityfighter",
         title: "重力と戦う者",
         description: "説明2",
-        color: "#dc2626",
       },
     ],
   },
@@ -339,13 +337,11 @@ vi.mock("@/play/quiz/data/unexpected-compatibility", () => ({
         id: "vendingmachine",
         title: "自動販売機",
         description: "説明1",
-        color: "#0891b2",
       },
       {
         id: "oldclock",
         title: "古い掛け時計",
         description: "説明2",
-        color: "#92400e",
       },
     ],
   },
@@ -422,7 +418,6 @@ describe("ResultCard - 結果のボックス", () => {
     id: "type-a",
     title: "炎の詩人",
     description: "炎の詩人の説明です。",
-    color: "#c0392b",
   };
 
   test("結果は、タイプ名の見出しを名前に持つ region で、補助情報が何の結果かを言う", () => {
@@ -468,13 +463,12 @@ describe("ResultCard - 結果のボックス", () => {
     expect(heading).toHaveAccessibleName("締切3分前に本気出す炎の司令塔");
   });
 
-  test("包み・印・記号面・「診断完了」・絵文字を持たない", () => {
+  test("包み・印・記号面・「診断完了」を持たない", () => {
     const { container } = render(
       <ResultCard {...defaultProps} result={typeResult} />,
     );
     expect(container.querySelector("figure")).toBeNull();
     expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
-    expect(screen.queryByText("🦊")).not.toBeInTheDocument();
     expect(inlineColoredElements(container)).toEqual([]);
   });
 
@@ -1368,17 +1362,6 @@ describe("ResultCard - yoji-personality variant", () => {
     const { container } = render(<ResultCard {...yojiProps} />);
     expect(container.querySelector("[style]")).toBeNull();
     expect(inlineColoredElements(container)).toEqual([]);
-  });
-
-  test("result.color が未設定の場合、キャッチコピーがインラインスタイルを持たないこと", () => {
-    const yojiResultNoColor: QuizResult = {
-      ...yojiResult,
-      color: undefined,
-    };
-    render(<ResultCard {...yojiProps} result={yojiResultNoColor} />);
-    expect(
-      screen.getByText("四方を見渡す、あなたの眼力。").getAttribute("style"),
-    ).toBeNull();
   });
 });
 

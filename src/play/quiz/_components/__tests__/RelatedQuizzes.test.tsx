@@ -109,14 +109,6 @@ test("RelatedQuizzes renders shortDescription for each item", () => {
   expect(screen.getByText("四字熟語の知識を確認")).toBeInTheDocument();
 });
 
-test("RelatedQuizzes does not render emoji icons", () => {
-  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
-
-  // 絵文字を置かない（DESIGN.md §5）。
-  expect(screen.queryByText("📖")).not.toBeInTheDocument();
-  expect(screen.queryByText("🈵")).not.toBeInTheDocument();
-});
-
 test("RelatedQuizzes prefers shortTitle over title when shortTitle is set", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 

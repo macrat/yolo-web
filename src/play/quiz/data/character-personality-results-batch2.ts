@@ -1,16 +1,5 @@
 /**
  * Character Personality Quiz — Results Batch 2 (#11〜#20)
- *
- * Archetypes and base colors:
- *   commander  = #e11d48
- *   professor  = #2563eb
- *   dreamer    = #d946ef
- *   trickster  = #f59e0b
- *   guardian   = #059669
- *   artist     = #7c3aed
- *
- * Colors are blended from the two component archetypes (primary × 0.7 + secondary × 0.3).
- * Same-type reinforcement uses a deepened version of the archetype color.
  */
 export const resultsBatch2 = [
   {
