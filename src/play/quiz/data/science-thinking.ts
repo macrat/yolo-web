@@ -216,44 +216,40 @@ const scienceThinkingQuiz: QuizDefinition = {
     slug: "science-thinking",
     title: "理系思考タイプ診断 — あなたはどの科学者型？",
     // タイトルが全角15文字を超えるためカード表示用の短縮タイトルを設定
-    shortTitle: "\u7406\u7CFB\u601D\u8003\u30BF\u30A4\u30D7\u8A3A\u65AD",
+    shortTitle: "理系思考タイプ診断",
     description:
-      "\u3042\u306A\u305F\u306E\u300C\u7406\u7CFB\u8133\u306E\u5F62\u300D\u30925\u3064\u306E\u8EF8\u3067\u53EF\u8996\u5316\uFF01\u7406\u8AD6\u30FB\u5B9F\u9A13\u30FB\u6570\u5024\u30FB\u89B3\u5BDF\u30FB\u5275\u9020\u306E5\u3064\u306E\u601D\u8003\u30B9\u30BF\u30A4\u30EB\u304B\u3089\u3001\u3042\u306A\u305F\u306B\u6700\u3082\u8FD1\u3044\u79D1\u5B66\u8005\u30BF\u30A4\u30D7\u3092\u8A3A\u65AD\u3057\u307E\u3059\u3002\u30A2\u30A4\u30F3\u30B7\u30E5\u30BF\u30A4\u30F3\u3001\u30AD\u30E5\u30EA\u30FC\u3001\u30C1\u30E5\u30FC\u30EA\u30F3\u30B0\u3001\u30C0\u30FB\u30F4\u30A3\u30F3\u30C1\u306A\u306910\u30BF\u30A4\u30D7\u3002\u7406\u7CFB\u306E\u77E5\u8B58\u306F\u4E00\u5207\u4E0D\u8981\u3001\u65E5\u5E38\u306E\u884C\u52D5\u3084\u597D\u307F\u306B\u7B54\u3048\u308B\u3060\u3051\u3002\u30EC\u30FC\u30C0\u30FC\u30C1\u30E3\u30FC\u30C8\u3067\u3042\u306A\u305F\u3060\u3051\u306E\u601D\u8003\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u304C\u898B\u3048\u3066\u304D\u307E\u3059\u3002",
+      "あなたの「理系脳の形」を5つの軸で可視化！理論・実験・数値・観察・創造の5つの思考スタイルから、あなたに最も近い科学者タイプを診断します。アインシュタイン、キュリー、チューリング、ダ・ヴィンチなど10タイプ。理系の知識は一切不要、日常の行動や好みに答えるだけ。レーダーチャートであなただけの思考プロフィールが見えてきます。",
     shortDescription:
-      "5\u3064\u306E\u601D\u8003\u8EF8\u3067\u3042\u306A\u305F\u306E\u7406\u7CFB\u8133\u306E\u5F62\u3092\u53EF\u8996\u5316\uFF01\u516810\u30BF\u30A4\u30D7\u306E\u79D1\u5B66\u8005\u304B\u3089\u8A3A\u65AD",
+      "5つの思考軸であなたの理系脳の形を可視化！全10タイプの科学者から診断",
     type: "personality",
     category: "personality",
     questionCount: 20,
     resultPageLabels: {
-      traitsHeading:
-        "\u3053\u306E\u601D\u8003\u30BF\u30A4\u30D7\u306E\u6301\u3061\u5473",
-      behaviorsHeading: "\u7406\u7CFB\u8133\u3042\u308B\u3042\u308B",
-      adviceHeading:
-        "\u3053\u306E\u601D\u8003\u3092\u3082\u3063\u3068\u6D3B\u304B\u3059\u306B\u306F",
+      traitsHeading: "この思考タイプの持ち味",
+      behaviorsHeading: "理系脳あるある",
+      adviceHeading: "この思考をもっと活かすには",
     },
     keywords: [
-      "\u7406\u7CFB\u8133 \u8A3A\u65AD",
-      "\u7406\u7CFB \u601D\u8003\u30BF\u30A4\u30D7",
-      "\u7406\u7CFB \u6587\u7CFB \u8A3A\u65AD",
-      "\u601D\u8003\u30B9\u30BF\u30A4\u30EB \u8A3A\u65AD",
-      "\u7406\u7CFB\u8133 \u30C6\u30B9\u30C8",
-      "\u79D1\u5B66\u8005\u30BF\u30A4\u30D7",
-      "\u7406\u7CFB\u8A3A\u65AD \u7121\u6599",
+      "理系脳 診断",
+      "理系 思考タイプ",
+      "理系 文系 診断",
+      "思考スタイル 診断",
+      "理系脳 テスト",
+      "科学者タイプ",
+      "理系診断 無料",
     ],
     publishedAt: "2026-03-09T18:00:00+09:00",
     relatedLinks: [
       {
-        label: "\u97F3\u697D\u6027\u683C\u8A3A\u65AD\u3092\u53D7\u3051\u308B",
+        label: "音楽性格診断を受ける",
         href: "/play/music-personality",
       },
       {
-        label:
-          "\u65E5\u672C\u306B\u3057\u304B\u3044\u306A\u3044\u52D5\u7269\u3067\u6027\u683C\u8A3A\u65AD",
+        label: "日本にしかいない動物で性格診断",
         href: "/play/animal-personality",
       },
       {
-        label:
-          "\u5B88\u8B77\u30AD\u30E3\u30E9\u8A3A\u65AD\u3092\u53D7\u3051\u308B",
+        label: "守護キャラ診断を受ける",
         href: "/play/character-fortune",
       },
     ],
@@ -289,16 +285,16 @@ const scienceThinkingQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "\u53CB\u9054\u3068\u65C5\u884C\u306E\u8A08\u753B\u3092\u7ACB\u3066\u308B\u3068\u304D\u3001\u3042\u306A\u305F\u304C\u6700\u521D\u306B\u3084\u308B\u3053\u3068\u306F\uFF1F",
+      text: "友達と旅行の計画を立てるとき、あなたが最初にやることは？",
       choices: [
         {
           id: "q1-a",
-          text: "\u307E\u305A\u300C\u306A\u305C\u305D\u306E\u5834\u6240\u306B\u884C\u304D\u305F\u3044\u306E\u304B\u300D\u3092\u6DF1\u304F\u8003\u3048\u308B",
+          text: "まず「なぜその場所に行きたいのか」を深く考える",
           points: { theory: MAIN_AXIS_POINTS, observational: SUB_AXIS_POINTS },
         },
         {
           id: "q1-b",
-          text: "\u904E\u53BB\u306E\u65C5\u884C\u30C7\u30FC\u30BF\uFF08\u8CBB\u7528\u30FB\u6E80\u8DB3\u5EA6\uFF09\u3092\u6BD4\u8F03\u3059\u308B",
+          text: "過去の旅行データ（費用・満足度）を比較する",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -306,12 +302,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q1-c",
-          text: "\u3068\u308A\u3042\u3048\u305A\u5019\u88DC\u5730\u306B\u65E5\u5E30\u308A\u3067\u4E0B\u898B\u306B\u884C\u304F",
+          text: "とりあえず候補地に日帰りで下見に行く",
           points: { empirical: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q1-d",
-          text: "\u30AC\u30A4\u30C9\u30D6\u30C3\u30AF\u306B\u306A\u3044\u7A74\u5834\u30B9\u30DD\u30C3\u30C8\u3092\u72EC\u81EA\u306B\u30EA\u30B5\u30FC\u30C1\u3059\u308B",
+          text: "ガイドブックにない穴場スポットを独自にリサーチする",
           points: {
             observational: MAIN_AXIS_POINTS,
             creative: SUB_AXIS_POINTS,
@@ -321,11 +317,11 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "\u6599\u7406\u3092\u3059\u308B\u3068\u304D\u3001\u3042\u306A\u305F\u306E\u30B9\u30BF\u30A4\u30EB\u306F\uFF1F",
+      text: "料理をするとき、あなたのスタイルは？",
       choices: [
         {
           id: "q2-a",
-          text: "\u30EC\u30B7\u30D4\u306E\u5206\u91CF\u3092\u6B63\u78BA\u306B\u8A08\u91CF\u3059\u308B\u30021g\u5358\u4F4D\u3067",
+          text: "レシピの分量を正確に計量する。1g単位で",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -333,12 +329,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q2-b",
-          text: "\u300C\u306A\u305C\u3053\u306E\u8ABF\u5473\u6599\u3092\u5165\u308C\u308B\u306E\u304B\u300D\u3092\u7406\u89E3\u3057\u3066\u304B\u3089\u4F5C\u308B",
+          text: "「なぜこの調味料を入れるのか」を理解してから作る",
           points: { theory: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
         {
           id: "q2-c",
-          text: "\u30EC\u30B7\u30D4\u3092\u898B\u306A\u3044\u3067\u3001\u5473\u898B\u3057\u306A\u304C\u3089\u611F\u899A\u3067\u8ABF\u6574\u3059\u308B",
+          text: "レシピを見ないで、味見しながら感覚で調整する",
           points: {
             empirical: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -346,28 +342,28 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q2-d",
-          text: "\u5168\u304F\u65B0\u3057\u3044\u7D44\u307F\u5408\u308F\u305B\u3092\u8A66\u3057\u3066\u5275\u4F5C\u6599\u7406\u3092\u4F5C\u308B",
+          text: "全く新しい組み合わせを試して創作料理を作る",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q3",
-      text: "\u9053\u306B\u8FF7\u3063\u305F\u3068\u304D\u3001\u3042\u306A\u305F\u306F\u3069\u3046\u3059\u308B\uFF1F",
+      text: "道に迷ったとき、あなたはどうする？",
       choices: [
         {
           id: "q3-a",
-          text: "\u5730\u56F3\u30A2\u30D7\u30EA\u306E\u30EB\u30FC\u30C8\u691C\u7D22\u3067\u6700\u77ED\u8DDD\u96E2\u3092\u8A08\u7B97\u3059\u308B",
+          text: "地図アプリのルート検索で最短距離を計算する",
           points: { quantitative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q3-b",
-          text: "\u5468\u56F2\u306E\u5EFA\u7269\u3084\u592A\u967D\u306E\u4F4D\u7F6E\u304B\u3089\u65B9\u89D2\u3092\u63A8\u7406\u3059\u308B",
+          text: "周囲の建物や太陽の位置から方角を推理する",
           points: { observational: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q3-c",
-          text: "\u9069\u5F53\u306B\u6B69\u3044\u3066\u307F\u308B\u3002\u8FF7\u3063\u305F\u5148\u306B\u9762\u767D\u3044\u3082\u306E\u304C\u3042\u308B\u304B\u3082",
+          text: "適当に歩いてみる。迷った先に面白いものがあるかも",
           points: {
             creative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -375,28 +371,28 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q3-d",
-          text: "\u300C\u3053\u306E\u9053\u3092\u884C\u3063\u305F\u3089\u3069\u3046\u306A\u308B\u304B\u300D\u4EEE\u8AAC\u3092\u7ACB\u3066\u3066\u9032\u3080",
+          text: "「この道を行ったらどうなるか」仮説を立てて進む",
           points: { theory: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q4",
-      text: "\u30CB\u30E5\u30FC\u30B9\u3067\u300C\u65B0\u767A\u898B\u300D\u306E\u8A18\u4E8B\u3092\u898B\u305F\u3068\u304D\u3001\u6700\u521D\u306B\u6C17\u306B\u306A\u308B\u3053\u3068\u306F\uFF1F",
+      text: "ニュースで「新発見」の記事を見たとき、最初に気になることは？",
       choices: [
         {
           id: "q4-a",
-          text: "\u305D\u306E\u767A\u898B\u306E\u7406\u8AD6\u7684\u306A\u610F\u5473\u3084\u6CD5\u5247\u6027",
+          text: "その発見の理論的な意味や法則性",
           points: { theory: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q4-b",
-          text: "\u5B9F\u9A13\u3084\u691C\u8A3C\u306F\u3069\u306E\u3088\u3046\u306B\u884C\u308F\u308C\u305F\u306E\u304B",
+          text: "実験や検証はどのように行われたのか",
           points: { empirical: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q4-c",
-          text: "\u30C7\u30FC\u30BF\u306E\u4FE1\u983C\u6027\uFF08\u30B5\u30F3\u30D7\u30EB\u6570\u3084\u7D71\u8A08\u624B\u6CD5\uFF09",
+          text: "データの信頼性（サンプル数や統計手法）",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -404,28 +400,28 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q4-d",
-          text: "\u305D\u308C\u304C\u65E5\u5E38\u751F\u6D3B\u306B\u3069\u3046\u5FDC\u7528\u3067\u304D\u308B\u304B",
+          text: "それが日常生活にどう応用できるか",
           points: { creative: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q5",
-      text: "\u53CB\u9054\u3068\u8B70\u8AD6\u306B\u306A\u3063\u305F\u3068\u304D\u3001\u3042\u306A\u305F\u306E\u5F37\u307F\u306F\uFF1F",
+      text: "友達と議論になったとき、あなたの強みは？",
       choices: [
         {
           id: "q5-a",
-          text: "\u5177\u4F53\u7684\u306A\u30C7\u30FC\u30BF\u3084\u6570\u5B57\u3092\u793A\u3057\u3066\u8AAC\u5F97\u3059\u308B",
+          text: "具体的なデータや数字を示して説得する",
           points: { quantitative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q5-b",
-          text: "\u76F8\u624B\u306E\u8A71\u306E\u77DB\u76FE\u70B9\u3092\u8AD6\u7406\u7684\u306B\u6307\u6458\u3059\u308B",
+          text: "相手の話の矛盾点を論理的に指摘する",
           points: { theory: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
         {
           id: "q5-c",
-          text: "\u5B9F\u969B\u306E\u4E8B\u4F8B\u3092\u6319\u3052\u3066\u300C\u3053\u3046\u3044\u3046\u30B1\u30FC\u30B9\u3082\u3042\u308B\u300D\u3068\u793A\u3059",
+          text: "実際の事例を挙げて「こういうケースもある」と示す",
           points: {
             empirical: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -433,7 +429,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q5-d",
-          text: "\u76F8\u624B\u306E\u8868\u60C5\u3084\u58F0\u306E\u30C8\u30FC\u30F3\u304B\u3089\u672C\u97F3\u3092\u8AAD\u307F\u53D6\u308B",
+          text: "相手の表情や声のトーンから本音を読み取る",
           points: {
             observational: MAIN_AXIS_POINTS,
             creative: SUB_AXIS_POINTS,
@@ -443,16 +439,16 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "\u65B0\u3057\u3044\u30AC\u30B8\u30A7\u30C3\u30C8\u3092\u8CB7\u3063\u305F\u3068\u304D\u3001\u6700\u521D\u306B\u3059\u308B\u3053\u3068\u306F\uFF1F",
+      text: "新しいガジェットを買ったとき、最初にすることは？",
       choices: [
         {
           id: "q6-a",
-          text: "\u8AAC\u660E\u66F8\u306F\u8AAD\u307E\u305A\u306B\u3001\u3068\u308A\u3042\u3048\u305A\u89E6\u3063\u3066\u4F7F\u3044\u65B9\u3092\u63A2\u308B",
+          text: "説明書は読まずに、とりあえず触って使い方を探る",
           points: { empirical: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q6-b",
-          text: "\u30B9\u30DA\u30C3\u30AF\u8868\u3092\u96A0\u3005\u307E\u3067\u8AAD\u3093\u3067\u6027\u80FD\u3092\u6570\u5024\u3067\u628A\u63E1\u3059\u308B",
+          text: "スペック表を隠々まで読んで性能を数値で把握する",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -460,23 +456,23 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q6-c",
-          text: "\u672C\u6765\u306E\u7528\u9014\u4EE5\u5916\u306E\u4F7F\u3044\u65B9\u304C\u306A\u3044\u304B\u8003\u3048\u308B",
+          text: "本来の用途以外の使い方がないか考える",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
         {
           id: "q6-d",
-          text: "\u3069\u3046\u3044\u3046\u6280\u8853\u539F\u7406\u3067\u52D5\u3044\u3066\u3044\u308B\u306E\u304B\u8ABF\u3079\u308B",
+          text: "どういう技術原理で動いているのか調べる",
           points: { theory: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q7",
-      text: "\u30AB\u30D5\u30A7\u3067\u6CE8\u6587\u3092\u6C7A\u3081\u308B\u3068\u304D\u3001\u3042\u306A\u305F\u306E\u30BF\u30A4\u30D7\u306F\uFF1F",
+      text: "カフェで注文を決めるとき、あなたのタイプは？",
       choices: [
         {
           id: "q7-a",
-          text: "\u3044\u3064\u3082\u3068\u9055\u3046\u30E1\u30CB\u30E5\u30FC\u3092\u983C\u3093\u3067\u5473\u3092\u691C\u8A3C\u3059\u308B",
+          text: "いつもと違うメニューを頼んで味を検証する",
           points: {
             empirical: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -484,12 +480,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q7-b",
-          text: "\u300C\u3053\u306E\u30B3\u30FC\u30D2\u30FC\u306E\u7523\u5730\u306F\u3069\u3053\uFF1F\u300D\u3068\u8C46\u306E\u80CC\u666F\u304C\u6C17\u306B\u306A\u308B",
+          text: "「このコーヒーの産地はどこ？」と豆の背景が気になる",
           points: { observational: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q7-c",
-          text: "\u53E3\u30B3\u30DF\u30B5\u30A4\u30C8\u306E\u8A55\u4FA1\u70B9\u3092\u6BD4\u8F03\u3057\u3066\u9AD8\u5F97\u70B9\u306E\u3082\u306E\u3092\u9078\u3076",
+          text: "口コミサイトの評価点を比較して高得点のものを選ぶ",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -497,44 +493,44 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q7-d",
-          text: "2\u3064\u306E\u30E1\u30CB\u30E5\u30FC\u3092\u7D44\u307F\u5408\u308F\u305B\u305F\u30AA\u30EA\u30B8\u30CA\u30EB\u6CE8\u6587\u3092\u8003\u3048\u308B",
+          text: "2つのメニューを組み合わせたオリジナル注文を考える",
           points: { creative: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q8",
-      text: "\u90E8\u5C4B\u306E\u6A21\u69D8\u66FF\u3048\u3092\u3059\u308B\u3068\u304D\u3001\u3042\u306A\u305F\u306E\u30A2\u30D7\u30ED\u30FC\u30C1\u306F\uFF1F",
+      text: "部屋の模様替えをするとき、あなたのアプローチは？",
       choices: [
         {
           id: "q8-a",
-          text: "\u5BB6\u5177\u306E\u5BF8\u6CD5\u3092\u6E2C\u308A\u3001\u914D\u7F6E\u3092\u56F3\u9762\u3067\u8A08\u753B\u3059\u308B",
+          text: "家具の寸法を測り、配置を図面で計画する",
           points: { quantitative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q8-b",
-          text: "\u300C\u306A\u305C\u3053\u306E\u914D\u7F6E\u304C\u843D\u3061\u7740\u304F\u306E\u304B\u300D\u3092\u5FC3\u7406\u5B66\u7684\u306B\u8003\u3048\u308B",
+          text: "「なぜこの配置が落ち着くのか」を心理学的に考える",
           points: { theory: MAIN_AXIS_POINTS, observational: SUB_AXIS_POINTS },
         },
         {
           id: "q8-c",
-          text: "\u3068\u308A\u3042\u3048\u305A\u5BB6\u5177\u3092\u52D5\u304B\u3057\u3066\u307F\u3066\u3001\u3057\u3063\u304F\u308A\u304F\u308B\u914D\u7F6E\u3092\u63A2\u3059",
+          text: "とりあえず家具を動かしてみて、しっくりくる配置を探す",
           points: { empirical: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q8-d",
-          text: "\u4ECA\u307E\u3067\u8AB0\u3082\u3084\u3063\u305F\u3053\u3068\u306E\u306A\u3044\u65AC\u65B0\u306A\u914D\u7F6E\u306B\u6311\u6226\u3059\u308B",
+          text: "今まで誰もやったことのない斬新な配置に挑戦する",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q9",
-      text: "\u690D\u7269\u3092\u80B2\u3066\u308B\u306A\u3089\u3001\u3042\u306A\u305F\u306F\u3069\u3046\u3059\u308B\uFF1F",
+      text: "植物を育てるなら、あなたはどうする？",
       choices: [
         {
           id: "q9-a",
-          text: "\u6C34\u3084\u308A\u306E\u91CF\u3068\u983B\u5EA6\u3092\u8A18\u9332\u3057\u3066\u6700\u9069\u306A\u6761\u4EF6\u3092\u898B\u3064\u3051\u308B",
+          text: "水やりの量と頻度を記録して最適な条件を見つける",
           points: {
             empirical: MAIN_AXIS_POINTS,
             quantitative: SUB_AXIS_POINTS,
@@ -542,7 +538,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q9-b",
-          text: "\u8449\u306E\u8272\u3084\u5F62\u306E\u5909\u5316\u3092\u6BCE\u65E5\u7D30\u304B\u304F\u89B3\u5BDF\u3059\u308B",
+          text: "葉の色や形の変化を毎日細かく観察する",
           points: {
             observational: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -550,7 +546,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q9-c",
-          text: "\u571F\u58CC\u306EpH\u5024\u3084\u65E5\u7167\u6642\u9593\u3092\u30C7\u30FC\u30BF\u7BA1\u7406\u3059\u308B",
+          text: "土壌のpH値や日照時間をデータ管理する",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -558,23 +554,23 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q9-d",
-          text: "\u5149\u5408\u6210\u3084\u6210\u9577\u30DB\u30EB\u30E2\u30F3\u306E\u4ED5\u7D44\u307F\u3092\u8ABF\u3079\u3066\u7406\u89E3\u3059\u308B",
+          text: "光合成や成長ホルモンの仕組みを調べて理解する",
           points: { theory: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q10",
-      text: "\u6620\u753B\u3092\u89B3\u305F\u5F8C\u3001\u53CB\u9054\u3068\u8A71\u3059\u3068\u304D\u4F55\u3092\u8A9E\u308B\uFF1F",
+      text: "映画を観た後、友達と話すとき何を語る？",
       choices: [
         {
           id: "q10-a",
-          text: "\u30B9\u30C8\u30FC\u30EA\u30FC\u306E\u4F0F\u7DDA\u3084\u69CB\u9020\u3092\u5206\u6790\u3059\u308B",
+          text: "ストーリーの伏線や構造を分析する",
           points: { theory: MAIN_AXIS_POINTS, observational: SUB_AXIS_POINTS },
         },
         {
           id: "q10-b",
-          text: "\u300C\u3042\u306E\u30B7\u30FC\u30F3\u306E\u7167\u660E\u306E\u4F7F\u3044\u65B9\u300D\u306A\u3069\u6F14\u51FA\u306E\u7D30\u90E8",
+          text: "「あのシーンの照明の使い方」など演出の細部",
           points: {
             observational: MAIN_AXIS_POINTS,
             creative: SUB_AXIS_POINTS,
@@ -582,33 +578,33 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q10-c",
-          text: "\u4F3C\u305F\u30B8\u30E3\u30F3\u30EB\u306E\u6620\u753B\u3068\u6BD4\u3079\u3066\u3001\u3069\u3053\u304C\u826F\u304B\u3063\u305F\u304B\u691C\u8A3C\u3059\u308B",
+          text: "似たジャンルの映画と比べて、どこが良かったか検証する",
           points: { empirical: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q10-d",
-          text: "\u300C\u81EA\u5206\u306A\u3089\u3053\u3046\u64AE\u308B\u300D\u3068\u72EC\u81EA\u306E\u30A2\u30A4\u30C7\u30A2\u3092\u8A9E\u308B",
+          text: "「自分ならこう撮る」と独自のアイデアを語る",
           points: { creative: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q11",
-      text: "\u30D1\u30BA\u30EB\u3084\u30AF\u30A4\u30BA\u306B\u53D6\u308A\u7D44\u3080\u3068\u304D\u3001\u3042\u306A\u305F\u306E\u30B9\u30BF\u30A4\u30EB\u306F\uFF1F",
+      text: "パズルやクイズに取り組むとき、あなたのスタイルは？",
       choices: [
         {
           id: "q11-a",
-          text: "\u30D1\u30BF\u30FC\u30F3\u3084\u6CD5\u5247\u3092\u898B\u3064\u3051\u3066\u4E00\u6C17\u306B\u89E3\u304F",
+          text: "パターンや法則を見つけて一気に解く",
           points: { theory: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
         {
           id: "q11-b",
-          text: "\u4E00\u3064\u305A\u3064\u8A66\u3057\u3066\u3001\u6D88\u53BB\u6CD5\u3067\u6B63\u89E3\u306B\u8FEB\u308B",
+          text: "一つずつ試して、消去法で正解に迫る",
           points: { empirical: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q11-c",
-          text: "\u89E3\u304F\u30B9\u30D4\u30FC\u30C9\u3084\u30B9\u30B3\u30A2\u3092\u8A18\u9332\u3057\u3066\u81EA\u5DF1\u30D9\u30B9\u30C8\u3092\u72D9\u3046",
+          text: "解くスピードやスコアを記録して自己ベストを狙う",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -616,7 +612,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q11-d",
-          text: "\u51FA\u984C\u8005\u306E\u610F\u56F3\u3092\u8AAD\u307F\u53D6\u3063\u3066\u88CF\u3092\u304B\u304F",
+          text: "出題者の意図を読み取って裏をかく",
           points: {
             observational: MAIN_AXIS_POINTS,
             creative: SUB_AXIS_POINTS,
@@ -626,11 +622,11 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "q12",
-      text: "\u5929\u6C17\u4E88\u5831\u3092\u898B\u308B\u3068\u304D\u3001\u3042\u306A\u305F\u304C\u6C17\u306B\u306A\u308B\u306E\u306F\uFF1F",
+      text: "天気予報を見るとき、あなたが気になるのは？",
       choices: [
         {
           id: "q12-a",
-          text: "\u964D\u6C34\u78BA\u7387\u306E\u6570\u5024\u3068\u6C17\u6E29\u306E\u63A8\u79FB\u30B0\u30E9\u30D5",
+          text: "降水確率の数値と気温の推移グラフ",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -638,12 +634,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q12-b",
-          text: "\u9AD8\u6C17\u5727\u30FB\u4F4E\u6C17\u5727\u306E\u52D5\u304D\u3068\u5929\u6C17\u306E\u30E1\u30AB\u30CB\u30BA\u30E0",
+          text: "高気圧・低気圧の動きと天気のメカニズム",
           points: { theory: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
         {
           id: "q12-c",
-          text: "\u7A7A\u306E\u96F2\u306E\u5F62\u3092\u898B\u3066\u81EA\u5206\u306A\u308A\u306B\u5929\u6C17\u3092\u4E88\u6E2C\u3059\u308B",
+          text: "空の雲の形を見て自分なりに天気を予測する",
           points: {
             observational: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -651,18 +647,18 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q12-d",
-          text: "\u5929\u6C17\u306B\u5408\u308F\u305B\u305F\u65AC\u65B0\u306A\u904E\u3054\u3057\u65B9\u3092\u8003\u3048\u308B",
+          text: "天気に合わせた斬新な過ごし方を考える",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q13",
-      text: "\u30B0\u30EB\u30FC\u30D7\u30EF\u30FC\u30AF\u3067\u3001\u3042\u306A\u305F\u304C\u81EA\u7136\u3068\u62C5\u5F53\u3059\u308B\u306E\u306F\uFF1F",
+      text: "グループワークで、あなたが自然と担当するのは？",
       choices: [
         {
           id: "q13-a",
-          text: "\u30C7\u30FC\u30BF\u53CE\u96C6\u3068\u5206\u6790\u3002\u6570\u5B57\u3067\u6839\u62E0\u3092\u793A\u3059\u5F79",
+          text: "データ収集と分析。数字で根拠を示す役",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -670,7 +666,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q13-b",
-          text: "\u30A2\u30A4\u30C7\u30A2\u51FA\u3057\u3002\u300C\u3053\u3093\u306A\u65B9\u6CD5\u3082\u3042\u308B\u3088\u300D\u3068\u767A\u60F3\u3059\u308B\u5F79",
+          text: "アイデア出し。「こんな方法もあるよ」と発想する役",
           points: {
             creative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -678,12 +674,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q13-c",
-          text: "\u8A08\u753B\u306E\u8AD6\u7406\u30C1\u30A7\u30C3\u30AF\u3002\u77DB\u76FE\u304C\u306A\u3044\u304B\u691C\u8A3C\u3059\u308B\u5F79",
+          text: "計画の論理チェック。矛盾がないか検証する役",
           points: { theory: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
         {
           id: "q13-d",
-          text: "\u73FE\u5834\u306E\u58F0\u3092\u96C6\u3081\u308B\u3002\u30E6\u30FC\u30B6\u30FC\u306E\u53CD\u5FDC\u3092\u89B3\u5BDF\u3059\u308B\u5F79",
+          text: "現場の声を集める。ユーザーの反応を観察する役",
           points: {
             observational: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -693,11 +689,11 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "q14",
-      text: "\u30B9\u30DE\u30DB\u306E\u4F7F\u3044\u65B9\u3067\u3001\u3042\u306A\u305F\u306B\u5F53\u3066\u306F\u307E\u308B\u306E\u306F\uFF1F",
+      text: "スマホの使い方で、あなたに当てはまるのは？",
       choices: [
         {
           id: "q14-a",
-          text: "\u30D0\u30C3\u30C6\u30EA\u30FC\u306E\u6E1B\u308A\u65B9\u306E\u30D1\u30BF\u30FC\u30F3\u3092\u628A\u63E1\u3057\u3066\u3044\u308B",
+          text: "バッテリーの減り方のパターンを把握している",
           points: {
             observational: MAIN_AXIS_POINTS,
             quantitative: SUB_AXIS_POINTS,
@@ -705,33 +701,33 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q14-b",
-          text: "\u9762\u767D\u3044\u30A2\u30D7\u30EA\u306E\u7D44\u307F\u5408\u308F\u305B\u3067\u65B0\u3057\u3044\u4F7F\u3044\u65B9\u3092\u767A\u660E\u3059\u308B",
+          text: "面白いアプリの組み合わせで新しい使い方を発明する",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
         {
           id: "q14-c",
-          text: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30BF\u30A4\u30E0\u306E\u30C7\u30FC\u30BF\u3092\u5206\u6790\u3057\u3066\u4F7F\u7528\u6642\u9593\u3092\u7BA1\u7406\u3059\u308B",
+          text: "スクリーンタイムのデータを分析して使用時間を管理する",
           points: { quantitative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q14-d",
-          text: "\u65B0\u3057\u3044\u30A2\u30D7\u30EA\u306F\u7247\u3063\u7AEF\u304B\u3089\u8A66\u3057\u3066\u826F\u3057\u60AA\u3057\u3092\u5224\u65AD\u3059\u308B",
+          text: "新しいアプリは片っ端から試して良し悪しを判断する",
           points: { empirical: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q15",
-      text: "\u6B74\u53F2\u306E\u6388\u696D\u3067\u4E00\u756A\u9762\u767D\u304B\u3063\u305F\u306E\u306F\uFF1F",
+      text: "歴史の授業で一番面白かったのは？",
       choices: [
         {
           id: "q15-a",
-          text: "\u6B74\u53F2\u306E\u300C\u306A\u305C\u300D\u3092\u8003\u3048\u308B\u3053\u3068\u3002\u306A\u305C\u6226\u4E89\u304C\u8D77\u304D\u305F\u304B\u3001\u306A\u305C\u6587\u660E\u304C\u6EC5\u3093\u3060\u304B",
+          text: "歴史の「なぜ」を考えること。なぜ戦争が起きたか、なぜ文明が滅んだか",
           points: { theory: MAIN_AXIS_POINTS, observational: SUB_AXIS_POINTS },
         },
         {
           id: "q15-b",
-          text: "\u6B74\u53F2\u4E0A\u306E\u51FA\u6765\u4E8B\u3092\u73FE\u5730\u3067\u518D\u73FE\u30FB\u8FFD\u4F53\u9A13\u3059\u308B\u4F01\u753B",
+          text: "歴史上の出来事を現地で再現・追体験する企画",
           points: {
             empirical: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -739,7 +735,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q15-c",
-          text: "\u907A\u8DE1\u3084\u6587\u5316\u8CA1\u306E\u7D30\u90E8\u304B\u3089\u5F53\u6642\u306E\u66AE\u3089\u3057\u3092\u60F3\u50CF\u3059\u308B\u3053\u3068",
+          text: "遺跡や文化財の細部から当時の暮らしを想像すること",
           points: {
             observational: MAIN_AXIS_POINTS,
             creative: SUB_AXIS_POINTS,
@@ -747,23 +743,23 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q15-d",
-          text: "\u300C\u3082\u3057\u81EA\u5206\u304C\u3042\u306E\u6642\u4EE3\u306B\u3044\u305F\u3089\u4F55\u3092\u767A\u660E\u3059\u308B\u304B\u300D\u3092\u8003\u3048\u308B\u3053\u3068",
+          text: "「もし自分があの時代にいたら何を発明するか」を考えること",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q16",
-      text: "\u53CB\u9054\u304C\u60A9\u307F\u76F8\u8AC7\u3092\u3057\u3066\u304D\u305F\u3068\u304D\u3001\u3042\u306A\u305F\u306E\u30A2\u30D7\u30ED\u30FC\u30C1\u306F\uFF1F",
+      text: "友達が悩み相談をしてきたとき、あなたのアプローチは？",
       choices: [
         {
           id: "q16-a",
-          text: "\u554F\u984C\u3092\u69CB\u9020\u5316\u3057\u3066\u3001\u6839\u672C\u539F\u56E0\u3092\u8AD6\u7406\u7684\u306B\u5206\u6790\u3059\u308B",
+          text: "問題を構造化して、根本原因を論理的に分析する",
           points: { theory: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
         {
           id: "q16-b",
-          text: "\u4F3C\u305F\u3088\u3046\u306A\u4E8B\u4F8B\u3092\u8ABF\u3079\u3066\u3001\u89E3\u6C7A\u30D1\u30BF\u30FC\u30F3\u3092\u63A2\u3059",
+          text: "似たような事例を調べて、解決パターンを探す",
           points: {
             empirical: MAIN_AXIS_POINTS,
             quantitative: SUB_AXIS_POINTS,
@@ -771,12 +767,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q16-c",
-          text: "\u76F8\u624B\u306E\u8A00\u8449\u306E\u88CF\u306B\u3042\u308B\u672C\u5F53\u306E\u6C17\u6301\u3061\u3092\u6C72\u307F\u53D6\u308B",
+          text: "相手の言葉の裏にある本当の気持ちを汲み取る",
           points: { observational: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q16-d",
-          text: "\u5E38\u8B58\u306B\u3068\u3089\u308F\u308C\u306A\u3044\u89E3\u6C7A\u7B56\u3092\u63D0\u6848\u3059\u308B",
+          text: "常識にとらわれない解決策を提案する",
           points: {
             creative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -786,11 +782,11 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "q17",
-      text: "\u81EA\u5206\u306E\u5065\u5EB7\u7BA1\u7406\u3001\u3069\u3046\u3057\u3066\u308B\uFF1F",
+      text: "自分の健康管理、どうしてる？",
       choices: [
         {
           id: "q17-a",
-          text: "\u3044\u308D\u3044\u308D\u306A\u5065\u5EB7\u6CD5\u3092\u5B9F\u969B\u306B\u8A66\u3057\u3066\u3001\u52B9\u679C\u3092\u81EA\u5206\u306E\u4F53\u3067\u691C\u8A3C\u3059\u308B",
+          text: "いろいろな健康法を実際に試して、効果を自分の体で検証する",
           points: {
             empirical: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -798,7 +794,7 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q17-b",
-          text: "\u4F53\u8ABF\u306E\u5909\u5316\u3068\u98DF\u4E8B\u30FB\u5929\u6C17\u306E\u95A2\u4FC2\u3092\u89B3\u5BDF\u3059\u308B",
+          text: "体調の変化と食事・天気の関係を観察する",
           points: {
             observational: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -806,33 +802,33 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q17-c",
-          text: "\u300C\u306A\u305C\u904B\u52D5\u3059\u308B\u3068\u6C17\u5206\u304C\u826F\u304F\u306A\u308B\u306E\u304B\u300D\u3092\u79D1\u5B66\u7684\u306B\u7406\u89E3\u3059\u308B",
+          text: "「なぜ運動すると気分が良くなるのか」を科学的に理解する",
           points: { theory: MAIN_AXIS_POINTS, quantitative: SUB_AXIS_POINTS },
         },
         {
           id: "q17-d",
-          text: "\u5F93\u6765\u306E\u5065\u5EB7\u6CD5\u306B\u3068\u3089\u308F\u308C\u305A\u3001\u81EA\u5206\u6D41\u306E\u5065\u5EB7\u6CD5\u3092\u958B\u767A\u3059\u308B",
+          text: "従来の健康法にとらわれず、自分流の健康法を開発する",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q18",
-      text: "DIY\u3084\u5DE5\u4F5C\u3092\u3059\u308B\u3068\u304D\u3001\u3042\u306A\u305F\u306F\uFF1F",
+      text: "DIYや工作をするとき、あなたは？",
       choices: [
         {
           id: "q18-a",
-          text: "\u8A2D\u8A08\u56F3\u3092\u63CF\u3044\u3066\u3001\u6750\u6599\u306E\u5BF8\u6CD5\u3092\u8A08\u7B97\u3057\u3066\u304B\u3089\u59CB\u3081\u308B",
+          text: "設計図を描いて、材料の寸法を計算してから始める",
           points: { quantitative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q18-b",
-          text: "\u307E\u305A\u624B\u3092\u52D5\u304B\u3057\u3066\u3001\u4F5C\u308A\u306A\u304C\u3089\u5F62\u3092\u6C7A\u3081\u3066\u3044\u304F",
+          text: "まず手を動かして、作りながら形を決めていく",
           points: { empirical: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q18-c",
-          text: "\u65E2\u5B58\u306E\u3082\u306E\u3092\u5206\u89E3\u3057\u3066\u69CB\u9020\u3092\u7406\u89E3\u3057\u3066\u304B\u3089\u3001\u6539\u826F\u7248\u3092\u4F5C\u308B",
+          text: "既存のものを分解して構造を理解してから、改良版を作る",
           points: {
             observational: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -840,23 +836,23 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q18-d",
-          text: "\u8AB0\u3082\u4F5C\u3063\u305F\u3053\u3068\u306E\u306A\u3044\u3082\u306E\u3092\u4F5C\u308D\u3046\u3068\u3059\u308B",
+          text: "誰も作ったことのないものを作ろうとする",
           points: { creative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
       ],
     },
     {
       id: "q19",
-      text: "SNS\u306E\u6295\u7A3F\u3067\u300C\u3044\u3044\u306D\u300D\u3057\u305F\u304F\u306A\u308B\u306E\u306F\uFF1F",
+      text: "SNSの投稿で「いいね」したくなるのは？",
       choices: [
         {
           id: "q19-a",
-          text: "\u8EAB\u8FD1\u306A\u3082\u306E\u3092\u4F7F\u3063\u305F\u610F\u5916\u306A\u767A\u660E\u3084\u30E9\u30A4\u30D5\u30CF\u30C3\u30AF",
+          text: "身近なものを使った意外な発明やライフハック",
           points: { creative: MAIN_AXIS_POINTS, empirical: SUB_AXIS_POINTS },
         },
         {
           id: "q19-b",
-          text: "\u5B9F\u9A13\u3057\u3066\u307F\u305F\u7CFB\u306E\u52D5\u753B",
+          text: "実験してみた系の動画",
           points: {
             empirical: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -864,12 +860,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q19-c",
-          text: "\u30C7\u30FC\u30BF\u3092\u308F\u304B\u308A\u3084\u3059\u304F\u53EF\u8996\u5316\u3057\u305F\u30A4\u30F3\u30D5\u30A9\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF",
+          text: "データをわかりやすく可視化したインフォグラフィック",
           points: { quantitative: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q19-d",
-          text: "\u65E5\u5E38\u306E\u4E2D\u306E\u5C0F\u3055\u306A\u767A\u898B\u3092\u5207\u308A\u53D6\u3063\u305F\u5199\u771F",
+          text: "日常の中の小さな発見を切り取った写真",
           points: {
             observational: MAIN_AXIS_POINTS,
             quantitative: SUB_AXIS_POINTS,
@@ -879,16 +875,16 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "q20",
-      text: "\u3082\u30571\u65E5\u3060\u3051\u79D1\u5B66\u8005\u306B\u306A\u308C\u308B\u306A\u3089\u3001\u4F55\u3092\u3057\u305F\u3044\uFF1F",
+      text: "もし1日だけ科学者になれるなら、何をしたい？",
       choices: [
         {
           id: "q20-a",
-          text: "\u5B87\u5B99\u306E\u8D77\u6E90\u3084\u6642\u9593\u306E\u672C\u8CEA\u306A\u3069\u3001\u7A76\u6975\u306E\u554F\u3044\u306B\u6311\u3080",
+          text: "宇宙の起源や時間の本質など、究極の問いに挑む",
           points: { theory: MAIN_AXIS_POINTS, creative: SUB_AXIS_POINTS },
         },
         {
           id: "q20-b",
-          text: "\u4E16\u754C\u4E2D\u306E\u672A\u8E0F\u306E\u5730\u3092\u63A2\u7D22\u3057\u3066\u65B0\u7A2E\u3092\u767A\u898B\u3059\u308B",
+          text: "世界中の未踏の地を探索して新種を発見する",
           points: {
             observational: MAIN_AXIS_POINTS,
             empirical: SUB_AXIS_POINTS,
@@ -896,12 +892,12 @@ const scienceThinkingQuiz: QuizDefinition = {
         },
         {
           id: "q20-c",
-          text: "\u4E16\u754C\u3092\u5909\u3048\u308B\u3088\u3046\u306A\u65B0\u3057\u3044\u767A\u660E\u3092\u5B8C\u6210\u3055\u305B\u308B",
+          text: "世界を変えるような新しい発明を完成させる",
           points: { creative: MAIN_AXIS_POINTS, theory: SUB_AXIS_POINTS },
         },
         {
           id: "q20-d",
-          text: "\u5927\u91CF\u306E\u30C7\u30FC\u30BF\u3092\u5206\u6790\u3057\u3066\u8AB0\u3082\u6C17\u3065\u304B\u306A\u304B\u3063\u305F\u6CD5\u5247\u3092\u898B\u3064\u3051\u308B",
+          text: "大量のデータを分析して誰も気づかなかった法則を見つける",
           points: {
             quantitative: MAIN_AXIS_POINTS,
             observational: SUB_AXIS_POINTS,
@@ -913,10 +909,9 @@ const scienceThinkingQuiz: QuizDefinition = {
   results: [
     {
       id: "einstein",
-      title:
-        "\u30A2\u30A4\u30F3\u30B7\u30E5\u30BF\u30A4\u30F3\u578B\u601D\u8003\u8005",
+      title: "アインシュタイン型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30A2\u30A4\u30F3\u30B7\u30E5\u30BF\u30A4\u30F3\u578B\u601D\u8003\u8005\u3002\u62BD\u8C61\u7684\u306A\u7406\u8AD6\u3068\u5275\u9020\u7684\u306A\u76F4\u611F\u3092\u878D\u5408\u3055\u305B\u3001\u300C\u3082\u3057\uFF5E\u3060\u3063\u305F\u3089\uFF1F\u300D\u3068\u3044\u3046\u601D\u8003\u5B9F\u9A13\u3067\u4E16\u754C\u306E\u672C\u8CEA\u306B\u8FEB\u308B\u30BF\u30A4\u30D7\u3067\u3059\u3002\u65E5\u5E38\u3067\u3082\u300C\u306A\u305C\u7A7A\u306F\u9752\u3044\u306E\u304B\u300D\u300C\u6642\u9593\u3068\u306F\u4F55\u304B\u300D\u3068\u6839\u672C\u7684\u306A\u7591\u554F\u3092\u8FFD\u3044\u304B\u3051\u3066\u3057\u307E\u3046\u3053\u3068\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30A2\u30A4\u30F3\u30B7\u30E5\u30BF\u30A4\u30F3\u81EA\u8EAB\u3001\u7279\u8A31\u5E81\u3067\u50CD\u304D\u306A\u304C\u3089\u901A\u52E4\u96FB\u8ECA\u306E\u4E2D\u3067\u76F8\u5BFE\u6027\u7406\u8AD6\u306E\u7740\u60F3\u3092\u5F97\u305F\u3068\u8A00\u308F\u308C\u3066\u3044\u307E\u3059\u3002\u5F7C\u306F\u300C\u60F3\u50CF\u529B\u306F\u77E5\u8B58\u3088\u308A\u91CD\u8981\u3060\u300D\u3068\u8A9E\u308A\u307E\u3057\u305F\u304C\u3001\u3042\u306A\u305F\u306B\u3082\u305D\u306E\u7CBE\u795E\u304C\u5BBF\u3063\u3066\u3044\u308B\u3088\u3046\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u58EE\u5927\u306A\u601D\u8003\u306B\u6CA1\u982D\u3059\u308B\u3042\u307E\u308A\u3001\u76EE\u306E\u524D\u306E\u73FE\u5B9F\u7684\u306A\u554F\u984C\u3092\u5F8C\u56DE\u3057\u306B\u3057\u304C\u3061\u306A\u3053\u3068\u3002\u9774\u4E0B\u306E\u5DE6\u53F3\u304C\u9055\u3046\u307E\u307E\u51FA\u304B\u3051\u3066\u3082\u6C17\u3065\u304B\u306A\u3044\u30BF\u30A4\u30D7\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u305F\u307E\u306B\u306F\u601D\u8003\u5B9F\u9A13\u3092\u4E2D\u65AD\u3057\u3066\u3001\u9774\u4E0B\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+        "あなたはアインシュタイン型思考者。抽象的な理論と創造的な直感を融合させ、「もし～だったら？」という思考実験で世界の本質に迫るタイプです。日常でも「なぜ空は青いのか」「時間とは何か」と根本的な疑問を追いかけてしまうことはありませんか？ アインシュタイン自身、特許庁で働きながら通勤電車の中で相対性理論の着想を得たと言われています。彼は「想像力は知識より重要だ」と語りましたが、あなたにもその精神が宿っているようです。弱点は、壮大な思考に没頭するあまり、目の前の現実的な問題を後回しにしがちなこと。靴下の左右が違うまま出かけても気づかないタイプかもしれません。アドバイス：たまには思考実験を中断して、靴下を確認してください。",
       detailedContent: {
         traits: [
           "頭の中に「もしも」の小さな世界をいくつも飼っていて、ぼーっとしているように見える時ほど、実はその中で壮大なシミュレーションが動いています。",
@@ -936,9 +931,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "curie",
-      title: "\u30AD\u30E5\u30EA\u30FC\u578B\u601D\u8003\u8005",
+      title: "キュリー型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30AD\u30E5\u30EA\u30FC\u578B\u601D\u8003\u8005\u3002\u7C98\u308A\u5F37\u3044\u5B9F\u9A13\u3068\u92ED\u3044\u89B3\u5BDF\u773C\u3067\u771F\u5B9F\u306B\u8FEB\u308B\u3001\u7B4B\u91D1\u5165\u308A\u306E\u5B9F\u8A3C\u4E3B\u7FA9\u8005\u3067\u3059\u3002\u6599\u7406\u306E\u30EC\u30B7\u30D4\u3082\u81EA\u5206\u3067\u6539\u826F\u3057\u306A\u3044\u3068\u6C17\u304C\u6E08\u307E\u305A\u3001\u300C\u672C\u5F53\u306B\u3053\u306E\u5206\u91CF\u304C\u30D9\u30B9\u30C8\u306A\u306E\u304B\u300D\u3068\u691C\u8A3C\u3092\u7E70\u308A\u8FD4\u3059\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30DE\u30EA\u30FC\u30FB\u30AD\u30E5\u30EA\u30FC\u306F\u30CE\u30FC\u30D9\u30EB\u8CDE\u30922\u5EA6\u53D7\u8CDE\u3057\u305F\u552F\u4E00\u306E\u5973\u6027\u79D1\u5B66\u8005\u3067\u3059\u304C\u3001\u30E9\u30B8\u30A6\u30E0\u306E\u7814\u7A76\u3067\u306F\u4F55\u30C8\u30F3\u3082\u306E\u9271\u77F3\u3092\u81EA\u3089\u306E\u624B\u3067\u51E6\u7406\u3057\u7D9A\u3051\u307E\u3057\u305F\u3002\u300C\u597D\u5947\u5FC3\u304C\u6B62\u307E\u3089\u306A\u3044\u300D\u3092\u4F53\u73FE\u3057\u305F\u4EBA\u7269\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u691C\u8A3C\u304C\u7D42\u308F\u308B\u307E\u3067\u7D50\u8AD6\u3092\u51FA\u3057\u305F\u304F\u306A\u3044\u305F\u3081\u3001\u5468\u56F2\u304B\u3089\u300C\u3067\u3001\u7D50\u5C40\u3069\u3046\u306A\u306E\uFF1F\u300D\u3068\u6025\u304B\u3055\u308C\u304C\u3061\u306A\u3053\u3068\u3002\u3067\u3082\u7126\u3063\u3066\u51FA\u3057\u305F\u7B54\u3048\u3088\u308A\u3001\u3042\u306A\u305F\u306E\u691C\u8A3C\u6E08\u307F\u306E\u7B54\u3048\u306E\u65B9\u304C\u305A\u3063\u3068\u4FE1\u983C\u3067\u304D\u307E\u3059\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u5B9F\u9A13\u30CE\u30FC\u30C8\u306F\u5B9D\u7269\u3067\u3059\u3002\u3067\u3082\u305F\u307E\u306B\u306F\u7D50\u679C\u3092\u4EBA\u306B\u898B\u305B\u3066\u3042\u3052\u3066\u304F\u3060\u3055\u3044\u3002",
+        "あなたはキュリー型思考者。粘り強い実験と鋭い観察眼で真実に迫る、筋金入りの実証主義者です。料理のレシピも自分で改良しないと気が済まず、「本当にこの分量がベストなのか」と検証を繰り返すタイプではありませんか？ マリー・キュリーはノーベル賞を2度受賞した唯一の女性科学者ですが、ラジウムの研究では何トンもの鉱石を自らの手で処理し続けました。「好奇心が止まらない」を体現した人物です。弱点は、検証が終わるまで結論を出したくないため、周囲から「で、結局どうなの？」と急かされがちなこと。でも焦って出した答えより、あなたの検証済みの答えの方がずっと信頼できます。アドバイス：実験ノートは宝物です。でもたまには結果を人に見せてあげてください。",
       detailedContent: {
         traits: [
           "「たぶん大丈夫」が苦手で、自分の目で確かめて初めて納得します。一度確かめたことには、誰に何と言われても揺るがない静かな自信を持っています。",
@@ -958,9 +953,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "turing",
-      title: "\u30C1\u30E5\u30FC\u30EA\u30F3\u30B0\u578B\u601D\u8003\u8005",
+      title: "チューリング型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30C1\u30E5\u30FC\u30EA\u30F3\u30B0\u578B\u601D\u8003\u8005\u3002\u8AD6\u7406\u3068\u6570\u5024\u3067\u4E16\u754C\u3092\u89E3\u8AAD\u3059\u308B\u3001\u751F\u307E\u308C\u306A\u304C\u3089\u306E\u30B7\u30B9\u30C6\u30E0\u601D\u8003\u5BB6\u3067\u3059\u3002\u300C\u305D\u308C\u3063\u3066\u672C\u5F53\u306B\u30C7\u30FC\u30BF\u3067\u8A3C\u660E\u3067\u304D\u308B\uFF1F\u300D\u304C\u53E3\u7656\u3067\u3001\u611F\u899A\u7684\u306A\u8B70\u8AD6\u3088\u308A\u3082\u30ED\u30B8\u30C3\u30AF\u3067\u7269\u4E8B\u3092\u6574\u7406\u3057\u305F\u3044\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30A2\u30E9\u30F3\u30FB\u30C1\u30E5\u30FC\u30EA\u30F3\u30B0\u306F\u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u79D1\u5B66\u306E\u7236\u3068\u547C\u3070\u308C\u307E\u3059\u304C\u3001\u7B2C\u4E8C\u6B21\u4E16\u754C\u5927\u6226\u4E2D\u306B\u306F\u30C9\u30A4\u30C4\u306E\u6697\u53F7\u30A8\u30CB\u30B0\u30DE\u3092\u89E3\u8AAD\u3057\u3001\u6226\u4E89\u306E\u884C\u65B9\u3092\u5909\u3048\u307E\u3057\u305F\u3002\u8907\u96D1\u306A\u6697\u53F7\u3082\u3001\u5F7C\u306B\u3068\u3063\u3066\u306F\u300C\u89E3\u304F\u3079\u304D\u30D1\u30BA\u30EB\u300D\u3060\u3063\u305F\u306E\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u8AD6\u7406\u3067\u5272\u308A\u5207\u308C\u306A\u3044\u4EBA\u9593\u306E\u611F\u60C5\u306B\u6238\u60D1\u3046\u3053\u3068\u304C\u3042\u308B\u3053\u3068\u3002\u300C\u306A\u3093\u3067\u6CE3\u3044\u3066\u308B\u306E\uFF1F \u30C7\u30FC\u30BF\u4E0A\u306F\u6700\u9069\u89E3\u306A\u306E\u306B\u300D\u3068\u601D\u3063\u305F\u3053\u3068\u304C\u3042\u308B\u306A\u3089\u3001\u307E\u3055\u306B\u30C1\u30E5\u30FC\u30EA\u30F3\u30B0\u578B\u3067\u3059\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u4E16\u754C\u306B\u306F\u8AD6\u7406\u3067\u89E3\u3051\u306A\u3044\u554F\u984C\u3082\u3042\u308A\u307E\u3059\u3002\u305D\u308C\u3082\u307E\u305F\u9762\u767D\u3044\u30D1\u30BA\u30EB\u3067\u3059\u3002",
+        "あなたはチューリング型思考者。論理と数値で世界を解読する、生まれながらのシステム思考家です。「それって本当にデータで証明できる？」が口癖で、感覚的な議論よりもロジックで物事を整理したいタイプではありませんか？ アラン・チューリングはコンピュータ科学の父と呼ばれますが、第二次世界大戦中にはドイツの暗号エニグマを解読し、戦争の行方を変えました。複雑な暗号も、彼にとっては「解くべきパズル」だったのです。弱点は、論理で割り切れない人間の感情に戸惑うことがあること。「なんで泣いてるの？ データ上は最適解なのに」と思ったことがあるなら、まさにチューリング型です。アドバイス：世界には論理で解けない問題もあります。それもまた面白いパズルです。",
       detailedContent: {
         traits: [
           "物事をいったん要素に分解し、「条件A ならB、そうでなければC」という分岐の形に整理してから動き出します。曖昧なまま進めるより、ルールが見えた瞬間にいちばん安心するタイプです。",
@@ -980,9 +975,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "davinci",
-      title: "\u30C0\u30FB\u30F4\u30A3\u30F3\u30C1\u578B\u601D\u8003\u8005",
+      title: "ダ・ヴィンチ型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30C0\u30FB\u30F4\u30A3\u30F3\u30C1\u578B\u601D\u8003\u8005\u3002\u92ED\u3044\u89B3\u5BDF\u529B\u3068\u7121\u9650\u306E\u5275\u9020\u529B\u3067\u3001\u5206\u91CE\u306E\u58C1\u3092\u8EFD\u3005\u3068\u8D8A\u3048\u3066\u3044\u304F\u4E07\u80FD\u4EBA\u3067\u3059\u3002\u7D75\u753B\u3082\u79D1\u5B66\u3082\u5DE5\u5B66\u3082\u3001\u6C17\u306B\u306A\u3063\u305F\u3089\u5168\u90E8\u3084\u3063\u3066\u307F\u305F\u3044\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30EC\u30AA\u30CA\u30EB\u30C9\u30FB\u30C0\u30FB\u30F4\u30A3\u30F3\u30C1\u306F\u300C\u30E2\u30CA\u30FB\u30EA\u30B6\u300D\u306E\u753B\u5BB6\u3068\u3057\u3066\u6709\u540D\u3067\u3059\u304C\u3001\u30D8\u30EA\u30B3\u30D7\u30BF\u30FC\u3084\u6226\u8ECA\u306E\u8A2D\u8A08\u56F3\u3092500\u5E74\u524D\u306B\u63CF\u304D\u3001\u4EBA\u4F53\u89E3\u5256\u307E\u3067\u884C\u3063\u305F\u7A76\u6975\u306E\u30DE\u30EB\u30C1\u30BF\u30EC\u30F3\u30C8\u3067\u3057\u305F\u3002\u5F7C\u306E\u30CE\u30FC\u30C8\u306B\u306F\u93E1\u6587\u5B57\u3067\u66F8\u304B\u308C\u305F\u767A\u660E\u306E\u30A2\u30A4\u30C7\u30A2\u304C8,000\u30DA\u30FC\u30B8\u4EE5\u4E0A\u6B8B\u3063\u3066\u3044\u307E\u3059\u3002\u5F31\u70B9\u306F\u3001\u8208\u5473\u306E\u5E45\u304C\u5E83\u3059\u304E\u3066\u3001\u3069\u308C\u3082\u4E2D\u9014\u534A\u7AEF\u306B\u306A\u308A\u304C\u3061\u306A\u3053\u3068\u3002\u300C\u3084\u308A\u305F\u3044\u3053\u3068\u30EA\u30B9\u30C8\u300D\u304C\u6C38\u9060\u306B\u7D42\u308F\u3089\u306A\u3044\u306E\u304C\u30C0\u30FB\u30F4\u30A3\u30F3\u30C1\u578B\u306E\u5BBF\u547D\u3067\u3059\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u5168\u90E8\u3084\u308D\u3046\u3068\u3057\u3066\u5927\u4E08\u592B\u3002\u30C0\u30FB\u30F4\u30A3\u30F3\u30C1\u3082\u30E2\u30CA\u30FB\u30EA\u30B6\u306E\u5B8C\u6210\u306B16\u5E74\u304B\u3051\u307E\u3057\u305F\u304B\u3089\u3002",
+        "あなたはダ・ヴィンチ型思考者。鋭い観察力と無限の創造力で、分野の壁を軽々と越えていく万能人です。絵画も科学も工学も、気になったら全部やってみたいタイプではありませんか？ レオナルド・ダ・ヴィンチは「モナ・リザ」の画家として有名ですが、ヘリコプターや戦車の設計図を500年前に描き、人体解剖まで行った究極のマルチタレントでした。彼のノートには鏡文字で書かれた発明のアイデアが8,000ページ以上残っています。弱点は、興味の幅が広すぎて、どれも中途半端になりがちなこと。「やりたいことリスト」が永遠に終わらないのがダ・ヴィンチ型の宿命です。アドバイス：全部やろうとして大丈夫。ダ・ヴィンチもモナ・リザの完成に16年かけましたから。",
       detailedContent: {
         traits: [
           "まったく別ジャンルの知識を、ひょいと結びつけるのが得意です。料理の手順と仕事の段取り、音楽のリズムと文章の流れ——他の人が「関係ない」と思うものの間に橋を架けてしまいます。",
@@ -1002,9 +997,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "darwin",
-      title: "\u30C0\u30FC\u30A6\u30A3\u30F3\u578B\u601D\u8003\u8005",
+      title: "ダーウィン型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30C0\u30FC\u30A6\u30A3\u30F3\u578B\u601D\u8003\u8005\u3002\u5730\u9053\u306A\u89B3\u5BDF\u304B\u3089\u58EE\u5927\u306A\u7406\u8AD6\u3092\u5C0E\u304D\u51FA\u3059\u3001\u81EA\u7136\u754C\u306E\u8AAD\u307F\u624B\u3067\u3059\u3002\u6563\u6B69\u4E2D\u306B\u9053\u7AEF\u306E\u82B1\u306E\u5909\u5316\u306B\u6C17\u3065\u3044\u305F\u308A\u3001\u3044\u3064\u3082\u306E\u5E97\u306E\u5BA2\u5C64\u306E\u5909\u5316\u3092\u611F\u3058\u53D6\u3063\u305F\u308A\u3059\u308B\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30C1\u30E3\u30FC\u30EB\u30BA\u30FB\u30C0\u30FC\u30A6\u30A3\u30F3\u306F\u30D3\u30FC\u30B0\u30EB\u53F7\u30675\u5E74\u9593\u4E16\u754C\u3092\u65C5\u3057\u3001\u8198\u5927\u306A\u89B3\u5BDF\u8A18\u9332\u304B\u3089\u9032\u5316\u8AD6\u3092\u5C0E\u304D\u51FA\u3057\u307E\u3057\u305F\u3002\u3057\u304B\u3057\u767A\u8868\u307E\u306720\u5E74\u4EE5\u4E0A\u3082\u614E\u91CD\u306B\u8A3C\u62E0\u3092\u96C6\u3081\u7D9A\u3051\u305F\u306E\u3067\u3059\u3002\u300C\u6025\u304C\u306A\u3044\u89B3\u5BDF\u8005\u300D\u306E\u771F\u9AA8\u9802\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u89B3\u5BDF\u306B\u6642\u9593\u3092\u304B\u3051\u3059\u304E\u3066\u884C\u52D5\u304C\u9045\u304F\u306A\u308B\u3053\u3068\u3002\u300C\u3082\u3046\u5C11\u3057\u30C7\u30FC\u30BF\u304C\u96C6\u307E\u3063\u305F\u3089\u52D5\u3053\u3046\u300D\u304C\u53E3\u7656\u306B\u306A\u3063\u3066\u3044\u307E\u305B\u3093\u304B\uFF1F \u30C0\u30FC\u30A6\u30A3\u30F3\u3082\u540C\u3058\u3060\u3063\u305F\u306E\u3067\u5B89\u5FC3\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u5B8C\u74A7\u306A\u89B3\u5BDF\u3092\u5F85\u3063\u3066\u3044\u305F\u3089\u3001\u9032\u5316\u8AD6\u306F\u307E\u3060\u767A\u8868\u3055\u308C\u3066\u3044\u306A\u304B\u3063\u305F\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002\u305F\u307E\u306B\u306F\u898B\u5207\u308A\u767A\u8ECA\u3082\u5927\u5207\u3067\u3059\u3002",
+        "あなたはダーウィン型思考者。地道な観察から壮大な理論を導き出す、自然界の読み手です。散歩中に道端の花の変化に気づいたり、いつもの店の客層の変化を感じ取ったりするタイプではありませんか？ チャールズ・ダーウィンはビーグル号で5年間世界を旅し、膘大な観察記録から進化論を導き出しました。しかし発表まで20年以上も慎重に証拠を集め続けたのです。「急がない観察者」の真骨頂です。弱点は、観察に時間をかけすぎて行動が遅くなること。「もう少しデータが集まったら動こう」が口癖になっていませんか？ ダーウィンも同じだったので安心してください。アドバイス：完璧な観察を待っていたら、進化論はまだ発表されていなかったかもしれません。たまには見切り発車も大切です。",
       detailedContent: {
         traits: [
           "一つの出来事だけでは結論を出しません。「先週もそうだった」「去年の同じ時期もこうだった」と、過去の記憶と照らし合わせて初めて「これは傾向だ」と判断するタイプです。",
@@ -1024,9 +1019,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "edison",
-      title: "\u30A8\u30B8\u30BD\u30F3\u578B\u601D\u8003\u8005",
+      title: "エジソン型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30A8\u30B8\u30BD\u30F3\u578B\u601D\u8003\u8005\u3002\u300C\u3068\u308A\u3042\u3048\u305A\u4F5C\u3063\u3066\u307F\u3088\u3046\u300D\u7CBE\u795E\u3067\u3001\u5931\u6557\u3092\u6050\u308C\u305A\u30A2\u30A4\u30C7\u30A2\u3092\u6B21\u3005\u3068\u5F62\u306B\u3059\u308B\u5B9F\u8DF5\u7684\u767A\u660E\u5BB6\u3067\u3059\u3002\u8003\u3048\u308B\u3088\u308A\u5148\u306B\u624B\u304C\u52D5\u304F\u3001\u30D7\u30ED\u30C8\u30BF\u30A4\u30D7\u601D\u8003\u306E\u6301\u3061\u4E3B\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30C8\u30FC\u30DE\u30B9\u30FB\u30A8\u30B8\u30BD\u30F3\u306F\u96FB\u7403\u306E\u5B9F\u7528\u5316\u3067\u77E5\u3089\u308C\u307E\u3059\u304C\u3001\u305D\u306E\u30D5\u30A3\u30E9\u30E1\u30F3\u30C8\u7D20\u6750\u3092\u898B\u3064\u3051\u308B\u307E\u3067\u306B6,000\u7A2E\u985E\u4EE5\u4E0A\u306E\u6750\u6599\u3092\u8A66\u3057\u305F\u3068\u8A00\u308F\u308C\u3066\u3044\u307E\u3059\u3002\u300C\u5931\u6557\u3057\u305F\u306E\u3067\u306F\u306A\u3044\u3001\u3046\u307E\u304F\u3044\u304B\u306A\u3044\u65B9\u6CD5\u3092\u898B\u3064\u3051\u305F\u306E\u3060\u300D\u3068\u3044\u3046\u540D\u8A00\u306F\u3001\u307E\u3055\u306B\u3053\u306E\u30BF\u30A4\u30D7\u306E\u54F2\u5B66\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u624B\u3092\u52D5\u304B\u3059\u306E\u304C\u597D\u304D\u3059\u304E\u3066\u3001\u8A08\u753B\u3092\u7ACB\u3066\u308B\u306E\u3092\u9762\u5012\u306B\u611F\u3058\u308B\u3053\u3068\u3002\u300C\u8A2D\u8A08\u56F3\uFF1F \u4F5C\u308A\u306A\u304C\u3089\u8003\u3048\u308B\u3088\u300D\u306F\u5468\u56F2\u3092\u30CF\u30E9\u30CF\u30E9\u3055\u305B\u304C\u3061\u3067\u3059\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A6,000\u56DE\u8A66\u3059\u6839\u6027\u304C\u3042\u308B\u306A\u3089\u30011\u56DE\u304F\u3089\u3044\u8A2D\u8A08\u56F3\u3092\u63CF\u3044\u3066\u3082\u640D\u306F\u3057\u307E\u305B\u3093\u3002",
+        "あなたはエジソン型思考者。「とりあえず作ってみよう」精神で、失敗を恐れずアイデアを次々と形にする実践的発明家です。考えるより先に手が動く、プロトタイプ思考の持ち主ではありませんか？ トーマス・エジソンは電球の実用化で知られますが、そのフィラメント素材を見つけるまでに6,000種類以上の材料を試したと言われています。「失敗したのではない、うまくいかない方法を見つけたのだ」という名言は、まさにこのタイプの哲学です。弱点は、手を動かすのが好きすぎて、計画を立てるのを面倒に感じること。「設計図？ 作りながら考えるよ」は周囲をハラハラさせがちです。アドバイス：6,000回試す根性があるなら、1回くらい設計図を描いても損はしません。",
       detailedContent: {
         traits: [
           "うまくいかなくても落ち込むより「じゃあ次はこうしてみよう」と切り替えが速いタイプです。失敗を結果ではなく、次の一手のヒントとして受け取れる回復力があります。",
@@ -1046,9 +1041,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "newton",
-      title: "\u30CB\u30E5\u30FC\u30C8\u30F3\u578B\u601D\u8003\u8005",
+      title: "ニュートン型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30CB\u30E5\u30FC\u30C8\u30F3\u578B\u601D\u8003\u8005\u3002\u6570\u7406\u7684\u306A\u53B3\u5BC6\u3055\u3067\u81EA\u7136\u306E\u6CD5\u5247\u3092\u89E3\u304D\u660E\u304B\u3059\u3001\u5B64\u9AD8\u306E\u7406\u8AD6\u5BB6\u3067\u3059\u3002\u300C\u76F4\u611F\u3067\u306F\u306A\u304F\u8A08\u7B97\u3067\u7B54\u3048\u3092\u51FA\u3057\u305F\u3044\u300D\u300C\u306A\u3093\u3068\u306A\u304F\u3067\u306F\u306A\u304F\u6570\u5F0F\u3067\u8A3C\u660E\u3057\u305F\u3044\u300D\u3068\u601D\u3046\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30A2\u30A4\u30B6\u30C3\u30AF\u30FB\u30CB\u30E5\u30FC\u30C8\u30F3\u306F\u4E07\u6709\u5F15\u529B\u306E\u6CD5\u5247\u3092\u767A\u898B\u3057\u305F\u3060\u3051\u3067\u306A\u304F\u3001\u305D\u308C\u3092\u8A18\u8FF0\u3059\u308B\u305F\u3081\u306B\u5FAE\u7A4D\u5206\u307E\u3067\u767A\u660E\u3057\u3066\u3057\u307E\u3044\u307E\u3057\u305F\u3002\u554F\u984C\u3092\u89E3\u304F\u9053\u5177\u304C\u306A\u3051\u308C\u3070\u3001\u9053\u5177\u3054\u3068\u4F5C\u3063\u3066\u3057\u307E\u3046\u7A76\u6975\u306E\u7406\u8AD6\u5BB6\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u53B3\u5BC6\u3055\u3092\u6C42\u3081\u308B\u3042\u307E\u308A\u4ED6\u4EBA\u306E\u300C\u3060\u3044\u305F\u3044\u3067\u826F\u304F\u306A\u3044\uFF1F\u300D\u304C\u8A31\u305B\u306A\u3044\u3053\u3068\u3002\u30EC\u30B9\u30C8\u30E9\u30F3\u306E\u5272\u308A\u52D8\u3092\u5C0F\u6570\u70B9\u4EE5\u4E0B\u307E\u3067\u8A08\u7B97\u3057\u3066\u5F15\u304B\u308C\u305F\u7D4C\u9A13\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u30CB\u30E5\u30FC\u30C8\u30F3\u3082\u30EA\u30F3\u30B4\u304C\u843D\u3061\u308B\u306E\u3092\u300C\u3060\u3044\u305F\u3044\u4E0B\u306B\u843D\u3061\u305F\u300D\u304B\u3089\u59CB\u3081\u307E\u3057\u305F\u3002\u6700\u521D\u306F\u3056\u3063\u304F\u308A\u3067\u3082\u5927\u4E08\u592B\u3067\u3059\u3002",
+        "あなたはニュートン型思考者。数理的な厳密さで自然の法則を解き明かす、孤高の理論家です。「直感ではなく計算で答えを出したい」「なんとなくではなく数式で証明したい」と思うタイプではありませんか？ アイザック・ニュートンは万有引力の法則を発見しただけでなく、それを記述するために微積分まで発明してしまいました。問題を解く道具がなければ、道具ごと作ってしまう究極の理論家です。弱点は、厳密さを求めるあまり他人の「だいたいで良くない？」が許せないこと。レストランの割り勘を小数点以下まで計算して引かれた経験はありませんか？ アドバイス：ニュートンもリンゴが落ちるのを「だいたい下に落ちた」から始めました。最初はざっくりでも大丈夫です。",
       detailedContent: {
         traits: [
           "「なんとなくこうなる」では落ち着かず、なぜそうなるのかを根っこの原理までさかのぼって自分の手で導けたとき、ようやく腑に落ちます。誰かの結論をそのまま借りるより、一から組み立て直したいタイプです。",
@@ -1068,10 +1063,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "nightingale",
-      title:
-        "\u30CA\u30A4\u30C1\u30F3\u30B2\u30FC\u30EB\u578B\u601D\u8003\u8005",
+      title: "ナイチンゲール型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30CA\u30A4\u30C1\u30F3\u30B2\u30FC\u30EB\u578B\u601D\u8003\u8005\u3002\u30C7\u30FC\u30BF\u306E\u53EF\u8996\u5316\u3067\u554F\u984C\u3092\u89E3\u6C7A\u306B\u5C0E\u304F\u3001\u793E\u4F1A\u6D3E\u30B5\u30A4\u30A8\u30F3\u30C6\u30A3\u30B9\u30C8\u3067\u3059\u3002\u300C\u30B0\u30E9\u30D5\u306B\u3059\u308C\u3070\u4E00\u76EE\u77AD\u7136\u3067\u3057\u3087\uFF1F\u300D\u304C\u6C7A\u3081\u30BC\u30EA\u30D5\u3067\u3001\u6570\u5B57\u306E\u88CF\u306B\u3042\u308B\u73FE\u5B9F\u3092\u898B\u629C\u304F\u529B\u3092\u6301\u3063\u3066\u3044\u307E\u3059\u3002\u30D5\u30ED\u30FC\u30EC\u30F3\u30B9\u30FB\u30CA\u30A4\u30C1\u30F3\u30B2\u30FC\u30EB\u3068\u3044\u3048\u3070\u300C\u767D\u8863\u306E\u5929\u4F7F\u300D\u306E\u30A4\u30E1\u30FC\u30B8\u304C\u5F37\u3044\u3067\u3059\u304C\u3001\u5B9F\u306F\u7D71\u8A08\u5B66\u306E\u5148\u99C6\u8005\u3067\u3082\u3042\u308A\u307E\u3057\u305F\u3002\u30AF\u30EA\u30DF\u30A2\u6226\u4E89\u3067\u5175\u58EB\u306E\u6B7B\u56E0\u3092\u5206\u6790\u3057\u3001\u6226\u95D8\u3067\u306F\u306A\u304F\u4E0D\u885B\u751F\u306A\u74B0\u5883\u304C\u4E3B\u306A\u6B7B\u56E0\u3060\u3068\u30C7\u30FC\u30BF\u3067\u8A3C\u660E\u3002\u5F7C\u5973\u304C\u8003\u6848\u3057\u305F\u300C\u9D8F\u306E\u3068\u3055\u304B\u300D\u3068\u547C\u3070\u308C\u308B\u5186\u30B0\u30E9\u30D5\u306E\u5909\u5F62\u306F\u3001\u653F\u6CBB\u5BB6\u3092\u52D5\u304B\u3057\u3001\u75C5\u9662\u6539\u9769\u3092\u5B9F\u73FE\u3055\u305B\u307E\u3057\u305F\u3002\u5F31\u70B9\u306F\u3001\u30C7\u30FC\u30BF\u306B\u983C\u308A\u3059\u304E\u3066\u300C\u6570\u5B57\u306B\u8868\u308C\u306A\u3044\u4FA1\u5024\u300D\u3092\u898B\u843D\u3068\u3059\u3053\u3068\u304C\u3042\u308B\u3053\u3068\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u30CA\u30A4\u30C1\u30F3\u30B2\u30FC\u30EB\u306E\u771F\u306E\u6B66\u5668\u306F\u30B0\u30E9\u30D5\u3067\u306F\u306A\u304F\u3001\u300C\u30C7\u30FC\u30BF\u3067\u4EBA\u3092\u6551\u3044\u305F\u3044\u300D\u3068\u3044\u3046\u60C5\u71B1\u3067\u3057\u305F\u3002\u6570\u5B57\u306E\u5148\u306B\u3042\u308B\u4EBA\u3092\u5FD8\u308C\u305A\u306B\u3002",
+        "あなたはナイチンゲール型思考者。データの可視化で問題を解決に導く、社会派サイエンティストです。「グラフにすれば一目瞭然でしょ？」が決めゼリフで、数字の裏にある現実を見抜く力を持っています。フローレンス・ナイチンゲールといえば「白衣の天使」のイメージが強いですが、実は統計学の先駆者でもありました。クリミア戦争で兵士の死因を分析し、戦闘ではなく不衛生な環境が主な死因だとデータで証明。彼女が考案した「鶏のとさか」と呼ばれる円グラフの変形は、政治家を動かし、病院改革を実現させました。弱点は、データに頼りすぎて「数字に表れない価値」を見落とすことがあること。アドバイス：ナイチンゲールの真の武器はグラフではなく、「データで人を救いたい」という情熱でした。数字の先にある人を忘れずに。",
       detailedContent: {
         traits: [
           "頭の中にある事実を、相手に伝わる「見える形」へ翻訳するのが得意です。同じ数字でも、どう並べてどこに色を置けば一目で伝わるかを自然に考えてしまうタイプです。",
@@ -1091,9 +1085,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "faraday",
-      title: "\u30D5\u30A1\u30E9\u30C7\u30FC\u578B\u601D\u8003\u8005",
+      title: "ファラデー型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30D5\u30A1\u30E9\u30C7\u30FC\u578B\u601D\u8003\u8005\u3002\u72EC\u5B66\u3068\u5B9F\u9A13\u3067\u5E38\u8B58\u3092\u8986\u3059\u3001\u53E9\u304D\u4E0A\u3052\u306E\u5929\u624D\u3067\u3059\u3002\u6559\u79D1\u66F8\u306E\u7406\u8AD6\u3088\u308A\u3001\u81EA\u5206\u306E\u624B\u3067\u8A66\u3057\u3066\u78BA\u304B\u3081\u308B\u3053\u3068\u3092\u5927\u5207\u306B\u3059\u308B\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30DE\u30A4\u30B1\u30EB\u30FB\u30D5\u30A1\u30E9\u30C7\u30FC\u306F\u88FD\u672C\u5C4B\u306E\u5F92\u5F1F\u304B\u3089\u72EC\u5B66\u3067\u79D1\u5B66\u8005\u306B\u306A\u308A\u3001\u96FB\u78C1\u8A98\u5C0E\u306E\u6CD5\u5247\u3092\u767A\u898B\u3057\u307E\u3057\u305F\u3002\u6B63\u5F0F\u306A\u9AD8\u7B49\u6559\u80B2\u3092\u53D7\u3051\u3066\u3044\u306A\u304B\u3063\u305F\u305F\u3081\u6570\u5B66\u304C\u82E6\u624B\u3067\u3057\u305F\u304C\u3001\u4EE3\u308F\u308A\u306B\u9BAE\u3084\u304B\u306A\u5B9F\u9A13\u306E\u76F4\u611F\u3067\u96FB\u6C17\u3068\u78C1\u6C17\u306E\u95A2\u4FC2\u3092\u898B\u629C\u3044\u305F\u306E\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u300C\u81EA\u5206\u3067\u3084\u3063\u3066\u307F\u306A\u3044\u3068\u4FE1\u3058\u306A\u3044\u300D\u305F\u3081\u3001\u4EBA\u306E\u30A2\u30C9\u30D0\u30A4\u30B9\u3092\u7D20\u76F4\u306B\u805E\u3051\u306A\u3044\u3053\u3068\u304C\u3042\u308B\u3053\u3068\u3002\u8ECA\u8F2A\u306E\u518D\u767A\u660E\u3092\u3057\u304C\u3061\u3067\u3059\u304C\u3001\u305D\u306E\u904E\u7A0B\u3067\u601D\u308F\u306C\u767A\u898B\u3092\u3059\u308B\u306E\u3082\u30D5\u30A1\u30E9\u30C7\u30FC\u578B\u306E\u7279\u6A29\u3067\u3059\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u9060\u56DE\u308A\u306B\u898B\u3048\u308B\u9053\u304C\u3001\u5B9F\u306F\u6700\u3082\u8C4A\u304B\u306A\u5B66\u3073\u3092\u3082\u305F\u3089\u3057\u307E\u3059\u3002\u81EA\u5206\u306E\u624B\u3092\u4FE1\u3058\u3066\u304F\u3060\u3055\u3044\u3002",
+        "あなたはファラデー型思考者。独学と実験で常識を覆す、叩き上げの天才です。教科書の理論より、自分の手で試して確かめることを大切にするタイプではありませんか？ マイケル・ファラデーは製本屋の徒弟から独学で科学者になり、電磁誘導の法則を発見しました。正式な高等教育を受けていなかったため数学が苦手でしたが、代わりに鮮やかな実験の直感で電気と磁気の関係を見抜いたのです。弱点は、「自分でやってみないと信じない」ため、人のアドバイスを素直に聞けないことがあること。車輪の再発明をしがちですが、その過程で思わぬ発見をするのもファラデー型の特権です。アドバイス：遠回りに見える道が、実は最も豊かな学びをもたらします。自分の手を信じてください。",
       detailedContent: {
         traits: [
           "説明書を読むより先に、まず触って動かしてみたくなります。手を動かしているうちに「なるほど、こういう仕組みか」と体で理解していくタイプで、頭でわかるより指先でわかるほうが腑に落ちます。",
@@ -1113,9 +1107,9 @@ const scienceThinkingQuiz: QuizDefinition = {
     },
     {
       id: "fabre",
-      title: "\u30D5\u30A1\u30FC\u30D6\u30EB\u578B\u601D\u8003\u8005",
+      title: "ファーブル型思考者",
       description:
-        "\u3042\u306A\u305F\u306F\u30D5\u30A1\u30FC\u30D6\u30EB\u578B\u601D\u8003\u8005\u3002\u8EAB\u8FD1\u306A\u751F\u304D\u7269\u3084\u73FE\u8C61\u3092\u3068\u3053\u3068\u3093\u89B3\u5BDF\u3057\u3001\u5B9F\u9A13\u3067\u78BA\u304B\u3081\u305A\u306B\u306F\u3044\u3089\u308C\u306A\u3044\u535A\u7269\u5B66\u8005\u30BF\u30A4\u30D7\u3067\u3059\u3002\u6563\u6B69\u4E2D\u306B\u866B\u306E\u884C\u52D5\u304C\u6C17\u306B\u306A\u3063\u3066\u7ACB\u3061\u6B62\u307E\u3063\u305F\u308A\u3001\u96F2\u306E\u5F62\u306E\u5909\u5316\u3092\u8FFD\u3044\u304B\u3051\u305F\u308A\u3059\u308B\u30BF\u30A4\u30D7\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u304B\uFF1F \u30B8\u30E3\u30F3\u30FB\u30A2\u30F3\u30EA\u30FB\u30D5\u30A1\u30FC\u30D6\u30EB\u306F\u300C\u6606\u866B\u8A18\u300D\u3067\u77E5\u3089\u308C\u308B\u30D5\u30E9\u30F3\u30B9\u306E\u535A\u7269\u5B66\u8005\u3002\u30D5\u30F3\u30B3\u30ED\u30AC\u30B7\u304C\u7CDE\u3092\u8EE2\u304C\u3059\u65B9\u5411\u306B\u6CD5\u5247\u304C\u3042\u308B\u306E\u304B\u3001\u4F55\u6642\u9593\u3082\u304B\u3051\u3066\u89B3\u5BDF\u3068\u5B9F\u9A13\u3092\u7E70\u308A\u8FD4\u3057\u307E\u3057\u305F\u3002\u7814\u7A76\u5BA4\u3067\u306F\u306A\u304F\u91CE\u5916\u306E\u81EA\u7136\u306E\u4E2D\u3067\u3001\u866B\u306E\u76EE\u7DDA\u306B\u306A\u3063\u3066\u4E16\u754C\u3092\u898B\u3064\u3081\u7D9A\u3051\u305F\u4EBA\u3067\u3059\u3002\u5F31\u70B9\u306F\u3001\u89B3\u5BDF\u5BFE\u8C61\u306B\u5922\u4E2D\u306B\u306A\u308A\u3059\u304E\u3066\u6642\u9593\u3092\u5FD8\u308C\u308B\u3053\u3068\u3002\u5F85\u3061\u5408\u308F\u305B\u306B\u9045\u308C\u305F\u7406\u7531\u304C\u300C\u30A2\u30EA\u306E\u884C\u5217\u304C\u9762\u767D\u304F\u3066\u300D\u3067\u306F\u8A31\u3057\u3066\u3082\u3089\u3048\u306A\u3044\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002\u30A2\u30C9\u30D0\u30A4\u30B9\uFF1A\u5C0F\u3055\u306A\u767A\u898B\u3092\u7A4D\u307F\u91CD\u306D\u308B\u3042\u306A\u305F\u306E\u76EE\u306F\u3001\u4E16\u754C\u3092\u5C11\u3057\u305A\u3064\u8C4A\u304B\u306B\u3057\u3066\u3044\u307E\u3059\u3002\u305D\u306E\u76EE\u3092\u5927\u5207\u306B\u3002",
+        "あなたはファーブル型思考者。身近な生き物や現象をとことん観察し、実験で確かめずにはいられない博物学者タイプです。散歩中に虫の行動が気になって立ち止まったり、雲の形の変化を追いかけたりするタイプではありませんか？ ジャン・アンリ・ファーブルは「昆虫記」で知られるフランスの博物学者。フンコロガシが糞を転がす方向に法則があるのか、何時間もかけて観察と実験を繰り返しました。研究室ではなく野外の自然の中で、虫の目線になって世界を見つめ続けた人です。弱点は、観察対象に夢中になりすぎて時間を忘れること。待ち合わせに遅れた理由が「アリの行列が面白くて」では許してもらえないかもしれません。アドバイス：小さな発見を積み重ねるあなたの目は、世界を少しずつ豊かにしています。その目を大切に。",
       detailedContent: {
         traits: [
           "結論を急がず、まず「ただ見続ける」ことができます。すぐ答えを出すより、同じ対象を時間をかけて眺め、少しずつ変化に気づいていく過程そのものを楽しめるタイプです。",
