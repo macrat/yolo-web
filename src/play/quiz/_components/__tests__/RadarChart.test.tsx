@@ -122,10 +122,11 @@ describe("layoutRadar", () => {
     expect(layout.radius).toBeLessThan(4 * narrowLarge.lineHeight);
   });
 
-  test("軸の名前を置く幅が図に無ければ、組めないことを返す", () => {
-    for (const width of [0, 60, 90]) {
+  test("軸の名前を置く幅が図に無ければ組めないことを返し、置ける幅になれば組む", () => {
+    for (const width of [0, 60, 95]) {
       expect(layoutRadar({ ...frame, width }, 5)).toBeNull();
     }
+    expect(layoutRadar({ ...frame, width: 96 }, 5)?.labels).toHaveLength(5);
   });
 
   test("図の高さは、多角形と添えた字の全体を含む", () => {
@@ -175,11 +176,17 @@ describe("RadarChart を測り直す", () => {
     { label: "創造", percent: 0 },
   ];
 
-  /** 図の幅と、字1つあたりの幅（14px の字）。測りの字の幅は字数から出す。 */
   let figureWidth = 320;
   const observers: ResizeObserverCallback[] = [];
 
+  /**
+   * 図の幅を figureWidth に、字を 14px（1字の幅 14px・行の高さ 17.5px）にして測らせ、ResizeObserver の通知を
+   * resizeTo で送れるようにする。この測りでは、軸の名前を置けるいちばん狭い図の幅が 96px になる。
+   */
   function stubMeasurement() {
+    const style = document.createElement("style");
+    style.textContent = "[data-radar-name] { font-size: 14px; }";
+    document.head.append(style);
     vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(
       () => figureWidth,
     );
@@ -202,12 +209,17 @@ describe("RadarChart を測り直す", () => {
     vi.stubGlobal(
       "ResizeObserver",
       class {
+        #callback: ResizeObserverCallback;
         constructor(callback: ResizeObserverCallback) {
+          this.#callback = callback;
           observers.push(callback);
         }
         observe() {}
         unobserve() {}
-        disconnect() {}
+        disconnect() {
+          const index = observers.indexOf(this.#callback);
+          if (index >= 0) observers.splice(index, 1);
+        }
       },
     );
   }
@@ -228,6 +240,7 @@ describe("RadarChart を測り直す", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
+    document.head.querySelectorAll("style").forEach((style) => style.remove());
     observers.length = 0;
     figureWidth = 320;
   });
@@ -239,17 +252,27 @@ describe("RadarChart を測り直す", () => {
     );
     expect(labelCount(container)).toBe(5);
 
-    for (const width of [266, 0, 400, 40, 320, 0, 266]) {
+    const steps: [width: number, drawn: boolean][] = [
+      [266, true],
+      [0, false],
+      [96, true],
+      [95, false],
+      [100, true],
+      [90, false],
+      [320, true],
+      [0, false],
+      [266, true],
+    ];
+    for (const [width, drawn] of steps) {
       resizeTo(width);
       const svg = container.querySelector("svg");
-      if (width < 60) {
-        expect(svg).toBeNull();
-      } else {
+      if (drawn) {
         expect(svg?.getAttribute("width")).toBe(String(width));
         expect(labelCount(container)).toBe(5);
+      } else {
+        expect(svg).toBeNull();
       }
     }
-    expect(labelCount(container)).toBe(5);
   });
 
   test("軸の数が変わっても、前の軸で測った値では組まず、いまの軸で測り直して描く", () => {
