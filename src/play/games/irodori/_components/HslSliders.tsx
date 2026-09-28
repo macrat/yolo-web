@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, type CSSProperties, type Ref } from "react";
+import type { Ref } from "react";
+import Slider, { type SliderItem, type TrackStop } from "@/components/Slider";
 import styles from "./HslSliders.module.css";
 
 interface Props {
@@ -14,21 +15,18 @@ interface Props {
   firstSliderRef?: Ref<HTMLInputElement>;
 }
 
-interface SliderSpec {
-  label: string;
-  max: number;
-  value: number;
-  onChange: (value: number) => void;
-  /** 溝に描く、その値を動かしたときの色の移り変わり */
-  track: string;
+/** 色相の止まりの間隔。HSL の色は色相 60 ごとの区間で RGB の上を線形に動くので、この間隔の止まりで正確に描ける。 */
+const HUE_STOP_INTERVAL = 60;
+const HUE_MAX = 360;
+
+function hsl(h: number, s: number, l: number): string {
+  return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
-const HUE_TRACK =
-  "linear-gradient(to right, hsl(0,100%,50%), hsl(60,100%,50%), hsl(120,100%,50%), hsl(180,100%,50%), hsl(240,100%,50%), hsl(300,100%,50%), hsl(360,100%,50%))";
-
 /**
- * 色相・彩度・明度のスライダー。溝には、そのスライダーを動かすと色がどう移るかを描く。いまの色から
- * 動かす先が見えるので、お題に近づける向きが分かる。
+ * 色相・彩度・明度のスライダー。どの溝も、そこへつまみを動かしたときに作られる色で塗り、ほかの2つの成分は
+ * いまの値のままにする（DESIGN.md §6 の色を作るスライダー）。いま作っている色から、どちらへ動かせばお題に
+ * 近づくかが溝の上に見える。彩度が 0 なら色相の溝は一様な灰になり、色相を動かしても色が変わらないことも見える。
  */
 export default function HslSliders({
   h,
@@ -39,57 +37,54 @@ export default function HslSliders({
   onLChange,
   firstSliderRef,
 }: Props) {
-  const id = useId();
-  const sliders: SliderSpec[] = [
+  const hueStops: TrackStop[] = [];
+  for (let hue = 0; hue <= HUE_MAX; hue += HUE_STOP_INTERVAL) {
+    hueStops.push({ value: hue, color: hsl(hue, s, l) });
+  }
+  const items: SliderItem[] = [
     {
       label: "色相",
-      max: 360,
       value: h,
+      min: 0,
+      max: HUE_MAX,
       onChange: onHChange,
-      track: HUE_TRACK,
+      decreaseLabel: "色相を1減らす",
+      increaseLabel: "色相を1増やす",
+      trackStops: hueStops,
+      inputRef: firstSliderRef,
     },
     {
       label: "彩度",
-      max: 100,
       value: s,
+      min: 0,
+      max: 100,
       onChange: onSChange,
-      track: `linear-gradient(to right, hsl(${h},0%,${l}%), hsl(${h},100%,${l}%))`,
+      decreaseLabel: "彩度を1減らす",
+      increaseLabel: "彩度を1増やす",
+      trackStops: [
+        { value: 0, color: hsl(h, 0, l) },
+        { value: 100, color: hsl(h, 100, l) },
+      ],
     },
     {
       label: "明度",
-      max: 100,
       value: l,
+      min: 0,
+      max: 100,
       onChange: onLChange,
-      track: `linear-gradient(to right, hsl(${h},${s}%,0%), hsl(${h},${s}%,50%), hsl(${h},${s}%,100%))`,
+      decreaseLabel: "明度を1減らす",
+      increaseLabel: "明度を1増やす",
+      trackStops: [
+        { value: 0, color: hsl(h, s, 0) },
+        { value: 50, color: hsl(h, s, 50) },
+        { value: 100, color: hsl(h, s, 100) },
+      ],
     },
   ];
 
   return (
     <div className={styles.sliders}>
-      {sliders.map((slider, index) => {
-        const inputId = `${id}-${index}`;
-        return (
-          <div key={slider.label} className={styles.row}>
-            <label htmlFor={inputId} className={styles.label}>
-              {slider.label}
-            </label>
-            <input
-              ref={index === 0 ? firstSliderRef : undefined}
-              id={inputId}
-              type="range"
-              min={0}
-              max={slider.max}
-              value={slider.value}
-              onChange={(e) => slider.onChange(Number(e.target.value))}
-              className={styles.slider}
-              style={{ "--track": slider.track } as CSSProperties}
-            />
-            <span className={styles.value} aria-hidden="true">
-              {slider.value}
-            </span>
-          </div>
-        );
-      })}
+      <Slider items={items} />
     </div>
   );
 }

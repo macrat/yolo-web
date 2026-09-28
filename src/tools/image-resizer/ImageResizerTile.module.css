@@ -80,7 +80,6 @@
 .rangeInput {
   width: 100%;
   max-width: 200px;
-  accent-color: var(--accent);
 }
 
 /* ===== 実行のボタン =====

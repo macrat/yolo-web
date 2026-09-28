@@ -1,0 +1,145 @@
+/*
+ * スライダーの並び（DESIGN.md §6）。溝とつまみの見た目・押せる範囲の高さ・hover とフォーカスは globals.css の
+ * input[type="range"] の既定が持ち、ここは並べ方と − ＋・値を持つ。
+ *
+ * 1行の組みと2行の組みの切り替え: 1行の組みの溝の長さは、並びの幅から、ラベル・値などの溝のほかの幅
+ * （--slider-fixed。部品が並びの字の数から決める）を除いたものである。コンテナクエリの条件に var() は書けない
+ * ので、問い合わせる入れ物の幅そのものを「並びの幅 − 溝のほかの幅」にし、中の並びはその分だけ右へはみ出させて
+ * 元の幅に戻す。入れ物の幅がそのまま1行の組みの溝の長さになり、それが 5rem に届かなければ2行の組みにする。
+ */
+.container {
+  container: slider / inline-size;
+  width: calc(100% - var(--slider-fixed));
+}
+
+.sliders {
+  display: grid;
+  grid-template-columns: max-content 1fr auto auto auto;
+  width: calc(100% + var(--slider-fixed));
+}
+
+/* どの行も並びの列を使い、溝の始まりと長さを揃える。 */
+.row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+}
+
+/* ラベルは本文の大きさで溝の横に置き、溝の押せる範囲とのあいだを 8px あける（§5）。溝の押せる範囲は左へ
+ * 8px 張り出すので、ラベルのあとに 16px を取る。 */
+.label {
+  padding-inline-end: var(--space-16);
+  color: var(--ink);
+}
+
+/* 押せる範囲は溝の左右に 8px ずつで、右の 8px までを溝の列に収め、− の押せる範囲に接する。 */
+.input {
+  width: calc(100% + var(--text-box-pad));
+}
+
+/* − と ＋。44px 四方の押せる範囲の中央に、長さ 16px の太い線で描く形を置く（§6）。 */
+.step {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.shape {
+  position: relative;
+  width: 16px;
+  height: var(--rule-w);
+  background: currentColor;
+}
+
+.increase .shape::after {
+  content: "";
+  position: absolute;
+  left: calc((16px - var(--rule-w)) / 2);
+  top: calc((var(--rule-w) - 16px) / 2);
+  width: var(--rule-w);
+  height: 16px;
+  background: currentColor;
+}
+
+/* 値が端にあるときの無効の形（§6）。線を --ink-2 で描き、太い破線の枠で囲む。フォーカスの二重リングと取り合わない
+ * よう、枠は outline でなく別の線で描き、フォーカスがあるときはリングの内側に並べる。 */
+.step[aria-disabled="true"] {
+  color: var(--ink-2);
+  cursor: not-allowed;
+}
+
+.step[aria-disabled="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--rule-w) dashed var(--rule);
+}
+
+.step[aria-disabled="true"]:focus-visible::after {
+  inset: calc(2 * var(--rule-w));
+}
+
+/* いまの値。とりうるいちばん長い値の場所をいつも取り、右で揃えて桁をそろえる（§3）。幅は、字の見積もり
+ * （--slider-value）と、いちばん長い値を置いた幅の広いほうで、Web フォントを読む前も後も変わらない。 */
+.value {
+  display: grid;
+  min-width: var(--slider-value);
+  justify-items: end;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.valueSpace,
+.valueText {
+  grid-area: 1 / 1;
+}
+
+.valueSpace {
+  visibility: hidden;
+}
+
+/* 2行の組み。1行目の左にラベル、右端に − と値と ＋、そのすぐ下に並びの幅いっぱいの溝を置き、項目のあいだを
+ * 16px あける。溝の押せる範囲は左右に 8px ずつ張り出す。 */
+@container slider (width < 5rem) {
+  .sliders {
+    grid-template-columns: 1fr auto auto auto;
+    row-gap: var(--space-16);
+  }
+
+  .label {
+    grid-row: 1;
+    grid-column: 1;
+    padding-inline-end: 0;
+  }
+
+  .decrease {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .value {
+    grid-row: 1;
+    grid-column: 3;
+  }
+
+  .increase {
+    grid-row: 1;
+    grid-column: 4;
+  }
+
+  .input {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    width: calc(100% + 2 * var(--text-box-pad));
+  }
+}

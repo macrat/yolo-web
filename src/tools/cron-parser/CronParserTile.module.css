@@ -125,6 +125,8 @@
 }
 
 /* 生成されたCron式表示 */
+/* 生成された式とコピーのボタンの行。式の幅は削らず、1行に入らないときはボタンを次の行の右端に回す
+ * （§6）。 */
 .builtExpressionRow {
   display: flex;
   align-items: center;
@@ -133,7 +135,8 @@
 }
 
 .builtExpression {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--rule-strong);
   /* 読み取り専用の表示ボックス（非インタラクティブ）は --radius (0)。

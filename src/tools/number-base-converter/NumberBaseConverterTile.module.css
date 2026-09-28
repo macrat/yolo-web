@@ -85,8 +85,11 @@
   margin-bottom: 0.5rem;
 }
 
+/* ラベルとコピーのボタンを1行に並べる。1行に入らないときはボタンを次の行の右端に回し、ラベルの幅を
+ * 削らない（§6）。 */
 .hexResultHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }

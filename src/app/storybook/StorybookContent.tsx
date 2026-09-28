@@ -608,14 +608,14 @@ export default function StorybookContent({
                 variant="default"
                 onClick={() => console.log("default clicked")}
               >
-                結果をコピー
+                変換する
               </Button>
               <Button
                 variant="default"
                 disabled
-                disabledReason="結果が出ると押せます"
+                disabledReason="文字を入れると押せます"
               >
-                結果をコピー
+                変換する
               </Button>
             </div>
           </div>
@@ -1147,7 +1147,12 @@ export default function StorybookContent({
           />
 
           <h3 className={styles.subsectionTitle}>無効（写すものが無いとき）</h3>
-          <CopyButton text="" target="出力" disabled />
+          <CopyButton
+            text=""
+            target="出力"
+            disabled
+            disabledReason="変換すると写せます"
+          />
         </Panel>
       </Section>
 
@@ -1385,7 +1390,7 @@ export default function StorybookContent({
       <Section id="result-box">
         <h2 className={styles.sectionTitle}>24. ResultBox</h2>
         <p>
-          結果のボックス（§8）。囲むのは結果と、結果を写すコピーのボタンだけで、中身の形ごとに組み方が決まる。
+          結果のボックス（§8）。囲むのは結果と、値を写すコピーのボタンだけで、中身の形ごとに組み方が決まる。
         </p>
 
         <p className={styles.subsectionTitle}>

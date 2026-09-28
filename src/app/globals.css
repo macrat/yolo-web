@@ -432,6 +432,7 @@ hr {
   summary,
   option,
   [role="button"],
+  input[type="range"],
   [data-text-box],
   [data-hit-area],
   [data-inverted],
@@ -489,7 +490,8 @@ hr {
     a[href]:is([data-text-box], [data-inverted]),
     button,
     summary,
-    [role="button"]
+    [role="button"],
+    input[type="range"]
   ):where(:hover, :active):where(
     :not(
       :disabled,
@@ -529,6 +531,58 @@ hr {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--focus-ring-fill);
+}
+
+/* §6 スライダー。押せる範囲は、溝を上下の中央に持つ高さ 44px の字の箱で、溝の左端を置いた列の左端に揃え、
+ * 左右に 8px 張り出す（§5）。部品のクラスが上書きできるよう、詳細度を 0 にする。上下の余白を持たない（並べた
+ * スライダーの行が、押せる範囲の高さのまま積まれる）。
+ * 溝とつまみは、WebKit・Chromium と Firefox の擬似要素に別々の規則で書く。1つのセレクタの並びにまとめると、
+ * どれかの擬似要素を知らないブラウザがその規則を丸ごと捨てる。溝の細い線は内側の box-shadow で引く。border で
+ * 引くと、WebKit・Chromium はつまみを線の内側で動かし、つまみの動く幅が縮んで、溝の色の止まり（つまみの中心の
+ * 対応。src/components/Slider）とつまみの位置がずれる。溝の地は --paper-2 で、色を作るスライダーは部品が
+ * --slider-track に溝の色を渡す。つまみより左は塗り分けない（進み具合の帯・量の帯と同じ見え方になる）。 */
+:where(input[type="range"]) {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  height: 44px;
+  margin-block: 0;
+  margin-inline: calc(-1 * var(--text-box-pad)) 0;
+  padding-block: 0;
+  padding-inline: var(--text-box-pad);
+  background: transparent;
+  cursor: pointer;
+}
+:where(input[type="range"])::-webkit-slider-runnable-track {
+  height: 16px;
+  background: var(--slider-track, var(--paper-2));
+  box-shadow: inset 0 0 0 var(--rule-w-hair) var(--rule-2);
+}
+:where(input[type="range"])::-moz-range-track {
+  height: 16px;
+  background: var(--slider-track, var(--paper-2));
+  box-shadow: inset 0 0 0 var(--rule-w-hair) var(--rule-2);
+}
+/* つまみは幅 16px・高さ 32px の太い線の四角で、溝より上下に 8px ずつ長い。WebKit・Chromium はつまみの上端を
+ * 溝の上端に付けて描くので、負の margin-top で溝の上下の中央まで上げる。 */
+:where(input[type="range"])::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 16px;
+  height: 32px;
+  margin-top: -8px;
+  border: var(--rule-w) solid var(--rule);
+  border-radius: 0;
+  background: var(--paper);
+}
+:where(input[type="range"])::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 16px;
+  height: 32px;
+  border: var(--rule-w) solid var(--rule);
+  border-radius: 0;
+  background: var(--paper);
 }
 
 /* §8 入力欄（書き込む欄・選ぶ欄）。細い線で囲み、エラーのときだけ太い線にする。hover では見え方を変えない。

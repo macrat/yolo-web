@@ -20,7 +20,8 @@
  *   §3   本文の font-family に Inter/Roboto/Open Sans 等の欧文既定 sans・monospace = ERROR。
  *        見出しの書体（--font-heading）で組む要素のウェイトが 400 以外 = ERROR
  *        （Zen Antique は 400 の1本だけで、ほかのウェイトはブラウザが合成太字を作る。§4「合成太字を作らない」）。
- *   §5   角丸は 0px。影・グロー・半透明ぼかし・グラデーションを持たない。この検査が見るのは:
+ *   §5   角丸は 0px。影・グロー・半透明ぼかしを持たない。グラデーションは、移り変わりの各点をその位置が表す値から
+ *        作った色で塗るときだけ描く。この検査が見るのは:
  *        border-radius が ALLOWED_RADIUS_ATOMS 以外 = ERROR。backdrop-filter: blur・色付きの影 = ERROR。
  *        中性の影・グラデーション背景 = WARN（人手で確認）。絵文字（埋め込み面）= ERROR。
  *        線を引くトークン（LINE_SHADOW_TOKENS）だけの box-shadow は影でないので見ない。

@@ -69,6 +69,7 @@ describe("CopyButton", () => {
       vi.advanceTimersByTime(COPIED_DISPLAY_MS);
     });
     expect(button).toHaveTextContent(COPY_FACES.idle);
+    expect(liveRegion(container)).toHaveTextContent(/^$/);
   });
 
   test("「コピー済み」のあいだはボタンの名前を変えず、知らせはライブリージョンだけが言う", async () => {
@@ -158,6 +159,30 @@ describe("CopyButton", () => {
       COPY_FACES.copied,
       COPY_FACES.failed,
     ]);
+  });
+
+  test("押したあとの面の字は、「コピー」と「済み」「失敗」のあいだにだけ折り所を持つ", async () => {
+    render(<CopyButton text="#ee827c" target="HEX" />);
+    const button = screen.getByRole("button", { name: "HEXをコピー" });
+
+    await press(button);
+
+    expect(button.innerHTML).toContain("コピー<wbr>済み");
+  });
+
+  test("無効の理由を渡すと、押せないあいだ字で添え、ボタンの説明として読ませる", () => {
+    render(
+      <CopyButton
+        text=""
+        target="出力"
+        disabled
+        disabledReason="変換すると写せます"
+      />,
+    );
+    const button = screen.getByRole("button", { name: "出力をコピー" });
+    expect(button).toBeDisabled();
+    expect(button).toHaveAccessibleDescription("変換すると写せます");
+    expect(screen.getByText("変換すると写せます")).toBeVisible();
   });
 
   test("disabled のときは押せず、写さない", () => {
