@@ -5,7 +5,7 @@
  */
 
 import type { Metadata } from "next";
-import type { LinkIndexGroup, LinkIndexItem } from "@/components/LinkIndex";
+import type { IndexEntry, IndexEntryGroup } from "@/lib/index-phrases";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import {
   listPageHref,
@@ -298,12 +298,13 @@ export const KANJI_INDEX_SUMMARY = [
 
 /**
  * 一覧の上の索引に並べる学年・画数・部首（§7）。学年と画数はその順で並べる。部首は、並びの値の画数が字に
- * 見えないので、部首の画数ごとに区切りの見出しを立て、区切りの中は部首の番号の順に並べる。
+ * 見えないので、部首の画数ごとに区切りの見出しを立て、区切りの中は部首の番号の順に並べる。語は区切る前の字で返し、
+ * 索引を置く部品が phraseIndexEntries・phraseIndexGroups（@/lib/index-phrases）で区切る。
  */
 export function kanjiIndexEntries(): {
-  grades: LinkIndexItem[];
-  radicals: LinkIndexGroup[];
-  strokes: LinkIndexItem[];
+  grades: IndexEntry[];
+  radicals: IndexEntryGroup[];
+  strokes: IndexEntry[];
 } {
   const all = getAllKanji();
   const strokeCounts = new Map(
@@ -325,7 +326,7 @@ export function kanjiIndexEntries(): {
   }
   const radicals = [...byStrokes.entries()]
     .sort(([a], [b]) => a - b)
-    .map(([strokes, members]): LinkIndexGroup => {
+    .map(([strokes, members]): IndexEntryGroup => {
       const heading = `${strokes}画`;
       return {
         heading,

@@ -6,23 +6,23 @@ import LinkIndex, {
 } from "@/components/LinkIndex";
 
 const tags: LinkIndexItem[] = [
-  { label: "Web開発", href: "/blog/tag/Web開発", count: 35 },
-  { label: "設計パターン", href: "/blog/tag/設計パターン", count: 20 },
-  { label: "SQL", href: "/blog/tag/SQL", count: 4 },
+  { name: ["Web", "開発"], href: "/blog/tag/Web開発", count: 35 },
+  { name: ["設計", "パターン"], href: "/blog/tag/設計パターン", count: 20 },
+  { name: "SQL", href: "/blog/tag/SQL", count: 4 },
 ];
 
 const strokeGroups: LinkIndexGroup[] = [
   {
     heading: "4画",
     items: [
-      { label: "氷", href: "/dictionary/kanji/氷" },
-      { label: "永", href: "/dictionary/kanji/永" },
+      { name: "氷", href: "/dictionary/kanji/氷" },
+      { name: "永", href: "/dictionary/kanji/永" },
     ],
   },
   {
     heading: "5画",
     headingFont: { "data-heading-font": "fallback" },
-    items: [{ label: "汁", href: "/dictionary/kanji/汁" }],
+    items: [{ name: "汁", href: "/dictionary/kanji/汁" }],
   },
 ];
 
@@ -45,15 +45,21 @@ describe("LinkIndex", () => {
     expect(links[0]).toHaveAttribute("href", "/blog/tag/Web開発");
   });
 
-  test("項目の数を持つ語は、語と数の括弧のあいだでだけ折れる", () => {
+  test("語は、渡された名前の中の語の切れ目と、添えた数の始め括弧の前でだけ折れる", () => {
     render(<LinkIndex label="タグ（3）" items={tags} />);
-    const link = screen.getByRole("link", { name: "設計パターン（20）" });
-    const label = link.querySelector("span");
-    expect(
-      [...(label?.childNodes ?? [])].map((node) =>
-        node.nodeName === "WBR" ? "|" : node.textContent,
-      ),
-    ).toEqual(["設計パターン", "|", "（20）"]);
+    const phrasesOf = (name: string) =>
+      [
+        ...(screen.getByRole("link", { name }).querySelector("span")
+          ?.childNodes ?? []),
+      ].map((node) => (node.nodeName === "WBR" ? "|" : node.textContent));
+    expect(phrasesOf("設計パターン（20）")).toEqual([
+      "設計",
+      "|",
+      "パターン",
+      "|",
+      "（20）",
+    ]);
+    expect(phrasesOf("SQL（4）")).toEqual(["SQL", "|", "（4）"]);
   });
 
   test("数を持たない語は、語だけを言う", () => {
@@ -61,8 +67,8 @@ describe("LinkIndex", () => {
       <LinkIndex
         label="学年（2）"
         items={[
-          { label: "小学1年", href: "/dictionary/kanji/grade/1" },
-          { label: "小学2年", href: "/dictionary/kanji/grade/2" },
+          { name: "小学1年", href: "/dictionary/kanji/grade/1" },
+          { name: "小学2年", href: "/dictionary/kanji/grade/2" },
         ]}
       />,
     );

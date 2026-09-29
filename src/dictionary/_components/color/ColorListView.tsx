@@ -13,6 +13,7 @@ import {
   colorListTitle,
   type ColorListScope,
 } from "@/dictionary/_lib/color-list";
+import { phraseIndexEntries } from "@/lib/index-phrases";
 import { listPageHref } from "@/lib/list-pages";
 
 interface ColorListViewProps {
@@ -58,7 +59,7 @@ export default function ColorListView({ scope, page }: ColorListViewProps) {
     >
       <IndexAccordion
         summary={COLOR_INDEX_SUMMARY}
-        index={colorIndexEntries()}
+        index={phraseIndexEntries(colorIndexEntries())}
         currentHref={basePath}
       />
       <BrowsableList

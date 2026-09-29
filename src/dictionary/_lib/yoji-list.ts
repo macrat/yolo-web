@@ -4,7 +4,7 @@
  */
 
 import type { Metadata } from "next";
-import type { LinkIndexItem } from "@/components/LinkIndex";
+import type { IndexEntry } from "@/lib/index-phrases";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import {
   listPageHref,
@@ -157,8 +157,9 @@ export const YOJI_INDEX_SUMMARY = ["カテゴリから", "探す"] as const;
 
 /**
  * 一覧の上の索引に並べるカテゴリ（§7）。カテゴリは順を持たないので、語の多い順に並べ、語の後ろに語の数を添える。
+ * 語は区切る前の字で返し、索引を置く部品が phraseIndexEntries（@/lib/index-phrases）で区切る。
  */
-export function yojiIndexEntries(): LinkIndexItem[] {
+export function yojiIndexEntries(): IndexEntry[] {
   return getYojiCategories()
     .map((category) => ({
       label: YOJI_CATEGORY_LABELS[category],

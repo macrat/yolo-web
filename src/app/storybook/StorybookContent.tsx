@@ -133,26 +133,27 @@ const TOC_ITEMS = [
   { id: "solved-screen", label: "27. 解き終えた画面（ResultCard）" },
 ];
 
-// LinkIndex の見本。順を持たない分類（多い順・数を添える）と、見えない値で区切る索引。
+// LinkIndex の見本。順を持たない分類（多い順・数を添える）と、見えない値で区切る索引。2語の名前は、名前の中の語の
+// 切れ目で分けた並びで渡す（splitIntoPhrases の countedName と同じ分け方）。
 const LINK_INDEX_TAGS: LinkIndexItem[] = [
-  { label: "Web開発", href: "/blog/tag/Web開発", count: 35 },
-  { label: "設計パターン", href: "/blog/tag/設計パターン", count: 20 },
-  { label: "TypeScript", href: "/blog/tag/TypeScript", count: 12 },
-  { label: "SQL", href: "/blog/tag/SQL", count: 4 },
+  { name: ["Web", "開発"], href: "/blog/tag/Web開発", count: 35 },
+  { name: ["設計", "パターン"], href: "/blog/tag/設計パターン", count: 20 },
+  { name: "TypeScript", href: "/blog/tag/TypeScript", count: 12 },
+  { name: "SQL", href: "/blog/tag/SQL", count: 4 },
 ];
 
 const LINK_INDEX_STROKES: LinkIndexGroup[] = [
   {
     heading: "5画",
     items: ["氷", "永", "汁", "氾", "汀"].map((char) => ({
-      label: char,
+      name: char,
       href: `/dictionary/kanji/${char}`,
     })),
   },
   {
     heading: "6画",
     items: ["汚", "汗", "江", "池", "汐", "汎", "汝"].map((char) => ({
-      label: char,
+      name: char,
       href: `/dictionary/kanji/${char}`,
     })),
   },
@@ -1367,7 +1368,11 @@ export default function StorybookContent({
           漢字の詳細の同じ部首の漢字 —
           セクションの見出しの下に、画数の区切りの見出しつき
         </p>
-        <h3 className={styles.sampleSectionHeading}>同じ部首の漢字（12字）</h3>
+        <PhrasedText
+          as="h3"
+          className={styles.sampleSectionHeading}
+          phrases={["同じ", "部首の", "漢字", "（12字）"]}
+        />
         <LinkIndex
           singleCharacters
           groups={LINK_INDEX_STROKES}

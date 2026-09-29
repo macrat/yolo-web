@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { useId, type ReactElement } from "react";
+import PhrasedText from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
 import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./LinkIndex.module.css";
 
 export interface LinkIndexItem {
-  /** 語。リンクの字になる。 */
-  label: string;
+  /**
+   * 語。リンクの字になる。2語以上の名前は、名前の中の語の切れ目で分けた並び（splitIntoPhrases の countedName。
+   * データから組む語は @/lib/index-phrases で区切る）で渡し、1語の名前は字のまま渡す。
+   */
+  name: PhrasedName;
   href: string;
   /** 順を持たない分類で、その語に属する項目の数。語の後ろに添える。 */
   count?: number;
@@ -45,18 +50,17 @@ export type LinkIndexProps = LinkIndexContent & {
 };
 
 /**
- * 語の字。項目の数を添えるとき（「対立・闘い（26）」）は、始め括弧の前で折り、括弧の数の中では折らない
- * （「対立・闘い／（26）」、DESIGN.md §4）。語が1行に収まらないときだけ、その語の中で折る。
+ * 語の字（DESIGN.md §4 の名前に括弧で数を添えたもの）。名前の中の語の切れ目と、添えた数の始め括弧の前でだけ折り、
+ * 括弧の数の中では折らない（「対立・／闘い／（26）」）。語が1行に収まらないときだけ、その語の中で折る。
  * リンクは flex の箱なので、字を1つの span に入れて1つの行の箱として折り返させる。
  */
-function ItemLabel({ label, count }: Pick<LinkIndexItem, "label" | "count">) {
-  if (count === undefined) return label;
+function ItemName({ name, count }: Pick<LinkIndexItem, "name" | "count">) {
+  const phrases = typeof name === "string" ? [name] : name;
   return (
-    <span className={styles.counted}>
-      {label}
-      <wbr />
-      {`（${count}）`}
-    </span>
+    <PhrasedText
+      as="span"
+      phrases={count === undefined ? phrases : [...phrases, `（${count}）`]}
+    />
   );
 }
 
@@ -88,7 +92,7 @@ export default function LinkIndex(props: LinkIndexProps): ReactElement {
               aria-current={current ? "page" : undefined}
               data-text-box="inline"
             >
-              <ItemLabel label={item.label} count={item.count} />
+              <ItemName name={item.name} count={item.count} />
             </Link>
           </li>
         );

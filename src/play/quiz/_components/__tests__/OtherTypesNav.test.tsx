@@ -3,7 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import React from "react";
 import OtherTypesNav from "../OtherTypesNav";
 import type { QuizResult } from "../../types";
-import { followsPhraseRules } from "@/lib/phrase-breaks";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 
 // next/link をモック（テスト環境で <a> として描画する）
 vi.mock("next/link", () => ({
@@ -272,7 +272,7 @@ describe("OtherTypesNav", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  test("見出しは名前に括弧で数を添えたものとして、名前の中の語の切れ目と始め括弧の前でだけ折れる（DESIGN.md §4）", () => {
     render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
@@ -281,11 +281,11 @@ describe("OtherTypesNav", () => {
         placement="resultPage"
       />,
     );
-    const headings: string[][] = [["すべての", "タイプ", "（3）"]];
-    for (const phrases of headings) {
-      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
-      const heading = screen.getByRole("heading", { name: phrases.join("") });
-      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
-    }
+    const phrases = splitIntoPhrases("すべてのタイプ（3）", {
+      countedName: true,
+    });
+    expect(phrases).toEqual(["すべての", "タイプ", "（3）"]);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
   });
 });

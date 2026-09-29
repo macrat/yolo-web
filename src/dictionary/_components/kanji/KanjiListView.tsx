@@ -13,6 +13,7 @@ import {
   kanjiListTitle,
   type KanjiListScope,
 } from "@/dictionary/_lib/kanji-list";
+import { phraseIndexEntries, phraseIndexGroups } from "@/lib/index-phrases";
 import { listPageHref } from "@/lib/list-pages";
 
 interface KanjiListViewProps {
@@ -63,12 +64,12 @@ export default function KanjiListView({ scope, page }: KanjiListViewProps) {
       <IndexAccordion
         summary={KANJI_INDEX_SUMMARY}
         indexes={[
-          { name: "学年", items: index.grades },
-          { name: "画数", items: index.strokes },
+          { name: "学年", items: phraseIndexEntries(index.grades) },
+          { name: "画数", items: phraseIndexEntries(index.strokes) },
         ]}
         groupedIndex={{
           name: "部首",
-          groups: index.radicals,
+          groups: phraseIndexGroups(index.radicals),
           singleCharacters: true,
         }}
         currentHref={basePath}

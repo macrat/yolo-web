@@ -37,8 +37,9 @@ interface OtherTypesNavProps {
  *
  * 面（解き終えた画面の ResultCard と、結果のページの ResultPageShell）が、読みもののセクションのあとに置く。
  * 1つのセクションで、見出しはどちらの面でもセクションの見出しの段（§4）。全件の一覧なので、見出しがタイプの数を
- * 言う（DESIGN.md §7）。タイプ名は長い句なので、段組みにせず1行1項目で組む。サーバーでも描けるよう、フックは
- * useId だけにする。
+ * 言う（DESIGN.md §7）。見出しは名前に括弧で数を添えたものなので、名前の中の語の切れ目と始め括弧の前でだけ折る
+ * （§4。splitIntoPhrases の countedName と同じ分け方）。タイプ名は長い句なので、段組みにせず1行1項目で組む。
+ * サーバーでも描けるよう、フックは useId だけにする。
  */
 export default function OtherTypesNav({
   quizSlug,

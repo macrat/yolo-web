@@ -1,5 +1,5 @@
 import Link from "next/link";
-import LinkIndex, { type LinkIndexGroup } from "@/components/LinkIndex";
+import LinkIndex from "@/components/LinkIndex";
 import PhrasedText from "@/components/PhrasedText";
 import type {
   YojiDifficulty,
@@ -13,6 +13,7 @@ import {
 } from "@/dictionary/_lib/types";
 import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import { getAllKanjiChars } from "@/dictionary/_lib/kanji";
+import { phraseIndexGroups, type IndexEntryGroup } from "@/lib/index-phrases";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./YojiDetail.module.css";
@@ -24,7 +25,7 @@ interface YojiDetailProps {
 const DIFFICULTY_ORDER: YojiDifficulty[] = [1, 2, 3];
 
 /** 同じカテゴリの四字熟語を難易度の順に区切る。難易度は語に見えないので、区切りの見出しで見せる（§7）。 */
-function groupByDifficulty(yojiList: YojiEntry[]): LinkIndexGroup[] {
+function groupByDifficulty(yojiList: YojiEntry[]): IndexEntryGroup[] {
   return DIFFICULTY_ORDER.map((difficulty) => {
     const heading = YOJI_DIFFICULTY_LABELS[difficulty];
     return {
@@ -87,12 +88,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   const categoryLabel = YOJI_CATEGORY_LABELS[yoji.category];
   const difficultyLabel = YOJI_DIFFICULTY_LABELS[yoji.difficulty];
   const title = `四字熟語「${yoji.yoji}」`;
-  const relatedHeading = [
-    "同じ",
-    "カテゴリの",
-    "四字熟語",
-    `（${relatedYoji.length}語）`,
-  ];
+  const relatedHeading = `同じカテゴリの四字熟語（${relatedYoji.length}語）`;
 
   // Cross-link: find kanji characters from this yoji that exist in kanji-data
   const allKanjiChars = new Set(getAllKanjiChars());
@@ -213,11 +209,11 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         <section className={styles.section}>
           <PhrasedText
             as="h2"
-            phrases={relatedHeading}
-            {...headingFontAttr(relatedHeading.join(""))}
+            phrases={splitIntoPhrases(relatedHeading, { countedName: true })}
+            {...headingFontAttr(relatedHeading)}
           />
           <LinkIndex
-            groups={groupByDifficulty(relatedYoji)}
+            groups={phraseIndexGroups(groupByDifficulty(relatedYoji))}
             groupHeadingLevel={3}
           />
         </section>

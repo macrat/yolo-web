@@ -186,7 +186,7 @@ test("同じカテゴリの四字熟語は、見出しだけが語の数を言�
   }
 });
 
-test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+test("見出しは文節の切れ目で、同じカテゴリの四字熟語の見出しは名前の中の語の切れ目と始め括弧の前でだけ折れる（DESIGN.md §4）", () => {
   render(<YojiDetail yoji={mockYoji} />);
   const count = getYojiByCategory(mockYoji.category).filter(
     (y) => y.yoji !== mockYoji.yoji,
@@ -205,9 +205,10 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () =
     const heading = screen.getByRole("heading", { name: phrases.join("") });
     expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
   }
-  const related = ["同じ", "カテゴリの", "四字熟語", `（${count}語）`];
-  expect(followsPhraseRules(related)).toBe(true);
-  expect(
-    screen.getByRole("heading", { name: related.join("") }).innerHTML,
-  ).toBe(related.join("<wbr>"));
+  const related = `同じカテゴリの四字熟語（${count}語）`;
+  const phrases = splitIntoPhrases(related, { countedName: true });
+  expect(phrases).toEqual(["同じ", "カテゴリの", "四字熟語", `（${count}語）`]);
+  expect(screen.getByRole("heading", { name: related }).innerHTML).toBe(
+    phrases.join("<wbr>"),
+  );
 });

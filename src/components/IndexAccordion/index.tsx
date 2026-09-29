@@ -1,9 +1,10 @@
-import { Fragment, useId } from "react";
+import { useId } from "react";
 import Accordion from "@/components/Accordion";
 import LinkIndex, {
   type LinkIndexGroup,
   type LinkIndexItem,
 } from "@/components/LinkIndex";
+import PhrasedText from "@/components/PhrasedText";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./IndexAccordion.module.css";
 
@@ -36,46 +37,20 @@ type IndexAccordionContent =
 
 export type IndexAccordionProps = IndexAccordionContent & {
   /**
-   * アコーディオンのラベルを語の切れ目で分けたもの（["カテゴリから", "探す"]）。何から探せるかを言い、
-   * 1行に収まらないときは、この切れ目と添えた数の始め括弧の前でだけ折る（DESIGN.md §4）。
+   * アコーディオンのラベル（何から探せるか）を、名前の中の語の切れ目で分けた並び（["カテゴリから", "探す"]。
+   * splitIntoPhrases の countedName と同じ分け方）。索引が1つなら、後ろに語の数を添える。
    */
   summary: readonly string[];
   /** いま開いているページの一覧の元のパス。一致する語を現在地にする。 */
   currentHref: string;
 };
 
-function withCount(name: string, count: number): string {
-  return `${name}（${count}）`;
-}
-
 /**
- * ラベルと索引の見出しの名前。名前の中の語の切れ目と、添えた数の始め括弧の前でだけ折り、括弧の数の中では
- * 折らない（「カテゴリから／探す（10）」「部首／（198）」、DESIGN.md §4）。一語が1行に収まらないときだけ、
- * 本文から継ぐ overflow-wrap がその語の中で折る。
+ * 名前の並びの後ろに、語の数を添える。名前の中の語の切れ目と、添えた数の始め括弧の前でだけ折り、括弧の数の中では
+ * 折らない（「カテゴリから／探す／（10）」「部首／（198）」、DESIGN.md §4）。
  */
-function IndexName({
-  words,
-  count,
-}: {
-  words: readonly string[];
-  count?: number;
-}) {
-  return (
-    <span className={styles.name}>
-      {words.map((word, i) => (
-        <Fragment key={i}>
-          {i > 0 ? <wbr /> : null}
-          {word}
-        </Fragment>
-      ))}
-      {count === undefined ? null : (
-        <>
-          <wbr />
-          {`（${count}）`}
-        </>
-      )}
-    </span>
-  );
+function withCount(phrases: readonly string[], count: number): string[] {
+  return [...phrases, `（${count}）`];
 }
 
 /**
@@ -97,9 +72,11 @@ export default function IndexAccordion(props: IndexAccordionProps) {
     return (
       <Accordion
         summary={
-          <span id={labelId}>
-            <IndexName words={props.summary} count={props.index.length} />
-          </span>
+          <PhrasedText
+            as="span"
+            id={labelId}
+            phrases={withCount(props.summary, props.index.length)}
+          />
         }
       >
         <div className={styles.index}>
@@ -114,13 +91,15 @@ export default function IndexAccordion(props: IndexAccordionProps) {
   }
 
   const { indexes, groupedIndex } = props;
-  const groupedCount = groupedIndex?.groups.reduce(
-    (sum, group) => sum + group.items.length,
-    0,
-  );
+  const groupedHeading =
+    groupedIndex &&
+    withCount(
+      [groupedIndex.name],
+      groupedIndex.groups.reduce((sum, group) => sum + group.items.length, 0),
+    );
 
   return (
-    <Accordion summary={<IndexName words={props.summary} />}>
+    <Accordion summary={props.summary}>
       <div
         className={
           groupedIndex?.singleCharacters
@@ -130,15 +109,16 @@ export default function IndexAccordion(props: IndexAccordionProps) {
       >
         {indexes.map((index, i) => {
           const headingId = `${idPrefix}-${i}`;
+          const heading = withCount([index.name], index.items.length);
           return (
             <div key={index.name} className={styles.part}>
-              <h2
+              <PhrasedText
+                as="h2"
                 id={headingId}
                 className={styles.heading}
-                {...headingFontAttr(withCount(index.name, index.items.length))}
-              >
-                <IndexName words={[index.name]} count={index.items.length} />
-              </h2>
+                phrases={heading}
+                {...headingFontAttr(heading.join(""))}
+              />
               <LinkIndex
                 labelledBy={headingId}
                 items={index.items}
@@ -147,14 +127,14 @@ export default function IndexAccordion(props: IndexAccordionProps) {
             </div>
           );
         })}
-        {groupedIndex && groupedCount !== undefined ? (
+        {groupedIndex && groupedHeading ? (
           <div className={styles.part}>
-            <h2
+            <PhrasedText
+              as="h2"
               className={styles.heading}
-              {...headingFontAttr(withCount(groupedIndex.name, groupedCount))}
-            >
-              <IndexName words={[groupedIndex.name]} count={groupedCount} />
-            </h2>
+              phrases={groupedHeading}
+              {...headingFontAttr(groupedHeading.join(""))}
+            />
             <LinkIndex
               singleCharacters={groupedIndex.singleCharacters}
               groups={groupedIndex.groups}

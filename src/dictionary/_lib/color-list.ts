@@ -4,7 +4,7 @@
  */
 
 import type { Metadata } from "next";
-import type { LinkIndexItem } from "@/components/LinkIndex";
+import type { IndexEntry } from "@/lib/index-phrases";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import {
   listPageHref,
@@ -210,8 +210,11 @@ export function colorListItems(scope: ColorListScope): BrowseItem[] {
 /** 一覧の上の索引を入れるアコーディオンのラベルを、語の切れ目で分けたもの（DESIGN.md §4）。 */
 export const COLOR_INDEX_SUMMARY = ["色みから", "探す"] as const;
 
-/** 一覧の上の索引に並べる色み（§7）。色みは色相の順を持つので、その順で並べ、数を添えない。 */
-export function colorIndexEntries(): LinkIndexItem[] {
+/**
+ * 一覧の上の索引に並べる色み（§7）。色みは色相の順を持つので、その順で並べ、数を添えない。語は区切る前の字で返し、
+ * 索引を置く部品が phraseIndexEntries（@/lib/index-phrases）で区切る。
+ */
+export function colorIndexEntries(): IndexEntry[] {
   return colorListCategories().map((category) => ({
     label: COLOR_CATEGORY_LABELS[category],
     href: colorListBasePath({ type: "category", category }),

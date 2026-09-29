@@ -14,6 +14,7 @@ import {
   blogListTitle,
   type BlogListScope,
 } from "@/blog/_lib/blog-list";
+import { phraseIndexEntries } from "@/lib/index-phrases";
 import { listPageHref } from "@/lib/list-pages";
 
 interface BlogListViewProps {
@@ -53,8 +54,8 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
       <IndexAccordion
         summary={BLOG_INDEX_SUMMARY}
         indexes={[
-          { name: "分類", items: index.categories },
-          { name: "タグ", items: index.tags },
+          { name: "分類", items: phraseIndexEntries(index.categories) },
+          { name: "タグ", items: phraseIndexEntries(index.tags) },
         ]}
         currentHref={basePath}
       />

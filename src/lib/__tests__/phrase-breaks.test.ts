@@ -335,6 +335,84 @@ describe("splitIntoPhrases", () => {
   });
 });
 
+describe("splitIntoPhrases の名前に括弧で数を添えたもの（countedName）", () => {
+  const counted = { countedName: true };
+
+  test("名前の中の語の切れ目と始め括弧の前で区切る", () => {
+    expect(splitIntoPhrases("オンラインツール", counted)).toEqual([
+      "オンライン",
+      "ツール",
+    ]);
+    expect(splitIntoPhrases("カテゴリから探す（10）", counted)).toEqual([
+      "カテゴリから",
+      "探す",
+      "（10）",
+    ]);
+    expect(splitIntoPhrases("部首（198）", counted)).toEqual([
+      "部首",
+      "（198）",
+    ]);
+    expect(splitIntoPhrases("対立・闘い（26）", counted)).toEqual([
+      "対立・",
+      "闘い",
+      "（26）",
+    ]);
+    expect(splitIntoPhrases("Web開発", counted)).toEqual(["Web", "開発"]);
+  });
+
+  test("括弧の中では区切らない", () => {
+    for (const text of [
+      "同じカテゴリの四字熟語（57語）",
+      "メール配信（初期: 選択済み）",
+      "Claude Code（3）",
+    ]) {
+      const pieces = splitIntoPhrases(text, counted);
+      expect(pieces.join("")).toBe(text);
+      expect(pieces.at(-1)).toMatch(/^（[^（]*）$/u);
+      for (const piece of pieces.slice(0, -1)) {
+        expect(piece).not.toMatch(/[（）]/u);
+      }
+    }
+  });
+
+  test("文節でなく語で区切り、助詞・送り仮名・漢字どうしの所では区切らない", () => {
+    expect(splitIntoPhrases("同じカテゴリの四字熟語（57語）", counted)).toEqual(
+      ["同じ", "カテゴリの", "四字熟語", "（57語）"],
+    );
+    expect(splitIntoPhrases("失敗と学び", counted)).toEqual(["失敗と", "学び"]);
+    expect(splitIntoPhrases("中学以降", counted)).toEqual(["中学以降"]);
+    expect(splitIntoPhrases("小学1年", counted)).toEqual(["小学1年"]);
+  });
+
+  test("見出しの狭い行に収まる片仮名の続きは、語の辞書が刻んでも1語として区切らない", () => {
+    expect(splitIntoPhrases("ワークフロー連載", counted)).toEqual([
+      "ワークフロー",
+      "連載",
+    ]);
+    expect(splitIntoPhrases("ツールガイド", counted)).toEqual(["ツールガイド"]);
+  });
+
+  test("区切りは禁則を満たし、名前の切れ端はどれも1行を作ってよい長さを持つ", () => {
+    for (const text of [
+      "オンラインツール（12）",
+      "AIエージェント（8）",
+      "日本語・文化（5）",
+      "すべてのタイプ（24）",
+      "学年・画数・部首から探す",
+    ]) {
+      const pieces = splitIntoPhrases(text, counted);
+      expect(pieces.join("")).toBe(text);
+      expect(followsPhraseRules(pieces), pieces.join("|")).toBe(true);
+      for (const piece of pieces.filter((p) => !p.startsWith("（"))) {
+        expect(
+          [...piece].filter((ch) => /[\p{L}\p{N}]/u.test(ch)).length,
+          piece,
+        ).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+});
+
 describe("followsPhraseRules", () => {
   test("splitIntoPhrases が作る並びは、どれも禁則を満たす", () => {
     for (const heading of allQuizHeadings) {

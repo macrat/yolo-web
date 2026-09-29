@@ -125,13 +125,19 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () =
   expect(title.innerHTML).toBe(
     splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
   );
-  const headings: string[][] = [
-    ["同じ", "部首の", "漢字", "（117字）"],
-    ["関連", "ゲーム"],
-  ];
-  for (const phrases of headings) {
-    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
-    const heading = screen.getByRole("heading", { name: phrases.join("") });
-    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
-  }
+  const game = ["関連", "ゲーム"];
+  expect(followsPhraseRules(game)).toBe(true);
+  expect(screen.getByRole("heading", { name: game.join("") }).innerHTML).toBe(
+    game.join("<wbr>"),
+  );
+});
+
+test("同じ部首の漢字の見出しは、名前に括弧で数を添えたものとして、名前の中の語の切れ目と始め括弧の前でだけ折れる（DESIGN.md §4）", () => {
+  render(<KanjiDetail kanji={getKanjiByChar("水")!} />);
+  const text = "同じ部首の漢字（117字）";
+  const phrases = splitIntoPhrases(text, { countedName: true });
+  expect(phrases).toEqual(["同じ", "部首の", "漢字", "（117字）"]);
+  expect(screen.getByRole("heading", { name: text }).innerHTML).toBe(
+    phrases.join("<wbr>"),
+  );
 });

@@ -13,6 +13,8 @@
  *   足す。
  *   収まらない文節をブラウザが字の所で割ると、1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。
  *   <wbr> の折り所に優先の順は無く、文節が1行に収まる広い行でも行の終わりに来れば使われるので、語の中には置かない。
+ * 名前に括弧で数を添えたもの（索引の語・アコーディオンのラベル・「部首（198）」の見出し）は、文節でなく、名前の中の語の
+ * 切れ目と始め括弧の前でだけ区切り、括弧の中では区切らない（countedName の指定）。
  * BudouX の分け方の表は大きいので、クライアントのバンドルに入れないよう、区切りはサーバーで作る。
  * クライアントの部品から読み込むとビルドが止まる（server-only）。クライアントの部品が描く見出しには、
  * サーバーの page.tsx がここで作った区切りを props で渡す。
@@ -528,26 +530,90 @@ function splitWidePhraseAtWords(phrase: string): string[] {
   return cut(chars, split(0, chars.length));
 }
 
-interface PhraseOptions {
-  /**
-   * 組む先が表のセルか（DESIGN.md §4）。表のセルは丸括弧の中も文節で折る。表のセルの括弧は読み仮名や数でなく説明を
-   * 囲み、中にも文節がある。開き括弧の直後と閉じ括弧の直前で折らない禁則は残る。列の幅はいちばん長い文節で決まるので、
-   * 見出しだけのための足し引き（中点・英字の語の後ろ、閉じ括弧の後ろの続き、広い文節の中の語の切れ目）はしない。
-   * 最初の文節の字の種類の変わり目の折り所は、見出しと同じく置く。
-   */
-  tableCell?: boolean;
+/**
+ * 名前（数を添えるなら添えた数まで）を、名前の中の語の切れ目と始め括弧の前で分ける（「カテゴリから|探す|（10）」
+ * 「部首|（198）」）。語の切れ目は、見出しの広い文節を分ける所と同じ語の頭（wordStartsOf・wordBreakRank）のうち、禁則を
+ * 満たし、分けた名前の切れ端のどちらもが1行を作ってよい所（canStandAlone）。丸括弧の中には区切りを置かない。
+ * 片仮名の続きの中の語の頭は、続きが見出しの狭い行（NARROWEST_HEADING_LINE）に収まらないとき（「オンライン|ツール」）
+ * だけ使う。語の辞書は1つの外来語も元の語ごとに刻む（「ワーク|フロー」）ので、収まる続きは1語として組む。
+ * 文節で分けないので、BudouX を使わない。
+ */
+function splitNameAtWords(text: string): string[] {
+  const chars = toGraphemes(text);
+  const depths = parenDepths(chars);
+  const starts = new Set(
+    [...wordStartsOf(chars, text)].filter((index) => {
+      if (
+        scriptOf(chars[index - 1]) !== "katakana" ||
+        scriptOf(chars[index]) !== "katakana"
+      ) {
+        return true;
+      }
+      const runStart = index - scriptRunLength(chars, index - 1, -1);
+      const runEnd = index + scriptRunLength(chars, index, 1);
+      return widthOf(chars.slice(runStart, runEnd)) > NARROWEST_HEADING_LINE;
+    }),
+  );
+  const nameEnd = (from: number): number => {
+    const paren = chars.findIndex(
+      (ch, index) =>
+        index >= from && depths[index] === 0 && OPEN_PAREN.test(ch),
+    );
+    return paren === -1 ? chars.length : paren;
+  };
+  const offsets: number[] = [];
+  let from = 0;
+  for (let index = 1; index < chars.length; index += 1) {
+    if (depths[index] > 0) continue;
+    const before = chars.slice(from, index);
+    const breakable =
+      OPEN_PAREN.test(chars[index]) ||
+      (starts.has(index) &&
+        wordBreakRank(chars[index - 1], chars[index]) !== undefined &&
+        canStandAlone(before) &&
+        canStandAlone(chars.slice(index, nameEnd(index))));
+    if (
+      breakable &&
+      !isUnbreakable(before.join(""), chars.slice(index).join(""))
+    ) {
+      offsets.push(index);
+      from = index;
+    }
+  }
+  return cut(chars, offsets);
 }
+
+type PhraseOptions =
+  | {
+      /**
+       * 組む先が表のセルか（DESIGN.md §4）。表のセルは丸括弧の中も文節で折る。表のセルの括弧は読み仮名や数でなく
+       * 説明を囲み、中にも文節がある。開き括弧の直後と閉じ括弧の直前で折らない禁則は残る。列の幅はいちばん長い文節で
+       * 決まるので、見出しだけのための足し引き（中点・英字の語の後ろ、閉じ括弧の後ろの続き、広い文節の中の語の
+       * 切れ目）はしない。最初の文節の字の種類の変わり目の折り所は、見出しと同じく置く。
+       */
+      tableCell?: boolean;
+      countedName?: never;
+    }
+  | {
+      /**
+       * 文が名前に括弧で数を添えたもの（「部首（198）」「対立・闘い（26）」）か、数を添える名前（索引の語）か
+       * （DESIGN.md §4）。名前の中の語の切れ目と始め括弧の前でだけ区切り、括弧の中では区切らない（splitNameAtWords）。
+       */
+      countedName?: boolean;
+      tableCell?: never;
+    };
 
 /**
  * text を、行の切れ目にしてよい所で分けた並びを返す。並びをつなぐと text に戻る。
  * 区切りは文節の切れ目と、見出しでは語の切れ目（ファイルの頭の説明）。最後の文節が1字なら前の文節につなぎ、
- * 最後の行を1字だけにしない。
+ * 最後の行を1字だけにしない。名前に括弧で数を添えたもの（countedName）は、名前の中の語の切れ目と始め括弧の前で区切る。
  */
 export function splitIntoPhrases(
   text: string,
-  { tableCell = false }: PhraseOptions = {},
+  { tableCell = false, countedName = false }: PhraseOptions = {},
 ): string[] {
   if (text === "") return [];
+  if (countedName) return splitNameAtWords(text);
   parser ??= loadDefaultJapaneseParser();
   const chunks = parser.parse(text);
   let phrases: string[] = [];

@@ -13,6 +13,7 @@ import {
   yojiListTitle,
   type YojiListScope,
 } from "@/dictionary/_lib/yoji-list";
+import { phraseIndexEntries } from "@/lib/index-phrases";
 import { listPageHref } from "@/lib/list-pages";
 
 interface YojiListViewProps {
@@ -58,7 +59,7 @@ export default function YojiListView({ scope, page }: YojiListViewProps) {
     >
       <IndexAccordion
         summary={YOJI_INDEX_SUMMARY}
-        index={yojiIndexEntries()}
+        index={phraseIndexEntries(yojiIndexEntries())}
         currentHref={basePath}
       />
       <BrowsableList

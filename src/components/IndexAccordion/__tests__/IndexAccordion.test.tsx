@@ -3,8 +3,8 @@ import { render, screen, within } from "@testing-library/react";
 import IndexAccordion from "@/components/IndexAccordion";
 
 const categories = [
-  { label: "人生", href: "/dictionary/yoji/category/life", count: 58 },
-  { label: "努力", href: "/dictionary/yoji/category/effort", count: 45 },
+  { name: "人生", href: "/dictionary/yoji/category/life", count: 58 },
+  { name: "努力", href: "/dictionary/yoji/category/effort", count: 45 },
 ];
 
 describe("IndexAccordion", () => {
@@ -37,13 +37,13 @@ describe("IndexAccordion", () => {
         indexes={[
           {
             name: "学年",
-            items: [{ label: "小学1年", href: "/dictionary/kanji/grade/1" }],
+            items: [{ name: "小学1年", href: "/dictionary/kanji/grade/1" }],
           },
           {
             name: "画数",
             items: [
-              { label: "1画", href: "/dictionary/kanji/stroke/1" },
-              { label: "2画", href: "/dictionary/kanji/stroke/2" },
+              { name: "1画", href: "/dictionary/kanji/stroke/1" },
+              { name: "2画", href: "/dictionary/kanji/stroke/2" },
             ],
           },
         ]}
@@ -53,13 +53,13 @@ describe("IndexAccordion", () => {
           groups: [
             {
               heading: "1画",
-              items: [{ label: "一", href: "/dictionary/kanji/radical/一" }],
+              items: [{ name: "一", href: "/dictionary/kanji/radical/一" }],
             },
             {
               heading: "4画",
               items: [
-                { label: "水", href: "/dictionary/kanji/radical/水" },
-                { label: "火", href: "/dictionary/kanji/radical/火" },
+                { name: "水", href: "/dictionary/kanji/radical/水" },
+                { name: "火", href: "/dictionary/kanji/radical/火" },
               ],
             },
           ],
