@@ -8,6 +8,7 @@ import Field from "@/components/Field";
 import ResultBox from "@/components/ResultBox";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
+import { WORD_JOINER } from "@/lib/phrase-dashes";
 import { revealResult } from "@/lib/reveal";
 import {
   findJsonErrorPosition,
@@ -45,7 +46,7 @@ const TOO_DEEP_ERROR =
  * しない。§4）。字のあいだに幅の無い WORD JOINER を挟む。エラーの文は Field が字で受けるので、折り方を字の側で決める。
  */
 function keepTogether(text: string): string {
-  return [...text].join("\u2060");
+  return [...text].join(WORD_JOINER);
 }
 
 /**

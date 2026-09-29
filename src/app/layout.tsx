@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "@/app/globals.css";
 import SiteFrame from "@/components/SiteFrame";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import WordJoinerCopyFilter from "@/components/WordJoinerCopyFilter";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import { sharedMetadata, sharedViewport } from "@/lib/site-metadata";
 import { plexSans, zenAntique } from "@/lib/fonts";
@@ -25,6 +26,7 @@ export default function RootLayout({
           }}
         />
         <GoogleAnalytics />
+        <WordJoinerCopyFilter />
         <SiteFrame>{children}</SiteFrame>
       </body>
     </html>
