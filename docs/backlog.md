@@ -65,7 +65,7 @@
 | B-530 | AP-WF11 の運用化(公開前 reader-perspective audit) | P3 | 詳細 cycle-255.md |
 | B-531 | Goal-first チェック運用の仕組み化 | P3 | 詳細 cycle-255.md |
 | B-364 | cycle-175〜178 連続事故のブログ化再判断 | P3 | 着手時PM独立判断。詳細 cycle-178.md |
-| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md。cycle-316のT9で再現を確認し、再現すればB-754の中で直す |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | cycle-301実測。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md。cycle-316のT5aで直す(t5a-design.md 4-5・4-9)。T5a-7とT9の実機で確かめてDoneへ |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | 辞典の処遇判断(B-564)と連動。詳細 cycle-258.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | 出荷物に影響なし。詳細 cycle-271 接地 |
 | B-512 | next.config redirects コメント「301」→「308」統一 | P4 | 文言のみ是正。詳細 cycle-243.md |
@@ -110,7 +110,7 @@
 | B-758 | 計測した5ページすべてで実験室のLCPが2.5秒を超えている(2026-09の計測) | P2 | 着手: cycle-316の出荷後、新しいデザインで測り直してから。診断のプレイ面3.8秒ほか。LCP要素は全て文字。実測cycle-316/facts-speed-before.md。一覧の操作も測る(cycle-316/review-t3-7-fix.md) |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: cycle-316の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
 | B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: cycle-316の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
-| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: cycle-316出荷後。T9の二度打ちの記録とB-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md |
+| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: cycle-316出荷後。T9の二度打ちの記録とB-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md。材料はt5a-design.md 3-1案2・4-12とt5a-measure.md条件7 |
 | B-740 | cycle-314の失敗をブログ化するか判断する | P4 | 着手: 事故分析(incident-1・incident-2)がレビュー済みになってから。題材=隔離された成果物をその自己申告で信じた機構と、チェック項目は当てる先を選べる件。詳細cycle-314/ |
 | B-565 | 診断完走率の低下の決着 | P2 | ADR001の観測は+2週で止まり同ADRは失効した。設問途中の離脱までは判明しており、残る問いはどこで落ちるか。ADR009が未決として引き継ぐ。B-612・B-613・B-614と同じ塊。詳細cycle-305/observation |
 | B-615 | 375px CLSのレイアウトシフト点検・あればバグ修正 | P4 | **ADRの賭けではなく通常のバグ(cycle-305でオーナー是正)**。デザイン移行が安定した面で375px CLSを点検し、シフトがあれば修正。計装(field計測)の新設は不要。着手: デザイン移行(B-754)の完了後 |
