@@ -1,0 +1,110 @@
+/* 表の枠。表はコンテンツ幅いっぱいに組む。列の幅と、横に送るか（data-scrolls）は src/lib/scroll-frame.ts が
+ * 描く前に決める。 */
+.frame {
+  overflow-x: auto;
+}
+
+/* 組む前の表は描かない。回線が遅いと、表の途中までが届いたところで描かれることがあり、枠の直後のスクリプトが
+ * 組むと列の幅とボタンの位置が変わって、表とその下が動く。組んだ印（data-layout-key）が付いてから見せる。
+ * 表が隠れたままにならないよう、見せる道を3つ持つ。
+ * - スクリプトが動かない来訪者には、組まない表をそのまま見せる（scripting の条件）。
+ * - 枠の直後のスクリプトが組めなかったときは、組めなかった印（data-layout-failed）を付けてすぐ見せる。
+ * - スクリプトが止められたり水和が動かなかったりして、どちらの印も付かないときも、3秒で見せる。3秒は、遅い
+ *   回線で表が届き終えるまでより長く、来訪者が表の無い所を待つには短い。 */
+@media (scripting: enabled) {
+  .frame:not([data-layout-key], [data-layout-failed]) {
+    visibility: hidden;
+    animation: frame-reveal 0s 3s forwards;
+  }
+}
+
+@keyframes frame-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
+/* 横に送る表のボックス。ほかのボックスと同じ太い線と内側の余白を持ち、表はその内側に組む。フォーカスの
+ * リングは globals.css の既定のまま、太い線の外に密着して出る（§6）。 */
+.frame[data-scrolls] {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+}
+
+/* 結果のボックスの中の表。ボックスが表のボックスで、枠は線を重ねない。ボックスの幅に収まらない表では、枠が
+ * 表の最小の幅まで伸び、ボックスが横に送る（§8）。 */
+.frame[data-in-box] {
+  overflow-x: visible;
+  min-width: min-content;
+}
+
+.table {
+  width: 100%;
+}
+
+/* セルは、渡された区切りの並びの切れ目（<wbr>）でだけ折る。列はいちばん長い文節の幅を取るので、列に入る
+ * 文節は割らない。細くした列（data-narrowed）だけは、列に入らない文節をその中で折る。セルの中の部品
+ * （区切りを組む PhrasedText・コントロールの面）も、セルと同じ折り方に従う。 */
+.table :is(th, td) {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.table :is(th, td) * {
+  overflow-wrap: inherit;
+}
+
+.table [data-narrowed] {
+  overflow-wrap: anywhere;
+}
+
+/* 開いた行の中身（例文・注記）は区切りの並びでない文章なので、本文と同じ通常の禁則で折る（§4）。 */
+.table [data-detail] {
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* 開いた行の中身は、表が横に送られても見える幅で折り、見える左端に留める。表の全幅に広げると、送る表では
+ * どの行も右が切れ、1行ごとに送って戻ることになる。見える幅は組むときに枠が持つ（src/lib/scroll-frame.ts）。 */
+.detailContent {
+  position: sticky;
+  inset-inline-start: 0;
+  max-width: var(--frame-visible-width, 100%);
+}
+
+/* コピーのボタンを持つ行は、行の見出しと値とボタンの字の1行目をそろえる。 */
+.copyRow > * {
+  vertical-align: baseline;
+}
+
+/* 値とコピーのボタン（§6）。ボタンは値のセルの右端に置き、どの行のボタンも1つの列に並ぶ。横に置くあいだは
+ * 値もボタンの面も折らないので、値の列の最小の幅は、値を1行にした幅とあきとボタンの幅になる。この幅で表が
+ * 収まるときだけ横に置くので、ボタンの場所のために値が削られて折れることがない。 */
+.valueLine {
+  display: flex;
+  align-items: baseline;
+  column-gap: var(--space-16);
+}
+
+.frame:not([data-copy-below]) .valueLine {
+  white-space: nowrap;
+}
+
+/* Chromium は white-space: nowrap の中でも <wbr> で折るので、横に置くあいだは折り所を組みから外す。 */
+.frame:not([data-copy-below]) .valueLine wbr {
+  display: none;
+}
+
+/* ボタンの知らせの箱（読み上げだけのもの）は、ボタンの升の内側に置く。右端に寄せたボタンの外に出ると、枠と
+ * 結果のボックスが、何も隠れていないのに横に送れる。 */
+.valueLine :global(.visually-hidden) {
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  margin: 0;
+}
+
+/* 表が収まらないときは、どの行もボタンを値の次の行の右端に送り、値に行の幅を渡す（§6）。 */
+.frame[data-copy-below] .valueLine {
+  flex-direction: column;
+  align-items: stretch;
+}

@@ -1,9 +1,10 @@
 /**
  * 横に送る枠（DESIGN.md §4・§5）の組み方。表の列の幅と、枠を付けて横に送るかを決める。
  *
- * 記事のページは、描く前に表を組むため、この組み方を文字列にして本文の最初の表の前のスクリプトに入れる
- * （TABLE_LAYOUT_DEFINE）。規則を1か所に持つため、組み方はすべて createFrameLayout の中に書き、外の名前を
- * 使わない。ビルドの変換で名前が変わっても、文字列にした関数がそのまま動く。
+ * サーバーで描いた表は、描く前に組むため、この組み方を文字列にしてスクリプトに入れる（記事の本文は
+ * TABLE_LAYOUT_DEFINE、記事の外の表の部品は FRAME_LAYOUT_DEFINE）。規則を1か所に持つため、組み方はすべて
+ * createFrameLayout の中に書き、外の名前を使わない。ビルドの変換で名前が変わっても、文字列にした関数がそのまま
+ * 動く。
  */
 
 /** 列の幅の決め方の結果。 */
@@ -25,7 +26,7 @@ export interface FrameLabels {
 export interface FrameLayout {
   labels: FrameLabels;
   planColumns: (mins: number[], target: number, floor: number) => ColumnPlan;
-  layoutTable: (frame: HTMLElement) => void;
+  layoutTable: (frame: HTMLElement, contentChanged?: boolean) => void;
   markContentFrame: (frame: HTMLElement, label: string) => void;
   layoutFrames: (root: HTMLElement) => void;
 }
@@ -120,32 +121,20 @@ export function createFrameLayout(): FrameLayout {
   }
 
   /**
-   * 表を組む。はみ出すかは、枠を外した組み方の表の幅と、枠の外形の幅（置かれた幅）で比べる。枠を付けた表を
-   * 組み直すときも同じ幅と比べるので、枠の付け外しが行ったり来たりしない。
-   * 区切りを持つ表（.table-phrased）は、表の幅を0にして列を最小の幅（いちばん長い文節の幅）にした組みで各列を
-   * 測り、planColumns で決める。区切りを持たない表（書いた Markdown のプレビュー）は、枠だけを決める。
+   * 表を置いた幅。結果のボックスの中に置いた表（data-in-box）は、ボックスの中身の幅に置かれる。枠は表の幅に
+   * 伸びて、はみ出す分はボックスが横に送るので、枠の幅でなくボックスの中身の幅で測る。
    */
-  function applyTableLayout(frame: HTMLElement) {
-    const table = frame.querySelector("table");
-    if (!table) return;
-    const cells = table.querySelectorAll<HTMLElement>("th, td");
-    setScrolls(frame, false, labels.table);
-    table.style.tableLayout = "";
-    table.style.width = "";
-    for (let c = 0; c < cells.length; c++) {
-      cells[c].removeAttribute("data-narrowed");
-      cells[c].style.width = "";
-    }
-    const available = frame.getBoundingClientRect().width;
-    const head = table.rows[0];
-    if (!frame.classList.contains("table-phrased") || !head) {
-      setScrolls(
-        frame,
-        table.getBoundingClientRect().width > available,
-        labels.table,
-      );
-      return;
-    }
+  function placedWidth(frame: HTMLElement) {
+    const box = frame.hasAttribute("data-in-box") ? frame.parentElement : null;
+    if (!box) return frame.getBoundingClientRect().width;
+    return box.getBoundingClientRect().width - horizontalExtras(box, true);
+  }
+
+  /**
+   * 各列のいちばん長い文節の幅を測る。表の幅を0にして列を最小の幅にした組みで、最初の行のセルを測る。
+   * overhead は、表の幅のうち列の中身でない分（セルの余白と罫線）。
+   */
+  function measureColumns(table: HTMLTableElement, head: HTMLTableRowElement) {
     table.style.width = "0";
     const outer: number[] = [];
     const mins: number[] = [];
@@ -160,21 +149,77 @@ export function createFrameLayout(): FrameLayout {
     const overhead = table.getBoundingClientRect().width - contentTotal;
     const em = parseFloat(getComputedStyle(head.cells[0]).fontSize);
     table.style.width = "";
-    const plan = planColumns(mins, available - overhead, floorChars * em);
+    return { outer: outer, mins: mins, overhead: overhead, em: em };
+  }
+
+  /**
+   * 表を組む。はみ出すかは、枠を外した組み方の表の幅と、置かれた幅で比べる。枠を付けた表を組み直すときも
+   * 同じ幅と比べるので、枠の付け外しが行ったり来たりしない。
+   * 区切りを持つ表（.table-phrased）は、各列のいちばん長い文節の幅を測り、planColumns で決める。区切りを
+   * 持たない表（書いた Markdown のプレビュー）は、枠だけを決める。
+   * 値を写すコピーのボタンを値の横に置く表（data-copy-column）は、どの列も細くせずに収まるときだけボタンを
+   * 横に置く。収まらなければ、どの行もボタンを値の次の行に送り（枠の data-copy-below）、値に行の幅を渡した
+   * 組みで測り直して決める（§6）。
+   * 結果のボックスの中に置いた表は、横に送るのはボックスなので、枠に送る印を付けない。
+   */
+  function applyTableLayout(frame: HTMLElement) {
+    const table = frame.querySelector("table");
+    if (!table) return;
+    const cells = table.querySelectorAll<HTMLElement>("th, td");
+    const ownsScroll = !frame.hasAttribute("data-in-box");
+    setScrolls(frame, false, labels.table);
+    frame.removeAttribute("data-copy-below");
+    table.style.tableLayout = "";
+    table.style.width = "";
+    for (let c = 0; c < cells.length; c++) {
+      cells[c].removeAttribute("data-narrowed");
+      cells[c].style.width = "";
+    }
+    const available = placedWidth(frame);
+    const head = table.rows[0];
+    if (!frame.classList.contains("table-phrased") || !head) {
+      setScrolls(
+        frame,
+        ownsScroll && table.getBoundingClientRect().width > available,
+        labels.table,
+      );
+      return;
+    }
+    let columns = measureColumns(table, head);
+    let plan = planColumns(
+      columns.mins,
+      available - columns.overhead,
+      floorChars * columns.em,
+    );
+    if (
+      frame.hasAttribute("data-copy-column") &&
+      (plan.scrolls || plan.narrowed.indexOf(true) !== -1)
+    ) {
+      frame.setAttribute("data-copy-below", "");
+      columns = measureColumns(table, head);
+      plan = planColumns(
+        columns.mins,
+        available - columns.overhead,
+        floorChars * columns.em,
+      );
+    }
     if (plan.scrolls) {
-      setScrolls(frame, true, labels.table);
+      setScrolls(frame, ownsScroll, labels.table);
       return;
     }
     if (plan.narrowed.indexOf(true) === -1) return;
     table.style.tableLayout = "fixed";
     table.style.width = available + "px";
     for (let j = 0; j < head.cells.length; j++) {
-      head.cells[j].style.width = outer[j] - mins[j] + plan.widths[j] + "px";
+      head.cells[j].style.width =
+        columns.outer[j] - columns.mins[j] + plan.widths[j] + "px";
     }
     for (let r = 0; r < table.rows.length; r++) {
       const row = table.rows[r];
       for (let n = 0; n < row.cells.length; n++) {
-        if (plan.narrowed[n]) row.cells[n].setAttribute("data-narrowed", "");
+        if (plan.narrowed[n] && row.cells[n].colSpan === 1) {
+          row.cells[n].setAttribute("data-narrowed", "");
+        }
       }
     }
   }
@@ -182,18 +227,41 @@ export function createFrameLayout(): FrameLayout {
   /**
    * 表を組む。組んだときの置かれた幅・字の大きさ・Web フォントの読み込みの状態を枠に覚えさせ、どれも同じなら
    * 組み直さない。表の直後のスクリプトが組んだ表を、水和のときにもう一度測り直さずに済む（組み直しは枠と幅を
-   * 外して測るので、レイアウトを何度もやり直させる）。
+   * 外して測るので、レイアウトを何度もやり直させる）。中身を描き替えたとき（contentChanged）は、どれも同じでも
+   * 組み直す。置かれた幅を持たない枠（隠れた区画の中）は測れないので組まず、描かれたときに組む。開いた行を
+   * 持つ表には、見える幅を枠の --frame-visible-width に持たせ、開いた行が無くなれば外す。
    */
-  function layoutTable(frame: HTMLElement) {
+  function layoutTable(frame: HTMLElement, contentChanged?: boolean) {
+    const width = placedWidth(frame);
+    if (width === 0) return;
     const key =
-      frame.getBoundingClientRect().width +
+      width +
       "|" +
       getComputedStyle(frame).fontSize +
       "|" +
       (document.fonts ? document.fonts.status : "");
-    if (frame.getAttribute("data-layout-key") === key) return;
+    if (!contentChanged && frame.getAttribute("data-layout-key") === key) {
+      return;
+    }
     applyTableLayout(frame);
+    if (frame.querySelector("[data-detail]")) {
+      frame.style.setProperty(
+        "--frame-visible-width",
+        visibleWidth(frame) + "px",
+      );
+    } else {
+      frame.style.removeProperty("--frame-visible-width");
+    }
     frame.setAttribute("data-layout-key", key);
+  }
+
+  /**
+   * 表のうち画面に見える幅。横に送る枠では、枠の線と内側の余白の内側、結果のボックスの中の表では、ボックスの
+   * 中身の幅。開いた行（data-detail）の中身は、表が横に送られてもこの幅で折って左端に留める。
+   */
+  function visibleWidth(frame: HTMLElement) {
+    if (frame.hasAttribute("data-in-box")) return placedWidth(frame);
+    return frame.getBoundingClientRect().width - horizontalExtras(frame, true);
   }
 
   /**
@@ -231,6 +299,22 @@ const frameLayout = createFrameLayout();
 export const SCROLL_FRAME_LABELS = frameLayout.labels;
 export const markScrollFrame = frameLayout.markContentFrame;
 export const layoutFrames = frameLayout.layoutFrames;
+export const layoutTable = frameLayout.layoutTable;
+
+/**
+ * 記事の外の表の部品が、サーバーで描いた表の枠の前に置くスクリプトの文。組み方を作って window に置く。ページで
+ * 最初に動いた文だけが作り、同じページのほかの表の文は何もしない。本文の中の最初の表より前にスクリプトが無いと、
+ * ブラウザがスクリプトを動かす前の描画の機会に、組む前の表を描くことがあるので、定める文を表の前に置く。
+ */
+export const FRAME_LAYOUT_DEFINE = `window.yolosFrameLayout||(window.yolosFrameLayout=(${String(createFrameLayout)})())`;
+
+/**
+ * 記事の外の表の部品が、サーバーで描いた表の枠の直後に置くスクリプトの文。枠の前の文が定めた組み方で直前の枠の
+ * 表を組む。部品は組むまで表を隠すので、組み方が無いか組む途中で失敗したときは、組めなかった印
+ * （data-layout-failed）を付けて表を見せ、失敗はそのまま投げてエラーとして残す。
+ */
+export const LAYOUT_PREVIOUS_TABLE =
+  '(function(f){try{window.yolosFrameLayout.layoutTable(f)}catch(e){f.setAttribute("data-layout-failed","");throw e}})(document.currentScript.previousElementSibling)';
 
 /**
  * 記事の本文の最初の表の前に置くスクリプト。表の直後のスクリプトが呼ぶ、表を組む関数を定める。本文の HTML の中に

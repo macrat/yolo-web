@@ -1,6 +1,8 @@
 import { describe, test, expect } from "vitest";
 import {
   createFrameLayout,
+  FRAME_LAYOUT_DEFINE,
+  LAYOUT_PREVIOUS_TABLE,
   markScrollFrame,
   TABLE_LAYOUT_DEFINE,
   SCROLL_FRAME_LABELS,
@@ -106,6 +108,23 @@ describe("layoutTable（組み直しを飛ばす）", () => {
     expect(frame.hasAttribute("data-scrolls")).toBe(true);
     frame.remove();
   });
+
+  test("中身を描き替えたと渡したら、幅も字の大きさも同じでも組み直す", () => {
+    const frame = tableFrame({ value: 300 });
+    layoutTable(frame);
+    frame.removeAttribute("data-scrolls");
+    layoutTable(frame, true);
+    expect(frame.hasAttribute("data-scrolls")).toBe(true);
+    frame.remove();
+  });
+
+  test("置かれた幅を持たない枠（隠れた区画の中）は組まず、組んだ印も残さない", () => {
+    const frame = tableFrame({ value: 0 });
+    layoutTable(frame);
+    expect(frame.hasAttribute("data-scrolls")).toBe(false);
+    expect(frame.hasAttribute("data-layout-key")).toBe(false);
+    frame.remove();
+  });
 });
 
 describe("TABLE_LAYOUT_DEFINE", () => {
@@ -116,5 +135,62 @@ describe("TABLE_LAYOUT_DEFINE", () => {
     expect(body).not.toContain("</script");
     new Function(body)();
     expect(typeof win.yolosLayoutTable).toBe("function");
+  });
+});
+
+describe("FRAME_LAYOUT_DEFINE・LAYOUT_PREVIOUS_TABLE", () => {
+  test("枠の前の文が組み方を外の名前を使わずに定め、枠の直後の文が直前の枠の表を組む。組み方はページで1つだけ作る", () => {
+    const win = window as unknown as { yolosFrameLayout?: unknown };
+    delete win.yolosFrameLayout;
+    expect(FRAME_LAYOUT_DEFINE).not.toContain("</script");
+    expect(LAYOUT_PREVIOUS_TABLE).not.toContain("</script");
+    const run = () => {
+      const frame = document.createElement("div");
+      frame.innerHTML = "<table><tbody><tr><td>x</td></tr></tbody></table>";
+      frame.getBoundingClientRect = () => ({ width: 300 }) as DOMRect;
+      frame.querySelector("table")!.getBoundingClientRect = () =>
+        ({ width: 500 }) as DOMRect;
+      const script = document.createElement("script");
+      document.body.append(frame, script);
+      Object.defineProperty(document, "currentScript", {
+        value: script,
+        configurable: true,
+      });
+      try {
+        new Function(FRAME_LAYOUT_DEFINE)();
+        new Function(LAYOUT_PREVIOUS_TABLE)();
+      } finally {
+        delete (document as { currentScript?: unknown }).currentScript;
+        frame.remove();
+        script.remove();
+      }
+      return frame;
+    };
+    expect(run().hasAttribute("data-scrolls")).toBe(true);
+    const layout = win.yolosFrameLayout;
+    expect(layout).toBeDefined();
+    expect(run().hasAttribute("data-scrolls")).toBe(true);
+    expect(win.yolosFrameLayout).toBe(layout);
+  });
+
+  test("組み方が無いか組む途中で失敗したら、組めなかった印を付けて表を見せ、失敗は投げる", () => {
+    const win = window as unknown as { yolosFrameLayout?: unknown };
+    delete win.yolosFrameLayout;
+    const frame = document.createElement("div");
+    const script = document.createElement("script");
+    document.body.append(frame, script);
+    Object.defineProperty(document, "currentScript", {
+      value: script,
+      configurable: true,
+    });
+    try {
+      expect(() => new Function(LAYOUT_PREVIOUS_TABLE)()).toThrow(TypeError);
+      expect(frame.hasAttribute("data-layout-failed")).toBe(true);
+      expect(frame.hasAttribute("data-layout-key")).toBe(false);
+    } finally {
+      delete (document as { currentScript?: unknown }).currentScript;
+      frame.remove();
+      script.remove();
+    }
   });
 });
