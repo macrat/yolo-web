@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
 // `getBlogPostsReferencing` をモックする
 vi.mock("@/lib/cross-links", () => ({
@@ -13,9 +13,18 @@ vi.mock("@/lib/date", () => ({
 
 import { getBlogPostsReferencing } from "@/lib/cross-links";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+import Section from "@/components/Section";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const mockGetBlogPostsReferencing = vi.mocked(getBlogPostsReferencing);
+
+/** Section が描く要素の class。関連ブログ記事の根がこれと同じなら、同じセクションの罫線と余白を持つ。 */
+function sectionClassName(): string {
+  const { container, unmount } = render(<Section />);
+  const className = (container.firstElementChild as HTMLElement).className;
+  unmount();
+  return className;
+}
 
 describe("RelatedBlogPosts", () => {
   it("関連記事がある場合にセクションが描画される", () => {
@@ -37,6 +46,33 @@ describe("RelatedBlogPosts", () => {
     render(<RelatedBlogPosts slug="test-tool" />);
     expect(
       screen.getByRole("list", { name: "関連ブログ記事" }),
+    ).toBeInTheDocument();
+  });
+
+  it("ページの1つのセクション（Section）として描き、見出しはセクションの見出し（h2）", () => {
+    mockGetBlogPostsReferencing.mockReturnValue([
+      {
+        slug: "test-post",
+        title: "テスト記事",
+        published_at: "2026-01-15T10:00:00+09:00",
+        updated_at: "2026-01-15T10:00:00+09:00",
+        description: "テスト説明",
+        tags: [],
+        category: "tool-guides",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+    ]);
+
+    const expectedClassName = sectionClassName();
+    const { container } = render(<RelatedBlogPosts slug="test-tool" />);
+    const root = container.firstElementChild as HTMLElement;
+    expect(container.childElementCount).toBe(1);
+    expect(root.tagName).toBe("SECTION");
+    expect(root.className).toBe(expectedClassName);
+    expect(
+      within(root).getByRole("heading", { level: 2, name: "関連ブログ記事" }),
     ).toBeInTheDocument();
   });
 

@@ -235,6 +235,16 @@ describe("解き終えたとき", () => {
     expect(result).toHaveFocus();
   });
 
+  test("結果のあとの共有の区画の見出しは、ゲームのセクションの中の小見出し（h2）で、文節の切れ目でだけ折れる", () => {
+    winWithOneMistake();
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    const heading = within(share).getByRole("heading", {
+      level: 2,
+      name: "この結果を共有",
+    });
+    expect(heading.innerHTML).toBe(["この", "結果を", "共有"].join("<wbr>"));
+  });
+
   test("成績の名前は文節の切れ目で、組の語の並びは語の切れ目で折れるようにする", () => {
     winWithOneMistake();
     const table = screen.getByRole("table");

@@ -1,5 +1,6 @@
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import { CATEGORY_LABELS } from "@/blog/_lib/blog";
 import { getBlogPostsReferencing } from "@/lib/cross-links";
 import { formatDate } from "@/lib/date";
@@ -13,8 +14,9 @@ interface RelatedBlogPostsProps {
 const HEADING_ID = "related-blog-posts";
 
 /**
- * ツール・ゲームのページの末尾の「関連ブログ記事」。行は題名・説明・分類・公開日で、説明があれば開く前に中身が分かり、
- * 公開日で記事の新しさを比べられる。関連記事が無いときは何も描かない。
+ * ツール・ゲームのページの末尾の「関連ブログ記事」。ページの1つのセクション（DESIGN.md §5）で、見出しはセクションの
+ * 見出しの段に立つ（§4）。行は題名・説明・分類・公開日で、説明があれば開く前に中身が分かり、公開日で記事の新しさを
+ * 比べられる。関連記事が無いときは、セクションごと描かない。
  */
 export default function RelatedBlogPosts({ slug }: RelatedBlogPostsProps) {
   const posts = getBlogPostsReferencing(slug);
@@ -31,7 +33,7 @@ export default function RelatedBlogPosts({ slug }: RelatedBlogPostsProps) {
   }));
 
   return (
-    <section className={styles.related}>
+    <Section>
       <PhrasedText
         as="h2"
         id={HEADING_ID}
@@ -39,6 +41,6 @@ export default function RelatedBlogPosts({ slug }: RelatedBlogPostsProps) {
         phrases={["関連", "ブログ", "記事"]}
       />
       <ItemList labelledBy={HEADING_ID} items={items} />
-    </section>
+    </Section>
   );
 }

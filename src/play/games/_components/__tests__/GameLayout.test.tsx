@@ -2,15 +2,13 @@ import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import GameLayout from "../GameLayout";
 import type { GameMeta } from "@/play/games/types";
+import Section from "@/components/Section";
+import { getBlogPostsReferencing } from "@/lib/cross-links";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-// RecommendedContent をモックしてテストを安定させる
-vi.mock("@/play/_components/RecommendedContent", () => ({
-  default: ({ currentSlug }: { currentSlug: string }) => (
-    <nav aria-label="おすすめコンテンツ">
-      <span>RecommendedContent:{currentSlug}</span>
-    </nav>
-  ),
+// 関連ブログ記事の元の記事一覧だけを差し替える。関連の3つのセクションは本物を描く
+vi.mock("@/lib/cross-links", () => ({
+  getBlogPostsReferencing: vi.fn(() => []),
 }));
 
 const mockMeta: GameMeta = {
@@ -233,14 +231,12 @@ test("GameLayout renders attribution when provided", () => {
 });
 
 test("GameLayout does not render attribution when not provided", () => {
-  render(
+  const { container } = render(
     <GameLayout meta={mockMeta}>
       <div>Content</div>
     </GameLayout>,
   );
-  // No footer with attribution should exist
-  const article = screen.getByRole("article");
-  expect(article.querySelector("footer")).not.toBeInTheDocument();
+  expect(container.querySelector("footer")).not.toBeInTheDocument();
 });
 
 test("ゲーム本体の区画は「ゲーム」という名前を持つ", () => {
@@ -250,16 +246,6 @@ test("ゲーム本体の区画は「ゲーム」という名前を持つ", () =>
     </GameLayout>,
   );
   expect(screen.getByRole("region", { name: "ゲーム" })).toBeInTheDocument();
-});
-
-test("GameLayout renders RecommendedContent with meta.slug", () => {
-  render(
-    <GameLayout meta={mockMeta}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  // RecommendedContent のモックが currentSlug=meta.slug で呼ばれることを確認
-  expect(screen.getByText("RecommendedContent:test-game")).toBeInTheDocument();
 });
 
 test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
@@ -274,4 +260,77 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () =
     const heading = screen.getByRole("heading", { name: phrases.join("") });
     expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
   }
+});
+
+/** Section が描く要素の class。ページの直下の要素がこれと同じなら、Section の罫線と余白を持つ。 */
+function sectionClassName(): string {
+  const { container, unmount } = render(<Section />);
+  const className = (container.firstElementChild as HTMLElement).className;
+  unmount();
+  return className;
+}
+
+test("ページは、ゲーム・よくある質問・ページの共有・関連ゲーム・ほかの分類のおすすめ・関連ブログ記事の順に、兄弟の Section で組む（DESIGN.md §5）", () => {
+  vi.mocked(getBlogPostsReferencing).mockReturnValueOnce([
+    {
+      slug: "test-post",
+      title: "テスト記事",
+      published_at: "2026-01-15T10:00:00+09:00",
+      updated_at: "2026-01-15T10:00:00+09:00",
+      description: "テスト説明",
+      tags: [],
+      category: "tool-guides",
+      related_tool_slugs: [],
+      draft: false,
+      readingTime: 5,
+    },
+  ]);
+  const expectedClassName = sectionClassName();
+  const { container } = render(
+    <GameLayout
+      meta={{
+        ...mockMetaFull,
+        slug: "kanji-kanaru",
+        relatedGameSlugs: ["yoji-kimeru", "nakamawake"],
+      }}
+      attribution={<p>テスト帰属表示</p>}
+    >
+      <div>Content</div>
+    </GameLayout>,
+  );
+  const children = Array.from(container.children) as HTMLElement[];
+  expect(children).toHaveLength(6);
+  for (const child of children) {
+    expect(child.tagName).toBe("SECTION");
+    expect(child.className).toBe(expectedClassName);
+  }
+  const [game, faq, share, relatedGames, recommended, relatedPosts] = children;
+  expect(
+    within(game).getByRole("navigation", { name: "パンくずリスト" }),
+  ).toBeInTheDocument();
+  expect(within(game).getByRole("heading", { level: 1 })).toHaveTextContent(
+    "テストゲーム",
+  );
+  expect(
+    within(game).getByRole("region", { name: "ゲーム" }),
+  ).toHaveTextContent("Content");
+  expect(within(game).getByText("テスト帰属表示")).toBeInTheDocument();
+  expect(
+    within(faq).getByRole("region", { name: "よくある質問" }),
+  ).toBeInTheDocument();
+  const sectionHeading = (section: HTMLElement) =>
+    within(section).getByRole("heading", { level: 2 }).textContent;
+  expect(sectionHeading(share)).toBe("このゲームを勧める");
+  expect(sectionHeading(relatedGames)).toBe("関連ゲーム");
+  expect(sectionHeading(recommended)).toBe("他のジャンルも試してみよう");
+  expect(sectionHeading(relatedPosts)).toBe("関連ブログ記事");
+});
+
+test("よくある質問を持たないゲームは、空のセクションを置かない", () => {
+  const { container } = render(
+    <GameLayout meta={mockMeta}>
+      <div>Content</div>
+    </GameLayout>,
+  );
+  expect(container.querySelectorAll(":scope > section")).toHaveLength(2);
 });

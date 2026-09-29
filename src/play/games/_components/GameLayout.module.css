@@ -1,12 +1,8 @@
 /*
- * ゲームのページ（/play/kanji-kanaru ほか）の組み方。
- *
- * 幅と左右の余白はコンテナが決めるので、この組みは自分の左右の余白も幅の上限も持たず、コンテンツ幅の左端から
- * 組む（DESIGN.md §5「コンテンツ幅の左端は、どのページでも同じ位置」）。
+ * ゲームのページ（/play/kanji-kanaru ほか）の組み方。ページの割り方と、セクションのあいだの全幅の罫線と余白は
+ * Section が持つ（DESIGN.md §5）。幅と左右の余白はコンテナが決めるので、この組みは自分の左右の余白も幅の上限も
+ * 持たず、コンテンツ幅の左端から組む（§5「コンテンツ幅の左端は、どのページでも同じ位置」）。
  */
-.layout {
-  padding-block: var(--space-16);
-}
 
 /* h1 は §4 の主見出しの段（globals.css の h1 の既定）で組む。 */
 .header {
@@ -52,16 +48,7 @@
   color: var(--ink-2);
 }
 
-/* FAQ と、このゲームを人に勧めるページの共有。上に細い罫線を引いて、上の内容と分ける（§5）。 */
-.faqSection,
-.shareSection {
-  max-width: var(--measure);
-  margin-top: var(--space-32);
-  padding-top: var(--space-24);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.shareSectionTitle {
-  font-size: var(--text-heading-sub);
-  margin-bottom: var(--space-8);
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。大きさは h2 の既定（§4 のセクションの見出し）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
 }

@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { trackContentEnd } from "@/lib/analytics";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import type { ItemListItem } from "@/components/ItemList";
 import type {
@@ -463,9 +464,12 @@ export default function GameContainer({
                   className={styles.share}
                   aria-labelledby="nakamawake-share"
                 >
-                  <h3 id="nakamawake-share" className={styles.shareHeading}>
-                    この結果を共有
-                  </h3>
+                  <PhrasedText
+                    as="h2"
+                    id="nakamawake-share"
+                    className={styles.shareHeading}
+                    phrases={["この", "結果を", "共有"]}
+                  />
                   <ShareButtons
                     url="/play/nakamawake"
                     title="ナカマワケ"
