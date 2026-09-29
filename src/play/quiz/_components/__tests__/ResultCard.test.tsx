@@ -15,15 +15,12 @@ import type {
   ImpossibleAdviceDetailedContent,
 } from "../../types";
 
-// next/dynamicをモック: テスト環境では vi.mock によりモジュールが同期的にキャッシュされるため、
-// loaderが返すPromiseを同期的に評価できる。
-// ただし Promise.then は常に非同期のため、別のアプローチを取る:
-// vi.mock でモジュールがすでに登録されているため、
-// loader() を呼んでその結果をトップレベルで await するのではなく、
-// vi.mock ファクトリ内での特定のモジュールパスに対するマッピングを使う。
+// next/dynamic は、loader の文字列表現から読み込む部品を見分け、同期的に描く部品を返す。
+// AnimalPersonalityContent・TraditionalColorContent は実物を、MusicPersonalityContent は下の vi.mock のモックを、
+// ファクトリの中で先に読み込んで返す。YojiPersonalityContent・UnexpectedCompatibilityContent・
+// ImpossibleAdviceContent・ContrarianFortuneContent は data-testid を持つスタブを返し、そのほかの部品
+// （CharacterPersonalityContent など）は何も描かない部品を返す。
 vi.mock("next/dynamic", async () => {
-  // AnimalPersonalityContent / MusicPersonalityContent / TraditionalColorContent
-  // を事前にインポートして同期キャッシュする。ほかの *Content は data-testid を持つスタブで代替する。
   const animal =
     await import("@/play/quiz/_components/AnimalPersonalityContent");
   const music = await import("@/play/quiz/_components/MusicPersonalityContent");
@@ -36,8 +33,6 @@ vi.mock("next/dynamic", async () => {
         default: React.ComponentType<Record<string, unknown>>;
       }>,
     ) => {
-      // loaderの文字列表現から対応するコンポーネントを選択する。
-      // loader.toString() でインポートパスを取得し、適切なモックを返す。
       const loaderStr = loader.toString();
       let cachedComp: React.ComponentType<Record<string, unknown>>;
       if (loaderStr.includes("AnimalPersonalityContent")) {
@@ -97,7 +92,7 @@ vi.mock("next/dynamic", async () => {
           );
         };
       } else {
-        // 未知のコンポーネントはfallback
+        // そのほかの部品は何も描かない
         cachedComp = () => null;
       }
 

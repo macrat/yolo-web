@@ -38,7 +38,7 @@ type QuizContainerProps = {
   /** ページの頭（パンくずと h1）。どの段階でも最初のセクションの頭に置く。 */
   head: ReactNode;
   quiz: QuizDefinition;
-  /** Optional referrer type ID from URL search params (for compatibility) */
+  /** 相性を見る友達のタイプの id（共有のリンクの ref） */
   referrerTypeId?: string;
   /**
    * 解き終えた画面の「次はこれを試してみよう」に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、

@@ -100,6 +100,7 @@
 | B-779 | 結果のページの誘いに ?ref= を付け、共有から来て解いた人に共有した人との相性を出す（character-fortune 以外） | P2 | word-sense-personality の相性の表も未使用。cycle-316 review-t5-5a-3.md |
 | B-780 | 相性のページの題「A x B - 相性名」が 50〜60 字で、X・LINE の表示で相性名が切れる | P3 | 5本に共通の規則。cycle-316 review-t5-5a-3.md |
 | B-781 | 動的ルートの値が % を含む URL（/blog/%25 など）が 404 でなく 500 になる | P3 | Next.js の「failed to decode param」。ページの前で起きる。cycle-316 review-t5-22b-1.md |
+| B-782 | 解き終えた画面の招待のボタンの多く（character-personality・music ほか）が contentId を渡さず、GA に share（invite）が送られない | P2 | cycle-316 review-t5-5b-13.md |
 
 ## Deferred (すぐに着手できない)
 

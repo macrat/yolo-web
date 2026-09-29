@@ -1,9 +1,9 @@
 /**
  * あなたに似たキャラ診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * 成り立ち・日常・キャラからのメッセージを並べる。解き終えた画面では、友達の結果から来たときの相性と招待も
- * ここで出す。結果のページは afterCharacterMessage で自分の相性と招待を差し込む。キャッチコピー・共有・
- * すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
+ * 成り立ち・日常・キャラからのメッセージを並べる。解き終えた画面では、読みものの最後の相性と招待もここで組む
+ * （CompatibilityArea）。結果のページは afterCharacterMessage で、?with= の相性と招待と診断への誘いを差し込む。
+ * キャッチコピー・共有・すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
@@ -36,17 +36,19 @@ interface CharacterPersonalityContentProps {
   content: CharacterPersonalityDetailedContent;
   /** 来訪者のタイプ。友達との相性と招待に使う。 */
   resultId: string;
-  /** 友達のタイプ。解き終えた画面で、友達の結果から来たときに相性を出す。 */
+  /** 相性を見る友達のタイプの id（共有のリンクの ref）。解き終えた画面で使う。 */
   referrerTypeId?: string;
   /**
-   * キャラからのメッセージのあと、読みものの最後に置くもの（結果のページの相性・招待）。渡したときは、
-   * referrerTypeId から相性を読み込まない。
+   * キャラからのメッセージのあと、読みものの最後に置くもの（結果のページの ?with= の相性・招待・診断への誘い）。
+   * 渡したときは、解き終えた画面の相性と招待（CompatibilityArea）を組まず、これだけを置く。
    */
   afterCharacterMessage?: React.ReactNode;
 }
 
 /**
- * 解き終えた画面の相性と招待。友達のタイプがあれば相性を読み込んで出し、読み込めなければ招待だけを出す。
+ * あなたに似たキャラ診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
+ * 相性は /api/quiz/compatibility から読み込み、読み込むあいだは読み込んでいることを文で言う。
  */
 function CompatibilityArea({
   resultId,
@@ -90,7 +92,6 @@ function CompatibilityArea({
     };
   }, [resultId, referrerTypeId]);
 
-  // referrerTypeId がない場合は招待ボタンのみ
   if (!referrerTypeId) {
     return (
       <InviteFriendButton
@@ -105,7 +106,6 @@ function CompatibilityArea({
     return <ReadingText>友達との相性を読み込んでいます</ReadingText>;
   }
 
-  // フェッチ失敗またはデータなしの場合は招待ボタンのみ
   if (fetchFailed || !compatibilityData) {
     return (
       <InviteFriendButton
@@ -116,7 +116,6 @@ function CompatibilityArea({
     );
   }
 
-  // フェッチ成功: 相性セクションと招待ボタンを表示
   const compatibility: CompatibilityEntry = {
     label: compatibilityData.label,
     description: compatibilityData.description,

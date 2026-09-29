@@ -1,9 +1,9 @@
 /**
  * 音楽性格診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * 音楽的な強み・弱み・音楽あるある・今日の音楽ライフのヒントを並べる。解き終えた画面では、友達の結果から
- * 来たときの相性と招待もここで出す。結果のページは afterTodayAction で相性と招待を差し込む。キャッチコピー・
- * 共有・すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
+ * 音楽的な強み・弱み・音楽あるある・今日の音楽ライフのヒントを並べる。解き終えた画面では、読みものの最後の
+ * 相性と招待もここで組む（buildAfterTodayAction）。結果のページは afterTodayAction で、?with= の相性と診断への
+ * 誘いを差し込む。キャッチコピー・共有・すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
@@ -27,23 +27,25 @@ interface MusicPersonalityContentProps {
   content: MusicPersonalityDetailedContent;
   /** 来訪者のタイプ。友達との相性と招待に使う。 */
   resultId: string;
-  /** 友達のタイプ。解き終えた画面で、友達の結果から来たときに相性を出す。 */
+  /** 相性を見る友達のタイプの id（共有のリンクの ref）。解き終えた画面で使う。 */
   referrerTypeId?: string;
   /**
-   * 今日の音楽ライフのヒントのあと、読みものの最後に置くもの（結果のページの相性・招待）。渡したときは、
-   * referrerTypeId から相性を組まない。
+   * 今日の音楽ライフのヒントのあと、読みものの最後に置くもの（結果のページの ?with= の相性と診断への誘い）。
+   * 渡したときは、解き終えた画面の相性と招待（buildAfterTodayAction）を組まず、これだけを置く。
    */
   afterTodayAction?: React.ReactNode;
 }
 
-/** 解き終えた画面の相性と招待。友達のタイプが正しければ相性を出し、なければ招待だけを出す。 */
+/**
+ * 音楽性格診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
+ */
 function buildAfterTodayAction(
   resultId: string,
   referrerTypeId?: string,
 ): React.ReactNode {
   const quiz = musicPersonalityQuiz;
 
-  // 相性セクション: referrerTypeIdが有効な場合は相性表示、なければ招待ボタン
   if (referrerTypeId && isValidMusicTypeId(referrerTypeId)) {
     const myResult = quiz.results.find((r) => r.id === resultId);
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);

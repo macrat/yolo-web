@@ -13,10 +13,10 @@ interface CharacterFortuneResultExtraProps {
   referrerTypeId?: string;
 }
 
-/** ResultExtraLoader が読み込んで、解き終えた画面の結果のあとに描く。 */
+/** ResultExtraLoader が読み込んで、解き終えた画面の「このタイプについて」の最後に描く。 */
 export function renderCharacterFortuneExtra(
   referrerTypeId?: string,
-): (resultId: string, refTypeId?: string) => React.ReactNode {
+): (resultId: string) => React.ReactNode {
   function ResultExtraRenderer(resultId: string): React.ReactNode {
     return (
       <CharacterFortuneResultExtra
@@ -29,7 +29,8 @@ export function renderCharacterFortuneExtra(
 }
 
 /**
- * あなたの守護キャラ診断の解き終えた画面の相性と招待。友達の結果の共有のリンクから来たときは相性を出し、招待のボタンを続ける。
+ * あなたの守護キャラ診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
  */
 function CharacterFortuneResultExtra({
   resultId,

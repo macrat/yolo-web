@@ -8,12 +8,12 @@
  *   1. ページの頭（パンくず・h1）・結果のボックス（タイプ名・キャッチコピー・説明）・結果を持ち帰る・共有する区画
  *   2. このタイプについて（詳しい読みもの。その結果の辞典の項目へのリンクと、診断ごとの追加の読みもの・相性・招待を、
  *      その後ろに置く）
- *   3. 次はこれを試してみよう（「もう一度挑戦する」と、ほかの遊びへの結果ごとのおすすめ、次の遊びの一覧）
+ *   3. 次はこれを試してみよう（「もう一度挑戦する」と、辞典の一覧やほかの遊びへの結果ごとのおすすめ、次の遊びの一覧）
  *   4. すべてのタイプ
  * 2 は、詳しい読みもの・辞典の項目へのリンク・追加の読みもののどれかがあるときだけ描く。4 は、詳しい読みものを
- * 持たない診断・クイズでは描かない。結果ごとのおすすめを 2 と 3 のどちらに置くかは recommendationPlacement が決める。各タイプの
- * 結果のページ（`/play/[slug]/result/[resultId]`。枠は ResultPageShell）は、ここから共有する URL であり、
- * すべてのタイプの行から移る先でもある。
+ * 持たない診断・クイズでは描かない。結果ごとのおすすめを 2 と 3 のどちらに置くかは、リンクの行き先から
+ * recommendationPlacement が決める。各タイプの結果のページ（`/play/[slug]/result/[resultId]`。枠は
+ * ResultPageShell）は、ここから共有する URL であり、すべてのタイプの行から移る先でもある。
  */
 import type React from "react";
 import { useId, useState, type ReactNode, type Ref } from "react";
@@ -111,7 +111,7 @@ interface ResultCardProps {
   /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ったものを受け取る。 */
   readingHeadings: Readonly<Record<string, readonly string[]>>;
   quizType: QuizType;
-  /** 診断の題（ハッシュタグと、共有シートとはてなブックマークに渡す題に使う） */
+  /** 診断の題（ハッシュタグと、端末の共有シートに渡す題に使う） */
   quizTitle: string;
   /** 補助情報「{診断の名前}の結果」と共有の文で言う診断の名前。短い名前（shortTitle）があればそれを渡す。 */
   quizName: string;
@@ -125,7 +125,7 @@ interface ResultCardProps {
   detailedContent?: DetailedContent;
   /** 詳しい読みものの小見出しの文言 */
   resultPageLabels?: QuizMeta["resultPageLabels"];
-  /** 相性を見る友だちのタイプの id（共有のリンクの ref） */
+  /** 相性を見る友達のタイプの id（共有のリンクの ref） */
   referrerTypeId?: string;
   /**
    * 診断ごとの追加の読みもの（理系思考のプロフィール・相性・招待など）。「このタイプについて」の最後に置く。
@@ -137,8 +137,8 @@ interface ResultCardProps {
    */
   nextItems?: ItemListItem[];
   /**
-   * 診断の全タイプ。詳しい読みもののあとの、すべてのタイプの一覧に並べる。呼び出し側が持つ quiz.results を
-   * 受け取り、ここで診断ごとのデータを読み込まない（バンドルを小さく保つ）。
+   * 診断の全タイプ。「次はこれを試してみよう」のあとの、最後のセクション「すべてのタイプ」に並べる。呼び出し側が
+   * 持つ quiz.results を受け取り、ここで診断ごとのデータを読み込まない（バンドルを小さく保つ）。
    */
   allResults: QuizResult[];
   /**
@@ -212,13 +212,16 @@ function renderStandardContent(
   );
 }
 
+/**
+ * 動物性格診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
+ */
 function buildAnimalPersonalityAfterTodayAction(
   resultId: string,
   referrerTypeId?: string,
 ): React.ReactNode {
   const quiz = animalPersonalityQuiz;
 
-  // 相性セクション: referrerTypeIdが有効な場合は相性表示、なければ招待ボタン
   if (referrerTypeId && isValidAnimalTypeId(referrerTypeId)) {
     const myResult = quiz.results.find((r) => r.id === resultId);
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
@@ -412,7 +415,8 @@ export default function ResultCard({
   // 伝統色診断は、結果の色が結果そのものなので、色見本で見せる（DESIGN.md §2）。
   const resultColor =
     detailedContent?.variant === "traditional-color" ? result.color : undefined;
-  // 結果ごとのおすすめのリンク。その結果の辞典の項目なら「このタイプについて」、ほかへの誘いなら「次はこれを試してみよう」に置く。
+  // 結果ごとのおすすめのリンク。行き先がその結果の辞典の項目なら「このタイプについて」、辞典の一覧やほかの遊びなら
+  // 「次はこれを試してみよう」に置く。
   const { recommendation: recommendationText, recommendationLink } = result;
   const recommendation =
     recommendationText && recommendationLink

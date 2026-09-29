@@ -1,30 +1,28 @@
 import { expect, test, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
-// next/dynamic を各コンポーネントのモックに置き換える
-// ローダー関数の引数から import パスを取得して対応するコンポーネントを返す
+// next/dynamic は、読み込む部品の名前から診断の slug を決めるスタブを返す。
+// スタブは受け取った props を data 属性に写すので、ResultExtraLoader が渡した値を確かめられる。
 vi.mock("next/dynamic", () => ({
-  default: (
-    loader: () => Promise<{
-      default: React.ComponentType<Record<string, unknown>>;
-    }>,
-  ) => {
-    // 各コンポーネントのスタブを返すラッパー
-    // loader 文字列化でパスを判定する
+  default: (loader: () => Promise<unknown>) => {
     const loaderStr = loader.toString();
+    const slug = loaderStr.includes("CharacterFortune")
+      ? "character-fortune"
+      : loaderStr.includes("ScienceThinking")
+        ? "science-thinking"
+        : loaderStr.includes("JapaneseCulture")
+          ? "japanese-culture"
+          : "unknown";
 
     function Stub(props: Record<string, unknown>) {
-      const slug = loaderStr.includes("CharacterFortune")
-        ? "character-fortune"
-        : loaderStr.includes("ScienceThinking")
-          ? "science-thinking"
-          : loaderStr.includes("JapaneseCulture")
-            ? "japanese-culture"
-            : "unknown";
       return (
         <div
           data-testid={`${slug}-extra`}
           data-result-id={String(props.resultId)}
+          data-referrer-type-id={String(props.referrerTypeId)}
+          data-answer-count={String(
+            Array.isArray(props.answers) ? props.answers.length : "none",
+          )}
         />
       );
     }
@@ -32,59 +30,51 @@ vi.mock("next/dynamic", () => ({
   },
 }));
 
-// 各モジュールのモック（dynamic import の解決には不要だが、型エラー回避のため）
-vi.mock("../CharacterFortuneResultExtra", () => ({
-  renderCharacterFortuneExtra: () => () => null,
-}));
-vi.mock("../ScienceThinkingResultExtra", () => ({
-  renderScienceThinkingExtra: () => () => null,
-}));
-vi.mock("../JapaneseCultureResultExtra", () => ({
-  renderJapaneseCultureExtra: () => () => null,
-}));
-
-// モックのセットアップ後に対象コンポーネントをインポート
 const { default: ResultExtraLoader, hasResultExtra } =
   await import("../ResultExtraLoader");
 
+const SLUGS_WITH_EXTRA = [
+  "character-fortune",
+  "science-thinking",
+  "japanese-culture",
+];
+
+const SLUGS_WITHOUT_EXTRA = [
+  "character-personality",
+  "music-personality",
+  "animal-personality",
+  "kanji-level",
+  "unknown-quiz",
+];
+
 test("追加の読みものを持つのは character-fortune・science-thinking・japanese-culture の3つだけ", () => {
   expect(
-    [
-      "character-fortune",
-      "science-thinking",
-      "japanese-culture",
-      "character-personality",
-      "music-personality",
-      "animal-personality",
-      "kanji-level",
-    ].filter(hasResultExtra),
-  ).toEqual(["character-fortune", "science-thinking", "japanese-culture"]);
+    [...SLUGS_WITH_EXTRA, ...SLUGS_WITHOUT_EXTRA].filter(hasResultExtra),
+  ).toEqual(SLUGS_WITH_EXTRA);
 });
 
-test("character-personality スラグでは null が返る（追加の区画は CharacterPersonalityContent が持つ）", () => {
-  const { container } = render(
-    <ResultExtraLoader slug="character-personality" resultId="result-01" />,
-  );
-  expect(container.firstChild).toBeNull();
-});
+test.each(SLUGS_WITH_EXTRA)(
+  "%s では、その診断の読みものの部品を描き、結果と来訪者の情報を渡す",
+  (slug) => {
+    const answers = [{ questionId: "q1", choiceId: "a" }];
+    render(
+      <ResultExtraLoader
+        slug={slug}
+        resultId="result-01"
+        referrerTypeId="result-02"
+        answers={answers}
+      />,
+    );
+    const extra = screen.getByTestId(`${slug}-extra`);
+    expect(extra.dataset.resultId).toBe("result-01");
+    expect(extra.dataset.referrerTypeId).toBe("result-02");
+    expect(extra.dataset.answerCount).toBe("1");
+  },
+);
 
-test("unknown スラグでは null が返る", () => {
+test.each(SLUGS_WITHOUT_EXTRA)("%s では何も描かない", (slug) => {
   const { container } = render(
-    <ResultExtraLoader slug="unknown-quiz" resultId="result-01" />,
-  );
-  expect(container.firstChild).toBeNull();
-});
-
-test("music-personality スラグでは null が返る（相性の区画は MusicPersonalityContent の afterTodayAction スロットに入る）", () => {
-  const { container } = render(
-    <ResultExtraLoader slug="music-personality" resultId="result-02" />,
-  );
-  expect(container.firstChild).toBeNull();
-});
-
-test("animal-personality スラグでは null が返る（追加の区画は ResultCard が描く）", () => {
-  const { container } = render(
-    <ResultExtraLoader slug="animal-personality" resultId="result-03" />,
+    <ResultExtraLoader slug={slug} resultId="result-01" />,
   );
   expect(container.firstChild).toBeNull();
 });

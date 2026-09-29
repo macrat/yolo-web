@@ -40,7 +40,7 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
   if (!quiz) notFound();
 
   // クイズの相性機能: 友達のタイプIDをクエリパラメータ ref から取得する
-  // バリデーションはクライアントサイドの ResultExtraLoader が担うため、ここでは渡すだけ
+  // 有効なタイプかを確かめるのは ref を受け取って相性を出す各部品なので、ここでは渡すだけ
   const resolvedSearchParams = await searchParams;
   const refParam =
     typeof resolvedSearchParams.ref === "string"

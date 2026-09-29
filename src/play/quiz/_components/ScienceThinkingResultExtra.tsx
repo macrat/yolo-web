@@ -28,23 +28,15 @@ const INVITE_TEXT = "理系思考タイプ診断であなたの理系脳の形�
 
 interface ScienceThinkingResultExtraProps {
   resultId: string;
-  referrerTypeId?: string;
   answers?: QuizAnswer[];
 }
 
 /** ResultExtraLoader が読み込んで、解き終えた画面の「このタイプについて」の最後に描く。 */
 export function renderScienceThinkingExtra(
-  referrerTypeId?: string,
   answers?: QuizAnswer[],
 ): (resultId: string) => React.ReactNode {
   function ResultExtraRenderer(resultId: string): React.ReactNode {
-    return (
-      <ScienceThinkingResultExtra
-        resultId={resultId}
-        referrerTypeId={referrerTypeId}
-        answers={answers}
-      />
-    );
+    return <ScienceThinkingResultExtra resultId={resultId} answers={answers} />;
   }
   return ResultExtraRenderer;
 }
@@ -52,7 +44,7 @@ export function renderScienceThinkingExtra(
 /**
  * 理系思考タイプ診断の、来訪者の答えから出した5つの軸のスコア。レーダーとスコアの帯で見せ、どちらも軸ごとの
  * 満点に対する割合を言う。満点は軸によって違うので、点数でなく割合で並べる（DESIGN.md §5 量の帯）。
- * そのあとに友達を招待するボタンを置く。答えが無いとき（結果のリンクから開いたとき）は招待だけを出す。
+ * そのあとに友達を招待するボタンを置く。答えが無いときは招待だけを出す。
  * 読みものの最後の小見出しとして、置かれた読みものに続けて組む。
  */
 function ScienceThinkingResultExtra({

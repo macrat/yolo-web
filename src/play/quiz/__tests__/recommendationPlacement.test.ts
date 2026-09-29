@@ -13,6 +13,7 @@ describe("recommendationPlacement", () => {
 
   test("辞典の一覧・分類のページと、ほかの遊びは「次はこれを試してみよう」に置く", () => {
     for (const link of [
+      "/dictionary",
       "/dictionary/colors",
       "/dictionary/yoji",
       "/dictionary/kanji",
@@ -21,6 +22,7 @@ describe("recommendationPlacement", () => {
       "/dictionary/kanji/grade/1",
       "/dictionary/kanji/radical/水",
       "/dictionary/kanji/stroke/5",
+      "/dictionary/colors/category/red/page/2",
       "/play/kanji-kanaru",
       "/play/yoji-level",
     ]) {

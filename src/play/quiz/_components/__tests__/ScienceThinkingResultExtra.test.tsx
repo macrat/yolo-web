@@ -22,9 +22,7 @@ const firstChoices = scienceThinkingQuiz.questions.map((question) => ({
 
 function renderExtra(answers = firstChoices) {
   const resultId = scienceThinkingQuiz.results[0].id;
-  return render(
-    <>{renderScienceThinkingExtra(undefined, answers)(resultId)}</>,
-  );
+  return render(<>{renderScienceThinkingExtra(answers)(resultId)}</>);
 }
 
 describe("ScienceThinkingResultExtra", () => {

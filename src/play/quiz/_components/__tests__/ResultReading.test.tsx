@@ -125,12 +125,7 @@ describe("読みものの小見出しの手で区切った並び", () => {
       choiceId: question.choices[0].id,
     }));
     const { container } = render(
-      <>
-        {renderScienceThinkingExtra(
-          undefined,
-          answers,
-        )(scienceThinking.results[0].id)}
-      </>,
+      <>{renderScienceThinkingExtra(answers)(scienceThinking.results[0].id)}</>,
     );
     container
       .querySelectorAll("h3")

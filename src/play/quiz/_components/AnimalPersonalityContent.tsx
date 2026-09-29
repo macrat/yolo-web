@@ -1,8 +1,9 @@
 /**
- * 日本の固有種診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
+ * 動物性格診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
  * 強み・弱み・行動パターン・今日試してほしいことを並べる。キャッチコピー・共有・すべてのタイプ・「もう一度
- * 挑戦する」は呼び出し側が置き、相性と招待は afterTodayAction で差し込む。
+ * 挑戦する」は呼び出し側が置く。読みものの最後には、呼び出し側が afterTodayAction で、解き終えた画面では相性と
+ * 招待を、結果のページでは ?with= の相性と診断への誘いを差し込む。
  */
 
 import type React from "react";
@@ -16,7 +17,10 @@ import {
 
 interface AnimalPersonalityContentProps {
   content: AnimalPersonalityDetailedContent;
-  /** 今日試してほしいことのあと、読みものの最後に置くもの（相性・招待） */
+  /**
+   * 今日試してほしいことのあと、読みものの最後に置くもの（解き終えた画面では相性と招待、結果のページでは ?with= の
+   * 相性と診断への誘い）
+   */
   afterTodayAction?: React.ReactNode;
 }
 
