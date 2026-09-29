@@ -60,10 +60,16 @@ vi.mock("@/play/seo", () => ({
 }));
 
 describe("DailyFortunePage (/play/daily)", () => {
-  it("renders the page wrapper", () => {
-    render(<DailyFortunePage />);
-    const main = document.querySelector('[class*="wrapper"]');
-    expect(main).toBeInTheDocument();
+  it("builds the page from sections: the fortune first, then the recommendations", () => {
+    const { container } = render(<DailyFortunePage />);
+    const sections = container.querySelectorAll(":scope > section");
+    expect(sections).toHaveLength(2);
+    expect(
+      within(sections[0] as HTMLElement).getByRole("heading", { level: 1 }),
+    ).toHaveTextContent("今日のユーモア運勢");
+    expect(
+      within(sections[1] as HTMLElement).getByRole("heading", { level: 2 }),
+    ).toHaveTextContent("他のジャンルも試してみよう");
   });
 
   it("renders the page title as the main heading", () => {

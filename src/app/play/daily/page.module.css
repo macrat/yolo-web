@@ -1,9 +1,10 @@
-/* 今日のユーモア運勢（/play/daily）。結果のボックスをコンテンツ幅いっぱいに置くため、横の余白と幅は
- * コンテナのものだけを使う（DESIGN.md §5）。 */
-.wrapper {
-  padding-block: var(--space-16) var(--space-64);
-}
+/* 今日のユーモア運勢（/play/daily）。ページの割り方と、セクションのあいだの全幅の罫線と余白は Section が持ち、
+ * 横の余白と幅はコンテナのものだけを使う（DESIGN.md §5）。見出しの大きさは h1 の既定（§4 の主見出し）に従う。 */
 
-.title {
-  margin-block: var(--space-16) var(--space-24);
+/* 最初のセクションの頭。パンくずと主見出しを、その下の結果のボックスと同じ間隔で積む（§5 の間隔）。 */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
 }

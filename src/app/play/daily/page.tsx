@@ -1,6 +1,7 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import PhrasedText from "@/components/PhrasedText";
 import type { ResultHeading } from "@/components/ResultBox";
+import Section from "@/components/Section";
 import DailyFortuneCard from "@/play/fortune/_components/DailyFortuneCard";
 import { DAILY_FORTUNES } from "@/play/fortune/data/daily-fortunes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
@@ -36,31 +37,39 @@ const pendingHeading: ResultHeading = {
   ...headingFontAttr(PENDING_HEADING_TEXT),
 };
 
+/**
+ * 今日のユーモア運勢のページ。ページはセクションを上から並べる（DESIGN.md §5 ページの割り方）。
+ *   1. 最初のセクション。パンくずと主見出し（h1）の下に、今日の運勢の結果のボックスと、結果の共有を置く
+ *   2. ほかの分類のおすすめ（RecommendedContent）。並べるものが無ければセクションごと描かない
+ */
 export default function DailyFortunePage() {
   return (
-    <div className={styles.wrapper}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "遊び", href: "/play" },
-          { label: fortunePlayContentMeta.title, href: "/play/daily" },
-        ]}
-      />
-      <PhrasedText
-        as="h1"
-        phrases={splitIntoPhrases(fortunePlayContentMeta.title)}
-        className={styles.title}
-        {...headingFontAttr(fortunePlayContentMeta.title)}
-      />
-      <DailyFortuneCard
-        headings={fortuneHeadings}
-        pendingHeading={pendingHeading}
-      />
+      <Section>
+        <div className={styles.head}>
+          <Breadcrumb
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "遊び", href: "/play" },
+              { label: fortunePlayContentMeta.title, href: "/play/daily" },
+            ]}
+          />
+          <PhrasedText
+            as="h1"
+            phrases={splitIntoPhrases(fortunePlayContentMeta.title)}
+            {...headingFontAttr(fortunePlayContentMeta.title)}
+          />
+        </div>
+        <DailyFortuneCard
+          headings={fortuneHeadings}
+          pendingHeading={pendingHeading}
+        />
+      </Section>
       <RecommendedContent currentSlug="daily" />
-    </div>
+    </>
   );
 }
