@@ -281,9 +281,12 @@ describe("build410Html のトークンは globals.css と一致する", () => {
     return found;
   }
 
-  /** Web フォントを除いた書体の並び。410 は Web フォントを読み込まない。 */
-  const withoutWebFonts = (value: string) =>
-    value.replace(/var\(--font-(plex-sans|zen-antique)\), /g, "");
+  /** Web フォントと、Zen Antique の読み込みのあいだに組む書体を除いた並び。410 は Web フォントを読み込まない。 */
+  const toGonePageFontStack = (value: string) =>
+    value.replace(
+      /var\(--font-(plex-sans|zen-antique|zen-antique-fallback)\), /g,
+      "",
+    );
 
   test.each(Object.entries(GONE_PAGE_TOKENS))("%s", (scope, tokens) => {
     const expected = rootDeclarations(
@@ -291,7 +294,7 @@ describe("build410Html のトークンは globals.css と一致する", () => {
     );
     for (const [prop, value] of Object.entries(tokens)) {
       expect(expected.has(prop), `${prop} が globals.css に無い`).toBe(true);
-      expect(value, prop).toBe(withoutWebFonts(expected.get(prop)!));
+      expect(value, prop).toBe(toGonePageFontStack(expected.get(prop)!));
     }
   });
 

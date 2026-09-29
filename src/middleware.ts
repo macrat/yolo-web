@@ -54,8 +54,9 @@ export function isDeletedBlogSlug(slug: string): boolean {
 /**
  * 410 のページが使う globals.css のトークン（DESIGN.md §2〜§5）。middleware は globals.css を読めないので、
  * 同じ名前・同じ値をここに持つ。一致は __tests__/middleware-gone-slugs.test.ts が globals.css と照らして確かめる。
- * 書体の並びだけは、Web フォント（--font-plex-sans・--font-zen-antique）を除いた並びにする。このページは
- * Web フォントを読み込まないので、ほかのページが Web フォントを読み込む前と同じ書体で組む。
+ * 書体の並びだけは、Web フォント（--font-plex-sans・--font-zen-antique）と、Zen Antique の読み込みのあいだに
+ * 見出しを組む書体（--font-zen-antique-fallback）を除いた並びにする。このページは Web フォントを読み込まないので、
+ * 見出しの和文を初めから見出しの和文の並び（--font-ja-heading-fallback）で組む。
  */
 export const GONE_PAGE_TOKENS = {
   root: {

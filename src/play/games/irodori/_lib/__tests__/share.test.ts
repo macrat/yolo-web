@@ -275,8 +275,8 @@ describe("rankPhrases", () => {
 describe("書体の読み込み", () => {
   const FAMILIES: FontFamilies = {
     heading: {
-      all: '"plexSans", "IBM Plex Sans Fallback", "Zen Antique", "BIZ UDGothic", sans-serif',
-      ja: '"Zen Antique", "BIZ UDGothic", sans-serif',
+      all: '"plexSans", "IBM Plex Sans Fallback", "Zen Antique", "Zen Antique Fallback BIZ UDGothic", "BIZ UDGothic", sans-serif',
+      ja: '"Zen Antique", "Zen Antique Fallback BIZ UDGothic", "BIZ UDGothic", sans-serif',
     },
     body: {
       all: '"plexSans", "IBM Plex Sans Fallback", "BIZ UDPGothic", sans-serif',
@@ -300,6 +300,7 @@ describe("書体の読み込み", () => {
       { font: '400 134px "plexSans"', text: "72" },
       { font: '400 134px "IBM Plex Sans Fallback"', text: "72" },
       { font: '400 134px "Zen Antique"', text: "点" },
+      { font: '400 134px "Zen Antique Fallback BIZ UDGothic"', text: "点" },
       { font: '400 134px "BIZ UDGothic"', text: "点" },
       { font: "400 134px sans-serif", text: "点" },
     ]);

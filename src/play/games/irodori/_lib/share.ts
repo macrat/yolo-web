@@ -9,7 +9,8 @@
  * 書体は画面と同じ並び（`--font-heading`・`--font-body` と、その和文の並び）を、ページの CSS の変数から読む。Canvas は
  * 字を測るときと描くときに Web フォントの読み込みを起こすが、読み終えるのを待たず、まだ読み終えていない書体の字は並びの
  * 次の書体で描く。そのため、描く字を書体ごとに渡して読み込みを待ってから、字の幅を測って描く。読み込めなかった書体の
- * 字は、並びの次の書体で描かれる（Zen Antique を読み込めないときの見出しの字は、§3 の仮名を全角で組む並び）。
+ * 字は、並びの次の書体で描かれる（Zen Antique を読み込めないときの見出しの字は、§3 の送り幅を Zen Antique に揃えた
+ * 代わりの書体と、仮名を全角で組む並び）。
  */
 import type { IrodoriGameState } from "./types";
 import {
@@ -449,7 +450,11 @@ function pageFontFamilies(): FontFamilies {
   return {
     heading: {
       all: read("--font-heading"),
-      ja: read("--font-zen-antique", "--font-ja-heading-fallback"),
+      ja: read(
+        "--font-zen-antique",
+        "--font-zen-antique-fallback",
+        "--font-ja-heading-fallback",
+      ),
     },
     body: { all: read("--font-body"), ja: read("--font-ja-body") },
   };

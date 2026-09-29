@@ -16,6 +16,94 @@
   unicode-range: U+0000-007F;
 }
 
+/* Zen Antique の読み込みのあいだに見出しの和文を組む代わりの書体。見出しの和文の並び（--font-ja-heading-fallback）の
+ * 書体と、その後ろの sans-serif が端末で当たる書体を、同じ順に1つずつ置く。どれも字の送り幅を size-adjust で
+ * Zen Antique（漢字と々〆は 996/1000em、仮名・約物・全角の形・罫線・「—」は 1000/1000em、ダッシュの前の
+ * 折れない空白 U+00A0 は 280/1000em）に合わせ、読み込みの前後で見出しの行の数を変えない。倍率は、字の種類ごとに
+ * Zen Antique と各書体の送り幅の比から求めた値で、送り幅が字ごとにまちまちな字（欧文の約物・アクセント付き
+ * ラテンなど）は範囲に入れず、後ろの並びに任せる。字の範囲が重ならないので、どの字も一つの倍率で組む。 */
+@font-face {
+  font-family: "Zen Antique Fallback BIZ UDGothic";
+  src: local("BIZ UDGothic"), local("BIZUDGothic-Regular");
+  size-adjust: 99.6%;
+  unicode-range: U+3005-3006, U+4E00-9FFF, U+F900-FAFF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback BIZ UDGothic";
+  src: local("BIZ UDGothic"), local("BIZUDGothic-Regular");
+  unicode-range:
+    U+2025-2026, U+2500-257F, U+3000-3004, U+3007-30FF, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback BIZ UDGothic";
+  src: local("BIZ UDGothic"), local("BIZUDGothic-Regular");
+  size-adjust: 56%;
+  unicode-range: U+00A0;
+}
+@font-face {
+  font-family: "Zen Antique Fallback Hiragino Kaku Gothic ProN";
+  src: local("Hiragino Kaku Gothic ProN W3"), local("HiraKakuProN-W3");
+  size-adjust: 99.6%;
+  unicode-range: U+3005-3006, U+4E00-9FFF, U+F900-FAFF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback Hiragino Kaku Gothic ProN";
+  src: local("Hiragino Kaku Gothic ProN W3"), local("HiraKakuProN-W3");
+  unicode-range:
+    U+2025-2026, U+2500-257F, U+3000-3004, U+3007-30FF, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback Yu Gothic Medium";
+  src: local("Yu Gothic Medium"), local("YuGothic-Medium");
+  size-adjust: 99.6%;
+  unicode-range: U+3005-3006, U+4E00-9FFF, U+F900-FAFF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback Yu Gothic Medium";
+  src: local("Yu Gothic Medium"), local("YuGothic-Medium");
+  unicode-range:
+    U+2025-2026, U+2500-257F, U+3000-3004, U+3007-30FF, U+FF00-FFEF;
+}
+/* Noto Sans JP と、Android と Linux の既定の和文の書体の Noto Sans CJK JP は、同じ送り幅とカーニングを持つ。
+ * 「—」と、その前の折れない空白は、カーニングが前後の字とのあいだを広げ、和文の中では Zen Antique と同じ幅に
+ * なるので、倍率を掛けずに後ろの並びに任せる。 */
+@font-face {
+  font-family: "Zen Antique Fallback Noto Sans JP";
+  src:
+    local("Noto Sans JP Regular"), local("NotoSansJP-Regular"),
+    local("Noto Sans CJK JP"), local("NotoSansCJKjp-Regular");
+  size-adjust: 99.6%;
+  unicode-range: U+3005-3006, U+4E00-9FFF, U+F900-FAFF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback Noto Sans JP";
+  src:
+    local("Noto Sans JP Regular"), local("NotoSansJP-Regular"),
+    local("Noto Sans CJK JP"), local("NotoSansCJKjp-Regular");
+  unicode-range:
+    U+2025-2026, U+2500-257F, U+3000-3004, U+3007-30FF, U+FF00-FFEF;
+}
+/* Linux で和文の書体が WenQuanYi Zen Hei だけのとき。仮名の送り幅が 1023/1000em ある。 */
+@font-face {
+  font-family: "Zen Antique Fallback WenQuanYi Zen Hei";
+  src: local("WenQuanYi Zen Hei"), local("WenQuanYiZenHei");
+  size-adjust: 99.6%;
+  unicode-range: U+3005-3006, U+4E00-9FFF, U+F900-FAFF;
+}
+@font-face {
+  font-family: "Zen Antique Fallback WenQuanYi Zen Hei";
+  src: local("WenQuanYi Zen Hei"), local("WenQuanYiZenHei");
+  size-adjust: 97.71%;
+  unicode-range: U+3041-3096, U+309B-309E, U+30A1-30FA;
+}
+@font-face {
+  font-family: "Zen Antique Fallback WenQuanYi Zen Hei";
+  src: local("WenQuanYi Zen Hei"), local("WenQuanYiZenHei");
+  unicode-range:
+    U+2014, U+2025-2026, U+2500-257F, U+3000-3004, U+3007-3040, U+3097-309A,
+    U+309F-30A0, U+30FB-30FF, U+FF00-FFEF;
+}
+
 :root {
   color-scheme: light;
 
@@ -91,14 +179,27 @@
   --font-ja-body:
     "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",
     "Noto Sans JP", sans-serif;
-  /* 見出しの和文を Zen Antique の代わりに組む本文の書体。Zen Antique の仮名はほぼ全角なので、
-   * 仮名が全角で palt を掛けない書体を選び、読み込みの前後で見出しの折り返しを変えない。 */
+  /* 見出しの和文を本文の書体で組むときの並び。Zen Antique に無い字を含む見出しを組む。Zen Antique の読み込みの
+   * あいだは、送り幅を合わせた書体（先頭の @font-face）の範囲から外した字（欧文の約物・「×」・BIZ UDGothic 以外の
+   * U+00A0 など）と、送り幅を合わせた書体がどれも端末に無いときの和文を組む。Zen Antique の仮名は全角なので、
+   * 仮名が全角で palt を掛けない書体を選ぶ。 */
   --font-ja-heading-fallback:
     "BIZ UDGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",
     "Noto Sans JP", sans-serif;
+  /* Zen Antique の読み込みのあいだに見出しの和文を組む、送り幅を Zen Antique に合わせた書体（上の @font-face）。 */
+  --font-zen-antique-fallback:
+    "Zen Antique Fallback BIZ UDGothic",
+    "Zen Antique Fallback Hiragino Kaku Gothic ProN",
+    "Zen Antique Fallback Yu Gothic Medium",
+    "Zen Antique Fallback Noto Sans JP",
+    "Zen Antique Fallback WenQuanYi Zen Hei";
   --font-heading:
     var(--font-plex-sans), "IBM Plex Sans Fallback", var(--font-zen-antique),
-    var(--font-ja-heading-fallback);
+    var(--font-zen-antique-fallback), var(--font-ja-heading-fallback);
+  /* 見出しの連続約物の詰め。Zen Antique は halt・chws を持たず連続約物を全角のまま組むので、Zen Antique で組む
+   * 見出しは、読み込みの前に組む書体（ヒラギノ・Noto Sans CJK JP は持つ）でも詰めず、読み込みの前後で字幅を
+   * 変えない。本文の書体で組む見出しは、本文と同じく書体に従って詰める（下の [data-heading-font="fallback"]）。 */
+  --heading-text-spacing-trim: space-all;
   --font-body:
     var(--font-plex-sans), "IBM Plex Sans Fallback", var(--font-ja-body);
   --font-mono:
@@ -177,7 +278,8 @@ body {
 
 /* 見出しの和文の Zen Antique はウェイト400の1本だけなので、太字にすると合成太字になる。
  * word-break: auto-phrase は Chromium だけで効き、ブラウザの辞書による区切りで和文を折る。
- * 辞書に無い語は途中で折れることもある。 */
+ * 辞書に無い語は途中で折れることもある。
+ * 連続約物の詰めは --heading-text-spacing-trim に従う。 */
 h1,
 h2,
 h3,
@@ -188,6 +290,7 @@ h6 {
   font-weight: 400;
   line-height: var(--leading-heading);
   word-break: auto-phrase;
+  text-spacing-trim: var(--heading-text-spacing-trim);
 }
 h1 {
   font-size: var(--text-heading-main);
@@ -205,11 +308,13 @@ h6 {
 }
 
 /* Zen Antique に無い字を含む見出し。和文を丸ごと本文の書体で組み、一つの見出しの中で和文の書体を混ぜない。
- * 属性はサーバーが見出しの文字列から付ける（src/lib/zen-antique-charset.ts）。 */
+ * 属性はサーバーが見出しの文字列から付け、見出しそのものか、見出しを包む要素に置く（src/lib/zen-antique-charset.ts）。
+ * どちらでも効くよう、見出しの規則が読む変数を替える。 */
 [data-heading-font="fallback"] {
   --font-heading:
     var(--font-plex-sans), "IBM Plex Sans Fallback",
     var(--font-ja-heading-fallback);
+  --heading-text-spacing-trim: normal;
 }
 
 b,
