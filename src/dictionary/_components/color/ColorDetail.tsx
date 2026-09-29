@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
 import ItemList from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { getColorsByCategory } from "@/dictionary/_lib/colors";
@@ -14,6 +15,8 @@ import styles from "./ColorDetail.module.css";
 const SAME_CATEGORY_HEADING_ID = "same-category-colors";
 
 interface ColorDetailProps {
+  /** ページの頭（パンくずなど）。項目の本文のセクションの頭に置く。 */
+  head: ReactNode;
   color: ColorEntry;
   /**
    * 見出し（色名）を組むための折り所の区切りと属性。区切りの関数と字の表をクライアントに入れないよう、
@@ -27,6 +30,7 @@ export default function ColorDetail({
   color,
   titlePhrases,
   titleFontAttr,
+  head,
 }: ColorDetailProps) {
   const categoryLabel = COLOR_CATEGORY_LABELS[color.category];
 
@@ -65,90 +69,93 @@ export default function ColorDetail({
   const hslText = `hsl(${color.hsl[0]}, ${color.hsl[1]}%, ${color.hsl[2]}%)`;
 
   return (
-    <article className={styles.detail} data-testid="color-detail">
-      {/* 色の名前とカラーコードは本文の字が伝えるので、色見本は読み上げに出さない。 */}
-      <div
-        className={styles.swatch}
-        style={{ backgroundColor: color.hex }}
-        aria-hidden="true"
-      />
+    <Section>
+      {head}
+      <article className={styles.detail} data-testid="color-detail">
+        {/* 色の名前とカラーコードは本文の字が伝えるので、色見本は読み上げに出さない。 */}
+        <div
+          className={styles.swatch}
+          style={{ backgroundColor: color.hex }}
+          aria-hidden="true"
+        />
 
-      <PhrasedText
-        as="h1"
-        className={styles.title}
-        phrases={titlePhrases}
-        {...titleFontAttr}
-      />
+        <PhrasedText
+          as="h1"
+          className={styles.title}
+          phrases={titlePhrases}
+          {...titleFontAttr}
+        />
 
-      <section className={styles.section}>
-        <h2>カラーコード</h2>
-        <table className={styles.codeTable}>
-          <tbody>
-            <tr>
-              <th>HEX</th>
-              <td className={styles.codeValue}>{color.hex}</td>
-              <td className={styles.codeAction}>
-                <CopyButton text={color.hex} target="HEX" align="end" />
-              </td>
-            </tr>
-            <tr>
-              <th>RGB</th>
-              <td className={styles.codeValue}>{rgbText}</td>
-              <td className={styles.codeAction}>
-                <CopyButton text={rgbText} target="RGB" align="end" />
-              </td>
-            </tr>
-            <tr>
-              <th>HSL</th>
-              <td className={styles.codeValue}>{hslText}</td>
-              <td className={styles.codeAction}>
-                <CopyButton text={hslText} target="HSL" align="end" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section className={styles.section}>
-        <h2>カテゴリ</h2>
-        <Link
-          href={`/dictionary/colors/category/${color.category}`}
-          className={styles.categoryLink}
-          data-text-box="inline"
-        >
-          {categoryLabel}
-        </Link>
-      </section>
-
-      <section className={styles.section}>
-        <PhrasedText as="h2" phrases={["関連", "ツール"]} />
-        <Link
-          href="/tools/color-converter"
-          className={styles.crossLink}
-          data-text-box="inline"
-        >
-          カラーコードを変換する
-        </Link>
-      </section>
-
-      {relatedColors.length > 0 && (
         <section className={styles.section}>
-          <PhrasedText
-            as="h2"
-            id={SAME_CATEGORY_HEADING_ID}
-            phrases={["同じ", "カテゴリの", "伝統色", `（${categoryLabel}）`]}
-          />
-          <ItemList
-            labelledBy={SAME_CATEGORY_HEADING_ID}
-            items={relatedColors.map((c) => ({
-              name: c.name,
-              href: `/dictionary/colors/${c.slug}`,
-              reading: c.romaji,
-              swatch: c.hex,
-            }))}
-          />
+          <h2>カラーコード</h2>
+          <table className={styles.codeTable}>
+            <tbody>
+              <tr>
+                <th>HEX</th>
+                <td className={styles.codeValue}>{color.hex}</td>
+                <td className={styles.codeAction}>
+                  <CopyButton text={color.hex} target="HEX" align="end" />
+                </td>
+              </tr>
+              <tr>
+                <th>RGB</th>
+                <td className={styles.codeValue}>{rgbText}</td>
+                <td className={styles.codeAction}>
+                  <CopyButton text={rgbText} target="RGB" align="end" />
+                </td>
+              </tr>
+              <tr>
+                <th>HSL</th>
+                <td className={styles.codeValue}>{hslText}</td>
+                <td className={styles.codeAction}>
+                  <CopyButton text={hslText} target="HSL" align="end" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </section>
-      )}
-    </article>
+
+        <section className={styles.section}>
+          <h2>カテゴリ</h2>
+          <Link
+            href={`/dictionary/colors/category/${color.category}`}
+            className={styles.categoryLink}
+            data-text-box="inline"
+          >
+            {categoryLabel}
+          </Link>
+        </section>
+
+        <section className={styles.section}>
+          <PhrasedText as="h2" phrases={["関連", "ツール"]} />
+          <Link
+            href="/tools/color-converter"
+            className={styles.crossLink}
+            data-text-box="inline"
+          >
+            カラーコードを変換する
+          </Link>
+        </section>
+
+        {relatedColors.length > 0 && (
+          <section className={styles.section}>
+            <PhrasedText
+              as="h2"
+              id={SAME_CATEGORY_HEADING_ID}
+              phrases={["同じ", "カテゴリの", "伝統色", `（${categoryLabel}）`]}
+            />
+            <ItemList
+              labelledBy={SAME_CATEGORY_HEADING_ID}
+              items={relatedColors.map((c) => ({
+                name: c.name,
+                href: `/dictionary/colors/${c.slug}`,
+                reading: c.romaji,
+                swatch: c.hex,
+              }))}
+            />
+          </section>
+        )}
+      </article>
+    </Section>
   );
 }

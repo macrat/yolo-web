@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
 import { COLOR_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";
@@ -33,8 +33,6 @@ export default async function ColorDetailPage({
   const color = getColorBySlug(slug);
   if (!color) notFound();
 
-  // 辞典固有の JSON-LD のみ渡す。
-  // breadcrumb JSON-LD は Breadcrumb コンポーネントが自動出力するため手動呼び出し不要。
   const jsonLd = generateColorJsonLd(color);
   const playRecommendations = getPlayRecommendationsForDictionary("colors");
   const title = `${color.name}（${color.romaji}）`;
@@ -51,13 +49,17 @@ export default async function ColorDetailPage({
       jsonLd={jsonLd}
       shareUrl={`/dictionary/colors/${color.slug}`}
       shareTitle={title}
+      shareHeading={["この", "伝統色を", "共有"]}
       playRecommendations={playRecommendations}
     >
-      <ColorDetail
-        color={color}
-        titlePhrases={splitIntoPhrases(title)}
-        titleFontAttr={headingFontAttr(title)}
-      />
+      {(head) => (
+        <ColorDetail
+          color={color}
+          titlePhrases={splitIntoPhrases(title)}
+          titleFontAttr={headingFontAttr(title)}
+          head={head}
+        />
+      )}
     </DictionaryDetailLayout>
   );
 }

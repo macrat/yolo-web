@@ -19,7 +19,7 @@ const mockYoji: YojiEntry = {
 };
 
 test("renders yoji prominently", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   const detail = screen.getByTestId("yoji-detail");
   expect(detail).toBeInTheDocument();
   expect(
@@ -28,7 +28,7 @@ test("renders yoji prominently", () => {
 });
 
 test("renders the yoji as the page h1 (DictionaryDetailLayout 設計契約: h1 は Detail 内部で管理)", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   const h1 = screen.getByRole("heading", { level: 1 });
   expect(h1).toHaveTextContent("四字熟語「一期一会」");
   // h1 はページに1個だけ（kanji/color と同型の見出し階層）
@@ -36,7 +36,7 @@ test("renders the yoji as the page h1 (DictionaryDetailLayout 設計契約: h1 �
 });
 
 test("renders reading and meaning", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   expect(screen.getByText("いちごいちえ")).toBeInTheDocument();
   expect(
     screen.getByText("一生に一度の出会いを大切にすること"),
@@ -44,17 +44,17 @@ test("renders reading and meaning", () => {
 });
 
 test("renders difficulty", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   expect(screen.getByText("初級", { selector: "span" })).toBeInTheDocument();
 });
 
 test("renders category link", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   expect(screen.getByText("人生")).toBeInTheDocument();
 });
 
 test("renders game cross-link", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   expect(
     screen.getByRole("link", {
       name: "四字キメル - 毎日の四字熟語パズルで遊ぶ",
@@ -63,26 +63,26 @@ test("renders game cross-link", () => {
 });
 
 test("renders constituent kanji section", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   // "一期一会" has 一 which is in kanji-data.json
   // The character should be linked
   expect(screen.getByText("構成漢字")).toBeInTheDocument();
 });
 
 test("renders AI example section when example is present", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   expect(screen.getByText("AIが見た人間のひとコマ")).toBeInTheDocument();
   expect(screen.getByText("テスト用の例文です。")).toBeInTheDocument();
 });
 
 test("does not render AI example section when example is empty string", () => {
   const yojiWithoutExample: YojiEntry = { ...mockYoji, example: "" };
-  render(<YojiDetail yoji={yojiWithoutExample} />);
+  render(<YojiDetail yoji={yojiWithoutExample} head={null} />);
   expect(screen.queryByText("AIが見た人間のひとコマ")).not.toBeInTheDocument();
 });
 
 test("AI example section appears after kanji section and before related yoji section", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   const headings = screen
     .getAllByRole("heading", { level: 2 })
     .map((h) => h.textContent);
@@ -99,19 +99,19 @@ test("AI example section appears after kanji section and before related yoji sec
 
 test("renders origin label for 中国 as '中国伝来'", () => {
   const chinaYoji: YojiEntry = { ...mockYoji, origin: "中国" };
-  render(<YojiDetail yoji={chinaYoji} />);
+  render(<YojiDetail yoji={chinaYoji} head={null} />);
   expect(screen.getByText("成立と出典")).toBeInTheDocument();
   expect(screen.getByText("中国伝来")).toBeInTheDocument();
 });
 
 test("renders structure label for 対句 as '対句構造'", () => {
   const tsuikuYoji: YojiEntry = { ...mockYoji, structure: "対句" };
-  render(<YojiDetail yoji={tsuikuYoji} />);
+  render(<YojiDetail yoji={tsuikuYoji} head={null} />);
   expect(screen.getByText("対句構造")).toBeInTheDocument();
 });
 
 test("renders kotobank source URL as external link with safe rel and target", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   const link = screen.getByRole("link", { name: /コトバンク.*外部サイト/ });
   expect(link).toHaveAttribute(
     "href",
@@ -128,7 +128,7 @@ test("falls back to hostname for unknown source host", () => {
     ...mockYoji,
     sourceUrl: "https://unknown.example.com/some/path",
   };
-  render(<YojiDetail yoji={unknownHostYoji} />);
+  render(<YojiDetail yoji={unknownHostYoji} head={null} />);
   const link = screen.getByRole("link", {
     name: /unknown\.example\.com.*外部サイト/,
   });
@@ -137,13 +137,13 @@ test("falls back to hostname for unknown source host", () => {
 
 test("renders origin '不明' honestly without hiding", () => {
   const unknownOriginYoji: YojiEntry = { ...mockYoji, origin: "不明" };
-  render(<YojiDetail yoji={unknownOriginYoji} />);
-  // 「不明」は隠さず誠実に提示する（憲法 Rule 2 / N-3）
+  render(<YojiDetail yoji={unknownOriginYoji} head={null} />);
+  // 「不明」も隠さず、特定されていないことを示す
   expect(screen.getByText(/不明/)).toBeInTheDocument();
 });
 
 test("大字は直後の h1 と同じ語なので、読み上げの木に現れない", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   expect(screen.getByText("一期一会", { selector: "span" })).toHaveAttribute(
     "aria-hidden",
     "true",
@@ -152,7 +152,7 @@ test("大字は直後の h1 と同じ語なので、読み上げの木に現れ�
 
 test("同じカテゴリの四字熟語は、見出しだけが語の数を言い、難易度ごとのリストとして読まれる", () => {
   const others = getYojiByCategory("life").filter((y) => y.yoji !== "一期一会");
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
 
   const heading = screen.getByRole("heading", {
     level: 2,
@@ -187,7 +187,7 @@ test("同じカテゴリの四字熟語は、見出しだけが語の数を言�
 });
 
 test("見出しは文節の切れ目で、同じカテゴリの四字熟語の見出しは名前の中の語の切れ目と始め括弧の前でだけ折れる（DESIGN.md §4）", () => {
-  render(<YojiDetail yoji={mockYoji} />);
+  render(<YojiDetail yoji={mockYoji} head={null} />);
   const count = getYojiByCategory(mockYoji.category).filter(
     (y) => y.yoji !== mockYoji.yoji,
   ).length;
@@ -211,4 +211,16 @@ test("見出しは文節の切れ目で、同じカテゴリの四字熟語の�
   expect(screen.getByRole("heading", { name: related }).innerHTML).toBe(
     phrases.join("<wbr>"),
   );
+});
+
+test("渡されたページの頭を、項目の本文のセクションの最初の子として、主見出しより前に置く", () => {
+  const { container } = render(
+    <YojiDetail yoji={mockYoji} head={<nav data-testid="page-head" />} />,
+  );
+  const head = screen.getByTestId("page-head");
+  expect(container.querySelector("section")!.firstElementChild).toBe(head);
+  expect(
+    head.compareDocumentPosition(screen.getByRole("heading", { level: 1 })) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
 });

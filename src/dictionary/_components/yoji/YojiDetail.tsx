@@ -1,6 +1,8 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import LinkIndex from "@/components/LinkIndex";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import type {
   YojiDifficulty,
   YojiEntry,
@@ -19,6 +21,8 @@ import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./YojiDetail.module.css";
 
 interface YojiDetailProps {
+  /** ページの頭（パンくずなど）。項目の本文のセクションの頭に置く。 */
+  head: ReactNode;
   yoji: YojiEntry;
 }
 
@@ -42,7 +46,7 @@ function groupByDifficulty(yojiList: YojiEntry[]): IndexEntryGroup[] {
 }
 
 /** origin (3値) を来訪者向けの説明的な日本語に変換する。
- * 「不明」は隠さず誠実に示す（憲法 Rule 2 / N-3）。*/
+ * 「不明」も隠さず、特定されていないことを示す。*/
 const ORIGIN_LABELS: Record<YojiOrigin, string> = {
   中国: "中国伝来",
   日本: "日本由来",
@@ -57,7 +61,6 @@ const STRUCTURE_LABELS: Record<YojiStructure, string> = {
 };
 
 /** 出典 URL のホスト名 → 表示名の辞書。
- * 後続の他コンポーネントから再利用する予定はないため component ローカルに置く。
  * 不一致のホストは fallback としてホスト名をそのまま表示する。*/
 const SOURCE_HOST_LABELS: Record<string, string> = {
   "kotobank.jp": "コトバンク",
@@ -81,7 +84,7 @@ function getSourceLabel(sourceUrl: string): string {
   }
 }
 
-export default function YojiDetail({ yoji }: YojiDetailProps) {
+export default function YojiDetail({ yoji, head }: YojiDetailProps) {
   const relatedYoji = getYojiByCategory(yoji.category).filter(
     (y) => y.yoji !== yoji.yoji,
   );
@@ -98,137 +101,139 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   const uniqueLinkedKanji = Array.from(new Set(linkedKanji));
 
   return (
-    <article className={styles.detail} data-testid="yoji-detail">
-      <div className={styles.header}>
-        {/* 直後の h1 が同じ語を言うので、読み上げでは二度読ませない。 */}
-        <span
-          className={styles.character}
-          aria-hidden="true"
-          {...headingFontAttr(yoji.yoji)}
-        >
-          {yoji.yoji}
-        </span>
-        <PhrasedText
-          as="h1"
-          className={styles.title}
-          phrases={splitIntoPhrases(title)}
-          {...headingFontAttr(title)}
-        />
-        <p className={styles.reading}>{yoji.reading}</p>
-        <p className={styles.meaning}>{yoji.meaning}</p>
-        {/* 分類: カテゴリは索引への導線、難易度は補助情報の文字。ピルにしない。 */}
-        <div className={styles.classification}>
-          <Link
-            href={`/dictionary/yoji/category/${yoji.category}`}
-            className={styles.categoryTag}
-            data-text-box="inline"
+    <Section>
+      {head}
+      <article className={styles.detail} data-testid="yoji-detail">
+        <div className={styles.header}>
+          {/* 直後の h1 が同じ語を言うので、読み上げでは二度読ませない。 */}
+          <span
+            className={styles.character}
+            aria-hidden="true"
+            {...headingFontAttr(yoji.yoji)}
           >
-            {categoryLabel}
-          </Link>
-          <span className={styles.difficulty}>{difficultyLabel}</span>
+            {yoji.yoji}
+          </span>
+          <PhrasedText
+            as="h1"
+            className={styles.title}
+            phrases={splitIntoPhrases(title)}
+            {...headingFontAttr(title)}
+          />
+          <p className={styles.reading}>{yoji.reading}</p>
+          <p className={styles.meaning}>{yoji.meaning}</p>
+          {/* 分類: カテゴリは索引への導線、難易度は補助情報の文字。 */}
+          <div className={styles.classification}>
+            <Link
+              href={`/dictionary/yoji/category/${yoji.category}`}
+              className={styles.categoryTag}
+              data-text-box="inline"
+            >
+              {categoryLabel}
+            </Link>
+            <span className={styles.difficulty}>{difficultyLabel}</span>
+          </div>
         </div>
-      </div>
 
-      {yojiChars.length > 0 && (
-        <section className={styles.section}>
-          <h2>構成漢字</h2>
-          <div className={styles.kanjiLinks} {...headingFontAttr(yoji.yoji)}>
-            {yojiChars.map((ch, i) =>
-              uniqueLinkedKanji.includes(ch) ? (
-                <Link
-                  key={`${ch}-${i}`}
-                  href={`/dictionary/kanji/${encodeURIComponent(ch)}`}
-                  className={styles.kanjiLink}
-                  data-text-box="inline"
-                  title={`漢字「${ch}」の詳細を見る`}
-                >
-                  {ch}
-                </Link>
-              ) : (
-                <span
-                  key={`${ch}-${i}`}
-                  className={styles.kanjiChar}
-                  data-text-box="inline"
-                >
-                  {ch}
-                </span>
-              ),
-            )}
-          </div>
-        </section>
-      )}
-
-      <section className={styles.section}>
-        <PhrasedText as="h2" phrases={["成立と", "出典"]} />
-        <dl className={styles.metaList}>
-          <div className={styles.metaItem}>
-            <dt className={styles.metaTerm}>成立地</dt>
-            <dd className={styles.metaDesc}>{ORIGIN_LABELS[yoji.origin]}</dd>
-          </div>
-          <div className={styles.metaItem}>
-            <dt className={styles.metaTerm}>構成</dt>
-            <dd className={styles.metaDesc}>
-              {STRUCTURE_LABELS[yoji.structure]}
-            </dd>
-          </div>
-          {yoji.sourceUrl && (
-            <div className={styles.metaItem}>
-              <dt className={styles.metaTerm}>出典</dt>
-              <dd className={styles.metaDesc}>
-                <a
-                  href={yoji.sourceUrl}
-                  className={styles.externalLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${getSourceLabel(yoji.sourceUrl)}（外部サイト・新しいタブで開く）`}
-                >
-                  {getSourceLabel(yoji.sourceUrl)}
-                  {/* テキストより小さめの外部リンク記号 */}
-                  <span className={styles.externalIcon} aria-hidden="true">
-                    ↗
+        {yojiChars.length > 0 && (
+          <section className={styles.section}>
+            <h2>構成漢字</h2>
+            <div className={styles.kanjiLinks} {...headingFontAttr(yoji.yoji)}>
+              {yojiChars.map((ch, i) =>
+                uniqueLinkedKanji.includes(ch) ? (
+                  <Link
+                    key={`${ch}-${i}`}
+                    href={`/dictionary/kanji/${encodeURIComponent(ch)}`}
+                    className={styles.kanjiLink}
+                    data-text-box="inline"
+                    title={`漢字「${ch}」の詳細を見る`}
+                  >
+                    {ch}
+                  </Link>
+                ) : (
+                  <span
+                    key={`${ch}-${i}`}
+                    className={styles.kanjiChar}
+                    data-text-box="inline"
+                  >
+                    {ch}
                   </span>
-                </a>
+                ),
+              )}
+            </div>
+          </section>
+        )}
+
+        <section className={styles.section}>
+          <PhrasedText as="h2" phrases={["成立と", "出典"]} />
+          <dl className={styles.metaList}>
+            <div className={styles.metaItem}>
+              <dt className={styles.metaTerm}>成立地</dt>
+              <dd className={styles.metaDesc}>{ORIGIN_LABELS[yoji.origin]}</dd>
+            </div>
+            <div className={styles.metaItem}>
+              <dt className={styles.metaTerm}>構成</dt>
+              <dd className={styles.metaDesc}>
+                {STRUCTURE_LABELS[yoji.structure]}
               </dd>
             </div>
-          )}
-        </dl>
-      </section>
-
-      {/* フッターにAI運営の旨が記載されているため、セクション単位の注記は不要 */}
-      {yoji.example && (
-        <section className={styles.section}>
-          <PhrasedText
-            as="h2"
-            phrases={["AIが", "見た", "人間の", "ひとコマ"]}
-          />
-          <p className={styles.exampleQuote}>{yoji.example}</p>
+            {yoji.sourceUrl && (
+              <div className={styles.metaItem}>
+                <dt className={styles.metaTerm}>出典</dt>
+                <dd className={styles.metaDesc}>
+                  <a
+                    href={yoji.sourceUrl}
+                    className={styles.externalLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${getSourceLabel(yoji.sourceUrl)}（外部サイト・新しいタブで開く）`}
+                  >
+                    {getSourceLabel(yoji.sourceUrl)}
+                    {/* テキストより小さめの外部リンク記号 */}
+                    <span className={styles.externalIcon} aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
         </section>
-      )}
 
-      {relatedYoji.length > 0 && (
+        {yoji.example && (
+          <section className={styles.section}>
+            <PhrasedText
+              as="h2"
+              phrases={["AIが", "見た", "人間の", "ひとコマ"]}
+            />
+            <p className={styles.exampleQuote}>{yoji.example}</p>
+          </section>
+        )}
+
+        {relatedYoji.length > 0 && (
+          <section className={styles.section}>
+            <PhrasedText
+              as="h2"
+              phrases={splitIntoPhrases(relatedHeading, { countedName: true })}
+              {...headingFontAttr(relatedHeading)}
+            />
+            <LinkIndex
+              groups={phraseIndexGroups(groupByDifficulty(relatedYoji))}
+              groupHeadingLevel={3}
+            />
+          </section>
+        )}
+
         <section className={styles.section}>
-          <PhrasedText
-            as="h2"
-            phrases={splitIntoPhrases(relatedHeading, { countedName: true })}
-            {...headingFontAttr(relatedHeading)}
-          />
-          <LinkIndex
-            groups={phraseIndexGroups(groupByDifficulty(relatedYoji))}
-            groupHeadingLevel={3}
-          />
+          <PhrasedText as="h2" phrases={["関連", "ゲーム"]} />
+          <Link
+            href="/play/yoji-kimeru"
+            className={styles.crossLink}
+            data-text-box="inline"
+          >
+            四字キメル - 毎日の四字熟語パズルで遊ぶ
+          </Link>
         </section>
-      )}
-
-      <section className={styles.section}>
-        <PhrasedText as="h2" phrases={["関連", "ゲーム"]} />
-        <Link
-          href="/play/yoji-kimeru"
-          className={styles.crossLink}
-          data-text-box="inline"
-        >
-          四字キメル - 毎日の四字熟語パズルで遊ぶ
-        </Link>
-      </section>
-    </article>
+      </article>
+    </Section>
   );
 }

@@ -14,6 +14,7 @@ describe("ColorDetail の同じカテゴリの伝統色", () => {
         color={toki}
         titlePhrases={titlePhrases}
         titleFontAttr={{}}
+        head={null}
       />,
     );
     const list = screen.getByRole("list", {
@@ -35,6 +36,7 @@ describe("ColorDetail の同じカテゴリの伝統色", () => {
         color={toki}
         titlePhrases={titlePhrases}
         titleFontAttr={{}}
+        head={null}
       />,
     );
     const list = screen.getByRole("list", {
@@ -57,6 +59,7 @@ describe("ColorDetail の色見本", () => {
         color={toki}
         titlePhrases={titlePhrases}
         titleFontAttr={{}}
+        head={null}
       />,
     );
     const swatch = getByTestId("color-detail").firstElementChild!;
@@ -86,6 +89,7 @@ describe("ColorDetail のカラーコードのコピー", () => {
         color={toki}
         titlePhrases={titlePhrases}
         titleFontAttr={{}}
+        head={null}
       />,
     );
     const hexButton = screen.getByRole("button", { name: "HEXをコピー" });
@@ -109,6 +113,7 @@ describe("ColorDetail のカラーコードのコピー", () => {
         color={toki}
         titlePhrases={titlePhrases}
         titleFontAttr={{}}
+        head={null}
       />,
     );
     const hexButton = screen.getByRole("button", { name: "HEXをコピー" });
@@ -119,7 +124,12 @@ describe("ColorDetail のカラーコードのコピー", () => {
 
 test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
   render(
-    <ColorDetail color={toki} titlePhrases={titlePhrases} titleFontAttr={{}} />,
+    <ColorDetail
+      color={toki}
+      titlePhrases={titlePhrases}
+      titleFontAttr={{}}
+      head={null}
+    />,
   );
   const headings: string[][] = [
     ["関連", "ツール"],
@@ -133,4 +143,21 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () =
   expect(screen.getByRole("heading", { level: 1 }).innerHTML).toBe(
     titlePhrases.join("<wbr>"),
   );
+});
+
+test("渡されたページの頭を、項目の本文のセクションの最初の子として、主見出しより前に置く", () => {
+  const { container } = render(
+    <ColorDetail
+      color={toki}
+      titlePhrases={titlePhrases}
+      titleFontAttr={{}}
+      head={<nav data-testid="page-head" />}
+    />,
+  );
+  const head = screen.getByTestId("page-head");
+  expect(container.querySelector("section")!.firstElementChild).toBe(head);
+  expect(
+    head.compareDocumentPosition(screen.getByRole("heading", { level: 1 })) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
 });

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
 import { YOJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
@@ -50,9 +50,10 @@ export default async function YojiDetailPage({
       jsonLd={jsonLd}
       shareUrl={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}
       shareTitle={`「${yoji.yoji}」の意味・読み方`}
+      shareHeading={["この", "四字熟語を", "共有"]}
       playRecommendations={playRecommendations}
     >
-      <YojiDetail yoji={yoji} />
+      {(head) => <YojiDetail yoji={yoji} head={head} />}
     </DictionaryDetailLayout>
   );
 }
