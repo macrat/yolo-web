@@ -2,6 +2,7 @@ import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
 import ListPage from "@/components/ListPage";
+import PhrasedText from "@/components/PhrasedText";
 import {
   KANJI_INDEX_SUMMARY,
   KANJI_LIST_PER_PAGE,
@@ -74,13 +75,17 @@ export default function KanjiListView({ scope, page }: KanjiListViewProps) {
         }}
         currentHref={basePath}
       />
-      <h2 className="visually-hidden">漢字の一覧</h2>
+      <PhrasedText
+        as="h2"
+        className="visually-hidden"
+        phrases={["漢字の", "一覧"]}
+      />
       <BrowsableList
         items={kanjiListItems(scope)}
         hrefPrefix="/dictionary/kanji/"
         label="漢字の一覧"
         unit="字"
-        searchLabel="字・読み・熟語で探す"
+        searchLabel={["字・", "読み・", "熟語で", "探す"]}
         sorts={kanjiListSorts(scope)}
         perPage={KANJI_LIST_PER_PAGE}
         basePath={basePath}

@@ -13,6 +13,7 @@ import {
 import DisclosureTriangle from "@/components/DisclosureTriangle";
 import Field from "@/components/Field";
 import Input from "@/components/Input";
+import PhrasedText from "@/components/PhrasedText";
 import { phrasedNameText, type PhrasedName } from "@/lib/phrased-name";
 import RadioGroup, { type RadioGroupOption } from "@/components/RadioGroup";
 import { ALL, controlsLabel, type BrowseChoice } from "@/lib/list-browse";
@@ -48,10 +49,9 @@ function withAll(options: BrowseChoice[]): BrowseChoice[] {
   return [{ value: ALL, name: "すべて" }, ...options];
 }
 
-/** 組のいま選んでいる選択肢の名前の字。開閉のボタンのラベルに入れる。 */
-function selectedText(group: ListControlsGroup): string | undefined {
-  const selected = group.options.find((option) => option.value === group.value);
-  return selected && phrasedNameText(selected.name);
+/** 組のいま選んでいる選択肢の名前。開閉のボタンのラベルに入れる。 */
+function selectedName(group: ListControlsGroup): PhrasedName | undefined {
+  return group.options.find((option) => option.value === group.value)?.name;
 }
 
 /** 選択肢をラジオボタンの組の選択肢にする。名前は区切りの並びのまま渡し、ラジオボタンの横で文節で折る。 */
@@ -66,6 +66,11 @@ function radioOptions(options: BrowseChoice[]): RadioGroupOption[] {
  * 名前の欄は畳まず、どの幅でもいつも見せる。畳める枠は `45rem` 未満の画面でだけ閉じ、閉じた状態を
  * CSS のメディアクエリだけで隠す。サーバーの HTML と最初の描画が同じになり、読み込みのあとに一覧が動かない。
  * 広い画面でいつも開いた形を JS なしで作れないので、`details` ではなく開閉のボタンで組む。
+ *
+ * 開閉のボタンのラベルは、組の名前と、いまの選択を言う丸括弧の一続きを、別々の PhrasedText で組む。一続きを
+ * 1つの箱にして、1行に収まるなら丸ごと次の行へ送り、収まらないときだけ中で折るためである（§4）。字を要素で分けない
+ * PhrasedText の約束は見出しを読み上げが分けて読まないためのもので、ボタンの名前は中の要素に関わらず1続きの字で
+ * 読まれる。
  *
  * 名前の欄の字は、IME の変換中の仮名で一覧が揺れないよう、確定するまで親へ渡さない。そのため欄の字は
  * 部品の中に持ち、親の条件とは確定の時点で揃える。
@@ -139,9 +144,9 @@ export default function ListControls({
     hasFilterGroups: filterGroupsInOrder.length > 0,
     selectedFilters: filterGroupsInOrder
       .filter((group) => group.value !== ALL)
-      .map((group) => selectedText(group))
-      .filter((text): text is string => text !== undefined),
-    sortLabel: sortGroup ? selectedText(sortGroup) : undefined,
+      .map((group) => selectedName(group))
+      .filter((name) => name !== undefined),
+    sortName: sortGroup ? selectedName(sortGroup) : undefined,
   });
 
   return (
@@ -172,7 +177,19 @@ export default function ListControls({
             onClick={() => setOpen((value) => !value)}
           >
             <DisclosureTriangle />
-            <span className={styles.toggleLabel}>{label}</span>
+            <span className={styles.toggleLabel}>
+              <PhrasedText as="span" phrases={label.name} />
+              {label.selection.length > 0 ? (
+                <>
+                  <wbr />
+                  <PhrasedText
+                    as="span"
+                    className={styles.selection}
+                    phrases={label.selection}
+                  />
+                </>
+              ) : null}
+            </span>
           </button>
           <div
             id={regionId}

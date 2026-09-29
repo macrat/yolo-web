@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import ListControls from "@/components/ListControls";
+import styles from "@/components/ListControls/ListControls.module.css";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const KINDS = [
@@ -164,7 +165,7 @@ describe("ListControls", () => {
     expect(followsPhraseRules(legend)).toBe(true);
   });
 
-  test("選択肢の名前の区切りの並びは文節で折り、開閉のボタンのラベルと読み上げの名前は1続きの字で言う", () => {
+  test("選択肢の名前の区切りの並びは、ラジオボタンの横と開閉のボタンのラベルで文節で折り、ラベルの丸括弧の一続きは1つの箱にし、読み上げの名前は1続きの字で言う", () => {
     const kindName = ["データの", "変換"];
     const sortName = ["読みの", "五十音順"];
     render(
@@ -192,11 +193,16 @@ describe("ListControls", () => {
     const kind = screen.getByRole("radio", { name: "データの変換" });
     expect(kind.closest("label")!.innerHTML).toContain("データの<wbr>変換");
     expect(screen.getByRole("radio", { name: "読みの五十音順" })).toBeChecked();
-    expect(
-      screen.getByRole("button", {
-        name: "絞り込みと並び順（データの変換、読みの五十音順）",
-      }),
-    ).toBeInTheDocument();
+    const toggle = screen.getByRole("button", {
+      name: "絞り込みと並び順（データの変換、読みの五十音順）",
+    });
+    const selection = toggle.querySelector(`.${styles.selection}`)!;
+    expect(selection.innerHTML).toBe(
+      "（データの<wbr>変換、<wbr>読みの<wbr>五十音順）",
+    );
+    expect(selection.parentElement!.innerHTML).toContain(
+      "絞り込みと<wbr>並び順</span><wbr>",
+    );
     expect(followsPhraseRules(kindName)).toBe(true);
     expect(followsPhraseRules(sortName)).toBe(true);
   });

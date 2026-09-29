@@ -184,7 +184,7 @@ const BY_READING: BrowseSortKey = { by: "reading" };
 
 const SORT_READING: BrowseSort = {
   value: "reading",
-  name: "読みの五十音順",
+  name: ["読みの", "五十音順"],
   keys: [BY_READING],
 };
 

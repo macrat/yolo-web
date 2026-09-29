@@ -52,7 +52,7 @@ export default function HumorListView({ page }: HumorListViewProps) {
         hrefPrefix={`${HUMOR_LIST_BASE_PATH}/`}
         label="ユーモア辞典の見出し語の一覧"
         unit="語"
-        searchLabel="語・読み・語義で探す"
+        searchLabel={["語・", "読み・", "語義で", "探す"]}
         sorts={HUMOR_LIST_SORTS}
         perPage={HUMOR_LIST_PER_PAGE}
         basePath={HUMOR_LIST_BASE_PATH}

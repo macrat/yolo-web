@@ -7,7 +7,11 @@
 
 import type { ItemListFact } from "@/components/ItemList";
 import { hexToOklch } from "@/lib/hexToOklch";
-import { phrasedNameText, type PhrasedName } from "@/lib/phrased-name";
+import {
+  phrasedNamePhrases,
+  phrasedNameText,
+  type PhrasedName,
+} from "@/lib/phrased-name";
 
 /**
  * 一覧のページで絞り込み・並べ替えをする項目。サーバーからクライアントへ全件を渡すので、行に見せる値と、
@@ -515,29 +519,51 @@ export function browseSearch(state: BrowseState, spec: BrowseSpec): string {
   return text === "" ? "" : `?${text}`;
 }
 
+/** 開閉のボタンのラベルを、組の名前と、いまの選択を言う丸括弧の一続きに分け、それぞれを文節で分けた並び。 */
+export interface ControlsLabel {
+  /** 畳んだ組の名前（「絞り込みと」「並び順」）。 */
+  name: string[];
+  /**
+   * いまの選択を丸括弧で囲んだ一続き（「（すべて、」「読みの」「五十音順）」）。括弧の中の区切りは、「、」の後ろと
+   * 選んだ値の名前の区切りで、一続きが1行に収まらないときにだけ使う。言う選択が無ければ空。
+   */
+  selection: string[];
+}
+
 /**
- * 畳んだ枠の開閉のボタンのラベル（§7）。畳んだ組のいまの選択を言う。絞っている組の値を種別・道具ごとの組の
- * 順に「、」でつなぎ（値の中に「・」が現れるので区切りに使わない）、どの組も絞っていなければ「すべて」の1語で言う。
+ * 畳んだ枠の開閉のボタンのラベル（§7）。畳んだ組の名前の後ろに、いまの選択を丸括弧で囲んで添える。絞っている組の
+ * 値を種別・道具ごとの組の順に「、」でつなぎ（値の中に「・」が現れるので区切りに使わない）、どの組も絞っていなければ
+ * 「すべて」の1語で言う。丸括弧の一続きは1つのまとまりとして組み（§4）、中で折るのは一続きが1行に収まらないとき
+ * だけなので、名前と一続きを分けて返す。
  */
 export function controlsLabel(options: {
   /** 絞り込みの組（種別・道具ごとの組）を持つか。 */
   hasFilterGroups: boolean;
-  /** 絞っている組の選択の語。種別・道具ごとの組の順。 */
-  selectedFilters: readonly string[];
-  /** 並び順の組を持つとき、選んでいる並び順の語。 */
-  sortLabel?: string;
-}): string {
-  const selection =
-    options.selectedFilters.length > 0
-      ? options.selectedFilters.join("、")
-      : "すべて";
-  if (options.hasFilterGroups && options.sortLabel !== undefined) {
-    return `絞り込みと並び順（${selection}、${options.sortLabel}）`;
+  /** 絞っている組の選択の名前。種別・道具ごとの組の順。 */
+  selectedFilters: readonly PhrasedName[];
+  /** 並び順の組を持つとき、選んでいる並び順の名前。 */
+  sortName?: PhrasedName;
+}): ControlsLabel {
+  const { hasFilterGroups, selectedFilters, sortName } = options;
+  const filters = selectedFilters.length > 0 ? selectedFilters : ["すべて"];
+  const values = [
+    ...(hasFilterGroups ? filters : []),
+    ...(sortName !== undefined ? [sortName] : []),
+  ];
+  const selection = values.flatMap((value, index) => {
+    const phrases = [...phrasedNamePhrases(value)];
+    if (index < values.length - 1) phrases[phrases.length - 1] += "、";
+    return phrases;
+  });
+  if (selection.length > 0) {
+    selection[0] = `（${selection[0]}`;
+    selection[selection.length - 1] += "）";
   }
-  if (options.hasFilterGroups) {
-    return `絞り込み（${selection}）`;
-  }
-  return `並び順（${options.sortLabel ?? ""}）`;
+  const name =
+    hasFilterGroups && sortName !== undefined
+      ? ["絞り込みと", "並び順"]
+      : [hasFilterGroups ? "絞り込み" : "並び順"];
+  return { name, selection };
 }
 
 const numberFormat = new Intl.NumberFormat("ja-JP");
@@ -551,17 +577,13 @@ function unitNoun(unit: BrowseUnit): string {
   return unit === "件" ? "もの" : unit;
 }
 
-/** 並び順の語を文節に分ける。どの並び順も「○○順」か「○○の○○順」の形なので、「の」の後ろで切る。 */
-function sortLabelWords(sortLabel: string): string[] {
-  return sortLabel.split(/(?<=の)/);
-}
-
 /**
  * 件数の行の文（§7）を、途中で折らない語に分けたもの。全体の件数をいつも言い、絞っている間は該当の件数も言う。
  * ページ送りがあるときは表示している範囲を、並び順の組が無いときはその並び順を後ろに添える。
  *
- * 行は語の切れ目でだけ折る。数と単位（「1,110字目」）は1語、並び順と0件の文は文節ごとの語
- * （「読みの」「五十音順」、「条件に合う」「字は」「ありません」）にする。行頭に置かない「・」は前の語に付ける。
+ * 行は語の切れ目でだけ折る。数と単位（「1,110字目」）は1語、0件の文は文節ごとの語（「条件に合う」「字は」
+ * 「ありません」）にし、並び順は選択肢の名前の区切りの並び（「読みの」「五十音順」）をそのまま語にする。行頭に
+ * 置かない「・」は前の語に付ける。
  */
 export function statusWords(options: {
   total: number;
@@ -570,10 +592,10 @@ export function statusWords(options: {
   unit: BrowseUnit;
   /** ページ送りがあるときの、表示している範囲（1 から数える）。 */
   range?: { start: number; end: number };
-  /** 並び順の組が無いときの、既定の並び順の語。 */
-  sortLabel?: string;
+  /** 並び順の組が無いときの、既定の並び順の名前。 */
+  sortName?: PhrasedName;
 }): string[] {
-  const { total, matched, filtering, unit, range, sortLabel } = options;
+  const { total, matched, filtering, unit, range, sortName } = options;
   const all = `全${count(total, unit)}`;
   if (filtering && matched === 0) {
     return ["条件に合う", `${unitNoun(unit)}は`, "ありません", `（${all}）`];
@@ -586,9 +608,9 @@ export function statusWords(options: {
     }
     words.push(`${count(range.end, unit)}目`);
   }
-  if (sortLabel) {
+  if (sortName !== undefined) {
     words[words.length - 1] += "・";
-    words.push(...sortLabelWords(sortLabel));
+    words.push(...phrasedNamePhrases(sortName));
   }
   return words;
 }

@@ -67,7 +67,7 @@ export default function ColorListView({ scope, page }: ColorListViewProps) {
         hrefPrefix="/dictionary/colors/"
         label="伝統色の一覧"
         unit="色"
-        searchLabel="色名・ローマ字・カラーコードで探す"
+        searchLabel={["色名・", "ローマ字・", "カラー", "コードで", "探す"]}
         sorts={colorListSorts(scope)}
         perPage={COLOR_LIST_PER_PAGE}
         basePath={basePath}

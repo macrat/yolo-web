@@ -38,7 +38,7 @@ export default function PlayListView({ page }: PlayListViewProps) {
         hrefPrefix={`${PLAY_LIST_BASE_PATH}/`}
         label="遊びの一覧"
         unit="件"
-        searchLabel="名前・説明で探す"
+        searchLabel={["名前・", "説明で", "探す"]}
         kindGroup={{ legend: "種別", options: PLAY_KINDS }}
         sorts={PLAY_SORTS}
         perPage={PLAY_LIST_PER_PAGE}

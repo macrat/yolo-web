@@ -38,7 +38,7 @@ export default function ToolListView({ page }: ToolListViewProps) {
         hrefPrefix={`${TOOL_LIST_BASE_PATH}/`}
         label="ツールの一覧"
         unit="件"
-        searchLabel="名前・説明で探す"
+        searchLabel={["名前・", "説明で", "探す"]}
         kindGroup={{ legend: "種別", options: TOOL_KINDS }}
         sorts={TOOL_SORTS}
         perPage={TOOL_LIST_PER_PAGE}

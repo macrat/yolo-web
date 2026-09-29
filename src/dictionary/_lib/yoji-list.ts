@@ -119,7 +119,11 @@ export function isYojiCategory(value: string): value is YojiCategory {
  * 上級の順で、同じ難易度の中を読みの五十音順に並べる。
  */
 export const YOJI_LIST_SORTS: BrowseSort[] = [
-  { value: "reading", name: "読みの五十音順", keys: [{ by: "reading" }] },
+  {
+    value: "reading",
+    name: ["読みの", "五十音順"],
+    keys: [{ by: "reading" }],
+  },
   {
     value: "easy",
     name: "やさしい順",

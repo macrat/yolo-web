@@ -1,6 +1,7 @@
 import type { Ref } from "react";
 import Button from "@/components/Button";
 import { statusWords, type BrowseUnit } from "@/lib/list-browse";
+import type { PhrasedName } from "@/lib/phrased-name";
 import styles from "./ListStatus.module.css";
 
 interface ListStatusProps {
@@ -13,8 +14,8 @@ interface ListStatusProps {
   unit: BrowseUnit;
   /** ページ送りがあるときの、表示している範囲（1 から数える）。 */
   range?: { start: number; end: number };
-  /** 並び順の組が無いときの、既定の並び順の語。 */
-  sortLabel?: string;
+  /** 並び順の組が無いときの、既定の並び順の名前。名前の区切りの並びのまま、文節ごとの語に組む。 */
+  sortName?: PhrasedName;
   /**
    * 読み上げに伝える件数の文。来訪者が変えた条件が落ち着いたときに親が入れ、読まれる間を置いて空に戻す。
    * ほかのときは空にしておき、ページを読み進める読み上げに、見えている件数の行と同じ文を二度読ませない。
@@ -44,7 +45,7 @@ export default function ListStatus({
   filtering,
   unit,
   range,
-  sortLabel,
+  sortName,
   announcement,
   onClear,
   ref,
@@ -59,7 +60,7 @@ export default function ListStatus({
           filtering,
           unit,
           range,
-          sortLabel,
+          sortName,
         }).map((word, i) => (
           <span key={i} className={styles.word}>
             {word}

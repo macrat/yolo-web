@@ -2,6 +2,7 @@ import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
 import ListPage from "@/components/ListPage";
+import PhrasedText from "@/components/PhrasedText";
 import {
   BLOG_INDEX_SUMMARY,
   BLOG_LIST_PER_PAGE,
@@ -59,13 +60,24 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
         ]}
         currentHref={basePath}
       />
-      <h2 className="visually-hidden">記事の一覧</h2>
+      <PhrasedText
+        as="h2"
+        className="visually-hidden"
+        phrases={["記事の", "一覧"]}
+      />
       <BrowsableList
         items={blogListItems(scope)}
         hrefPrefix="/blog/"
         label="記事の一覧"
         unit="件"
-        searchLabel="題名・説明・分類・タグ・連載名で探す"
+        searchLabel={[
+          "題名・",
+          "説明・",
+          "分類・",
+          "タグ・",
+          "連載名で",
+          "探す",
+        ]}
         sorts={BLOG_SORTS}
         perPage={BLOG_LIST_PER_PAGE}
         basePath={basePath}

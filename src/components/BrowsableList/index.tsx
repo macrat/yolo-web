@@ -144,10 +144,8 @@ export default function BrowsableList({
               ? { start: slice.start, end: slice.end }
               : undefined
           }
-          sortLabel={
-            showSortGroup || items.length === 0 || sortChoice === undefined
-              ? undefined
-              : phrasedNameText(sortChoice.name)
+          sortName={
+            showSortGroup || items.length === 0 ? undefined : sortChoice?.name
           }
           announcement={announcement}
           onClear={clear}

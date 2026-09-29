@@ -4,6 +4,7 @@ import LinkIndex, {
   type LinkIndexGroup,
   type LinkIndexItem,
 } from "@/components/LinkIndex";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 
 const tags: LinkIndexItem[] = [
   { name: ["Web", "開発"], href: "/blog/tag/Web開発", count: 35 },
@@ -146,9 +147,14 @@ describe("LinkIndex", () => {
     expect(singleClass).toContain(plainClass);
   });
 
-  test("区切りの見出しは、渡された段と書体の属性で組む", () => {
+  test("区切りの見出しは、渡された段と書体の属性で、1つの文節として組む", () => {
     render(<LinkIndex groups={strokeGroups} groupHeadingLevel={4} />);
-    expect(screen.getAllByRole("heading", { level: 4 })).toHaveLength(2);
+    const headings = screen.getAllByRole("heading", { level: 4 });
+    expect(headings).toHaveLength(2);
+    for (const heading of headings) {
+      expect(heading).toHaveClass(phrasedStyles.phrased);
+      expect(heading.querySelector("wbr")).toBeNull();
+    }
     expect(screen.getByRole("heading", { name: "5画" })).toHaveAttribute(
       "data-heading-font",
       "fallback",

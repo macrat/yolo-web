@@ -17,7 +17,7 @@ export interface LinkIndexItem {
 }
 
 export interface LinkIndexGroup {
-  /** 区切りの見出し。並びの値を言う（「4画」「初級」）。 */
+  /** 区切りの見出し。並びの値を1語で言い（「4画」「初級」）、1つの文節として組む。 */
   heading: string;
   /** 区切りの見出しを組む属性。字の表をクライアントに入れないよう、サーバーで判定して渡す。 */
   headingFont?: HeadingFontAttr;
@@ -122,13 +122,13 @@ export default function LinkIndex(props: LinkIndexProps): ReactElement {
         const headingId = `${idPrefix}-${index}`;
         return (
           <div key={group.heading} className={styles.group}>
-            <Heading
+            <PhrasedText
+              as={Heading}
               id={headingId}
               className={styles.groupHeading}
+              phrases={[group.heading]}
               {...group.headingFont}
-            >
-              {group.heading}
-            </Heading>
+            />
             {renderList(group.items, { "aria-labelledby": headingId })}
           </div>
         );

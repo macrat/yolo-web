@@ -558,9 +558,9 @@ describe("controlsLabel", () => {
       controlsLabel({
         hasFilterGroups: false,
         selectedFilters: [],
-        sortLabel: "新しい順",
+        sortName: "新しい順",
       }),
-    ).toBe("並び順（新しい順）");
+    ).toEqual({ name: ["並び順"], selection: ["（新しい順）"] });
   });
 
   test("どの組も絞っていなければ選択を「すべて」の1語で言う", () => {
@@ -568,25 +568,31 @@ describe("controlsLabel", () => {
       controlsLabel({
         hasFilterGroups: true,
         selectedFilters: [],
-        sortLabel: "種別順",
+        sortName: "種別順",
       }),
-    ).toBe("絞り込みと並び順（すべて、種別順）");
+    ).toEqual({
+      name: ["絞り込みと", "並び順"],
+      selection: ["（すべて、", "種別順）"],
+    });
   });
 
-  test("絞っている組の値を「、」でつなぐ", () => {
+  test("絞っている組の値を「、」でつなぎ、括弧の中は「、」の後ろと値の名前の区切りで分ける", () => {
     expect(
       controlsLabel({
         hasFilterGroups: true,
         selectedFilters: ["人生", "初級"],
-        sortLabel: "読みの五十音順",
+        sortName: ["読みの", "五十音順"],
       }),
-    ).toBe("絞り込みと並び順（人生、初級、読みの五十音順）");
+    ).toEqual({
+      name: ["絞り込みと", "並び順"],
+      selection: ["（人生、", "初級、", "読みの", "五十音順）"],
+    });
   });
 
   test("並び順の組が無ければ「絞り込み（…）」", () => {
     expect(
       controlsLabel({ hasFilterGroups: true, selectedFilters: ["データ"] }),
-    ).toBe("絞り込み（データ）");
+    ).toEqual({ name: ["絞り込み"], selection: ["（データ）"] });
   });
 });
 
@@ -610,7 +616,7 @@ describe("statusText", () => {
         matched: 30,
         filtering: false,
         unit: "語",
-        sortLabel: "五十音順",
+        sortName: "五十音順",
       }),
     ).toBe("全30語・五十音順");
   });
@@ -654,14 +660,14 @@ describe("statusText", () => {
     ).toEqual(["12件", "（全86件）"]);
   });
 
-  test("並び順は「・」を前の語に付け、文節ごとの語に分ける", () => {
+  test("並び順は「・」を前の語に付け、名前の区切りの並びをそのまま語にする", () => {
     expect(
       statusWords({
         total: 10,
         matched: 10,
         filtering: false,
         unit: "色",
-        sortLabel: "明るい順",
+        sortName: "明るい順",
       }),
     ).toEqual(["全10色・", "明るい順"]);
     expect(
@@ -670,7 +676,7 @@ describe("statusText", () => {
         matched: 6,
         filtering: false,
         unit: "字",
-        sortLabel: "読みの五十音順",
+        sortName: ["読みの", "五十音順"],
       }),
     ).toEqual(["全6字・", "読みの", "五十音順"]);
     expect(
@@ -680,7 +686,7 @@ describe("statusText", () => {
         filtering: false,
         unit: "字",
         range: { start: 101, end: 118 },
-        sortLabel: "画数順",
+        sortName: "画数順",
       }),
     ).toEqual(["全118字", "のうち", "101〜", "118字目・", "画数順"]);
   });

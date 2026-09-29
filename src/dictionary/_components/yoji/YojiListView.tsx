@@ -67,7 +67,7 @@ export default function YojiListView({ scope, page }: YojiListViewProps) {
         hrefPrefix="/dictionary/yoji/"
         label="四字熟語の一覧"
         unit="語"
-        searchLabel="語・読み・意味・例文で探す"
+        searchLabel={["語・", "読み・", "意味・", "例文で", "探す"]}
         sorts={YOJI_LIST_SORTS}
         perPage={YOJI_LIST_PER_PAGE}
         basePath={basePath}

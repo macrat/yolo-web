@@ -9,3 +9,8 @@ export type PhrasedName = string | readonly string[];
 export function phrasedNameText(name: PhrasedName): string {
   return typeof name === "string" ? name : name.join("");
 }
+
+/** 名前を区切りの並びにしたもの。文字列は1つの文節の並びにする。名前をほかの文の文節に並べて組むときに使う。 */
+export function phrasedNamePhrases(name: PhrasedName): readonly string[] {
+  return typeof name === "string" ? [name] : name;
+}

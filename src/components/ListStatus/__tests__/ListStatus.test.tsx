@@ -44,14 +44,14 @@ describe("ListStatus", () => {
     ]);
   });
 
-  test("並び順の語と0件の文も、文節ごとの語に分けて組む", () => {
+  test("並び順は名前の区切りの並びのまま、0件の文は文節ごとの語に分けて組む", () => {
     const { rerender } = render(
       <ListStatus
         total={10}
         matched={10}
         filtering={false}
-        unit="色"
-        sortLabel="明るい順"
+        unit="字"
+        sortName={["読みの", "五十音順"]}
         announcement=""
       />,
     );
@@ -59,7 +59,7 @@ describe("ListStatus", () => {
       Array.from(
         document.querySelector('p[tabindex="-1"]')?.children ?? [],
       ).map((word) => word.textContent);
-    expect(words()).toEqual(["全10色・", "明るい順"]);
+    expect(words()).toEqual(["全10字・", "読みの", "五十音順"]);
 
     rerender(
       <ListStatus
