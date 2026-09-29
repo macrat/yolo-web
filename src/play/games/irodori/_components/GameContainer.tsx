@@ -1,8 +1,10 @@
 "use client";
 
-import { trackContentEnd } from "@/lib/analytics";
+import { trackContentEnd, trackSave } from "@/lib/analytics";
 import {
   type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
   useState,
   useCallback,
   useEffect,
@@ -136,6 +138,14 @@ function restoreRounds(
   }));
 }
 
+/** 解き終えた回の結果の画像を描いて落とし、結果の画像の保存として計測する。描けなかったときは何もしない。 */
+async function saveResultImage(state: IrodoriGameState): Promise<void> {
+  const dataUrl = await generateResultImage(state);
+  if (!dataUrl) return;
+  downloadImage(dataUrl, `irodori-${state.puzzleNumber}.png`);
+  trackSave("irodori", "game", "download", "fuda");
+}
+
 /** 端末に今日の記録があれば、その所から続ける回。無ければ initial のまま。 */
 function restoredState(
   initial: IrodoriGameState,
@@ -203,6 +213,10 @@ export default function GameContainer({
   const nextButtonRef = useRef<HTMLButtonElement>(null);
   const resultBoxRef = useRef<HTMLElement>(null);
   const pendingFocusRef = useRef<FocusTarget | null>(null);
+  // 画像を描いているあいだは、次の押下を捨てる。書体の読み込みを待つあいだに押し直されても（キーボードの押下や、
+  // 描くのが遅い端末）、同じ画像が2枚落ちたり、1度の保存が2回数えられたりしない。ダブルクリックの2度目は、描き終えた
+  // あとに届いても handleSaveImage が捨てる。
+  const savingImageRef = useRef(false);
   const roundResultId = useId();
 
   const setSliders = useCallback(
@@ -342,12 +356,18 @@ export default function GameContainer({
     pendingFocusRef.current = "sliders";
   }, [gameState.currentRound, setSliders]);
 
-  const handleSaveImage = useCallback(() => {
-    const dataUrl = generateResultImage(gameState);
-    if (dataUrl) {
-      downloadImage(dataUrl, `irodori-${gameState.puzzleNumber}.png`);
-    }
-  }, [gameState]);
+  // ダブルクリック・トリプルクリックの2度目以降（detail が2以上）は、1度の保存のつもりの押下なので捨てる。
+  // キーボードの押下（detail は0）と、改めての1度の押下（1）は受ける。
+  const handleSaveImage = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      if (event.detail >= 2 || savingImageRef.current) return;
+      savingImageRef.current = true;
+      void saveResultImage(gameState).finally(() => {
+        savingImageRef.current = false;
+      });
+    },
+    [gameState],
+  );
 
   const completed = gameState.status === "completed";
   // 端末の記録を当て終えたか（成績を読むのは記録を当てるときと同じ）。
@@ -456,7 +476,15 @@ export default function GameContainer({
 
 interface ResultShareProps {
   gameState: IrodoriGameState;
-  onSaveImage: () => void;
+  onSaveImage: (event: MouseEvent<HTMLButtonElement>) => void;
+}
+
+/**
+ * キーを押し続けたときの繰り返しの押下を捨てる。ボタンは Enter の keydown ごとに押されるので、押し続けると同じ画像を
+ * 何枚も落とす。キーを離して改めて押せば、次の押下として受ける。
+ */
+function ignoreKeyRepeat(event: KeyboardEvent<HTMLButtonElement>) {
+  if (event.repeat) event.preventDefault();
 }
 
 /** 結果を持ち帰る・共有する区画。結果のボックスのすぐ下に置く（§8）。 */
@@ -478,6 +506,7 @@ function ResultShare({ gameState, onSaveImage }: ResultShareProps) {
       >
         <Button
           onClick={onSaveImage}
+          onKeyDown={ignoreKeyRepeat}
           phrases={SHARE_LABELS.saveImage.phrases}
         />
       </ShareButtons>

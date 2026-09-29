@@ -7,15 +7,35 @@ import {
   test,
   vi,
 } from "vitest";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import GameContainer from "../GameContainer";
-import { trackContentEnd } from "@/lib/analytics";
+import { trackContentEnd, trackSave } from "@/lib/analytics";
+import {
+  downloadImage,
+  generateResultImage,
+} from "@/play/games/irodori/_lib/share";
 import type { IrodoriColor } from "@/play/games/irodori/_lib/types";
 
 vi.mock("@/lib/analytics", () => ({
   trackContentEnd: vi.fn(),
+  trackSave: vi.fn(),
   trackShare: vi.fn(),
 }));
+
+// jsdom は Canvas を描かないので、結果の画像を描く所と落とす所を差し替える。
+vi.mock("@/play/games/irodori/_lib/share", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/play/games/irodori/_lib/share")>()),
+  generateResultImage: vi.fn(),
+  downloadImage: vi.fn(),
+}));
+
+const IMAGE_URL = "data:image/png;base64,AAAA";
 
 const TODAY = "2026-09-27";
 
@@ -51,6 +71,9 @@ beforeAll(() => {
 beforeEach(() => {
   window.localStorage.clear();
   vi.mocked(trackContentEnd).mockClear();
+  vi.mocked(trackSave).mockClear();
+  vi.mocked(downloadImage).mockClear();
+  vi.mocked(generateResultImage).mockReset();
 });
 
 afterEach(() => {
@@ -210,6 +233,95 @@ describe("イロドリの盤", () => {
       screen.getByRole("region", { name: "今日の合計点" }),
     ).toBeInTheDocument();
     expect(trackContentEnd).not.toHaveBeenCalled();
+  });
+});
+
+describe("結果の画像の保存", () => {
+  function finishGame() {
+    renderGame();
+    for (let i = 0; i < 5; i++) {
+      fireEvent.click(screen.getByRole("button", { name: "決定" }));
+      if (i < 4) {
+        fireEvent.click(screen.getByRole("button", { name: /次の問題へ/ }));
+      }
+    }
+  }
+
+  test("「画像を保存」を押すと、解き終えた回の画像を落とし、結果の画像の保存として計測する", async () => {
+    vi.mocked(generateResultImage).mockResolvedValue(IMAGE_URL);
+    finishGame();
+    fireEvent.click(screen.getByRole("button", { name: "画像を保存" }));
+    await waitFor(() => expect(trackSave).toHaveBeenCalledTimes(1));
+    expect(trackSave).toHaveBeenCalledWith(
+      "irodori",
+      "game",
+      "download",
+      "fuda",
+    );
+    expect(downloadImage).toHaveBeenCalledWith(IMAGE_URL, "irodori-220.png");
+    const [state] = vi.mocked(generateResultImage).mock.calls[0];
+    expect(state.status).toBe("completed");
+    expect(state.rounds.every((round) => round.answer !== null)).toBe(true);
+  });
+
+  test("画像を描いているあいだに2度押しても、落とすのも計測も1回", async () => {
+    let finishDrawing: (url: string) => void = () => {};
+    vi.mocked(generateResultImage).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finishDrawing = resolve;
+        }),
+    );
+    finishGame();
+    const save = screen.getByRole("button", { name: "画像を保存" });
+    fireEvent.click(save);
+    fireEvent.click(save);
+    finishDrawing(IMAGE_URL);
+    await waitFor(() => expect(trackSave).toHaveBeenCalledTimes(1));
+    expect(generateResultImage).toHaveBeenCalledTimes(1);
+    expect(downloadImage).toHaveBeenCalledTimes(1);
+  });
+
+  test("描き終えたあとは、もう1度押すと、もう1度落とす", async () => {
+    vi.mocked(generateResultImage).mockResolvedValue(IMAGE_URL);
+    finishGame();
+    const save = screen.getByRole("button", { name: "画像を保存" });
+    fireEvent.click(save);
+    await waitFor(() => expect(trackSave).toHaveBeenCalledTimes(1));
+    fireEvent.click(save);
+    await waitFor(() => expect(trackSave).toHaveBeenCalledTimes(2));
+    expect(downloadImage).toHaveBeenCalledTimes(2);
+  });
+
+  test("ダブルクリックの2度目は、1度目を描き終えたあとに届いても、落とすのも計測も1回", async () => {
+    vi.mocked(generateResultImage).mockResolvedValue(IMAGE_URL);
+    finishGame();
+    const save = screen.getByRole("button", { name: "画像を保存" });
+    fireEvent.click(save, { detail: 1 });
+    await waitFor(() => expect(trackSave).toHaveBeenCalledTimes(1));
+    fireEvent.click(save, { detail: 2 });
+    fireEvent.click(save, { detail: 3 });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(generateResultImage).toHaveBeenCalledTimes(1);
+    expect(downloadImage).toHaveBeenCalledTimes(1);
+    expect(trackSave).toHaveBeenCalledTimes(1);
+  });
+
+  test("キーを押し続けたときの繰り返しの押下は捨て、改めての押下は受ける", () => {
+    finishGame();
+    const save = screen.getByRole("button", { name: "画像を保存" });
+    expect(fireEvent.keyDown(save, { key: "Enter", repeat: true })).toBe(false);
+    expect(fireEvent.keyDown(save, { key: "Enter" })).toBe(true);
+  });
+
+  test("画像を描けなかったときは、何も落とさず、計測もしない", async () => {
+    vi.mocked(generateResultImage).mockResolvedValue(null);
+    finishGame();
+    fireEvent.click(screen.getByRole("button", { name: "画像を保存" }));
+    await waitFor(() => expect(generateResultImage).toHaveBeenCalledTimes(1));
+    await Promise.resolve();
+    expect(downloadImage).not.toHaveBeenCalled();
+    expect(trackSave).not.toHaveBeenCalled();
   });
 });
 
