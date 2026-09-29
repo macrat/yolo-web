@@ -1,54 +1,30 @@
 /*
- * ブログ記事。矩形パネルで包まず、罫と組版だけで組む。本文は読む幅
- * --measure に絞り、記事全体の外枠は --max-width。色はすべてトークン経由。
- *
- * グローバルヘッダー/フッターの .inner と同じ左右パディング基調（--space-16 系）に
- * 揃えるため、横パディングは --space-24 を採用する。
+ * ブログの記事。コンテナのコンテンツ幅に、記事（頭・目次・連載の案内・本文）・共有・関連記事・前後の記事の
+ * セクションを並べる（DESIGN.md §5）。本文の文は本文の幅で折り返し、表・コード・図はコンテンツ幅まで使う。
  */
-.contentColumn {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-32) var(--space-24) var(--space-64);
-}
 
-.articleHeader {
-  margin-bottom: var(--space-32);
-}
-
-/* モバイルでは単一カラム、≥1024px で grid に切り替わる（下のメディアクエリ参照） */
-.articleBody {
+/* 記事の頭から本文までを縦に積む。目次はこの中で画面の上端に留まる。 */
+.body {
   display: flex;
   flex-direction: column;
   gap: var(--space-32);
 }
 
-.articleMain {
-  min-width: 0; /* Grid 内でのオーバーフロー抑制 */
+/* パンくず・主見出し・分類と日付・タグを、あいだを 16px あけて積む。 */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-.articleFooter {
-  margin-top: var(--space-32);
-  max-width: var(--measure);
-}
-
-.title {
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  max-width: var(--measure);
-}
-
-/*
- * メタ情報: --ink-2 と補助情報の字サイズの組み合わせでタイトルとの階層を表現。
- */
+/* 分類と日付と読む時間。補助情報の大きさで、--ink-2 で組む。 */
 .meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-16);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: var(--text-small);
   color: var(--ink-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-16);
 }
 
 /* 分類のページへ進むリンク。縁の見えないコントロールで、下線と訪問済みの色は globals.css の a の既定に
@@ -60,150 +36,55 @@
   min-height: 44px;
 }
 
-/* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
-
 /* 本文の組み方は Prose（src/components/Prose）が持ち、ここでは記事にだけ出る図を足す（§5 の図）。図はコンテンツ幅に
  * 左端から置き、大きさと横に送るか（data-scrolls）は MermaidRenderer が描くときに決める。 */
-.body :global(.mermaid) {
+.prose :global(.mermaid) {
   margin: 0 0 var(--space-16);
   overflow-x: auto;
 }
 
-.body :global(.mermaid) svg {
+.prose :global(.mermaid) svg {
   display: block;
   height: auto;
 }
 
 /* 横に送る図のボックス。表・コードのボックスと同じ太い線と内側の余白を持つ。フォーカスのリングは globals.css の
  * 既定のまま、太い線の外に密着して出る（§6）。 */
-.body :global(.mermaid[data-scrolls]) {
+.prose :global(.mermaid[data-scrolls]) {
   border: var(--rule-w) solid var(--rule);
   padding: var(--box-padding);
 }
 
-/* シェアセクション */
-.shareSection {
-  max-width: var(--measure);
-  margin-top: var(--space-32);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
+/* 共有と前後の記事のセクションの見出し。大きさは h2 の既定（§4 のセクションの見出し）に従う。 */
+.heading {
+  margin-block-end: var(--space-16);
 }
 
-.shareSectionTitle {
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  font-size: 1.125rem; /* globals.css の h2 の大きさより小さくする */
-}
-
-/* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示し最終回でも動線を確保。aria-label で時系列順を SR 向けに明示） */
+/* 前後の記事へ進むリンク。どちらも並びの左端から始め（§5）、前の記事・次の記事の順に縦に積む。 */
 .postNav {
   display: flex;
-  justify-content: space-between;
-  gap: var(--space-16);
-  margin-top: var(--space-32);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-/* 前後の記事へ進むリンク。押せる範囲は見出しの文字と題を合わせた箱で、下線は題にだけ引く（§6・§7）。
- * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
-.prevPost,
-.nextPost {
+/* 押せる範囲は見出しの文字と題を合わせた箱で、下線は題にだけ引く（§6・§7）。題の字の色と訪問済みの色は
+ * globals.css の a の既定に従う。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が
+ * 持つ。 */
+.postNavLink {
   display: flex;
   flex-direction: column;
+  max-width: 100%;
   padding-block: var(--space-8);
   text-decoration: none;
-  color: var(--ink);
-  max-width: 48%;
 }
 
-.nextPost {
-  text-align: right;
-}
-
-.navLabel {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
+.postNavLabel {
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-bottom: var(--space-8);
 }
 
-.navTitle {
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  font-weight: 600;
+.postNavTitle {
   text-decoration: underline;
   text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
-}
-
-/*
- * デスクトップ（1024px 以上）: articleBody を CSS Grid に切り替える。
- *
- * Grid 構造: [articleMain 1fr] [articleAside 220px]
- * DOM 順序は aside 先・main 後だが、grid-column/grid-row で左右を入れ替える。
- * これにより モバイルでは TOC が本文より上、デスクトップでは本文が左・TOC が右になる。
- *
- * TOC 幅 220px は <TableOfContents> 内の見出しテキストが 2 行以内に収まる経験則値。
- * これ未満にすると複数行折り返しが頻発する。サイト全体で他に TOC 様要素がないため
- * CSS 変数化はせずローカル定数として扱う（共有が必要になったら token 化を検討）。
- */
-@media (min-width: 1024px) {
-  .articleBody {
-    display: grid;
-    grid-template-columns: 1fr 220px;
-    gap: var(--space-32);
-    align-items: start;
-  }
-
-  /*
-   * TOC 折りたたみ時、TOC 列を auto（= summary の幅）に縮めて本文が広がる。
-   * .articleAside（TOC ラッパー専用クラス）配下に限定するのは、SeriesNav も
-   * <details> を使うのと、記事本文中の HTML として <details> が書かれうるため。
-   */
-  .articleBody:has(.articleAside details:not([open])) {
-    grid-template-columns: 1fr auto;
-  }
-
-  /* articleMain を左カラム（column 1）に固定。DOM 順序は aside 先でも Grid で左に配置。 */
-  .articleMain {
-    grid-column: 1;
-    grid-row: 1;
-    min-width: 0; /* Grid 内でのオーバーフロー抑制 */
-  }
-
-  /*
-   * articleAside を右カラム（column 2）に固定。sticky でスクロール追従する。
-   * グローバルヘッダーは position: fixed/sticky ではないため top: 1rem で OK。
-   * 将来ヘッダーが固定配置に変わったら、ヘッダー高さ分のオフセットが必要になる。
-   */
-  .articleAside {
-    grid-column: 2;
-    grid-row: 1;
-    position: sticky;
-    top: var(--space-16);
-    align-self: start;
-  }
-}
-
-/*
- * 狭い画面では縦方向の padding だけを縮め、左右は --space-24 を保つ。
- */
-@media (max-width: 720px) {
-  .contentColumn {
-    padding: var(--space-24) var(--space-24) var(--space-48);
-  }
-
-  .postNav {
-    flex-direction: column;
-  }
-
-  .prevPost,
-  .nextPost {
-    max-width: 100%;
-  }
-
-  .nextPost {
-    text-align: left;
-  }
 }

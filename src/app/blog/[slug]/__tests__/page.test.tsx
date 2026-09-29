@@ -33,8 +33,9 @@ describe("app/blog/[slug]/page", () => {
       expect(source).toContain('@/components/ShareButtons"');
     });
 
-    // 連載の案内と目次はそれぞれ自分の罫線を持つので、ページ全体を枠で包まない。
-    it("page.tsx は Panel を使わないこと（読み物は矩形パネルに包まない・§4）", () => {
+    // 記事はセクションとそのあいだの全幅の罫線で組み（DESIGN.md §5 ページの割り方）、連載の案内と目次はそれぞれ
+    // 自分のボックスを持つので、ページ全体を枠で包まない。
+    it("page.tsx は Panel を使わないこと（記事はセクションと全幅の罫線で組む・§5）", () => {
       expect(source).not.toMatch(/<Panel\b/);
       expect(source).not.toContain('@/components/Panel"');
     });
@@ -47,8 +48,53 @@ describe("app/blog/[slug]/page", () => {
       expect(source).toMatch(/<SeriesNav\b/);
     });
 
-    it("page.tsx に contentColumn クラスの div が存在すること（Grid 右カラム wrapper）", () => {
-      expect(source).toContain("contentColumn");
+    it("記事の頭・目次・連載の案内・本文を1つのセクションに置き、共有・関連記事・前後の記事をそれぞれセクションにすること（§5）", () => {
+      expect(source).toContain('@/components/Section"');
+      const order = [
+        "<Breadcrumb",
+        "<CollapsibleTOC",
+        "<SeriesNav",
+        "<Prose",
+        "</Section>",
+        "<ShareButtons",
+        "</Section>",
+        "<RelatedArticles",
+        'aria-label="前後の記事（時系列順）"',
+        "</Section>",
+      ];
+      let from = 0;
+      for (const marker of order) {
+        const at = source.indexOf(marker, from);
+        expect(at, marker).toBeGreaterThanOrEqual(from);
+        from = at + marker.length;
+      }
+    });
+
+    it("目次に記事の slug を渡し、目次の計測の content_id にすること", () => {
+      expect(source).toMatch(
+        /<CollapsibleTOC\s+headings=\{post\.headings\}\s+contentId=\{post\.slug\}/,
+      );
+    });
+
+    it("目次を本文と同じ要素の中に置き、本文を読み終えるまで目次が上端に留まること（§5）", () => {
+      // 留まる要素は、自分を包む要素の中でだけ留まる。目次と本文を同じ .body に置く。
+      const bodyStart = source.indexOf("<div className={styles.body}>");
+      const bodyEnd = source.indexOf("</Section>", bodyStart);
+      expect(bodyStart).toBeGreaterThanOrEqual(0);
+      const body = source.slice(bodyStart, bodyEnd);
+      expect(body).toContain("<CollapsibleTOC");
+      expect(body).toContain("<Prose");
+    });
+
+    it("パンくずと主見出しのあいだを 16px にすること", () => {
+      expect(css).toMatch(/\.header\s*\{[^}]*gap:\s*var\(--space-16\)/);
+    });
+
+    it("補助情報の字を §4 の下限（0.875rem）より小さくしないこと", () => {
+      const sizes = [...css.matchAll(/font-size:\s*([^;]+);/g)].map(
+        ([, value]) => value.trim(),
+      );
+      expect(sizes.every((size) => size === "var(--text-small)")).toBe(true);
     });
   });
 
@@ -64,79 +110,6 @@ describe("app/blog/[slug]/page", () => {
       expect(source).toContain("前の記事");
       expect(source).toContain("次の記事");
       expect(source).toContain("時系列順");
-    });
-  });
-
-  describe("page.module.css — CSS Grid によるレイアウト構造", () => {
-    it("articleBody に display:grid が定義されていること（デスクトップ 2カラム Grid）", () => {
-      expect(css).toContain("display: grid");
-    });
-
-    it("grid-template-columns: 1fr 220px が定義されていること（本文左・TOC右の配置）", () => {
-      // 本文が残り全幅を占め TOC が 220px 固定で右端に配置される
-      expect(css).toContain("1fr 220px");
-    });
-
-    it("articleMain に grid-column: 1 が定義されていること（左カラム固定）", () => {
-      expect(css).toMatch(/\.articleMain[^{]*\{[^}]*grid-column:\s*1/);
-    });
-
-    it("articleAside に position:sticky が定義されていること（スクロール追従）", () => {
-      expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
-    });
-
-    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（連載の案内や記事の本文の <details> を開閉しても grid が動かないため）", () => {
-      // 目次を包む .articleAside の中の <details> だけを見る。
-      expect(css).toMatch(
-        /\.articleBody:has\(\.articleAside\s+details:not\(\[open\]\)\)/,
-      );
-    });
-  });
-
-  describe("エの字レイアウト — DOM 構造の検証", () => {
-    it("page.tsx に <CollapsibleTOC が1箇所のみ存在すること（a11y: nav ランドマーク重複なし）", () => {
-      const matches = source.match(/<CollapsibleTOC\b/g);
-      expect(matches).not.toBeNull();
-      expect(matches!.length).toBe(1);
-    });
-
-    it("page.tsx は <TableOfContents を直接呼ばないこと（CollapsibleTOC 経由で1インスタンスにまとめる）", () => {
-      // 直接 <TableOfContents JSX があると CollapsibleTOC 内のものと合わせて二重になる
-      expect(source).not.toMatch(/<TableOfContents\b/);
-    });
-
-    it("page.tsx に articleBody クラスが存在すること（エの字中央ボディ）", () => {
-      expect(source).toContain("articleBody");
-    });
-
-    it("page.tsx に articleAside クラスが存在すること（TOC サイドバー）", () => {
-      expect(source).toContain("articleAside");
-    });
-
-    it("page.tsx に articleFooter クラスが存在すること（フッター横幅いっぱい）", () => {
-      expect(source).toContain("articleFooter");
-    });
-
-    it("page.tsx の最上位ラッパーが <article タグであること（記事のまとまりを読み上げに伝える）", () => {
-      expect(source).toMatch(/<article\s+className=\{styles\.contentColumn\}/);
-    });
-  });
-
-  describe("本文カラムの横幅", () => {
-    it(".contentColumn に max-width: var(--max-width) が定義されていること（コンテナの最大幅・§5）", () => {
-      expect(css).toMatch(
-        /\.contentColumn[^{]*\{[^}]*max-width:\s*var\(--max-width\)/,
-      );
-    });
-
-    it(".contentColumn の横パディングが var(--space-24) であること（余白は 8px の倍数・§5）", () => {
-      expect(css).toMatch(
-        /\.contentColumn[^{]*\{[^}]*padding:[^;}]*var\(--space-24\)/,
-      );
-    });
-
-    it("page.module.css の SP ブレークポイントは 720px", () => {
-      expect(css).toMatch(/@media\s*\(max-width:\s*720px\)/);
     });
   });
 

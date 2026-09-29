@@ -29,11 +29,14 @@ import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
 import RelatedArticles from "@/blog/_components/RelatedArticles";
 import Prose from "@/components/Prose";
+import Section from "@/components/Section";
 import styles from "./page.module.css";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
+
+const SHARE_HEADING_ID = "share-this-post";
 
 export function generateStaticParams() {
   return getAllBlogSlugs().map((slug) => ({ slug }));
@@ -73,60 +76,54 @@ export default async function BlogPostPage({ params }: Props) {
   });
 
   return (
-    <article className={styles.contentColumn}>
+    <article>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
 
-      <header className={styles.articleHeader}>
-        <Breadcrumb
-          items={[
-            { label: "ホーム", href: "/" },
-            { label: "ブログ", href: "/blog" },
-            {
-              label: CATEGORY_LABELS[post.category],
-              href: `/blog/category/${post.category}`,
-            },
-            { label: post.title, href: `/blog/${post.slug}` },
-          ]}
-        />
-        <PhrasedText
-          as="h1"
-          className={styles.title}
-          phrases={splitIntoPhrases(post.title)}
-        />
-        <div className={styles.meta}>
-          <Link
-            href={`/blog/category/${post.category}`}
-            className={styles.category}
-            data-text-box="inline"
-          >
-            {CATEGORY_LABELS[post.category]}
-          </Link>
-          <time dateTime={post.published_at}>
-            {formatDate(post.published_at)}
-          </time>
-          {post.updated_at !== post.published_at && (
-            <span>更新: {formatDate(post.updated_at)}</span>
-          )}
-          <span>{post.readingTime}分で読める</span>
-        </div>
-        <TagList tags={post.tags} linkableTags={linkableTags} />
-      </header>
-
       {/*
-       * aside を main より DOM 先行に置くことで、モバイルの単一カラム時に
-       * TOC が本文の上に並ぶ。デスクトップでは grid-column で左右を入れ替える。
+       * 記事の頭・目次・連載の案内・本文を1つのセクションに置く。目次はこのセクションの中で画面の上端に留まるので、
+       * 本文を読み終えるまで留まり、そのあとのセクションでは留まらない。
        */}
-      <div className={styles.articleBody}>
-        {post.headings.length > 0 && (
-          <aside className={styles.articleAside}>
-            <CollapsibleTOC headings={post.headings} />
-          </aside>
-        )}
+      <Section>
+        <div className={styles.body}>
+          <header className={styles.header}>
+            <Breadcrumb
+              items={[
+                { label: "ホーム", href: "/" },
+                { label: "ブログ", href: "/blog" },
+                {
+                  label: CATEGORY_LABELS[post.category],
+                  href: `/blog/category/${post.category}`,
+                },
+                { label: post.title, href: `/blog/${post.slug}` },
+              ]}
+            />
+            <PhrasedText as="h1" phrases={splitIntoPhrases(post.title)} />
+            <div className={styles.meta}>
+              <Link
+                href={`/blog/category/${post.category}`}
+                className={styles.category}
+                data-text-box="inline"
+              >
+                {CATEGORY_LABELS[post.category]}
+              </Link>
+              <time dateTime={post.published_at}>
+                {formatDate(post.published_at)}
+              </time>
+              {post.updated_at !== post.published_at && (
+                <span>更新: {formatDate(post.updated_at)}</span>
+              )}
+              <span>{post.readingTime}分で読める</span>
+            </div>
+            <TagList tags={post.tags} linkableTags={linkableTags} />
+          </header>
 
-        <div className={styles.articleMain}>
+          {post.headings.length > 0 && (
+            <CollapsibleTOC headings={post.headings} contentId={post.slug} />
+          )}
+
           {post.series && (
             <SeriesNav
               seriesId={post.series}
@@ -136,63 +133,65 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           {/* markdownToHtml() の中でサニタイズしてある。 */}
-          <Prose className={styles.body} html={post.contentHtml} />
+          <Prose className={styles.prose} html={post.contentHtml} />
 
           <MermaidRenderer />
         </div>
-      </div>
+      </Section>
 
-      <footer className={styles.articleFooter}>
-        <section className={styles.shareSection} aria-label="この記事をシェア">
+      <Section aria-labelledby={SHARE_HEADING_ID}>
+        <PhrasedText
+          as="h2"
+          id={SHARE_HEADING_ID}
+          className={styles.heading}
+          phrases={["この", "記事を", "シェア"]}
+        />
+        <ShareButtons
+          url={`/blog/${post.slug}`}
+          title={post.title}
+          sns={["x", "line", "hatena", "copy"]}
+          contentType="blog"
+          contentId={post.slug}
+        />
+      </Section>
+
+      <RelatedArticles posts={relatedPosts} />
+
+      {/*
+       * 公開の順の前後の記事。連載の記事でも出し、連載の最後の回でも次に読む記事へ進める。連載の前後の回は
+       * 連載の案内が持つので、こちらは時系列順であることを読み上げに伝える。
+       */}
+      {(prevPost || nextPost) && (
+        <Section>
           <PhrasedText
             as="h2"
-            className={styles.shareSectionTitle}
-            phrases={["この", "記事を", "シェア"]}
+            className={styles.heading}
+            phrases={["前後の", "記事"]}
           />
-          <ShareButtons
-            url={`/blog/${post.slug}`}
-            title={post.title}
-            sns={["x", "line", "hatena", "copy"]}
-            contentType="blog"
-            contentId={post.slug}
-          />
-        </section>
-
-        {/* 関連記事 */}
-        <RelatedArticles posts={relatedPosts} />
-
-        {/*
-         * 前後ナビゲーション（投稿日時系列順）。
-         * シリーズ記事でも常時表示する（シリーズ最終回で動線が消えないため）。
-         * aria-label で時系列順であることをスクリーンリーダー向けに明示している。
-         */}
-        <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
-          {prevPost ? (
-            <Link
-              href={`/blog/${prevPost.slug}`}
-              className={styles.prevPost}
-              data-text-box="inline"
-            >
-              <span className={styles.navLabel}>前の記事</span>
-              <span className={styles.navTitle}>{prevPost.title}</span>
-            </Link>
-          ) : (
-            <span aria-hidden="true" />
-          )}
-          {nextPost ? (
-            <Link
-              href={`/blog/${nextPost.slug}`}
-              className={styles.nextPost}
-              data-text-box="inline"
-            >
-              <span className={styles.navLabel}>次の記事</span>
-              <span className={styles.navTitle}>{nextPost.title}</span>
-            </Link>
-          ) : (
-            <span aria-hidden="true" />
-          )}
-        </nav>
-      </footer>
+          <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
+            {prevPost && (
+              <Link
+                href={`/blog/${prevPost.slug}`}
+                className={styles.postNavLink}
+                data-text-box="inline"
+              >
+                <span className={styles.postNavLabel}>前の記事</span>
+                <span className={styles.postNavTitle}>{prevPost.title}</span>
+              </Link>
+            )}
+            {nextPost && (
+              <Link
+                href={`/blog/${nextPost.slug}`}
+                className={styles.postNavLink}
+                data-text-box="inline"
+              >
+                <span className={styles.postNavLabel}>次の記事</span>
+                <span className={styles.postNavTitle}>{nextPost.title}</span>
+              </Link>
+            )}
+          </nav>
+        </Section>
+      )}
     </article>
   );
 }

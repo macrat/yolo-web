@@ -307,3 +307,42 @@ export function trackTileFirstInteraction({
     surface,
   });
 }
+
+// ── Blog table of contents ───────────────────────────────────────────────────
+//
+// Both events identify the post with content_type "blog" and content_id = the
+// post slug (the same value the page's share buttons send as content_id), so
+// the number of jumps can be read against the number of opens per post.
+
+/**
+ * Send a toc_open event when the visitor opens a blog post's table of contents.
+ *
+ * Only the visitor's own opening is sent. The table of contents starts closed
+ * on every width, so rendering it sends nothing, and closing it sends nothing.
+ */
+export function trackTocOpen(contentId: string): void {
+  sendGaEvent("toc_open", {
+    content_type: "blog",
+    content_id: contentId,
+  });
+}
+
+/**
+ * Send a toc_jump event when the visitor picks a section in a blog post's
+ * table of contents.
+ *
+ * `sectionId` is the id of the heading the visitor moves to, and
+ * `sectionLevel` is its heading level (2 for `##`, 4 for `####`).
+ */
+export function trackTocJump(
+  contentId: string,
+  sectionId: string,
+  sectionLevel: number,
+): void {
+  sendGaEvent("toc_jump", {
+    content_type: "blog",
+    content_id: contentId,
+    section_id: sectionId,
+    section_level: sectionLevel,
+  });
+}

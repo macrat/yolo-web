@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import type { BlogPostMeta } from "@/blog/_lib/blog";
+import { joinDashes } from "@/lib/phrase-dashes";
 
 /** Helper to create a minimal BlogPostMeta for testing. */
 function makeMeta(
@@ -53,8 +54,9 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
+    // ラベルは PhrasedText で組むので、名前の中のハイフンは joinDashes が組む形（後ろに語結合子）で出る。
     expect(
-      screen.getByText("連載「unknown-series」（全3回）"),
+      screen.getByText(joinDashes("連載「unknown-series」（全3回）")),
     ).toBeInTheDocument();
   });
 
@@ -181,6 +183,38 @@ describe("SeriesNav", () => {
       />,
     );
     expect(container.innerHTML).toBe("");
+  });
+
+  test("開閉のラベルは連載の名前と回の数、いまの回を、どちらも文節の切れ目にだけ折り所を持つ字で組む", () => {
+    const { container } = render(
+      <SeriesNav
+        seriesId="ai-agent-ops"
+        currentSlug="post-2"
+        seriesPosts={mockPosts}
+      />,
+    );
+    const summary = container.querySelector("summary");
+    expect(summary).not.toBeNull();
+    const phrases = (element: Element) =>
+      Array.from(element.childNodes)
+        .reduce<string[]>(
+          (parts, node) => {
+            if (node.nodeName === "WBR") return [...parts, ""];
+            parts[parts.length - 1] += node.textContent ?? "";
+            return parts;
+          },
+          [""],
+        )
+        .filter((part) => part !== "");
+    const [series, position] = Array.from(
+      summary!.querySelectorAll("span"),
+    ).filter((span) => span.querySelector(":scope > wbr"));
+    expect(phrases(series).join("")).toBe(
+      "連載「AIエージェント運用記」（全3回）",
+    );
+    expect(phrases(series).length).toBeGreaterThan(1);
+    expect(phrases(position).join("")).toBe("この記事は第2回");
+    expect(phrases(position).length).toBeGreaterThan(1);
   });
 
   test("displays position label correctly", () => {

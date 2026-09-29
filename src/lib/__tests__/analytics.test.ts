@@ -6,6 +6,8 @@ import {
   trackShare,
   trackSave,
   trackTileFirstInteraction,
+  trackTocOpen,
+  trackTocJump,
 } from "@/lib/analytics";
 import type { TileSurface } from "@/lib/analytics";
 
@@ -378,6 +380,32 @@ describe("analytics", () => {
     });
   });
 
+  describe("trackTocOpen", () => {
+    it("sends toc_open with the blog post's slug as content_id", () => {
+      trackTocOpen("javascript-date-pitfalls-and-fixes");
+
+      expect(mockGtag).toHaveBeenCalledTimes(1);
+      expect(mockGtag).toHaveBeenCalledWith("event", "toc_open", {
+        content_type: "blog",
+        content_id: "javascript-date-pitfalls-and-fixes",
+      });
+    });
+  });
+
+  describe("trackTocJump", () => {
+    it("sends toc_jump with the section's heading id and level", () => {
+      trackTocJump("character-counting-guide", "surrogate-pairs", 4);
+
+      expect(mockGtag).toHaveBeenCalledTimes(1);
+      expect(mockGtag).toHaveBeenCalledWith("event", "toc_jump", {
+        content_type: "blog",
+        content_id: "character-counting-guide",
+        section_id: "surrogate-pairs",
+        section_level: 4,
+      });
+    });
+  });
+
   describe("safety guards", () => {
     it("does not throw when window.gtag is undefined", () => {
       Object.defineProperty(window, "gtag", {
@@ -431,6 +459,10 @@ describe("analytics", () => {
           item_id: "color-picker",
           surface: "detail",
         }),
+      ).not.toThrow();
+      expect(() => trackTocOpen("character-counting-guide")).not.toThrow();
+      expect(() =>
+        trackTocJump("character-counting-guide", "surrogate-pairs", 2),
       ).not.toThrow();
     });
   });

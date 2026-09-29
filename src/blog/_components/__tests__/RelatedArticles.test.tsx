@@ -49,6 +49,14 @@ describe("RelatedArticles", () => {
     ).toBeInTheDocument();
   });
 
+  test("見出し「関連記事」を頭に持つセクションを1つだけ描くこと", () => {
+    const { container } = render(<RelatedArticles posts={mockPosts} />);
+    const sections = container.querySelectorAll("section");
+    expect(sections).toHaveLength(1);
+    expect(sections[0].firstElementChild).toHaveTextContent("関連記事");
+    expect(sections[0].firstElementChild?.tagName).toBe("H2");
+  });
+
   test("各記事タイトルがリンクとして表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
     const firstPostLink = screen.getByRole("link", { name: "First Post" });

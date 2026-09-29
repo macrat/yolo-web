@@ -1,64 +1,45 @@
-import { describe, test, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, test, expect, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 import TableOfContents from "@/blog/_components/TableOfContents";
 
-const mockHeadings = [
+const headings = [
   { level: 2, text: "はじめに", id: "intro" },
   { level: 3, text: "背景", id: "background" },
+  { level: 4, text: "細かい話", id: "details" },
   { level: 2, text: "まとめ", id: "conclusion" },
 ];
 
 describe("TableOfContents", () => {
-  test("renders 'h2' with text '目次'", () => {
-    render(<TableOfContents headings={mockHeadings} />);
-    expect(screen.getByRole("heading", { name: "目次" })).toBeInTheDocument();
-  });
-
-  test("renders all heading links", () => {
-    render(<TableOfContents headings={mockHeadings} />);
-    expect(screen.getByRole("link", { name: "はじめに" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "背景" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "まとめ" })).toBeInTheDocument();
-  });
-
-  test("each link href points to the heading id", () => {
-    render(<TableOfContents headings={mockHeadings} />);
-    expect(screen.getByRole("link", { name: "はじめに" })).toHaveAttribute(
-      "href",
+  test("見出しへ移るリンクを本文の順に並べる", () => {
+    render(<TableOfContents headings={headings} onSelect={() => {}} />);
+    const links = screen.getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual([
+      "はじめに",
+      "背景",
+      "細かい話",
+      "まとめ",
+    ]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "#intro",
-    );
-    expect(screen.getByRole("link", { name: "背景" })).toHaveAttribute(
-      "href",
       "#background",
-    );
+      "#details",
+      "#conclusion",
+    ]);
   });
 
-  test("returns null when headings array is empty", () => {
-    const { container } = render(<TableOfContents headings={[]} />);
-    expect(container.innerHTML).toBe("");
+  test("## の項目は字下げせず、### とそれより深い項目を同じ1段だけ字下げする", () => {
+    render(<TableOfContents headings={headings} onSelect={() => {}} />);
+    const items = screen.getAllByRole("listitem");
+    const indented = items.map((item) => item.className !== "");
+    expect(indented).toEqual([false, true, true, false]);
+    expect(items[1].className).toBe(items[2].className);
   });
 
-  test("nav has aria-label 'Table of contents'", () => {
-    render(<TableOfContents headings={mockHeadings} />);
-    expect(
-      screen.getByRole("navigation", { name: "Table of contents" }),
-    ).toBeInTheDocument();
-  });
-
-  test(".toc セレクタに background / border / border-radius / padding が含まれない（枠と余白は外側の CollapsibleTOC が持つ）", async () => {
-    const fs = await import("fs");
-    const path = await import("path");
-    const cssPath = path.resolve(__dirname, "../TableOfContents.module.css");
-    const css = fs.readFileSync(cssPath, "utf-8");
-
-    // .toc ブロックのみを抽出してチェック
-    const tocBlockMatch = css.match(/\.toc\s*\{([^}]*)\}/);
-    const tocBlock = tocBlockMatch ? tocBlockMatch[1] : "";
-
-    // 目次を包む CollapsibleTOC（tocDetails）が枠と余白を持ち、目次の中で二重に持たない
-    expect(tocBlock).not.toMatch(/background(-color)?:/);
-    expect(tocBlock).not.toMatch(/\bborder\b\s*:/);
-    expect(tocBlock).not.toMatch(/border-radius:/);
-    expect(tocBlock).not.toMatch(/\bpadding\b\s*:/);
+  test("項目を押すと、その見出しを onSelect に渡す", () => {
+    const onSelect = vi.fn();
+    render(<TableOfContents headings={headings} onSelect={onSelect} />);
+    fireEvent.click(screen.getByRole("link", { name: "細かい話" }));
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledWith(headings[2]);
   });
 });

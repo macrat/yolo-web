@@ -2,6 +2,7 @@ import type { BlogPostMeta } from "@/blog/_lib/blog";
 import { CATEGORY_LABELS } from "@/blog/_lib/blog";
 import { formatDate } from "@/lib/date";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import Section from "@/components/Section";
 import styles from "./RelatedArticles.module.css";
 
 interface RelatedArticlesProps {
@@ -11,8 +12,8 @@ interface RelatedArticlesProps {
 const HEADING_ID = "related-articles";
 
 /**
- * 記事の末尾の「関連記事」。行は題名・説明・分類・公開日で、説明があれば開く前に中身が分かる。
- * 関連記事が無いときは何も描かない。
+ * 記事の末尾の「関連記事」のセクション（DESIGN.md §5）。頭に見出し「関連記事」を置き、行は題名・説明・分類・
+ * 公開日で、説明があれば開く前に中身が分かる。関連記事が無いときは、セクションごと描かない。
  */
 export default function RelatedArticles({ posts }: RelatedArticlesProps) {
   if (posts.length === 0) return null;
@@ -28,11 +29,11 @@ export default function RelatedArticles({ posts }: RelatedArticlesProps) {
   }));
 
   return (
-    <section>
+    <Section>
       <h2 id={HEADING_ID} className={styles.heading}>
         関連記事
       </h2>
       <ItemList labelledBy={HEADING_ID} items={items} />
-    </section>
+    </Section>
   );
 }

@@ -1,7 +1,6 @@
 /* 連載の案内。記事の本文と分けて読ませるため、ボックスに入れる（§5）。太い線で囲み、コンテナと同じ
  * 内側の余白を持つ。 */
 .seriesNav {
-  margin-bottom: var(--space-24);
   border: var(--rule-w) solid var(--rule);
   background: var(--paper);
   padding: var(--box-padding);
@@ -18,79 +17,32 @@
   color: var(--ink-2);
 }
 
-/* --- prev/next quick navigation --- */
-
-/* 前後両方あるとき: 両端寄せ */
+/* 前後の回へのリンク。どちらも並びの左端から始め（§5）、前の回・次の回の順に縦に積む。 */
 .quickNav {
   display: flex;
-  justify-content: space-between;
-  gap: var(--space-16);
-  margin-top: var(--space-16);
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: var(--space-8);
 }
 
-/* 前の記事のみ: 左寄せ */
-.quickNavPrevOnly {
-  display: flex;
-  justify-content: flex-start;
-  gap: var(--space-16);
-  margin-top: var(--space-16);
-}
-
-/* 次の記事のみ: 右寄せ */
-.quickNavNextOnly {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-16);
-  margin-top: var(--space-16);
-}
-
-/* 前後の記事へ進むリンク。押せる範囲は見出しの文字と題を合わせた箱で、下線は題にだけ引く（§6・§7）。
- * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
-.prevLink,
-.nextLink {
+/* 押せる範囲は見出しの文字と題を合わせた箱で、下線は題にだけ引く（§6・§7）。題の字の色と訪問済みの色は
+ * globals.css の a の既定に従う。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が
+ * 持つ。 */
+.quickNavLink {
   display: flex;
   flex-direction: column;
+  max-width: 100%;
   padding-block: var(--space-8);
   text-decoration: none;
-  color: var(--ink);
-  max-width: 48%;
-}
-
-.nextLink {
-  text-align: right;
 }
 
 .quickNavLabel {
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-bottom: var(--space-8);
 }
 
 .quickNavTitle {
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  font-weight: 600;
   text-decoration: underline;
   text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
-}
-
-/* --- responsive --- */
-
-@media (max-width: 720px) {
-  .quickNav,
-  .quickNavPrevOnly,
-  .quickNavNextOnly {
-    flex-direction: column;
-    gap: var(--space-8);
-  }
-
-  .prevLink,
-  .nextLink {
-    max-width: 100%;
-  }
-
-  .nextLink {
-    text-align: left;
-  }
 }
