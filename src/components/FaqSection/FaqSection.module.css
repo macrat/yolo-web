@@ -1,15 +1,8 @@
-/* よくある質問のセクション。質問ごとのアコーディオンを縦に接して並べる。 */
+/* よくある質問。質問ごとのアコーディオンを縦に接して並べる。見出しはセクションの見出しの段（§4。h2 の既定）。 */
 
-.section {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
+/* セクションの見出しと、その下の最初の質問の行のあいだ（§5 の間隔）。 */
 .heading {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  color: var(--ink);
+  margin-block-end: var(--space-16);
 }
 
 /* 答えは本文として、本文の大きさ・本文の幅で組む。次の質問の行とのあいだを 16px あける。 */

@@ -4,6 +4,7 @@ import type { DictionaryMeta } from "@/dictionary/_lib/types";
 import type { PlayContentMeta } from "@/play/types";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqSection from "@/components/FaqSection";
+import { phraseFaq } from "@/lib/faq-phrases";
 import ShareButtons from "@/components/ShareButtons";
 import PlayRecommendBlock from "./PlayRecommendBlock";
 import styles from "./DictionaryDetailLayout.module.css";
@@ -78,7 +79,7 @@ export default function DictionaryDetailLayout({
 
       {children}
 
-      <FaqSection faq={meta.faq} />
+      <FaqSection faq={phraseFaq(meta.faq)} />
 
       <section className={styles.shareSection}>
         <ShareButtons

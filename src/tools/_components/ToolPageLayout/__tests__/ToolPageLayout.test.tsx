@@ -173,7 +173,9 @@ describe("ToolPageLayout", () => {
         <div>ツール本体</div>
       </ToolPageLayout>,
     );
-    expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "よくある質問" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("テスト質問1")).toBeInTheDocument();
   });
 
@@ -248,7 +250,9 @@ describe("ToolPageLayout", () => {
       ),
     ).toBeInTheDocument();
     // FAQ が描画される
-    expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "よくある質問" }),
+    ).toBeInTheDocument();
   });
 
   it("children が空要素でも howItWorks 以降が描画される", () => {
@@ -339,7 +343,7 @@ describe("ToolPageLayout", () => {
       </ToolPageLayout>,
     );
     expect(
-      screen.queryByRole("region", { name: "FAQ" }),
+      screen.queryByRole("region", { name: "よくある質問" }),
     ).not.toBeInTheDocument();
   });
 

@@ -6,6 +6,7 @@ import ShareButtons from "@/components/ShareButtons";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { phraseFaq } from "@/lib/faq-phrases";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import RelatedGames from "./RelatedGames";
 import styles from "./GameLayout.module.css";
@@ -34,6 +35,7 @@ export default function GameLayout({
   children,
   attribution,
 }: GameLayoutProps) {
+  const faq = phraseFaq(meta.faq);
   return (
     <article className={styles.layout}>
       <Breadcrumb
@@ -69,7 +71,11 @@ export default function GameLayout({
       {attribution && (
         <footer className={styles.attribution}>{attribution}</footer>
       )}
-      <FaqSection faq={meta.faq} />
+      {faq.length > 0 && (
+        <div className={styles.faqSection}>
+          <FaqSection faq={faq} />
+        </div>
+      )}
       <section className={styles.shareSection}>
         <PhrasedText
           as="h2"

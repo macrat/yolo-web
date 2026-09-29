@@ -38,9 +38,13 @@ describe("joinDashes", () => {
     );
   });
 
-  test("ダッシュの無い文と、数字の前・空白の隣の「-」はそのまま返す", () => {
+  test("ハイフンの後ろが数字でも語結合子を置き、そこで折らない", () => {
+    expect(joinDashes("UTF-8だけですか？")).toBe(`UTF-${WJ}8だけですか？`);
+    expect(joinDashes("ISO-8601 の日付")).toBe(`ISO-${WJ}8601 の日付`);
+  });
+
+  test("ダッシュの無い文と、空白の隣の「-」はそのまま返す", () => {
     expect(joinDashes("生年月日（必須）")).toBe("生年月日（必須）");
-    expect(joinDashes("UTF-8 の文字")).toBe("UTF-8 の文字");
     expect(joinDashes("a - b")).toBe("a - b");
     expect(joinDashes("-x")).toBe("-x");
   });
@@ -50,7 +54,7 @@ describe("joinDashes", () => {
   });
 
   test("字を消さず、語結合子を除けば元の文に戻る（空白は折れない空白に替わるだけ）", () => {
-    const text = "見出し — その先 ── さらに -- 終わり not-found";
+    const text = "見出し — その先 ── さらに -- 終わり not-found UTF-8";
     expect(joinDashes(text).replaceAll(WJ, "").replaceAll(NBSP, " ")).toBe(
       text,
     );

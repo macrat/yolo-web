@@ -6,6 +6,7 @@ import ShareButtons from "@/components/ShareButtons";
 import RelatedTools from "@/components/RelatedTools";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { phraseFaq } from "@/lib/faq-phrases";
 import TileInteractionTracker from "./TileInteractionTracker";
 import styles from "./ToolPageLayout.module.css";
 
@@ -37,6 +38,7 @@ export default function ToolPageLayout({
   meta,
   children,
 }: ToolPageLayoutProps) {
+  const faq = phraseFaq(meta.faq);
   return (
     <article className={styles.layout}>
       {/* 1. パンくず（BreadcrumbList JSON-LD 内蔵） */}
@@ -89,8 +91,12 @@ export default function ToolPageLayout({
         }
       </p>
 
-      {/* 6. FAQ。faq が無いとき FaqSection は何も描かない */}
-      <FaqSection faq={meta.faq} />
+      {/* 6. FAQ。faq が無いときは区画ごと描かない */}
+      {faq.length > 0 && (
+        <div className={styles.faqSection}>
+          <FaqSection faq={faq} />
+        </div>
+      )}
 
       {/* 7. シェア */}
       <section className={styles.shareSection}>

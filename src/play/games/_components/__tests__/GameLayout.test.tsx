@@ -192,7 +192,9 @@ test("GameLayout renders FAQ section when provided", () => {
       <div>Content</div>
     </GameLayout>,
   );
-  expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+  expect(
+    screen.getByRole("region", { name: "よくある質問" }),
+  ).toBeInTheDocument();
   expect(screen.getByText("テスト質問？")).toBeInTheDocument();
 });
 
@@ -202,7 +204,9 @@ test("GameLayout does not render FAQ when not provided", () => {
       <div>Content</div>
     </GameLayout>,
   );
-  expect(screen.queryByRole("region", { name: "FAQ" })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("region", { name: "よくある質問" }),
+  ).not.toBeInTheDocument();
 });
 
 test("GameLayout renders share section with game-specific text", () => {

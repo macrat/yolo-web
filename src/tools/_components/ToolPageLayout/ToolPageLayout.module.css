@@ -46,8 +46,10 @@
   width: 100%;
 }
 
-/* 道具の下の補助の情報。このツールについて・シェアは、上に細い罫線を引いて道具と分ける（§5）。 */
-.howItWorksSection {
+/* 道具の下の補助の情報。このツールについて・FAQ・シェアは、上に細い罫線を引いて上の内容と分ける（§5）。 */
+.howItWorksSection,
+.faqSection,
+.shareSection {
   max-width: var(--measure);
   padding-top: var(--space-24);
   border-top: var(--rule-w-hair) solid var(--rule-2);
@@ -75,12 +77,6 @@
   color: var(--ink-2);
   font-size: var(--text-small);
   margin: 0;
-}
-
-.shareSection {
-  max-width: var(--measure);
-  padding-top: var(--space-24);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .shareSectionTitle {

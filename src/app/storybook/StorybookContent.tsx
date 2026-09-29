@@ -17,7 +17,7 @@ import CopyButton from "@/components/CopyButton";
 import Breadcrumb from "@/components/Breadcrumb";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
-import FaqSection from "@/components/FaqSection";
+import FaqSection, { type PhrasedFaqEntry } from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import LinkIndex, {
@@ -87,20 +87,6 @@ const BREADCRUMB_3 = [
 ];
 
 const BREADCRUMB_1 = [{ label: "ホーム", href: "/" }];
-
-// FaqSection サンプルデータ
-const SAMPLE_FAQ = [
-  {
-    question: "このツールはどのように動作しますか？",
-    answer:
-      "ブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
-  },
-  {
-    question: "対応しているファイル形式は何ですか？",
-    answer:
-      "テキスト形式（.txt）および UTF-8 エンコードのファイルに対応しています。",
-  },
-];
 
 // 目次アイテム（Header/Footer はページ上下に実物が表示されるためプレビューセクション不要）
 const TOC_ITEMS = [
@@ -380,6 +366,8 @@ interface StorybookContentProps {
   qrCode: ImageSample;
   /** 解き終えた画面の見本の診断。タイプを1つずつ選んで開く。 */
   solvedScreen: SolvedScreenSample;
+  /** FaqSection の見本。問いの区切りは、道具などのページと同じく server の page.tsx が作る。 */
+  faqSample: PhrasedFaqEntry[];
 }
 
 export default function StorybookContent({
@@ -391,6 +379,7 @@ export default function StorybookContent({
   voiceOverSamples,
   qrCode,
   solvedScreen,
+  faqSample,
 }: StorybookContentProps) {
   // Checkbox・Radio controlled state
   const [checkboxOn, setCheckboxOn] = useState(false);
@@ -1208,12 +1197,26 @@ export default function StorybookContent({
           <Accordion summary="目次">
             <p>開いたときに出る中身。</p>
           </Accordion>
-          <Accordion summary="ラベルが長く、狭い画面で2行に折り返しても、三角は1行目の字の中央に並ぶ">
+          <Accordion
+            summary={[
+              "ラベルが",
+              "長く、",
+              "狭い",
+              "画面で",
+              "2行に",
+              "折り返しても、",
+              "三角は",
+              "1行目の",
+              "字の",
+              "中央に",
+              "並ぶ",
+            ]}
+          >
             <p>開いたときに出る中身。</p>
           </Accordion>
 
           <h3 className={styles.subsectionTitle}>FaqSection（2 件）</h3>
-          <FaqSection faq={SAMPLE_FAQ} />
+          <FaqSection faq={faqSample} />
 
           <h3 className={styles.subsectionTitle}>
             faq が空配列のとき（null を返す）

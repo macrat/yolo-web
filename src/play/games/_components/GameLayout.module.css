@@ -52,7 +52,8 @@
   color: var(--ink-2);
 }
 
-/* このゲームを人に勧めるページの共有。上に細い罫線を引いて、上の内容と分ける（§5）。 */
+/* FAQ と、このゲームを人に勧めるページの共有。上に細い罫線を引いて、上の内容と分ける（§5）。 */
+.faqSection,
 .shareSection {
   max-width: var(--measure);
   margin-top: var(--space-32);

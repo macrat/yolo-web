@@ -9,6 +9,7 @@ import RecommendedContent from "@/play/_components/RecommendedContent";
 import { generatePlayJsonLd } from "@/play/seo";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { phraseFaq } from "@/lib/faq-phrases";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
@@ -40,7 +41,7 @@ interface QuizPlayPageLayoutProps {
  * h1 はどの段階でも §4 の主見出しのまま置く。クイズの説明は、開始の画面が「はじめる」の下に置く。
  *
  * 解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品が描くデータから作る
- * 見出しなので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。
+ * 見出しなので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って渡す。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -52,6 +53,7 @@ export default async function QuizPlayPageLayout({
 
   const resultNextContents = toPlayListItems(getResultNextContents(slug));
   const { resultHeadings, readingHeadings } = solvedScreenHeadings(quiz);
+  const faq = phraseFaq(quiz.meta.faq);
   const recommendHeading =
     quiz.meta.type === "knowledge"
       ? ["この", "クイズを", "勧める"]
@@ -90,9 +92,9 @@ export default async function QuizPlayPageLayout({
         readingHeadings={readingHeadings}
       />
 
-      {quiz.meta.faq && quiz.meta.faq.length > 0 && (
+      {faq.length > 0 && (
         <Section>
-          <FaqSection faq={quiz.meta.faq} />
+          <FaqSection faq={faq} />
         </Section>
       )}
 

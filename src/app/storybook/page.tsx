@@ -14,6 +14,7 @@ import {
 } from "./list/samples";
 import characterPersonalityQuiz from "@/play/quiz/data/character-personality";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { phraseFaq } from "@/lib/faq-phrases";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
 
@@ -70,6 +71,20 @@ function characterSolvedScreen(): SolvedScreenSample {
   };
 }
 
+/** FaqSection の見本の FAQ。 */
+const SAMPLE_FAQ = [
+  {
+    question: "このツールはどのように動作しますか？",
+    answer:
+      "ブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
+  },
+  {
+    question: "対応しているファイル形式は何ですか？",
+    answer:
+      "テキスト形式（.txt）および UTF-8 エンコードのファイルに対応しています。",
+  },
+];
+
 const QR_CELL_SIZE = 4;
 const QR_MARGIN_CELLS = 4;
 
@@ -91,7 +106,7 @@ export default function StorybookPage() {
   // ビルドが失敗する。そのため server component である本ページで描画し、
   // ReactNode を prop として渡す（Next.js の server-in-client パターン）。
   // BrowsableList の見本の行も、辞典のデータを読むのでここで組む。見出しの区切りはサーバーだけで作れるので
-  // （@/lib/phrase-breaks）、結果のボックス・PhrasedText・解き終えた画面の見本の区切りもここで作って渡す。
+  // （@/lib/phrase-breaks）、結果のボックス・PhrasedText・解き終えた画面・FaqSection の見本の区切りもここで作って渡す。
   return (
     <StorybookContent
       relatedBlogPostsWithPosts={<RelatedBlogPosts slug="business-email" />}
@@ -102,6 +117,7 @@ export default function StorybookPage() {
       voiceOverSamples={VOICE_OVER_TYPE_IDS.map(characterType)}
       qrCode={qrCodeSample()}
       solvedScreen={characterSolvedScreen()}
+      faqSample={phraseFaq(SAMPLE_FAQ)}
     />
   );
 }

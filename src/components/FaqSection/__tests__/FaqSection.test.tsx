@@ -1,21 +1,15 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import FaqSection from "@/components/FaqSection";
-import type { FaqEntry } from "@/lib/seo";
+import FaqSection, { type PhrasedFaqEntry } from "@/components/FaqSection";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-const sampleFaq: FaqEntry[] = [
-  { question: "テスト質問1", answer: "テスト回答1" },
-  { question: "テスト質問2", answer: "テスト回答2" },
+const sampleFaq: PhrasedFaqEntry[] = [
+  { question: ["テスト", "質問1"], answer: "テスト回答1" },
+  { question: ["テスト", "質問2"], answer: "テスト回答2" },
 ];
 
 describe("FaqSection", () => {
   // --- レンダリング ---
-
-  test("faq が undefined のとき null を返す（何も描画しない）", () => {
-    const { container } = render(<FaqSection faq={undefined} />);
-    expect(container.firstChild).toBeNull();
-  });
 
   test("faq が空配列のとき null を返す（何も描画しない）", () => {
     const { container } = render(<FaqSection faq={[]} />);
@@ -24,7 +18,9 @@ describe("FaqSection", () => {
 
   test("faq がある場合に section が描画される", () => {
     render(<FaqSection faq={sampleFaq} />);
-    expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "よくある質問" }),
+    ).toBeInTheDocument();
   });
 
   test("見出し「よくある質問」が表示される", () => {
@@ -97,6 +93,17 @@ describe("FaqSection", () => {
     const summaries = container.querySelectorAll("summary");
     expect(summaries[0]).toHaveTextContent("テスト質問1");
     expect(summaries[1]).toHaveTextContent("テスト質問2");
+  });
+
+  test("質問は渡された文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    const { container } = render(<FaqSection faq={sampleFaq} />);
+    const summaries = container.querySelectorAll("summary");
+    sampleFaq.forEach((entry, index) => {
+      expect(summaries[index].querySelector("wbr")).not.toBeNull();
+      expect(summaries[index].innerHTML).toContain(
+        entry.question.join("<wbr>"),
+      );
+    });
   });
 
   test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
