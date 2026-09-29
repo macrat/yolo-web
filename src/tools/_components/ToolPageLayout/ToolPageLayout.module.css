@@ -1,99 +1,31 @@
 /*
- * ToolPageLayout.module.css — 道具のページの器。
- *
- * 道具（タイル）を主役として頭のすぐ下に置き、補助の情報をその下に並べる。器は影も角丸も持たない
- * （DESIGN.md §5）。
+ * ToolPageLayout.module.css — 道具のページの組み方。ページの割り方と、セクションのあいだの全幅の罫線と余白は
+ * Section が持つ（DESIGN.md §5）。見出しの大きさは h1・h2 の既定（§4 の主見出し・セクションの見出し）に従う。
  */
 
-/* ページの中身。幅と左右の余白はコンテナが決めるので、器は自分の左右の余白を持たず、コンテンツ幅の左端から
- * 組む（§5「コンテンツ幅の左端は、どのページでも同じ位置」）。パンくず・見出し・道具・補助の情報は、一覧の
- * ページの頭と同じ 16px の間隔で積み、道具の最初の結果を画面の上のほうに置く。 */
-.layout {
-  padding-block: var(--space-24);
+/* パンくずと h1 を、その下の道具の本体と同じ間隔で積む（§5 の間隔）。 */
+.head {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
+  margin-block-end: var(--space-16);
 }
 
-/* パンくずの下に、道具の名前の h1 と短い説明を 8px あけて積む。 */
-.header {
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
+}
+
+/* このツールについての文は本文として、本文の幅で折り返し、段落のあいだを 16px あける（§4・§5）。 */
+.about {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-}
-
-/* h1 は見出しの書体で組む（§3）。 */
-.title {
-  font-family: var(--font-heading);
-  font-size: 1.5625rem;
-  color: var(--ink);
-  margin: 0;
-  line-height: var(--leading-heading);
-}
-
-/* 短い説明は、道具が何をするかを言う1〜2文。本文の大きさで、本文の幅で折り返す（§4・§5）。 */
-.shortDescription {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--ink-2);
-  line-height: var(--leading-body);
-  margin: 0;
+  gap: var(--space-16);
   max-width: var(--measure);
 }
 
-/* 道具の本体は、コンテンツ幅いっぱいを使う。 */
-.content {
-  width: 100%;
-}
-
-/* 道具の下の補助の情報。このツールについて・FAQ・シェアは、上に細い罫線を引いて上の内容と分ける（§5）。 */
-.howItWorksSection,
-.faqSection,
-.shareSection {
-  max-width: var(--measure);
-  padding-top: var(--space-24);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.howItWorksHeading {
-  font-family: var(--font-heading);
-  font-size: var(--text-step-1);
-  color: var(--ink);
-  margin: 0 0 var(--space-8);
-  line-height: var(--leading-heading);
-}
-
-.howItWorksText {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--ink-2);
-  line-height: var(--leading-body);
-  margin: 0;
-}
-
-/* プライバシーの注記。補助情報の文字で置く（§4）。 */
+/* プライバシーの注記は補助情報の文字で置く（§4）。 */
 .privacyNote {
-  max-width: var(--measure);
   color: var(--ink-2);
   font-size: var(--text-small);
-  margin: 0;
-}
-
-.shareSectionTitle {
-  font-family: var(--font-heading);
-  font-size: var(--text-step-1);
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  line-height: var(--leading-heading);
-}
-
-/* 狭い画面では、頭の上の余白と h1 を小さくして、道具を画面の上のほうに置く。 */
-@media (width < 45rem) {
-  .layout {
-    padding-block: var(--space-16);
-  }
-
-  .title {
-    font-size: 1.25rem;
-  }
 }

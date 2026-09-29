@@ -1,5 +1,6 @@
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import { toolCategoryLabel } from "@/tools/categories";
 import { allToolMetas } from "@/tools/registry";
 import styles from "./RelatedTools.module.css";
@@ -14,9 +15,10 @@ interface RelatedToolsProps {
 const HEADING_ID = "related-tools";
 
 /**
- * ツールのページの末尾の「関連ツール」。行はツール名・一行の説明・種別で、似たツールのどれへ進むかを開く前に選べる。
+ * ツールのページの末尾の「関連ツール」。ページの1つのセクション（DESIGN.md §5）で、見出しはセクションの見出しの段に
+ * 立つ（§4）。行はツール名・一行の説明・種別で、似たツールのどれへ進むかを開く前に選べる。
  * 種別の語はツールの一覧と同じで、載せたツールがすべて同じ種別なら行に出ない（ItemList）。
- * 載せるツールが無いときは何も描かない。
+ * 載せるツールが無いときは、セクションごと描かない。
  */
 export default function RelatedTools({
   currentSlug,
@@ -36,7 +38,7 @@ export default function RelatedTools({
   if (items.length === 0) return null;
 
   return (
-    <section className={styles.related}>
+    <Section>
       <PhrasedText
         as="h2"
         id={HEADING_ID}
@@ -44,6 +46,6 @@ export default function RelatedTools({
         phrases={["関連", "ツール"]}
       />
       <ItemList labelledBy={HEADING_ID} items={items} />
-    </section>
+    </Section>
   );
 }

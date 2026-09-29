@@ -10,7 +10,6 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error: Error | null;
 }
 
 export default class ToolErrorBoundary extends React.Component<
@@ -19,17 +18,17 @@ export default class ToolErrorBoundary extends React.Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div role="alert" className={styles.error}>
+        <div role="alert">
           <PhrasedText
             as="h2"
             className={styles.heading}

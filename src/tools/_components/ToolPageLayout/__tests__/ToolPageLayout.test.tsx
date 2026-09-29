@@ -120,15 +120,58 @@ describe("ToolPageLayout", () => {
     ).toBeInTheDocument();
   });
 
-  it("shortDescription が描画される（1〜2文の短説明）", () => {
+  it("「このツールについて」は短い説明・仕組み・プライバシーの注記の順の段落で、見出しを名前に持つ", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
       </ToolPageLayout>,
     );
-    expect(
-      screen.getByText("テキストをBase64形式に変換・復元するツール"),
-    ).toBeInTheDocument();
+    const about = screen.getByRole("region", { name: "このツールについて" });
+    const paragraphs = Array.from(about.querySelectorAll("p")).map(
+      (p) => p.textContent,
+    );
+    expect(paragraphs).toEqual([
+      "テキストをBase64形式に変換・復元するツール",
+      "ブラウザ上でBase64のエンコード・デコードを処理します。",
+      "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
+    ]);
+  });
+
+  it("短い説明は頭（パンくずと h1 と道具の本体のセクション）に置かない", () => {
+    const { container } = render(
+      <ToolPageLayout meta={baseMeta}>
+        <div data-testid="tool-body">ツール本体</div>
+      </ToolPageLayout>,
+    );
+    const firstSection = container.querySelector("section");
+    expect(firstSection).toContainElement(
+      screen.getByRole("heading", { level: 1 }),
+    );
+    expect(firstSection).toContainElement(screen.getByTestId("tool-body"));
+    expect(firstSection).not.toHaveTextContent(
+      "テキストをBase64形式に変換・復元するツール",
+    );
+  });
+
+  it("ページはセクションを兄弟として並べ、道具の本体を h1 と同じ最初のセクションに置く（DESIGN.md §5）", () => {
+    const { container } = render(
+      <ToolPageLayout meta={baseMeta}>
+        <div data-testid="tool-body">ツール本体</div>
+      </ToolPageLayout>,
+    );
+    const sections = Array.from(container.children).filter(
+      (el) => el.tagName === "SECTION",
+    );
+    const headings = sections.map(
+      (section) => section.querySelector("h1, h2")?.textContent,
+    );
+    expect(headings).toEqual([
+      "Base64エンコード・デコード",
+      "このツールについて",
+      "よくある質問",
+      "このツールを勧める",
+      "関連ツール",
+    ]);
   });
 
   it("children（ツール本体）が描画される", () => {
@@ -141,7 +184,7 @@ describe("ToolPageLayout", () => {
     expect(screen.getByText("ツール本体コンテンツ")).toBeInTheDocument();
   });
 
-  it("howItWorks セクションが描画される（「このツールについて」）", () => {
+  it("「このツールについて」のセクションが描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
@@ -179,14 +222,15 @@ describe("ToolPageLayout", () => {
     expect(screen.getByText("テスト質問1")).toBeInTheDocument();
   });
 
-  it("ShareButtons が描画される（シェアセクション）", () => {
+  it("ShareButtons が描画される（「このツールを勧める」のセクション）", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
       </ToolPageLayout>,
     );
-    // ShareButtons は "use client" のため、ラッパー要素や「X でシェア」等のテキストで確認
-    // このツールについてシェアセクションがある
+    expect(
+      screen.getByRole("heading", { level: 2, name: "このツールを勧める" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("X でシェア")).toBeInTheDocument();
   });
 
@@ -203,7 +247,7 @@ describe("ToolPageLayout", () => {
 
   // --- 要素並び順の検証（DOM 上の順序） ---
 
-  it("パンくず→h1→children→howItWorks の順序で DOM に出現する", () => {
+  it("パンくず→h1→children→「このツールについて」の順序で DOM に出現する", () => {
     const { container } = render(
       <ToolPageLayout meta={baseMeta}>
         <div data-testid="tool-body">ツール本体</div>
@@ -211,10 +255,10 @@ describe("ToolPageLayout", () => {
     );
 
     const allElements = container.querySelectorAll(
-      "nav[aria-label='パンくずリスト'], h1, [data-testid='tool-body'], [data-section='howItWorks']",
+      "nav[aria-label='パンくずリスト'], h1, [data-testid='tool-body'], [aria-labelledby='about-tool-heading']",
     );
 
-    // パンくず → h1 → ツール本体 → howItWorks の順
+    // パンくず → h1 → ツール本体 → 「このツールについて」の順
     const breadcrumbIdx = Array.from(allElements).findIndex(
       (el) => el.getAttribute("aria-label") === "パンくずリスト",
     );
@@ -224,20 +268,20 @@ describe("ToolPageLayout", () => {
     const toolBodyIdx = Array.from(allElements).findIndex(
       (el) => el.getAttribute("data-testid") === "tool-body",
     );
-    const howItWorksIdx = Array.from(allElements).findIndex(
-      (el) => el.getAttribute("data-section") === "howItWorks",
+    const aboutIdx = Array.from(allElements).findIndex(
+      (el) => el.getAttribute("aria-labelledby") === "about-tool-heading",
     );
 
     expect(breadcrumbIdx).toBeLessThan(h1Idx);
     expect(h1Idx).toBeLessThan(toolBodyIdx);
-    expect(toolBodyIdx).toBeLessThan(howItWorksIdx);
+    expect(toolBodyIdx).toBeLessThan(aboutIdx);
   });
 
   // --- children が空でも並びが崩れない ---
 
-  it("children が null でも howItWorks 以降が描画される", () => {
+  it("children が null でも「このツールについて」以降が描画される", () => {
     render(<ToolPageLayout meta={baseMeta}>{null}</ToolPageLayout>);
-    // howItWorks が描画される
+    // 「このツールについて」が描画される
     expect(
       screen.getByText(
         "ブラウザ上でBase64のエンコード・デコードを処理します。",
@@ -255,7 +299,7 @@ describe("ToolPageLayout", () => {
     ).toBeInTheDocument();
   });
 
-  it("children が空要素でも howItWorks 以降が描画される", () => {
+  it("children が空要素でも「このツールについて」以降が描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <></>
@@ -349,16 +393,11 @@ describe("ToolPageLayout", () => {
 
   // --- CSS 規約チェック ---
 
-  it("CSS: 器は左右の余白と最大幅を持たず、コンテナのコンテンツ幅の左端から組む（DESIGN.md §5）", () => {
+  it("CSS: 見出しの大きさを上書きせず、h1・h2 の既定（§4 の主見出し・セクションの見出し）に任せる", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    const layoutRules = css.match(/\.layout\s*\{[^}]*\}/g) ?? [];
-    expect(layoutRules.length).toBeGreaterThan(0);
-    for (const rule of layoutRules) {
-      expect(rule).not.toMatch(
-        /(?:padding|padding-inline|padding-left|padding-right|max-width|margin)\s*:/,
-      );
-    }
+    const sizes = css.match(/font-size\s*:[^;]*/g) ?? [];
+    expect(sizes).toEqual(["font-size: var(--text-small)"]);
   });
 
   it("CSS: 長文テキストに --measure（読む面）制限が含まれる（DESIGN.md §5）", () => {
@@ -397,7 +436,7 @@ describe("ToolPageLayout", () => {
     );
     const headings: string[][] = [
       ["この", "ツールに", "ついて"],
-      ["この", "ツールが", "便利だったら", "シェア"],
+      ["この", "ツールを", "勧める"],
     ];
     for (const phrases of headings) {
       expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);

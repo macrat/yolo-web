@@ -6,8 +6,6 @@ import { trackTileFirstInteraction } from "@/lib/analytics";
 interface TileInteractionTrackerProps {
   /** 道具の slug。item_id として送る。 */
   itemId: string;
-  /** <section> のクラス（ToolPageLayout は styles.content を渡す）。 */
-  className?: string;
   /** <section> の読み上げの名前。 */
   ariaLabel: string;
   children: React.ReactNode;
@@ -25,7 +23,6 @@ interface TileInteractionTrackerProps {
  */
 export default function TileInteractionTracker({
   itemId,
-  className,
   ariaLabel,
   children,
 }: TileInteractionTrackerProps) {
@@ -42,7 +39,6 @@ export default function TileInteractionTracker({
     // onPointerDownCapture / onKeyDownCapture は capture phase で発火するため、
     // タイル内部の stopPropagation の影響を受けずに最初の操作を捕捉できる
     <section
-      className={className}
       aria-label={ariaLabel}
       onPointerDownCapture={handleFirstInteraction}
       onKeyDownCapture={handleFirstInteraction}

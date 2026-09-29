@@ -1,27 +1,14 @@
 /*
- * ErrorBoundary.module.css — ツール読み込み失敗時のフォールバック表示。
- * ステータス色（エラー）は緑/赤のベタでなく
- * --accent と文字で示す。地は --paper-2（区画の沈み）・枠は中立の --rule。
+ * ErrorBoundary.module.css — 道具の本体が描けなかったときに、本体の場所に出す知らせ。
+ * 道具のセクションの中の小見出しと本文で組み（DESIGN.md §4・§5）、色では示さず文字で言う（§8）。
+ * すぐ上が主見出しなので、小見出しの上の細い罫線は持たない（§5）。
  */
-.error {
-  padding: var(--space-24);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background-color: var(--paper-2);
-}
-
 .heading {
-  font-family: var(--font-heading);
-  font-size: 1.09375rem;
-  color: var(--accent);
-  margin: 0 0 var(--space-8);
-  line-height: 1.4;
+  font-size: var(--text-heading-sub);
+  margin-block-end: var(--space-8);
 }
 
+/* 何が起きてどうすればよいかを言う文は、本文の大きさ・本文の幅で組む（§8）。 */
 .text {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  margin: 0;
-  line-height: 1.7;
+  max-width: var(--measure);
 }
