@@ -95,7 +95,7 @@ export default function InviteFriendButton({
   return (
     <div className={styles.wrapper}>
       <p className={styles.label}>友達との相性を調べてみよう</p>
-      <Button onClick={handleInvite}>友達に診断を送る</Button>
+      <Button onClick={handleInvite} phrases={["友達に", "診断を", "送る"]} />
       <div className={styles.copiedMessage} role="status" aria-live="polite">
         {copyStatus === "copied"
           ? "リンクをコピーしました"

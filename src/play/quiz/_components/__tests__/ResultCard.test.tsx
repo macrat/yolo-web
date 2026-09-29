@@ -2,6 +2,7 @@ import { expect, test, vi, describe } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import React, { type ComponentProps } from "react";
 import ResultCardComponent from "../ResultCard";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 import type {
   QuizResult,
   QuizResultDetailedContent,
@@ -979,6 +980,16 @@ describe("ResultCard - セクションの並び", () => {
           Node.DOCUMENT_POSITION_FOLLOWING,
       ).toBeTruthy();
     }
+  });
+
+  test("「もう一度挑戦する」は書き手が分けた文節の切れ目でだけ折れ、読み上げの名前は元の文のまま（DESIGN.md §4）", () => {
+    render(<ResultCard {...defaultProps} />);
+    const face = screen.getByRole("button", {
+      name: "もう一度挑戦する",
+    }).firstElementChild!;
+    const phrases = face.innerHTML.split("<wbr>");
+    expect(phrases).toEqual(["もう一度", "挑戦する"]);
+    expect(followsPhraseRules(phrases)).toBe(true);
   });
 
   test("詳しい読みものを持たないクイズは、結果と共有・次はこれを試してみようの2つのセクションで、結果ごとのおすすめは「もう一度挑戦する」の下に置く", () => {

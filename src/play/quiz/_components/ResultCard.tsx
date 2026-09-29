@@ -517,7 +517,7 @@ export default function ResultCard({
         </Section>
       )}
       <ResultNextContent items={nextItems}>
-        <Button onClick={onRetry}>もう一度挑戦する</Button>
+        <Button onClick={onRetry} phrases={["もう一度", "挑戦する"]} />
         {nextLink}
       </ResultNextContent>
       {detailedContent && (

@@ -19,6 +19,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import InviteFriendButton from "../InviteFriendButton";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 const gtagSpy = vi.fn();
 const mockShare = vi.fn();
@@ -226,5 +227,14 @@ describe("InviteFriendButton の「リンクをコピーしました」", () => 
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe("InviteFriendButton の面", () => {
+  test("「友達に診断を送る」は書き手が分けた文節の切れ目でだけ折れ、読み上げの名前は元の文のまま（DESIGN.md §4）", () => {
+    const face = renderButton().firstElementChild!;
+    const phrases = face.innerHTML.split("<wbr>");
+    expect(phrases).toEqual(["友達に", "診断を", "送る"]);
+    expect(followsPhraseRules(phrases)).toBe(true);
   });
 });
