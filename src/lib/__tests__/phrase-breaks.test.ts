@@ -10,6 +10,7 @@ import {
   splitIntoPhrases,
 } from "@/lib/phrase-breaks";
 import { quizBySlug } from "@/play/quiz/registry";
+import { toolsBySlug } from "@/tools/registry";
 
 const characterPersonalityTypeNames = (
   quizBySlug.get("character-personality")?.results ?? []
@@ -260,6 +261,82 @@ describe("splitIntoPhrases", () => {
     ]);
   });
 
+  test("辞書に無い外来語の欠片をつないだ語と、となりの語のあいだで分ける", () => {
+    expect(
+      splitIntoPhrases(toolsBySlug.get("email-validator")?.meta.name ?? ""),
+    ).toEqual(["メールアドレス", "バリデーター"]);
+    expect(splitIntoPhrases("パスワードジェネレーター")).toEqual([
+      "パスワード",
+      "ジェネレーター",
+    ]);
+    expect(splitIntoPhrases("CSSグラデーションジェネレーター")).toEqual([
+      "CSS",
+      "グラデーション",
+      "ジェネレーター",
+    ]);
+    expect(splitIntoPhrases("セキュリティバリデーターの使い方")).toEqual([
+      "セキュリティ",
+      "バリデーターの",
+      "使い方",
+    ]);
+  });
+
+  test("欠片が前後の語の頭や終わりでありうる片仮名の語の中では分けない", () => {
+    for (const [text, word] of [
+      ["ゲームインフラのリファクタリング", "リファクタリング"],
+      ["デザイントークンの移行", "トークン"],
+      ["サーバーサイドレンダリングの仕組み", "レンダリング"],
+      ["プログラマティックSEO戦略の実践", "プログラマティック"],
+      ["ページネーションの実装", "ページネーション"],
+      ["ゲーミフィケーションの効果", "ゲーミフィケーション"],
+      ["グローバルナビゲーションを直す", "ナビゲーション"],
+      ["トークナイザーの選び方", "トークナイザー"],
+      ["ダイアグラムタイプ", "ダイアグラム"],
+      ["アマミノクロウサギタイプ", "アマミノクロウサギ"],
+      ["リュウグウノツカイタイプ", "リュウグウノツカイ"],
+      ["モバイルフレンドリー", "フレンドリー"],
+      ["アクセストラッカー", "トラッカー"],
+      ["ブラウザトラッカー", "トラッカー"],
+      ["セマンティクスクローラー", "クローラー"],
+      ["レガシーリファクタリング", "リファクタリング"],
+      ["プロセスイレギュラー", "イレギュラー"],
+      ["シングルスケーラブル", "スケーラブル"],
+      ["サプライズガッコウ", "サプライズ"],
+      ["メッセージングリベンジ", "メッセージング"],
+      ["1,728 → 31のフィルタリングパイプライン", "フィルタリング"],
+      ["フィルタリング全体の流れ", "フィルタリング"],
+      ["チャンキングコンテキスト", "チャンキング"],
+      ["パーティションテーブル", "パーティション"],
+      ["フレンドリーバリデーター", "フレンドリー"],
+      ["トレーサビリティジェネレーター", "トレーサビリティ"],
+      ["ホバートランジション", "トランジション"],
+      ["フロートラフィック", "トラフィック"],
+      ["フォーカスリング", "フォーカスリング"],
+    ]) {
+      const start = text.indexOf(word);
+      for (const options of [{}, { countedName: true }]) {
+        for (const offset of boundaryOffsets(splitIntoPhrases(text, options))) {
+          expect(
+            offset <= start || offset >= start + word.length,
+            `${text} ${offset}`,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
+  test("英語の語尾を写した切れ端と撥音で始まる切れ端は、前の語に付けて1つの語として分ける", () => {
+    expect(
+      splitIntoPhrases("1,728 → 31のフィルタリングパイプライン"),
+    ).toContain("フィルタリング");
+    expect(splitIntoPhrases("フィルタリング全体の流れ")[0]).toBe(
+      "フィルタリング",
+    );
+    expect(
+      splitIntoPhrases("デザイントークンの移行", { countedName: true }),
+    ).toEqual(["デザイン", "トークンの", "移行"]);
+  });
+
   test("BudouX が語の中に置く境目で区切らない", () => {
     expect(splitIntoPhrases("見た目が同じでも")).toContain("見た目が");
     expect(
@@ -390,6 +467,17 @@ describe("splitIntoPhrases の名前に括弧で数を添えたもの（countedN
       "連載",
     ]);
     expect(splitIntoPhrases("ツールガイド", counted)).toEqual(["ツールガイド"]);
+  });
+
+  test("見出しの狭い行に収まらない片仮名の続きは、欠片をつないだ語と、となりの語のあいだで区切る", () => {
+    expect(splitIntoPhrases("メールアドレスバリデーター", counted)).toEqual([
+      "メールアドレス",
+      "バリデーター",
+    ]);
+    expect(splitIntoPhrases("リファクタリング（3）", counted)).toEqual([
+      "リファクタリング",
+      "（3）",
+    ]);
   });
 
   test("区切りは禁則を満たし、名前の切れ端はどれも1行を作ってよい長さを持つ", () => {

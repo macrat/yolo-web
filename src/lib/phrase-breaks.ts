@@ -22,6 +22,13 @@
  */
 import "server-only";
 import { jaModel, loadDefaultJapaneseParser } from "budoux";
+import {
+  scriptOf,
+  toGraphemes,
+  type Word,
+  wordStartsOf,
+  wordsOf,
+} from "@/lib/word-starts";
 
 /** 行の頭に置かない字。閉じ括弧・句読点・感嘆符と疑問符・リーダ・中点類・小書きの仮名・長音符・繰り返し記号。 */
 const NO_LINE_START =
@@ -106,22 +113,6 @@ export function parenDepthAfter(depth: number, text: string): number {
   return next;
 }
 
-const graphemes = new Intl.Segmenter("ja", { granularity: "grapheme" });
-const words = new Intl.Segmenter("ja", { granularity: "word" });
-
-function toGraphemes(text: string): string[] {
-  return Array.from(graphemes.segment(text), ({ segment }) => segment);
-}
-
-type Script = "han" | "katakana" | "hiragana" | "other";
-
-function scriptOf(grapheme: string): Script {
-  if (/^[\p{Script=Katakana}ー]/u.test(grapheme)) return "katakana";
-  if (/^[\p{Script=Han}々〻]/u.test(grapheme)) return "han";
-  if (/^\p{Script=Hiragana}/u.test(grapheme)) return "hiragana";
-  return "other";
-}
-
 /** chars[from] から同じ字の種類が続く字数。step が -1 なら前へ数える。 */
 function scriptRunLength(chars: string[], from: number, step: 1 | -1): number {
   const script = scriptOf(chars[from]);
@@ -189,52 +180,6 @@ function isListedHiraganaWord(chars: string[], index: number): boolean {
   while (end < chars.length - 1 && scriptOf(chars[end + 1]) === "hiragana")
     end += 1;
   return chars[start - 1] === MIDDLE_DOT || chars[end + 1] === MIDDLE_DOT;
-}
-
-interface Word {
-  start: number;
-  end: number;
-  text: string;
-}
-
-/** 片仮名の続きを語に刻んだ切れ端の字の数の下限。これより短い切れ端があれば、その続きの刻みを信じない。 */
-const MIN_KATAKANA_WORD = 3;
-
-/** text を Intl.Segmenter で語に刻み、字の番号で返す。 */
-function wordsOf(text: string): Word[] {
-  const out: Word[] = [];
-  let start = 0;
-  for (const { segment } of words.segment(text)) {
-    const length = toGraphemes(segment).length;
-    out.push({ start, end: start + length, text: segment });
-    start += length;
-  }
-  return out;
-}
-
-/**
- * 語の頭の位置（字の番号）。Intl.Segmenter の語の境目のうち、片仮名の続きの中の境目は、その続きのどの切れ端も
- * 3字以上のときだけ採る。辞書に無い外来語は短い切れ端に刻まれる（「リ|ファクタ|リング」「デザイン|トーク|ン」）ので、
- * その続きの中は語の頭にしない。
- */
-function wordStartsOf(chars: string[], text: string): Set<number> {
-  const all = wordsOf(text);
-  const starts = new Set(all.map((word) => word.start).filter((i) => i > 0));
-  let run = 0;
-  while (run < chars.length) {
-    if (scriptOf(chars[run]) !== "katakana") {
-      run += 1;
-      continue;
-    }
-    let end = run;
-    while (end < chars.length && scriptOf(chars[end]) === "katakana") end += 1;
-    const inside = all.filter((word) => word.start >= run && word.end <= end);
-    if (inside.some((word) => word.end - word.start < MIN_KATAKANA_WORD)) {
-      for (let index = run + 1; index < end; index += 1) starts.delete(index);
-    }
-    run = end;
-  }
-  return starts;
 }
 
 /** 漢字か片仮名を含む語の中の位置か（BudouX が語の中に置く境目「見た|目」「切り|替え」を見分ける）。 */
@@ -501,7 +446,7 @@ function splitWidePhraseAtWords(phrase: string): string[] {
   }
   const scores = boundaryScores(phrase);
   const candidates: { index: number; rank: number; score: number }[] = [];
-  for (const index of wordStartsOf(chars, phrase)) {
+  for (const index of wordStartsOf(phrase)) {
     if (depths[index] > 0) continue;
     const rank = wordBreakRank(chars[index - 1], chars[index]);
     if (rank !== undefined) {
@@ -542,7 +487,7 @@ function splitNameAtWords(text: string): string[] {
   const chars = toGraphemes(text);
   const depths = parenDepths(chars);
   const starts = new Set(
-    [...wordStartsOf(chars, text)].filter((index) => {
+    [...wordStartsOf(text)].filter((index) => {
       if (
         scriptOf(chars[index - 1]) !== "katakana" ||
         scriptOf(chars[index]) !== "katakana"
