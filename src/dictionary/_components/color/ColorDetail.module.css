@@ -1,98 +1,53 @@
 /*
- * 伝統色の詳細。色そのものが中身なので、色見本はその色の大きな色面で見せる（コンテンツの色・§2）。
- * HEX・RGB・HSL は桁の揃う数字で組み、値の横にコピーのボタンを置く。
+ * 伝統色の詳細（DESIGN.md §5 ページの割り方）。主見出しとセクションの見出しは h1・h2 の既定の大きさ（§4）に従い、
+ * 最初のセクションの中の小見出し（h2）だけを §4 の小見出しの段にする。セクションのあいだの全幅の罫線と余白は
+ * Section が持つ。
  */
 
-.detail {
-  max-width: var(--measure);
-  margin: 0 auto;
+/* 色名の読み（ローマ字）。主見出しのすぐ下に添える補助情報（§4・§7 の読みと同じ組み）。 */
+.reading {
+  margin-block-start: var(--space-8);
+  color: var(--ink-2);
+  font-size: var(--text-small);
 }
 
 /*
- * 色見本: 幅いっぱいの大きな色面。地の色は項目の色で、インライン style の color.hex で与え、
- * 細い線で囲む。
+ * 色見本（§2 のコンテンツの色・§5 の中身を大きく見せる見本）。色を名指す主見出しと読みのすぐ下に、主見出しと
+ * 同じ左端から置く。地の色は項目の色で、インライン style の color.hex で与える。淡い色が背景に溶けないよう、
+ * 細い線で囲む。幅は本文の幅までの大きな色面にする。
  */
 .swatch {
-  width: 100%;
-  height: 200px;
-  border-radius: var(--radius);
-  margin-bottom: var(--space-24);
-  border: 1px solid var(--rule);
+  inline-size: 100%;
+  max-inline-size: var(--measure);
+  block-size: 150px;
+  margin-block-start: var(--space-16);
+  border: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* h1（色名）: 書体は globals.css の見出しの規則に委ね、大きさと余白を整える。 */
-.title {
-  font-size: 1.5625rem; /* 25px */
-  margin-bottom: var(--space-24);
-  color: var(--ink);
-}
-
-.section {
-  margin-bottom: var(--space-32);
-}
-
-/* 小見出し: 見出しの書体・墨・一本罫で仕切る。 */
-.section h2 {
-  font-size: 1.25rem; /* 20px */
-  margin-bottom: var(--space-16);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink);
-}
-
-/* カラーコードの表: 行どうしを罫で区切る。 */
-.codeTable {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1rem;
-}
-
-.codeTable th {
-  text-align: left;
-  color: var(--ink-2);
-  padding: var(--space-8) var(--space-16) var(--space-8) 0;
-  width: 4rem;
-  white-space: nowrap;
-}
-
-/* 値のセル: HEX・RGB・HSL を、桁の揃う本文の書体の数字で組む。 */
-.codeValue {
-  padding: var(--space-8) 0;
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-feature-settings: "tnum";
-}
-
-.codeAction {
-  padding: var(--space-8) 0;
-  text-align: right;
-  width: 6rem;
-}
-
-.codeTable tr {
-  border-bottom: 1px solid var(--rule);
-}
-
-/* 分類のページへ進むリンク。押すと別のページが開くので、下線で示す（§6）。
- * 下線と訪問済みの色は globals.css の a の既定に従う。タップの標的は 44px 以上で、字の左右の余白と、
- * 字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
-.categoryLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 0.9375rem; /* 15px */
-}
-
-/* 関連ツールへ進むリンク。categoryLink と同じく縁の見えないコントロールとして置く。 */
-.crossLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 1rem;
-}
-
-@media (max-width: 640px) {
+@media (min-width: 45rem) {
   .swatch {
-    height: 150px;
+    block-size: 200px;
   }
+}
+
+/* セクションの中の小見出し（§4 の段・§5）。上の細い罫線で、前の内容（色見本・表）と分ける。 */
+.subheading {
+  font-size: var(--text-heading-sub);
+  margin-block: var(--space-32) var(--space-16);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
+}
+
+/* カテゴリと関連ツールへ進むリンク。縁の見えないコントロールで、下線と訪問済みの色は globals.css の a の
+ * 既定に従う（§6）。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持ち、
+ * 押せる範囲の高さを 44px にする。 */
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
 }

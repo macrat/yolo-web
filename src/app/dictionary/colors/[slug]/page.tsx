@@ -55,8 +55,8 @@ export default async function ColorDetailPage({
       {(head) => (
         <ColorDetail
           color={color}
-          titlePhrases={splitIntoPhrases(title)}
-          titleFontAttr={headingFontAttr(title)}
+          namePhrases={splitIntoPhrases(color.name)}
+          nameFontAttr={headingFontAttr(color.name)}
           head={head}
         />
       )}
