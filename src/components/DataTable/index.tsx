@@ -22,8 +22,8 @@ import styles from "./DataTable.module.css";
  * - 区切りの並び: セルの字を折り所で分けた並び。データから来る字は、サーバーで splitIntoPhrases
  *   （@/lib/phrase-breaks）の表のセルの指定（tableCell）で分けたものを渡す。コードが組み立てる値
  *   （「36歳」「4ヶ月」「13日」）は、組み立てた単位ごとの並びをそのまま渡す。
- * - 要素: セルに置くコントロール（行の頭の開閉のボタンなど）。面の字は、その要素が区切りの並びで組む
- *   （Button の phrases など）。
+ * - 要素: セルに置くコントロール（行の頭の開閉のボタンなど）と、中身を見せる見本（色見本など）。要素が字を
+ *   持つときは、その要素が区切りの並びで組む（Button の phrases・PhrasedText など）。
  */
 export type DataTableCell = readonly string[] | ReactElement;
 

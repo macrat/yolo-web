@@ -1,6 +1,8 @@
 "use client";
 
-import { Fragment, useId, type Ref } from "react";
+import { useId, type Ref } from "react";
+import DataTable, { type DataTableRow } from "@/components/DataTable";
+import PhrasedText from "@/components/PhrasedText";
 import ResultBox from "@/components/ResultBox";
 import QuantityBars from "@/components/QuantityBars";
 import type {
@@ -26,14 +28,6 @@ const LOST_HEADING = ["4回", "間違えて", "終了"];
 
 const MISTAKE_LABELS = ["0ミス", "1ミス", "2ミス", "3ミス", "4ミス"];
 
-/** これまでの成績の名前。表のセルの中で文節の切れ目（<wbr>）で折るので、文節ごとに区切る。 */
-const RECORD_LABELS = {
-  played: ["遊んだ", "回数"],
-  winRate: ["勝った", "割合"],
-  currentStreak: ["続けて", "勝った", "日数"],
-  maxStreak: ["いちばん", "長く", "続けて", "勝った", "日数"],
-};
-
 /**
  * 解き終えた回の結果（DESIGN.md §8）。その回の結果（勝った回はミスの数、負けた回は当てた組の数と、
  * 当てられなかった組）と、それで更新されたこれまでの成績を、盤のすぐ下の結果のボックスに置く。
@@ -54,11 +48,23 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
       : 0;
-  const records = [
-    { label: RECORD_LABELS.played, value: `${stats.gamesPlayed}回` },
-    { label: RECORD_LABELS.winRate, value: `${winRate}%` },
-    { label: RECORD_LABELS.currentStreak, value: `${stats.currentStreak}日` },
-    { label: RECORD_LABELS.maxStreak, value: `${stats.maxStreak}日` },
+  const records: DataTableRow[] = [
+    {
+      key: "played",
+      header: ["遊んだ", "回数"],
+      cells: [[`${stats.gamesPlayed}回`]],
+    },
+    { key: "winRate", header: ["勝った", "割合"], cells: [[`${winRate}%`]] },
+    {
+      key: "currentStreak",
+      header: ["続けて", "勝った", "日数"],
+      cells: [[`${stats.currentStreak}日`]],
+    },
+    {
+      key: "maxStreak",
+      header: ["いちばん", "長く", "続けて", "勝った", "日数"],
+      cells: [[`${stats.maxStreak}日`]],
+    },
   ];
 
   return (
@@ -77,9 +83,12 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
         </p>
         {missedGroups.length > 0 && (
           <section className={styles.part} aria-labelledby={missedId}>
-            <h3 id={missedId} className={styles.subheading}>
-              当てられなかった組
-            </h3>
+            <PhrasedText
+              as="h2"
+              id={missedId}
+              className={styles.subheading}
+              phrases={["当てられなかった組"]}
+            />
             <ul className={styles.missed}>
               {missedGroups.map((group) => (
                 <li key={group.name}>
@@ -96,31 +105,21 @@ export default function GameResult({ gameState, stats, appear, ref }: Props) {
           </section>
         )}
         <section className={styles.part} aria-labelledby={statsId}>
-          <h3 id={statsId} className={styles.subheading}>
-            これまでの成績
-          </h3>
-          <table className={styles.stats}>
-            <tbody>
-              {records.map(({ label, value }) => (
-                <tr key={label.join("")}>
-                  <th scope="row">
-                    {label.map((phrase, index) => (
-                      <Fragment key={index}>
-                        {index > 0 && <wbr />}
-                        {phrase}
-                      </Fragment>
-                    ))}
-                  </th>
-                  <td>{value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <PhrasedText
+            as="h2"
+            id={statsId}
+            className={styles.subheading}
+            phrases={["これまでの", "成績"]}
+          />
+          <DataTable labelledBy={statsId} rows={records} />
         </section>
         <section className={styles.part} aria-labelledby={distributionId}>
-          <h4 id={distributionId} className={styles.subheading}>
-            ミスの数ごとの回数
-          </h4>
+          <PhrasedText
+            as="h2"
+            id={distributionId}
+            className={styles.subheading}
+            phrases={["ミスの", "数ごとの", "回数"]}
+          />
           <QuantityBars
             labelledBy={distributionId}
             items={stats.mistakeDistribution.map((count, mistakes) => ({

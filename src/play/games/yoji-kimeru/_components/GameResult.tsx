@@ -1,6 +1,8 @@
 "use client";
 
-import { Fragment, useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
+import DataTable, { type DataTableRow } from "@/components/DataTable";
+import PhrasedText from "@/components/PhrasedText";
 import ResultBox from "@/components/ResultBox";
 import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
 import ShareButtons from "@/components/ShareButtons";
@@ -69,17 +71,22 @@ export default function GameResult({
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
       : 0;
-  // 成績の名前は文節の切れ目（<wbr>）で折る（§4 表のセル）。名前は決まった文なので、切れ目もここに書く。
-  const records: { label: string[]; value: string }[] = [
-    { label: ["遊んだ", "回数"], value: `${stats.gamesPlayed}回` },
-    { label: ["正解した", "割合"], value: `${winRate}%` },
+  const records: DataTableRow[] = [
     {
-      label: ["続けて", "正解した", "日数"],
-      value: `${stats.currentStreak}日`,
+      key: "played",
+      header: ["遊んだ", "回数"],
+      cells: [[`${stats.gamesPlayed}回`]],
+    },
+    { key: "winRate", header: ["正解した", "割合"], cells: [[`${winRate}%`]] },
+    {
+      key: "currentStreak",
+      header: ["続けて", "正解した", "日数"],
+      cells: [[`${stats.currentStreak}日`]],
     },
     {
-      label: ["いちばん", "長く", "続けて", "正解した", "日数"],
-      value: `${stats.maxStreak}日`,
+      key: "maxStreak",
+      header: ["いちばん", "長く", "続けて", "正解した", "日数"],
+      cells: [[`${stats.maxStreak}日`]],
     },
   ];
   const distribution: QuantityBar[] = stats.guessDistribution.map(
@@ -108,29 +115,19 @@ export default function GameResult({
             {originSentences[answer.origin]}で、分類は「
             {categoryLabels[answer.category]}」です。
           </p>
-          <h3 id={statsHeadingId} className={styles.resultHeading}>
-            {difficultyNames[difficulty]}のこれまでの成績
-          </h3>
-          <table className={styles.statsTable} aria-labelledby={statsHeadingId}>
-            <tbody>
-              {records.map(({ label, value }) => (
-                <tr key={label.join("")}>
-                  <th scope="row">
-                    {label.map((phrase, k) => (
-                      <Fragment key={k}>
-                        {k > 0 && <wbr />}
-                        {phrase}
-                      </Fragment>
-                    ))}
-                  </th>
-                  <td>{value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <h3 id={distributionHeadingId} className={styles.resultHeading}>
-            何回目で正解したか（日数）
-          </h3>
+          <PhrasedText
+            as="h2"
+            id={statsHeadingId}
+            className={styles.resultHeading}
+            phrases={[`${difficultyNames[difficulty]}の`, "これまでの", "成績"]}
+          />
+          <DataTable labelledBy={statsHeadingId} rows={records} />
+          <PhrasedText
+            as="h2"
+            id={distributionHeadingId}
+            className={styles.resultHeading}
+            phrases={["何回目で", "正解したか", "（日数）"]}
+          />
           <QuantityBars
             labelledBy={distributionHeadingId}
             items={distribution}

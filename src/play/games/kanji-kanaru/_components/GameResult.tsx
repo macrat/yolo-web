@@ -11,6 +11,7 @@ import {
   MAX_GUESSES,
 } from "@/play/games/kanji-kanaru/_lib/types";
 import { generateShareText } from "@/play/games/kanji-kanaru/_lib/share";
+import DataTable, { type DataTableRow } from "@/components/DataTable";
 import ResultBox from "@/components/ResultBox";
 import PhrasedText from "@/components/PhrasedText";
 import QuantityBars from "@/components/QuantityBars";
@@ -19,7 +20,6 @@ import type { ItemListItem } from "@/components/ItemList";
 import NextPuzzleTime from "@/play/games/shared/_components/NextPuzzleTime";
 import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
-import ResultTable, { type ResultTableRow } from "./ResultTable";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface GameResultProps {
@@ -54,28 +54,47 @@ export default function GameResult({
   const isWon = status === "won";
   const difficultyLabel = DIFFICULTY_LABELS[difficulty];
 
-  const facts: ResultTableRow[] = targetKanji
+  const facts: DataTableRow[] = targetKanji
     ? [
-        { label: "音読み", value: targetKanji.onYomi },
-        { label: "訓読み", value: targetKanji.kunYomi },
-        { label: "意味", value: targetKanji.meanings, separator: ", " },
-        { label: "例", value: targetKanji.examples },
-      ].filter((fact) => fact.value.length > 0)
+        { key: "on", header: ["音読み"], items: targetKanji.onYomi },
+        { key: "kun", header: ["訓読み"], items: targetKanji.kunYomi },
+        {
+          key: "meaning",
+          header: ["意味"],
+          items: targetKanji.meanings,
+          separator: ", ",
+        },
+        { key: "example", header: ["例"], items: targetKanji.examples },
+      ]
+        .filter((fact) => fact.items.length > 0)
+        .map(({ key, header, items, separator }) => ({
+          key,
+          header,
+          cells: [listPhrases(items, separator)],
+        }))
     : [];
 
   const winRate =
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
       : 0;
-  const records: ResultTableRow[] = [
-    { label: "遊んだ日", value: [`${stats.gamesPlayed}日`], unbreakable: true },
-    { label: "正解率", value: [`${winRate}%`], unbreakable: true },
+  const records: DataTableRow[] = [
     {
-      label: "連続中",
-      value: [`${stats.currentStreak}日`],
-      unbreakable: true,
+      key: "played",
+      header: ["遊んだ日"],
+      cells: [[`${stats.gamesPlayed}日`]],
     },
-    { label: "最長連続", value: [`${stats.maxStreak}日`], unbreakable: true },
+    { key: "winRate", header: ["正解率"], cells: [[`${winRate}%`]] },
+    {
+      key: "currentStreak",
+      header: ["連続中"],
+      cells: [[`${stats.currentStreak}日`]],
+    },
+    {
+      key: "maxStreak",
+      header: ["最長連続"],
+      cells: [[`${stats.maxStreak}日`]],
+    },
   ];
 
   return (
@@ -93,14 +112,19 @@ export default function GameResult({
               ? `${guesses.length}回目で当てました。`
               : `${MAX_GUESSES}回のうちに当てられませんでした。`}
           </p>
-          {facts.length > 0 && <ResultTable rows={facts} />}
+          {facts.length > 0 && (
+            <DataTable
+              label={`「${targetKanji?.character}」の読みと意味`}
+              rows={facts}
+            />
+          )}
           <PhrasedText
             as="h2"
             id={statsHeadingId}
             className={styles.subHeading}
             phrases={[`${difficultyLabel}の`, "これまでの", "成績"]}
           />
-          <ResultTable rows={records} labelledBy={statsHeadingId} />
+          <DataTable labelledBy={statsHeadingId} rows={records} />
           <p id={distributionLabelId} className={styles.distributionLabel}>
             何回目で当てたか（当てた日の数）
           </p>
@@ -135,5 +159,18 @@ export default function GameResult({
       <NextGameBanner currentGameSlug="kanji-kanaru" />
       <CrossCategoryBanner items={crossCategoryItems} />
     </div>
+  );
+}
+
+/**
+ * 並べた語（読み・意味・例）を表のセルの区切りの並びにする。語を1つずつ文節にし、区切りの字（「、」「, 」）を
+ * 前の語に付けて、区切りの字のあとでだけ折る。
+ */
+function listPhrases(
+  items: readonly string[],
+  separator = "、",
+): readonly string[] {
+  return items.map((item, index) =>
+    index < items.length - 1 ? `${item}${separator}` : item,
   );
 }
