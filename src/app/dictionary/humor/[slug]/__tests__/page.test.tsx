@@ -162,6 +162,28 @@ describe("HumorDictEntryPage", () => {
     ).toBeInTheDocument();
   });
 
+  test("見出しは本文の小見出し（解説・用例）のあとに、関連語・評価・共有・一覧へ戻る道のセクションの順に並ぶ", async () => {
+    await renderPage("morning");
+    const headings = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((h) => h.textContent);
+    expect(headings).toEqual([
+      "解説",
+      "用例",
+      "関連語",
+      "この言葉を評価",
+      "この言葉を共有",
+      "ほかの言葉を探す",
+    ]);
+  });
+
+  test("最後のセクションに、ユーモア辞典の一覧へ戻るリンクを置く", async () => {
+    await renderPage("morning");
+    expect(
+      screen.getByRole("link", { name: "ユーモア辞典の一覧へ" }),
+    ).toHaveAttribute("href", "/dictionary/humor");
+  });
+
   test("throws notFound for unknown slug", async () => {
     vi.resetModules();
     await expect(async () => {

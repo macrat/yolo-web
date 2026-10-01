@@ -1,120 +1,50 @@
 /*
- * AI 造語（ユーモア辞典）詳細。
- * 見出し語を見出しの書体で大字、定義・解説・用例・関連語を罫と組版で組む。器は静か（紙・墨・罫のみ）。
- * 影・ピル・色付きカード・角丸装飾なし・全トークン経由。左揃え（§5）。
+ * ユーモア辞典の見出し語の詳細（DESIGN.md §5 ページの割り方）。主見出しとセクションの見出しは h1・h2 の既定の
+ * 大きさ（§4）に従い、最初のセクションの中の小見出し（解説・用例）だけを §4 の小見出しの段にする。
+ * セクションのあいだの全幅の罫線と余白は Section が持つ。
  */
 
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-32) var(--space-24) var(--space-64);
+/* 項目の本文。パンくずとのあいだをあける（§5 の間隔）。 */
+.entry {
+  margin-block-start: var(--space-16);
 }
 
-/* 読ませる面に絞る（§5）。 */
-.article {
-  max-width: var(--measure);
-  margin: 0 auto;
-}
-
-/* ファーストビュー: 見出し語・よみ・定義。強い罫で下を仕切る。 */
-.header {
-  padding: 0 0 var(--space-24);
-  margin-bottom: var(--space-32);
-  border-bottom: 1px solid var(--rule-strong);
-}
-
-.headingGroup {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-16);
-  margin-bottom: var(--space-16);
-  flex-wrap: wrap;
-}
-
-/* 大字: 見出し語を大きく。書体は globals.css の見出しの規則に委ね、大きさと余白だけ整える。 */
-.word {
-  font-size: 2.4375rem; /* 39px */
-  margin: 0;
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-/* よみ: 補助情報の墨（--ink-2・§2）。 */
+/* 見出し語の読み。主見出しのすぐ下に添える補助情報（§4・§7 の読みと同じ組み）。 */
 .reading {
-  font-size: 1rem;
+  margin-block-start: var(--space-8);
   color: var(--ink-2);
+  font-size: var(--text-small);
 }
 
-/*
- * ユーモア定義文（造語のオチ・この辞典の主役の一文）: 強い一本罫の引用で示す。
- * 色付きの座布団や角丸の包みは使わない（器は静か）。
- */
+/* 定義。項目の本文の最初の段落で、本文の幅で折り返す（§5）。 */
 .definition {
-  margin: 0;
-  padding: var(--space-16) var(--space-24);
-  border-left: 3px solid var(--rule-strong);
-  font-size: 1rem;
-  line-height: 1.9;
-  color: var(--ink);
+  max-width: var(--measure);
+  margin-block-start: var(--space-16);
 }
 
-.definition p {
-  margin: 0;
+/* セクションの中の小見出し（§4 の段・§5）。上の細い罫線で、前の内容と分ける。 */
+.subheading {
+  font-size: var(--text-heading-sub);
+  margin-block: var(--space-32) var(--space-16);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.section {
-  margin-bottom: var(--space-32);
+/* 解説と用例の本文。本文の幅で折り返す（§5）。 */
+.text {
+  max-width: var(--measure);
 }
 
-/* 小見出し: 見出しの書体・墨・一本罫で仕切る。 */
-.sectionTitle {
-  font-size: 1.25rem; /* 20px */
-  margin-bottom: var(--space-16);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink);
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
 }
 
-/* 解説: 読ませる本文（16px）。 */
-.explanation {
-  font-size: 1rem;
-  line-height: 1.9;
-  color: var(--ink);
-  margin: 0;
-}
-
-/* 用例: 一本罫の引用。 */
-.example {
-  margin: 0;
-  padding: var(--space-16) var(--space-24);
-  border-left: 3px solid var(--rule);
-  font-size: 1rem;
-  line-height: 1.9;
-  color: var(--ink-2);
-}
-
-.example p {
-  margin: 0;
-}
-
-/* 一覧へ戻る導線: 本文と一本罫で仕切り、リンクで示す。 */
-.backLink {
-  margin-top: var(--space-32);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
-}
-
-/* 縁の見えないコントロールとして置く。下線と訪問済みの色は globals.css の a の既定に従い、字の左右の余白と、
- * 字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
-.backLinkAnchor {
+/* 一覧へ戻るリンク。縁の見えないコントロールで、下線と訪問済みの色は globals.css の a の既定に従う（§6）。
+ * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持ち、押せる範囲の高さを
+ * 44px にする。 */
+.link {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  font-size: 1rem;
-}
-
-@media (max-width: 640px) {
-  .word {
-    font-size: 1.9375rem; /* 31px */
-  }
+  min-block-size: 44px;
 }

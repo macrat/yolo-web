@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 import ItemList from "@/components/ItemList";
 import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import ShareButtons from "@/components/ShareButtons";
 import {
   generateHumorDictEntryMetadata,
@@ -42,6 +43,11 @@ export async function generateMetadata({
   );
 }
 
+/**
+ * ユーモア辞典の見出し語の詳細（DESIGN.md §5 ページの割り方）。最初のセクションに、パンくずと項目の本文
+ * （主見出しの見出し語・読み・定義・解説・用例）を置く。そのあとに、関連語・評価・共有・一覧へ戻る道を、
+ * この順にそれぞれのセクションにする。
+ */
 export default async function HumorDictEntryPage({
   params,
 }: {
@@ -59,89 +65,103 @@ export default async function HumorDictEntryPage({
     .filter((e): e is NonNullable<typeof e> => e !== undefined);
 
   return (
-    <div className={styles.container}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "辞典", href: "/dictionary" },
-          { label: "ユーモア辞典", href: "/dictionary/humor" },
-          { label: entry.word, href: `/dictionary/humor/${entry.slug}` },
-        ]}
-      />
-      <article className={styles.article}>
-        {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}
-        <header className={styles.header}>
-          <div className={styles.headingGroup}>
-            <PhrasedText
-              as="h1"
-              className={styles.word}
-              phrases={splitIntoPhrases(entry.word)}
-              {...headingFontAttr(entry.word)}
-            />
-            <span className={styles.reading}>【{entry.reading}】</span>
-          </div>
-          <blockquote className={styles.definition}>
-            <p>{entry.definition}</p>
-          </blockquote>
-        </header>
 
-        {/* 解説 */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>解説</h2>
-          <p className={styles.explanation}>{entry.explanation}</p>
-        </section>
+      <Section>
+        <Breadcrumb
+          items={[
+            { label: "ホーム", href: "/" },
+            { label: "辞典", href: "/dictionary" },
+            { label: "ユーモア辞典", href: "/dictionary/humor" },
+            { label: entry.word, href: `/dictionary/humor/${entry.slug}` },
+          ]}
+        />
+        <article className={styles.entry}>
+          <PhrasedText
+            as="h1"
+            phrases={splitIntoPhrases(entry.word)}
+            {...headingFontAttr(entry.word)}
+          />
+          <p className={styles.reading}>{entry.reading}</p>
+          <p className={styles.definition}>{entry.definition}</p>
 
-        {/* 用例 */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>用例</h2>
-          <blockquote className={styles.example}>
-            <p>{entry.example}</p>
-          </blockquote>
-        </section>
+          <PhrasedText
+            as="h2"
+            className={styles.subheading}
+            phrases={["解説"]}
+          />
+          <p className={styles.text}>{entry.explanation}</p>
 
-        {relatedEntries.length > 0 && (
-          <section className={styles.section}>
-            <h2 id={RELATED_HEADING_ID} className={styles.sectionTitle}>
-              関連語
-            </h2>
-            <ItemList
-              labelledBy={RELATED_HEADING_ID}
-              items={relatedEntries.map((related) => ({
-                name: related.word,
-                href: `/dictionary/humor/${related.slug}`,
-                reading: related.reading,
-                description: getDefinitionPreview(related.definition),
-              }))}
-            />
-          </section>
-        )}
+          <PhrasedText
+            as="h2"
+            className={styles.subheading}
+            phrases={["用例"]}
+          />
+          <p className={styles.text}>{entry.example}</p>
+        </article>
+      </Section>
 
-        {/* 評価ボタン */}
+      {relatedEntries.length > 0 && (
+        <Section>
+          <PhrasedText
+            as="h2"
+            id={RELATED_HEADING_ID}
+            className={styles.sectionHeading}
+            phrases={["関連語"]}
+          />
+          <ItemList
+            labelledBy={RELATED_HEADING_ID}
+            items={relatedEntries.map((related) => ({
+              name: related.word,
+              href: `/dictionary/humor/${related.slug}`,
+              reading: related.reading,
+              description: getDefinitionPreview(related.definition),
+            }))}
+          />
+        </Section>
+      )}
+
+      <Section>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionHeading}
+          phrases={["この", "言葉を", "評価"]}
+        />
         <EntryRatingButton slug={entry.slug} />
+      </Section>
 
-        {/* SNSシェアボタン */}
+      <Section>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionHeading}
+          phrases={["この", "言葉を", "共有"]}
+        />
         <ShareButtons
           url={`/dictionary/humor/${entry.slug}`}
           title={`【ユーモア辞書】${entry.word}: ${entry.definition} | yolos.net`}
           contentType="humor-dictionary"
           contentId={entry.slug}
         />
+      </Section>
 
-        {/* 一覧へ戻るリンク */}
-        <div className={styles.backLink}>
-          <Link
-            href="/dictionary/humor"
-            className={styles.backLinkAnchor}
-            data-text-box="inline"
-          >
-            ← ユーモア辞典一覧へ
-          </Link>
-        </div>
-      </article>
-    </div>
+      <Section>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionHeading}
+          phrases={["ほかの", "言葉を", "探す"]}
+        />
+        <Link
+          href="/dictionary/humor"
+          className={styles.link}
+          data-text-box="inline"
+        >
+          ユーモア辞典の一覧へ
+        </Link>
+      </Section>
+    </>
   );
 }
