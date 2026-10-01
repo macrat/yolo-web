@@ -39,24 +39,21 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
   default: () => <button data-testid="invite-friend-button">友達を招待</button>,
 }));
 
-// ResultPageShell は、ページが渡した値（添えた段落・誘い・説明・中身）をそのまま出す部品に替える
+// ResultPageShell は、ページが渡した値（添えた段落・説明・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   default: ({
     quiz,
     lead,
     description,
-    ctaText,
     children,
   }: {
     quiz: { meta: { questionCount: number } };
     lead?: string;
     description?: string;
-    ctaText: string;
     children: React.ReactNode;
   }) => (
     <div data-testid="result-page-shell">
       {lead && <p>{lead}</p>}
-      <a href="#try">{ctaText}</a>
       <p>全{quiz.meta.questionCount}問 / 登録不要</p>
       {description && <p>{description}</p>}
       {children}
@@ -161,18 +158,6 @@ describe("CharacterPersonalityResultPage catchphrase", () => {
     render(page);
 
     expect(screen.getByText("テストキャッチコピー")).toBeInTheDocument();
-  });
-});
-
-describe("CharacterPersonalityResultPage 最初の誘い", () => {
-  it("最初の誘いのボタンが表示されること", async () => {
-    const params = Promise.resolve({ resultId: "blazing-strategist" });
-    const page = await CharacterPersonalityResultPage({ params });
-    render(page);
-
-    const ctaButtons =
-      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
-    expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
   });
 });
 

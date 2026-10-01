@@ -108,4 +108,33 @@ describe("Breadcrumb", () => {
     expect(parsed.itemListElement[2].name).toBe("文字数カウント");
     expect(parsed.itemListElement[2].item).toBe(`${BASE_URL}/tools/char-count`);
   });
+
+  test("名前の区切りの並びを渡した項目は、文節の切れ目に折り所を持ち、構造化データの名前は区切らない", () => {
+    const { container } = render(
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          {
+            label: "日本にしかいない動物で性格診断",
+            phrases: ["日本に", "しかいない", "動物で", "性格診断"],
+            href: "/play/animal-personality",
+          },
+        ]}
+      />,
+    );
+    const link = screen.getByRole("link", {
+      name: "日本にしかいない動物で性格診断",
+    });
+    expect(link.querySelectorAll("wbr")).toHaveLength(3);
+    expect(
+      screen.getByRole("link", { name: "ホーム" }).querySelector("wbr"),
+    ).toBeNull();
+    const parsed = JSON.parse(
+      container.querySelector('script[type="application/ld+json"]')!
+        .textContent ?? "",
+    );
+    expect(parsed.itemListElement[1].name).toBe(
+      "日本にしかいない動物で性格診断",
+    );
+  });
 });

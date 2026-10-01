@@ -9,6 +9,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
+import { readingTableCells } from "@/play/quiz/readingTableCells";
 import ContrarianFortuneContent from "@/play/quiz/_components/ContrarianFortuneContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -23,9 +25,6 @@ type Props = {
 
 const SLUG = "contrarian-fortune";
 const quiz = contrarianFortuneQuiz;
-
-/** 診断への誘いの文言。375px の画面で1行に収まる長さに保つ。 */
-export const CTA_TEXT = "あなたも診断してみよう";
 
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
@@ -78,9 +77,9 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
   if (!dc || dc.variant !== "contrarian-fortune") notFound();
   const cfDc = dc as ContrarianFortuneDetailedContent;
 
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #逆張り運勢診断 #yolosnet`;
+  const { hashtag, ctaText } = resultTexts(SLUG);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = CTA_TEXT;
 
   return (
     <ResultPageShell
@@ -90,10 +89,10 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
       shareUrl={shareUrl}
       lead={cfDc.catchphrase}
       description={result.description}
-      ctaText={ctaText}
     >
       <ContrarianFortuneContent
         detailedContent={cfDc}
+        tableCells={readingTableCells([cfDc])}
         afterThirdPartyNote={
           <div className={styles.cta2Section}>
             <Link

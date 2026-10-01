@@ -16,7 +16,7 @@ import characterPersonalityQuiz from "@/play/quiz/data/character-personality";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { phraseFaq } from "@/lib/faq-phrases";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
-import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
+import { solvedScreenPhrases } from "@/play/quiz/solvedScreenPhrases";
 
 /** /storybook は開発者向けのコンポーネントカタログ。
  * 来訪者の目に触れる想定はないため `robots: noindex` を指定する。
@@ -59,7 +59,7 @@ const VOICE_OVER_TYPE_IDS = [
   "guardian-charger",
 ];
 
-/** character-personality の解き終えた画面の見本。24タイプの見出しと読みものの小見出しの区切りを、ここで作って渡す。 */
+/** character-personality の解き終えた画面の見本。24タイプの見出し・読みものの小見出し・表のセルの区切りを、ここで作って渡す。 */
 function characterSolvedScreen(): SolvedScreenSample {
   const { meta, results } = characterPersonalityQuiz;
   return {
@@ -67,7 +67,7 @@ function characterSolvedScreen(): SolvedScreenSample {
     quizName: meta.shortTitle ?? meta.title,
     quizSlug: meta.slug,
     results,
-    ...solvedScreenHeadings(characterPersonalityQuiz),
+    ...solvedScreenPhrases(characterPersonalityQuiz),
   };
 }
 

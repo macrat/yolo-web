@@ -64,6 +64,7 @@ function renderQuiz() {
       quiz={quiz}
       resultHeadings={{}}
       readingHeadings={{}}
+      tableCells={{}}
     />,
   );
 }

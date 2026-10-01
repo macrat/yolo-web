@@ -160,6 +160,7 @@ async function playToLevelEnd(
       quiz={quiz}
       resultHeadings={resultHeadings}
       readingHeadings={{}}
+      tableCells={{}}
       recommendedContents={recommendedContents}
     />,
   );
@@ -293,6 +294,7 @@ describe("QuizContainer — 結果に着いたとき", () => {
         quiz={quiz}
         resultHeadings={{ "type-a": { phrases: ["タイプA"] } }}
         readingHeadings={{}}
+        tableCells={{}}
       />,
     );
     expect(scrollIntoViewSpy).not.toHaveBeenCalled();

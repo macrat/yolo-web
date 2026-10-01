@@ -35,8 +35,8 @@ interface OtherTypesNavProps {
 /**
  * 診断の全タイプを並べ、いまのタイプを示す。結果を受け取った来訪者が、ほかに何があるかを眺める一覧。
  *
- * 面（解き終えた画面の ResultCard と、結果のページの ResultPageShell）が、読みもののセクションのあとに置く。
- * 1つのセクションで、見出しはどちらの面でもセクションの見出しの段（§4）。全件の一覧なので、見出しがタイプの数を
+ * 面（解き終えた画面の ResultCard と、結果のページの ResultPageShell）が、その結果についての区画のあとに、ページの
+ * セクション（Section）に入れて置く。1つのセクションで、見出しはどちらの面でもセクションの見出しの段（§4）。全件の一覧なので、見出しがタイプの数を
  * 言う（DESIGN.md §7）。見出しは名前に括弧で数を添えたものなので、名前の中の語の切れ目と始め括弧の前でだけ折る
  * （§4。splitIntoPhrases の countedName と同じ分け方）。タイプ名は長い句なので、段組みにせず1行1項目で組む。
  * サーバーでも描けるよう、フックは useId だけにする。
@@ -70,7 +70,7 @@ export default function OtherTypesNav({
   const currentResultHref = getPlayResultPath(quizSlug, currentResultId);
 
   return (
-    <section className={styles.section} aria-labelledby={headingId}>
+    <section aria-labelledby={headingId}>
       <PhrasedText
         as="h2"
         id={headingId}

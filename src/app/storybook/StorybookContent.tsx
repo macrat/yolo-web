@@ -275,7 +275,7 @@ export interface PhrasedSample {
   description: string;
 }
 
-/** 診断の解き終えた画面の見本。見出しの区切りは、サーバーの page.tsx が全タイプぶん作る。 */
+/** 診断の解き終えた画面の見本。見出しと表のセルの区切りは、サーバーの page.tsx が全タイプぶん作る。 */
 export interface SolvedScreenSample {
   quizTitle: string;
   quizSlug: string;
@@ -284,6 +284,7 @@ export interface SolvedScreenSample {
   quizName: string;
   resultHeadings: Readonly<Record<string, ResultHeading>>;
   readingHeadings: Readonly<Record<string, readonly string[]>>;
+  tableCells: Readonly<Record<string, readonly string[]>>;
 }
 
 /** 画像の結果の見本。size は画像の一辺の px。 */
@@ -1609,6 +1610,7 @@ export default function StorybookContent({
         result={solvedResult}
         heading={solvedScreen.resultHeadings[solvedResult.id]}
         readingHeadings={solvedScreen.readingHeadings}
+        tableCells={solvedScreen.tableCells}
         quizType="personality"
         quizTitle={solvedScreen.quizTitle}
         quizName={solvedScreen.quizName}

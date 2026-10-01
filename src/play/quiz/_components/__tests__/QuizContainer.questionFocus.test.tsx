@@ -89,6 +89,7 @@ async function startQuiz(quiz: QuizDefinition) {
       quiz={quiz}
       resultHeadings={{}}
       readingHeadings={{}}
+      tableCells={{}}
     />,
   );
   const startBtn = screen.getByRole("button", { name: "はじめる" });

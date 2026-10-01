@@ -29,24 +29,34 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// ResultPageShell は、ページが渡した値（誘い・説明・中身・共有の文）をそのまま出す部品に替える
+// 診断ごとに決まった文。知識のクイズと性格診断で誘いの文が違う形を、ここで決める
+const { mockResultTexts } = vi.hoisted(() => ({
+  mockResultTexts: (slug: string) => ({
+    hashtag: `${slug}のタグ`,
+    ctaText:
+      slug === "knowledge-quiz"
+        ? "あなたも挑戦してみよう"
+        : "あなたはどのタイプ? 診断してみよう",
+  }),
+}));
+vi.mock("@/play/quiz/resultTexts", () => ({ resultTexts: mockResultTexts }));
+
+// ResultPageShell は、ページが渡した値（説明・中身・共有の文）と、診断の誘いの文をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   default: ({
     quiz,
     description,
-    ctaText,
     children,
     shareText,
   }: {
-    quiz: { meta: { title: string; questionCount: number } };
+    quiz: { meta: { slug: string; title: string; questionCount: number } };
     description?: string;
-    ctaText: string;
     children: React.ReactNode;
     shareText: string;
   }) => (
     <div data-testid="result-page-shell">
       <p>{quiz.meta.title}の結果</p>
-      <a href="#try">{ctaText}</a>
+      <a href="#try">{mockResultTexts(quiz.meta.slug).ctaText}</a>
       <p>全{quiz.meta.questionCount}問 / 登録不要</p>
       {description && <p>{description}</p>}
       {children}
@@ -62,6 +72,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "knowledge-quiz",
       {
         meta: {
+          slug: "knowledge-quiz",
           title: "知識クイズ",
           shortDescription: "知識クイズの短い説明",
           type: "knowledge",
@@ -81,6 +92,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "personality-quiz",
       {
         meta: {
+          slug: "personality-quiz",
           title: "性格診断",
           shortDescription: "性格診断の短い説明",
           type: "personality",
@@ -100,6 +112,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "reading-quiz",
       {
         meta: {
+          slug: "reading-quiz",
           title: "言葉診断",
           shortDescription: "言葉診断の短い説明",
           type: "personality",
@@ -120,6 +133,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "reading-long-quiz",
       {
         meta: {
+          slug: "reading-long-quiz",
           title: "あなたの言葉センス診断",
           shortDescription: "言葉センス診断の短い説明",
           type: "personality",
@@ -140,6 +154,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "short-title-quiz",
       {
         meta: {
+          slug: "short-title-quiz",
           title: "あなたの性格を天気に例えると?",
           shortTitle: "天気で性格診断",
           shortDescription: "天気で性格診断の短い説明",
@@ -160,6 +175,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "japanese-culture",
       {
         meta: {
+          slug: "japanese-culture",
           title: "日本文化診断",
           shortDescription: "日本文化診断の短い説明",
           type: "personality",
@@ -176,6 +192,7 @@ vi.mock("@/play/quiz/registry", () => ({
       "personality-with-detailed",
       {
         meta: {
+          slug: "personality-with-detailed",
           title: "詳細診断",
           shortDescription: "詳細診断の短い説明",
           type: "personality",
@@ -215,7 +232,7 @@ vi.mock("@/play/quiz/data/japanese-culture", () => ({
 }));
 
 describe("PlayQuizResultPage 診断への誘い", () => {
-  it("knowledge タイプのクイズでは「あなたも挑戦してみよう」と表示する", async () => {
+  it("診断ごとに決まった誘いの文を言う（知識のクイズ）", async () => {
     const params = Promise.resolve({
       slug: "knowledge-quiz",
       resultId: "result-a",
@@ -226,7 +243,7 @@ describe("PlayQuizResultPage 診断への誘い", () => {
     expect(screen.getByText("あなたも挑戦してみよう")).toBeInTheDocument();
   });
 
-  it("personality タイプのクイズでは「あなたはどのタイプ? 診断してみよう」と表示する", async () => {
+  it("診断ごとに決まった誘いの文を言う（性格診断）", async () => {
     const params = Promise.resolve({
       slug: "personality-quiz",
       resultId: "result-x",
@@ -317,18 +334,18 @@ describe("ページの題と共有の文", () => {
     expect(metadata.title).toBe("Xタイプ | 性格診断の結果 | yolos.net");
     render(await PlayQuizResultPage({ params }));
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
-      /^性格診断の結果は「Xタイプ」でした！あなたは\? #性格診断 #yolosnet$/,
+      /^性格診断の結果は「Xタイプ」でした！あなたは\? #personality-quizのタグ #yolosnet$/,
     );
   });
 
-  it("短い名前を持つ診断は、共有の文で短い名前を言い、ハッシュタグは正式な名前から作る", async () => {
+  it("短い名前を持つ診断は、共有の文で短い名前を言い、ハッシュタグは題から作らず診断ごとに決まった語にする", async () => {
     const params = Promise.resolve({
       slug: "short-title-quiz",
       resultId: "result-s",
     });
     render(await PlayQuizResultPage({ params }));
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
-      /^天気で性格診断の結果は「晴れタイプ」でした！あなたは\? #あなたの性格を天気に例えると\? #yolosnet$/,
+      /^天気で性格診断の結果は「晴れタイプ」でした！あなたは\? #short-title-quizのタグ #yolosnet$/,
     );
   });
 

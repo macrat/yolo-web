@@ -3,7 +3,7 @@
  *
  * テスト対象:
  * - behaviors / persona / thirdPartyNote の3セクション表示
- * - humorMetrics テーブル（存在する場合のみ表示）
+ * - humorMetrics テーブル（存在する場合のみ表示。セルは受け取った区切りで折る）
  * - 小見出しの段（h3）と、すべてのタイプを持たないこと
  * - afterThirdPartyNote スロット
  */
@@ -36,9 +36,24 @@ const sampleContentWithMetrics: ContrarianFortuneDetailedContent = {
   ],
 };
 
+/** 表のセルの区切り。サーバーの readingTableCells が作るものの代わりに、書き手が分けた並びを渡す。 */
+const metricCells: Record<string, readonly string[]> = {
+  逆張り指数: ["逆張り", "指数"],
+  "98%": ["98%"],
+  流行回避率: ["流行", "回避率"],
+  最高レベル: ["最高", "レベル"],
+  独自路線度: ["独自", "路線度"],
+  "★★★★★": ["★★★★★"],
+};
+
 describe("ContrarianFortuneContent - 基本レンダリング", () => {
   it("behaviorsセクションが表示されること", () => {
-    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
+    render(
+      <ContrarianFortuneContent
+        detailedContent={sampleContent}
+        tableCells={{}}
+      />,
+    );
     expect(screen.getByText("あるある行動")).toBeInTheDocument();
     expect(
       screen.getByText("人気のカフェに行かない理由を3つ以上言える。"),
@@ -49,7 +64,12 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
   });
 
   it("personaセクションが表示されること", () => {
-    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
+    render(
+      <ContrarianFortuneContent
+        detailedContent={sampleContent}
+        tableCells={{}}
+      />,
+    );
     expect(screen.getByText("このタイプの人物像")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -59,7 +79,12 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
   });
 
   it("thirdPartyNoteセクションが表示されること", () => {
-    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
+    render(
+      <ContrarianFortuneContent
+        detailedContent={sampleContent}
+        tableCells={{}}
+      />,
+    );
     expect(
       screen.getByText("このタイプの人と一緒にいると"),
     ).toBeInTheDocument();
@@ -74,7 +99,10 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
 describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () => {
   it("humorMetricsが存在しない場合、テーブルが表示されないこと", () => {
     const { container } = render(
-      <ContrarianFortuneContent detailedContent={sampleContent} />,
+      <ContrarianFortuneContent
+        detailedContent={sampleContent}
+        tableCells={{}}
+      />,
     );
     expect(container.querySelector("table")).toBeNull();
     expect(screen.queryByText("このタイプを数字で見ると")).toBeNull();
@@ -82,24 +110,45 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
 
   it("humorMetricsが存在する場合、テーブルが表示されること", () => {
     render(
-      <ContrarianFortuneContent detailedContent={sampleContentWithMetrics} />,
+      <ContrarianFortuneContent
+        detailedContent={sampleContentWithMetrics}
+        tableCells={metricCells}
+      />,
     );
-    expect(screen.getByRole("table")).toBeInTheDocument();
-    // 表は自分の小見出しの下に置き、「一緒にいると」の区画の中身に見せない
+    // 表は自分の小見出しの下に置き、「一緒にいると」の区画の中身に見せない。表の名前は小見出しが言う
     expect(
       screen.getByRole("heading", { name: "このタイプを数字で見ると" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("table", { name: "このタイプを数字で見ると" }),
     ).toBeInTheDocument();
     expect(screen.getByText("逆張り指数")).toBeInTheDocument();
     expect(screen.getByText("98%")).toBeInTheDocument();
     expect(screen.getByText("流行回避率")).toBeInTheDocument();
     expect(screen.getByText("最高レベル")).toBeInTheDocument();
   });
+
+  it("指標の名前は行の見出しのセルで、セルは受け取った区切りの切れ目でだけ折る", () => {
+    render(
+      <ContrarianFortuneContent
+        detailedContent={sampleContentWithMetrics}
+        tableCells={metricCells}
+      />,
+    );
+    const rowHeader = screen.getByRole("rowheader", { name: "逆張り指数" });
+    expect(rowHeader.querySelectorAll("wbr")).toHaveLength(1);
+    const value = screen.getByRole("cell", { name: "最高レベル" });
+    expect(value.querySelectorAll("wbr")).toHaveLength(1);
+  });
 });
 
 describe("ContrarianFortuneContent - 見出しの段", () => {
   it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <ContrarianFortuneContent detailedContent={sampleContent} />,
+      <ContrarianFortuneContent
+        detailedContent={sampleContent}
+        tableCells={{}}
+      />,
     );
     expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
     expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
@@ -117,6 +166,7 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
     render(
       <ContrarianFortuneContent
         detailedContent={sampleContent}
+        tableCells={{}}
         afterThirdPartyNote={afterContent}
       />,
     );
@@ -128,7 +178,12 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
 
   it("afterThirdPartyNote が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(<ContrarianFortuneContent detailedContent={sampleContent} />);
+      render(
+        <ContrarianFortuneContent
+          detailedContent={sampleContent}
+          tableCells={{}}
+        />,
+      );
     }).not.toThrow();
   });
 });
@@ -136,7 +191,10 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
 describe("ContrarianFortuneContent - 読みものの組み方", () => {
   it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <ContrarianFortuneContent detailedContent={sampleContent} />,
+      <ContrarianFortuneContent
+        detailedContent={sampleContent}
+        tableCells={{}}
+      />,
     );
     for (const text of [sampleContent.persona, sampleContent.thirdPartyNote]) {
       expect(screen.getByText(text).tagName).toBe("P");

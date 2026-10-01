@@ -110,6 +110,8 @@ interface ResultCardProps {
   heading: ResultHeading;
   /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ったものを受け取る。 */
   readingHeadings: Readonly<Record<string, readonly string[]>>;
+  /** 詳しい読みものの表のセルの区切り。セルの字ごとに、サーバーで作ったものを受け取る。 */
+  tableCells: Readonly<Record<string, readonly string[]>>;
   quizType: QuizType;
   /** 診断の題（ハッシュタグと、端末の共有シートに渡す題に使う） */
   quizTitle: string;
@@ -284,6 +286,7 @@ function renderDetailedContent(
   content: DetailedContent,
   resultId: string,
   phrasesOf: PhrasesOf,
+  tableCells: Readonly<Record<string, readonly string[]>>,
   labels?: QuizMeta["resultPageLabels"],
   referrerTypeId?: string,
 ): React.ReactNode {
@@ -294,7 +297,7 @@ function renderDetailedContent(
   switch (content.variant) {
     case "contrarian-fortune": {
       const Comp = ContrarianFortuneContent;
-      return <Comp detailedContent={content} />;
+      return <Comp detailedContent={content} tableCells={tableCells} />;
     }
     case "character-fortune":
       // character-fortune は専用 *Content を持たず、常に
@@ -387,6 +390,7 @@ export default function ResultCard({
   result,
   heading,
   readingHeadings,
+  tableCells,
   quizType,
   quizTitle,
   quizName,
@@ -508,6 +512,7 @@ export default function ResultCard({
                 detailedContent,
                 result.id,
                 (text) => readingHeadings[text] ?? [text],
+                tableCells,
                 resultPageLabels,
                 referrerTypeId,
               )}

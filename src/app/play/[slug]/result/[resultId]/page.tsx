@@ -9,6 +9,7 @@ import {
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
 import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
 import {
   Reading,
@@ -203,13 +204,9 @@ export default async function PlayQuizResultPage({
   if (!result) notFound();
 
   // 末尾に「あなたは?」を追加してシェアした友人の興味を引く
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const { hashtag, ctaText } = resultTexts(slug);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
-
-  const ctaText =
-    quiz.meta.type === "personality"
-      ? "あなたはどのタイプ? 診断してみよう"
-      : "あなたも挑戦してみよう";
 
   const { detailedContent } = result;
   // variant を持つ詳しい読みものは、その診断の専用のルートが描く。
@@ -226,7 +223,6 @@ export default async function PlayQuizResultPage({
       shareText={shareText}
       shareUrl={shareUrl}
       description={result.description}
-      ctaText={ctaText}
     >
       {(standardReading || compat) && (
         <>

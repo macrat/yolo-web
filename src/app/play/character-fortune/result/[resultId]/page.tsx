@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
 import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
 import {
   Reading,
@@ -17,6 +18,7 @@ import {
   ReadingText,
 } from "@/play/quiz/_components/ResultReading";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { CHARACTER_FORTUNE_THIRD_PARTY_HEADING } from "@/play/quiz/readingHeadings";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -34,16 +36,6 @@ type Props = {
 
 const SLUG = "character-fortune";
 const quiz = characterFortuneQuiz;
-/** 第三者から見た場面の小見出し。コードに書いた決まった文なので、書き手が文節で区切った並びで持つ。 */
-export const THIRD_PARTY_HEADING = [
-  "この",
-  "キャラの",
-  "守護を",
-  "受けている",
-  "人と",
-  "一緒に",
-  "いると",
-] as const;
 
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
@@ -121,9 +113,9 @@ export default async function CharacterFortuneResultPage({
   const result = quiz.results.find((r) => r.id === resultId);
   if (!result) notFound();
 
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const { hashtag } = resultTexts(SLUG);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどのタイプ? 診断してみよう";
 
   // detailedContent は character-fortune では必ず存在する
   const cf = result.detailedContent;
@@ -169,7 +161,6 @@ export default async function CharacterFortuneResultPage({
       shareText={shareText}
       shareUrl={shareUrl}
       lead={cf.characterIntro}
-      ctaText={ctaText}
     >
       <Reading>
         <ReadingHeading
@@ -184,7 +175,7 @@ export default async function CharacterFortuneResultPage({
         />
         <ReadingText>{cf.characterMessage}</ReadingText>
 
-        <ReadingHeading phrases={THIRD_PARTY_HEADING} />
+        <ReadingHeading phrases={CHARACTER_FORTUNE_THIRD_PARTY_HEADING} />
         <ReadingText>{cf.thirdPartyNote}</ReadingText>
       </Reading>
 

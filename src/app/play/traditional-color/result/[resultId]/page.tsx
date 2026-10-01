@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
 import { resultNameWithReading } from "@/play/quiz/resultName";
 import TraditionalColorContent from "@/play/quiz/_components/TraditionalColorContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
@@ -72,9 +73,9 @@ export default async function TraditionalColorResultPage({ params }: Props) {
   if (!dc || dc.variant !== "traditional-color") notFound();
   const colorDc = dc as TraditionalColorDetailedContent;
 
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #伝統色診断 #yolosnet`;
+  const { hashtag, ctaText } = resultTexts(SLUG);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどの伝統色? 診断してみよう";
 
   return (
     <ResultPageShell
@@ -85,7 +86,6 @@ export default async function TraditionalColorResultPage({ params }: Props) {
       swatch={result.color}
       lead={colorDc.catchphrase}
       description={result.description}
-      ctaText={ctaText}
     >
       <TraditionalColorContent
         content={colorDc}

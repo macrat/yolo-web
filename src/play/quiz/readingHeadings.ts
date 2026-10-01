@@ -10,6 +10,20 @@ export const DEFAULT_READING_HEADINGS = {
   advice: ["この", "タイプの", "人への", "アドバイス"],
 } as const satisfies Record<string, readonly string[]>;
 
+/**
+ * あなたの守護キャラ診断の読みもののうち、第三者から見た場面の小見出し。どのタイプでも同じ決まった文なので、
+ * 書き手が文節で区切った並びで持つ。
+ */
+export const CHARACTER_FORTUNE_THIRD_PARTY_HEADING = [
+  "この",
+  "キャラの",
+  "守護を",
+  "受けている",
+  "人と",
+  "一緒に",
+  "いると",
+] as const;
+
 /** 既定の小見出しの文から、書き手が分けた区切りを引く。 */
 export const DEFAULT_READING_HEADING_PHRASES: Readonly<
   Record<string, readonly string[]>

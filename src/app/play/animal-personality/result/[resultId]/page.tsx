@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
 import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
 import AnimalPersonalityContent from "@/play/quiz/_components/AnimalPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
@@ -138,9 +139,9 @@ export default async function AnimalPersonalityResultPage({
     }
   }
 
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const { hashtag, ctaText } = resultTexts(SLUG);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどのタイプ? 診断してみよう";
 
   return (
     <ResultPageShell
@@ -150,7 +151,6 @@ export default async function AnimalPersonalityResultPage({
       shareUrl={shareUrl}
       lead={dc.catchphrase}
       description={result.description}
-      ctaText={ctaText}
     >
       <AnimalPersonalityContent
         content={dc}

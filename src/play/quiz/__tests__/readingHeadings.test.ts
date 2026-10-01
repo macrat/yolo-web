@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { followsPhraseRules } from "@/lib/phrase-breaks";
 import {
+  CHARACTER_FORTUNE_THIRD_PARTY_HEADING,
   DEFAULT_READING_HEADING_PHRASES,
   standardReadingHeadings,
 } from "../readingHeadings";
@@ -23,5 +24,13 @@ describe("既定の読みものの小見出し", () => {
       standardReadingHeadings({ traitsHeading: "この思考タイプの持ち味" })
         .traits,
     ).toBe("この思考タイプの持ち味");
+  });
+});
+
+describe("あなたの守護キャラ診断の第三者から見た場面の小見出し", () => {
+  test("書き手が分けた区切りは、見出しの区切りの禁則を満たす", () => {
+    expect(followsPhraseRules(CHARACTER_FORTUNE_THIRD_PARTY_HEADING)).toBe(
+      true,
+    );
   });
 });

@@ -368,7 +368,7 @@ vi.mock("next/link", () => ({
 function ResultCard(
   props: Omit<
     ComponentProps<typeof ResultCardComponent>,
-    "heading" | "readingHeadings" | "quizName" | "allResults"
+    "heading" | "readingHeadings" | "tableCells" | "quizName" | "allResults"
   > & { quizName?: string; allResults?: QuizResult[] },
 ) {
   return (
@@ -377,6 +377,7 @@ function ResultCard(
         phrases: [props.result.nameParts?.name ?? props.result.title],
       }}
       readingHeadings={{}}
+      tableCells={{}}
       {...props}
       quizName={props.quizName ?? props.quizTitle}
       allResults={props.allResults ?? [props.result]}
@@ -454,6 +455,7 @@ describe("ResultCard - 結果のボックス", () => {
         quizName={defaultProps.quizTitle}
         heading={{ phrases: ["締切3分前に", "本気出す", "炎の司令塔"] }}
         readingHeadings={{}}
+        tableCells={{}}
         allResults={[]}
       />,
     );
@@ -1104,6 +1106,7 @@ describe("ResultCard - セクションの並び", () => {
         readingHeadings={{
           このタイプのあるある: ["この", "タイプの", "あるある"],
         }}
+        tableCells={{}}
         detailedContent={content}
         allResults={[]}
       />,

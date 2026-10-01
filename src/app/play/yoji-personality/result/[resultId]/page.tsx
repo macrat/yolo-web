@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
 import YojiPersonalityContent from "@/play/quiz/_components/YojiPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -70,9 +71,9 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
   if (!dc || dc.variant !== "yoji-personality") notFound();
   const yojiDc = dc as YojiPersonalityDetailedContent;
 
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #四字熟語診断 #yolosnet`;
+  const { hashtag, ctaText } = resultTexts(SLUG);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどの四字熟語? 診断してみよう";
 
   return (
     <ResultPageShell
@@ -82,7 +83,6 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
       shareUrl={shareUrl}
       lead={yojiDc.catchphrase}
       description={result.description}
-      ctaText={ctaText}
     >
       <YojiPersonalityContent
         content={yojiDc}

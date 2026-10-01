@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import { resultTexts } from "@/play/quiz/resultTexts";
 import UnexpectedCompatibilityContent from "@/play/quiz/_components/UnexpectedCompatibilityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -23,9 +24,6 @@ type Props = {
 
 const SLUG = "unexpected-compatibility";
 const quiz = unexpectedCompatibilityQuiz;
-
-/** 診断への誘いの文言。375px の画面で1行に収まる長さに保つ。 */
-export const CTA_TEXT = "あなたの相性を診断してみよう";
 
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
@@ -77,9 +75,9 @@ export default async function UnexpectedCompatibilityResultPage({
   if (!dc || dc.variant !== "unexpected-compatibility") notFound();
   const ucDc = dc as UnexpectedCompatibilityDetailedContent;
 
-  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #斜め上の相性診断 #yolosnet`;
+  const { hashtag, ctaText } = resultTexts(SLUG);
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${hashtag} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = CTA_TEXT;
 
   return (
     <ResultPageShell
@@ -89,7 +87,6 @@ export default async function UnexpectedCompatibilityResultPage({
       shareUrl={shareUrl}
       lead={ucDc.catchphrase}
       description={result.description}
-      ctaText={ctaText}
     >
       <UnexpectedCompatibilityContent
         detailedContent={ucDc}

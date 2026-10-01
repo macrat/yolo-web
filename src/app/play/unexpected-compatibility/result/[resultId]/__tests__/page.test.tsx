@@ -3,11 +3,10 @@
  * - generateStaticParams が全8タイプのresultIdを返すこと
  * - generateMetadata が正しいメタデータを返すこと
  * - 相性機能（CompatibilityDisplay, InviteFriendButton）のコードが含まれないこと
- * - 誘いの文言（CTA_TEXT）が 375px の画面で1行に収まる字数であること
  */
 
 import { describe, it, expect } from "vitest";
-import { generateStaticParams, generateMetadata, CTA_TEXT } from "../page";
+import { generateStaticParams, generateMetadata } from "../page";
 
 describe("UnexpectedCompatibilityResultPage", () => {
   describe("generateStaticParams", () => {
@@ -84,14 +83,6 @@ describe("UnexpectedCompatibilityResultPage", () => {
       expect(
         (metadata.alternates as { canonical?: string })?.canonical,
       ).toContain("unexpected-compatibility");
-    });
-  });
-
-  describe("CTA_TEXT", () => {
-    it("誘いの文言が18字以下で、375px の画面で1行に収まる長さである", () => {
-      // yoji-personalityのCTAテキスト「あなたはどの四字熟語? 診断してみよう」は17文字。
-      // unexpected-compatibilityも同等の長さに揃える。
-      expect(CTA_TEXT.length).toBeLessThanOrEqual(18);
     });
   });
 });

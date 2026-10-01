@@ -1,11 +1,13 @@
-/* 結果のページ。コンテンツ幅の左端から組み（§5）、見出しはコンテンツ幅いっぱいに置く。 */
-.page {
-  padding-block: var(--space-24) var(--space-48);
-}
+/* 結果のページ。ページの割り方と、セクションのあいだの全幅の罫線と余白は Section が持つ（DESIGN.md §5）。
+ * どれもコンテンツ幅の左端から組み、見出しはコンテンツ幅いっぱいに置く。 */
 
-/* 何の診断の結果か・タイプ名・読み・色見本。 */
-.header {
-  margin-block: var(--space-24) var(--space-16);
+/* 最初のセクションの頭。パンくずと、何の診断の結果か・タイプ名・読み・色見本を、プレイ面の頭と同じ間隔で積み、
+ * その下の誘いとも同じ間隔をあける（§5 の間隔）。 */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
 }
 
 .quizName {
@@ -35,24 +37,18 @@
   border: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* タイプ名の説明から先は、本文の幅で組む。 */
-.body {
+/* 添えた段落・診断への誘い・タイプの説明。プレイ面の開始の画面と同じく上から同じ間隔で積み、段落は本文の幅で
+ * 折り返す（§4・§5）。 */
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-16);
   max-inline-size: var(--measure);
 }
 
-/* 添えた段落・診断への誘い・タイプの説明。後ろに続く読みもののセクションや共有の区画とは、このあとの余白で
- * 分かれる。 */
-.intro {
-  margin-block-end: var(--space-32);
-}
-
-.lead {
-  margin: 0 0 var(--space-24);
-}
-
-/* タイプの説明。全文を本文の段落で置く。 */
-.description {
-  margin: var(--space-24) 0 0;
+.intro > p {
+  margin: 0;
 }
 
 /* 主要な誘い: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
@@ -77,17 +73,7 @@
   color: var(--ink-2);
 }
 
-/* 共有の区画。ページに1つだけ置き、見出しが何を共有するかを言う（§8）。 */
-.share {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  margin-block-start: var(--space-32);
-  padding-block-start: var(--space-16);
-  border-block-start: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.shareHeading {
-  margin: 0;
-  font-size: var(--text-heading-sub);
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。見出しの大きさは h2 の既定（§4 のセクションの見出し）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
 }

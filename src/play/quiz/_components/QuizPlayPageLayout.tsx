@@ -15,7 +15,7 @@ import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
-import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
+import { solvedScreenPhrases } from "@/play/quiz/solvedScreenPhrases";
 import styles from "@/app/play/[slug]/page.module.css";
 
 interface QuizPlayPageLayoutProps {
@@ -40,8 +40,9 @@ interface QuizPlayPageLayoutProps {
  *
  * h1 はどの段階でも §4 の主見出しのまま置く。クイズの説明は、開始の画面が「はじめる」の下に置く。
  *
- * 解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品が描くデータから作る
- * 見出しなので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って渡す。
+ * 解き終えた画面の結果の見出し（タイプ名）・詳しい読みものの小見出し・読みものの表のセルは、クライアントの部品が
+ * 描くデータから作る字なので、区切りをここ（サーバー）で全件ぶん作って渡す（§4）。パンくずの診断名も、h1 と同じ
+ * 区切りで折る。FAQ の問いの区切りも、ここで作って渡す。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -52,7 +53,9 @@ export default async function QuizPlayPageLayout({
   const jsonLd = meta ? generatePlayJsonLd(meta) : null;
 
   const resultNextContents = toPlayListItems(getResultNextContents(slug));
-  const { resultHeadings, readingHeadings } = solvedScreenHeadings(quiz);
+  const { resultHeadings, readingHeadings, tableCells } =
+    solvedScreenPhrases(quiz);
+  const titlePhrases = splitIntoPhrases(quiz.meta.title);
   const faq = phraseFaq(quiz.meta.faq);
   const recommendHeading =
     quiz.meta.type === "knowledge"
@@ -75,12 +78,16 @@ export default async function QuizPlayPageLayout({
               items={[
                 { label: "ホーム", href: "/" },
                 { label: "遊び", href: "/play" },
-                { label: quiz.meta.title, href: `/play/${slug}` },
+                {
+                  label: quiz.meta.title,
+                  phrases: titlePhrases,
+                  href: `/play/${slug}`,
+                },
               ]}
             />
             <PhrasedText
               as="h1"
-              phrases={splitIntoPhrases(quiz.meta.title)}
+              phrases={titlePhrases}
               {...headingFontAttr(quiz.meta.title)}
             />
           </>
@@ -90,6 +97,7 @@ export default async function QuizPlayPageLayout({
         recommendedContents={resultNextContents}
         resultHeadings={resultHeadings}
         readingHeadings={readingHeadings}
+        tableCells={tableCells}
       />
 
       {faq.length > 0 && (

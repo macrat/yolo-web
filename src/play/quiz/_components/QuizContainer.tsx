@@ -49,6 +49,8 @@ type QuizContainerProps = {
   resultHeadings: Readonly<Record<string, ResultHeading>>;
   /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ってから受け取る。 */
   readingHeadings: Readonly<Record<string, readonly string[]>>;
+  /** 詳しい読みものの表のセルの区切り。セルの字ごとに、サーバーで作ってから受け取る。 */
+  tableCells: Readonly<Record<string, readonly string[]>>;
 };
 
 /**
@@ -64,6 +66,7 @@ export default function QuizContainer({
   recommendedContents,
   resultHeadings,
   readingHeadings,
+  tableCells,
 }: QuizContainerProps) {
   const [phase, setPhase] = useState<QuizPhase>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -247,6 +250,7 @@ export default function QuizContainer({
       result={result}
       heading={resultHeadings[result.id]}
       readingHeadings={readingHeadings}
+      tableCells={tableCells}
       quizType={quiz.meta.type}
       quizTitle={quiz.meta.title}
       quizName={quiz.meta.shortTitle ?? quiz.meta.title}

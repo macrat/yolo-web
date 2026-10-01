@@ -7,13 +7,27 @@ import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // パンくず・共有・関連の中身はそれぞれのテストが確かめるので、ここでは渡した値だけを出す部品に替える
 vi.mock("@/components/Breadcrumb", () => ({
-  default: ({ items }: { items: Array<{ label: string; href?: string }> }) => (
+  default: ({
+    items,
+  }: {
+    items: Array<{ label: string; href?: string; phrases?: string[] }>;
+  }) => (
     <nav aria-label="パンくずリスト">
       {items.map((item) => (
-        <span key={item.label}>{item.label}</span>
+        <span key={item.label} data-phrases={item.phrases?.join("|")}>
+          {item.label}
+        </span>
       ))}
     </nav>
   ),
+}));
+
+// 診断ごとの誘いの文は resultTexts.test.ts が確かめるので、ここでは決まった文を返す
+vi.mock("../../resultTexts", () => ({
+  resultTexts: () => ({
+    hashtag: "テストクイズ",
+    ctaText: "あなたはどのタイプ? 診断してみよう",
+  }),
 }));
 
 vi.mock("@/components/ShareButtons", () => ({
@@ -75,7 +89,6 @@ function renderShell(
       result={mockResult}
       shareText="シェアテキスト"
       shareUrl="https://example.com/result"
-      ctaText="あなたはどのタイプ? 診断してみよう"
       {...props}
     >
       {"children" in props ? props.children : <div>子コンテンツ</div>}
@@ -205,7 +218,7 @@ test("タイプ名のあとに、添えた段落・診断への誘い・説明�
   expect(screen.queryByRole("button")).toBeNull();
 });
 
-test("詳しい読みものを持つタイプは、ルートの中身をセクション「このタイプについて」（h2）に置き、そのあとにすべてのタイプ（h2）、共有の区画を続ける", () => {
+test("詳しい読みものを持つタイプは、ルートの中身をセクション「このタイプについて」（h2）に置き、そのあとに共有の区画、すべてのタイプ（h2）を続ける", () => {
   renderShell({
     quiz: readingQuiz,
     result: readingResult,
@@ -227,8 +240,8 @@ test("詳しい読みものを持つタイプは、ルートの中身をセク�
   const share = screen.getByRole("region", { name: "この結果を共有" });
   expect(reading).not.toContainElement(allTypes);
   for (const [before, after] of [
-    [reading, allTypes],
-    [allTypes, share],
+    [reading, share],
+    [share, allTypes],
   ]) {
     expect(
       before.compareDocumentPosition(after) & Node.DOCUMENT_POSITION_FOLLOWING,
@@ -290,14 +303,45 @@ test("共有の区画を1つだけ置き、見出し「この結果を共有」�
   expect(screen.getAllByTestId("share-buttons")).toHaveLength(1);
 });
 
-test("パンくずに、ホーム・遊び・診断・結果を並べる", () => {
-  renderShell();
+test("パンくずに、ホーム・遊び・診断・結果を並べ、診断の名前は文節の区切りで折る", () => {
+  renderShell({
+    quiz: {
+      ...mockQuiz,
+      meta: { ...mockQuiz.meta, title: "日本にしかいない動物で性格診断" },
+    },
+  });
 
   const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
   expect(breadcrumb).toHaveTextContent("ホーム");
   expect(within(breadcrumb).getByText("遊び")).toBeInTheDocument();
-  expect(breadcrumb).toHaveTextContent("テストクイズ");
   expect(breadcrumb).toHaveTextContent("結果");
+  const quizItem =
+    within(breadcrumb).getByText("日本にしかいない動物で性格診断");
+  expect(quizItem.dataset.phrases?.split("|").length).toBeGreaterThan(1);
+  expect(quizItem.dataset.phrases?.replaceAll("|", "")).toBe(
+    "日本にしかいない動物で性格診断",
+  );
+});
+
+test("ページはセクションを兄弟として並べ、最初のセクション・このタイプについて・この結果を共有・すべてのタイプ・関連の順に置く", () => {
+  const { container } = renderShell({
+    quiz: readingQuiz,
+    result: readingResult,
+    children: <div data-testid="child-content">子コンテンツ</div>,
+  });
+
+  const sections = [...container.children];
+  expect(sections.slice(0, 4).every((el) => el.tagName === "SECTION")).toBe(
+    true,
+  );
+  expect(sections[0]).toContainElement(
+    screen.getByRole("heading", { level: 1 }),
+  );
+  expect(sections[1]).toHaveTextContent(/^このタイプについて/);
+  expect(sections[2]).toHaveAccessibleName("この結果を共有");
+  expect(sections[3]).toHaveTextContent(/^すべてのタイプ（2）/);
+  expect(sections[4]).toHaveTextContent("related-test-quiz");
+  expect(sections[5]).toHaveTextContent("recommended-test-quiz");
 });
 
 test("関連の診断とおすすめに、いまの診断の slug を渡す", () => {

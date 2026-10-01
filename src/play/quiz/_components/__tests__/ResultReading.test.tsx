@@ -68,6 +68,14 @@ function readings(): ReactElement[] {
     <ContrarianFortuneContent
       key="contrarian"
       detailedContent={contentOf([contrarian], "contrarian-fortune")}
+      tableCells={Object.fromEntries(
+        (
+          contentOf([contrarian], "contrarian-fortune").humorMetrics ?? []
+        ).flatMap((metric) => [
+          [metric.label, [metric.label]],
+          [metric.value, [metric.value]],
+        ]),
+      )}
     />,
     <ImpossibleAdviceContent
       key="impossible"

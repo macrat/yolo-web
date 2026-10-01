@@ -1,10 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { followsPhraseRules } from "@/lib/phrase-breaks";
-import CharacterFortuneResultPage, {
-  THIRD_PARTY_HEADING,
-  generateMetadata,
-} from "../page";
+import CharacterFortuneResultPage, { generateMetadata } from "../page";
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
@@ -33,24 +29,21 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// ResultPageShell は、ページが渡した値（添えた段落・誘い・説明・中身）をそのまま出す部品に替える
+// ResultPageShell は、ページが渡した値（添えた段落・説明・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   default: ({
     quiz,
     lead,
     description,
-    ctaText,
     children,
   }: {
     quiz: { meta: { questionCount: number } };
     lead?: string;
     description?: string;
-    ctaText: string;
     children: React.ReactNode;
   }) => (
     <div data-testid="result-page-shell">
       {lead && <p>{lead}</p>}
-      <a href="#try">{ctaText}</a>
       <p>全{quiz.meta.questionCount}問 / 登録不要</p>
       {description && <p>{description}</p>}
       {children}
@@ -132,18 +125,6 @@ describe("CharacterFortuneResultPage characterIntro", () => {
     render(page);
 
     expect(screen.getByText("自己紹介テキスト")).toBeInTheDocument();
-  });
-});
-
-describe("CharacterFortuneResultPage 最初の誘い", () => {
-  it("最初の誘いのボタンが表示されること", async () => {
-    const params = Promise.resolve({ resultId: "commander" });
-    const page = await CharacterFortuneResultPage({ params });
-    render(page);
-
-    const ctaButtons =
-      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
-    expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -292,11 +273,5 @@ describe("CharacterFortuneResultPage resultIdが不正な場合", () => {
     await expect(CharacterFortuneResultPage({ params })).rejects.toThrow(
       "NEXT_NOT_FOUND",
     );
-  });
-});
-
-describe("第三者から見た場面の小見出し", () => {
-  it("書き手が区切った並びが、文節の区切りの禁則を満たす", () => {
-    expect(followsPhraseRules(THIRD_PARTY_HEADING)).toBe(true);
   });
 });
