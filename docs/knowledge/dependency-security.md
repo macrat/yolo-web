@@ -1,6 +1,6 @@
-# 依存パッケージの脆弱性対応と一括更新
+# 依存パッケージの脆弱性対応・一括更新・peer の衝突
 
-Dependabot アラート / `npm audit` が報告する脆弱性の優先度の決め方と、溜まった依存更新を安全に一括で当てるための知見。自動PRを個別にマージするだけで済まない規模のアラート群に当てはまる（運用上の入口は `.claude/skills/new-cycle-idea/catalog/address-to-security-and-dependency-issues.md`）。知見はすべて cycle-286（B-505: open 20件のアラートへの対応）で得たもので、実例の詳細は `docs/cycles/cycle-286/` にある。
+Dependabot アラート / `npm audit` が報告する脆弱性の優先度の決め方と、溜まった依存更新を安全に一括で当てるための知見。自動PRを個別にマージするだけで済まない規模のアラート群に当てはまる（運用上の入口は `.claude/skills/new-cycle-idea/catalog/address-to-security-and-dependency-issues.md`）。脆弱性と更新の知見は cycle-286（B-505: open 20件のアラートへの対応）で得たもので、実例の詳細は `docs/cycles/cycle-286/` にある。最後の節は、依存の optional peer がルートの版と衝突して `npm ci` が止まる件で、原因は cycle-313 で突き止めた。
 
 ## 優先度は「深刻度」でなく「到達性」で決める
 
@@ -41,3 +41,14 @@ Dependabot の high/medium/low は CVSS(最悪ケース)評価であって、こ
 推移的依存を patched 版へ固定する `overrides` は、親が自然に patched 版を引くようになったら外す。ピンを残し続けると upstream から乖離する。
 
 根拠: 推論（cycle-286）。`package.json` の postcss / eslint-plugin-react-hooks の override はこのとき入れたもので、解消は B-592 で追跡している。
+
+## `npm ci` の `Missing: typescript@5.9.3` は optional peer の衝突で、環境の制約ではない
+
+npm 10 の `npm ci` が `Missing: typescript@5.9.3 from lock file` で止まるのは、このリポジトリの依存の衝突による。`vite-tsconfig-paths` の下の `tsconfck` が `typescript@^5.0.0` を optional peer に持ち、ルートの `typescript`（6.0.3）がそれを満たさない。npm 10 は、それを満たす入れ子の typescript（`node_modules/vite-tsconfig-paths/node_modules/typescript` の 5.x）を lock に求め、lock にその入れ子が無いと止まる。入れ子を持つ lock は npm 10 でも npm 11 でも通る。入れ子の有無は lock を書いた npm によって変わり、lock の履歴には入れ子を足すコミットと消すコミット（Dependabot のものを含む）が並んでいる。
+
+CI（`.github/workflows/deploy.yml`）が Node 24（npm 11）で通り、作業のコンテナ（npm 10）でだけ止まるため、npm の版の違い、つまり環境の制約に見える。しかし原因は依存の木にあり、根から直せる（cycle-313 は、これを環境の制約として扱ったことを事故とした。incident-7）。
+
+- **根からの直し方**: `vite-tsconfig-paths` を外して Vite の `resolve.tsconfigPaths` に移す（Vite はネイティブのパス解決を持ち、テストを走らせるたびにその案内を出している）。`tsconfck` ごと消えて、衝突そのものが無くなる。cycle-313 でこれを入れて `npm ci` とゲートが通ったが、cycle-313 の成果物の revert で戻され、`vitest.config.mts` と `package.json` はいまも `vite-tsconfig-paths` を使う。
+- **回避**: lock が入れ子を持たないときは、lock を書き換えずに `npx -y npm@11 ci` で入れる。cycle-314 からはこの回避で入れている。回避は作業のコンテナでの `npm ci` を通すだけで、衝突は依存の木に残る。
+
+根拠: 確認と実測。原因と根からの直し方は cycle-313（`docs/cycles/cycle-313/incident-7.md`・`incident-8.md`、コミット 684c89f5）、回避は cycle-314・cycle-315 の index.md。cycle-316 で、入れ子の無い origin/main の lock は npm 10.9.7 の `npm ci` で止まって npm 11 で通り、入れ子のある lock は両方で通ることを再現した。

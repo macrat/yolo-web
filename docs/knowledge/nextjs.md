@@ -8,7 +8,7 @@
 
 動的ルート（`/play/[slug]/result/[resultId]/`）と同じ階層に専用ルート（例: `/play/animal-personality/result/[resultId]/`）を足しても、起動したままの開発サーバーは専用ルートではなく動的ルートで描く。本番のビルドでは専用ルートが使われるので、開発サーバーでは正しく動いているように見えて本番と違う画面を確かめることになる。
 
-**対処**: 専用ルートを足したあとの見た目の確認やレビューは、`npm run build && npx next start` で本番のビルドを起動して行う。
+**対処**: 専用ルートを足したあとの見た目の確認やレビューは、本番のビルドを起動して行う。ビルドと起動は `docs/knowledge/playwright-mcp.md` の「本番ビルドの実機検証の段取り」、起こし方・待ち方・止め方は同じファイルの「バックグラウンドのプロセスを起こして止める」の手順のとおりにする。
 
 **根拠**: 実測（cycle-149 で動的ルートで描かれ、開発サーバーの再起動で解消した。cycle-150 で本番のビルドでは専用ルートで描かれることを確かめた）。原因をルーティングの表がビルドのときに作られるためとするのは推論。
 
@@ -98,15 +98,12 @@ dev・build・start を繰り返すと、`next-server` のプロセスが残る�
 
 **解消の手順**:
 
-```bash
-ps -eo pid,ppid,args | grep next-server   # 残っているプロセスを探す
-kill <PID>                                # 自分が起動したものだけ止める
-npm run build                             # 最新のコードでビルドし直す
-npm run start &                           # 新しい next-server を起動する
-curl -I http://localhost:3000/path        # 200 が返ることを確かめる
-```
+1. `ps -eo pid,pgid,args | grep '[n]ext-server'` で、残っているプロセスとそのグループを見る。
+2. 残っているのが自分の起こしたグループ（自分の専用のディレクトリに書いた PGID のもの）なら、グループごと止める。自分のグループでなければ、ほかの作業者のサーバーなので止めずに、別のポートで起こす。
+3. `npm run build` で最新のコードでビルドし直す。
+4. `npm start` を起こし、待ち受けたことを確かめてから、`curl -I http://localhost:<番号>/path` で 200 が返ることを確かめる。
 
-止めるのは、起動したときに控えた自分の PID か、`/proc/<pid>/cwd` が自分の作業ツリーを指すものに限る。`pkill -f next-server` は、同じコンテナで動くほかのエージェントのサーバーまで止める（`docs/knowledge/playwright-mcp.md` の「本番ビルドの実機検証の段取り」）。
+止め方（2）、ポートの空きの確かめ・起こし方・ログに Ready が出るのを待つこと（4）は、`docs/knowledge/playwright-mcp.md` の「バックグラウンドのプロセスを起こして止める」の手順のとおりにする。`npm start` が起こす `next start` は自分の名前を `next-server` に替えるので、`npm` の PID だけを止めると `next-server` が残る。
 
 **根拠**: 実測（cycle-177 で、確かめるルートが 404 を返し続けた原因が古い `next-server` の残存だった）。
 
@@ -157,18 +154,19 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 
 ---
 
-## 11. `.next/dev/types/` の型ファイルが古いか壊れていると、commit と push の typecheck が落ちる
+## 11. `.next/` の型ファイルがいまの木と合わないと、typecheck と push の hook が落ちる
 
-`tsconfig.json` の `include` には `.next/dev/types/**/*.ts` が含まれる。`next dev` はここに `validator.ts`（その時点の全ルートのファイルへの相対 import）と `routes.d.ts` を生成する。`.next/` は git の管理の外なので git status に出ず、`npm run build` は別の `.next/types/` を作り直して通るため、「build は通るのに commit や push だけが落ちる」形で現れる。壊れ方は2つある。
+`tsconfig.json` の `include` には `.next/types/**/*.ts` と `.next/dev/types/**/*.ts` が含まれ、`next-env.d.ts` は `.next/types/routes.d.ts` を import する。`next build` は `.next/types/` に、`next dev` は `.next/dev/types/` に、`validator.ts`（その時点の全ルートのファイルへの相対 import）と `routes.d.ts` を生成する。`.next/` は git の管理の外なので git status に出ず、ファイルを生成した時点の木を指したまま残る。手で打つ `npm run typecheck` が落ちるほか、push の hook（`.claude/hooks/pre-push-check.sh`）は build より前に typecheck を走らせるので、「build は通るのに push だけが落ちる」形でも現れる。合わなくなり方は3つある。
 
-- **古いパス**: ルートの `page.tsx` を `git mv`（例: route group をまたぐ移動）すると、`validator.ts` が移動前のパスを参照したまま残り、`TS2307: Cannot find module '.../page.js'` で落ちる。
-- **書きかけ**: `next dev` が、親のエージェントが終わったあとも動き続けていると（親プロセスが 1 になった孤児）、作業ツリーの変更に合わせて `routes.d.ts` を書き直し続け、途中の状態の `routes.d.ts` が `TS1146: Declaration expected`・`TS1161: Unterminated regular expression literal` で落ちる。
+- **ルートの移動**: ルートの `page.tsx` を `git mv`（例: route group をまたぐ移動）すると、`.next/dev/types/validator.ts` が移動前のパスを参照したまま残り、`TS2307: Cannot find module '.../page.js'` で落ちる。
+- **ブランチの移動・別の木での検査**: 別のブランチの build が残した `.next/types/` のまま、ブランチを移ったり別の木を検査したりすると、`validator.ts` がいまの木に無いページを指し、同じ `TS2307` で落ちる。`src/__tests__/bundle-budget.test.ts` も `.next` の build の結果（`build-manifest.json` ほか）を読むので、試験も別の木の結果で落ちる。
+- **書きかけ**: 同じ作業ツリーで `next dev` が動いていると、作業ツリーの変更に合わせて `routes.d.ts` を書き直し続け、途中の状態の `routes.d.ts` が `TS1146: Declaration expected`・`TS1161: Unterminated regular expression literal` で落ちる。起こしたエージェントが終わったあとも動き続けている `next dev` でも起きる。
 
-**対処**: 孤児の `next dev` とその子の `next-server` を止め（`ps -o ppid=` が 1 で、cwd がリポジトリのもの）、`rm -rf .next/dev/types` してから typecheck・commit・push する。ファイルが無ければ include の glob はマッチがゼロで、エラーにならない。
+**対処**: 書き直し続けている `next dev` が自分の起こしたものなら、自分の専用のディレクトリに書いた PGID でグループごと止める（`docs/knowledge/playwright-mcp.md` の「バックグラウンドのプロセスを起こして止める」）。自分のものでない `next dev` は止めず（ほかの作業者のサーバーである）、PM に知らせ、検査は `git worktree add` で取り出した別の木でやり直す。そのうえで、合わない側の型ファイルを消してから typecheck と push をやり直す（ルートの移動と書きかけは `rm -rf .next/dev/types`、ブランチの移動は `rm -rf .next`）。ファイルが無ければ include の glob はマッチがゼロで、`.next` を丸ごと消しても typecheck は通る。`bundle-budget.test.ts` は `.next/build-manifest.json` が無いと全体を飛ばすので、試験も落ちない。
 
-**予防**: ルートを移動・リネームしたあとは、`next dev` で確かめたあとに `rm -rf .next/dev` を挟んでから commit する。サブエージェントに開発サーバーを使わせるときは、終える前に自分の起動した `next dev` と子の `next-server` の両方を止めるよう指示する。
+**予防**: ルートを移動・リネームしたあとは、`next dev` で確かめたあと、typecheck や push の前に `rm -rf .next/dev` を挟む。ブランチを移ったときや別の木を検査するときは、最初に `rm -rf .next` を打つ。どちらも「対処」と同じく、その `.next` を使っているのが自分のサーバーだけのとき（ほかの作業者の `next dev`・`next start` が同じ木で動いていないとき）に限る。ほかの作業者のサーバーが動いていれば消さずに、`git worktree add` で取り出した別の木で確かめる。サブエージェントに開発サーバーを使わせるときは、`docs/knowledge/playwright-mcp.md` の「バックグラウンドのプロセスを起こして止める」の形で起こし、終える前に起こしたグループごと止めるよう指示する。
 
-**根拠**: 実測（古いパスは cycle-265、書きかけは cycle-316）。
+**根拠**: 実測（ルートの移動は cycle-265。書きかけは cycle-316。ブランチの移動も cycle-316 で、main の木を cycle-316 の build が残した `.next` のまま検査すると、typecheck は `.next/types/validator.ts` の `TS2307` で、試験は bundle-budget で落ち、`.next` を消すとどちらも通った）。
 
 ---
 

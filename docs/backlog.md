@@ -2,29 +2,12 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-775 | 対になる古いものが無くなった `_components/new/` の名を外す | cycle-316 | B-567 と同じ中身のため B-567 にまとめて中止 |
-| B-754 | サイトデザインの刷新 | P1 | **cycle-316で着手**。cycle-315で作り直した`DESIGN.md`が実装に届かず、来訪者が見る面は捨てたデザインのまま。favicon・OGP・文言を含むサイト全体。B-583・B-576・B-652を統合。詳細cycle-316/index.md |
-| B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P2 | DESIGN.md §4が入力欄を`1.0625rem`・16px下限と規定。char-count・unit-converterで実測。共有部品Input/Textarea/Selectが根。詳細cycle-312。cycle-316でB-754の一部 |
-| B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | globals.cssのhtml/bodyがfont-size:16px固定で、文字サイズ設定を上げて読む来訪者に本文が追随しない。詳細cycle-302/carryover.md §7-1。cycle-316でB-754の一部 |
-| B-577 | theme-color付与+410ダーク追従 | P4 | theme-color欠落(アドレスバー色を--paperへ)+410ページがライト固定。manifestは扱わない(理由cycle-316/options.md)。詳細cycle-282.md。cycle-316でB-754の一部 |
-| B-597 | テーマトグルのタップ標的高さ(28px) | P4 | cycle-287監査C5。DESIGN§6の44px未満。トグルを置くかをcycle-316のT1で来訪者価値から判断。詳細cycle-287/findings.md。cycle-316でB-754の一部 |
-| B-578 | クイズデータ内の旧青hexクレンジング | P4 | cycle-282点検で発覚。--type-color inject用の青hexだが消費CSS0=dead。OGP accentColor廃止で完全無害化済。和色へ寄せるか除去。詳細cycle-282.md。cycle-316でB-754の一部として扱う |
-| B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 日本語はどこでも改行できるため列のmin-contentが1文字になり、狭い画面で表のセルが縦一列に潰れて読めない。詳細cycle-302/incident-2.md。cycle-316でB-754の一部として扱う |
-| B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | cycle-309でE3を是正。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節。cycle-316でB-754の一部として扱う |
-| B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | B-573のa11y掃討の一部。SRが連結を読む冗長さを主リンク名のみへ。cycle-287で辞典検索結果リンクにも同種確認(C6)。詳細cycle-281.md/cycle-287。cycle-316でB-754の一部として扱う |
-| B-599 | 辞典/共有まわりのa11y軽微群 | P4 | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md。cycle-316でB-754の一部として扱う |
-| B-594 | /play/daily の見出し構造是正(h1不在) | P3 | dailyだけh1不在(タイトルがTsutsumiの<p>のみ)。ResultPageShellはh1あり是正不要。DESIGN§5「最初のセクションは主見出し」。詳細cycle-287/findings.md。cycle-316でB-754の一部 |
-| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md。cycle-316でB-754の一部 |
-| B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md。cycle-316でB-754の一部 |
-| B-755 | 道具箱の作りの撤去 | P2 | 機能はcycle-279で撤去済みなのに、同居を前提にした作りとコメントが残り、読む者に存在しない機能があるように見せている。詳細cycle-315/index.md。cycle-316でB-754の一部として扱う |
-| B-614 | 診断の回答フェーズの摩擦低減 | P3 | 375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。付帯=押した選択肢を即座に見せる。cycle-301のdesign.mdは実コードに突き合わせ直す。詳細cycle-301/index.md。cycle-316でB-754の一部 |
-| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md。cycle-316でB-754の一部 |
-| B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | 押したボタンがdisabledになるため。SR利用者は先頭からTabし直す。詳細cycle-301/review-log.md。cycle-316でB-754の一部 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 | B-756 | 診断・ゲームの刷新 | P2 | site-conceptの「人が運営する場所でも作られたか」で1面ずつ判定し、伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
 | B-672 | ソースコードのコメントの整理 | P4 | 経緯の堆積・旧コンセプトの語・存在しない§番号への参照が残っている。コンセプトを作り直し、引き直す先が決まった。詳細cycle-312 |
 | B-746 | about ページの作り直し | P1 | サイトの自己紹介が、cycle-315で作り直したコンセプトと別のことを名乗っている。`docs/site-concept.md`の「来訪者への約束」から書き直す。文言を固定しているテストも対象。詳細cycle-315/index.md |
@@ -64,7 +47,6 @@
 | B-530 | AP-WF11 の運用化(公開前 reader-perspective audit) | P3 | 詳細 cycle-255.md |
 | B-531 | Goal-first チェック運用の仕組み化 | P3 | 詳細 cycle-255.md |
 | B-364 | cycle-175〜178 連続事故のブログ化再判断 | P3 | 着手時PM独立判断。詳細 cycle-178.md |
-| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | cycle-301実測。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md。cycle-316のT5aで直す(t5a-design.md 4-5・4-9)。T5a-7とT9の実機で確かめてDoneへ |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | 辞典の処遇判断(B-564)と連動。詳細 cycle-258.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | 出荷物に影響なし。詳細 cycle-271 接地 |
 | B-512 | next.config redirects コメント「301」→「308」統一 | P4 | 文言のみ是正。詳細 cycle-243.md |
@@ -101,21 +83,31 @@
 | B-781 | 動的ルートの値が % を含む URL（/blog/%25 など）が 404 でなく 500 になる | P3 | Next.js の「failed to decode param」。ページの前で起きる。cycle-316 review-t5-22b-1.md |
 | B-782 | 解き終えた画面の招待のボタンの多く（character-personality・music ほか）が contentId を渡さず、GA に share（invite）が送られない | P2 | cycle-316 review-t5-5b-13.md |
 | B-783 | docs/content-quality-requirements.md のチートシート・ToolLayout・CheatsheetLayout・道具の valueProposition の節が今のコードと合わない。今の形に書き直す | P2 | cycle-316 T5-3c の builder の報告 |
+| B-784 | サイクルの文書の大きさをコミット前に検査する | P3 | 着手: design-rolloutの1つ目のサイクル(B-754と同時)。cycle-316のindex.mdが227KBに肥大(AP-WF17候補N=3)。検査の対象と線はそのサイクルの設計で決める。詳細cycle-316/decisions.md |
 
 ## Deferred (すぐに着手できない)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-758 | 計測した5ページすべてで実験室のLCPが2.5秒を超えている(2026-09の計測) | P2 | 着手: cycle-316の出荷後、新しいデザインで測り直してから。診断のプレイ面3.8秒ほか。LCP要素は全て文字。実測cycle-316/facts-speed-before.md。一覧の操作も測る(cycle-316/review-t3-7-fix.md) |
-| B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: cycle-316の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
-| B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: cycle-316の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
-| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: cycle-316出荷後。T9の二度打ちの記録とB-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md。材料はt5a-design.md 3-1案2・4-12とt5a-measure.md条件7 |
+| B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: design-rolloutのT5-8b・T5-18のサイクル(B-754)。記事の表はT4で済んだ。残りは記事の外の表。詳細cycle-302/incident-2.md |
+| B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | 着手: design-rolloutのT7のサイクル(B-754)。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
+| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: design-rolloutのT6のサイクル(B-754)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
+| B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 着手: design-rolloutのT6-7のサイクル(B-754)。開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md |
+| B-755 | 道具箱の作りの撤去 | P2 | 着手: design-rolloutのT5-18・T5-25bのサイクル(B-754)。同居を前提にした作りとコメントが残る。詳細cycle-315/index.md |
+| B-614 | 診断の回答フェーズの摩擦低減 | P3 | 着手: design-rolloutのT5aのサイクル(B-754)。375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
+| B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | 着手: design-rolloutのT5aのサイクル(B-754)。押したボタンがdisabledになるため。SR利用者は先頭からTabし直す。詳細cycle-301/review-log.md |
+| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | 着手: design-rolloutのT5の各面のサイクル(B-754)。ゲーム4本はT4で済んだ。確かめはT9。詳細cycle-301/review-log.md |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | 着手: design-rolloutのT5aのサイクル(B-754。t5a-design.md 4-5・4-9)。T5a-7の二度打ちの測りで0を確かめ、iOSのSafariはT5aの設計で(i)〜(iii)に振り分けた方法で確かめてDoneへ |
+| B-758 | 計測した5ページすべてで実験室のLCPが2.5秒を超えている(2026-09の計測) | P2 | 着手: B-754の出荷後、新しいデザインで測り直してから。診断のプレイ面3.8秒ほか。LCP要素は全て文字。実測cycle-316/facts-speed-before.md。一覧の操作も測る(cycle-316/review-t3-7-fix.md) |
+| B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: B-754の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
+| B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: B-754の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
+| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: B-754の出荷後。T5a-7の測り、T5aの設計で(i)〜(iii)に振り分けた方法での二度押しの確かめ、B-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md |
 | B-740 | cycle-314の失敗をブログ化するか判断する | P4 | 着手: 事故分析(incident-1・incident-2)がレビュー済みになってから。題材=隔離された成果物をその自己申告で信じた機構と、チェック項目は当てる先を選べる件。詳細cycle-314/ |
 | B-565 | 診断完走率の低下の決着 | P2 | ADR001の観測は+2週で止まり同ADRは失効した。設問途中の離脱までは判明しており、残る問いはどこで落ちるか。ADR009が未決として引き継ぐ。B-612・B-613・B-614と同じ塊。詳細cycle-305/observation |
 | B-615 | 375px CLSのレイアウトシフト点検・あればバグ修正 | P4 | **ADRの賭けではなく通常のバグ(cycle-305でオーナー是正)**。デザイン移行が安定した面で375px CLSを点検し、シフトがあれば修正。計装(field計測)の新設は不要。着手: デザイン移行(B-754)の完了後 |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
-| B-612 | 診断完走率低下の帰属を同時期対照で切り分け | P2 | 着手: B-613(計装)が出荷され対照の対象が実在してから。B-614はcycle-316でデザイン刷新と同時に出るため効果を切り分けられない。比較対象は設計で決める。前後比較では効果分離不可(AP-P31)。詳細cycle-300/incident-1 |
+| B-612 | 診断完走率低下の帰属を同時期対照で切り分け | P2 | 着手: B-613(計装)が出荷され対照の対象が実在してから。B-614はB-754の出荷でデザイン刷新と同時に出るため効果を切り分けられない。比較対象は設計で決める。前後比較では効果分離不可(AP-P31)。詳細cycle-300/incident-1 |
 | B-622 | B-613出荷後の計装健全性検査 | P3 | 着手: B-613の出荷+2日(未出荷のためcycle-302でQueuedから移動)。合格条件=instrumentation-design.md C7〜C11。詳細cycle-301 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
@@ -157,6 +149,8 @@
 | B-448 | モードラベル補助テキスト追加(旧タイルUI) | P5 | 着手: R-1プルーニングで対象ツール存続時に再評価。着手条件に加え新デザインでの意味残存も確認 |
 | B-503 | cron-parser プリセット拡充(5→8個) | P4 | 着手: R-1プルーニングで対象ツール存続時に再評価。 |
 | B-588 | git履歴の不要バイナリ/生成物を除去 | P3 | 着手: Ownerの指示まで着手しない(履歴書換+force pushの破壊的操作)。cycle284混入の.py5+.pyc1(未push)・cycle177/180のルートPNG7枚・cycle210のPNG14枚(追跡中)が.gitignore違反で肥大化。git rm不可で履歴書換要。詳細cycle-284.md |
+| B-785 | ステージした中身が作業ツリーと違うブログ記事でfrontmatter検証がコミットの中身を見ない | P4 | 着手: B-754の出荷後。pre-commitは作業ツリーのファイルを検証し、検証のスクリプトは記事の新旧をgitの履歴からパスで引く。詳細cycle-316/decisions.md |
+| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | P2 | 着手: design-rolloutの1つ目のサイクル(B-784と同時)。他人の書きかけでコミットの検査が止まる・名前で探して他人のプロセスを止める。hookで症状を止めず、担当ごとの木とコミットする者の決め方で直す。詳細cycle-316/decisions.md |
 
 ## Done/Cancel (完了・中止)
 
@@ -164,6 +158,15 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | 316 | design-rolloutのT2で実装(共有の入力欄を16px以上に)。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
+| B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | 316 | design-rolloutのT1(組版)で実装。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
+| B-577 | theme-color付与+410ダーク追従 | 316 | design-rolloutのT1で実装。manifestは扱わない(理由cycle-316/options.md)。出荷はB-754のmainへのマージで |
+| B-597 | テーマトグルのタップ標的高さ(28px) | 316 | design-rolloutのT1でテーマ切替を置かないと決めた(理由cycle-316/decisions.md)。出荷はB-754のmainへのマージで |
+| B-578 | クイズデータ内の旧青hexクレンジング | 316 | design-rolloutのT4-9で描かれない色の値を型とデータから外した。出荷はB-754のmainへのマージで |
+| B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | 316 | design-rolloutのT3で実装(一覧の行の名前を名前だけに)。出荷はB-754のmainへのマージで。詳細cycle-316/t3-design.md 6章 |
+| B-599 | 辞典/共有まわりのa11y軽微群 | 316 | design-rolloutのT3で実装(同部首の索引・大字のaria-hidden・共有の予告)。出荷はB-754のmainへのマージで。詳細cycle-316/t3-design.md 6章 |
+| B-594 | /play/daily の見出し構造是正(h1不在) | 316 | design-rolloutのT4-8(ada742a1)で/play/dailyにh1を置いた。出荷はB-754のmainへのマージで |
+| B-775 | 対になる古いものが無くなった `_components/new/` の名を外す | 316 | 【中止】B-567 と同じ中身のため B-567 にまとめた |
 | B-567 | 移行時代の `new/` コンポーネントディレクトリ平坦化 | 316 | 辞典の `new/` を T5-9 で、ゲームの2件を T5-20a で平坦化した |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | 316 | 【中止】B-754へ統合。目的(§6・§12)と対象ページが同じ。詳細cycle-316/options.md |
 | B-757 | ブログの刷新 | 315 | 【中止】起票が誤り。ブログの書き方の規則は変わっておらず、同じ見直しは過去に済んでいる。試行錯誤の過程はこのサイトにしか出せないコンテンツであり、題材で一括りに判定するものではない |
@@ -251,7 +254,7 @@
 | B-669 | DESIGN §10 の最小幅 375px と実測の 360px が食い違う | 312 | 【中止】根拠が`DESIGN.md`/`site-concept.md`の条文のみだが、両文書は冒頭に「この文書は信用してはならない」と明記されている。規範が決まるまで違反か判定できない。観察はcycle-312に残り、B-651の入力になる |
 | B-670 | 規範文書が自分の規則を自分へ適用する射程が未定義 | 312 | 【中止】根拠が`DESIGN.md`/`site-concept.md`の条文のみだが、両文書は冒頭に「この文書は信用してはならない」と明記されている。規範が決まるまで違反か判定できない。観察はcycle-312に残り、B-651の入力になる |
 | B-671 | DESIGN §5 の状態変化だけ時間の規定が無い | 312 | 【中止】根拠が`DESIGN.md`/`site-concept.md`の条文のみだが、両文書は冒頭に「この文書は信用してはならない」と明記されている。規範が決まるまで違反か判定できない。観察はcycle-312に残り、B-651の入力になる |
-| B-673 | 疑問符・感嘆符の全角/半角が診断データ全体で混在 | 312 | 【中止】DESIGN.md §4 で規範が決まり、cycle-316 の T5-4（診断のデータ）と T5-27（来訪者が読むほかの文）で直す |
+| B-673 | 疑問符・感嘆符の全角/半角が診断データ全体で混在 | 312 | 【中止】DESIGN.md §4 で規範が決まり、B-754 の T5-4（診断のデータ）と T5-27（来訪者が読むほかの文）で直す |
 | B-674 | 持ち帰れる成果物が拡散の手段として働くかの判定 | 312 | 【中止】評価対象の設計要求が`site-concept.md`由来だが、同文書は信用してはならないと明記されている。B-651で要求が確定してから立て直す。詳細cycle-312 |
 | B-676 | 値札の語彙を名乗るラベルが12pxで規範の下限を割っている | 312 | 【中止】根拠が`DESIGN.md`/`site-concept.md`の条文のみだが、両文書は冒頭に「この文書は信用してはならない」と明記されている。規範が決まるまで違反か判定できない。観察はcycle-312に残り、B-651の入力になる |
 | B-677 | irodori の共有画像が濃紺の地を直書きして店構えの外にある | 312 | 【中止】根拠が`DESIGN.md`/`site-concept.md`の条文のみだが、両文書は冒頭に「この文書は信用してはならない」と明記されている。規範が決まるまで違反か判定できない。観察はcycle-312に残り、B-651の入力になる |

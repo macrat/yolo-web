@@ -21,7 +21,22 @@ disable-model-invocation: true
 
 ### 1. 状態の確認
 
-/docs/cycles/ にある最新のサイクルドキュメントを読んで、前回のサイクルが完了していることを確認してください。
+`/docs/backlog.md` に、統合のブランチ（来訪者に途中の状態を見せられない変更を、複数のサイクルに分けて進めるブランチ）で進行中の項目があれば、このサイクルはその項目を続けます。次のように、そのブランチに移って push 済みの最新まで進め、`origin/main` をマージし、依存を入れ直してから、以降の手順をそのブランチの上で行ってください。
+
+```bash
+git fetch origin main <統合のブランチ>
+git switch <統合のブランチ>
+git merge --ff-only origin/<統合のブランチ>
+git merge origin/main
+rm -rf .next
+npm ci
+```
+
+fetch は要るブランチだけを名指して取ります（ほかのブランチは、それを使うサイクルが名指して取ります）。同じコンテナに前のセッションのローカルの統合のブランチが残っていると、`git switch` はその古いブランチに移り、ほかのセッションが後から push したコミットを含みません。`git merge --ff-only` でそれを `origin/<統合のブランチ>` まで進めます。これが止まったときは、ローカルに push していないコミットがあって origin と分かれているので、先へ進まずに違いを調べてください。push の hook は、いまの `node_modules` と `.next` を使って型・試験・build を検査します。別のブランチの build が残した `.next`（型の検査が `.next/types` を読み、試験が build の結果を読みます）を消し、統合のブランチの `package.json` は main と違いうるので `npm ci` で依存を入れ直します。統合のブランチは push 済みで、続くサイクルのセッションが共有しているので、取り込みは rebase でなくマージのコミットにします（rebase には force push が要り、hook が止めます）。
+
+本番で急ぎの不具合が出たときだけは、main の上でそれを直すサイクルを立てます。統合のブランチは、次のキックオフのマージでその修正を取り込みます。main の道具（`.claude/` の hook・設定・スキル）とアンチパターン集（`/docs/anti-patterns/`）と知見（`/docs/knowledge/`）は、統合のブランチより古いことがあります。統合のブランチのサイクルが見つけた環境の落とし穴とその回避（ブラウザの起動・依存の入れ方・プロセスの止め方など）と、失敗から足したアンチパターンは、統合のブランチの `.claude/`・`/docs/anti-patterns/`・`/docs/knowledge/` にあります。急ぎのサイクルは、作業の前に `git fetch origin <統合のブランチ>` を打ち、`git diff --stat origin/main origin/<統合のブランチ> -- .claude docs/knowledge docs/anti-patterns` で違うファイルを見て、それを `git show origin/<統合のブランチ>:<パス>` で読んでください。そのサイクルのレビューの依頼と、`cycle-completion` の手順5のアンチパターンのチェックでは、reviewer に作業ツリーの `/docs/anti-patterns/` でなく、`git show origin/<統合のブランチ>:docs/anti-patterns/<ファイル>` で統合のブランチの版を読ませてください。急ぎのサイクルが見つけたアンチパターンの発生（新しい候補を含む）は、main の `/docs/anti-patterns/` には書かず、当たる統合のブランチの項目とともに、そのサイクルの文書に記録してください。main と統合のブランチではアンチパターン集の項目が違い、main に書くと、統合のブランチが変えた行と次のキックオフのマージで衝突します。統合のブランチの次のサイクルは、キックオフの main のマージで急ぎのサイクルの記録が入ったら、手順5で作る `index.md` の「実施する作業」に、その発生を統合のブランチの `/docs/anti-patterns/` に反映する行を置き、`cycle-completion` の手順5で反映します。
+
+/docs/cycles/ にある最新のサイクルドキュメントを読んで、前回のサイクルが完了していることを確認してください。統合のブランチで続けるときは、ブランチを移ってから /docs/cycles/ を見てください。セッションの始めに SessionStart の hook が出す最新のサイクルの番号と状態は、セッションを始めた main の木の値で、統合のブランチの最新とは違います。
 前回のサイクルが完了していない場合は、まずはそちらを完了させてください。
 
 ### 2. 期限が来たADRの確認
@@ -50,7 +65,7 @@ disable-model-invocation: true
 
 ### 5. サイクルドキュメントの作成
 
-サイクルの内容が決まったら、新しいサイクルディレクトリ `/docs/cycles/cycle-XX/` を作成し、`/docs/cycles/TEMPLATE.md` をコピーして `/docs/cycles/cycle-XX/index.md` を作成してください。XXはサイクル番号で、前回のサイクルドキュメントの番号に1を足したものになります。
+サイクルの内容が決まったら、新しいサイクルディレクトリ `/docs/cycles/cycle-XX/` を作成し、`/docs/cycles/TEMPLATE.md` をコピーして `/docs/cycles/cycle-XX/index.md` を作成してください。XXはサイクル番号で、これまでのサイクルドキュメントの最新の番号に1を足したものになります。統合のブランチがあるときは、main と統合のブランチの両方の `/docs/cycles/` を見て、そのうち最新の番号に1を足してください（いまいない側のブランチは、`git fetch origin <ブランチ>` のあと `git ls-tree --name-only origin/<ブランチ> docs/cycles/` で見ます）。片方だけを見ると、main で急ぎの不具合を直すサイクルと統合のブランチのサイクルが同じ番号になり、マージで1つのディレクトリに混ざります。
 
 `index.md` には計画・チェックリスト・完了サマリだけを書いてください。レビューの経過ログ・事故報告の詳細・長い調査メモは、同じディレクトリ内の別ファイル（例: `review-log.md`・`incident-1.md`）に分割して `index.md` からリンクしてください（`index.md` の肥大化はレビューの全文通読を不可能にします）。
 

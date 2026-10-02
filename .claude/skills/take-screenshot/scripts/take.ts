@@ -1,22 +1,35 @@
-import { chromium } from "playwright";
+import { chromium, type Browser } from "playwright";
 import sharp from "sharp";
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 
 const url = process.argv[2];
 if (!url) {
   console.error(
-    "Usage: npx tsx take.ts <URL> [--selector <CSS selector>] [--dark]",
+    "Usage: npx tsx take.ts <URL> [--selector <CSS selector>] [--dark] [--out <dir>]",
   );
   process.exit(1);
 }
 
-const selectorIndex = process.argv.indexOf("--selector");
-const selector = selectorIndex !== -1 ? process.argv[selectorIndex + 1] : null;
-if (selectorIndex !== -1 && !selector) {
-  console.error("--selector requires a CSS selector argument");
-  process.exit(1);
+// 値を取るオプションの値を返す。オプションが無ければ null。値が無いか `--` で始まる
+// （すぐ後ろに別のフラグを書いた）ときは、そのフラグを値と取り違えないようにエラーで止める。
+function optionValue(name: string, valueName: string): string | null {
+  const index = process.argv.indexOf(name);
+  if (index === -1) return null;
+  const value = process.argv[index + 1];
+  if (!value || value.startsWith("--")) {
+    console.error(`${name} requires a ${valueName} argument`);
+    process.exit(1);
+  }
+  return value;
 }
+
+const selector = optionValue("--selector", "CSS selector");
+
+// --out: 画像の書き出し先。既定は cwd の tmp/screenshots。並行して撮る作業者は自分専用のディレクトリを渡す。
+const outDir =
+  optionValue("--out", "directory") ?? path.join("tmp", "screenshots");
 
 // --dark フラグ: 指定時はダークテーマで撮影する。
 // サイトは端末の設定（prefers-color-scheme）に従うので、ブラウザの設定を dark にして撮る。
@@ -37,11 +50,48 @@ function sanitizeUrl(rawUrl: string): string {
     .replace(/^-|-$/g, "");
 }
 
+// ブラウザの置き場（PLAYWRIGHT_BROWSERS_PATH、無ければ Playwright の既定の置き場）に入っている
+// Chromium の本体のうち、版がいちばん新しいものを返す。
+function findInstalledChromium(): string | null {
+  const browsersDir =
+    process.env.PLAYWRIGHT_BROWSERS_PATH ||
+    path.join(os.homedir(), ".cache", "ms-playwright");
+  if (!fs.existsSync(browsersDir)) return null;
+
+  const candidates = fs
+    .readdirSync(browsersDir)
+    .map((name) => ({ name, revision: /^chromium-(\d+)$/.exec(name)?.[1] }))
+    .filter((entry) => entry.revision !== undefined)
+    .sort((a, b) => Number(b.revision) - Number(a.revision))
+    .flatMap(({ name }) =>
+      ["chrome-linux64", "chrome-linux"].map((sub) =>
+        path.join(browsersDir, name, sub, "chrome"),
+      ),
+    );
+  return candidates.find((candidate) => fs.existsSync(candidate)) ?? null;
+}
+
+// リポジトリの playwright が求める版のブラウザで起動する。その版が入っていないとき
+// （ブラウザを足さない環境で、入っている版が違うとき）は、入っている Chromium で起動する。
+async function launchBrowser(): Promise<Browser> {
+  try {
+    return await chromium.launch();
+  } catch (err) {
+    const missingExecutable =
+      err instanceof Error && err.message.includes("Executable doesn't exist");
+    const installed = missingExecutable ? findInstalledChromium() : null;
+    if (!installed) throw err;
+    console.log(
+      `playwright が求める版のブラウザが無いので、入っている Chromium で撮ります: ${installed}`,
+    );
+    return chromium.launch({ executablePath: installed });
+  }
+}
+
 async function main() {
-  const outDir = path.join("tmp", "screenshots");
   fs.mkdirSync(outDir, { recursive: true });
 
-  const browser = await chromium.launch();
+  const browser = await launchBrowser();
   const timestamp = getTimestamp();
   const sanitized = sanitizeUrl(url);
 
