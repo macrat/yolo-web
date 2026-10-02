@@ -1,0 +1,1020 @@
+[
+ {
+  "path": "character-personality/result/blazing-poet",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 125
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "traditional-color/result/ai",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "藍色(あいいろ)",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": {
+   "color": "rgb(13, 86, 97)",
+   "text": "",
+   "border": "1px solid lab(55.92 -0.0000298023 0)"
+  },
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "animal-personality/result/nihon-zaru",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "ニホンザル——温泉を発明した革命児",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 125
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "music-personality/result/festival-pioneer",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "フェス一番乗り族",
+  "h1Rect": {
+   "x": 27,
+   "y": 189,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-fortune/result/commander",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "締切3分前に本気出す炎の司令塔",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 83
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "contrarian-fortune/result/reverseoptimist",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "逆オプティミスト",
+  "h1Rect": {
+   "x": 27,
+   "y": 189,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "yoji-personality/result/shoshikantetsu",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "初志貫徹",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "unexpected-compatibility/result/vendingmachine",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "自動販売機",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "impossible-advice/result/timemagician",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "時間魔術師見習い",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "science-thinking/result/einstein",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "アインシュタイン型思考者",
+  "h1Rect": {
+   "x": 27,
+   "y": 303,
+   "width": 321,
+   "height": 83
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "word-sense-personality/result/poetic-sensory",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "花鳥風月タイプ",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "japanese-culture/result/sado",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 125
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "kanji-level/result/master",
+  "vw": 375,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "漢字マスター",
+  "h1Rect": {
+   "x": 27,
+   "y": 189,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-personality/result/blazing-poet",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 125
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "traditional-color/result/ai",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "藍色(あいいろ)",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": {
+   "color": "rgb(13, 86, 97)",
+   "text": "",
+   "border": "1px solid lab(45.48 0 0)"
+  },
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "animal-personality/result/nihon-zaru",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "ニホンザル——温泉を発明した革命児",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 125
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "music-personality/result/festival-pioneer",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "フェス一番乗り族",
+  "h1Rect": {
+   "x": 27,
+   "y": 189,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-fortune/result/commander",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "締切3分前に本気出す炎の司令塔",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 83
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "contrarian-fortune/result/reverseoptimist",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "逆オプティミスト",
+  "h1Rect": {
+   "x": 27,
+   "y": 189,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "yoji-personality/result/shoshikantetsu",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "初志貫徹",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "unexpected-compatibility/result/vendingmachine",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "自動販売機",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "impossible-advice/result/timemagician",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "時間魔術師見習い",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "science-thinking/result/einstein",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "アインシュタイン型思考者",
+  "h1Rect": {
+   "x": 27,
+   "y": 303,
+   "width": 321,
+   "height": 83
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "word-sense-personality/result/poetic-sensory",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "花鳥風月タイプ",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "japanese-culture/result/sado",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "h1Rect": {
+   "x": 27,
+   "y": 233,
+   "width": 321,
+   "height": 125
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "kanji-level/result/master",
+  "vw": 375,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "漢字マスター",
+  "h1Rect": {
+   "x": 27,
+   "y": 189,
+   "width": 321,
+   "height": 42
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-personality/result/blazing-poet",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "traditional-color/result/ai",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "藍色(あいいろ)",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": {
+   "color": "rgb(13, 86, 97)",
+   "text": "",
+   "border": "1px solid lab(55.92 -0.0000298023 0)"
+  },
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "animal-personality/result/nihon-zaru",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "ニホンザル——温泉を発明した革命児",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "music-personality/result/festival-pioneer",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "フェス一番乗り族",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-fortune/result/commander",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "締切3分前に本気出す炎の司令塔",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "contrarian-fortune/result/reverseoptimist",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "逆オプティミスト",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "yoji-personality/result/shoshikantetsu",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "初志貫徹",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "unexpected-compatibility/result/vendingmachine",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "自動販売機",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1",
+   "p",
+   "div"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "impossible-advice/result/timemagician",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "時間魔術師見習い",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "science-thinking/result/einstein",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "アインシュタイン型思考者",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "word-sense-personality/result/poetic-sensory",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "花鳥風月タイプ",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "japanese-culture/result/sado",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "kanji-level/result/master",
+  "vw": 1280,
+  "scheme": "light",
+  "h1Count": 1,
+  "h1": "漢字マスター",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-personality/result/blazing-poet",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "traditional-color/result/ai",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "藍色(あいいろ)",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": {
+   "color": "rgb(13, 86, 97)",
+   "text": "",
+   "border": "1px solid lab(45.48 0 0)"
+  },
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "animal-personality/result/nihon-zaru",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "ニホンザル——温泉を発明した革命児",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "music-personality/result/festival-pioneer",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "フェス一番乗り族",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "character-fortune/result/commander",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "締切3分前に本気出す炎の司令塔",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "contrarian-fortune/result/reverseoptimist",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "逆オプティミスト",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "yoji-personality/result/shoshikantetsu",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "初志貫徹",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "unexpected-compatibility/result/vendingmachine",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "自動販売機",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1",
+   "p",
+   "div"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "impossible-advice/result/timemagician",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "時間魔術師見習い",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "science-thinking/result/einstein",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "アインシュタイン型思考者",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "word-sense-personality/result/poetic-sensory",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "花鳥風月タイプ",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "japanese-culture/result/sado",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 163
+  },
+  "titleElementsInView": [
+   "h1"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ },
+ {
+  "path": "kanji-level/result/master",
+  "vw": 1280,
+  "scheme": "dark",
+  "h1Count": 1,
+  "h1": "漢字マスター",
+  "h1Rect": {
+   "x": 179,
+   "y": 189,
+   "width": 922,
+   "height": 82
+  },
+  "titleElementsInView": [
+   "h1",
+   "p"
+  ],
+  "swatch": null,
+  "tsutsumi": 0,
+  "pageScrollX": false
+ }
+]

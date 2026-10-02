@@ -1,0 +1,588 @@
+{
+ "traditional-color-320-light": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "藍色",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あいいろあなたのタイプ"
+   },
+   {
+    "link": "朱色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|しゅいろ"
+   }
+  ],
+  "title": "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見 | yolos.net",
+  "resultH2": [
+   "藍色(あいいろ)",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 320,
+  "vw": 320,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"藍色\":\n        - /url: /play/traditional-color/result/ai\n      - text: あいいろ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"朱色\":\n        - /url: /play/traditional-color/result/shu\n      - text: しゅいろ\n  - listitem:\n    - paragraph:\n      - link \"若草色\":\n        - /url: /play/traditional-color/result/wakakusa\n      - text: わかくさいろ\n  - listitem:\n    - paragraph:\n      - link \"藤色\":\n        - /url: /play/traditional-color/result/fuji\n      - text: ふじいろ\n  - listitem:\n    - paragraph:\n      - link \"山吹色\":\n        - /url: /play/traditional-color/result/yamabuki\n      - text: やまぶきいろ\n  - listitem:\n    - paragraph:\n      - link \"紺色\":\n        - /url: /play/traditional-color/result/kon\n      - text: こんいろ\n  - listitem:\n    - paragraph:\n      - link \"桜色\":\n        - /url: /play/traditional-color/result/sakura\n      - text: さくらいろ\n  - listitem:\n    - paragraph:\n      - link \"翡翠色\":\n        - /url: /play/traditional-color/result/hisui\n      - text: ひすいいろ"
+ },
+ "traditional-color-320-light-resultpage": {
+  "h1": "藍色(あいいろ)",
+  "title": "藍色(あいいろ) | yolos.net",
+  "cur": {
+   "link": "藍色",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "藍色あいいろ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 320
+ },
+ "character-personality-320-light": {
+  "heading": "H3 17px 他のタイプ（24）",
+  "rows": [
+   {
+    "link": "締切3分前に5手先を読む炎の策士",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "夢の中で3本の論文を書き終えた学術夢想家",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あなたのタイプ"
+   }
+  ],
+  "title": "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト | yolos.net",
+  "resultH2": [
+   "夢の中で3本の論文を書き終えた学術夢想家",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 320,
+  "vw": 320,
+  "aria": "- heading \"他のタイプ（24）\" [level=3]\n- list \"他のタイプ（24）\":\n  - listitem:\n    - paragraph:\n      - link \"締切3分前に5手先を読む炎の策士\":\n        - /url: /play/character-personality/result/blazing-strategist\n  - listitem:\n    - paragraph:\n      - link \"「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人\":\n        - /url: /play/character-personality/result/blazing-poet\n  - listitem:\n    - paragraph:\n      - link \"正攻法3秒で飽きて全員を裏道に連れ込む司令塔\":\n        - /url: /play/character-personality/result/blazing-schemer\n  - listitem:\n    - paragraph:\n      - link \"先頭を走りながら「全員来てるか！」と叫び続ける守護司令塔\":\n        - /url: /play/character-personality/result/blazing-warden\n  - listitem:\n    - paragraph:\n      - link \"締切1時間前に突然スイッチが入って傑作を叩き出す情熱の画家\":\n        - /url: /play/character-personality/result/blazing-canvas\n  - listitem:\n    - paragraph:\n      - link \"夢の中で3本の論文を書き終えた学術夢想家\":\n        - /url: /play/character-personality/result/dreaming-scholar\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"正解を出した後で「でも違う解釈だと…」と追加する人\":\n        - /url: /play/character-personality/result/contrarian-professor\n  - listitem:\n    - paragraph:\n      - link \"安全確認を17回やってから実験を始める慎重博士\":\n        - /url: /play/character-personality/result/careful-scholar\n  - listitem:\n    - paragraph:\n      - link \"数式を見て「これ詩みたいだ」と感動するデータの詩人\":\n        - /url: /play/character-personality/result/academic-artist\n  - listitem:\n    - paragraph:\n      - link \"夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家\":\n        - /url: /play/character-personality/result/star-chaser\n  - listitem:\n    - paragraph:\n      - link \"「みんなが幸せな世界」を毎晩脳内で丁寧に設計する夢想家\":\n        - /url: /play/character-personality/result/tender-dreamer\n  - listitem:\n    - paragraph:\n      - link \"目を閉じると映画が始まる感性と妄想の重ね塗りタイプ\":\n        - /url: /play/character-personality/result/dreaming-canvas\n  - listitem:\n    - paragraph:\n      - link \"「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係\":\n        - /url: /play/character-personality/result/clever-guardian\n  - listitem:\n    - paragraph:\n      - link \"「王道でいく理由ある?」と言いながら意図的に外す曲者\":\n        - /url: /play/character-personality/result/creative-disruptor\n  - listitem:\n    - paragraph:\n      - link \"「大丈夫?」と聞きながら自分が一番疲れている守護芸術家\":\n        - /url: /play/character-personality/result/gentle-fortress\n  - listitem:\n    - paragraph:\n      - link \"「考えるより動け」を文字通り実践する覇王\":\n        - /url: /play/character-personality/result/ultimate-commander\n  - listitem:\n    - paragraph:\n      - link \"「もう少し調べてから」と言って気づいたら10年経っていた博士\":\n        - /url: /play/character-personality/result/endless-researcher\n  - listitem:\n    - paragraph:\n      - link \"「いつかやる」と言いながら脳内では47回旅立っている妄想家\":\n        - /url: /play/character-personality/result/eternal-dreamer\n  - listitem:\n    - paragraph:\n      - link \"裏の裏の裏を読んで頭が痛くなっても続ける策略家\":\n        - /url: /play/character-personality/result/ultimate-trickster\n  - listitem:\n    - paragraph:\n      - link \"晴れの日に傘を7本持って山に登る備えの王\":\n        - /url: /play/character-personality/result/ultimate-guardian\n  - listitem:\n    - paragraph:\n      - link \"「うーん、なんか違う」を1000回繰り返す美の追求者\":\n        - /url: /play/character-personality/result/ultimate-artist\n  - listitem:\n    - paragraph:\n      - link \"心配の原因を全部データで証明してから対策する論理的守護者\":\n        - /url: /play/character-personality/result/data-fortress\n  - listitem:\n    - paragraph:\n      - link \"直感で走ったら3歩目で全員置き去りにしていた野生の芸術家\":\n        - /url: /play/character-personality/result/vibe-rebel\n  - listitem:\n    - paragraph:\n      - link \"普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者\":\n        - /url: /play/character-personality/result/guardian-charger"
+ },
+ "character-personality-320-light-resultpage": {
+  "h1": "夢の中で3本の論文を書き終えた学術夢想家",
+  "title": "夢の中で3本の論文を書き終えた学術夢想家 | yolos.net",
+  "cur": {
+   "link": "夢の中で3本の論文を書き終えた学術夢想家",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "夢の中で3本の論文を書き終えた学術夢想家"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 320
+ },
+ "traditional-color-320-dark": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "藍色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|あいいろ"
+   },
+   {
+    "link": "朱色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|しゅいろ"
+   },
+   {
+    "link": "紺色",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|こんいろあなたのタイプ"
+   }
+  ],
+  "title": "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見 | yolos.net",
+  "resultH2": [
+   "紺色(こんいろ)",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 320,
+  "vw": 320,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"藍色\":\n        - /url: /play/traditional-color/result/ai\n      - text: あいいろ\n  - listitem:\n    - paragraph:\n      - link \"朱色\":\n        - /url: /play/traditional-color/result/shu\n      - text: しゅいろ\n  - listitem:\n    - paragraph:\n      - link \"若草色\":\n        - /url: /play/traditional-color/result/wakakusa\n      - text: わかくさいろ\n  - listitem:\n    - paragraph:\n      - link \"藤色\":\n        - /url: /play/traditional-color/result/fuji\n      - text: ふじいろ\n  - listitem:\n    - paragraph:\n      - link \"山吹色\":\n        - /url: /play/traditional-color/result/yamabuki\n      - text: やまぶきいろ\n  - listitem:\n    - paragraph:\n      - link \"紺色\":\n        - /url: /play/traditional-color/result/kon\n      - text: こんいろ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"桜色\":\n        - /url: /play/traditional-color/result/sakura\n      - text: さくらいろ\n  - listitem:\n    - paragraph:\n      - link \"翡翠色\":\n        - /url: /play/traditional-color/result/hisui\n      - text: ひすいいろ"
+ },
+ "traditional-color-320-dark-resultpage": {
+  "h1": "紺色(こんいろ)",
+  "title": "紺色(こんいろ) | yolos.net",
+  "cur": {
+   "link": "紺色",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "紺色こんいろ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 320
+ },
+ "character-personality-320-dark": {
+  "heading": "H3 17px 他のタイプ（24）",
+  "rows": [
+   {
+    "link": "締切3分前に5手先を読む炎の策士",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あなたのタイプ"
+   }
+  ],
+  "title": "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト | yolos.net",
+  "resultH2": [
+   "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 320,
+  "vw": 320,
+  "aria": "- heading \"他のタイプ（24）\" [level=3]\n- list \"他のタイプ（24）\":\n  - listitem:\n    - paragraph:\n      - link \"締切3分前に5手先を読む炎の策士\":\n        - /url: /play/character-personality/result/blazing-strategist\n  - listitem:\n    - paragraph:\n      - link \"「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人\":\n        - /url: /play/character-personality/result/blazing-poet\n  - listitem:\n    - paragraph:\n      - link \"正攻法3秒で飽きて全員を裏道に連れ込む司令塔\":\n        - /url: /play/character-personality/result/blazing-schemer\n  - listitem:\n    - paragraph:\n      - link \"先頭を走りながら「全員来てるか！」と叫び続ける守護司令塔\":\n        - /url: /play/character-personality/result/blazing-warden\n  - listitem:\n    - paragraph:\n      - link \"締切1時間前に突然スイッチが入って傑作を叩き出す情熱の画家\":\n        - /url: /play/character-personality/result/blazing-canvas\n  - listitem:\n    - paragraph:\n      - link \"夢の中で3本の論文を書き終えた学術夢想家\":\n        - /url: /play/character-personality/result/dreaming-scholar\n  - listitem:\n    - paragraph:\n      - link \"正解を出した後で「でも違う解釈だと…」と追加する人\":\n        - /url: /play/character-personality/result/contrarian-professor\n  - listitem:\n    - paragraph:\n      - link \"安全確認を17回やってから実験を始める慎重博士\":\n        - /url: /play/character-personality/result/careful-scholar\n  - listitem:\n    - paragraph:\n      - link \"数式を見て「これ詩みたいだ」と感動するデータの詩人\":\n        - /url: /play/character-personality/result/academic-artist\n  - listitem:\n    - paragraph:\n      - link \"夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家\":\n        - /url: /play/character-personality/result/star-chaser\n  - listitem:\n    - paragraph:\n      - link \"「みんなが幸せな世界」を毎晩脳内で丁寧に設計する夢想家\":\n        - /url: /play/character-personality/result/tender-dreamer\n  - listitem:\n    - paragraph:\n      - link \"目を閉じると映画が始まる感性と妄想の重ね塗りタイプ\":\n        - /url: /play/character-personality/result/dreaming-canvas\n  - listitem:\n    - paragraph:\n      - link \"「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係\":\n        - /url: /play/character-personality/result/clever-guardian\n  - listitem:\n    - paragraph:\n      - link \"「王道でいく理由ある?」と言いながら意図的に外す曲者\":\n        - /url: /play/character-personality/result/creative-disruptor\n  - listitem:\n    - paragraph:\n      - link \"「大丈夫?」と聞きながら自分が一番疲れている守護芸術家\":\n        - /url: /play/character-personality/result/gentle-fortress\n  - listitem:\n    - paragraph:\n      - link \"「考えるより動け」を文字通り実践する覇王\":\n        - /url: /play/character-personality/result/ultimate-commander\n  - listitem:\n    - paragraph:\n      - link \"「もう少し調べてから」と言って気づいたら10年経っていた博士\":\n        - /url: /play/character-personality/result/endless-researcher\n  - listitem:\n    - paragraph:\n      - link \"「いつかやる」と言いながら脳内では47回旅立っている妄想家\":\n        - /url: /play/character-personality/result/eternal-dreamer\n  - listitem:\n    - paragraph:\n      - link \"裏の裏の裏を読んで頭が痛くなっても続ける策略家\":\n        - /url: /play/character-personality/result/ultimate-trickster\n  - listitem:\n    - paragraph:\n      - link \"晴れの日に傘を7本持って山に登る備えの王\":\n        - /url: /play/character-personality/result/ultimate-guardian\n  - listitem:\n    - paragraph:\n      - link \"「うーん、なんか違う」を1000回繰り返す美の追求者\":\n        - /url: /play/character-personality/result/ultimate-artist\n  - listitem:\n    - paragraph:\n      - link \"心配の原因を全部データで証明してから対策する論理的守護者\":\n        - /url: /play/character-personality/result/data-fortress\n  - listitem:\n    - paragraph:\n      - link \"直感で走ったら3歩目で全員置き去りにしていた野生の芸術家\":\n        - /url: /play/character-personality/result/vibe-rebel\n  - listitem:\n    - paragraph:\n      - link \"普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者\":\n        - /url: /play/character-personality/result/guardian-charger\n    - paragraph: あなたのタイプ"
+ },
+ "character-personality-320-dark-resultpage": {
+  "h1": "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者",
+  "title": "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者 | yolos.net",
+  "cur": {
+   "link": "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 320
+ },
+ "traditional-color-375-light": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "藍色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|あいいろ"
+   },
+   {
+    "link": "朱色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|しゅいろ"
+   },
+   {
+    "link": "紺色",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|こんいろあなたのタイプ"
+   }
+  ],
+  "title": "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見 | yolos.net",
+  "resultH2": [
+   "紺色(こんいろ)",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 375,
+  "vw": 375,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"藍色\":\n        - /url: /play/traditional-color/result/ai\n      - text: あいいろ\n  - listitem:\n    - paragraph:\n      - link \"朱色\":\n        - /url: /play/traditional-color/result/shu\n      - text: しゅいろ\n  - listitem:\n    - paragraph:\n      - link \"若草色\":\n        - /url: /play/traditional-color/result/wakakusa\n      - text: わかくさいろ\n  - listitem:\n    - paragraph:\n      - link \"藤色\":\n        - /url: /play/traditional-color/result/fuji\n      - text: ふじいろ\n  - listitem:\n    - paragraph:\n      - link \"山吹色\":\n        - /url: /play/traditional-color/result/yamabuki\n      - text: やまぶきいろ\n  - listitem:\n    - paragraph:\n      - link \"紺色\":\n        - /url: /play/traditional-color/result/kon\n      - text: こんいろ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"桜色\":\n        - /url: /play/traditional-color/result/sakura\n      - text: さくらいろ\n  - listitem:\n    - paragraph:\n      - link \"翡翠色\":\n        - /url: /play/traditional-color/result/hisui\n      - text: ひすいいろ"
+ },
+ "traditional-color-375-light-resultpage": {
+  "h1": "紺色(こんいろ)",
+  "title": "紺色(こんいろ) | yolos.net",
+  "cur": {
+   "link": "紺色",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "紺色こんいろ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 375
+ },
+ "character-personality-375-light": {
+  "heading": "H3 17px 他のタイプ（24）",
+  "rows": [
+   {
+    "link": "締切3分前に5手先を読む炎の策士",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あなたのタイプ"
+   }
+  ],
+  "title": "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト | yolos.net",
+  "resultH2": [
+   "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 375,
+  "vw": 375,
+  "aria": "- heading \"他のタイプ（24）\" [level=3]\n- list \"他のタイプ（24）\":\n  - listitem:\n    - paragraph:\n      - link \"締切3分前に5手先を読む炎の策士\":\n        - /url: /play/character-personality/result/blazing-strategist\n  - listitem:\n    - paragraph:\n      - link \"「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人\":\n        - /url: /play/character-personality/result/blazing-poet\n  - listitem:\n    - paragraph:\n      - link \"正攻法3秒で飽きて全員を裏道に連れ込む司令塔\":\n        - /url: /play/character-personality/result/blazing-schemer\n  - listitem:\n    - paragraph:\n      - link \"先頭を走りながら「全員来てるか！」と叫び続ける守護司令塔\":\n        - /url: /play/character-personality/result/blazing-warden\n  - listitem:\n    - paragraph:\n      - link \"締切1時間前に突然スイッチが入って傑作を叩き出す情熱の画家\":\n        - /url: /play/character-personality/result/blazing-canvas\n  - listitem:\n    - paragraph:\n      - link \"夢の中で3本の論文を書き終えた学術夢想家\":\n        - /url: /play/character-personality/result/dreaming-scholar\n  - listitem:\n    - paragraph:\n      - link \"正解を出した後で「でも違う解釈だと…」と追加する人\":\n        - /url: /play/character-personality/result/contrarian-professor\n  - listitem:\n    - paragraph:\n      - link \"安全確認を17回やってから実験を始める慎重博士\":\n        - /url: /play/character-personality/result/careful-scholar\n  - listitem:\n    - paragraph:\n      - link \"数式を見て「これ詩みたいだ」と感動するデータの詩人\":\n        - /url: /play/character-personality/result/academic-artist\n  - listitem:\n    - paragraph:\n      - link \"夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家\":\n        - /url: /play/character-personality/result/star-chaser\n  - listitem:\n    - paragraph:\n      - link \"「みんなが幸せな世界」を毎晩脳内で丁寧に設計する夢想家\":\n        - /url: /play/character-personality/result/tender-dreamer\n  - listitem:\n    - paragraph:\n      - link \"目を閉じると映画が始まる感性と妄想の重ね塗りタイプ\":\n        - /url: /play/character-personality/result/dreaming-canvas\n  - listitem:\n    - paragraph:\n      - link \"「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係\":\n        - /url: /play/character-personality/result/clever-guardian\n  - listitem:\n    - paragraph:\n      - link \"「王道でいく理由ある?」と言いながら意図的に外す曲者\":\n        - /url: /play/character-personality/result/creative-disruptor\n  - listitem:\n    - paragraph:\n      - link \"「大丈夫?」と聞きながら自分が一番疲れている守護芸術家\":\n        - /url: /play/character-personality/result/gentle-fortress\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"「考えるより動け」を文字通り実践する覇王\":\n        - /url: /play/character-personality/result/ultimate-commander\n  - listitem:\n    - paragraph:\n      - link \"「もう少し調べてから」と言って気づいたら10年経っていた博士\":\n        - /url: /play/character-personality/result/endless-researcher\n  - listitem:\n    - paragraph:\n      - link \"「いつかやる」と言いながら脳内では47回旅立っている妄想家\":\n        - /url: /play/character-personality/result/eternal-dreamer\n  - listitem:\n    - paragraph:\n      - link \"裏の裏の裏を読んで頭が痛くなっても続ける策略家\":\n        - /url: /play/character-personality/result/ultimate-trickster\n  - listitem:\n    - paragraph:\n      - link \"晴れの日に傘を7本持って山に登る備えの王\":\n        - /url: /play/character-personality/result/ultimate-guardian\n  - listitem:\n    - paragraph:\n      - link \"「うーん、なんか違う」を1000回繰り返す美の追求者\":\n        - /url: /play/character-personality/result/ultimate-artist\n  - listitem:\n    - paragraph:\n      - link \"心配の原因を全部データで証明してから対策する論理的守護者\":\n        - /url: /play/character-personality/result/data-fortress\n  - listitem:\n    - paragraph:\n      - link \"直感で走ったら3歩目で全員置き去りにしていた野生の芸術家\":\n        - /url: /play/character-personality/result/vibe-rebel\n  - listitem:\n    - paragraph:\n      - link \"普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者\":\n        - /url: /play/character-personality/result/guardian-charger"
+ },
+ "character-personality-375-light-resultpage": {
+  "h1": "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家",
+  "title": "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家 | yolos.net",
+  "cur": {
+   "link": "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "「大丈夫?」と聞きながら自分が一番疲れている守護芸術家"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 375
+ },
+ "traditional-color-375-dark": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "藍色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|あいいろ"
+   },
+   {
+    "link": "朱色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|しゅいろ"
+   },
+   {
+    "link": "藤色",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|ふじいろあなたのタイプ"
+   }
+  ],
+  "title": "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見 | yolos.net",
+  "resultH2": [
+   "藤色(ふじいろ)",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 375,
+  "vw": 375,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"藍色\":\n        - /url: /play/traditional-color/result/ai\n      - text: あいいろ\n  - listitem:\n    - paragraph:\n      - link \"朱色\":\n        - /url: /play/traditional-color/result/shu\n      - text: しゅいろ\n  - listitem:\n    - paragraph:\n      - link \"若草色\":\n        - /url: /play/traditional-color/result/wakakusa\n      - text: わかくさいろ\n  - listitem:\n    - paragraph:\n      - link \"藤色\":\n        - /url: /play/traditional-color/result/fuji\n      - text: ふじいろ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"山吹色\":\n        - /url: /play/traditional-color/result/yamabuki\n      - text: やまぶきいろ\n  - listitem:\n    - paragraph:\n      - link \"紺色\":\n        - /url: /play/traditional-color/result/kon\n      - text: こんいろ\n  - listitem:\n    - paragraph:\n      - link \"桜色\":\n        - /url: /play/traditional-color/result/sakura\n      - text: さくらいろ\n  - listitem:\n    - paragraph:\n      - link \"翡翠色\":\n        - /url: /play/traditional-color/result/hisui\n      - text: ひすいいろ"
+ },
+ "traditional-color-375-dark-resultpage": {
+  "h1": "藤色(ふじいろ)",
+  "title": "藤色(ふじいろ) | yolos.net",
+  "cur": {
+   "link": "藤色",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "藤色ふじいろ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 375
+ },
+ "character-personality-375-dark": {
+  "heading": "H3 17px 他のタイプ（24）",
+  "rows": [
+   {
+    "link": "締切3分前に5手先を読む炎の策士",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あなたのタイプ"
+   }
+  ],
+  "title": "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト | yolos.net",
+  "resultH2": [
+   "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 375,
+  "vw": 375,
+  "aria": "- heading \"他のタイプ（24）\" [level=3]\n- list \"他のタイプ（24）\":\n  - listitem:\n    - paragraph:\n      - link \"締切3分前に5手先を読む炎の策士\":\n        - /url: /play/character-personality/result/blazing-strategist\n  - listitem:\n    - paragraph:\n      - link \"「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人\":\n        - /url: /play/character-personality/result/blazing-poet\n  - listitem:\n    - paragraph:\n      - link \"正攻法3秒で飽きて全員を裏道に連れ込む司令塔\":\n        - /url: /play/character-personality/result/blazing-schemer\n  - listitem:\n    - paragraph:\n      - link \"先頭を走りながら「全員来てるか！」と叫び続ける守護司令塔\":\n        - /url: /play/character-personality/result/blazing-warden\n  - listitem:\n    - paragraph:\n      - link \"締切1時間前に突然スイッチが入って傑作を叩き出す情熱の画家\":\n        - /url: /play/character-personality/result/blazing-canvas\n  - listitem:\n    - paragraph:\n      - link \"夢の中で3本の論文を書き終えた学術夢想家\":\n        - /url: /play/character-personality/result/dreaming-scholar\n  - listitem:\n    - paragraph:\n      - link \"正解を出した後で「でも違う解釈だと…」と追加する人\":\n        - /url: /play/character-personality/result/contrarian-professor\n  - listitem:\n    - paragraph:\n      - link \"安全確認を17回やってから実験を始める慎重博士\":\n        - /url: /play/character-personality/result/careful-scholar\n  - listitem:\n    - paragraph:\n      - link \"数式を見て「これ詩みたいだ」と感動するデータの詩人\":\n        - /url: /play/character-personality/result/academic-artist\n  - listitem:\n    - paragraph:\n      - link \"夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家\":\n        - /url: /play/character-personality/result/star-chaser\n  - listitem:\n    - paragraph:\n      - link \"「みんなが幸せな世界」を毎晩脳内で丁寧に設計する夢想家\":\n        - /url: /play/character-personality/result/tender-dreamer\n  - listitem:\n    - paragraph:\n      - link \"目を閉じると映画が始まる感性と妄想の重ね塗りタイプ\":\n        - /url: /play/character-personality/result/dreaming-canvas\n  - listitem:\n    - paragraph:\n      - link \"「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係\":\n        - /url: /play/character-personality/result/clever-guardian\n  - listitem:\n    - paragraph:\n      - link \"「王道でいく理由ある?」と言いながら意図的に外す曲者\":\n        - /url: /play/character-personality/result/creative-disruptor\n  - listitem:\n    - paragraph:\n      - link \"「大丈夫?」と聞きながら自分が一番疲れている守護芸術家\":\n        - /url: /play/character-personality/result/gentle-fortress\n  - listitem:\n    - paragraph:\n      - link \"「考えるより動け」を文字通り実践する覇王\":\n        - /url: /play/character-personality/result/ultimate-commander\n  - listitem:\n    - paragraph:\n      - link \"「もう少し調べてから」と言って気づいたら10年経っていた博士\":\n        - /url: /play/character-personality/result/endless-researcher\n  - listitem:\n    - paragraph:\n      - link \"「いつかやる」と言いながら脳内では47回旅立っている妄想家\":\n        - /url: /play/character-personality/result/eternal-dreamer\n  - listitem:\n    - paragraph:\n      - link \"裏の裏の裏を読んで頭が痛くなっても続ける策略家\":\n        - /url: /play/character-personality/result/ultimate-trickster\n  - listitem:\n    - paragraph:\n      - link \"晴れの日に傘を7本持って山に登る備えの王\":\n        - /url: /play/character-personality/result/ultimate-guardian\n  - listitem:\n    - paragraph:\n      - link \"「うーん、なんか違う」を1000回繰り返す美の追求者\":\n        - /url: /play/character-personality/result/ultimate-artist\n  - listitem:\n    - paragraph:\n      - link \"心配の原因を全部データで証明してから対策する論理的守護者\":\n        - /url: /play/character-personality/result/data-fortress\n  - listitem:\n    - paragraph:\n      - link \"直感で走ったら3歩目で全員置き去りにしていた野生の芸術家\":\n        - /url: /play/character-personality/result/vibe-rebel\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者\":\n        - /url: /play/character-personality/result/guardian-charger"
+ },
+ "character-personality-375-dark-resultpage": {
+  "h1": "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家",
+  "title": "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家 | yolos.net",
+  "cur": {
+   "link": "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 375
+ },
+ "traditional-color-1280-light": {
+  "heading": "H3 33.28px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "藍色",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あいいろあなたのタイプ"
+   },
+   {
+    "link": "朱色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|しゅいろ"
+   }
+  ],
+  "title": "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見 | yolos.net",
+  "resultH2": [
+   "藍色(あいいろ)",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 1280,
+  "vw": 1280,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"藍色\":\n        - /url: /play/traditional-color/result/ai\n      - text: あいいろ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"朱色\":\n        - /url: /play/traditional-color/result/shu\n      - text: しゅいろ\n  - listitem:\n    - paragraph:\n      - link \"若草色\":\n        - /url: /play/traditional-color/result/wakakusa\n      - text: わかくさいろ\n  - listitem:\n    - paragraph:\n      - link \"藤色\":\n        - /url: /play/traditional-color/result/fuji\n      - text: ふじいろ\n  - listitem:\n    - paragraph:\n      - link \"山吹色\":\n        - /url: /play/traditional-color/result/yamabuki\n      - text: やまぶきいろ\n  - listitem:\n    - paragraph:\n      - link \"紺色\":\n        - /url: /play/traditional-color/result/kon\n      - text: こんいろ\n  - listitem:\n    - paragraph:\n      - link \"桜色\":\n        - /url: /play/traditional-color/result/sakura\n      - text: さくらいろ\n  - listitem:\n    - paragraph:\n      - link \"翡翠色\":\n        - /url: /play/traditional-color/result/hisui\n      - text: ひすいいろ"
+ },
+ "traditional-color-1280-light-resultpage": {
+  "h1": "藍色(あいいろ)",
+  "title": "藍色(あいいろ) | yolos.net",
+  "cur": {
+   "link": "藍色",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "藍色あいいろ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 1280
+ },
+ "character-personality-1280-light": {
+  "heading": "H3 33.28px 他のタイプ（24）",
+  "rows": [
+   {
+    "link": "締切3分前に5手先を読む炎の策士",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "目を閉じると映画が始まる感性と妄想の重ね塗りタイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あなたのタイプ"
+   }
+  ],
+  "title": "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト | yolos.net",
+  "resultH2": [
+   "目を閉じると映画が始まる感性と妄想の重ね塗りタイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 1280,
+  "vw": 1280,
+  "aria": "- heading \"他のタイプ（24）\" [level=3]\n- list \"他のタイプ（24）\":\n  - listitem:\n    - paragraph:\n      - link \"締切3分前に5手先を読む炎の策士\":\n        - /url: /play/character-personality/result/blazing-strategist\n  - listitem:\n    - paragraph:\n      - link \"「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人\":\n        - /url: /play/character-personality/result/blazing-poet\n  - listitem:\n    - paragraph:\n      - link \"正攻法3秒で飽きて全員を裏道に連れ込む司令塔\":\n        - /url: /play/character-personality/result/blazing-schemer\n  - listitem:\n    - paragraph:\n      - link \"先頭を走りながら「全員来てるか！」と叫び続ける守護司令塔\":\n        - /url: /play/character-personality/result/blazing-warden\n  - listitem:\n    - paragraph:\n      - link \"締切1時間前に突然スイッチが入って傑作を叩き出す情熱の画家\":\n        - /url: /play/character-personality/result/blazing-canvas\n  - listitem:\n    - paragraph:\n      - link \"夢の中で3本の論文を書き終えた学術夢想家\":\n        - /url: /play/character-personality/result/dreaming-scholar\n  - listitem:\n    - paragraph:\n      - link \"正解を出した後で「でも違う解釈だと…」と追加する人\":\n        - /url: /play/character-personality/result/contrarian-professor\n  - listitem:\n    - paragraph:\n      - link \"安全確認を17回やってから実験を始める慎重博士\":\n        - /url: /play/character-personality/result/careful-scholar\n  - listitem:\n    - paragraph:\n      - link \"数式を見て「これ詩みたいだ」と感動するデータの詩人\":\n        - /url: /play/character-personality/result/academic-artist\n  - listitem:\n    - paragraph:\n      - link \"夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家\":\n        - /url: /play/character-personality/result/star-chaser\n  - listitem:\n    - paragraph:\n      - link \"「みんなが幸せな世界」を毎晩脳内で丁寧に設計する夢想家\":\n        - /url: /play/character-personality/result/tender-dreamer\n  - listitem:\n    - paragraph:\n      - link \"目を閉じると映画が始まる感性と妄想の重ね塗りタイプ\":\n        - /url: /play/character-personality/result/dreaming-canvas\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係\":\n        - /url: /play/character-personality/result/clever-guardian\n  - listitem:\n    - paragraph:\n      - link \"「王道でいく理由ある?」と言いながら意図的に外す曲者\":\n        - /url: /play/character-personality/result/creative-disruptor\n  - listitem:\n    - paragraph:\n      - link \"「大丈夫?」と聞きながら自分が一番疲れている守護芸術家\":\n        - /url: /play/character-personality/result/gentle-fortress\n  - listitem:\n    - paragraph:\n      - link \"「考えるより動け」を文字通り実践する覇王\":\n        - /url: /play/character-personality/result/ultimate-commander\n  - listitem:\n    - paragraph:\n      - link \"「もう少し調べてから」と言って気づいたら10年経っていた博士\":\n        - /url: /play/character-personality/result/endless-researcher\n  - listitem:\n    - paragraph:\n      - link \"「いつかやる」と言いながら脳内では47回旅立っている妄想家\":\n        - /url: /play/character-personality/result/eternal-dreamer\n  - listitem:\n    - paragraph:\n      - link \"裏の裏の裏を読んで頭が痛くなっても続ける策略家\":\n        - /url: /play/character-personality/result/ultimate-trickster\n  - listitem:\n    - paragraph:\n      - link \"晴れの日に傘を7本持って山に登る備えの王\":\n        - /url: /play/character-personality/result/ultimate-guardian\n  - listitem:\n    - paragraph:\n      - link \"「うーん、なんか違う」を1000回繰り返す美の追求者\":\n        - /url: /play/character-personality/result/ultimate-artist\n  - listitem:\n    - paragraph:\n      - link \"心配の原因を全部データで証明してから対策する論理的守護者\":\n        - /url: /play/character-personality/result/data-fortress\n  - listitem:\n    - paragraph:\n      - link \"直感で走ったら3歩目で全員置き去りにしていた野生の芸術家\":\n        - /url: /play/character-personality/result/vibe-rebel\n  - listitem:\n    - paragraph:\n      - link \"普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者\":\n        - /url: /play/character-personality/result/guardian-charger"
+ },
+ "character-personality-1280-light-resultpage": {
+  "h1": "目を閉じると映画が始まる感性と妄想の重ね塗りタイプ",
+  "title": "目を閉じると映画が始まる感性と妄想の重ね塗りタイプ | yolos.net",
+  "cur": {
+   "link": "目を閉じると映画が始まる感性と妄想の重ね塗りタイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "目を閉じると映画が始まる感性と妄想の重ね塗りタイプ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 1280
+ },
+ "traditional-color-1280-dark": {
+  "heading": "H3 33.28px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "藍色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|あいいろ"
+   },
+   {
+    "link": "朱色",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|しゅいろ"
+   },
+   {
+    "link": "藤色",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|ふじいろあなたのタイプ"
+   }
+  ],
+  "title": "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見 | yolos.net",
+  "resultH2": [
+   "藤色(ふじいろ)",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 1280,
+  "vw": 1280,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"藍色\":\n        - /url: /play/traditional-color/result/ai\n      - text: あいいろ\n  - listitem:\n    - paragraph:\n      - link \"朱色\":\n        - /url: /play/traditional-color/result/shu\n      - text: しゅいろ\n  - listitem:\n    - paragraph:\n      - link \"若草色\":\n        - /url: /play/traditional-color/result/wakakusa\n      - text: わかくさいろ\n  - listitem:\n    - paragraph:\n      - link \"藤色\":\n        - /url: /play/traditional-color/result/fuji\n      - text: ふじいろ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"山吹色\":\n        - /url: /play/traditional-color/result/yamabuki\n      - text: やまぶきいろ\n  - listitem:\n    - paragraph:\n      - link \"紺色\":\n        - /url: /play/traditional-color/result/kon\n      - text: こんいろ\n  - listitem:\n    - paragraph:\n      - link \"桜色\":\n        - /url: /play/traditional-color/result/sakura\n      - text: さくらいろ\n  - listitem:\n    - paragraph:\n      - link \"翡翠色\":\n        - /url: /play/traditional-color/result/hisui\n      - text: ひすいいろ"
+ },
+ "traditional-color-1280-dark-resultpage": {
+  "h1": "藤色(ふじいろ)",
+  "title": "藤色(ふじいろ) | yolos.net",
+  "cur": {
+   "link": "藤色",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "藤色ふじいろ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 1280
+ },
+ "character-personality-1280-dark": {
+  "heading": "H3 33.28px 他のタイプ（24）",
+  "rows": [
+   {
+    "link": "締切3分前に5手先を読む炎の策士",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|"
+   },
+   {
+    "link": "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|あなたのタイプ"
+   }
+  ],
+  "title": "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト | yolos.net",
+  "resultH2": [
+   "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 1280,
+  "vw": 1280,
+  "aria": "- heading \"他のタイプ（24）\" [level=3]\n- list \"他のタイプ（24）\":\n  - listitem:\n    - paragraph:\n      - link \"締切3分前に5手先を読む炎の策士\":\n        - /url: /play/character-personality/result/blazing-strategist\n  - listitem:\n    - paragraph:\n      - link \"「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人\":\n        - /url: /play/character-personality/result/blazing-poet\n  - listitem:\n    - paragraph:\n      - link \"正攻法3秒で飽きて全員を裏道に連れ込む司令塔\":\n        - /url: /play/character-personality/result/blazing-schemer\n  - listitem:\n    - paragraph:\n      - link \"先頭を走りながら「全員来てるか！」と叫び続ける守護司令塔\":\n        - /url: /play/character-personality/result/blazing-warden\n  - listitem:\n    - paragraph:\n      - link \"締切1時間前に突然スイッチが入って傑作を叩き出す情熱の画家\":\n        - /url: /play/character-personality/result/blazing-canvas\n  - listitem:\n    - paragraph:\n      - link \"夢の中で3本の論文を書き終えた学術夢想家\":\n        - /url: /play/character-personality/result/dreaming-scholar\n  - listitem:\n    - paragraph:\n      - link \"正解を出した後で「でも違う解釈だと…」と追加する人\":\n        - /url: /play/character-personality/result/contrarian-professor\n  - listitem:\n    - paragraph:\n      - link \"安全確認を17回やってから実験を始める慎重博士\":\n        - /url: /play/character-personality/result/careful-scholar\n  - listitem:\n    - paragraph:\n      - link \"数式を見て「これ詩みたいだ」と感動するデータの詩人\":\n        - /url: /play/character-personality/result/academic-artist\n  - listitem:\n    - paragraph:\n      - link \"夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家\":\n        - /url: /play/character-personality/result/star-chaser\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"「みんなが幸せな世界」を毎晩脳内で丁寧に設計する夢想家\":\n        - /url: /play/character-personality/result/tender-dreamer\n  - listitem:\n    - paragraph:\n      - link \"目を閉じると映画が始まる感性と妄想の重ね塗りタイプ\":\n        - /url: /play/character-personality/result/dreaming-canvas\n  - listitem:\n    - paragraph:\n      - link \"「悪用できる穴」を見つけて自分で塞ぐ戦略的安全係\":\n        - /url: /play/character-personality/result/clever-guardian\n  - listitem:\n    - paragraph:\n      - link \"「王道でいく理由ある?」と言いながら意図的に外す曲者\":\n        - /url: /play/character-personality/result/creative-disruptor\n  - listitem:\n    - paragraph:\n      - link \"「大丈夫?」と聞きながら自分が一番疲れている守護芸術家\":\n        - /url: /play/character-personality/result/gentle-fortress\n  - listitem:\n    - paragraph:\n      - link \"「考えるより動け」を文字通り実践する覇王\":\n        - /url: /play/character-personality/result/ultimate-commander\n  - listitem:\n    - paragraph:\n      - link \"「もう少し調べてから」と言って気づいたら10年経っていた博士\":\n        - /url: /play/character-personality/result/endless-researcher\n  - listitem:\n    - paragraph:\n      - link \"「いつかやる」と言いながら脳内では47回旅立っている妄想家\":\n        - /url: /play/character-personality/result/eternal-dreamer\n  - listitem:\n    - paragraph:\n      - link \"裏の裏の裏を読んで頭が痛くなっても続ける策略家\":\n        - /url: /play/character-personality/result/ultimate-trickster\n  - listitem:\n    - paragraph:\n      - link \"晴れの日に傘を7本持って山に登る備えの王\":\n        - /url: /play/character-personality/result/ultimate-guardian\n  - listitem:\n    - paragraph:\n      - link \"「うーん、なんか違う」を1000回繰り返す美の追求者\":\n        - /url: /play/character-personality/result/ultimate-artist\n  - listitem:\n    - paragraph:\n      - link \"心配の原因を全部データで証明してから対策する論理的守護者\":\n        - /url: /play/character-personality/result/data-fortress\n  - listitem:\n    - paragraph:\n      - link \"直感で走ったら3歩目で全員置き去りにしていた野生の芸術家\":\n        - /url: /play/character-personality/result/vibe-rebel\n  - listitem:\n    - paragraph:\n      - link \"普段は後方で全員の顔色を確認しながら、本当に必要な時だけ前に出る守護者\":\n        - /url: /play/character-personality/result/guardian-charger"
+ },
+ "character-personality-1280-dark-resultpage": {
+  "h1": "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家",
+  "title": "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家 | yolos.net",
+  "cur": {
+   "link": "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "夢を語りながら「でもこれ普通じゃないよね」と逆張りする妄想家"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 1280
+ }
+}

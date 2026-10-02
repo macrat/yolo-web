@@ -1,0 +1,290 @@
+[
+ {
+  "width": 320,
+  "font": 16,
+  "theme": "light",
+  "pg": {
+   "rem": "16px",
+   "slider": "38.0,354.2 244.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 773.4,
+   "sw": 320
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "74.0,1418.3 200.0x16.0",
+    "btnBottom": 1529.2,
+    "sw": 320
+   },
+   "image/webp": {
+    "slider": "74.0,150.3 200.0x16.0",
+    "btnBottom": 261.2,
+    "sw": 320
+   }
+  }
+ },
+ {
+  "width": 320,
+  "font": 16,
+  "theme": "dark",
+  "pg": {
+   "rem": "16px",
+   "slider": "38.0,354.2 244.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 773.4,
+   "sw": 320
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "74.0,1418.3 200.0x16.0",
+    "btnBottom": 1529.2,
+    "sw": 320
+   },
+   "image/webp": {
+    "slider": "74.0,150.3 200.0x16.0",
+    "btnBottom": 261.2,
+    "sw": 320
+   }
+  }
+ },
+ {
+  "width": 320,
+  "font": 32,
+  "theme": "light",
+  "pg": {
+   "rem": "32px",
+   "slider": "38.0,722.8 244.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 1515.1,
+   "sw": 320
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "38.0,2905.8 200.0x16.0",
+    "btnBottom": 3077.2,
+    "sw": 320
+   },
+   "image/webp": {
+    "slider": "38.0,149.8 200.0x16.0",
+    "btnBottom": 321.2,
+    "sw": 320
+   }
+  }
+ },
+ {
+  "width": 320,
+  "font": 32,
+  "theme": "dark",
+  "pg": {
+   "rem": "32px",
+   "slider": "38.0,722.8 244.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 1515.1,
+   "sw": 320
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "38.0,2905.8 200.0x16.0",
+    "btnBottom": 3077.2,
+    "sw": 320
+   },
+   "image/webp": {
+    "slider": "38.0,149.8 200.0x16.0",
+    "btnBottom": 321.2,
+    "sw": 320
+   }
+  }
+ },
+ {
+  "width": 375,
+  "font": 16,
+  "theme": "light",
+  "pg": {
+   "rem": "16px",
+   "slider": "38.0,266.2 299.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 685.4,
+   "sw": 375
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "74.0,1273.0 200.0x16.0",
+    "btnBottom": 1350,
+    "sw": 375
+   },
+   "image/webp": {
+    "slider": "74.0,150.0 200.0x16.0",
+    "btnBottom": 227,
+    "sw": 375
+   }
+  }
+ },
+ {
+  "width": 375,
+  "font": 16,
+  "theme": "dark",
+  "pg": {
+   "rem": "16px",
+   "slider": "38.0,266.2 299.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 685.4,
+   "sw": 375
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "74.0,1273.0 200.0x16.0",
+    "btnBottom": 1350,
+    "sw": 375
+   },
+   "image/webp": {
+    "slider": "74.0,150.0 200.0x16.0",
+    "btnBottom": 227,
+    "sw": 375
+   }
+  }
+ },
+ {
+  "width": 375,
+  "font": 32,
+  "theme": "light",
+  "pg": {
+   "rem": "32px",
+   "slider": "38.0,610.0 299.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 1339.3,
+   "sw": 375
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "110.0,2435.9 200.0x16.0",
+    "btnBottom": 2625.2,
+    "sw": 375
+   },
+   "image/webp": {
+    "slider": "110.0,149.9 200.0x16.0",
+    "btnBottom": 339.2,
+    "sw": 375
+   }
+  }
+ },
+ {
+  "width": 375,
+  "font": 32,
+  "theme": "dark",
+  "pg": {
+   "rem": "32px",
+   "slider": "38.0,610.0 299.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 1339.3,
+   "sw": 375
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "110.0,2435.9 200.0x16.0",
+    "btnBottom": 2625.2,
+    "sw": 375
+   },
+   "image/webp": {
+    "slider": "110.0,149.9 200.0x16.0",
+    "btnBottom": 339.2,
+    "sw": 375
+   }
+  }
+ },
+ {
+  "width": 1280,
+  "font": 16,
+  "theme": "light",
+  "pg": {
+   "rem": "16px",
+   "slider": "198.0,288.4 400.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 676.2,
+   "sw": 1280
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "234.0,1176.4 200.0x16.0",
+    "btnBottom": 1253.4,
+    "sw": 1280
+   },
+   "image/webp": {
+    "slider": "234.0,150.4 200.0x16.0",
+    "btnBottom": 227.4,
+    "sw": 1280
+   }
+  }
+ },
+ {
+  "width": 1280,
+  "font": 16,
+  "theme": "dark",
+  "pg": {
+   "rem": "16px",
+   "slider": "198.0,288.4 400.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 676.2,
+   "sw": 1280
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "234.0,1176.4 200.0x16.0",
+    "btnBottom": 1253.4,
+    "sw": 1280
+   },
+   "image/webp": {
+    "slider": "234.0,150.4 200.0x16.0",
+    "btnBottom": 227.4,
+    "sw": 1280
+   }
+  }
+ },
+ {
+  "width": 1280,
+  "font": 32,
+  "theme": "light",
+  "pg": {
+   "rem": "32px",
+   "slider": "38.0,377.3 400.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 980.8,
+   "sw": 1280
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "110.0,1673.1 200.0x16.0",
+    "btnBottom": 1794.6,
+    "sw": 1280
+   },
+   "image/webp": {
+    "slider": "110.0,150.1 200.0x16.0",
+    "btnBottom": 271.6,
+    "sw": 1280
+   }
+  }
+ },
+ {
+  "width": 1280,
+  "font": 32,
+  "theme": "dark",
+  "pg": {
+   "rem": "32px",
+   "slider": "38.0,377.3 400.0x16.0 m=0px/0px",
+   "btn": "パスワード生成",
+   "btnBottom": 980.8,
+   "sw": 1280
+  },
+  "ir": {
+   "image/jpeg": {
+    "slider": "110.0,1673.1 200.0x16.0",
+    "btnBottom": 1794.6,
+    "sw": 1280
+   },
+   "image/webp": {
+    "slider": "110.0,150.1 200.0x16.0",
+    "btnBottom": 271.6,
+    "sw": 1280
+   }
+  }
+ }
+]

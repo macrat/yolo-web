@@ -1,0 +1,2529 @@
+[
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "text": "ニホンザル——温泉を発明した革命児",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンザル——",
+   "温泉を発明した",
+   "革命児"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "text": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドタヌキ",
+   "——",
+   "化かすどころか",
+   "化かされる",
+   "愛されキャラ"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "text": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンキツネ",
+   "——お稲荷さんの",
+   "看板を背負う",
+   "孤高のリアリスト"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "text": "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "イリオモテヤマ",
+   "ネコ——",
+   "西表島だけで",
+   "生き残った究極の",
+   "サバイバー"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "text": "アマミノクロウサギ——走れないウサギの逆転戦略",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "アマミノクロウ",
+   "サギ——走れない",
+   "ウサギの逆転戦略"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "text": "ヤマネ——手のひらサイズの森の忍者",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ヤマネ——手の",
+   "ひらサイズの森の",
+   "忍者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "text": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンモモンガ",
+   "——",
+   "空飛ぶハンカチの",
+   "大冒険家"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "text": "ニホンカモシカ——山の哲学者は首をかしげる",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンカモシカ",
+   "——山の哲学者は",
+   "首をかしげる"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "text": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドテン——",
+   "季節ごとに",
+   "着替える孤高の",
+   "変身ハンター"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "text": "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ムササビ——",
+   "座布団サイズで",
+   "120m飛ぶ孤高の",
+   "夢想家"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "text": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンリス——",
+   "隠し場所を忘れる",
+   "慎重な貯蓄家"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "text": "エゾシカ——北の大地を群れで駆ける繊細戦士",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "エゾシカ——北の",
+   "大地を群れで",
+   "駆ける繊細戦士"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "text": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "茶道タイプ——",
+   "静寂を愛する",
+   "「一期一会」の",
+   "達人"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "text": "書道タイプ——一画に魂を込める「道」の探求者",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "書道タイプ——",
+   "一画に魂を込める",
+   "「道」の探求者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "text": "武道タイプ——心身を鍛える「不動心」の戦士",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "武道タイプ——",
+   "心身を鍛える",
+   "「不動心」の戦士"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "text": "華道タイプ——自然と対話する「美」の創造者",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "華道タイプ——",
+   "自然と対話する",
+   "「美」の創造者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "text": "落語タイプ——人を笑わせる「話芸」の天才",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "落語タイプ——",
+   "人を笑わせる",
+   "「話芸」の天才"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "text": "俳句タイプ——世界を十七音に閉じ込める「観察者」",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "俳句タイプ——",
+   "世界を十七音に",
+   "閉じ込める",
+   "「観察者」"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "text": "陶芸タイプ——土と炎から生み出す「ものづくり」の職人",
+  "width": 266,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "陶芸タイプ——",
+   "土と炎から",
+   "生み出す「もの",
+   "づくり」の職人"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "text": "ニホンザル——温泉を発明した革命児",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホン",
+   "ザル",
+   "——",
+   "温泉を",
+   "発明した",
+   "革命児"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "text": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンド",
+   "タヌキ",
+   "——",
+   "化かすど",
+   "ころか",
+   "化かされ",
+   "る",
+   "愛されキ",
+   "ャラ"
+  ],
+  "issues": [
+   "phrase-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "text": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホン",
+   "キツネ",
+   "——",
+   "お稲荷さ",
+   "んの",
+   "看板を",
+   "背負う",
+   "孤高の",
+   "リアリ",
+   "スト"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "text": "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "イリオ",
+   "モテヤ",
+   "マネコ",
+   "——",
+   "西表島だ",
+   "けで",
+   "生き残っ",
+   "た究極の",
+   "サバイ",
+   "バー"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "text": "アマミノクロウサギ——走れないウサギの逆転戦略",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "アマミ",
+   "ノクロ",
+   "ウサギ",
+   "——",
+   "走れない",
+   "ウサギ",
+   "の",
+   "逆転戦略"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "text": "ヤマネ——手のひらサイズの森の忍者",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ヤマネ",
+   "——手の",
+   "ひらサ",
+   "イズの",
+   "森の忍者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "text": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホン",
+   "モモン",
+   "ガ——",
+   "空飛ぶハ",
+   "ンカチ",
+   "の",
+   "大冒険家"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "text": "ニホンカモシカ——山の哲学者は首をかしげる",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホン",
+   "カモシ",
+   "カ——",
+   "山の",
+   "哲学者は",
+   "首を",
+   "かしげ",
+   "る"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "text": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンド",
+   "テン",
+   "——",
+   "季節ごと",
+   "に",
+   "着替える",
+   "孤高の",
+   "変身ハン",
+   "ター"
+  ],
+  "issues": [
+   "phrase-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "text": "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ムササ",
+   "ビ——",
+   "座布団",
+   "サイズ",
+   "で",
+   "120m飛",
+   "ぶ孤高の",
+   "夢想家"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "text": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホン",
+   "リス",
+   "——",
+   "隠し場所",
+   "を忘れる",
+   "慎重な",
+   "貯蓄家"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "text": "エゾシカ——北の大地を群れで駆ける繊細戦士",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "エゾシ",
+   "カ——",
+   "北の",
+   "大地を",
+   "群れで",
+   "駆ける",
+   "繊細戦士"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "text": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "茶道",
+   "タイプ",
+   "——",
+   "静寂を",
+   "愛する",
+   "「一期",
+   "一会」の",
+   "達人"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "text": "書道タイプ——一画に魂を込める「道」の探求者",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "書道",
+   "タイプ",
+   "——",
+   "一画に",
+   "魂を",
+   "込める",
+   "「道」の",
+   "探求者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "text": "武道タイプ——心身を鍛える「不動心」の戦士",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "武道",
+   "タイプ",
+   "——",
+   "心身を",
+   "鍛える",
+   "「不動心",
+   "」の戦士"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "text": "華道タイプ——自然と対話する「美」の創造者",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "華道",
+   "タイプ",
+   "——",
+   "自然と",
+   "対話する",
+   "「美」の",
+   "創造者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "text": "落語タイプ——人を笑わせる「話芸」の天才",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "落語",
+   "タイプ",
+   "——人を",
+   "笑わせる",
+   "「話芸」",
+   "の天才"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "text": "俳句タイプ——世界を十七音に閉じ込める「観察者」",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "俳句",
+   "タイプ",
+   "——",
+   "世界を",
+   "十七音に",
+   "閉じ込め",
+   "る",
+   "「観察者",
+   "」"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line",
+   "one-char-line",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 320,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "text": "陶芸タイプ——土と炎から生み出す「ものづくり」の職人",
+  "width": 266,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "陶芸",
+   "タイプ",
+   "——土と",
+   "炎から",
+   "生み出す",
+   "「もの",
+   "づくり",
+   "」の職人"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "text": "ニホンザル——温泉を発明した革命児",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンザル——",
+   "温泉を発明した",
+   "革命児"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "text": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドタヌキ——",
+   "化かすどころか",
+   "化かされる",
+   "愛されキャラ"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "text": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンキツネ——",
+   "お稲荷さんの看板を",
+   "背負う孤高の",
+   "リアリスト"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "text": "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "イリオモテヤマネコ",
+   "——西表島だけで",
+   "生き残った究極の",
+   "サバイバー"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "text": "アマミノクロウサギ——走れないウサギの逆転戦略",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "アマミノクロウサギ",
+   "——走れない",
+   "ウサギの逆転戦略"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "text": "ヤマネ——手のひらサイズの森の忍者",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ヤマネ——手の",
+   "ひらサイズの森の",
+   "忍者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "text": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンモモンガ——",
+   "空飛ぶハンカチの",
+   "大冒険家"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "text": "ニホンカモシカ——山の哲学者は首をかしげる",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンカモシカ——",
+   "山の哲学者は首を",
+   "かしげる"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "text": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドテン——",
+   "季節ごとに着替える",
+   "孤高の変身ハンター"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "text": "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ムササビ——座布団",
+   "サイズで",
+   "120m飛ぶ孤高の",
+   "夢想家"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "text": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンリス——",
+   "隠し場所を忘れる",
+   "慎重な貯蓄家"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "text": "エゾシカ——北の大地を群れで駆ける繊細戦士",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "エゾシカ——北の",
+   "大地を群れで駆ける",
+   "繊細戦士"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "text": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "茶道タイプ——",
+   "静寂を愛する「一期",
+   "一会」の達人"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "text": "書道タイプ——一画に魂を込める「道」の探求者",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "書道タイプ——",
+   "一画に魂を込める",
+   "「道」の探求者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "text": "武道タイプ——心身を鍛える「不動心」の戦士",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "武道タイプ——",
+   "心身を鍛える",
+   "「不動心」の戦士"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "text": "華道タイプ——自然と対話する「美」の創造者",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "華道タイプ——",
+   "自然と対話する",
+   "「美」の創造者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "text": "落語タイプ——人を笑わせる「話芸」の天才",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "落語タイプ——人を",
+   "笑わせる「話芸」の",
+   "天才"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "text": "俳句タイプ——世界を十七音に閉じ込める「観察者」",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "俳句タイプ——",
+   "世界を十七音に",
+   "閉じ込める",
+   "「観察者」"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent-fits"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "text": "陶芸タイプ——土と炎から生み出す「ものづくり」の職人",
+  "width": 321,
+  "fontSize": "33.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "陶芸タイプ——土と",
+   "炎から生み出す",
+   "「ものづくり」の",
+   "職人"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "text": "ニホンザル——温泉を発明した革命児",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンザ",
+   "ル——",
+   "温泉を",
+   "発明した",
+   "革命児"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "text": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドタ",
+   "ヌキ——",
+   "化かすど",
+   "ころか",
+   "化かされ",
+   "る",
+   "愛されキ",
+   "ャラ"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "text": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンキ",
+   "ツネ——",
+   "お稲荷さ",
+   "んの",
+   "看板を",
+   "背負う",
+   "孤高の",
+   "リアリス",
+   "ト"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "text": "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "イリオモ",
+   "テヤマネ",
+   "コ——",
+   "西表島だ",
+   "けで",
+   "生き残っ",
+   "た究極の",
+   "サバイバ",
+   "ー"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "text": "アマミノクロウサギ——走れないウサギの逆転戦略",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "アマミノ",
+   "クロウサ",
+   "ギ——",
+   "走れない",
+   "ウサギの",
+   "逆転戦略"
+  ],
+  "issues": [
+   "phrase-internal",
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "text": "ヤマネ——手のひらサイズの森の忍者",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ヤマネ",
+   "——手の",
+   "ひらサイ",
+   "ズの森の",
+   "忍者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "text": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンモ",
+   "モンガ",
+   "——",
+   "空飛ぶハ",
+   "ンカチの",
+   "大冒険家"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "text": "ニホンカモシカ——山の哲学者は首をかしげる",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンカ",
+   "モシカ",
+   "——山の",
+   "哲学者は",
+   "首を",
+   "かしげる"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "text": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドテ",
+   "ン——",
+   "季節ごと",
+   "に",
+   "着替える",
+   "孤高の",
+   "変身ハン",
+   "ター"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "text": "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ムササビ",
+   "——",
+   "座布団",
+   "サイズで",
+   "120m飛ぶ",
+   "孤高の",
+   "夢想家"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "text": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンリ",
+   "ス——",
+   "隠し場所",
+   "を忘れる",
+   "慎重な",
+   "貯蓄家"
+  ],
+  "issues": [
+   "phrase-internal",
+   "word-internal",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "text": "エゾシカ——北の大地を群れで駆ける繊細戦士",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "エゾシカ",
+   "——北の",
+   "大地を",
+   "群れで",
+   "駆ける",
+   "繊細戦士"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "text": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "茶道",
+   "タイプ",
+   "——",
+   "静寂を",
+   "愛する",
+   "「一期",
+   "一会」の",
+   "達人"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "text": "書道タイプ——一画に魂を込める「道」の探求者",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "書道",
+   "タイプ",
+   "——",
+   "一画に",
+   "魂を",
+   "込める",
+   "「道」の",
+   "探求者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "text": "武道タイプ——心身を鍛える「不動心」の戦士",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "武道",
+   "タイプ",
+   "——",
+   "心身を",
+   "鍛える",
+   "「不動心",
+   "」の戦士"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "text": "華道タイプ——自然と対話する「美」の創造者",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "華道",
+   "タイプ",
+   "——",
+   "自然と",
+   "対話する",
+   "「美」の",
+   "創造者"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "text": "落語タイプ——人を笑わせる「話芸」の天才",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "落語",
+   "タイプ",
+   "——人を",
+   "笑わせる",
+   "「話芸」",
+   "の天才"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "text": "俳句タイプ——世界を十七音に閉じ込める「観察者」",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "俳句",
+   "タイプ",
+   "——",
+   "世界を",
+   "十七音に",
+   "閉じ込め",
+   "る",
+   "「観察者",
+   "」"
+  ],
+  "issues": [
+   "dash-adjacent",
+   "dash-adjacent",
+   "phrase-internal",
+   "word-internal",
+   "phrase-internal",
+   "word-internal",
+   "one-char-line",
+   "one-char-line",
+   "kinsoku-start"
+  ]
+ },
+ {
+  "vw": 375,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "text": "陶芸タイプ——土と炎から生み出す「ものづくり」の職人",
+  "width": 321,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "陶芸",
+   "タイプ",
+   "——土と",
+   "炎から",
+   "生み出す",
+   "「もの",
+   "づくり」",
+   "の職人"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "text": "ニホンザル——温泉を発明した革命児",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンザル——温泉を発明した",
+   "革命児"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "text": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドタヌキ——",
+   "化かすどころか化かされる",
+   "愛されキャラ"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "text": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンキツネ——お稲荷さんの",
+   "看板を背負う孤高のリアリスト"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "text": "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "イリオモテヤマネコ——",
+   "西表島だけで生き残った究極の",
+   "サバイバー"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "text": "アマミノクロウサギ——走れないウサギの逆転戦略",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "アマミノクロウサギ——",
+   "走れないウサギの逆転戦略"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "text": "ヤマネ——手のひらサイズの森の忍者",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ヤマネ——手のひらサイズの",
+   "森の忍者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "text": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンモモンガ——",
+   "空飛ぶハンカチの大冒険家"
+  ],
+  "issues": [
+   "dash-adjacent"
+  ]
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "text": "ニホンカモシカ——山の哲学者は首をかしげる",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンカモシカ——山の",
+   "哲学者は首をかしげる"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "text": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドテン——季節ごとに",
+   "着替える孤高の変身ハンター"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "text": "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ムササビ——座布団サイズで",
+   "120m飛ぶ孤高の夢想家"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "text": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンリス——隠し場所を",
+   "忘れる慎重な貯蓄家"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "text": "エゾシカ——北の大地を群れで駆ける繊細戦士",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "エゾシカ——北の大地を群れで",
+   "駆ける繊細戦士"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "text": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "茶道タイプ——静寂を愛する",
+   "「一期一会」の達人"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "text": "書道タイプ——一画に魂を込める「道」の探求者",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "書道タイプ——一画に魂を",
+   "込める「道」の探求者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "text": "武道タイプ——心身を鍛える「不動心」の戦士",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "武道タイプ——心身を鍛える",
+   "「不動心」の戦士"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "text": "華道タイプ——自然と対話する「美」の創造者",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "華道タイプ——自然と対話する",
+   "「美」の創造者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "text": "落語タイプ——人を笑わせる「話芸」の天才",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "落語タイプ——人を笑わせる",
+   "「話芸」の天才"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "text": "俳句タイプ——世界を十七音に閉じ込める「観察者」",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "俳句タイプ——世界を十七音に",
+   "閉じ込める「観察者」"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 16,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "text": "陶芸タイプ——土と炎から生み出す「ものづくり」の職人",
+  "width": 922,
+  "fontSize": "65.28px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "陶芸タイプ——土と炎から",
+   "生み出す「ものづくり」の職人"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "text": "ニホンザル——温泉を発明した革命児",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンザル——温泉を発明した革命児"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "text": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドタヌキ——化かすどころか",
+   "化かされる愛されキャラ"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "text": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンキツネ——お稲荷さんの看板を",
+   "背負う孤高のリアリスト"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "text": "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "イリオモテヤマネコ——西表島だけで",
+   "生き残った究極のサバイバー"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "text": "アマミノクロウサギ——走れないウサギの逆転戦略",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "アマミノクロウサギ——走れない",
+   "ウサギの逆転戦略"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "text": "ヤマネ——手のひらサイズの森の忍者",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ヤマネ——手のひらサイズの森の忍者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "text": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンモモンガ——空飛ぶハンカチの",
+   "大冒険家"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "text": "ニホンカモシカ——山の哲学者は首をかしげる",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンカモシカ——山の哲学者は首を",
+   "かしげる"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "text": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ホンドテン——季節ごとに着替える",
+   "孤高の変身ハンター"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "text": "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ムササビ——座布団サイズで",
+   "120m飛ぶ孤高の夢想家"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "text": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "ニホンリス——隠し場所を忘れる慎重な",
+   "貯蓄家"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "text": "エゾシカ——北の大地を群れで駆ける繊細戦士",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "エゾシカ——北の大地を群れで駆ける",
+   "繊細戦士"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "text": "茶道タイプ——静寂を愛する「一期一会」の達人",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "茶道タイプ——静寂を愛する「一期",
+   "一会」の達人"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "text": "書道タイプ——一画に魂を込める「道」の探求者",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "書道タイプ——一画に魂を込める「道」",
+   "の探求者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "text": "武道タイプ——心身を鍛える「不動心」の戦士",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "武道タイプ——心身を鍛える「不動心」",
+   "の戦士"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "text": "華道タイプ——自然と対話する「美」の創造者",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "華道タイプ——自然と対話する「美」の",
+   "創造者"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "text": "落語タイプ——人を笑わせる「話芸」の天才",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "落語タイプ——人を笑わせる「話芸」の",
+   "天才"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "text": "俳句タイプ——世界を十七音に閉じ込める「観察者」",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "俳句タイプ——世界を十七音に",
+   "閉じ込める「観察者」"
+  ],
+  "issues": []
+ },
+ {
+  "vw": 1280,
+  "fontPx": 32,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "text": "陶芸タイプ——土と炎から生み出す「ものづくり」の職人",
+  "width": 1226,
+  "fontSize": "66.56px",
+  "wordBreak": "keep-all",
+  "innerWordBreak": true,
+  "fontReady": true,
+  "lines": [
+   "陶芸タイプ——土と炎から生み出す",
+   "「ものづくり」の職人"
+  ],
+  "issues": []
+ }
+]

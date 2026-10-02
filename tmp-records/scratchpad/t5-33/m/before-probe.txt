@@ -1,0 +1,4 @@
+irodori	fresh	320	100%	CLS=0.0000
+irodori	finished	320	100%	CLS=0.0000
+irodori	remembered	320	100%	CLS=0.0000
+irodori	playing	320	100%	CLS=0.0000

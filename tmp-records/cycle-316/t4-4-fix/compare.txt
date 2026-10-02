@@ -1,0 +1,55 @@
+('blog', False) SAME
+('daily', False) SAME
+('daily', True) SAME
+('fortuneResult', False) SAME
+('fortuneResult', True) SAME
+('gamePage', False) SAME
+('humor', False) SAME
+('irodori', False) 
+    buttons: [['X でシェア', '結果をコピー', '画像を保存']] -> [['X でシェア', 'LINE でシェア', '結果をコピー', '画像を保存']]
+    aria differs
+    click (0, 'LINE でシェア') only in after: {"opened": ["https://line.me/R/share?text=イロドリ #220 スコア: 39/100 (Dランク)
+🟩🟥🟥🟥🟥
+#イロドリ #yolosnet
+http://localhost:3447/play/irodori"], "copied": [], "shared": [], "gtag": [["event", "share", {"method": "line", "content_type": "game", "item_id": "irodori", "content_id": "irodori"}]], "status": ""}
+('irodori', True) SAME
+('kanji', False) SAME
+('kanjiGame', False) 
+    buttons: [['X でシェア', '結果をコピー']] -> [['X でシェア', 'LINE でシェア', '結果をコピー']]
+    aria differs
+    click (0, 'LINE でシェア') only in after: {"opened": ["https://line.me/R/share?text=漢字カナール #226 (中級) X/6
+⬜⬜🟨⬜⬜🟩
+⬜⬜🟨⬜⬜🟩
+⬜⬜🟨⬜⬜🟩
+⬜⬜🟨⬜⬜🟩
+⬜⬜🟨⬜⬜🟩
+⬜⬜🟨⬜⬜🟩
+#漢字カナール #yolosnet
+http://localhost:3447/play/kanji-kanaru"], "copied": [], "shared": [], "gtag": [["event", "share", {"method": "line", "content_type": "game", "item_id": "kanji-kanaru", "content_id": "kanji-kanaru"}]], "status": ""}
+('kanjiGame', True) SAME
+('nakamawake', False) 
+    buttons: [['X でシェア', '結果をコピー']] -> [['X でシェア', 'LINE でシェア', '結果をコピー']]
+    aria differs
+    click (0, 'LINE でシェア') only in after: {"opened": ["https://line.me/R/share?text=ナカマワケ #226 X
+
+#ナカマワケ #yolosnet
+http://localhost:3447/play/nakamawake"], "copied": [], "shared": [], "gtag": [["event", "share", {"method": "line", "content_type": "game", "item_id": "nakamawake", "content_id": "nakamawake"}]], "status": ""}
+('nakamawake', True) SAME
+('quizSolved', False) SAME
+('quizSolved', True) SAME
+('resultPage', False) SAME
+('resultPage', True) SAME
+('tool', False) SAME
+('yojiGame', False) 
+    buttons: [['X でシェア', '結果をコピー']] -> [['X でシェア', 'LINE でシェア', '結果をコピー']]
+    aria differs
+    click (0, 'LINE でシェア') only in after: {"opened": ["https://line.me/R/share?text=四字キメル #226 (中級) X/6
+⬜🟨⬜🟩
+⬜🟨⬜🟩
+⬜🟨⬜🟩
+⬜🟨⬜🟩
+⬜🟨⬜🟩
+⬜🟨⬜🟩
+#四字キメル #yolosnet
+http://localhost:3447/play/yoji-kimeru"], "copied": [], "shared": [], "gtag": [["event", "share", {"method": "line", "content_type": "game", "item_id": "yoji-kimeru", "content_id": "yoji-kimeru"}]], "status": ""}
+('yojiGame', True) SAME

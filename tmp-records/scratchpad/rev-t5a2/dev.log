@@ -1,0 +1,249 @@
+▲ Next.js 16.3.0 (webpack)
+- Local:         http://localhost:3917
+- Network:       http://192.0.2.2:3917
+✓ Ready in 1187ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /tmp/claude-0/-home-user-yolo-web/7ec6fd95-5319-581a-b78e-9e5ca394946c/scratchpad/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /tmp/claude-0/-home-user-yolo-web/7ec6fd95-5319-581a-b78e-9e5ca394946c/scratchpad/rev-t5a2/exp/package-lock.json
+
+✓ Running next.config.ts took 244ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+○ Compiling /play/[slug] ...
+⨯ ./src/lib/google-analytics.ts:1:1
+Module not found: Can't resolve '@/lib/generated/release-id'
+> 1 | import { RELEASE_ID } from "@/lib/generated/release-id";
+    | ^
+  2 |
+  3 | /**
+  4 |  * Google Analytics（gtag.js）の読み込み。React のページ（@/components/GoogleAnalytics）と、middleware が
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/GoogleAnalytics/index.tsx
+./src/app/layout.tsx
+⨯ ./src/lib/google-analytics.ts:1:1
+Module not found: Can't resolve '@/lib/generated/release-id'
+> 1 | import { RELEASE_ID } from "@/lib/generated/release-id";
+    | ^
+  2 |
+  3 | /**
+  4 |  * Google Analytics（gtag.js）の読み込み。React のページ（@/components/GoogleAnalytics）と、middleware が
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/GoogleAnalytics/index.tsx
+./src/app/layout.tsx
+⨯ ./src/lib/google-analytics.ts:1:1
+Module not found: Can't resolve '@/lib/generated/release-id'
+> 1 | import { RELEASE_ID } from "@/lib/generated/release-id";
+    | ^
+  2 |
+  3 | /**
+  4 |  * Google Analytics（gtag.js）の読み込み。React のページ（@/components/GoogleAnalytics）と、middleware が
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/GoogleAnalytics/index.tsx
+./src/app/layout.tsx
+ GET /play/character-personality 500 in 38.4s (next.js: 38.3s, application-code: 158ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /play/character-personality 200 in 4.7s (next.js: 2.1s, generate-params: 1828ms, application-code: 740ms)
+○ Compiling /tools/base64 ...
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /tools/base64 200 in 8.5s (next.js: 7.9s, application-code: 590ms)
+ GET /play/character-personality 200 in 919ms (next.js: 63ms, generate-params: 76ms, application-code: 779ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /play/character-personality 200 in 274ms (next.js: 4ms, generate-params: 0.0ms, application-code: 270ms)
+ GET /play/character-personality 200 in 466ms (next.js: 13ms, generate-params: 75ms, application-code: 378ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 457ms (next.js: 3ms, generate-params: 68ms, application-code: 385ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 672ms (next.js: 8ms, generate-params: 114ms, application-code: 551ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 620ms (next.js: 3ms, generate-params: 95ms, application-code: 522ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 790ms (next.js: 8ms, generate-params: 100ms, application-code: 682ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 520ms (next.js: 4ms, generate-params: 114ms, application-code: 401ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 661ms (next.js: 3ms, generate-params: 73ms, application-code: 585ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kanji-level 200 in 545ms (next.js: 6ms, generate-params: 80ms, application-code: 458ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kotowaza-level 200 in 650ms (next.js: 3ms, generate-params: 100ms, application-code: 547ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/traditional-color 200 in 673ms (next.js: 2ms, generate-params: 206ms, application-code: 465ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-level 200 in 481ms (next.js: 2ms, generate-params: 89ms, application-code: 390ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-personality 200 in 768ms (next.js: 7ms, generate-params: 106ms, application-code: 654ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/impossible-advice 200 in 480ms (next.js: 3ms, generate-params: 102ms, application-code: 375ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/contrarian-fortune 200 in 541ms (next.js: 13ms, generate-params: 76ms, application-code: 452ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/unexpected-compatibility 200 in 481ms (next.js: 6ms, generate-params: 111ms, application-code: 364ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /play/music-personality 200 in 3.7s (next.js: 3.0s, application-code: 712ms)
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-fortune 200 in 566ms (next.js: 72ms, generate-params: 84ms, application-code: 410ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/animal-personality 200 in 768ms (next.js: 7ms, generate-params: 137ms, application-code: 624ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/science-thinking 200 in 503ms (next.js: 3ms, generate-params: 89ms, application-code: 412ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/japanese-culture 200 in 721ms (next.js: 4ms, generate-params: 62ms, application-code: 654ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 817ms (next.js: 5ms, generate-params: 76ms, application-code: 737ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/word-sense-personality 200 in 819ms (next.js: 3ms, generate-params: 147ms, application-code: 670ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kanji-level 200 in 630ms (next.js: 3ms, generate-params: 104ms, application-code: 523ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kotowaza-level 200 in 405ms (next.js: 3ms, generate-params: 65ms, application-code: 337ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/traditional-color 200 in 702ms (next.js: 4ms, generate-params: 87ms, application-code: 611ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-level 200 in 616ms (next.js: 4ms, generate-params: 84ms, application-code: 529ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-personality 200 in 408ms (next.js: 3ms, generate-params: 78ms, application-code: 327ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/impossible-advice 200 in 660ms (next.js: 7ms, generate-params: 129ms, application-code: 524ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/contrarian-fortune 200 in 997ms (next.js: 3ms, generate-params: 161ms, application-code: 833ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/unexpected-compatibility 200 in 702ms (next.js: 3ms, generate-params: 68ms, application-code: 632ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/music-personality 200 in 365ms (next.js: 3ms, application-code: 362ms)
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-fortune 200 in 695ms (next.js: 4ms, generate-params: 74ms, application-code: 617ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/animal-personality 200 in 707ms (next.js: 2ms, generate-params: 78ms, application-code: 627ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/science-thinking 200 in 499ms (next.js: 6ms, generate-params: 85ms, application-code: 409ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/japanese-culture 200 in 669ms (next.js: 3ms, generate-params: 93ms, application-code: 573ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 779ms (next.js: 3ms, generate-params: 72ms, application-code: 704ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/word-sense-personality 200 in 323ms (next.js: 2ms, generate-params: 54ms, application-code: 266ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kotowaza-level 200 in 417ms (next.js: 3ms, generate-params: 76ms, application-code: 338ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-level 200 in 478ms (next.js: 4ms, generate-params: 56ms, application-code: 418ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kanji-level 200 in 235ms (next.js: 3ms, generate-params: 72ms, application-code: 161ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kotowaza-level 200 in 265ms (next.js: 5ms, generate-params: 61ms, application-code: 199ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-level 200 in 249ms (next.js: 3ms, generate-params: 69ms, application-code: 177ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kanji-level 200 in 296ms (next.js: 2ms, generate-params: 75ms, application-code: 219ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kotowaza-level 200 in 242ms (next.js: 3ms, generate-params: 60ms, application-code: 179ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-level 200 in 305ms (next.js: 3ms, generate-params: 53ms, application-code: 249ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kanji-level 200 in 317ms (next.js: 2ms, generate-params: 61ms, application-code: 254ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kotowaza-level 200 in 346ms (next.js: 3ms, generate-params: 59ms, application-code: 284ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/yoji-level 200 in 320ms (next.js: 3ms, generate-params: 83ms, application-code: 234ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/kanji-level 200 in 556ms (next.js: 3ms, generate-params: 55ms, application-code: 498ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 609ms (next.js: 19ms, generate-params: 77ms, application-code: 513ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 509ms (next.js: 5ms, generate-params: 68ms, application-code: 436ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 963ms (next.js: 2ms, generate-params: 100ms, application-code: 860ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 371ms (next.js: 3ms, generate-params: 61ms, application-code: 307ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 331ms (next.js: 3ms, generate-params: 77ms, application-code: 251ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 255ms (next.js: 3ms, generate-params: 54ms, application-code: 198ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/word-sense-personality 200 in 281ms (next.js: 3ms, generate-params: 54ms, application-code: 224ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/science-thinking 200 in 412ms (next.js: 4ms, generate-params: 73ms, application-code: 335ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/word-sense-personality 200 in 1365ms (next.js: 3ms, generate-params: 283ms, application-code: 1078ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/science-thinking 200 in 507ms (next.js: 3ms, generate-params: 60ms, application-code: 444ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+[?25h

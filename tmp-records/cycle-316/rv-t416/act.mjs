@@ -1,0 +1,33 @@
+import { chromium } from "/home/user/yolo-web/node_modules/playwright/index.mjs";
+const out = "/home/user/yolo-web/tmp/cycle-316/rv-t416";
+const url = "http://localhost:3461/tools/unix-timestamp";
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+const ctx = await browser.newContext({ viewport: { width: 375, height: 800 }, permissions: ["clipboard-read", "clipboard-write"] });
+const page = await ctx.newPage();
+page.setDefaultTimeout(10000);
+await page.goto(url, { waitUntil: "networkidle", timeout: 20000 });
+const code = page.locator("code").first();
+// Tab order: find toggle via keyboard
+const t = page.getByRole("button", { name: "タイムスタンプの刻みを止める" });
+await t.click();
+const v1 = await code.textContent();
+const realAtStop = Math.floor(Date.now()/1000);
+await page.waitForTimeout(5300);
+const v2 = await code.textContent();
+await page.locator("code").first().locator("..").screenshot({ path: `${out}/w375-bar-paused.png` });
+const lbl = await page.locator("code").first().locator("..").ariaSnapshot();
+await page.getByRole("button", { name: "止めたタイムスタンプをコピー" }).click();
+await page.waitForTimeout(200);
+const clip = await page.evaluate(() => navigator.clipboard.readText());
+const afterCopy = await page.locator("code").first().locator("..").ariaSnapshot();
+await page.locator("code").first().locator("..").screenshot({ path: `${out}/w375-bar-copied.png` });
+await page.getByRole("button", { name: "タイムスタンプの刻みを動かす" }).focus();
+await page.keyboard.press("Enter");
+const v3 = await code.textContent();
+const focused = await page.evaluate(() => document.activeElement?.getAttribute("aria-label"));
+await page.waitForTimeout(2100);
+const v4 = await code.textContent();
+// focus ring screenshot
+await page.locator("code").first().locator("..").screenshot({ path: `${out}/w375-bar-focus.png` });
+console.log(JSON.stringify({ v1, realAtStop, v2, same: v1===v2, lbl, clip, afterCopy, v3, focused, v4 }, null, 1));
+await browser.close();

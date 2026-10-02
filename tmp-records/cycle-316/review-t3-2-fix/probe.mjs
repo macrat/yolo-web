@@ -1,0 +1,12 @@
+import { chromium } from "/home/user/wt-review-5673f1a/node_modules/playwright/index.mjs";
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+const page = await browser.newPage();
+page.setDefaultTimeout(8000);
+await page.goto("http://localhost:3461/play/character-personality", { waitUntil: "networkidle" });
+const btns = await page.locator("main button").allTextContents();
+console.log(btns.slice(0, 20));
+await page.locator("main button").filter({ hasText: /はじめ|スタート|開始/ }).first().click();
+await page.waitForTimeout(500);
+console.log(await page.locator("main button").allTextContents());
+console.log((await page.locator("main").innerHTML()).slice(0, 3000));
+await browser.close();

@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const [base, slug, ti, w, out, needle] = process.argv.slice(2);
+const b = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+const scheme = process.env.SCHEME || "light";
+const p = await (await b.newContext({ viewport: { width: +w, height: 900 }, colorScheme: scheme })).newPage();
+await p.goto(`${base}/blog/${slug}`, { waitUntil: "networkidle" }); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(400);
+const loc = p.locator("article .table-scroll").nth(+ti);
+await loc.scrollIntoViewIfNeeded();
+const bb = await loc.boundingBox();
+await p.screenshot({ path: out, clip: { x: 0, y: Math.max(0, bb.y - 30), width: +w, height: Math.min(bb.height + 60, 900) } });
+if (needle) console.log(await p.evaluate(([ti, needle]) => { const t = document.querySelectorAll("article .table-scroll")[ti]; const c = [...t.querySelectorAll("th,td")].find((c) => c.textContent.includes(needle)); return c?.innerHTML; }, [+ti, needle]));
+await b.close();

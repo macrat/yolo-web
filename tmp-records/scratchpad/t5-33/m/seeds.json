@@ -1,0 +1,27 @@
+{
+ "kanji-kanaru": {
+  "kanji-kanaru-stats-intermediate": "{\"gamesPlayed\":1,\"gamesWon\":0,\"currentStreak\":0,\"maxStreak\":0,\"guessDistribution\":[0,0,0,0,0,0],\"lastPlayedDate\":\"2026-09-30\"}",
+  "kanji-kanaru-stats": "{\"lastPlayedDate\":\"2026-09-30\"}",
+  "kanji-kanaru-result-height": "{\"date\":\"2026-09-30\",\"difficulty\":\"intermediate\",\"heights\":{\"1280|16px\":1716}}",
+  "kanji-kanaru-migrated-v2": "1",
+  "kanji-kanaru-history-intermediate": "{\"2026-09-30\":{\"guesses\":[\"山\",\"川\",\"木\",\"火\",\"水\",\"金\"],\"feedbacks\":[{\"guess\":\"山\",\"radical\":\"wrong\",\"strokeCount\":\"wrong\",\"grade\":\"close\",\"gradeDirection\":\"up\",\"onYomi\":\"wrong\",\"category\":\"wrong\",\"kunYomiCount\":\"close\"},{\"guess\":\"川\",\"radical\":\"wrong\",\"strokeCount\":\"wrong\",\"grade\":\"close\",\"gradeDirection\":\"up\",\"onYomi\":\"wrong\",\"category\":\"wrong\",\"kunYomiCount\":\"close\"},{\"guess\":\"木\",\"radical\":\"wrong\",\"strokeCount\":\"wrong\",\"grade\":\"close\",\"gradeDirection\":\"up\",\"onYomi\":\"wrong\",\"category\":\"wrong\",\"kunYomiCount\":\"correct\"},{\"guess\":\"火\",\"radical\":\"wrong\",\"strokeCount\":\"wrong\",\"grade\":\"close\",\"gradeDirection\":\"up\",\"onYomi\":\"wrong\",\"category\":\"wrong\",\"kunYomiCount\":\"close\"},{\"guess\":\"水\",\"radical\":\"wrong\",\"strokeCount\":\"wrong\",\"grade\":\"close\",\"gradeDirection\":\"up\",\"onYomi\":\"wrong\",\"category\":\"wrong\",\"kunYomiCount\":\"correct\"},{\"guess\":\"金\",\"radical\":\"wrong\",\"strokeCount\":\"close\",\"grade\":\"close\",\"gradeDirection\":\"up\",\"onYomi\":\"wrong\",\"category\":\"close\",\"kunYomiCount\":\"close\"}],\"status\":\"lost\",\"guessCount\":6}}"
+ },
+ "yoji-kimeru": {
+  "yoji-kimeru-stats-intermediate": "{\"gamesPlayed\":1,\"gamesWon\":0,\"currentStreak\":0,\"maxStreak\":0,\"guessDistribution\":[0,0,0,0,0,0],\"lastPlayedDate\":\"2026-09-30\"}",
+  "yoji-kimeru-migrated-v2": "1",
+  "yoji-kimeru-stats": "{\"lastPlayedDate\":\"2026-09-30\"}",
+  "yoji-kimeru-history-intermediate": "{\"2026-09-30\":{\"guesses\":[\"一期一会\",\"十人十色\",\"以心伝心\",\"温故知新\",\"四面楚歌\",\"自業自得\"],\"feedbacks\":[{\"guess\":\"一期一会\",\"charFeedbacks\":[\"absent\",\"absent\",\"absent\",\"absent\"]},{\"guess\":\"十人十色\",\"charFeedbacks\":[\"absent\",\"absent\",\"absent\",\"absent\"]},{\"guess\":\"以心伝心\",\"charFeedbacks\":[\"absent\",\"absent\",\"absent\",\"absent\"]},{\"guess\":\"温故知新\",\"charFeedbacks\":[\"absent\",\"absent\",\"absent\",\"absent\"]},{\"guess\":\"四面楚歌\",\"charFeedbacks\":[\"absent\",\"absent\",\"absent\",\"absent\"]},{\"guess\":\"自業自得\",\"charFeedbacks\":[\"absent\",\"absent\",\"absent\",\"absent\"]}],\"status\":\"lost\",\"guessCount\":6}}",
+  "yoji-kimeru-hint-height": "{\"date\":\"2026-09-30\",\"difficulty\":\"intermediate\",\"heights\":{\"1280|16px\":104}}",
+  "yoji-kimeru-result-height": "{\"date\":\"2026-09-30\",\"difficulty\":\"intermediate\",\"heights\":{\"1280|16px\":1497}}"
+ },
+ "nakamawake": {
+  "nakamawake-history": "{\"2026-09-30\":{\"solvedGroups\":[],\"mistakes\":4,\"status\":\"lost\"}}",
+  "nakamawake-stats": "{\"gamesPlayed\":1,\"gamesWon\":0,\"currentStreak\":0,\"maxStreak\":0,\"mistakeDistribution\":[0,0,0,0,1],\"lastPlayedDate\":\"2026-09-30\"}",
+  "nakamawake-result-height": "{\"date\":\"2026-09-30\",\"difficulty\":\"\",\"heights\":{\"1280|16px\":1872}}"
+ },
+ "irodori": {
+  "irodori-history": "{\"2026-09-30\":{\"scores\":[0,60,0,16,0],\"answers\":[{\"h\":224,\"s\":17,\"l\":26},{\"h\":137,\"s\":46,\"l\":34},{\"h\":202,\"s\":32,\"l\":89},{\"h\":239,\"s\":87,\"l\":91},{\"h\":68,\"s\":82,\"l\":59}],\"totalScore\":15,\"currentRound\":5,\"status\":\"completed\"}}",
+  "irodori-result-height": "{\"date\":\"2026-09-30\",\"difficulty\":\"\",\"heights\":{\"1280|16px\":2138}}",
+  "irodori-stats": "{\"gamesPlayed\":1,\"averageScore\":15,\"bestScore\":15,\"currentStreak\":1,\"maxStreak\":1,\"lastPlayedDate\":\"2026-09-30\",\"scoreDistribution\":[0,1,0,0,0,0,0,0,0,0]}"
+ }
+}

@@ -1,0 +1,2927 @@
+{
+ "tools@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 437.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 451.7762451171875,
+  "firstLineCenter": 448.1875,
+  "selBox": [
+   55,
+   154,
+   222
+  ],
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "tools@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 393.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 407.7762451171875,
+  "firstLineCenter": 404.1875,
+  "selBox": [
+   55,
+   154,
+   277
+  ],
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "tools@1280/default": {
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "tools-data-new@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（データ、新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 437.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（データ、<wbr>新しい順）</span>",
+  "triCenter": 451.7762451171875,
+  "firstLineCenter": 448.1875,
+  "selBox": [
+   55,
+   172,
+   222
+  ],
+  "options": [],
+  "status": "13件（全36件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （データ、 新しい順）"
+  ]
+ },
+ "tools-data-new@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（データ、新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 393.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（データ、<wbr>新しい順）</span>",
+  "triCenter": 407.7762451171875,
+  "firstLineCenter": 404.1875,
+  "selBox": [
+   55,
+   172,
+   277
+  ],
+  "options": [],
+  "status": "13件（全36件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （データ、 新しい順）"
+  ]
+ },
+ "tools-data-new@1280/default": {
+  "options": [],
+  "status": "13件（全36件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "play@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 500.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 514.6512451171875,
+  "firstLineCenter": 511.0625,
+  "selBox": [
+   55,
+   154,
+   222
+  ],
+  "options": [],
+  "status": "全20件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "play@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 424.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 439.2137451171875,
+  "firstLineCenter": 435.625,
+  "selBox": [
+   55,
+   154,
+   277
+  ],
+  "options": [],
+  "status": "全20件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "play@1280/default": {
+  "options": [],
+  "status": "全20件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "play-pers@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（診断、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 500.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（診断、<wbr>種別順）</span>",
+  "triCenter": 514.6512451171875,
+  "firstLineCenter": 511.0625,
+  "selBox": [
+   55,
+   136,
+   222
+  ],
+  "options": [],
+  "status": "12件（全20件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （診断、 種別順）"
+  ]
+ },
+ "play-pers@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順（診断、種別順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 424.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（診断、<wbr>種別順）</span>",
+  "triCenter": 439.2137451171875,
+  "firstLineCenter": 435.625,
+  "selBox": [
+   193,
+   136,
+   274
+  ],
+  "options": [],
+  "status": "12件（全20件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （診断、 種別順）"
+  ]
+ },
+ "play-pers@1280/default": {
+  "options": [],
+  "status": "12件（全20件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "blog@320/default": {
+  "toggle": {
+   "lines": "並び順（新しい順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 622.9375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 637.5262451171875,
+  "firstLineCenter": 633.9375,
+  "selBox": [
+   106,
+   103,
+   154
+  ],
+  "options": [],
+  "status": "全86件のうち1〜50件目",
+  "search": "題名・説明・分類・タグ・／連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog@375/default": {
+  "toggle": {
+   "lines": "並び順（新しい順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 516.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 530.6512451171875,
+  "firstLineCenter": 527.0625,
+  "selBox": [
+   106,
+   103,
+   154
+  ],
+  "options": [],
+  "status": "全86件のうち1〜50件目",
+  "search": "題名・説明・分類・タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog@1280/default": {
+  "options": [],
+  "status": "全86件のうち1〜50件目",
+  "search": "題名・説明・分類・タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "blog-tag@320/default": {
+  "toggle": {
+   "lines": "並び順（新しい順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 802.84375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 817.4324951171875,
+  "firstLineCenter": 813.84375,
+  "selBox": [
+   106,
+   103,
+   154
+  ],
+  "options": [],
+  "status": "全12件",
+  "search": "題名・説明・分類・タグ・／連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog-tag@375/default": {
+  "toggle": {
+   "lines": "並び順（新しい順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 610.375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 624.9637451171875,
+  "firstLineCenter": 621.375,
+  "selBox": [
+   106,
+   103,
+   154
+  ],
+  "options": [],
+  "status": "全12件",
+  "search": "題名・説明・分類・タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog-tag@1280/default": {
+  "options": [],
+  "status": "全12件",
+  "search": "題名・説明・分類・タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "dictionary@320/default": {
+  "options": [],
+  "status": "全4件",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "dictionary@375/default": {
+  "options": [],
+  "status": "全4件",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "dictionary@1280/default": {
+  "options": [],
+  "status": "全4件",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "kanji@320/default": {
+  "toggle": {
+   "lines": "並び順（学年順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 560.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（学年順）</span>",
+  "triCenter": 574.6512451171875,
+  "firstLineCenter": 571.0625,
+  "selBox": [
+   106,
+   85,
+   136
+  ],
+  "options": [],
+  "status": "全2,136字のうち1〜100字目",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （学年順）"
+  ]
+ },
+ "kanji@375/default": {
+  "toggle": {
+   "lines": "並び順（学年順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 484.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（学年順）</span>",
+  "triCenter": 499.2137451171875,
+  "firstLineCenter": 495.625,
+  "selBox": [
+   106,
+   85,
+   136
+  ],
+  "options": [],
+  "status": "全2,136字のうち1〜100字目",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （学年順）"
+  ]
+ },
+ "kanji@1280/default": {
+  "options": [],
+  "status": "全2,136字のうち1〜100字目",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "kanji-reading@320/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 560.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 574.6512451171875,
+  "firstLineCenter": 571.0625,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全2,136字のうち1〜100字目",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "kanji-reading@375/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 484.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 499.2137451171875,
+  "firstLineCenter": 495.625,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全2,136字のうち1〜100字目",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "kanji-reading@1280/default": {
+  "options": [],
+  "status": "全2,136字のうち1〜100字目",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji@320/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 528.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 543.2137451171875,
+  "firstLineCenter": 539.625,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji@375/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 453.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 467.7762451171875,
+  "firstLineCenter": 464.1875,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji@1280/default": {
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji-society@320/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 509.75,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 524.3387451171875,
+  "firstLineCenter": 520.75,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全46語",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji-society@375/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 465.75,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 480.3387451171875,
+  "firstLineCenter": 476.75,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全46語",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji-society@1280/default": {
+  "options": [],
+  "status": "全46語",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "colors@320/default": {
+  "toggle": {
+   "lines": "並び順（色み順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 591.5,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（色み順）</span>",
+  "triCenter": 606.0887451171875,
+  "firstLineCenter": 602.5,
+  "selBox": [
+   106,
+   85,
+   137
+  ],
+  "options": [],
+  "status": "全250色のうち1〜100色目",
+  "search": "色名・ローマ字・カラーコードで／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （色み順）"
+  ]
+ },
+ "colors@375/default": {
+  "toggle": {
+   "lines": "並び順（色み順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 484.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（色み順）</span>",
+  "triCenter": 499.2137451171875,
+  "firstLineCenter": 495.625,
+  "selBox": [
+   106,
+   85,
+   137
+  ],
+  "options": [],
+  "status": "全250色のうち1〜100色目",
+  "search": "色名・ローマ字・カラーコードで探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （色み順）"
+  ]
+ },
+ "colors@1280/default": {
+  "options": [],
+  "status": "全250色のうち1〜100色目",
+  "search": "色名・ローマ字・カラーコードで探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "humor@320/default": {
+  "options": [],
+  "status": "全30語・五十音順",
+  "search": "語・読み・語義で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "humor@375/default": {
+  "options": [],
+  "status": "全30語・五十音順",
+  "search": "語・読み・語義で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "humor@1280/default": {
+  "options": [],
+  "status": "全30語・五十音順",
+  "search": "語・読み・語義で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "kanji-detail@320/default": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "基本情報",
+   "使用例"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "kanji-detail@375/default": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "基本情報",
+   "使用例"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "kanji-detail@1280/default": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "基本情報",
+   "使用例"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji-detail@320/default": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "構成漢字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji-detail@375/default": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "構成漢字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji-detail@1280/default": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "構成漢字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "keigo@320/default": {
+  "toggle": {
+   "lines": "絞り込み（すべて）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 606.46875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込み</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて）</span>",
+  "triCenter": 621.0574951171875,
+  "firstLineCenter": 617.46875,
+  "selBox": [
+   135,
+   86,
+   155
+  ],
+  "options": [],
+  "status": "全60語・分類順",
+  "search": "普通語・敬語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込み （すべて）"
+  ]
+ },
+ "keigo@375/default": {
+  "toggle": {
+   "lines": "絞り込み（すべて）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 487.03125,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込み</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて）</span>",
+  "triCenter": 501.6199951171875,
+  "firstLineCenter": 498.03125,
+  "selBox": [
+   135,
+   86,
+   155
+  ],
+  "options": [],
+  "status": "全60語・分類順",
+  "search": "普通語・敬語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込み （すべて）"
+  ]
+ },
+ "keigo@1280/default": {
+  "options": [],
+  "status": "全60語・分類順",
+  "search": "普通語・敬語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "palette@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、色み順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 507.03125,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>色み順）</span>",
+  "triCenter": 521.6199951171875,
+  "firstLineCenter": 518.03125,
+  "selBox": [
+   66,
+   155,
+   200
+  ],
+  "options": [],
+  "status": "全250色",
+  "search": "色名・ローマ字で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 色み順）"
+  ]
+ },
+ "palette@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、色み順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 387.59375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>色み順）</span>",
+  "triCenter": 402.1824951171875,
+  "firstLineCenter": 398.59375,
+  "selBox": [
+   66,
+   155,
+   255
+  ],
+  "options": [],
+  "status": "全250色",
+  "search": "色名・ローマ字で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 色み順）"
+  ]
+ },
+ "palette@1280/default": {
+  "options": [],
+  "status": "全250色",
+  "search": "色名・ローマ字で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji-search@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 463.03125,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 477.6199951171875,
+  "firstLineCenter": 474.03125,
+  "selBox": [
+   66,
+   200,
+   200
+  ],
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、読みの五十音順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 387.59375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 402.1824951171875,
+  "firstLineCenter": 398.59375,
+  "selBox": [
+   66,
+   223,
+   255
+  ],
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search@1280/default": {
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "yoji-search-3@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（対立・闘い、初級、／中国、読みの五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 463.03125,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（対立・闘い、<wbr>初級、<wbr>中国、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 477.6199951171875,
+  "firstLineCenter": 474.03125,
+  "selBox": [
+   66,
+   200,
+   200
+  ],
+  "options": [],
+  "status": "6語（全400語）",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （対立・闘い、 初級、 中国、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search-3@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（対立・闘い、初級、中国、／読みの五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 387.59375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（対立・闘い、<wbr>初級、<wbr>中国、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 402.1824951171875,
+  "firstLineCenter": 398.59375,
+  "selBox": [
+   66,
+   255,
+   255
+  ],
+  "options": [],
+  "status": "6語（全400語）",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （対立・闘い、 初級、 中国、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search-3@1280/default": {
+  "options": [],
+  "status": "6語（全400語）",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "sb-11@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、／読みの五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 481.65625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの五十音順）</span>",
+  "triCenter": 496.2449951171875,
+  "firstLineCenter": 492.65625,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [],
+  "status": "全11語",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語11語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの五十音順）"
+  ]
+ },
+ "sb-11@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、読みの五十音順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 364.625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの五十音順）</span>",
+  "triCenter": 379.2137451171875,
+  "firstLineCenter": 375.625,
+  "selBox": [
+   55,
+   223,
+   277
+  ],
+  "options": [],
+  "status": "全11語",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語11語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの五十音順）"
+  ]
+ },
+ "sb-11@1280/default": {
+  "options": [],
+  "status": "全11語",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語11語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "sb-100@320/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、画数順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 471.5,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>画数順）</span>",
+  "triCenter": 486.0887451171875,
+  "firstLineCenter": 482.5,
+  "selBox": [
+   55,
+   154,
+   222
+  ],
+  "options": [],
+  "status": "全100字",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [
+   "見本：漢字100字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 画数順）"
+  ]
+ },
+ "sb-100@375/default": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、画数順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 396.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>画数順）</span>",
+  "triCenter": 410.6512451171875,
+  "firstLineCenter": 407.0625,
+  "selBox": [
+   55,
+   154,
+   277
+  ],
+  "options": [],
+  "status": "全100字",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [
+   "見本：漢字100字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 画数順）"
+  ]
+ },
+ "sb-100@1280/default": {
+  "options": [],
+  "status": "全100字",
+  "search": "字・読み・熟語で探す",
+  "autoPhraseHeadings": [
+   "見本：漢字100字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "sb-101@320/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 513.09375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの五十音順）</span>",
+  "triCenter": 527.6824951171875,
+  "firstLineCenter": 524.09375,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全101語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語101語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの五十音順）"
+  ]
+ },
+ "sb-101@375/default": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 437.65625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの五十音順）</span>",
+  "triCenter": 452.2449951171875,
+  "firstLineCenter": 448.65625,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全101語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語101語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの五十音順）"
+  ]
+ },
+ "sb-101@1280/default": {
+  "options": [],
+  "status": "全101語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語101語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": []
+ },
+ "tools@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／種別順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 814.328125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 839.6356201171875,
+  "firstLineCenter": 836.328125,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "tools@375/200": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、／種別順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 751.4375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 776.7449951171875,
+  "firstLineCenter": 773.4375,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "tools-data-new@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（データ、／新しい順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 814.328125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（データ、<wbr>新しい順）</span>",
+  "triCenter": 839.6356201171875,
+  "firstLineCenter": 836.328125,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [],
+  "status": "13件（全36件）",
+  "search": "名前・説明で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （データ、 新しい順）"
+  ]
+ },
+ "tools-data-new@375/200": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（データ、／新しい順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 751.4375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（データ、<wbr>新しい順）</span>",
+  "triCenter": 776.7449951171875,
+  "firstLineCenter": 773.4375,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "13件（全36件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （データ、 新しい順）"
+  ]
+ },
+ "play@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／種別順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1003,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 1028.3074951171875,
+  "firstLineCenter": 1025,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [],
+  "status": "全20件",
+  "search": "名前・説明で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "play@375/200": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、／種別順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 877.21875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 902.5262451171875,
+  "firstLineCenter": 899.21875,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全20件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "play-pers@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（診断、／種別順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1003,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（診断、<wbr>種別順）</span>",
+  "triCenter": 1028.3074951171875,
+  "firstLineCenter": 1025,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [],
+  "status": "12件（全20件）",
+  "search": "名前・説明で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （診断、 種別順）"
+  ]
+ },
+ "play-pers@375/200": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（診断、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 877.21875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（診断、<wbr>種別順）</span>",
+  "triCenter": 902.5262451171875,
+  "firstLineCenter": 899.21875,
+  "selBox": [
+   55,
+   272,
+   277
+  ],
+  "options": [],
+  "status": "12件（全20件）",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （診断、 種別順）"
+  ]
+ },
+ "blog@320/200": {
+  "toggle": {
+   "lines": "並び順／（新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1396.34375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 1421.6512451171875,
+  "firstLineCenter": 1418.34375,
+  "selBox": [
+   55,
+   206,
+   222
+  ],
+  "options": [],
+  "status": "全86件のうち／1〜50件目",
+  "search": "題名・説明・／分類・タグ・／連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog@375/200": {
+  "toggle": {
+   "lines": "並び順／（新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1270.5625,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 1295.8699951171875,
+  "firstLineCenter": 1292.5625,
+  "selBox": [
+   55,
+   206,
+   277
+  ],
+  "options": [],
+  "status": "全86件のうち1〜／50件目",
+  "search": "題名・説明・分類・／タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog-tag@320/200": {
+  "toggle": {
+   "lines": "並び順／（新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1984.09375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 2009.4012451171875,
+  "firstLineCenter": 2006.09375,
+  "selBox": [
+   55,
+   206,
+   222
+  ],
+  "options": [],
+  "status": "全12件",
+  "search": "題名・説明・／分類・タグ・／連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "blog-tag@375/200": {
+  "toggle": {
+   "lines": "並び順／（新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1649.328125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 1674.6356201171875,
+  "firstLineCenter": 1671.328125,
+  "selBox": [
+   55,
+   206,
+   277
+  ],
+  "options": [],
+  "status": "全12件",
+  "search": "題名・説明・分類・／タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "dictionary@320/200": {
+  "options": [],
+  "status": "全4件",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "dictionary@375/200": {
+  "options": [],
+  "status": "全4件",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "kanji@320/200": {
+  "toggle": {
+   "lines": "並び順／（学年順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1377.453125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（学年順）</span>",
+  "triCenter": 1402.7606201171875,
+  "firstLineCenter": 1399.453125,
+  "selBox": [
+   55,
+   170,
+   222
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "全2,136字／のうち1〜／100字目",
+  "search": "字・読み・／熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （学年順）"
+  ]
+ },
+ "kanji@375/200": {
+  "toggle": {
+   "lines": "並び順（学年順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1251.671875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（学年順）</span>",
+  "triCenter": 1276.9793701171875,
+  "firstLineCenter": 1273.671875,
+  "selBox": [
+   158,
+   170,
+   273
+  ],
+  "options": [],
+  "status": "全2,136字のうち／1〜100字目",
+  "search": "字・読み・熟語で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （学年順）"
+  ]
+ },
+ "kanji-reading@320/200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1377.453125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1402.7606201171875,
+  "firstLineCenter": 1399.453125,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "全2,136字／のうち1〜／100字目",
+  "search": "字・読み・／熟語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "kanji-reading@375/200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1251.671875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1276.9793701171875,
+  "firstLineCenter": 1273.671875,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全2,136字のうち／1〜100字目",
+  "search": "字・読み・熟語で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji@320/200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1271.984375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1297.2918701171875,
+  "firstLineCenter": 1293.984375,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "全400語のうち／1〜50語目",
+  "search": "語・読み・／意味・例文で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji@375/200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1146.203125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1171.5106201171875,
+  "firstLineCenter": 1168.203125,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全400語のうち1〜／50語目",
+  "search": "語・読み・意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji-society@320/200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1064.421875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1089.7293701171875,
+  "firstLineCenter": 1086.421875,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "全46語",
+  "search": "語・読み・／意味・例文で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji-society@375/200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1001.53125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1026.8387451171875,
+  "firstLineCenter": 1023.53125,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全46語",
+  "search": "語・読み・意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "colors@320/200": {
+  "toggle": {
+   "lines": "並び順／（色み順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1460.65625,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（色み順）</span>",
+  "triCenter": 1485.9637451171875,
+  "firstLineCenter": 1482.65625,
+  "selBox": [
+   55,
+   171,
+   222
+  ],
+  "options": [],
+  "status": "全250色のうち／1〜100色目",
+  "search": "色名・／ローマ字・／カラーコードで／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [
+   "伝統色辞／典"
+  ],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （色み順）"
+  ]
+ },
+ "colors@375/200": {
+  "toggle": {
+   "lines": "並び順（色み順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1271.984375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（色み順）</span>",
+  "triCenter": 1297.2918701171875,
+  "firstLineCenter": 1293.984375,
+  "selBox": [
+   158,
+   171,
+   274
+  ],
+  "options": [],
+  "status": "全250色のうち1〜／100色目",
+  "search": "色名・ローマ字・／カラーコードで探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [
+   "伝統色辞／典"
+  ],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （色み順）"
+  ]
+ },
+ "humor@320/200": {
+  "options": [],
+  "status": "全30語・／五十音順",
+  "search": "語・読み・／語義で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "humor@375/200": {
+  "options": [],
+  "status": "全30語・五十音順",
+  "search": "語・読み・語義で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "kanji-detail@320/200": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "基本情報",
+   "使用例"
+  ],
+  "headingsMulti": [
+   "漢／字／「／左／」"
+  ],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "kanji-detail@375/200": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "基本情報",
+   "使用例"
+  ],
+  "headingsMulti": [
+   "漢字／「左／」"
+  ],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "yoji-detail@320/200": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "構成漢字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "yoji-detail@375/200": {
+  "options": [],
+  "autoPhraseHeadings": [
+   "構成漢字"
+  ],
+  "headingsMulti": [
+   "四字熟語／「一期一会／」"
+  ],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": []
+ },
+ "keigo@320/200": {
+  "toggle": {
+   "lines": "絞り込み／（すべて）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1237.46875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込み</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて）</span>",
+  "triCenter": 1262.7762451171875,
+  "firstLineCenter": 1259.46875,
+  "selBox": [
+   66,
+   172,
+   200
+  ],
+  "options": [
+   "よくある間／違い",
+   "接客・／サービス"
+  ],
+  "status": "全60語・／分類順",
+  "search": "普通語・／敬語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込み （すべて）"
+  ]
+ },
+ "keigo@375/200": {
+  "toggle": {
+   "lines": "絞り込み／（すべて）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1048.796875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込み</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて）</span>",
+  "triCenter": 1074.1043701171875,
+  "firstLineCenter": 1070.796875,
+  "selBox": [
+   66,
+   172,
+   255
+  ],
+  "options": [],
+  "status": "全60語・分類順",
+  "search": "普通語・／敬語で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込み （すべて）"
+  ]
+ },
+ "palette@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／色み順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 989.015625,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>色み順）</span>",
+  "triCenter": 1014.3231201171875,
+  "firstLineCenter": 1011.015625,
+  "selBox": [
+   66,
+   200,
+   200
+  ],
+  "options": [],
+  "status": "全250色",
+  "search": "色名・／ローマ字で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 色み順）"
+  ]
+ },
+ "palette@375/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／色み順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 886.125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>色み順）</span>",
+  "triCenter": 911.4324951171875,
+  "firstLineCenter": 908.125,
+  "selBox": [
+   66,
+   255,
+   255
+  ],
+  "options": [],
+  "status": "全250色",
+  "search": "色名・／ローマ字で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 色み順）"
+  ]
+ },
+ "yoji-search@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／読みの／五十音順）",
+   "n": 5,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1024.796875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 1050.1043701171875,
+  "firstLineCenter": 1046.796875,
+  "selBox": [
+   66,
+   200,
+   200
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "全400語のうち／1〜50語目",
+  "search": "語・読み・／意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search@375/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／読みの／五十音順）",
+   "n": 5,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 899.015625,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 924.3231201171875,
+  "firstLineCenter": 921.015625,
+  "selBox": [
+   66,
+   255,
+   255
+  ],
+  "options": [],
+  "status": "全400語のうち1〜／50語目",
+  "search": "語・読み・意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search-3@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（対立・／闘い、／初級、／中国、／読みの／五十音順）",
+   "n": 8,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1024.796875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（対立・闘い、<wbr>初級、<wbr>中国、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 1050.1043701171875,
+  "firstLineCenter": 1046.796875,
+  "selBox": [
+   66,
+   200,
+   200
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "6語／（全400語）",
+  "search": "語・読み・／意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （対立・闘い、 初級、 中国、 読みの 五十音順）"
+  ]
+ },
+ "yoji-search-3@375/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（対立・闘い、／初級、中国、／読みの／五十音順）",
+   "n": 6,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 836.125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（対立・闘い、<wbr>初級、<wbr>中国、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 861.4324951171875,
+  "firstLineCenter": 858.125,
+  "selBox": [
+   66,
+   255,
+   255
+  ],
+  "options": [],
+  "status": "6語（全400語）",
+  "search": "語・読み・意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （対立・闘い、 初級、 中国、 読みの 五十音順）"
+  ]
+ },
+ "sb-11@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／読みの五十音／順）",
+   "n": 5,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1235.1875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの五十音順）</span>",
+  "triCenter": 1260.4949951171875,
+  "firstLineCenter": 1257.1875,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの五十音／順"
+  ],
+  "status": "全11語",
+  "search": "語・読み・／意味・／例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語11語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの五十音順）"
+  ]
+ },
+ "sb-11@375/200": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、／読みの五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1046.515625,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>読みの五十音順）</span>",
+  "triCenter": 1071.8231201171875,
+  "firstLineCenter": 1068.515625,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全11語",
+  "search": "語・読み・意味・／例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語11語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 読みの五十音順）"
+  ]
+ },
+ "sb-100@320/200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／画数順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1235.1875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>画数順）</span>",
+  "triCenter": 1260.4949951171875,
+  "firstLineCenter": 1257.1875,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの五十音／順"
+  ],
+  "status": "全100字",
+  "search": "字・読み・／熟語で探す",
+  "autoPhraseHeadings": [
+   "見本：漢字100字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 画数順）"
+  ]
+ },
+ "sb-100@375/200": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、／画数順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1026.203125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>画数順）</span>",
+  "triCenter": 1051.5106201171875,
+  "firstLineCenter": 1048.203125,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全100字",
+  "search": "字・読み・／熟語で探す",
+  "autoPhraseHeadings": [
+   "見本：漢字100字"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 画数順）"
+  ]
+ },
+ "sb-101@320/200": {
+  "toggle": {
+   "lines": "並び順／（読みの五十／音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1423.859375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの五十音順）</span>",
+  "triCenter": 1449.1668701171875,
+  "firstLineCenter": 1445.859375,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの五十音／順"
+  ],
+  "status": "全101語のうち／1〜50語目",
+  "search": "語・読み・／意味・／例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語101語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの五十音順）"
+  ]
+ },
+ "sb-101@375/200": {
+  "toggle": {
+   "lines": "並び順／（読みの五十音順／）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 1,
+   "oneChar": 1,
+   "overflow": false,
+   "firstTop": 1235.1875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの五十音順）</span>",
+  "triCenter": 1260.4949951171875,
+  "firstLineCenter": 1257.1875,
+  "selBox": [
+   55,
+   277,
+   277
+  ],
+  "options": [],
+  "status": "全101語のうち1〜／50語目",
+  "search": "語・読み・意味・／例文で探す",
+  "autoPhraseHeadings": [
+   "見本：四字熟語101語"
+  ],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの五十音順）"
+  ]
+ },
+ "tools@375/dark": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（すべて、種別順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 393.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 407.7762451171875,
+  "firstLineCenter": 404.1875,
+  "selBox": [
+   55,
+   154,
+   277
+  ],
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "blog@375/dark": {
+  "toggle": {
+   "lines": "並び順（新しい順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 516.0625,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 530.6512451171875,
+  "firstLineCenter": 527.0625,
+  "selBox": [
+   106,
+   103,
+   154
+  ],
+  "options": [],
+  "status": "全86件のうち1〜50件目",
+  "search": "題名・説明・分類・タグ・連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "yoji@375/dark": {
+  "toggle": {
+   "lines": "並び順（読みの五十音順）",
+   "n": 1,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 453.1875,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 467.7762451171875,
+  "firstLineCenter": 464.1875,
+  "selBox": [
+   106,
+   154,
+   205
+  ],
+  "options": [],
+  "status": "全400語のうち1〜50語目",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji-search-3@375/dark": {
+  "toggle": {
+   "lines": "絞り込みと並び順／（対立・闘い、初級、中国、／読みの五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 387.59375,
+   "lh": 22
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（対立・闘い、<wbr>初級、<wbr>中国、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 402.1824951171875,
+  "firstLineCenter": 398.59375,
+  "selBox": [
+   66,
+   255,
+   255
+  ],
+  "options": [],
+  "status": "6語（全400語）",
+  "search": "語・読み・意味・例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "16px",
+  "buttonNames": [
+   "絞り込みと 並び順 （対立・闘い、 初級、 中国、 読みの 五十音順）"
+  ]
+ },
+ "tools@320/dark200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（すべて、／種別順）",
+   "n": 4,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 814.328125,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（すべて、<wbr>種別順）</span>",
+  "triCenter": 839.6356201171875,
+  "firstLineCenter": 836.328125,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [],
+  "status": "全36件",
+  "search": "名前・説明で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （すべて、 種別順）"
+  ]
+ },
+ "blog@320/dark200": {
+  "toggle": {
+   "lines": "並び順／（新しい順）",
+   "n": 2,
+   "inParen": 0,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1396.34375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（新しい順）</span>",
+  "triCenter": 1421.6512451171875,
+  "firstLineCenter": 1418.34375,
+  "selBox": [
+   55,
+   206,
+   222
+  ],
+  "options": [],
+  "status": "全86件のうち／1〜50件目",
+  "search": "題名・説明・／分類・タグ・／連載名で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （新しい順）"
+  ]
+ },
+ "yoji@320/dark200": {
+  "toggle": {
+   "lines": "並び順／（読みの／五十音順）",
+   "n": 3,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1271.984375,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（読みの<wbr>五十音順）</span>",
+  "triCenter": 1297.2918701171875,
+  "firstLineCenter": 1293.984375,
+  "selBox": [
+   55,
+   222,
+   222
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "全400語のうち／1〜50語目",
+  "search": "語・読み・／意味・例文で／探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "並び順 （読みの 五十音順）"
+  ]
+ },
+ "yoji-search-3@320/dark200": {
+  "toggle": {
+   "lines": "絞り込みと／並び順／（対立・／闘い、／初級、／中国、／読みの／五十音順）",
+   "n": 8,
+   "inParen": 1,
+   "inParenFit": 0,
+   "kinsoku": 0,
+   "oneChar": 0,
+   "overflow": false,
+   "firstTop": 1024.796875,
+   "lh": 44
+  },
+  "toggleHTML": "<span class=\"PhrasedText-module___3Lkta__phrased\">絞り込みと<wbr>並び順</span><wbr><span class=\"PhrasedText-module___3Lkta__phrased ListControls-module__IsOYKa__selection\">（対立・闘い、<wbr>初級、<wbr>中国、<wbr>読みの<wbr>五十音順）</span>",
+  "triCenter": 1050.1043701171875,
+  "firstLineCenter": 1046.796875,
+  "selBox": [
+   66,
+   200,
+   200
+  ],
+  "options": [
+   "読みの／五十音順"
+  ],
+  "status": "6語／（全400語）",
+  "search": "語・読み・／意味・／例文で探す",
+  "autoPhraseHeadings": [],
+  "headingsMulti": [],
+  "docOverflow": 0,
+  "rootFont": "32px",
+  "buttonNames": [
+   "絞り込みと 並び順 （対立・闘い、 初級、 中国、 読みの 五十音順）"
+  ]
+ }
+}

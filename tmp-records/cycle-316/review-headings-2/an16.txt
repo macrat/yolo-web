@@ -1,0 +1,46 @@
+tool 1280 {"n":205,"unmatched":0,"same":205,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+tool 375 {"n":205,"unmatched":0,"same":205,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+tool 320 {"n":205,"unmatched":0,"same":204,"better":1,"worse":0,"oneB":1,"oneA":0,"kinB":0,"kinA":0,"iwB":1,"iwA":0,"ovB":0,"ovA":0}
+game 375 {"n":26,"unmatched":0,"same":26,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+game 320 {"n":26,"unmatched":0,"same":26,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+game 1280 {"n":26,"unmatched":0,"same":26,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+quiz 320 {"n":79,"unmatched":1,"same":77,"better":1,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":1,"iwA":0,"ovB":0,"ovA":0}
+quiz 1280 {"n":79,"unmatched":1,"same":78,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+quiz 375 {"n":79,"unmatched":1,"same":77,"better":1,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":1,"iwA":0,"ovB":0,"ovA":0}
+result 375 {"n":375,"unmatched":4,"same":371,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+result 320 {"n":375,"unmatched":4,"same":371,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":1,"iwA":1,"ovB":0,"ovA":0}
+result 1280 {"n":375,"unmatched":4,"same":371,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+blog 320 {"n":1502,"unmatched":17,"same":1426,"better":59,"worse":0,"oneB":114,"oneA":108,"kinB":66,"kinA":55,"iwB":544,"iwA":420,"ovB":0,"ovA":0}
+blog 375 {"n":1502,"unmatched":17,"same":1428,"better":55,"worse":2,"oneB":78,"oneA":72,"kinB":48,"kinA":31,"iwB":330,"iwA":244,"ovB":0,"ovA":0}
+blog 1280 {"n":1502,"unmatched":17,"same":1427,"better":57,"worse":1,"oneB":49,"oneA":41,"kinB":34,"kinA":19,"iwB":261,"iwA":177,"ovB":0,"ovA":0}
+list 375 {"n":75,"unmatched":0,"same":75,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":9,"ovA":9}
+list 320 {"n":75,"unmatched":0,"same":75,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":9,"ovA":9}
+list 1280 {"n":75,"unmatched":0,"same":75,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":9,"ovA":9}
+kanji 320 {"n":171,"unmatched":0,"same":171,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+kanji 375 {"n":171,"unmatched":0,"same":171,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+kanji 1280 {"n":171,"unmatched":0,"same":171,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+yoji 320 {"n":110,"unmatched":0,"same":80,"better":30,"worse":0,"oneB":10,"oneA":0,"kinB":0,"kinA":0,"iwB":30,"iwA":0,"ovB":0,"ovA":0}
+yoji 375 {"n":110,"unmatched":0,"same":110,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+yoji 1280 {"n":110,"unmatched":0,"same":110,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+color 320 {"n":98,"unmatched":0,"same":98,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":1,"kinA":1,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+color 375 {"n":98,"unmatched":0,"same":97,"better":1,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":1,"iwA":0,"ovB":0,"ovA":0}
+color 1280 {"n":98,"unmatched":0,"same":98,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+humor 320 {"n":20,"unmatched":0,"same":20,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+humor 375 {"n":20,"unmatched":0,"same":20,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+humor 1280 {"n":20,"unmatched":0,"same":20,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+misc 320 {"n":30,"unmatched":1,"same":23,"better":6,"worse":0,"oneB":1,"oneA":0,"kinB":3,"kinA":1,"iwB":9,"iwA":3,"ovB":0,"ovA":0}
+misc 375 {"n":30,"unmatched":1,"same":25,"better":4,"worse":0,"oneB":3,"oneA":0,"kinB":0,"kinA":0,"iwB":4,"iwA":1,"ovB":0,"ovA":0}
+misc 1280 {"n":30,"unmatched":1,"same":26,"better":3,"worse":0,"oneB":3,"oneA":0,"kinB":1,"kinA":0,"iwB":4,"iwA":1,"ovB":0,"ovA":0}
+WORSE 3
+blog 375 /blog/ai-agent-concept-rethink-3-workflow-limits H1
+  A: セッション／長期化がAI／エージェントの／自律運用を／破壊する／（コンセプト再策／定記 3/3）  {"lines":7,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  B: セッション長期化／がAIエージェント／の自律運用を破壊／する（コンセプト／再策定記 3/3）  {"lines":5,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":0}
+  wbr: 5,9,11,18,23,27
+blog 375 /blog/irodori-and-kanji-expansion H1
+  A: イロドリ: ／伝統色250色で／遊ぶ色彩／チャレンジ／ゲームと漢字／データ拡充  {"lines":6,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":1}
+  B: イロドリ: 伝統色／250色で遊ぶ色彩／チャレンジゲーム／と漢字データ拡充  {"lines":4,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":0}
+  wbr: 6,14,16,18,23,27,29
+blog 1280 /blog/japanese-word-puzzle-games-guide H1
+  A: 日本語パズル／ゲームで毎日脳トレ: ／4つの無料デイリー／ゲームの楽しみ方  {"lines":4,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":2}
+  B: 日本語パズルゲーム／で毎日脳トレ: 4つの／無料デイリーゲーム／の楽しみ方  {"lines":4,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":0}
+  wbr: 3,6,10,12,20,22,26,30

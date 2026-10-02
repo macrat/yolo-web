@@ -1,0 +1,12 @@
+import { chromium } from "/home/user/yolo-web/node_modules/playwright/index.mjs";
+const b = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome", args: ["--no-sandbox"] });
+const page = await b.newPage();
+await page.goto("http://localhost:3318/play/character-personality/result/blazing-strategist"); await page.waitForTimeout(2000);
+await page.evaluate(() => { window.__log = []; new MutationObserver(() => { const h = document.querySelector("main h1"); window.__log.push([Math.round(performance.now()), h && h.textContent.slice(0, 10), document.querySelectorAll("main style").length]); }).observe(document.body, { subtree: true, childList: true }); });
+const t0 = await page.evaluate(() => performance.now());
+page.on("request", async (r) => { if (/woff2/.test(r.url())) console.log("req", r.url().split("/").pop(), Math.round((await page.evaluate(() => performance.now())) - t0)); });
+await page.evaluate(() => [...document.querySelectorAll("a")].find((a) => a.getAttribute("href") === "/play/character-personality").click());
+await page.waitForTimeout(3000);
+console.log(JSON.stringify((await page.evaluate(() => window.__log)).slice(0, 12).map(([t, h, s]) => [Math.round(t), h, s])), Math.round(t0));
+console.log(await page.evaluate(() => [...document.fonts].filter((f) => f.status !== "unloaded").map((f) => f.family + " " + f.unicodeRange.slice(0, 30) + " " + f.status).join("\n")));
+await b.close();

@@ -1,0 +1,1 @@
+export default async (page) => page.evaluate(() => [...document.querySelectorAll('nav a[href^="#"], details a[href^="#"]')].slice(0,4).map(a => ({ cls: a.className, h: Math.round(a.getBoundingClientRect().height), t: a.textContent.slice(0,15) })));

@@ -1,0 +1,114 @@
+{
+ "320px default": {
+  "n": 60,
+  "fontSize": "23.84px",
+  "headingWidth": 244,
+  "overflow": 0,
+  "inPhrase": 0,
+  "inWord": 0,
+  "singleChar": 0,
+  "kinsoku": 0,
+  "paren": 0,
+  "notKeepAll": 0,
+  "fontNotLoaded": 0,
+  "textMismatch": 0,
+  "maxLines": 2
+ },
+ "320px 200%": {
+  "n": 60,
+  "fontSize": "47.68px",
+  "headingWidth": 244,
+  "overflow": 0,
+  "inPhrase": 15,
+  "inWord": 8,
+  "singleChar": 6,
+  "kinsoku": 3,
+  "paren": 0,
+  "notKeepAll": 0,
+  "fontNotLoaded": 0,
+  "textMismatch": 0,
+  "maxLines": 4
+ },
+ "375px default": {
+  "n": 60,
+  "fontSize": "23.84px",
+  "headingWidth": 299,
+  "overflow": 0,
+  "inPhrase": 0,
+  "inWord": 0,
+  "singleChar": 0,
+  "kinsoku": 0,
+  "paren": 0,
+  "notKeepAll": 0,
+  "fontNotLoaded": 0,
+  "textMismatch": 0,
+  "maxLines": 1
+ },
+ "375px 200%": {
+  "n": 60,
+  "fontSize": "47.68px",
+  "headingWidth": 299,
+  "overflow": 0,
+  "inPhrase": 7,
+  "inWord": 4,
+  "singleChar": 1,
+  "kinsoku": 1,
+  "paren": 0,
+  "notKeepAll": 0,
+  "fontNotLoaded": 0,
+  "textMismatch": 0,
+  "maxLines": 3
+ },
+ "1280px default": {
+  "n": 60,
+  "fontSize": "46.72px",
+  "headingWidth": 884,
+  "overflow": 0,
+  "inPhrase": 0,
+  "inWord": 0,
+  "singleChar": 0,
+  "kinsoku": 0,
+  "paren": 0,
+  "notKeepAll": 0,
+  "fontNotLoaded": 0,
+  "textMismatch": 0,
+  "maxLines": 1
+ },
+ "1280px 200%": {
+  "n": 60,
+  "fontSize": "47.68px",
+  "headingWidth": 1204,
+  "overflow": 0,
+  "inPhrase": 0,
+  "inWord": 0,
+  "singleChar": 0,
+  "kinsoku": 0,
+  "paren": 0,
+  "notKeepAll": 0,
+  "fontNotLoaded": 0,
+  "textMismatch": 0,
+  "maxLines": 1
+ }
+}
+320 200% エレベータ／ー運 ／急上昇 inPhrase=1 inWord=1 single=0 kinsoku=1
+320 200% 充電残量3／%運 inPhrase=1 inWord=1 single=0 kinsoku=0
+320 200% 左ポケット／運 inPhrase=1 inWord=0 single=1 kinsoku=0
+320 200% ホッチキス／運 綾じ中 inPhrase=1 inWord=0 single=0 kinsoku=0
+320 200% エスカレー／ター運 ／自動上昇 inPhrase=1 inWord=1 single=0 kinsoku=0
+320 200% メガネ運 ／ピント合っ／てます inPhrase=1 inWord=1 single=0 kinsoku=0
+320 200% サンドイッ／チ運 は／み出し中 inPhrase=1 inWord=1 single=0 kinsoku=0
+320 200% のれん運 ／くぐり抜け／中 inPhrase=1 inWord=0 single=1 kinsoku=0
+320 200% ティッシュ／運 最後の／1枚 inPhrase=1 inWord=0 single=0 kinsoku=0
+320 200% リップクリ／ーム運 ／滑らか inPhrase=1 inWord=1 single=0 kinsoku=1
+320 200% スタンプカ／ード運 ／あと少し inPhrase=1 inWord=1 single=0 kinsoku=1
+320 200% シャンプー／運 ／泡立ち中 inPhrase=1 inWord=0 single=1 kinsoku=0
+320 200% まんじゅう／運 ／あんたっぷ／り inPhrase=1 inWord=1 single=2 kinsoku=0
+320 200% カレンダー／運 ／めくり中 inPhrase=1 inWord=0 single=1 kinsoku=0
+320 200% カーペット／運 ／足元注意 inPhrase=1 inWord=0 single=1 kinsoku=0
+375 200% エレベーター／運 急上昇 inPhrase=1 inWord=0 single=0 kinsoku=0
+375 200% 充電残量3%／運 inPhrase=1 inWord=0 single=1 kinsoku=0
+375 200% エスカレータ／ー運 自動上昇 inPhrase=1 inWord=1 single=0 kinsoku=1
+375 200% メガネ運 ／ピント合って／ます inPhrase=1 inWord=1 single=0 kinsoku=0
+375 200% サンドイッチ／運 はみ出し中 inPhrase=1 inWord=0 single=0 kinsoku=0
+375 200% リップクリー／ム運 滑らか inPhrase=1 inWord=1 single=0 kinsoku=0
+375 200% スタンプカー／ド運 あと少し inPhrase=1 inWord=1 single=0 kinsoku=0

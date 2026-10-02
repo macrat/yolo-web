@@ -1,0 +1,159 @@
+cells 28800
+320 16px 2col column minGap 12 
+375 16px 2col column minGap 11 
+1280 16px 4col row minGap 8 mk-text 8 mkTop-textTop 1
+320 17px 2col column minGap 8 
+375 17px 2col column minGap 14 
+1280 17px 4col row minGap 11 mk-text 8 mkTop-textTop 1
+320 18px 2col column minGap 13 
+375 18px 2col column minGap 11 
+1280 18px 4col row minGap 15 mk-text 8 mkTop-textTop 1
+320 19px 2col column minGap 11 
+375 19px 2col column minGap 8 
+1280 19px 4col row minGap 18 mk-text 8 mkTop-textTop 1
+320 20px 2col column minGap 8 
+375 20px 2col column minGap 13 
+1280 20px 4col row minGap 22 mk-text 8 mkTop-textTop 1
+320 21px 2col column minGap 15 
+375 21px 2col column minGap 10 
+1280 21px 4col row minGap 25 mk-text 8 mkTop-textTop 1
+320 22px 2col column minGap 12 
+375 22px 2col column minGap 16 
+1280 22px 4col row minGap 29 mk-text 8 mkTop-textTop 1
+320 24px 2col column minGap 8 
+375 24px 2col column minGap 11 
+1280 24px 4col row minGap 10 mk-text 8 mkTop-textTop 1
+320 26px 2col column minGap 15 
+375 26px 2col column minGap 17 
+1280 26px 4col row minGap 15 mk-text 8 mkTop-textTop 1
+320 28px 2col column minGap 11 
+375 28px 2col column minGap 13 
+1280 28px 4col row minGap 20 mk-text 8 mkTop-textTop 1
+320 30px 1col column minGap 9 
+375 30px 2col column minGap 8 
+1280 30px 4col row minGap 10 mk-text 8 mkTop-textTop 1
+320 32px 1col column minGap 15 
+375 32px 2col column minGap 18 
+1280 32px 4col row minGap 29 mk-text 8 mkTop-textTop 1
+文節中 built 16px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 16px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 16px 320 #34 (2col,129px) 風が吹けば桶/屋が儲かる
+文節中 built 16px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 16px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 17px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 17px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 17px 320 #34 (2col,129px) 風が吹けば桶/屋が儲かる
+文節中 built 17px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 17px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 18px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 18px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 18px 320 #34 (2col,129px) 風が吹けば桶/屋が儲かる
+文節中 built 18px 320 #34 (2col,129px) 石の上に/も三年
+文節中 built 18px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 18px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 19px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 19px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 19px 320 #34 (2col,129px) 風が吹けば桶/屋が儲かる
+文節中 built 19px 320 #34 (2col,129px) 石の上に/も三年
+文節中 built 19px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 19px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 19px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 20px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 20px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 20px 320 #34 (2col,129px) 風が吹けば桶/屋が儲かる
+文節中 built 20px 320 #34 (2col,129px) 石の上/にも三年
+文節中 built 20px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 20px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 20px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 21px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 21px 320 #34 (2col,129px) 馬の耳/に念仏
+文節中 built 21px 320 #34 (2col,129px) 絵に描/いた餅
+文節中 built 21px 320 #34 (2col,129px) 酒は百/薬の長
+文節中 built 21px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 21px 320 #34 (2col,129px) 足を引っ/張る
+文節中 built 21px 320 #34 (2col,129px) 風が吹け/ば桶屋が/儲かる
+文節中 built 21px 320 #34 (2col,129px) 石の上に/も三年
+文節中 built 21px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 21px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 21px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 22px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 22px 320 #34 (2col,129px) 馬の耳/に念仏
+文節中 built 22px 320 #34 (2col,129px) 絵に描/いた餅
+文節中 built 22px 320 #34 (2col,129px) 酒は百/薬の長
+文節中 built 22px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 22px 320 #34 (2col,129px) 足を引っ/張る
+文節中 built 22px 320 #34 (2col,129px) 風が吹け/ば桶屋が/儲かる
+文節中 built 22px 320 #34 (2col,129px) 石の上に/も三年
+文節中 built 22px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 22px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 22px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 22px 375 #34 (2col,157px) 石の上に/も三年
+文節中 built 24px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 24px 320 #34 (2col,129px) 馬の耳/に念仏
+文節中 built 24px 320 #34 (2col,129px) 絵に描/いた餅
+文節中 built 24px 320 #34 (2col,129px) 酒は百/薬の長
+文節中 built 24px 320 #34 (2col,129px) 目は口ほど/に物を言う
+文節中 built 24px 320 #34 (2col,129px) 風が吹け/ば桶屋が/儲かる
+文節中 built 24px 320 #34 (2col,129px) 石の上/にも三年
+文節中 built 24px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 24px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 24px 375 #34 (2col,157px) 風が吹けば桶/屋が儲かる
+文節中 built 24px 375 #34 (2col,157px) 石の上/にも三年
+文節中 built 26px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 26px 320 #34 (2col,129px) 犬も歩け/ば棒に/当たる
+文節中 built 26px 320 #34 (2col,129px) 馬の耳/に念仏
+文節中 built 26px 320 #34 (2col,129px) 絵に描/いた餅
+文節中 built 26px 320 #34 (2col,129px) 酒は百/薬の長
+文節中 built 26px 320 #34 (2col,129px) 目は口ほ/どに物/を言う
+文節中 built 26px 320 #34 (2col,129px) 手に汗/握る
+文節中 built 26px 320 #34 (2col,129px) 花よ/り団子
+文節中 built 26px 320 #34 (2col,129px) 風が吹け/ば桶屋が/儲かる
+文節中 built 26px 320 #34 (2col,129px) 石の上/にも三年
+文節中 built 26px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 26px 375 #34 (2col,157px) 馬の耳/に念仏
+文節中 built 26px 375 #34 (2col,157px) 絵に描/いた餅
+文節中 built 26px 375 #34 (2col,157px) 酒は百/薬の長
+文節中 built 26px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 26px 375 #34 (2col,157px) 風が吹け/ば桶屋が/儲かる
+文節中 built 26px 375 #34 (2col,157px) 石の上/にも三年
+文節中 built 28px 320 #34 (2col,129px) 猿も木か/ら落ちる
+文節中 built 28px 320 #34 (2col,129px) 犬も歩け/ば棒に/当たる
+文節中 built 28px 320 #34 (2col,129px) 馬の耳/に念仏
+文節中 built 28px 320 #34 (2col,129px) 絵に描/いた餅
+文節中 built 28px 320 #34 (2col,129px) 酒は百/薬の長
+文節中 built 28px 320 #34 (2col,129px) 目は口ほ/どに物/を言う
+文節中 built 28px 320 #34 (2col,129px) 足を引っ/張る
+文節中 built 28px 320 #34 (2col,129px) 手に汗/握る
+文節中 built 28px 320 #34 (2col,129px) 花よ/り団子
+文節中 built 28px 320 #34 (2col,129px) 風が吹け/ば桶屋が/儲かる
+文節中 built 28px 320 #34 (2col,129px) 石の上に/も三年
+文節中 built 28px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 28px 375 #34 (2col,157px) 馬の耳/に念仏
+文節中 built 28px 375 #34 (2col,157px) 絵に描/いた餅
+文節中 built 28px 375 #34 (2col,157px) 酒は百/薬の長
+文節中 built 28px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 28px 375 #34 (2col,157px) 足を引っ/張る
+文節中 built 28px 375 #34 (2col,157px) 風が吹け/ば桶屋が/儲かる
+文節中 built 28px 375 #34 (2col,157px) 石の上に/も三年
+文節中 built 30px 320 #34 (1col,266px) 目は口ほど/に物を言う
+文節中 built 30px 320 #34 (1col,266px) 風が吹けば桶/屋が儲かる
+文節中 built 30px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 30px 375 #34 (2col,157px) 馬の耳/に念仏
+文節中 built 30px 375 #34 (2col,157px) 絵に描/いた餅
+文節中 built 30px 375 #34 (2col,157px) 酒は百/薬の長
+文節中 built 30px 375 #34 (2col,157px) 目は口ほど/に物を言う
+文節中 built 30px 375 #34 (2col,157px) 風が吹け/ば桶屋が/儲かる
+文節中 built 30px 375 #34 (2col,157px) 石の上/にも三年
+文節中 built 32px 320 #34 (1col,266px) 目は口ほど/に物を言う
+文節中 built 32px 320 #34 (1col,266px) 風が吹けば桶/屋が儲かる
+文節中 built 32px 375 #34 (2col,157px) 猿も木か/ら落ちる
+文節中 built 32px 375 #34 (2col,157px) 犬も歩け/ば棒に/当たる
+文節中 built 32px 375 #34 (2col,157px) 馬の耳/に念仏
+文節中 built 32px 375 #34 (2col,157px) 絵に描/いた餅
+文節中 built 32px 375 #34 (2col,157px) 酒は百/薬の長
+文節中 built 32px 375 #34 (2col,157px) 目は口ほ/どに物/を言う
+文節中 built 32px 375 #34 (2col,157px) 足を引っ/張る
+文節中 built 32px 375 #34 (2col,157px) 手に汗/握る
+文節中 built 32px 375 #34 (2col,157px) 花よ/り団子
+文節中 built 32px 375 #34 (2col,157px) 風が吹け/ば桶屋が/儲かる
+文節中 built 32px 375 #34 (2col,157px) 石の上に/も三年

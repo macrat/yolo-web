@@ -1,0 +1,328 @@
+[
+  {
+    "mode": "reject-real-exec",
+    "name": "tool",
+    "scrollBefore": [
+      0,
+      1602,
+      null
+    ],
+    "scrollAfter": [
+      0,
+      1602,
+      null
+    ],
+    "active": "BUTTON:URLをコピー",
+    "focusVisible": false,
+    "dialogOpen": false,
+    "textareas": 0,
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "tool",
+          "item_id": "char-count",
+          "content_id": "char-count"
+        }
+      ]
+    ],
+    "focusLog": [
+      "BUTTON:URLをコピー",
+      "TEXTAREA:",
+      "BUTTON:URLをコピー"
+    ],
+    "status": [
+      "テキストを入力してください",
+      "コピーしました"
+    ],
+    "clip": "文字数カウント\nhttp://localhost:3461/tools/char-count",
+    "kb": {
+      "active": "URLをコピー",
+      "fv": true
+    }
+  },
+  {
+    "mode": "reject-real-exec",
+    "name": "yojiGame",
+    "scrollBefore": [
+      0,
+      0,
+      0
+    ],
+    "scrollAfter": [
+      0,
+      0,
+      0
+    ],
+    "active": "BUTTON:結果をコピー",
+    "focusVisible": false,
+    "dialogOpen": true,
+    "textareas": 0,
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "game",
+          "item_id": "yoji-kimeru",
+          "content_id": "yoji-kimeru"
+        }
+      ]
+    ],
+    "focusLog": [
+      "BUTTON:結果をコピー",
+      "TEXTAREA:",
+      "BUTTON:結果をコピー"
+    ],
+    "status": [
+      "ヒント:難易度 ★読み 9文字読み れ...出典 日本で成立分類 対立・戦い",
+      "コピーしました"
+    ],
+    "clip": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3461/play/yoji-kimeru",
+    "kb": {
+      "active": "四字キメル",
+      "fv": true
+    }
+  },
+  {
+    "mode": "no-api-real-exec",
+    "name": "tool",
+    "scrollBefore": [
+      0,
+      1602,
+      null
+    ],
+    "scrollAfter": [
+      0,
+      1602,
+      null
+    ],
+    "active": "BUTTON:URLをコピー",
+    "focusVisible": false,
+    "dialogOpen": false,
+    "textareas": 0,
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "tool",
+          "item_id": "char-count",
+          "content_id": "char-count"
+        }
+      ]
+    ],
+    "focusLog": [
+      "BUTTON:URLをコピー",
+      "TEXTAREA:",
+      "BUTTON:URLをコピー"
+    ],
+    "status": [
+      "テキストを入力してください",
+      "コピーしました"
+    ],
+    "clip": "文字数カウント\nhttp://localhost:3461/tools/char-count",
+    "kb": {
+      "active": "URLをコピー",
+      "fv": true
+    }
+  },
+  {
+    "mode": "no-api-real-exec",
+    "name": "yojiGame",
+    "scrollBefore": [
+      0,
+      0,
+      0
+    ],
+    "scrollAfter": [
+      0,
+      0,
+      0
+    ],
+    "active": "BUTTON:結果をコピー",
+    "focusVisible": false,
+    "dialogOpen": true,
+    "textareas": 0,
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "game",
+          "item_id": "yoji-kimeru",
+          "content_id": "yoji-kimeru"
+        }
+      ]
+    ],
+    "focusLog": [
+      "BUTTON:結果をコピー",
+      "TEXTAREA:",
+      "BUTTON:結果をコピー"
+    ],
+    "status": [
+      "ヒント:難易度 ★読み 9文字読み れ...出典 日本で成立分類 対立・戦い",
+      "コピーしました"
+    ],
+    "clip": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3461/play/yoji-kimeru",
+    "kb": {
+      "active": "四字キメル",
+      "fv": true
+    }
+  },
+  {
+    "mode": "all-fail",
+    "name": "tool",
+    "scrollBefore": [
+      0,
+      1602,
+      null
+    ],
+    "scrollAfter": [
+      0,
+      1602,
+      null
+    ],
+    "active": "BUTTON:URLをコピー",
+    "focusVisible": false,
+    "dialogOpen": false,
+    "textareas": 0,
+    "gtag": [],
+    "focusLog": [
+      "BUTTON:URLをコピー",
+      "TEXTAREA:",
+      "BUTTON:URLをコピー"
+    ],
+    "status": [
+      "テキストを入力してください",
+      "コピーできませんでした。ほかの共有先をお使いください"
+    ],
+    "clip": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3461/play/yoji-kimeru",
+    "kb": {
+      "active": "URLをコピー",
+      "fv": true
+    }
+  },
+  {
+    "mode": "all-fail",
+    "name": "yojiGame",
+    "scrollBefore": [
+      0,
+      0,
+      0
+    ],
+    "scrollAfter": [
+      0,
+      0,
+      0
+    ],
+    "active": "BUTTON:結果をコピー",
+    "focusVisible": false,
+    "dialogOpen": true,
+    "textareas": 0,
+    "gtag": [],
+    "focusLog": [
+      "BUTTON:結果をコピー",
+      "TEXTAREA:",
+      "BUTTON:結果をコピー"
+    ],
+    "status": [
+      "ヒント:難易度 ★読み 9文字読み れ...出典 日本で成立分類 対立・戦い",
+      "コピーできませんでした。ほかの共有先をお使いください"
+    ],
+    "clip": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3461/play/yoji-kimeru",
+    "kb": {
+      "active": "四字キメル",
+      "fv": true
+    }
+  },
+  {
+    "mode": "normal",
+    "name": "tool",
+    "scrollBefore": [
+      0,
+      1602,
+      null
+    ],
+    "scrollAfter": [
+      0,
+      1602,
+      null
+    ],
+    "active": "BUTTON:URLをコピー",
+    "focusVisible": false,
+    "dialogOpen": false,
+    "textareas": 0,
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "tool",
+          "item_id": "char-count",
+          "content_id": "char-count"
+        }
+      ]
+    ],
+    "focusLog": [
+      "BUTTON:URLをコピー"
+    ],
+    "status": [
+      "テキストを入力してください",
+      "コピーしました"
+    ],
+    "clip": "文字数カウント\nhttp://localhost:3461/tools/char-count",
+    "kb": {
+      "active": "URLをコピー",
+      "fv": true
+    }
+  },
+  {
+    "mode": "normal",
+    "name": "yojiGame",
+    "scrollBefore": [
+      0,
+      0,
+      0
+    ],
+    "scrollAfter": [
+      0,
+      0,
+      0
+    ],
+    "active": "BUTTON:結果をコピー",
+    "focusVisible": false,
+    "dialogOpen": true,
+    "textareas": 0,
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "game",
+          "item_id": "yoji-kimeru",
+          "content_id": "yoji-kimeru"
+        }
+      ]
+    ],
+    "focusLog": [
+      "BUTTON:結果をコピー"
+    ],
+    "status": [
+      "ヒント:難易度 ★読み 9文字読み れ...出典 日本で成立分類 対立・戦い",
+      "コピーしました"
+    ],
+    "clip": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3461/play/yoji-kimeru",
+    "kb": {
+      "active": "四字キメル",
+      "fv": true
+    }
+  }
+]

@@ -1,0 +1,289 @@
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /tmp/claude-0/-home-user-yolo-web/7ec6fd95-5319-581a-b78e-9e5ca394946c/scratchpad/rv-t57-2/ex
+
+stderr | src/app/__tests__/seo-coverage.test.ts
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/app/__tests__/seo-coverage.test.ts (32 tests | 1 failed) 161870ms
+     × /blog/[slug]: SEO必須項目が存在する 120517ms
+ ❯ src/app/blog/[slug]/__tests__/page.test.tsx (28 tests | 1 failed) 106480ms
+       × 記事の JSON-LD の image と openGraph.images の url が、同じ画像の URL であること 100987ms
+stderr | src/app/__tests__/sitemap.test.ts
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/app/__tests__/sitemap.test.ts (22 tests | 5 failed) 263171ms
+     × blog post lastModified reflects actual post date 15274ms
+     × sitemap includes only indexable (detailedContent) quiz result pages 16368ms
+     × sitemap includes word-sense-personality result pages 15138ms
+     × sitemap includes kanji and yoji list pages 15675ms
+     × game page lastModified matches each game updatedAt or publishedAt 16213ms
+stderr | src/lib/__tests__/share-image.test.tsx
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/lib/__tests__/share-image.test.tsx (282 tests | 1 failed) 226223ms
+     × name の空白が PNG に残る 16233ms
+stderr | src/tools/keigo-reference/__tests__/KeigoReferenceTile.test.tsx
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/tools/keigo-reference/__tests__/KeigoReferenceTile.test.tsx (15 tests | 1 failed) 116200ms
+     × 件数の行が全件の数と分類順を言い、並び順の組を持たない 20997ms
+ ❯ src/play/quiz/__tests__/reachability.test.ts (175 tests | 2 failed) 347275ms
+       × すべての結果タイプが少なくとも1つの回答で勝者になる 63638ms
+       × すべての結果タイプが independent 判定で勝者になる 64081ms
+ ❯ src/lib/__tests__/markdown.test.ts (79 tests | 79 skipped) 132763ms
+stderr | src/blog/_components/__tests__/BlogListView.test.tsx
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/blog/_components/__tests__/BlogListView.test.tsx (9 tests | 1 failed) 65823ms
+     × /blog は新しい順の1ページ目を並べ、行のリンクの名前は題名だけである 15495ms
+stderr | src/tools/yoji-search/__tests__/YojiSearchTile.test.tsx
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/tools/yoji-search/__tests__/YojiSearchTile.test.tsx (10 tests | 1 failed) 58499ms
+     × カテゴリ・難易度・出典の組を畳み、ラベルがいまの選択を言う 15724ms
+stderr | src/app/dictionary/humor/[slug]/__tests__/opengraph-image.test.tsx
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/app/dictionary/humor/[slug]/__tests__/opengraph-image.test.tsx (35 tests | 1 failed) 23392ms
+     × 語の画像を 1200×630 の PNG で返す 17516ms
+stderr | src/app/blog/__tests__/list-pages.test.ts
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ ❯ src/app/blog/__tests__/list-pages.test.ts (3 tests | 1 failed) 34586ms
+     × /blog/tag/[tag]/page/[page] はタグごとに2ページ目から最後のページまでを生成する 28441ms
+ ❯ src/tools/char-count/__tests__/CharCountTile.test.tsx (18 tests | 1 failed) 31612ms
+     × 桁区切りの後ろにだけ折り所を置き、単位は数から離さない 19216ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/__tests__/markdown.test.ts [ src/lib/__tests__/markdown.test.ts ]
+Error: Hook timed out in 60000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ src/lib/__tests__/markdown.test.ts:13:1
+     11| // vitest). Warm it up once so each test below doesn't pay that cost —…
+     12| // crucially, doesn't blow vitest's default 5 s testTimeout.
+     13| beforeAll(async () => {
+       | ^
+     14|   await markdownToHtml("```text\nwarmup\n```");
+     15| }, 60000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/__tests__/seo-coverage.test.ts > 動的metadataページのSEO検証 > /blog/[slug]: SEO必須項目が存在する
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/__tests__/seo-coverage.test.ts:359:3
+    357|   // タイムアウトを 60000ms に延長: generateMetadata 内で getBlogPostBySlug → mark…
+    358|   // 呼び出すため、Shiki の初回初期化で 15 秒を超えることがある。本テストに限り長めのタイムアウトを設定。
+    359|   test("/blog/[slug]: SEO必須項目が存在する", async () => {
+       |   ^
+    360|     const { getAllBlogSlugs } = await import("@/blog/_lib/blog");
+    361|     const slugs = getAllBlogSlugs();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  src/app/__tests__/sitemap.test.ts > sitemap > blog post lastModified reflects actual post date
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/__tests__/sitemap.test.ts:75:3
+     73|   });
+     74|
+     75|   test("blog post lastModified reflects actual post date", () => {
+       |   ^
+     76|     const entries = sitemap();
+     77|     const blogEntries = entries.filter(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  src/app/__tests__/sitemap.test.ts > sitemap > sitemap includes only indexable (detailedContent) quiz result pages
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/__tests__/sitemap.test.ts:132:3
+    130|   // sitemap は index 対象（= detailedContent あり）の結果ページだけを掲載し、
+    131|   // noindex の結果は掲載しない（robots と整合）。
+    132|   test("sitemap includes only indexable (detailedContent) quiz result …
+       |   ^
+    133|     const entries = sitemap();
+    134|     const resultUrls = entries
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  src/app/__tests__/sitemap.test.ts > sitemap > sitemap includes word-sense-personality result pages
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/__tests__/sitemap.test.ts:169:3
+    167|   });
+    168|
+    169|   test("sitemap includes word-sense-personality result pages", () => {
+       |   ^
+    170|     const entries = sitemap();
+    171|     const urls = entries.map((e) => e.url);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  src/app/__tests__/sitemap.test.ts > sitemap > sitemap includes kanji and yoji list pages
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/__tests__/sitemap.test.ts:197:3
+    195|   });
+    196|
+    197|   test("sitemap includes kanji and yoji list pages", () => {
+       |   ^
+    198|     const entries = sitemap();
+    199|     const urls = entries.map((e) => e.url);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  src/app/__tests__/sitemap.test.ts > sitemap > game page lastModified matches each game updatedAt or publishedAt
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/__tests__/sitemap.test.ts:232:3
+    230|   });
+    231|
+    232|   test("game page lastModified matches each game updatedAt or publishe…
+       |   ^
+    233|     const entries = sitemap();
+    234|     for (const game of allGameMetas) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  src/lib/__tests__/share-image.test.tsx > 空白 > name の空白が PNG に残る
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/lib/__tests__/share-image.test.tsx:952:14
+    950|       { name: "Base64", subtitle: "テキストとBase64の相互変換 (UTF-8 対応)" },
+    951|     ],
+    952|   ] as const)("%s の空白が PNG に残る", async (kind, content) => {
+       |              ^
+    953|     const text = content[kind as keyof typeof content] as string;
+    954|     const spaces = text.split(" ").length - 1;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  src/app/blog/__tests__/list-pages.test.ts > ブログの一覧の2ページ目からの経路 > /blog/tag/[tag]/page/[page] はタグごとに2ページ目から最後のページまでを生成する
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/blog/__tests__/list-pages.test.ts:54:3
+     52|   });
+     53|
+     54|   test("/blog/tag/[tag]/page/[page] はタグごとに2ページ目から最後のページまでを生成する", () =>…
+       |   ^
+     55|     expect(tagDynamicParams).toBe(false);
+     56|     const params = generateTagStaticParams();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL  src/blog/_components/__tests__/BlogListView.test.tsx > BlogListView > /blog は新しい順の1ページ目を並べ、行のリンクの名前は題名だけである
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/blog/_components/__tests__/BlogListView.test.tsx:29:3
+     27|
+     28| describe("BlogListView", () => {
+     29|   test("/blog は新しい順の1ページ目を並べ、行のリンクの名前は題名だけである", () => {
+       |   ^
+     30|     visit("/blog");
+     31|     render(<BlogListView scope={{ type: "all" }} page={1} />);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL  src/play/quiz/__tests__/reachability.test.ts > personality診断の結果タイプ到達性ガード > music-personality: 全タイプが到達可能（悉皆列挙で厳密確認） > すべての結果タイプが少なくとも1つの回答で勝者になる
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/play/quiz/__tests__/reachability.test.ts:157:7
+    155|     "%s: 全タイプが到達可能（悉皆列挙で厳密確認）",
+    156|     (_slug, quiz) => {
+    157|       it(
+       |       ^
+    158|         "すべての結果タイプが少なくとも1つの回答で勝者になる",
+    159|         () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL  src/play/quiz/__tests__/reachability.test.ts > personality診断の結果タイプ到達性ガード > science-thinking: 全タイプが到達可能（独自判定・決定的サンプリング） > すべての結果タイプが independent 判定で勝者になる
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/play/quiz/__tests__/reachability.test.ts:309:5
+    307|     });
+    308|
+    309|     it(
+       |     ^
+    310|       "すべての結果タイプが independent 判定で勝者になる",
+    311|       () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL  src/tools/char-count/__tests__/CharCountTile.test.tsx > 主役の数 > 桁区切りの後ろにだけ折り所を置き、単位は数から離さない
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/tools/char-count/__tests__/CharCountTile.test.tsx:47:3
+     45|   });
+     46|
+     47|   it("桁区切りの後ろにだけ折り所を置き、単位は数から離さない", () => {
+       |   ^
+     48|     render(<CharCountTile />);
+     49|     type("a".repeat(1234567));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+ FAIL  src/tools/keigo-reference/__tests__/KeigoReferenceTile.test.tsx > 件数の行と絞り込み > 件数の行が全件の数と分類順を言い、並び順の組を持たない
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/tools/keigo-reference/__tests__/KeigoReferenceTile.test.tsx:69:3
+     67|
+     68| describe("件数の行と絞り込み", () => {
+     69|   it("件数の行が全件の数と分類順を言い、並び順の組を持たない", () => {
+       |   ^
+     70|     render(<KeigoReferenceTile />);
+     71|     expect(countLine()).toHaveTextContent(/^全\d+語・分類順$/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/17]⎯
+
+ FAIL  src/tools/yoji-search/__tests__/YojiSearchTile.test.tsx > YojiSearchTile > カテゴリ・難易度・出典の組を畳み、ラベルがいまの選択を言う
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/tools/yoji-search/__tests__/YojiSearchTile.test.tsx:84:3
+     82|   });
+     83|
+     84|   it("カテゴリ・難易度・出典の組を畳み、ラベルがいまの選択を言う", () => {
+       |   ^
+     85|     render(<YojiSearchTile />);
+     86|     const toggle = screen.getByRole("button", {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/17]⎯
+
+ FAIL  src/app/blog/[slug]/__tests__/page.test.tsx > app/blog/[slug]/page > 構造化データ > 記事の JSON-LD の image と openGraph.images の url が、同じ画像の URL であること
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/blog/[slug]/__tests__/page.test.tsx:144:5
+    142|
+    143|   describe("構造化データ", () => {
+    144|     it("記事の JSON-LD の image と openGraph.images の url が、同じ画像の URL であること…
+       |     ^
+    145|       const {
+    146|         default: BlogPostPage,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/17]⎯
+
+ FAIL  src/app/dictionary/humor/[slug]/__tests__/opengraph-image.test.tsx > 語の画像の Route Handler > 語の画像を 1200×630 の PNG で返す
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/dictionary/humor/[slug]/__tests__/opengraph-image.test.tsx:40:3
+     38|   });
+     39|
+     40|   test("語の画像を 1200×630 の PNG で返す", async () => {
+       |   ^
+     41|     const response = await route.GET(
+     42|       new Request(`${BASE_URL}/dictionary/humor/${SLUG}/opengraph-imag…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/17]⎯
+
+
+ Test Files  12 failed | 385 passed | 2 skipped (399)
+      Tests  16 failed | 6401 passed | 87 skipped (6504)
+   Start at  10:08:13
+   Duration  3611.53s (transform 91.79s, setup 558.89s, import 303.30s, tests 2880.09s, environment 2852.93s)
+

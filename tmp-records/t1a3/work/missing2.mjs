@@ -1,0 +1,12 @@
+import { chromium } from "/home/user/yolo-web/node_modules/playwright/index.mjs";
+import fs from "node:fs";
+const man = JSON.parse(fs.readFileSync("../site/fontbuild/manifest.json", "utf8")).p;
+const [, , base, p, sel] = process.argv;
+const b = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome", args: ["--no-sandbox"] });
+const page = await b.newPage();
+await page.goto(base + encodeURI(p));
+const t = await page.evaluate((s) => document.querySelector(s).textContent, sel);
+const e = man[p]; const have = new Set([...(e.page.biz400?.chars || "")]);
+console.log([...new Set([...t])].filter((c) => c.codePointAt(0) >= 0x80 && !have.has(c)).map((c) => c + "(U+" + c.codePointAt(0).toString(16) + ")").join(" "));
+console.log(t.slice(0, 200));
+await b.close();

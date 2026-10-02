@@ -1,0 +1,28 @@
+
+> yolo-web@0.1.0 pretypecheck
+> npm run generate:toolbox-registry && npm run generate:release-id
+
+
+> yolo-web@0.1.0 generate:toolbox-registry
+> tsx scripts/generate-toolbox-registry.ts
+
+[generate-toolbox-registry] tools=36 → /home/user/yolo-web/src/tools/generated/tools-registry.ts (11ms)
+
+> yolo-web@0.1.0 generate:release-id
+> tsx scripts/generate-release-id.ts
+
+[generate-release-id] release=9530e39-20260925 → /home/user/yolo-web/src/lib/generated/release-id.ts (13ms)
+
+> yolo-web@0.1.0 typecheck
+> tsc --noEmit
+
+
+> yolo-web@0.1.0 lint
+> eslint .
+
+
+> yolo-web@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

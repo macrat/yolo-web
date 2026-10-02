@@ -1,0 +1,165 @@
+tool 320 /tools/traditional-color-palette H1
+  A: 伝統色／カラーパレッ／ト
+  B: 伝統色カラー／パレット
+result 320 /play/character-personality/result/blazing-poet H1
+  A: 「よし行／くぞ！／」／と叫んで／3秒後に／空を／見上げる／炎の詩人
+  B: 「よし行／くぞ！／」と／叫んで／3秒後に／空を／見上げる／炎の詩人
+blog 320 /blog/personality-quiz-tie-enumeration H1
+  A: タイプ／診断の／同点は／設問の／欠陥、／全回答／を／数え上／げて／見つけ／る
+  B: タイプ／診断の／同点は／設問の／欠陥、／全回答／を数え／上げて／見つけ／る
+blog 320 /blog/a11y-static-green-but-broken-dynamic-audit H1
+  A: アクセ／シビリ／ティの／静的／チェッ／クが／緑でも／、／動かし／たら／壊れて／いた
+  B: アクセ／シビリ／ティの／静的チ／ェック／が緑で／も、動／かした／ら壊れ／ていた
+blog 320 /blog/clickable-list-row-stretched-link H1
+  A: 一覧の／行全体／を／クリッ／クでき／る／CSSと／、その／落とし／穴の／直し方
+  B: 一覧の／行全体／をクリ／ックで／きる／CSS／と、そ／の落と／し穴の／直し方
+blog 320 /blog/sql-cheatsheet H1
+  A: SQL ／早見表 ／— ／SELEC／T・／JOIN／・／集計・／DML/D／DL／構文一／覧
+  B: SQL 早／見表 — ／SELEC／T・／JOIN／・集／計・／DML/D／DL構文／一覧
+blog 320 /blog/git-command-cheatsheet H1
+  A: Git／コマン／ド ／早見表 ／— ／用途別／の／コマン／ド一覧
+  B: Gitコ／マンド ／早見表 ／— 用途／別のコ／マンド／一覧
+blog 375 /blog/cron-cheatsheet H1
+  A: Cron式 ／早見表 ／— ／フィール／ド・／特殊文字／・／実用パタ／ーン一覧
+  B: Cron式 ／早見表 ／— フィ／ールド・／特殊文／字・実用／パターン／一覧
+blog 320 /blog/regex-cheatsheet H1
+  A: 正規表／現 ／早見表 ／— ／メタ文／字・／量指定／子・／よく／使う／パター／ン一覧
+  B: 正規表／現 早見／表 — ／メタ文／字・量／指定／子・よ／く使う／パター／ン一覧
+blog 375 /blog/regex-cheatsheet H1
+  A: 正規表現 ／早見表 ／— ／メタ文字／・／量指定子／・よく／使う／パターン／一覧
+  B: 正規表現 ／早見表 ／— メタ／文字・量／指定子・／よく使う／パターン／一覧
+blog 320 /blog/sql-execution-order-guide H1
+  A: SQLの／実行順／を／地図に／する: ／WHER／Eと／HAVIN／Gで／迷わな／い／読み方
+  B: SQLの／実行順／を地図／にす／る: ／WHER／Eと／HAVIN／Gで迷／わない／読み方
+blog 320 /blog/git-command-reference H1
+  A: git／コマン／ド／逆引き／ガイド／: ／取り消／し・／復旧で／慌てな／い／ために
+  B: gitコマ／ンド逆／引きガ／イド: ／取り消／し・復／旧で慌／てない／ために
+blog 375 /blog/nextjs-server-only-import-in-client-component-node-fs H1
+  A: Client ／Compon／entに／server／専用部品／を／importす／ると／node:fs／で／ビルドが／壊れる
+  B: Client ／Compon／entに／server専／用部品を／importす／ると／node:fs／でビルド／が壊れる
+blog 375 /blog/playwright-dark-mode-screenshot-next-themes H1
+  A: Playwrig／htの／ダークモ／ード／撮影が／実は／ライトだ／った -- ／emulate／Mediaの／落とし穴
+  B: Playwrig／htのダー／クモード／撮影が実／はライト／だった -- ／emulate／Mediaの／落とし穴
+blog 320 /blog/aria-status-implicit-aria-live H1
+  A: role="s／tatus"／が／読み上／げを／暴走さ／せた -- ／暗黙の／aria-／live=p／oliteと／二層構／成
+  B: role="s／tatus"／が読み／上げを／暴走さ／せた -- ／暗黙の／aria-／live=p／oliteと／二層構／成
+blog 375 /blog/aria-status-implicit-aria-live H1
+  A: role="st／atus"が／読み上げ／を／暴走させ／た -- ／暗黙の／aria-／live=poli／teと／二層構成
+  B: role="st／atus"が／読み上げ／を暴走さ／せた -- ／暗黙の／aria-／live=poli／teと二層／構成
+blog 375 /blog/grid-column-and-dom-order H1
+  A: grid-／column／を／書いたの／に／効かない ／-- CSS ／Gridは／DOM／順序にも／依存する
+  B: grid-／column／を書いた／のに効か／ない -- ／CSS Grid／はDOM／順序にも／依存する
+blog 320 /blog/grid-column-and-dom-order H1
+  A: grid-／colum／nを／書いた／のに／効かな／い -- ／CSS ／Gridは／DOM／順序に／も／依存す／る
+  B: grid-／colum／nを書／いたの／に効か／ない -- ／CSS ／Gridは／DOM順／序にも／依存す／る
+blog 320 /blog/nextjs-global-not-found-for-multiple-root-layouts H1
+  A: Next.js／複数ro／ot ／layout／で not-／found.t／sx が／効かな／い -- ／global-／not-／found.j／s での／解決
+  B: Next.js／複数／root ／layout／で not-／found.t／sx が効／かない ／-- ／global-／not-／found.j／s での／解決
+blog 375 /blog/yaml-implicit-type-conversion-quote-everything H1
+  A: YAML は ／`NO` を／ノルウェ／ーと／読まない ／-- ／暗黙の／型変換に／騙されな／い書き方
+  B: YAML は ／`NO` を／ノルウェ／ーと読ま／ない -- ／暗黙の型／変換に騙／されない／書き方
+blog 320 /blog/yaml-implicit-type-conversion-quote-everything H1
+  A: YAML ／は ／`NO` ／を／ノルウ／ェーと／読まな／い -- ／暗黙の／型変換／に／騙され／ない／書き方
+  B: YAML ／は ／`NO` ／をノル／ウェー／と読ま／ない -- ／暗黙の／型変換／に騙さ／れない／書き方
+blog 320 /blog/stop-piling-rules-give-ai-its-wish H1
+  A: AIが／指示を／守らな／いなら／、／ルール／より／先に／『望み／』／を渡し／てみて／ほしい
+  B: AIが指／示を守／らない／なら、／ルール／より先／に『望／み』を／渡して／みてほ／しい
+blog 375 /blog/ai-agent-verification-step-skip H1
+  A: AI／エージェ／ントは／「最後の／確認」／を省略す／る
+  B: AIエージ／ェントは／「最後の／確認」を／省略する
+blog 320 /blog/ai-agent-concept-rethink-3-workflow-limits H1
+  A: セッシ／ョン／長期化／がAI／エージ／ェント／の／自律運／用を／破壊す／る／（コン／セプト／再策定／記 ／3/3）
+  B: セッシ／ョン長／期化が／AIエー／ジェン／トの自／律運用／を破壊／する／（コン／セプト／再策定／記 ／3/3）
+blog 375 /blog/ai-agent-concept-rethink-3-workflow-limits H1
+  A: セッショ／ン／長期化が／AI／エージェ／ントの／自律運用／を／破壊する／（コンセ／プト再策／定記 ／3/3）
+  B: セッショ／ン長期化／がAIエー／ジェント／の自律運／用を破壊／する（コ／ンセプト／再策定記 ／3/3）
+blog 375 /blog/ai-agent-concept-rethink-2-forced-ideation-1728 H1
+  A: 1,728通／りの／強制発想／法で／バイアス／を／構造的に／排除する／（コンセ／プト再策／定記 ／2/3）
+  B: 1,728通／りの強制／発想法で／バイアス／を構造的／に排除す／る（コン／セプト再／策定記 ／2/3）
+blog 375 /blog/adsense-content-quality-audit-methodology H1
+  A: AdSense／「有用性／の低い／コンテン／ツ」／を乗り／越える -- ／コンテン／ツ／品質監査／の／実践ガイ／ド
+  B: AdSense／「有用性／の低いコ／ンテン／ツ」を乗／り越える ／-- コンテ／ンツ品質／監査の実／践ガイド
+blog 320 /blog/nextjs-hydration-mismatch-seeded-random H1
+  A: Next.js／ハイド／レーシ／ョン／不整合／を／シード／付き乱／数で／解決す／る
+  B: Next.js／ハイド／レーシ／ョン不／整合を／シード／付き乱／数で解／決する
+blog 375 /blog/nextjs-seo-metadata-and-json-ld-security H1
+  A: Next.js／サイトの／SEO／メタデー／タ／完全対策／: OGP・／canonica／l・／Twitter ／Card・／JSON-LD／セキュリ／ティまで
+  B: Next.js／サイトの／SEOメタ／データ完／全対策: ／OGP・／canonica／l・／Twitter ／Card・／JSON-LD／セキュリ／ティまで
+blog 320 /blog/url-structure-reorganization H1
+  A: URLを／変える／べきか／迷った／ら: ／SEO・／UX・／競合の／3軸で／判断す／るURL／設計／フレー／ムワー／ク
+  B: URLを／変える／べきか／迷った／ら: ／SEO・／UX・／競合の／3軸で／判断す／るURL／設計フ／レーム／ワーク
+blog 375 /blog/kotowaza-quiz H1
+  A: ことわざ／・／慣用句力／診断: ／10問の／クイズで／語彙力を／測定しよ／う
+  B: ことわ／ざ・慣用／句力診／断: 10問／のクイズ／で語彙力／を測定し／よう
+blog 320 /blog/kotowaza-quiz H1
+  A: ことわ／ざ・／慣用句／力診断／: ／10問の／クイズ／で／語彙力／を／測定し／よう
+  B: ことわ／ざ・慣／用句力／診断: ／10問の／クイズ／で語彙／力を測／定しよ／う
+blog 320 /blog/rss-feed-and-pagination H1
+  A: サイト／基盤の／整備: ／メモRS／S／フィー／ドと／ページ／ング／機能の／追加
+  B: サイト／基盤の／整備: ／メモ／RSSフ／ィード／とペー／ジング／機能の／追加
+blog 320 /blog/site-search-feature H1
+  A: サイト／内検索／を／実装し／ました ／-- ／Fuse.js／で／500件／の／日本語／コンテ／ンツを／横断検／索
+  B: サイト／内検索／を実装／しまし／た -- ／Fuse.js／で500／件の日／本語コ／ンテン／ツを横／断検索
+blog 320 /blog/business-email-and-keigo-tools H1
+  A: ビジネ／スメー／ル作成／ツール／と／敬語早／見表を／公開し／ました
+  B: ビジネ／スメー／ル作成／ツール／と敬語／早見表／を公開／しまし／た
+blog 320 /blog/dark-mode-toggle H1
+  A: ダーク／モード／を／手動で／切り／替えら／れるよ／うにな／りまし／た
+  B: ダーク／モード／を手動／で切り／替えら／れるよ／うにな／りまし／た
+blog 1280 /blog/dark-mode-toggle H1
+  A: ダークモードを手動で切り／替えられるようになりました
+  B: ダークモードを手動で切り替えられる／ようになりました
+blog 375 /blog/quiz-diagnosis-feature H1
+  A: クイズ・／診断テス／ト機能を／リリース／しました／: ／漢字力診／断と／伝統色診／断で／遊んで／みよう
+  B: クイズ・／診断テス／ト機能を／リリース／しまし／た: 漢字／力診断と／伝統色診／断で遊ん／でみよう
+blog 375 /blog/tools-expansion-10-to-30 H1
+  A: ツールを／10個か／ら／30個に／拡充／しました／: ／プログラ／マティッ／クSEO／戦略の／実践
+  B: ツールを／10個か／ら30個／に拡充し／ました: ／プログラ／マティッ／クSEO戦／略の実践
+blog 320 /blog/regex-tester-guide H1
+  A: 正規表／現／テスタ／ーの／使い方／: ／初心者／から／実践ま／で
+  B: 正規表／現テス／ターの／使い／方: 初／心者か／ら実践／まで
+blog 320 /blog/yojijukugo-learning-guide H1
+  A: 四字熟／語の／覚え方／: ／意味・／由来を／知って／楽しく／学ぶ方／法
+  B: 四字熟／語の覚／え方: ／意味・／由来を／知って／楽しく／学ぶ方／法
+blog 320 /blog/nextjs-static-tool-pages-design-pattern H1
+  A: Next.js ／App ／Router／で／20個の／静的／ツール／ページ／を／構築す／る／設計パ／ターン
+  B: Next.js ／App ／Router／で20個／の静的／ツール／ページ／を構築／する設／計パタ／ーン
+blog 375 /blog/nextjs-static-tool-pages-design-pattern H1
+  A: Next.js ／App ／Routerで／20個の／静的／ツールペ／ージを／構築する／設計パタ／ーン
+  B: Next.js ／App ／Routerで／20個の／静的ツー／ルページ／を構築す／る設計パ／ターン
+blog 320 /blog/how-we-built-this-site H1
+  A: AI／エージ／ェント／7人／チーム／でWeb／サイト／を／ゼロか／ら／構築し／た／全記録
+  B: AIエー／ジェン／ト7人／チーム／でWeb／サイト／をゼロ／から構／築した／全記録
+list 375 /blog/category/ai-workflow H1
+  A: AI／ワークフ／ロー
+  B: AIワーク／フロー
+yoji 375 /dictionary/yoji/%E4%B8%80%E5%88%80%E4%B8%A1%E6%96%AD H1
+  A: 四字熟語／「一刀両断／」
+  B: 四字熟語／「一刀両／断」
+yoji 375 /dictionary/yoji/%E6%B8%A9%E6%95%85%E7%9F%A5%E6%96%B0 H1
+  A: 四字熟語／「温故知新／」
+  B: 四字熟語／「温故知／新」
+yoji 375 /dictionary/yoji/%E8%87%A5%E8%96%AA%E5%98%97%E8%83%86 H1
+  A: 四字熟語／「臥薪嘗胆／」
+  B: 四字熟語／「臥薪嘗／胆」
+yoji 375 /dictionary/yoji/%E4%B8%83%E8%BB%A2%E5%85%AB%E8%B5%B7 H1
+  A: 四字熟語／「七転八起／」
+  B: 四字熟語／「七転八／起」
+yoji 375 /dictionary/yoji/%E7%94%BB%E7%AB%9C%E7%82%B9%E7%9D%9B H1
+  A: 四字熟語／「画竜点睛／」
+  B: 四字熟語／「画竜点／睛」
+yoji 375 /dictionary/yoji/%E8%87%AA%E7%94%BB%E8%87%AA%E8%B3%9B H1
+  A: 四字熟語／「自画自賛／」
+  B: 四字熟語／「自画自／賛」
+misc 320 /this-page-does-not-exist H2
+  A: 主要／コンテン／ツ
+  B: 主要コン／テンツ
+misc 320 /about H2
+  A: AIが／運営して／います
+  B: AIが運営し／ています
+misc 375 /privacy H2
+  A: 情報の／管理と／安全管理措／置
+  B: 情報の管理／と安全管理／措置
+misc 375 /privacy H2
+  A: プライバシ／ー／ポリシーの／変更
+  B: プライバシ／ーポリシー／の変更

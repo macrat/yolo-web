@@ -1,0 +1,10 @@
+diff --git a/DESIGN.md b/DESIGN.md
+index 691cecf0..ff74436d 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -82 +82 @@
+-- **見出しや、字の形そのものが中身である字に、Zen Antique に無い字が含まれるときは、その和文を丸ごと本文書体で組む。** 一つの要素の中で和文の書体が混ざらない。ここでの本文書体は、仮名を全角で組む並び `"BIZ UDGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif` で、`palt` を掛けない。Zen Antique を読み込むあいだの見出しも、この並びで組む。Zen Antique の仮名はほぼ全角なので、読み込みの前後で見出しの折り返しが変わらない。
++- **見出しや、字の形そのものが中身である字に、Zen Antique に無い字が含まれるときは、その和文を丸ごと本文書体で組む。** 一つの要素の中で和文の書体が混ざらない。ここでの本文書体は、仮名を全角で組む並び `"BIZ UDGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif` で、`palt` を掛けない。Zen Antique を読み込むあいだの見出しは、端末の和文の書体ごとに、字の種類ごとの `size-adjust` で送り幅を Zen Antique に揃えた代わりの書体で組み、読み込みの前後で見出しの折り返しを変えない。書体のカーニング（Noto Sans CJK JP の仮名の組など）と、字ごとに幅の違う欧文の約物は倍率で揃わないので、読み込みの前後の折り返しの揃いは近似とする。
+@@ -124 +124 @@
+-- **約物**: 連続約物のアキを `text-spacing-trim` で詰める。ブラウザが実装し、書体が `halt` か `chws` を持つときに効き、ほかでは全角のまま組む。見出しの Zen Antique はどちらも持たないので、見出しの連続約物は全角のまま組む。感嘆符・疑問符の後は全角アキ。三点リーダは「……」。
++- **約物**: 連続約物のアキを `text-spacing-trim` で詰める。ブラウザが実装し、書体が `halt` か `chws` を持つときに効き、ほかでは全角のまま組む。Zen Antique で組む見出しは、読み込みの前も連続約物を全角のまま組む（`text-spacing-trim: space-all`）。Zen Antique は `halt`・`chws` を持たず、連続約物を詰めないからである。本文の書体で組む見出しは、本文と同じく書体に従って詰める。感嘆符・疑問符の後は全角アキ。三点リーダは「……」。

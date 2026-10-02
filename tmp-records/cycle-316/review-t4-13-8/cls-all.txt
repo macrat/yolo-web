@@ -1,0 +1,43 @@
+1280x800 16px reopen-won: root 16px | cls 0.0109 / 0.0109 / 0.0109 / 0.0109 / 0.0109 / 0.0109 / 0.0109 / 0.0109 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | howOff 1408 / 1408 / 1408 / 1408 / 1408 / 1408 / 1408 / 1408
+   src: DETAILS
+1280x800 32px reopen-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | howOff 2043 / 2043 / 2043 / 2043 / 2043 / 2043 / 2043 / 2043
+320x568 16px reopen-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | howOff 1308 / 1308 / 1308 / 1308 / 1308 / 1308 / 1308 / 1308
+320x568 32px reopen-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | howOff 2919 / 2919 / 2919 / 2919 / 2919 / 2919 / 2919 / 2919
+375x667 16px reopen-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | howOff 1339 / 1339 / 1339 / 1339 / 1339 / 1339 / 1339 / 1339
+375x667 32px reopen-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | howOff 2605 / 2605 / 2605 / 2605 / 2605 / 2605 / 2605 / 2605
+1280x800 16px reload-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+1280x800 32px reload-mid: root 32px | cls 0 / 0.0001 / 0 / 0 / 0 / 0 / 0.0001 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+320x568 16px reload-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+320x568 32px reload-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 9 / 9 / 9 / 9 / 9 / 9 / 9 / 9 | nav reload
+375x667 16px reload-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+375x667 32px reload-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+1280x800 16px reload-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+1280x800 32px reload-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+320x568 16px reload-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+320x568 32px reload-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+375x667 16px reload-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+375x667 32px reload-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav reload
+1280x800 16px back-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+1280x800 32px back-mid: root 32px | cls 0.0001 / 0.0001 / 0.0001 / 0.0001 / 0.0001 / 0.0001 / 0 / 0.0001 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+320x568 16px back-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+320x568 32px back-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 9 / 9 / 9 / 9 / 9 / 9 / 9 / 9 | nav back_forward
+375x667 16px back-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+375x667 32px back-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+1280x800 16px back-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+1280x800 32px back-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+320x568 16px back-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+320x568 32px back-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+375x667 16px back-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+375x667 32px back-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav back_forward
+1280x800 16px link-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+1280x800 32px link-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+320x568 16px link-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+320x568 32px link-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+375x667 16px link-mid: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+375x667 32px link-mid: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+1280x800 16px link-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+1280x800 32px link-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+320x568 16px link-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+320x568 32px link-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+375x667 16px link-won: root 16px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate
+375x667 32px link-won: root 32px | cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | off 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 | nav navigate

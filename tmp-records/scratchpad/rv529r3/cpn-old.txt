@@ -1,0 +1,312 @@
+
+> yolo-web@0.1.0 check:phrased-names
+> CHECK_PHRASED_NAMES=1 vitest run src/test/check-phrased-names.test.ts
+
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /tmp/claude-0/-home-user-yolo-web/7ec6fd95-5319-581a-b78e-9e5ca394946c/scratchpad/r3build
+
+数えたパス: src
+数えた .tsx: 333
+
+字で渡すもの（直すもの）: 104
+src/app/storybook/StorybookContent.tsx:687:28  `Field` の `label`  「controlled（value + onChange）」  2文節以上（splitIntoPhrases の分け方: controlled／（value + onChange））
+src/app/storybook/StorybookContent.tsx:698:26  `Field` の `label`  「uncontrolled（defaultValue）」  2文節以上（splitIntoPhrases の分け方: uncontrolled／（defaultValue））
+src/app/storybook/StorybookContent.tsx:755:53  素の `legend` の子  「通知の設定」  2文節以上（splitIntoPhrases の分け方: 通知の／設定）
+src/app/storybook/StorybookContent.tsx:757:21  `Checkbox` の `label`  「通知を受け取る」  2文節以上（splitIntoPhrases の分け方: 通知を／受け取る）
+src/app/storybook/StorybookContent.tsx:761:29  `Checkbox` の `label`  「メール配信（初期: 選択済み）」  2文節以上（splitIntoPhrases の分け方: メール／配信／（初期: 選択済み））
+src/app/storybook/StorybookContent.tsx:762:29  `Checkbox` の `label`  「ラベルが長く、狭い画面で2行に折り返しても、四角は1行目の字の中央に並ぶ」  2文節以上（splitIntoPhrases の分け方: ラベルが／長く、／狭い／画面で／2行に／折り返しても、／四角は／1行目の／字の／中央に／並ぶ）
+src/app/storybook/StorybookContent.tsx:764:21  `Checkbox` の `label`  「無効（未選択）」  2文節以上（splitIntoPhrases の分け方: 無効／（未選択））
+src/app/storybook/StorybookContent.tsx:769:21  `Checkbox` の `label`  「無効（選択済み）」  2文節以上（splitIntoPhrases の分け方: 無効／（選択済み））
+src/app/storybook/StorybookContent.tsx:945:26  `Field` の `label`  「読み取り専用（出力）」  2文節以上（splitIntoPhrases の分け方: 読み取り専用／（出力））
+src/app/storybook/StorybookContent.tsx:1021:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）
+src/app/storybook/StorybookContent.tsx:1033:20  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）
+src/app/storybook/StorybookContent.tsx:1035:24  `RadioGroup` の `options` の名前  「ひらがな → カタカナ」  2文節以上（splitIntoPhrases の分け方: ひらが／な／ → カタカナ）
+src/app/storybook/StorybookContent.tsx:1037:24  `RadioGroup` の `options` の名前  「半角カナ → 全角カナ」  2文節以上（splitIntoPhrases の分け方: 半角／カナ → 全角カナ）
+src/app/storybook/StorybookContent.tsx:1038:24  `RadioGroup` の `options` の名前  「全角カナ → 半角カナ」  2文節以上（splitIntoPhrases の分け方: 全角／カナ → 半角カナ）
+src/app/storybook/StorybookContent.tsx:1079:19  `FileDropZone` の `label`  「画像ファイル」  2文節以上（splitIntoPhrases の分け方: 画像／ファイル）
+src/app/storybook/StorybookContent.tsx:1133:20  `CopyButton` の `target`  「メール全文」  2文節以上（splitIntoPhrases の分け方: メール／全文）
+src/app/storybook/StorybookContent.tsx:1422:11  `Button` の面  「文字数を数える」  2文節以上（splitIntoPhrases の分け方: 文字数を／数える）
+src/app/storybook/StorybookContent.tsx:1591:22  `Field` の `label`  「開くタイプ」  2文節以上（splitIntoPhrases の分け方: 開く／タイプ）
+src/tools/age-calculator/AgeCalculatorTile.tsx:173:48  `Button` の面  「今日に設定」  2文節以上（splitIntoPhrases の分け方: 今日に／設定）
+src/tools/base64/Base64Tile.tsx:48:17  `Field` の `label`  「エンコードするテキスト」  2文節以上（splitIntoPhrases の分け方: エンコードする／テキスト）
+src/tools/base64/Base64Tile.tsx:54:17  `Field` の `label`  「デコードするBase64」  2文節以上（splitIntoPhrases の分け方: デコードする／Base64）
+src/tools/base64/Base64Tile.tsx:159:16  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）
+src/tools/base64/Base64Tile.tsx:165:19  `Checkbox` の `label`  「URL-safe形式で出力」  2文節以上（splitIntoPhrases の分け方: URL-safe／形式で／出力）
+src/tools/business-email/BusinessEmailTile.tsx:190:18  `RadioGroup` の `legend`  「メールの種類」  2文節以上（splitIntoPhrases の分け方: メールの／種類）
+src/tools/business-email/BusinessEmailTile.tsx:272:15  素の `label` の子  「件名プレビュー」  2文節以上（splitIntoPhrases の分け方: 件名／プレビュー）
+src/tools/business-email/BusinessEmailTile.tsx:295:15  素の `label` の子  「本文プレビュー」  2文節以上（splitIntoPhrases の分け方: 本文／プレビュー）
+src/tools/byte-counter/ByteCounterTile.tsx:82:11  素の `label` の子  「テキストを入力」  2文節以上（splitIntoPhrases の分け方: テキストを／入力）
+src/tools/char-count/CharCountTile.tsx:83:20  `Field` の `label`  「数えるテキスト」  2文節以上（splitIntoPhrases の分け方: 数える／テキスト）
+src/tools/color-converter/ColorConverterTile.tsx:207:9  素の `label` の子  「HEX値 (#RGB または #RRGGBB)」  2文節以上（splitIntoPhrases の分け方: HEX／値 (#RGB または #RRGGBB)）
+src/tools/color-converter/ColorConverterTile.tsx:209:11  素の `label` の子  「RGB値 (R, G, B)」  2文節以上（splitIntoPhrases の分け方: RGB／値 (R, G, B)）
+src/tools/color-converter/ColorConverterTile.tsx:210:11  素の `label` の子  「HSL値 (H, S, L)」  2文節以上（splitIntoPhrases の分け方: HSL／値 (H, S, L)）
+src/tools/color-converter/ColorConverterTile.tsx:231:20  `RadioGroup` の `legend`  「入力モード」  2文節以上（splitIntoPhrases の分け方: 入力／モード）
+src/tools/cron-parser/CronParserTile.tsx:321:18  `RadioGroup` の `legend`  「使う機能」  2文節以上（splitIntoPhrases の分け方: 使う／機能）
+src/tools/csv-converter/CsvConverterTile.tsx:193:13  素の `label` の子  「入力データ」  2文節以上（splitIntoPhrases の分け方: 入力／データ）
+src/tools/date-calculator/DateCalculatorTile.tsx:229:15  `Button` の面  「差分を計算」  2文節以上（splitIntoPhrases の分け方: 差分を／計算）
+src/tools/dummy-text/DummyTextTile.tsx:145:20  `RadioGroup` の `legend`  「文章の言語」  2文節以上（splitIntoPhrases の分け方: 文章の／言語）
+src/tools/dummy-text/DummyTextTile.tsx:170:13  素の `label` の子  「段落あたりの文数」  2文節以上（splitIntoPhrases の分け方: 段落あたりの／文数）
+src/tools/email-validator/EmailValidatorTile.tsx:102:11  素の `label` の子  「メールアドレスを入力」  2文節以上（splitIntoPhrases の分け方: メールアドレスを／入力）
+src/tools/fullwidth-converter/FullwidthConverterTile.tsx:47:12  `RadioGroup` の `options` の名前  「半角に変換」  2文節以上（splitIntoPhrases の分け方: 半角に／変換）
+src/tools/fullwidth-converter/FullwidthConverterTile.tsx:48:12  `RadioGroup` の `options` の名前  「全角に変換」  2文節以上（splitIntoPhrases の分け方: 全角に／変換）
+src/tools/fullwidth-converter/FullwidthConverterTile.tsx:55:11  `Checkbox` の `label`  「記号・スペース」  2文節以上（splitIntoPhrases の分け方: 記号・／スペース）
+src/tools/fullwidth-converter/FullwidthConverterTile.tsx:155:20  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）
+src/tools/fullwidth-converter/FullwidthConverterTile.tsx:177:11  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）
+src/tools/hash-generator/HashGeneratorTile.tsx:179:11  素の `label` の子  「テキスト入力」  2文節以上（splitIntoPhrases の分け方: テキスト／入力）
+src/tools/hash-generator/HashGeneratorTile.tsx:211:11  `Button` の面  「ハッシュ生成」  2文節以上（splitIntoPhrases の分け方: ハッシュ／生成）
+src/tools/html-entity/HtmlEntityTile.tsx:142:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）
+src/tools/html-entity/HtmlEntityTile.tsx:150:32  素の `label` の子  「テキスト入力」  2文節以上（splitIntoPhrases の分け方: テキスト／入力）
+src/tools/html-entity/HtmlEntityTile.tsx:150:43  素の `label` の子  「HTMLエンティティ入力」  2文節以上（splitIntoPhrases の分け方: HTML／エンティティ／入力）
+src/tools/html-entity/HtmlEntityTile.tsx:174:34  素の `label` の子  「エンコード結果」  2文節以上（splitIntoPhrases の分け方: エンコード／結果）
+src/tools/html-entity/HtmlEntityTile.tsx:174:46  素の `label` の子  「デコード結果」  2文節以上（splitIntoPhrases の分け方: デコード／結果）
+src/tools/image-base64/ImageBase64Tile.tsx:219:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）
+src/tools/image-base64/ImageBase64Tile.tsx:229:19  `FileDropZone` の `label`  「画像ファイル」  2文節以上（splitIntoPhrases の分け方: 画像／ファイル）
+src/tools/image-base64/ImageBase64Tile.tsx:331:15  素の `label` の子  「Base64文字列またはData URI」  2文節以上（splitIntoPhrases の分け方: Base64／文字列または／Data URI）
+src/tools/image-resizer/ImageResizerTile.tsx:68:12  `RadioGroup` の `options` の名前  「サイズ指定」  2文節以上（splitIntoPhrases の分け方: サイズ／指定）
+src/tools/image-resizer/ImageResizerTile.tsx:69:12  `RadioGroup` の `options` の名前  「パーセント指定」  2文節以上（splitIntoPhrases の分け方: パーセント／指定）
+src/tools/image-resizer/ImageResizerTile.tsx:386:17  `FileDropZone` の `label`  「画像ファイル」  2文節以上（splitIntoPhrases の分け方: 画像／ファイル）
+src/tools/image-resizer/ImageResizerTile.tsx:440:24  `RadioGroup` の `legend`  「サイズの決め方」  2文節以上（splitIntoPhrases の分け方: サイズの／決め方）
+src/tools/image-resizer/ImageResizerTile.tsx:480:27  `Checkbox` の `label`  「縦横比を保つ」  2文節以上（splitIntoPhrases の分け方: 縦横比を／保つ）
+src/tools/kana-converter/KanaConverterTile.tsx:50:43  `RadioGroup` の `options` の名前  「ひらがな → カタカナ」  2文節以上（splitIntoPhrases の分け方: ひらが／な／ → カタカナ）
+src/tools/kana-converter/KanaConverterTile.tsx:52:44  `RadioGroup` の `options` の名前  「半角カナ → 全角カナ」  2文節以上（splitIntoPhrases の分け方: 半角／カナ → 全角カナ）
+src/tools/kana-converter/KanaConverterTile.tsx:53:44  `RadioGroup` の `options` の名前  「全角カナ → 半角カナ」  2文節以上（splitIntoPhrases の分け方: 全角／カナ → 半角カナ）
+src/tools/kana-converter/KanaConverterTile.tsx:127:18  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）
+src/tools/kana-converter/KanaConverterTile.tsx:138:11  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）
+src/tools/keigo-reference/KeigoReferenceTile.tsx:39:12  `RadioGroup` の `options` の名前  「よくある間違い」  2文節以上（splitIntoPhrases の分け方: よく／ある／間違い）
+src/tools/keigo-reference/KeigoReferenceTile.tsx:157:18  `RadioGroup` の `legend`  「表示する内容」  2文節以上（splitIntoPhrases の分け方: 表示する／内容）
+src/tools/keigo-reference/KeigoReferenceTile.tsx:174:29  `ListControls` の `searchLabel`  「普通語・敬語で探す」  2文節以上（splitIntoPhrases の分け方: 普通語・／敬語で／探す）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:56:29  `RadioGroup` の `options` の名前  「改行を削除」  2文節以上（splitIntoPhrases の分け方: 改行を／削除）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:57:36  `RadioGroup` の `options` の名前  「改行をスペースに置換」  2文節以上（splitIntoPhrases の分け方: 改行を／スペースに／置換）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:58:32  `RadioGroup` の `options` の名前  「PDFスマートモード」  2文節以上（splitIntoPhrases の分け方: PDF／スマート／モード）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:66:28  `RadioGroup` の `options` の名前  「スペースに置換」  2文節以上（splitIntoPhrases の分け方: スペースに／置換）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:146:18  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:159:19  `Checkbox` の `label`  「連続する改行を1つにまとめる」  2文節以上（splitIntoPhrases の分け方: 連続する／改行を／1つに／まとめる）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:169:18  `RadioGroup` の `legend`  「行内改行の処理」  2文節以上（splitIntoPhrases の分け方: 行内改行の／処理）
+src/tools/line-break-remover/LineBreakRemoverTile.tsx:182:13  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）
+src/tools/number-base-converter/NumberBaseConverterTile.tsx:157:18  `RadioGroup` の `legend`  「入力する進数」  2文節以上（splitIntoPhrases の分け方: 入力する／進数）
+src/tools/number-base-converter/NumberBaseConverterTile.tsx:171:11  素の `label` の子  「変換する数値」  2文節以上（splitIntoPhrases の分け方: 変換する／数値）
+src/tools/password-generator/PasswordGeneratorTile.tsx:207:19  `Checkbox` の `label`  「紛らわしい文字を除外 (O/0, I/l/1)」  2文節以上（splitIntoPhrases の分け方: 紛らわしい／文字を／除外 (O/0, I/l/1)）
+src/tools/password-generator/PasswordGeneratorTile.tsx:249:11  `Button` の面  「パスワード生成」  2文節以上（splitIntoPhrases の分け方: パスワード／生成）
+src/tools/percent-calculator/PercentCalculatorTile.tsx:20:12  `RadioGroup` の `options` の名前  「XのY%」  2文節以上（splitIntoPhrases の分け方: Xの／Y%）
+src/tools/percent-calculator/PercentCalculatorTile.tsx:88:19  素の `label` の子  「割合 Y（%）」  2文節以上（splitIntoPhrases の分け方: 割合 Y／（%））
+src/tools/percent-calculator/PercentCalculatorTile.tsx:98:19  素の `label` の子  「全体 B」  2文節以上（splitIntoPhrases の分け方: 全体／ B）
+src/tools/percent-calculator/PercentCalculatorTile.tsx:107:19  素の `label` の子  「もとの値 X」  2文節以上（splitIntoPhrases の分け方: もとの／値 X）
+src/tools/percent-calculator/PercentCalculatorTile.tsx:108:19  素の `label` の子  「割合 Y（%）」  2文節以上（splitIntoPhrases の分け方: 割合 Y／（%））
+src/tools/percent-calculator/PercentCalculatorTile.tsx:138:16  `RadioGroup` の `legend`  「計算パターン」  2文節以上（splitIntoPhrases の分け方: 計算／パターン）
+src/tools/percent-calculator/PercentCalculatorTile.tsx:183:22  `RadioGroup` の `legend`  「増減の方向」  2文節以上（splitIntoPhrases の分け方: 増減の／方向）
+src/tools/qr-code/QrCodeTile.tsx:113:15  `Field` の `label`  「QRコードにする文字やURL」  2文節以上（splitIntoPhrases の分け方: QR／コードに／する／文字や／URL）
+src/tools/qr-code/QrCodeTile.tsx:132:20  `Field` の `label`  「エラー訂正レベル」  2文節以上（splitIntoPhrases の分け方: エラー／訂正／レベル）
+src/tools/qr-code/QrCodeTile.tsx:169:13  `Button` の面  「PNG画像をダウンロード」  2文節以上（splitIntoPhrases の分け方: PNG／画像を／ダウンロード）
+src/tools/regex-tester/RegexTesterTile.tsx:175:13  素の `label` の子  「サンプルを試す」  2文節以上（splitIntoPhrases の分け方: サンプルを／試す）
+src/tools/regex-tester/RegexTesterTile.tsx:205:13  素の `label` の子  「正規表現パターン」  2文節以上（splitIntoPhrases の分け方: 正規表現／パターン）
+src/tools/regex-tester/RegexTesterTile.tsx:255:13  素の `label` の子  「テスト文字列」  2文節以上（splitIntoPhrases の分け方: テスト／文字列）
+src/tools/sql-formatter/SqlFormatterTile.tsx:184:19  `Checkbox` の `label`  「キーワード大文字」  2文節以上（splitIntoPhrases の分け方: キーワード／大文字）
+src/tools/text-diff/TextDiffTile.tsx:184:20  `RadioGroup` の `legend`  「比較の単位」  2文節以上（splitIntoPhrases の分け方: 比較の／単位）
+src/tools/text-diff/TextDiffTile.tsx:196:13  素の `label` の子  「変更前テキスト」  2文節以上（splitIntoPhrases の分け方: 変更前／テキスト）
+src/tools/text-diff/TextDiffTile.tsx:211:13  素の `label` の子  「変更後テキスト」  2文節以上（splitIntoPhrases の分け方: 変更後／テキスト）
+src/tools/text-replace/TextReplaceTile.tsx:133:11  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）
+src/tools/text-replace/TextReplaceTile.tsx:188:17  `Checkbox` の `label`  「大文字小文字を区別」  2文節以上（splitIntoPhrases の分け方: 大文字小文字を／区別）
+src/tools/text-replace/TextReplaceTile.tsx:198:17  `Checkbox` の `label`  「すべて置換」  2文節以上（splitIntoPhrases の分け方: すべて／置換）
+src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:300:27  `ListControls` の `searchLabel`  「色名・ローマ字で探す」  2文節以上（splitIntoPhrases の分け方: 色名・／ローマ字で／探す）
+src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:305:25  `ListControls` の `kindGroup` の `legend`  「色の系統」  2文節以上（splitIntoPhrases の分け方: 色の／系統）
+src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:382:20  `RadioGroup` の `legend`  「配色パターン」  2文節以上（splitIntoPhrases の分け方: 配色／パターン）
+src/tools/unix-timestamp/UnixTimestampTile.tsx:239:42  `Button` の面  「現在時刻を使用」  2文節以上（splitIntoPhrases の分け方: 現在時刻を／使用）
+src/tools/url-encode/UrlEncodeTile.tsx:159:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）
+src/tools/yoji-search/YojiSearchTile.tsx:98:25  `ListControls` の `searchLabel`  「語・読み・意味・例文で探す」  2文節以上（splitIntoPhrases の分け方: 語・／読み・／意味・／例文で／探す）
+
+値で渡すもの（名前が出る状態を開いて 320px の既定と 200% で測るもの）: 57
+src/app/storybook/list/ListSampleView.tsx:19:9  `BrowsableList` の `searchLabel`  「{...sample.list}」  広げて渡す props
+src/app/storybook/list/ListSampleView.tsx:19:9  `BrowsableList` の `sorts` の名前  「{...sample.list}」  広げて渡す props
+src/app/storybook/list/ListSampleView.tsx:19:9  `BrowsableList` の `kindGroup`  「{...sample.list}」  広げて渡す props
+src/app/storybook/StorybookContent.tsx:654:40  `Field` の `label`  「`type="${type}"`」  値を差し込んだ文
+src/app/storybook/StorybookContent.tsx:793:24  `Radio` の `label`  「label」  並びを .map して渡すもの
+src/blog/_components/BlogListView.tsx:81:16  `BrowsableList` の `sorts` の名前  「BLOG_SORTS」  ほかのモジュールの値
+src/blog/_components/SeriesNav.tsx:57:24  `Accordion` の `summary`  「seriesPhrases」  サーバーで区切る文
+src/blog/_components/SeriesNav.tsx:62:24  `Accordion` の `summary`  「positionPhrases」  サーバーで区切る文
+src/components/CopyButton/index.tsx:147:18  `Button` の面  「facePhrases(status)」  同じファイルの関数が組む文
+src/components/FaqSection/index.tsx:55:45  `Accordion` の `summary`  「entry.question」  並びを .map して渡すもの
+src/components/IndexAccordion/index.tsx:78:22  `Accordion` の `summary`  「withCount(props.summary, props.index.length)」  同じファイルの関数が組む文
+src/components/IndexAccordion/index.tsx:102:25  `Accordion` の `summary`  「props.summary」  区切りを受け取らない部品の props
+src/components/ListControls/index.tsx:181:47  素の `button` の子  「label.name」  状態や変数
+src/components/ListControls/index.tsx:188:30  素の `button` の子  「label.selection」  状態や変数
+src/components/Pagination/PaginationButtons.tsx:57:12  素の `button` の子  「label」  部品が関数に渡す引数
+src/components/ShareButtons/index.tsx:189:22  `Button` の面  「SHARE_LABELS.webShare.phrases」  ほかのモジュールの値
+src/components/ShareButtons/index.tsx:199:26  `Button` の面  「label.phrases」  並びを .map して渡すもの
+src/dictionary/_components/color/ColorListView.tsx:71:16  `BrowsableList` の `sorts` の名前  「colorListSorts(scope)」  ほかのモジュールの関数が返す値
+src/dictionary/_components/kanji/KanjiListView.tsx:89:16  `BrowsableList` の `sorts` の名前  「kanjiListSorts(scope)」  ほかのモジュールの関数が返す値
+src/dictionary/_components/yoji/YojiListView.tsx:71:16  `BrowsableList` の `sorts` の名前  「YOJI_LIST_SORTS」  ほかのモジュールの値
+src/humor-dict/_components/HumorListView.tsx:56:16  `BrowsableList` の `sorts` の名前  「HUMOR_LIST_SORTS」  ほかのモジュールの値
+src/play/_components/PlayListView.tsx:42:45  `BrowsableList` の `kindGroup` の `options` の名前  「PLAY_KINDS」  ほかのモジュールの値
+src/play/_components/PlayListView.tsx:43:16  `BrowsableList` の `sorts` の名前  「PLAY_SORTS」  ほかのモジュールの値
+src/play/games/irodori/_components/GameContainer.tsx:510:20  `Button` の面  「SHARE_LABELS.saveImage.phrases」  ほかのモジュールの値
+src/play/games/kanji-kanaru/_components/DifficultySelector.tsx:26:16  `RadioGroup` の `options` の名前  「DIFFICULTY_OPTIONS」  並びを .map して渡すもの
+src/play/games/kanji-kanaru/_components/GameContainer.tsx:466:22  `GuessInput` の `label`  「guessLabel(difficulty, remaining)」  ほかのモジュールの関数が返す値
+src/play/games/nakamawake/_components/WordGrid.tsx:56:20  素の `button` の子  「wordPhrases[word] ? wordPhrases[word].map((phrase, index) => ( <Fragment key={i…」  並びを .map して渡すもの
+src/play/games/yoji-kimeru/_components/DifficultySelector.tsx:29:16  `RadioGroup` の `options` の名前  「DIFFICULTY_OPTIONS」  並びを .map して渡すもの
+src/play/games/yoji-kimeru/_components/GameContainer.tsx:495:22  `GuessInput` の `label`  「guessLabel(difficulty, MAX_GUESSES - guessCount)」  ほかのモジュールの関数が返す値
+src/play/quiz/_components/FudaActions.tsx:208:18  `Button` の面  「SHARE_LABELS.saveImage.phrases」  ほかのモジュールの値
+src/play/quiz/_components/FudaActions.tsx:210:46  `Button` の面  「SHARE_LABELS.shareImage.phrases」  ほかのモジュールの値
+src/play/quiz/_components/QuestionCard.tsx:114:20  素の `button` の子  「choice.text」  並びを .map して渡すもの
+src/tools/_components/DisclosureRow/index.tsx:63:14  素の `button` の子  「name」  区切りを受け取らない部品の props
+src/tools/_components/DisclosureRow/index.tsx:66:14  素の `button` の子  「description」  区切りを受け取らない部品の props
+src/tools/_components/ToolListView.tsx:42:45  `BrowsableList` の `kindGroup` の `options` の名前  「TOOL_KINDS」  ほかのモジュールの値
+src/tools/_components/ToolListView.tsx:43:16  `BrowsableList` の `sorts` の名前  「TOOL_SORTS」  ほかのモジュールの値
+src/tools/business-email/BusinessEmailTile.tsx:187:20  `RadioGroup` の `options` の名前  「categoryOptions」  並びを .map して渡すもの
+src/tools/business-email/BusinessEmailTile.tsx:229:13  素の `label` の子  「<label htmlFor={`${uid}-field-${field.key}`} className={styles.label} > {field.…」  字と式を含む要素
+src/tools/cron-parser/CronParserTile.tsx:359:20  `Button` の面  「preset.label」  並びを .map して渡すもの
+src/tools/cron-parser/CronParserTile.tsx:431:20  `Button` の面  「preset.label」  並びを .map して渡すもの
+src/tools/cron-parser/CronParserTile.tsx:438:17  素の `label` の子  「<label htmlFor={minuteId} className={styles.fieldLabel}> 分 (0-59){" "} <span>- …」  字と式を含む要素
+src/tools/cron-parser/CronParserTile.tsx:460:17  素の `label` の子  「<label htmlFor={hourId} className={styles.fieldLabel}> 時 (0-23) <span>- {descri…」  字と式を含む要素
+src/tools/cron-parser/CronParserTile.tsx:481:17  素の `label` の子  「<label htmlFor={dayOfMonthId} className={styles.fieldLabel}> 日 (1-31){" "} <spa…」  字と式を含む要素
+src/tools/cron-parser/CronParserTile.tsx:503:17  素の `label` の子  「<label htmlFor={monthId} className={styles.fieldLabel}> 月 (1-12) <span>- {descr…」  字と式を含む要素
+src/tools/cron-parser/CronParserTile.tsx:524:17  素の `label` の子  「<label htmlFor={dayOfWeekId} className={styles.fieldLabel}> 曜日 (0-7){" "} <span…」  字と式を含む要素
+src/tools/keigo-reference/KeigoReferenceTile.tsx:180:28  `ListControls` の `kindGroup` の `options` の名前  「KEIGO_LIST_SPEC.kinds」  ほかのモジュールの値
+src/tools/keigo-reference/KeigoReferenceTile.tsx:217:34  素の `button` の子  「entry.casual」  並びを .map して渡すもの
+src/tools/password-generator/PasswordGeneratorTile.tsx:169:11  素の `label` の子  「<label htmlFor={lengthSliderId} className={styles.lengthLabel}> 文字数: {options.l…」  字と式を含む要素
+src/tools/regex-tester/RegexTesterTile.tsx:243:56  `Checkbox` の `label`  「opt.label」  並びを .map して渡すもの
+src/tools/regex-tester/RegexTesterTile.tsx:244:56  `Checkbox` の `label`  「opt.description」  並びを .map して渡すもの
+src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:306:26  `ListControls` の `kindGroup` の `options` の名前  「PALETTE_SPEC.kinds」  ほかのモジュールの値
+src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:312:26  `ListControls` の `sortGroup` の `options` の名前  「PALETTE_SPEC.sorts」  ほかのモジュールの値
+src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:379:22  `RadioGroup` の `options` の名前  「HARMONY_RADIO_OPTIONS」  並びを .map して渡すもの
+src/tools/unit-converter/UnitConverterTile.tsx:152:18  `RadioGroup` の `options` の名前  「categoryOptions」  並びを .map して渡すもの
+src/tools/yoji-search/YojiSearchTile.tsx:104:24  `ListControls` の `kindGroup` の `options` の名前  「YOJI_SEARCH_SPEC.kinds」  ほかのモジュールの値
+src/tools/yoji-search/YojiSearchTile.tsx:108:27  `ListControls` の `filterGroups`  「[LEVEL_GROUP, ORIGIN_GROUP].map((group) => ({ legend: group.legend, options: gr…」  並びを .map して渡すもの
+src/tools/yoji-search/YojiSearchTile.tsx:116:24  `ListControls` の `sortGroup` の `options` の名前  「YOJI_SEARCH_SPEC.sorts」  ほかのモジュールの値
+
+字で渡した名前と面（1文節のものを含む）: 281
+ ❯ src/test/check-phrased-names.test.ts (1 test | 1 failed) 711ms
+     × 字で渡す2文節以上の名前と面が無い 710ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/check-phrased-names.test.ts > check:phrased-names > 字で渡す2文節以上の名前と面が無い
+AssertionError: expected [ …(104) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "src/app/storybook/StorybookContent.tsx:687:28  `Field` の `label`  「controlled（value + onChange）」  2文節以上（splitIntoPhrases の分け方: controlled／（value + onChange））",
++   "src/app/storybook/StorybookContent.tsx:698:26  `Field` の `label`  「uncontrolled（defaultValue）」  2文節以上（splitIntoPhrases の分け方: uncontrolled／（defaultValue））",
++   "src/app/storybook/StorybookContent.tsx:755:53  素の `legend` の子  「通知の設定」  2文節以上（splitIntoPhrases の分け方: 通知の／設定）",
++   "src/app/storybook/StorybookContent.tsx:757:21  `Checkbox` の `label`  「通知を受け取る」  2文節以上（splitIntoPhrases の分け方: 通知を／受け取る）",
++   "src/app/storybook/StorybookContent.tsx:761:29  `Checkbox` の `label`  「メール配信（初期: 選択済み）」  2文節以上（splitIntoPhrases の分け方: メール／配信／（初期: 選択済み））",
++   "src/app/storybook/StorybookContent.tsx:762:29  `Checkbox` の `label`  「ラベルが長く、狭い画面で2行に折り返しても、四角は1行目の字の中央に並ぶ」  2文節以上（splitIntoPhrases の分け方: ラベルが／長く、／狭い／画面で／2行に／折り返しても、／四角は／1行目の／字の／中央に／並ぶ）",
++   "src/app/storybook/StorybookContent.tsx:764:21  `Checkbox` の `label`  「無効（未選択）」  2文節以上（splitIntoPhrases の分け方: 無効／（未選択））",
++   "src/app/storybook/StorybookContent.tsx:769:21  `Checkbox` の `label`  「無効（選択済み）」  2文節以上（splitIntoPhrases の分け方: 無効／（選択済み））",
++   "src/app/storybook/StorybookContent.tsx:945:26  `Field` の `label`  「読み取り専用（出力）」  2文節以上（splitIntoPhrases の分け方: 読み取り専用／（出力））",
++   "src/app/storybook/StorybookContent.tsx:1021:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）",
++   "src/app/storybook/StorybookContent.tsx:1033:20  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）",
++   "src/app/storybook/StorybookContent.tsx:1035:24  `RadioGroup` の `options` の名前  「ひらがな → カタカナ」  2文節以上（splitIntoPhrases の分け方: ひらが／な／ → カタカナ）",
++   "src/app/storybook/StorybookContent.tsx:1037:24  `RadioGroup` の `options` の名前  「半角カナ → 全角カナ」  2文節以上（splitIntoPhrases の分け方: 半角／カナ → 全角カナ）",
++   "src/app/storybook/StorybookContent.tsx:1038:24  `RadioGroup` の `options` の名前  「全角カナ → 半角カナ」  2文節以上（splitIntoPhrases の分け方: 全角／カナ → 半角カナ）",
++   "src/app/storybook/StorybookContent.tsx:1079:19  `FileDropZone` の `label`  「画像ファイル」  2文節以上（splitIntoPhrases の分け方: 画像／ファイル）",
++   "src/app/storybook/StorybookContent.tsx:1133:20  `CopyButton` の `target`  「メール全文」  2文節以上（splitIntoPhrases の分け方: メール／全文）",
++   "src/app/storybook/StorybookContent.tsx:1422:11  `Button` の面  「文字数を数える」  2文節以上（splitIntoPhrases の分け方: 文字数を／数える）",
++   "src/app/storybook/StorybookContent.tsx:1591:22  `Field` の `label`  「開くタイプ」  2文節以上（splitIntoPhrases の分け方: 開く／タイプ）",
++   "src/tools/age-calculator/AgeCalculatorTile.tsx:173:48  `Button` の面  「今日に設定」  2文節以上（splitIntoPhrases の分け方: 今日に／設定）",
++   "src/tools/base64/Base64Tile.tsx:48:17  `Field` の `label`  「エンコードするテキスト」  2文節以上（splitIntoPhrases の分け方: エンコードする／テキスト）",
++   "src/tools/base64/Base64Tile.tsx:54:17  `Field` の `label`  「デコードするBase64」  2文節以上（splitIntoPhrases の分け方: デコードする／Base64）",
++   "src/tools/base64/Base64Tile.tsx:159:16  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）",
++   "src/tools/base64/Base64Tile.tsx:165:19  `Checkbox` の `label`  「URL-safe形式で出力」  2文節以上（splitIntoPhrases の分け方: URL-safe／形式で／出力）",
++   "src/tools/business-email/BusinessEmailTile.tsx:190:18  `RadioGroup` の `legend`  「メールの種類」  2文節以上（splitIntoPhrases の分け方: メールの／種類）",
++   "src/tools/business-email/BusinessEmailTile.tsx:272:15  素の `label` の子  「件名プレビュー」  2文節以上（splitIntoPhrases の分け方: 件名／プレビュー）",
++   "src/tools/business-email/BusinessEmailTile.tsx:295:15  素の `label` の子  「本文プレビュー」  2文節以上（splitIntoPhrases の分け方: 本文／プレビュー）",
++   "src/tools/byte-counter/ByteCounterTile.tsx:82:11  素の `label` の子  「テキストを入力」  2文節以上（splitIntoPhrases の分け方: テキストを／入力）",
++   "src/tools/char-count/CharCountTile.tsx:83:20  `Field` の `label`  「数えるテキスト」  2文節以上（splitIntoPhrases の分け方: 数える／テキスト）",
++   "src/tools/color-converter/ColorConverterTile.tsx:207:9  素の `label` の子  「HEX値 (#RGB または #RRGGBB)」  2文節以上（splitIntoPhrases の分け方: HEX／値 (#RGB または #RRGGBB)）",
++   "src/tools/color-converter/ColorConverterTile.tsx:209:11  素の `label` の子  「RGB値 (R, G, B)」  2文節以上（splitIntoPhrases の分け方: RGB／値 (R, G, B)）",
++   "src/tools/color-converter/ColorConverterTile.tsx:210:11  素の `label` の子  「HSL値 (H, S, L)」  2文節以上（splitIntoPhrases の分け方: HSL／値 (H, S, L)）",
++   "src/tools/color-converter/ColorConverterTile.tsx:231:20  `RadioGroup` の `legend`  「入力モード」  2文節以上（splitIntoPhrases の分け方: 入力／モード）",
++   "src/tools/cron-parser/CronParserTile.tsx:321:18  `RadioGroup` の `legend`  「使う機能」  2文節以上（splitIntoPhrases の分け方: 使う／機能）",
++   "src/tools/csv-converter/CsvConverterTile.tsx:193:13  素の `label` の子  「入力データ」  2文節以上（splitIntoPhrases の分け方: 入力／データ）",
++   "src/tools/date-calculator/DateCalculatorTile.tsx:229:15  `Button` の面  「差分を計算」  2文節以上（splitIntoPhrases の分け方: 差分を／計算）",
++   "src/tools/dummy-text/DummyTextTile.tsx:145:20  `RadioGroup` の `legend`  「文章の言語」  2文節以上（splitIntoPhrases の分け方: 文章の／言語）",
++   "src/tools/dummy-text/DummyTextTile.tsx:170:13  素の `label` の子  「段落あたりの文数」  2文節以上（splitIntoPhrases の分け方: 段落あたりの／文数）",
++   "src/tools/email-validator/EmailValidatorTile.tsx:102:11  素の `label` の子  「メールアドレスを入力」  2文節以上（splitIntoPhrases の分け方: メールアドレスを／入力）",
++   "src/tools/fullwidth-converter/FullwidthConverterTile.tsx:47:12  `RadioGroup` の `options` の名前  「半角に変換」  2文節以上（splitIntoPhrases の分け方: 半角に／変換）",
++   "src/tools/fullwidth-converter/FullwidthConverterTile.tsx:48:12  `RadioGroup` の `options` の名前  「全角に変換」  2文節以上（splitIntoPhrases の分け方: 全角に／変換）",
++   "src/tools/fullwidth-converter/FullwidthConverterTile.tsx:55:11  `Checkbox` の `label`  「記号・スペース」  2文節以上（splitIntoPhrases の分け方: 記号・／スペース）",
++   "src/tools/fullwidth-converter/FullwidthConverterTile.tsx:155:20  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）",
++   "src/tools/fullwidth-converter/FullwidthConverterTile.tsx:177:11  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）",
++   "src/tools/hash-generator/HashGeneratorTile.tsx:179:11  素の `label` の子  「テキスト入力」  2文節以上（splitIntoPhrases の分け方: テキスト／入力）",
++   "src/tools/hash-generator/HashGeneratorTile.tsx:211:11  `Button` の面  「ハッシュ生成」  2文節以上（splitIntoPhrases の分け方: ハッシュ／生成）",
++   "src/tools/html-entity/HtmlEntityTile.tsx:142:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）",
++   "src/tools/html-entity/HtmlEntityTile.tsx:150:32  素の `label` の子  「テキスト入力」  2文節以上（splitIntoPhrases の分け方: テキスト／入力）",
++   "src/tools/html-entity/HtmlEntityTile.tsx:150:43  素の `label` の子  「HTMLエンティティ入力」  2文節以上（splitIntoPhrases の分け方: HTML／エンティティ／入力）",
++   "src/tools/html-entity/HtmlEntityTile.tsx:174:34  素の `label` の子  「エンコード結果」  2文節以上（splitIntoPhrases の分け方: エンコード／結果）",
++   "src/tools/html-entity/HtmlEntityTile.tsx:174:46  素の `label` の子  「デコード結果」  2文節以上（splitIntoPhrases の分け方: デコード／結果）",
++   "src/tools/image-base64/ImageBase64Tile.tsx:219:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）",
++   "src/tools/image-base64/ImageBase64Tile.tsx:229:19  `FileDropZone` の `label`  「画像ファイル」  2文節以上（splitIntoPhrases の分け方: 画像／ファイル）",
++   "src/tools/image-base64/ImageBase64Tile.tsx:331:15  素の `label` の子  「Base64文字列またはData URI」  2文節以上（splitIntoPhrases の分け方: Base64／文字列または／Data URI）",
++   "src/tools/image-resizer/ImageResizerTile.tsx:68:12  `RadioGroup` の `options` の名前  「サイズ指定」  2文節以上（splitIntoPhrases の分け方: サイズ／指定）",
++   "src/tools/image-resizer/ImageResizerTile.tsx:69:12  `RadioGroup` の `options` の名前  「パーセント指定」  2文節以上（splitIntoPhrases の分け方: パーセント／指定）",
++   "src/tools/image-resizer/ImageResizerTile.tsx:386:17  `FileDropZone` の `label`  「画像ファイル」  2文節以上（splitIntoPhrases の分け方: 画像／ファイル）",
++   "src/tools/image-resizer/ImageResizerTile.tsx:440:24  `RadioGroup` の `legend`  「サイズの決め方」  2文節以上（splitIntoPhrases の分け方: サイズの／決め方）",
++   "src/tools/image-resizer/ImageResizerTile.tsx:480:27  `Checkbox` の `label`  「縦横比を保つ」  2文節以上（splitIntoPhrases の分け方: 縦横比を／保つ）",
++   "src/tools/kana-converter/KanaConverterTile.tsx:50:43  `RadioGroup` の `options` の名前  「ひらがな → カタカナ」  2文節以上（splitIntoPhrases の分け方: ひらが／な／ → カタカナ）",
++   "src/tools/kana-converter/KanaConverterTile.tsx:52:44  `RadioGroup` の `options` の名前  「半角カナ → 全角カナ」  2文節以上（splitIntoPhrases の分け方: 半角／カナ → 全角カナ）",
++   "src/tools/kana-converter/KanaConverterTile.tsx:53:44  `RadioGroup` の `options` の名前  「全角カナ → 半角カナ」  2文節以上（splitIntoPhrases の分け方: 全角／カナ → 半角カナ）",
++   "src/tools/kana-converter/KanaConverterTile.tsx:127:18  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）",
++   "src/tools/kana-converter/KanaConverterTile.tsx:138:11  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）",
++   "src/tools/keigo-reference/KeigoReferenceTile.tsx:39:12  `RadioGroup` の `options` の名前  「よくある間違い」  2文節以上（splitIntoPhrases の分け方: よく／ある／間違い）",
++   "src/tools/keigo-reference/KeigoReferenceTile.tsx:157:18  `RadioGroup` の `legend`  「表示する内容」  2文節以上（splitIntoPhrases の分け方: 表示する／内容）",
++   "src/tools/keigo-reference/KeigoReferenceTile.tsx:174:29  `ListControls` の `searchLabel`  「普通語・敬語で探す」  2文節以上（splitIntoPhrases の分け方: 普通語・／敬語で／探す）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:56:29  `RadioGroup` の `options` の名前  「改行を削除」  2文節以上（splitIntoPhrases の分け方: 改行を／削除）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:57:36  `RadioGroup` の `options` の名前  「改行をスペースに置換」  2文節以上（splitIntoPhrases の分け方: 改行を／スペースに／置換）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:58:32  `RadioGroup` の `options` の名前  「PDFスマートモード」  2文節以上（splitIntoPhrases の分け方: PDF／スマート／モード）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:66:28  `RadioGroup` の `options` の名前  「スペースに置換」  2文節以上（splitIntoPhrases の分け方: スペースに／置換）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:146:18  `RadioGroup` の `legend`  「変換モード」  2文節以上（splitIntoPhrases の分け方: 変換／モード）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:159:19  `Checkbox` の `label`  「連続する改行を1つにまとめる」  2文節以上（splitIntoPhrases の分け方: 連続する／改行を／1つに／まとめる）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:169:18  `RadioGroup` の `legend`  「行内改行の処理」  2文節以上（splitIntoPhrases の分け方: 行内改行の／処理）",
++   "src/tools/line-break-remover/LineBreakRemoverTile.tsx:182:13  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）",
++   "src/tools/number-base-converter/NumberBaseConverterTile.tsx:157:18  `RadioGroup` の `legend`  「入力する進数」  2文節以上（splitIntoPhrases の分け方: 入力する／進数）",
++   "src/tools/number-base-converter/NumberBaseConverterTile.tsx:171:11  素の `label` の子  「変換する数値」  2文節以上（splitIntoPhrases の分け方: 変換する／数値）",
++   "src/tools/password-generator/PasswordGeneratorTile.tsx:207:19  `Checkbox` の `label`  「紛らわしい文字を除外 (O/0, I/l/1)」  2文節以上（splitIntoPhrases の分け方: 紛らわしい／文字を／除外 (O/0, I/l/1)）",
++   "src/tools/password-generator/PasswordGeneratorTile.tsx:249:11  `Button` の面  「パスワード生成」  2文節以上（splitIntoPhrases の分け方: パスワード／生成）",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:20:12  `RadioGroup` の `options` の名前  「XのY%」  2文節以上（splitIntoPhrases の分け方: Xの／Y%）",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:88:19  素の `label` の子  「割合 Y（%）」  2文節以上（splitIntoPhrases の分け方: 割合 Y／（%））",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:98:19  素の `label` の子  「全体 B」  2文節以上（splitIntoPhrases の分け方: 全体／ B）",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:107:19  素の `label` の子  「もとの値 X」  2文節以上（splitIntoPhrases の分け方: もとの／値 X）",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:108:19  素の `label` の子  「割合 Y（%）」  2文節以上（splitIntoPhrases の分け方: 割合 Y／（%））",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:138:16  `RadioGroup` の `legend`  「計算パターン」  2文節以上（splitIntoPhrases の分け方: 計算／パターン）",
++   "src/tools/percent-calculator/PercentCalculatorTile.tsx:183:22  `RadioGroup` の `legend`  「増減の方向」  2文節以上（splitIntoPhrases の分け方: 増減の／方向）",
++   "src/tools/qr-code/QrCodeTile.tsx:113:15  `Field` の `label`  「QRコードにする文字やURL」  2文節以上（splitIntoPhrases の分け方: QR／コードに／する／文字や／URL）",
++   "src/tools/qr-code/QrCodeTile.tsx:132:20  `Field` の `label`  「エラー訂正レベル」  2文節以上（splitIntoPhrases の分け方: エラー／訂正／レベル）",
++   "src/tools/qr-code/QrCodeTile.tsx:169:13  `Button` の面  「PNG画像をダウンロード」  2文節以上（splitIntoPhrases の分け方: PNG／画像を／ダウンロード）",
++   "src/tools/regex-tester/RegexTesterTile.tsx:175:13  素の `label` の子  「サンプルを試す」  2文節以上（splitIntoPhrases の分け方: サンプルを／試す）",
++   "src/tools/regex-tester/RegexTesterTile.tsx:205:13  素の `label` の子  「正規表現パターン」  2文節以上（splitIntoPhrases の分け方: 正規表現／パターン）",
++   "src/tools/regex-tester/RegexTesterTile.tsx:255:13  素の `label` の子  「テスト文字列」  2文節以上（splitIntoPhrases の分け方: テスト／文字列）",
++   "src/tools/sql-formatter/SqlFormatterTile.tsx:184:19  `Checkbox` の `label`  「キーワード大文字」  2文節以上（splitIntoPhrases の分け方: キーワード／大文字）",
++   "src/tools/text-diff/TextDiffTile.tsx:184:20  `RadioGroup` の `legend`  「比較の単位」  2文節以上（splitIntoPhrases の分け方: 比較の／単位）",
++   "src/tools/text-diff/TextDiffTile.tsx:196:13  素の `label` の子  「変更前テキスト」  2文節以上（splitIntoPhrases の分け方: 変更前／テキスト）",
++   "src/tools/text-diff/TextDiffTile.tsx:211:13  素の `label` の子  「変更後テキスト」  2文節以上（splitIntoPhrases の分け方: 変更後／テキスト）",
++   "src/tools/text-replace/TextReplaceTile.tsx:133:11  素の `label` の子  「入力テキスト」  2文節以上（splitIntoPhrases の分け方: 入力／テキスト）",
++   "src/tools/text-replace/TextReplaceTile.tsx:188:17  `Checkbox` の `label`  「大文字小文字を区別」  2文節以上（splitIntoPhrases の分け方: 大文字小文字を／区別）",
++   "src/tools/text-replace/TextReplaceTile.tsx:198:17  `Checkbox` の `label`  「すべて置換」  2文節以上（splitIntoPhrases の分け方: すべて／置換）",
++   "src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:300:27  `ListControls` の `searchLabel`  「色名・ローマ字で探す」  2文節以上（splitIntoPhrases の分け方: 色名・／ローマ字で／探す）",
++   "src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:305:25  `ListControls` の `kindGroup` の `legend`  「色の系統」  2文節以上（splitIntoPhrases の分け方: 色の／系統）",
++   "src/tools/traditional-color-palette/TraditionalColorPaletteTile.tsx:382:20  `RadioGroup` の `legend`  「配色パターン」  2文節以上（splitIntoPhrases の分け方: 配色／パターン）",
++   "src/tools/unix-timestamp/UnixTimestampTile.tsx:239:42  `Button` の面  「現在時刻を使用」  2文節以上（splitIntoPhrases の分け方: 現在時刻を／使用）",
++   "src/tools/url-encode/UrlEncodeTile.tsx:159:20  `RadioGroup` の `legend`  「変換の向き」  2文節以上（splitIntoPhrases の分け方: 変換の／向き）",
++   "src/tools/yoji-search/YojiSearchTile.tsx:98:25  `ListControls` の `searchLabel`  「語・読み・意味・例文で探す」  2文節以上（splitIntoPhrases の分け方: 語・／読み・／意味・／例文で／探す）",
++ ]
+
+ ❯ src/test/check-phrased-names.test.ts:43:50
+     41|     if (process.env.PHRASED_NAMES_REPORT_ONLY !== "1") {
+     42|       expect(report.targetsWithoutFiles).toEqual([]);
+     43|       expect(report.literals.map(formatFinding)).toEqual([]);
+       |                                                  ^
+     44|     }
+     45|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  23:47:40
+   Duration  2.75s (transform 316ms, setup 213ms, import 940ms, tests 711ms, environment 724ms)
+

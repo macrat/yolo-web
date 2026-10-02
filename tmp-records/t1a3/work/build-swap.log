@@ -1,0 +1,398 @@
+▲ Next.js 16.3.0 (Turbopack)
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/user/yolo-web/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/user/yolo-web/tmp/t1a3/site/package-lock.json
+
+✓ Running next.config.ts took 32ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.5s
+  Running TypeScript ...
+  Finished TypeScript in 4.4s ...
+  Collecting page data using 3 workers ...
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+  Generating static pages using 3 workers (0/4142) ...
+⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+  Generating static pages using 3 workers (1035/4142) 
+  Generating static pages using 3 workers (2070/4142) 
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+  Generating static pages using 3 workers (3106/4142) 
+✓ Generating static pages using 3 workers (4142/4142) in 57s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ƒ /api/kanji-kanaru/evaluate
+├ ƒ /api/kanji-kanaru/hints
+├ ƒ /api/quiz/compatibility
+├ ƒ /api/yoji-kimeru/evaluate
+├ ƒ /api/yoji-kimeru/puzzle
+├ ○ /blog
+├   /blog/[slug]
+│ ├ ● /blog/personality-quiz-tie-enumeration
+│ ├ ● /blog/does-personality-quiz-see-your-answers
+│ ├ ● /blog/auto-opened-dialog-focus-restore-body
+│ └ ● [+83 more paths]
+├   /blog/[slug]/opengraph-image
+│ ├ ● /blog/personality-quiz-tie-enumeration/opengraph-image
+│ ├ ● /blog/does-personality-quiz-see-your-answers/opengraph-image
+│ ├ ● /blog/auto-opened-dialog-focus-restore-body/opengraph-image
+│ └ ● [+83 more paths]
+├   /blog/[slug]/twitter-image
+│ ├ ● /blog/personality-quiz-tie-enumeration/twitter-image
+│ ├ ● /blog/does-personality-quiz-see-your-answers/twitter-image
+│ ├ ● /blog/auto-opened-dialog-focus-restore-body/twitter-image
+│ └ ● [+83 more paths]
+├   /blog/category/[category]
+│ ├ ● /blog/category/ai-workflow
+│ ├ ● /blog/category/dev-notes
+│ ├ ● /blog/category/site-updates
+│ └ ● [+2 more paths]
+├   /blog/category/[category]/page/[page]
+│ ├ ● /blog/category/ai-workflow/page/2
+│ ├ ● /blog/category/dev-notes/page/2
+│ ├ ● /blog/category/dev-notes/page/3
+│ └ ● /blog/category/tool-guides/page/2
+├   /blog/page/[page]
+│ ├ ● /blog/page/2
+│ ├ ● /blog/page/3
+│ ├ ● /blog/page/4
+│ └ ● [+4 more paths]
+├   /blog/tag/[tag]
+│ ├ ● /blog/tag/AIエージェント
+│ ├ ● /blog/tag/Claude Code
+│ ├ ● /blog/tag/Next.js
+│ └ ● [+26 more paths]
+├   /blog/tag/[tag]/page/[page]
+│ ├ ● /blog/tag/Next.js/page/2
+│ ├ ● /blog/tag/SEO/page/2
+│ ├ ● /blog/tag/UI改善/page/2
+│ └ ● [+5 more paths]
+├ ○ /dictionary
+├ ○ /dictionary/colors
+├   /dictionary/colors/[slug]
+│ ├ ● /dictionary/colors/toki
+│ ├ ● /dictionary/colors/shinsyu
+│ ├ ● /dictionary/colors/cyohsyun
+│ └ ● [+247 more paths]
+├   /dictionary/colors/[slug]/opengraph-image
+│ ├ ● /dictionary/colors/toki/opengraph-image
+│ ├ ● /dictionary/colors/shinsyu/opengraph-image
+│ ├ ● /dictionary/colors/cyohsyun/opengraph-image
+│ └ ● [+247 more paths]
+├   /dictionary/colors/category/[category]
+│ ├ ● /dictionary/colors/category/achromatic
+│ ├ ● /dictionary/colors/category/blue
+│ ├ ● /dictionary/colors/category/green
+│ └ ● [+4 more paths]
+├ ○ /dictionary/humor
+├   /dictionary/humor/[slug]
+│ ├ ● /dictionary/humor/morning
+│ ├ ● /dictionary/humor/exercise
+│ ├ ● /dictionary/humor/ojigi
+│ └ ● [+27 more paths]
+├   /dictionary/humor/[slug]/opengraph-image
+│ ├ ● /dictionary/humor/morning/opengraph-image
+│ ├ ● /dictionary/humor/exercise/opengraph-image
+│ ├ ● /dictionary/humor/ojigi/opengraph-image
+│ └ ● [+27 more paths]
+├   /dictionary/humor/[slug]/twitter-image
+│ ├ ● /dictionary/humor/morning/twitter-image
+│ ├ ● /dictionary/humor/exercise/twitter-image
+│ ├ ● /dictionary/humor/ojigi/twitter-image
+│ └ ● [+27 more paths]
+├ ○ /dictionary/kanji
+├   /dictionary/kanji/[char]
+│ ├ ● /dictionary/kanji/一
+│ ├ ● /dictionary/kanji/七
+│ ├ ● /dictionary/kanji/九
+│ └ ● [+2133 more paths]
+├   /dictionary/kanji/grade/[grade]
+│ ├ ● /dictionary/kanji/grade/1
+│ ├ ● /dictionary/kanji/grade/2
+│ ├ ● /dictionary/kanji/grade/3
+│ └ ● [+4 more paths]
+├   /dictionary/kanji/radical/[radical]
+│ ├ ● /dictionary/kanji/radical/一
+│ ├ ● /dictionary/kanji/radical/丨
+│ ├ ● /dictionary/kanji/radical/丶
+│ └ ● [+195 more paths]
+├   /dictionary/kanji/stroke/[count]
+│ ├ ● /dictionary/kanji/stroke/1
+│ ├ ● /dictionary/kanji/stroke/2
+│ ├ ● /dictionary/kanji/stroke/3
+│ └ ● [+21 more paths]
+├ ○ /dictionary/yoji
+├   /dictionary/yoji/[yoji]
+│ ├ ● /dictionary/yoji/一期一会
+│ ├ ● /dictionary/yoji/一日一善
+│ ├ ● /dictionary/yoji/人生行路
+│ └ ● [+397 more paths]
+├   /dictionary/yoji/category/[category]
+│ ├ ● /dictionary/yoji/category/change
+│ ├ ● /dictionary/yoji/category/conflict
+│ ├ ● /dictionary/yoji/category/effort
+│ └ ● [+7 more paths]
+├ ○ /feed
+├ ○ /feed/atom
+├ ○ /memos
+├ ƒ /memos/[id]
+├ ƒ /memos/feed
+├ ƒ /memos/feed/atom
+├ ƒ /memos/thread/[id]
+├ ○ /opengraph-image
+├ ○ /play
+├ ƒ /play/[slug]
+├   /play/[slug]/opengraph-image
+│ ├ ○ /play/kanji-kanaru/opengraph-image
+│ ├ ○ /play/yoji-kimeru/opengraph-image
+│ ├ ○ /play/nakamawake/opengraph-image
+│ └ ● [+17 more paths]
+├ ƒ /play/[slug]/result/[resultId]
+├   /play/[slug]/result/[resultId]
+│ ├ ● /play/traditional-color/result/ai
+│ ├ ● /play/traditional-color/result/shu
+│ ├ ● /play/traditional-color/result/wakakusa
+│ └ ● [+42 more paths]
+├   /play/[slug]/result/[resultId]/opengraph-image
+│ ├ ● /play/kanji-level/result/beginner/opengraph-image
+│ ├ ● /play/kanji-level/result/egg/opengraph-image
+│ ├ ● /play/kanji-level/result/intermediate/opengraph-image
+│ └ ● [+126 more paths]
+├ ƒ /play/animal-personality/result/[resultId]
+├   /play/animal-personality/result/[resultId]/opengraph-image
+│ ├ ● /play/animal-personality/result/nihon-zaru/opengraph-image
+│ ├ ● /play/animal-personality/result/hondo-tanuki/opengraph-image
+│ ├ ● /play/animal-personality/result/nihon-kitsune/opengraph-image
+│ └ ● [+9 more paths]
+├   /play/character-fortune/result/[resultId]
+│ ├ ● /play/character-fortune/result/commander
+│ ├ ● /play/character-fortune/result/professor
+│ ├ ● /play/character-fortune/result/dreamer
+│ └ ● [+3 more paths]
+├   /play/character-fortune/result/[resultId]/opengraph-image
+│ ├ ● /play/character-fortune/result/commander/opengraph-image
+│ ├ ● /play/character-fortune/result/professor/opengraph-image
+│ ├ ● /play/character-fortune/result/dreamer/opengraph-image
+│ └ ● [+3 more paths]
+├ ƒ /play/character-personality/result/[resultId]
+├   /play/character-personality/result/[resultId]/fuda-image
+│ ├ ● /play/character-personality/result/blazing-strategist/fuda-image
+│ ├ ● /play/character-personality/result/blazing-poet/fuda-image
+│ ├ ● /play/character-personality/result/blazing-schemer/fuda-image
+│ └ ● [+21 more paths]
+├   /play/character-personality/result/[resultId]/opengraph-image
+│ ├ ● /play/character-personality/result/blazing-strategist/opengraph-image
+│ ├ ● /play/character-personality/result/blazing-poet/opengraph-image
+│ ├ ● /play/character-personality/result/blazing-schemer/opengraph-image
+│ └ ● [+21 more paths]
+├   /play/contrarian-fortune/result/[resultId]
+│ ├ ● /play/contrarian-fortune/result/reverseoptimist
+│ ├ ● /play/contrarian-fortune/result/overthinker
+│ ├ ● /play/contrarian-fortune/result/cosmicworrier
+│ └ ● [+5 more paths]
+├   /play/contrarian-fortune/result/[resultId]/opengraph-image
+│ ├ ● /play/contrarian-fortune/result/reverseoptimist/opengraph-image
+│ ├ ● /play/contrarian-fortune/result/overthinker/opengraph-image
+│ ├ ● /play/contrarian-fortune/result/cosmicworrier/opengraph-image
+│ └ ● [+5 more paths]
+├ ○ /play/daily
+├ ○ /play/daily/opengraph-image
+├   /play/impossible-advice/result/[resultId]
+│ ├ ● /play/impossible-advice/result/timemagician
+│ ├ ● /play/impossible-advice/result/gravityfighter
+│ ├ ● /play/impossible-advice/result/digitalmonk
+│ └ ● [+4 more paths]
+├   /play/impossible-advice/result/[resultId]/opengraph-image
+│ ├ ● /play/impossible-advice/result/timemagician/opengraph-image
+│ ├ ● /play/impossible-advice/result/gravityfighter/opengraph-image
+│ ├ ● /play/impossible-advice/result/digitalmonk/opengraph-image
+│ └ ● [+4 more paths]
+├ ƒ /play/irodori
+├ ○ /play/irodori/opengraph-image
+├ ○ /play/kanji-kanaru
+├ ○ /play/kanji-kanaru/opengraph-image
+├ ƒ /play/music-personality
+├ ƒ /play/music-personality/result/[resultId]
+├   /play/music-personality/result/[resultId]/opengraph-image
+│ ├ ● /play/music-personality/result/festival-pioneer/opengraph-image
+│ ├ ● /play/music-personality/result/playlist-evangelist/opengraph-image
+│ ├ ● /play/music-personality/result/solo-explorer/opengraph-image
+│ └ ● [+5 more paths]
+├ ƒ /play/nakamawake
+├ ○ /play/nakamawake/opengraph-image
+├   /play/traditional-color/result/[resultId]
+│ ├ ● /play/traditional-color/result/ai
+│ ├ ● /play/traditional-color/result/shu
+│ ├ ● /play/traditional-color/result/wakakusa
+│ └ ● [+5 more paths]
+├   /play/traditional-color/result/[resultId]/opengraph-image
+│ ├ ● /play/traditional-color/result/ai/opengraph-image
+│ ├ ● /play/traditional-color/result/shu/opengraph-image
+│ ├ ● /play/traditional-color/result/wakakusa/opengraph-image
+│ └ ● [+5 more paths]
+├   /play/unexpected-compatibility/result/[resultId]
+│ ├ ● /play/unexpected-compatibility/result/vendingmachine
+│ ├ ● /play/unexpected-compatibility/result/oldclock
+│ ├ ● /play/unexpected-compatibility/result/streetlight
+│ └ ● [+5 more paths]
+├   /play/unexpected-compatibility/result/[resultId]/opengraph-image
+│ ├ ● /play/unexpected-compatibility/result/vendingmachine/opengraph-image
+│ ├ ● /play/unexpected-compatibility/result/oldclock/opengraph-image
+│ ├ ● /play/unexpected-compatibility/result/streetlight/opengraph-image
+│ └ ● [+5 more paths]
+├ ○ /play/yoji-kimeru
+├ ○ /play/yoji-kimeru/opengraph-image
+├   /play/yoji-personality/result/[resultId]
+│ ├ ● /play/yoji-personality/result/shoshikantetsu
+│ ├ ● /play/yoji-personality/result/tenshinranman
+│ ├ ● /play/yoji-personality/result/sessatakuma
+│ └ ● [+5 more paths]
+├   /play/yoji-personality/result/[resultId]/opengraph-image
+│ ├ ● /play/yoji-personality/result/shoshikantetsu/opengraph-image
+│ ├ ● /play/yoji-personality/result/tenshinranman/opengraph-image
+│ ├ ● /play/yoji-personality/result/sessatakuma/opengraph-image
+│ └ ● [+5 more paths]
+├ ○ /privacy
+├ ○ /privacy/opengraph-image
+├ ○ /privacy/twitter-image
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+├ ○ /storybook
+├ ○ /tools
+├ ○ /tools/age-calculator
+├ ○ /tools/age-calculator/opengraph-image
+├ ○ /tools/age-calculator/twitter-image
+├ ○ /tools/base64
+├ ○ /tools/base64/opengraph-image
+├ ○ /tools/base64/twitter-image
+├ ○ /tools/bmi-calculator
+├ ○ /tools/bmi-calculator/opengraph-image
+├ ○ /tools/bmi-calculator/twitter-image
+├ ○ /tools/business-email
+├ ○ /tools/business-email/opengraph-image
+├ ○ /tools/business-email/twitter-image
+├ ○ /tools/byte-counter
+├ ○ /tools/byte-counter/opengraph-image
+├ ○ /tools/byte-counter/twitter-image
+├ ○ /tools/char-count
+├ ○ /tools/char-count/opengraph-image
+├ ○ /tools/char-count/twitter-image
+├ ○ /tools/color-converter
+├ ○ /tools/color-converter/opengraph-image
+├ ○ /tools/color-converter/twitter-image
+├ ○ /tools/cron-parser
+├ ○ /tools/cron-parser/opengraph-image
+├ ○ /tools/cron-parser/twitter-image
+├ ○ /tools/csv-converter
+├ ○ /tools/csv-converter/opengraph-image
+├ ○ /tools/csv-converter/twitter-image
+├ ○ /tools/date-calculator
+├ ○ /tools/date-calculator/opengraph-image
+├ ○ /tools/date-calculator/twitter-image
+├ ○ /tools/dummy-text
+├ ○ /tools/dummy-text/opengraph-image
+├ ○ /tools/dummy-text/twitter-image
+├ ○ /tools/email-validator
+├ ○ /tools/email-validator/opengraph-image
+├ ○ /tools/email-validator/twitter-image
+├ ○ /tools/fullwidth-converter
+├ ○ /tools/fullwidth-converter/opengraph-image
+├ ○ /tools/fullwidth-converter/twitter-image
+├ ○ /tools/hash-generator
+├ ○ /tools/hash-generator/opengraph-image
+├ ○ /tools/hash-generator/twitter-image
+├ ○ /tools/html-entity
+├ ○ /tools/html-entity/opengraph-image
+├ ○ /tools/html-entity/twitter-image
+├ ○ /tools/image-base64
+├ ○ /tools/image-base64/opengraph-image
+├ ○ /tools/image-base64/twitter-image
+├ ○ /tools/image-resizer
+├ ○ /tools/image-resizer/opengraph-image
+├ ○ /tools/image-resizer/twitter-image
+├ ○ /tools/json-formatter
+├ ○ /tools/json-formatter/opengraph-image
+├ ○ /tools/json-formatter/twitter-image
+├ ○ /tools/kana-converter
+├ ○ /tools/kana-converter/opengraph-image
+├ ○ /tools/kana-converter/twitter-image
+├ ○ /tools/keigo-reference
+├ ○ /tools/keigo-reference/opengraph-image
+├ ○ /tools/keigo-reference/twitter-image
+├ ○ /tools/line-break-remover
+├ ○ /tools/line-break-remover/opengraph-image
+├ ○ /tools/line-break-remover/twitter-image
+├ ○ /tools/markdown-preview
+├ ○ /tools/markdown-preview/opengraph-image
+├ ○ /tools/markdown-preview/twitter-image
+├ ○ /tools/number-base-converter
+├ ○ /tools/number-base-converter/opengraph-image
+├ ○ /tools/number-base-converter/twitter-image
+├   /tools/page/[page]
+│ └ ● /tools/page/2
+├ ○ /tools/password-generator
+├ ○ /tools/password-generator/opengraph-image
+├ ○ /tools/password-generator/twitter-image
+├ ○ /tools/percent-calculator
+├ ○ /tools/percent-calculator/opengraph-image
+├ ○ /tools/percent-calculator/twitter-image
+├ ○ /tools/qr-code
+├ ○ /tools/qr-code/opengraph-image
+├ ○ /tools/qr-code/twitter-image
+├ ○ /tools/regex-tester
+├ ○ /tools/regex-tester/opengraph-image
+├ ○ /tools/regex-tester/twitter-image
+├ ○ /tools/sql-formatter
+├ ○ /tools/sql-formatter/opengraph-image
+├ ○ /tools/sql-formatter/twitter-image
+├ ○ /tools/text-diff
+├ ○ /tools/text-diff/opengraph-image
+├ ○ /tools/text-diff/twitter-image
+├ ○ /tools/text-replace
+├ ○ /tools/text-replace/opengraph-image
+├ ○ /tools/text-replace/twitter-image
+├ ○ /tools/traditional-color-palette
+├ ○ /tools/traditional-color-palette/opengraph-image
+├ ○ /tools/traditional-color-palette/twitter-image
+├ ○ /tools/unit-converter
+├ ○ /tools/unit-converter/opengraph-image
+├ ○ /tools/unit-converter/twitter-image
+├ ○ /tools/unix-timestamp
+├ ○ /tools/unix-timestamp/opengraph-image
+├ ○ /tools/unix-timestamp/twitter-image
+├ ○ /tools/url-encode
+├ ○ /tools/url-encode/opengraph-image
+├ ○ /tools/url-encode/twitter-image
+├ ○ /tools/yaml-formatter
+├ ○ /tools/yaml-formatter/opengraph-image
+├ ○ /tools/yaml-formatter/twitter-image
+├ ○ /tools/yoji-search
+├ ○ /tools/yoji-search/opengraph-image
+├ ○ /tools/yoji-search/twitter-image
+└ ○ /twitter-image
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,33 @@
+irodori	fresh	320	100%	CLS=0.0000
+irodori	fresh	375	100%	CLS=0.0000
+irodori	fresh	1280	100%	CLS=0.0000
+irodori	fresh	320	200%	CLS=0.0000
+irodori	fresh	375	200%	CLS=0.0000
+irodori	fresh	1280	200%	CLS=0.0000
+irodori	playing	320	100%	CLS=0.0000
+irodori	playing	375	100%	CLS=0.0000
+irodori	playing	1280	100%	CLS=0.0000
+irodori	playing	320	200%	CLS=0.0000
+irodori	playing	375	200%	CLS=0.0000
+irodori	playing	1280	200%	CLS=0.0000
+irodori	finished	320	100%	CLS=0.0000
+irodori	finished	375	100%	CLS=0.0000
+irodori	finished	1280	100%	CLS=0.0395
+   t=9054 v=0.0395
+      details.HowToPlay.howToPlay[くわしい遊び方毎日、お題] y719->0 h44->0
+      p.GameContainer.date[2026年9月30日の問] y787->0 h13->0
+irodori	finished	320	200%	CLS=0.0000
+irodori	finished	375	200%	CLS=0.0000
+irodori	finished	1280	200%	CLS=0.0000
+irodori	remembered	320	100%	CLS=0.0000
+irodori	remembered	375	100%	CLS=0.0000
+irodori	remembered	1280	100%	CLS=0.0000
+irodori	remembered	320	200%	CLS=0.0000
+irodori	remembered	375	200%	CLS=0.0000
+irodori	remembered	1280	200%	CLS=0.0000
+irodori	estimated	320	100%	CLS=0.0000
+irodori	estimated	375	100%	CLS=0.0000
+irodori	estimated	1280	100%	CLS=0.0000
+irodori	estimated	320	200%	CLS=0.0000
+irodori	estimated	375	200%	CLS=0.0000
+irodori	estimated	1280	200%	CLS=0.0000

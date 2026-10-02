@@ -1,0 +1,36 @@
+== win 375 16px
+ status: あと4回間違えると終わり /  / 正解です。着物の種類（難易度2） || あと3回間違えると終わり /  / はずれです || あと3回間違えると終わり /  / 正解です。着物の部分（難易度1） || あと3回間違えると終わり /  / 正解です。着物の生地（難易度4） || 
+ focus: SECTION ナカマワケ #227 の結果4組すべて正解ミス1回これまでの成績遊んだ回数1回勝 top=385
+ level_end: 1 {"level_name":"nakamawake","success":true,"content_type":"game","content_id":"nakamawake"} reopen: 0
+ X text: "ナカマワケ #227 4組すべて正解（間違い1回）\n当てた順（難易度）: 2→1→4→3\n#ナカマワケ #yolosnet"
+ LINE: https://line.me/R/share?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23227%204%E7%B5%84%E3%81%99%E3%81%B9%E3%81%A6%E6%AD%A3%E8%A7%A3%EF%BC%88%E9%96%93%
+== win 320 32px
+ status: あと4回間違えると終わり /  / 正解です。着物の種類（難易度2） || あと3回間違えると終わり /  / はずれです || あと3回間違えると終わり /  / 正解です。着物の部分（難易度1） || あと3回間違えると終わり /  / 正解です。着物の生地（難易度4） || 
+ focus: SECTION ナカマワケ #227 の結果4組すべて正解ミス1回これまでの成績遊んだ回数1回勝 top=195
+ level_end: 1 {"level_name":"nakamawake","success":true,"content_type":"game","content_id":"nakamawake"} reopen: 0
+ X text: "ナカマワケ #227 4組すべて正解（間違い1回）\n当てた順（難易度）: 2→1→4→3\n#ナカマワケ #yolosnet"
+ LINE: https://line.me/R/share?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23227%204%E7%B5%84%E3%81%99%E3%81%B9%E3%81%A6%E6%AD%A3%E8%A7%A3%EF%BC%88%E9%96%93%
+== loss 375 16px
+ status: あと4回間違えると終わり /  / 正解です。帯の結び方（難易度3） || あと3回間違えると終わり /  / はずれです || あと2回間違えると終わり /  / はずれです || あと1回間違えると終わり /  / おしい。4つのうち3つは同じ組です || 
+ focus: SECTION ナカマワケ #227 の結果4回間違えて終了1組正解当てられなかった組着物の部分 top=123
+ level_end: 1 {"level_name":"nakamawake","success":false,"content_type":"game","content_id":"nakamawake"} reopen: 0
+ X text: "ナカマワケ #227 4回間違えて終了（1組正解）\n当てた順（難易度）: 3\n#ナカマワケ #yolosnet"
+ LINE: https://line.me/R/share?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23227%204%E5%9B%9E%E9%96%93%E9%81%95%E3%81%88%E3%81%A6%E7%B5%82%E4%BA%86%EF%BC%881
+== loss 320 32px
+ status: あと4回間違えると終わり /  / 正解です。帯の結び方（難易度3） || あと3回間違えると終わり /  / はずれです || あと2回間違えると終わり /  / はずれです || あと1回間違えると終わり /  / おしい。4つのうち3つは同じ組です || 
+ focus: SECTION ナカマワケ #227 の結果4回間違えて終了1組正解当てられなかった組着物の部分 top=16
+ level_end: 1 {"level_name":"nakamawake","success":false,"content_type":"game","content_id":"nakamawake"} reopen: 0
+ X text: "ナカマワケ #227 4回間違えて終了（1組正解）\n当てた順（難易度）: 3\n#ナカマワケ #yolosnet"
+ LINE: https://line.me/R/share?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23227%204%E5%9B%9E%E9%96%93%E9%81%95%E3%81%88%E3%81%A6%E7%B5%82%E4%BA%86%EF%BC%881
+== loss0 375 16px
+ status: あと3回間違えると終わり /  / はずれです || あと2回間違えると終わり /  / はずれです || あと1回間違えると終わり /  / はずれです || 
+ focus: SECTION ナカマワケ #227 の結果4回間違えて終了0組正解当てられなかった組着物の部分 top=16
+ level_end: 1 {"level_name":"nakamawake","success":false,"content_type":"game","content_id":"nakamawake"} reopen: 0
+ X text: "ナカマワケ #227 4回間違えて終了（0組正解）\n#ナカマワケ #yolosnet"
+ LINE: https://line.me/R/share?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23227%204%E5%9B%9E%E9%96%93%E9%81%95%E3%81%88%E3%81%A6%E7%B5%82%E4%BA%86%EF%BC%880
+== loss0 320 32px
+ status: あと3回間違えると終わり /  / はずれです || あと2回間違えると終わり /  / はずれです || あと1回間違えると終わり /  / はずれです || 
+ focus: SECTION ナカマワケ #227 の結果4回間違えて終了0組正解当てられなかった組着物の部分 top=16
+ level_end: 1 {"level_name":"nakamawake","success":false,"content_type":"game","content_id":"nakamawake"} reopen: 0
+ X text: "ナカマワケ #227 4回間違えて終了（0組正解）\n#ナカマワケ #yolosnet"
+ LINE: https://line.me/R/share?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23227%204%E5%9B%9E%E9%96%93%E9%81%95%E3%81%88%E3%81%A6%E7%B5%82%E4%BA%86%EF%BC%880

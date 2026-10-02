@@ -1,0 +1,10977 @@
+[
+ {
+  "width": 375,
+  "slug": "kanji-level",
+  "id": "beginner",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 492,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kanji-level",
+  "id": "egg",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 492,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kanji-level",
+  "id": "intermediate",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 492,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kanji-level",
+  "id": "advanced",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 492,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kanji-level",
+  "id": "master",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 523,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kotowaza-level",
+  "id": "beginner",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 334,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 567,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kotowaza-level",
+  "id": "learner",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 334,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 567,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kotowaza-level",
+  "id": "intermediate",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 334,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 536,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kotowaza-level",
+  "id": "advanced",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 334,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 567,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "kotowaza-level",
+  "id": "master",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 334,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 536,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "ai",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2626,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "shu",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2626,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "wakakusa",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2595,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "fuji",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2564,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "yamabuki",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2595,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "kon",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2564,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "sakura",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2595,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "traditional-color",
+  "id": "hisui",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 504,
+  "ctaLines": [
+   "あなたはどの伝統色? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2626,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-level",
+  "id": "beginner",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 523,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-level",
+  "id": "learner",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 523,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-level",
+  "id": "intermediate",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 523,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-level",
+  "id": "advanced",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 523,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-level",
+  "id": "master",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 290,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 523,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "shoshikantetsu",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 441,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2549,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "tenshinranman",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 410,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2486,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "sessatakuma",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 441,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2612,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "ichigoichie",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 441,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2580,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "rinkiohen",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 410,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2612,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "meikyoshisui",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 410,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2549,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "ishindenshin",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 410,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2517,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "yoji-personality",
+  "id": "yuoumaishin",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 410,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2549,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "timemagician",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2315,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "gravityfighter",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2284,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "digitalmonk",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2347,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "sleeparchitect",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2284,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "conversationsamurai",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2315,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "weathercontroller",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2347,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "impossible-advice",
+  "id": "snackphilosopher",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2378,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "reverseoptimist",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 377,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2848,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "overthinker",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 377,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2879,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "cosmicworrier",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 377,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2848,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "paradoxmaster",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 377,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2682,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "accidentalprophet",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 377,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2879,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "calmchaos",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2619,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "inversefortune",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 377,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2799,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "contrarian-fortune",
+  "id": "mundaneoracle",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2879,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "vendingmachine",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 421,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2623,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "oldclock",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2655,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "streetlight",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2560,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "benchpark",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2623,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "windchime",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2623,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "rainyday",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2655,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "cloudspecific",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2655,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "unexpected-compatibility",
+  "id": "404page",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 390,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 2718,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "festival-pioneer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2721,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "playlist-evangelist",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2753,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "solo-explorer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2721,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "repeat-warrior",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2690,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "bgm-craftsman",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2784,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "karaoke-healer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2815,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "midnight-shuffle",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 346,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 230,
+  "shareTop": 2815,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "music-personality",
+  "id": "lyrics-dweller",
+  "status": 200,
+  "navTop": 87,
+  "navH": 44,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 419,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 272,
+  "shareTop": 2951,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-fortune",
+  "id": "commander",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 494,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 2646,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-fortune",
+  "id": "professor",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 494,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 2646,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-fortune",
+  "id": "dreamer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 494,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 2678,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-fortune",
+  "id": "trickster",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 526,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 2740,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-fortune",
+  "id": "guardian",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 494,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 2678,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-fortune",
+  "id": "artist",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 494,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 2520,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3648,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 3651,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 3722,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 3816,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3703,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 463,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 3599,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3609,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3672,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3680,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3672,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3703,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 3743,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "einstein",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 420,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3475,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "curie",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3496,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "turing",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 420,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3538,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "davinci",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 420,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3506,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "darwin",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3653,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "edison",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3685,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "newton",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3653,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "nightingale",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 420,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3600,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "faraday",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3685,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "science-thinking",
+  "id": "fabre",
+  "status": 200,
+  "navTop": 87,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの科学者",
+     "型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3496,
+  "overflow": 0,
+  "crumbBad": [
+   "理系思考タイプ診断 — あなたはどの科学者／型？"
+  ]
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 418,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 1153,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 418,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 1153,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 418,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 1090,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 418,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 1090,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 418,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 1153,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 459,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 1163,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 459,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 1163,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "blazing-strategist",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 463,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 316,
+  "shareTop": 4737,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "blazing-poet",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4810,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "blazing-schemer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4810,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "blazing-warden",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4852,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "blazing-canvas",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4852,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "dreaming-scholar",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4842,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "contrarian-professor",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4915,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "careful-scholar",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4946,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "academic-artist",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4883,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "star-chaser",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 588,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 441,
+  "shareTop": 4956,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "tender-dreamer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4977,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "dreaming-canvas",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 473,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4873,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "clever-guardian",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4967,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "creative-disruptor",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 515,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4852,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "gentle-fortress",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4915,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "ultimate-commander",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4842,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "endless-researcher",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4915,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "eternal-dreamer",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 556,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 441,
+  "shareTop": 5019,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "ultimate-trickster",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4904,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "ultimate-guardian",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 505,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 358,
+  "shareTop": 4904,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "ultimate-artist",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 515,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4883,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "data-fortress",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 588,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 441,
+  "shareTop": 4988,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "vibe-rebel",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 546,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 399,
+  "shareTop": 4852,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "character-personality",
+  "id": "guardian-charger",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 588,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 441,
+  "shareTop": 4988,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "elegant-precise",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3294,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "warm-empathy",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3514,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "creative-playful",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3624,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "logical-clear",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3483,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "poetic-sensory",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3420,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "bold-impact",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3585,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "humor-wit",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3522,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 375,
+  "slug": "word-sense-personality",
+  "id": "gentle-indirect",
+  "status": 200,
+  "navTop": 87,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 368,
+  "ctaLines": [
+   "あなたはどのタイプ? 診断してみよう"
+  ],
+  "h1Bottom": 274,
+  "shareTop": 3420,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kanji-level",
+  "id": "beginner",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kanji-level",
+  "id": "egg",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kanji-level",
+  "id": "intermediate",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kanji-level",
+  "id": "advanced",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kanji-level",
+  "id": "master",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "漢字力診断",
+    "lines": [
+     "漢字力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kotowaza-level",
+  "id": "beginner",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 420,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 684,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kotowaza-level",
+  "id": "learner",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kotowaza-level",
+  "id": "intermediate",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 580,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kotowaza-level",
+  "id": "advanced",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 643,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "kotowaza-level",
+  "id": "master",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "ことわざ・慣用句力診断",
+    "lines": [
+     "ことわざ・慣用句力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 420,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 653,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "ai",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 643,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2942,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "shu",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 611,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2879,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "wakakusa",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 611,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2942,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "fuji",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 643,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2910,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "yamabuki",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 643,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2879,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "kon",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 643,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2910,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "sakura",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 611,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2847,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "traditional-color",
+  "id": "hisui",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを日本の伝統色に例えると？",
+    "lines": [
+     "あなたを日本の伝統色に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 643,
+  "ctaLines": [
+   "あなたはどの伝統色? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 3004,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-level",
+  "id": "beginner",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-level",
+  "id": "learner",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 643,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-level",
+  "id": "intermediate",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-level",
+  "id": "advanced",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-level",
+  "id": "master",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "四字熟語力診断",
+    "lines": [
+     "四字熟語力診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 378,
+  "ctaLines": [
+   "あなたも挑戦してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 643,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "shoshikantetsu",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2781,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "tenshinranman",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2781,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "sessatakuma",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2844,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "ichigoichie",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2781,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "rinkiohen",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2876,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "meikyoshisui",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2813,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "ishindenshin",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2781,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "yoji-personality",
+  "id": "yuoumaishin",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたを四字熟語に例えると？",
+    "lines": [
+     "あなたを四字熟語に例えると？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 529,
+  "ctaLines": [
+   "あなたはどの四字熟語? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 2844,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "timemagician",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 434,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2517,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "gravityfighter",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2485,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "digitalmonk",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "sleeparchitect",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2580,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "conversationsamurai",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2548,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "weathercontroller",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2611,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "impossible-advice",
+  "id": "snackphilosopher",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "達成困難アドバイス診断",
+    "lines": [
+     "達成困難アドバイス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2548,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "reverseoptimist",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3156,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "overthinker",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3250,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "cosmicworrier",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3219,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "paradoxmaster",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2990,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "accidentalprophet",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3187,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "calmchaos",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 434,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2958,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "inversefortune",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3139,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "contrarian-fortune",
+  "id": "mundaneoracle",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "逆張り運勢診断",
+    "lines": [
+     "逆張り運勢診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたも診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3313,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "vendingmachine",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2919,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "oldclock",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2856,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "streetlight",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2856,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "benchpark",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 434,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2793,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "windchime",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2856,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "rainyday",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2887,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "cloudspecific",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2856,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "unexpected-compatibility",
+  "id": "404page",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "斜め上の相性診断",
+    "lines": [
+     "斜め上の相性診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 465,
+  "ctaLines": [
+   "あなたの相性を診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 2982,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "festival-pioneer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 485,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3193,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "playlist-evangelist",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 527,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3235,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "solo-explorer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 485,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3193,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "repeat-warrior",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 485,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3131,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "bgm-craftsman",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 454,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3131,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "karaoke-healer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 485,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3131,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "midnight-shuffle",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 485,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3131,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "music-personality",
+  "id": "lyrics-dweller",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "音楽性格診断",
+    "lines": [
+     "音楽性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 527,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3266,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-fortune",
+  "id": "commander",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 631,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 3191,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-fortune",
+  "id": "professor",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 631,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 3191,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-fortune",
+  "id": "dreamer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 589,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3118,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-fortune",
+  "id": "trickster",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 662,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 3317,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-fortune",
+  "id": "guardian",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 589,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 360,
+  "shareTop": 3265,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-fortune",
+  "id": "artist",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの守護キャラ診断",
+    "lines": [
+     "あなたの守護キャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 631,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 3066,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "nihon-zaru",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 612,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 4121,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "hondo-tanuki",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 654,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 3997,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "nihon-kitsune",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 654,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 4225,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "iriomote-yamaneko",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 695,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 529,
+  "shareTop": 4330,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "amami-kuro-usagi",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 612,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 4050,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "yamane",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 612,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 4018,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "nihon-momonga",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 654,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 4123,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "nihon-kamoshika",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 612,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 4081,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "hondo-ten",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 654,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 4162,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "musasabi",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 654,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 4060,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "nihon-risu",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 612,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 4113,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "animal-personality",
+  "id": "ezo-shika",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "日本にしかいない動物で性格診断",
+    "lines": [
+     "日本にしかいない動物で性格診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 612,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 4184,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "einstein",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 3903,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "curie",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 442,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 3924,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "turing",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 4029,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "davinci",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 3903,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "darwin",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 4186,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "edison",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 442,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 362,
+  "shareTop": 4113,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "newton",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 4217,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "nightingale",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 4092,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "faraday",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 4154,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "science-thinking",
+  "id": "fabre",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "理系思考タイプ診断 — あなたはどの科学者型？",
+    "lines": [
+     "理系思考タイプ診断 — あなたはどの",
+     "科学者型？"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 484,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 404,
+  "shareTop": 4029,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "sado",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 567,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 1428,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "shodo",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 525,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 1387,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "budo",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 525,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 1324,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "kado",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 525,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 1324,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "rakugo",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 525,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 446,
+  "shareTop": 1355,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "haiku",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 567,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 1397,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "japanese-culture",
+  "id": "togei",
+  "status": 200,
+  "navTop": 131,
+  "navH": 132,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたが極めるべき日本文化診断",
+    "lines": [
+     "あなたが極めるべき日本文化診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 567,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 487,
+  "shareTop": 1397,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "blazing-strategist",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 568,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 5458,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "blazing-poet",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5469,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "blazing-schemer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5469,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "blazing-warden",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5510,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "blazing-canvas",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5510,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "dreaming-scholar",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 568,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 5427,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "contrarian-professor",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5594,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "careful-scholar",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5531,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "academic-artist",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5437,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "star-chaser",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 693,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 526,
+  "shareTop": 5646,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "tender-dreamer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5626,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "dreaming-canvas",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5626,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "clever-guardian",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 568,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 5553,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "creative-disruptor",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 578,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5500,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "gentle-fortress",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5636,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "ultimate-commander",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 568,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 5427,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "endless-researcher",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 693,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 526,
+  "shareTop": 5646,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "eternal-dreamer",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5667,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "ultimate-trickster",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5531,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "ultimate-guardian",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 568,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 402,
+  "shareTop": 5521,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "ultimate-artist",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 610,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 443,
+  "shareTop": 5563,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "data-fortress",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5636,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "vibe-rebel",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5573,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "character-personality",
+  "id": "guardian-charger",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたに似たキャラ診断",
+    "lines": [
+     "あなたに似たキャラ診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 651,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 485,
+  "shareTop": 5573,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "elegant-precise",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 3878,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "warm-empathy",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4129,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "creative-playful",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4271,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "logical-clear",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4098,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "poetic-sensory",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4066,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "bold-impact",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4326,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "humor-wit",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4169,
+  "overflow": 0,
+  "crumbBad": []
+ },
+ {
+  "width": 320,
+  "slug": "word-sense-personality",
+  "id": "gentle-indirect",
+  "status": 200,
+  "navTop": 131,
+  "navH": 88,
+  "crumbs": [
+   {
+    "text": "ホーム",
+    "lines": [
+     "ホーム"
+    ]
+   },
+   {
+    "text": "遊び",
+    "lines": [
+     "遊び"
+    ]
+   },
+   {
+    "text": "あなたの言葉センス診断",
+    "lines": [
+     "あなたの言葉センス診断"
+    ]
+   },
+   {
+    "text": "結果",
+    "lines": [
+     "結果"
+    ]
+   }
+  ],
+  "ctaBottom": 432,
+  "ctaLines": [
+   "あなたはどのタイプ? ",
+   "診断してみよう"
+  ],
+  "h1Bottom": 318,
+  "shareTop": 4035,
+  "overflow": 0,
+  "crumbBad": []
+ }
+]

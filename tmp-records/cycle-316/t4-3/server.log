@@ -1,0 +1,6 @@
+▲ Next.js 16.3.0
+- Local:         http://localhost:3316
+- Network:       http://192.0.2.2:3316
+✓ Ready in 125ms
+✓ Running next.config.ts took 32ms
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net

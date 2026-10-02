@@ -1,0 +1,4 @@
+font 16: rotate cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 top 100 / 100 / 100 / 100 / 100 / 100 / 100 / 100
+  reload-landscape cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 top 100 / 100 / 100 / 100 / 100 / 100 / 100 / 100
+  back-to-portrait reload cls 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0 top 100 / 100 / 100 / 100 / 100 / 100 / 100 / 100
+  key {"date":"2026-09-28","difficulty":"","viewportWidth":375,"fontSize":"16px","height":2207} 

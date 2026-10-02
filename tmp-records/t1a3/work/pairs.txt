@@ -1,0 +1,10 @@
+/tools/char-count /tools/text-diff
+/tools/char-count /tools/json-formatter
+/tools/char-count /tools/line-break-remover
+/play/character-personality/result/blazing-strategist /play/character-personality/result/careful-scholar
+/play/character-personality/result/blazing-strategist /play/character-personality/result/dreaming-scholar
+/play/character-personality/result/blazing-strategist /play/character-personality
+/dictionary/kanji/哀 /dictionary/kanji/口
+/dictionary/kanji/哀 /dictionary/kanji/名
+/blog/sql-cheatsheet /blog/sql-execution-order-guide
+/blog/sql-cheatsheet /blog/html-tags-cheatsheet

@@ -1,0 +1,566 @@
+[
+ {
+  "name": "after-megane-375x667-light",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": {
+   "x": 27,
+   "y": 205,
+   "w": 321,
+   "h": 496,
+   "bottom": 701
+  },
+  "boxTag": "SECTION",
+  "boxName": "メガネ運 ピント合ってます",
+  "heading": {
+   "x": 38,
+   "y": 241,
+   "w": 299,
+   "h": 30,
+   "bottom": 271
+  },
+  "headingText": "メガネ運 ピント合ってます",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★★☆"
+  ],
+  "starColors": [
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "5つ星のうち4.4"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 754,
+   "w": 100,
+   "h": 44,
+   "bottom": 798
+  }
+ },
+ {
+  "name": "after-megane-375x667-dark",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": {
+   "x": 27,
+   "y": 205,
+   "w": 321,
+   "h": 496,
+   "bottom": 701
+  },
+  "boxTag": "SECTION",
+  "boxName": "メガネ運 ピント合ってます",
+  "heading": {
+   "x": 38,
+   "y": 241,
+   "w": 299,
+   "h": 30,
+   "bottom": 271
+  },
+  "headingText": "メガネ運 ピント合ってます",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★★☆"
+  ],
+  "starColors": [
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "5つ星のうち4.4"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 754,
+   "w": 100,
+   "h": 44,
+   "bottom": 798
+  }
+ },
+ {
+  "name": "after-megane-1280x800-light",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": {
+   "x": 179,
+   "y": 245,
+   "w": 922,
+   "h": 415,
+   "bottom": 660
+  },
+  "boxTag": "SECTION",
+  "boxName": "メガネ運 ピント合ってます",
+  "heading": {
+   "x": 198,
+   "y": 289,
+   "w": 884,
+   "h": 58,
+   "bottom": 348
+  },
+  "headingText": "メガネ運 ピント合ってます",
+  "headingFontSize": "46.72px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★★☆"
+  ],
+  "starColors": [
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "5つ星のうち4.4"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 171,
+   "y": 733,
+   "w": 100,
+   "h": 44,
+   "bottom": 777
+  }
+ },
+ {
+  "name": "after-megane-1280x800-dark",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": {
+   "x": 179,
+   "y": 245,
+   "w": 922,
+   "h": 415,
+   "bottom": 660
+  },
+  "boxTag": "SECTION",
+  "boxName": "メガネ運 ピント合ってます",
+  "heading": {
+   "x": 198,
+   "y": 289,
+   "w": 884,
+   "h": 58,
+   "bottom": 348
+  },
+  "headingText": "メガネ運 ピント合ってます",
+  "headingFontSize": "46.72px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★★☆"
+  ],
+  "starColors": [
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "5つ星のうち4.4"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 171,
+   "y": 733,
+   "w": 100,
+   "h": 44,
+   "bottom": 777
+  }
+ },
+ {
+  "name": "after-megane-320x667-light",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": {
+   "x": 27,
+   "y": 334,
+   "w": 266,
+   "h": 526,
+   "bottom": 860
+  },
+  "boxTag": "SECTION",
+  "boxName": "メガネ運 ピント合ってます",
+  "heading": {
+   "x": 38,
+   "y": 371,
+   "w": 244,
+   "h": 60,
+   "bottom": 431
+  },
+  "headingText": "メガネ運 ピント合ってます",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★★☆"
+  ],
+  "starColors": [
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "5つ星のうち4.4"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 914,
+   "w": 100,
+   "h": 44,
+   "bottom": 958
+  }
+ },
+ {
+  "name": "after-megane-320x667-dark",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": {
+   "x": 27,
+   "y": 334,
+   "w": 266,
+   "h": 526,
+   "bottom": 860
+  },
+  "boxTag": "SECTION",
+  "boxName": "メガネ運 ピント合ってます",
+  "heading": {
+   "x": 38,
+   "y": 371,
+   "w": 244,
+   "h": 60,
+   "bottom": 431
+  },
+  "headingText": "メガネ運 ピント合ってます",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★★☆"
+  ],
+  "starColors": [
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "5つ星のうち4.4"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 914,
+   "w": 100,
+   "h": 44,
+   "bottom": 958
+  }
+ },
+ {
+  "name": "after-kasa-375x667-light",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": {
+   "x": 27,
+   "y": 205,
+   "w": 321,
+   "h": 528,
+   "bottom": 732
+  },
+  "boxTag": "SECTION",
+  "boxName": "傘運 やや上向き",
+  "heading": {
+   "x": 38,
+   "y": 241,
+   "w": 299,
+   "h": 30,
+   "bottom": 271
+  },
+  "headingText": "傘運 やや上向き",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★☆☆"
+  ],
+  "starColors": [
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "5つ星のうち3.2"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 786,
+   "w": 100,
+   "h": 44,
+   "bottom": 830
+  }
+ },
+ {
+  "name": "after-kasa-375x667-dark",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": {
+   "x": 27,
+   "y": 205,
+   "w": 321,
+   "h": 528,
+   "bottom": 732
+  },
+  "boxTag": "SECTION",
+  "boxName": "傘運 やや上向き",
+  "heading": {
+   "x": 38,
+   "y": 241,
+   "w": 299,
+   "h": 30,
+   "bottom": 271
+  },
+  "headingText": "傘運 やや上向き",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★☆☆"
+  ],
+  "starColors": [
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "5つ星のうち3.2"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 786,
+   "w": 100,
+   "h": 44,
+   "bottom": 830
+  }
+ },
+ {
+  "name": "after-kasa-1280x800-light",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": {
+   "x": 179,
+   "y": 245,
+   "w": 922,
+   "h": 447,
+   "bottom": 691
+  },
+  "boxTag": "SECTION",
+  "boxName": "傘運 やや上向き",
+  "heading": {
+   "x": 198,
+   "y": 289,
+   "w": 884,
+   "h": 58,
+   "bottom": 348
+  },
+  "headingText": "傘運 やや上向き",
+  "headingFontSize": "46.72px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★☆☆"
+  ],
+  "starColors": [
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "5つ星のうち3.2"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 171,
+   "y": 765,
+   "w": 100,
+   "h": 44,
+   "bottom": 809
+  }
+ },
+ {
+  "name": "after-kasa-1280x800-dark",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": {
+   "x": 179,
+   "y": 245,
+   "w": 922,
+   "h": 447,
+   "bottom": 691
+  },
+  "boxTag": "SECTION",
+  "boxName": "傘運 やや上向き",
+  "heading": {
+   "x": 198,
+   "y": 289,
+   "w": 884,
+   "h": 58,
+   "bottom": 348
+  },
+  "headingText": "傘運 やや上向き",
+  "headingFontSize": "46.72px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★☆☆"
+  ],
+  "starColors": [
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "5つ星のうち3.2"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 171,
+   "y": 765,
+   "w": 100,
+   "h": 44,
+   "bottom": 809
+  }
+ },
+ {
+  "name": "after-kasa-320x667-light",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": {
+   "x": 27,
+   "y": 334,
+   "w": 266,
+   "h": 559,
+   "bottom": 893
+  },
+  "boxTag": "SECTION",
+  "boxName": "傘運 やや上向き",
+  "heading": {
+   "x": 38,
+   "y": 371,
+   "w": 244,
+   "h": 30,
+   "bottom": 401
+  },
+  "headingText": "傘運 やや上向き",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★☆☆"
+  ],
+  "starColors": [
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "5つ星のうち3.2"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 947,
+   "w": 100,
+   "h": 44,
+   "bottom": 991
+  }
+ },
+ {
+  "name": "after-kasa-320x667-dark",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": {
+   "x": 27,
+   "y": 334,
+   "w": 266,
+   "h": 559,
+   "bottom": 893
+  },
+  "boxTag": "SECTION",
+  "boxName": "傘運 やや上向き",
+  "heading": {
+   "x": 38,
+   "y": 371,
+   "w": 244,
+   "h": 30,
+   "bottom": 401
+  },
+  "headingText": "傘運 やや上向き",
+  "headingFontSize": "23.84px",
+  "headingFont": "plexSans, \"IBM Plex Sans Fallback\", \"Zen",
+  "starText": [
+   "★★★☆☆"
+  ],
+  "starColors": [
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "5つ星のうち3.2"
+  ],
+  "tsutsumi": false,
+  "seal": false,
+  "h1": "今日のユーモア運勢",
+  "boxAnimation": "none",
+  "shareBtn": {
+   "x": 19,
+   "y": 947,
+   "w": 100,
+   "h": 44,
+   "bottom": 991
+  }
+ }
+]

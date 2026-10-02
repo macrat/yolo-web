@@ -1,0 +1,295 @@
+{
+ "word-sense-personality-320-light": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "一字千金タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|いちじせんきん"
+   },
+   {
+    "link": "和顔愛語タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|わがんあいご"
+   },
+   {
+    "link": "理路整然タイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|りろせいぜんあなたのタイプ"
+   }
+  ],
+  "title": "あなたの言葉センス診断 - 診断 | yolos.net",
+  "resultH2": [
+   "理路整然（りろせいぜん）タイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 320,
+  "vw": 320,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"一字千金タイプ\":\n        - /url: /play/word-sense-personality/result/elegant-precise\n      - text: いちじせんきん\n  - listitem:\n    - paragraph:\n      - link \"和顔愛語タイプ\":\n        - /url: /play/word-sense-personality/result/warm-empathy\n      - text: わがんあいご\n  - listitem:\n    - paragraph:\n      - link \"奇想天外タイプ\":\n        - /url: /play/word-sense-personality/result/creative-playful\n      - text: きそうてんがい\n  - listitem:\n    - paragraph:\n      - link \"理路整然タイプ\":\n        - /url: /play/word-sense-personality/result/logical-clear\n      - text: りろせいぜん\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"花鳥風月タイプ\":\n        - /url: /play/word-sense-personality/result/poetic-sensory\n      - text: かちょうふうげつ\n  - listitem:\n    - paragraph:\n      - link \"疾風迅雷タイプ\":\n        - /url: /play/word-sense-personality/result/bold-impact\n      - text: しっぷうじんらい\n  - listitem:\n    - paragraph:\n      - link \"抱腹絶倒タイプ\":\n        - /url: /play/word-sense-personality/result/humor-wit\n      - text: ほうふくぜっとう\n  - listitem:\n    - paragraph:\n      - link \"柔和温順タイプ\":\n        - /url: /play/word-sense-personality/result/gentle-indirect\n      - text: にゅうわおんじゅん"
+ },
+ "word-sense-personality-320-light-resultpage": {
+  "h1": "理路整然（りろせいぜん）タイプ",
+  "title": "理路整然（りろせいぜん）タイプ | yolos.net",
+  "cur": {
+   "link": "理路整然タイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "理路整然タイプりろせいぜん"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 320
+ },
+ "word-sense-personality-320-dark": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "一字千金タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|いちじせんきん"
+   },
+   {
+    "link": "和顔愛語タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|わがんあいご"
+   },
+   {
+    "link": "抱腹絶倒タイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|ほうふくぜっとうあなたのタイプ"
+   }
+  ],
+  "title": "あなたの言葉センス診断 - 診断 | yolos.net",
+  "resultH2": [
+   "抱腹絶倒（ほうふくぜっとう）タイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 320,
+  "vw": 320,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"一字千金タイプ\":\n        - /url: /play/word-sense-personality/result/elegant-precise\n      - text: いちじせんきん\n  - listitem:\n    - paragraph:\n      - link \"和顔愛語タイプ\":\n        - /url: /play/word-sense-personality/result/warm-empathy\n      - text: わがんあいご\n  - listitem:\n    - paragraph:\n      - link \"奇想天外タイプ\":\n        - /url: /play/word-sense-personality/result/creative-playful\n      - text: きそうてんがい\n  - listitem:\n    - paragraph:\n      - link \"理路整然タイプ\":\n        - /url: /play/word-sense-personality/result/logical-clear\n      - text: りろせいぜん\n  - listitem:\n    - paragraph:\n      - link \"花鳥風月タイプ\":\n        - /url: /play/word-sense-personality/result/poetic-sensory\n      - text: かちょうふうげつ\n  - listitem:\n    - paragraph:\n      - link \"疾風迅雷タイプ\":\n        - /url: /play/word-sense-personality/result/bold-impact\n      - text: しっぷうじんらい\n  - listitem:\n    - paragraph:\n      - link \"抱腹絶倒タイプ\":\n        - /url: /play/word-sense-personality/result/humor-wit\n      - text: ほうふくぜっとう\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"柔和温順タイプ\":\n        - /url: /play/word-sense-personality/result/gentle-indirect\n      - text: にゅうわおんじゅん"
+ },
+ "word-sense-personality-320-dark-resultpage": {
+  "h1": "抱腹絶倒（ほうふくぜっとう）タイプ",
+  "title": "抱腹絶倒（ほうふくぜっとう）タイプ | yolos.net",
+  "cur": {
+   "link": "抱腹絶倒タイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "抱腹絶倒タイプほうふくぜっとう"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 320
+ },
+ "word-sense-personality-375-light": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "一字千金タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|いちじせんきん"
+   },
+   {
+    "link": "和顔愛語タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|わがんあいご"
+   },
+   {
+    "link": "抱腹絶倒タイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|ほうふくぜっとうあなたのタイプ"
+   }
+  ],
+  "title": "あなたの言葉センス診断 - 診断 | yolos.net",
+  "resultH2": [
+   "抱腹絶倒（ほうふくぜっとう）タイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 375,
+  "vw": 375,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"一字千金タイプ\":\n        - /url: /play/word-sense-personality/result/elegant-precise\n      - text: いちじせんきん\n  - listitem:\n    - paragraph:\n      - link \"和顔愛語タイプ\":\n        - /url: /play/word-sense-personality/result/warm-empathy\n      - text: わがんあいご\n  - listitem:\n    - paragraph:\n      - link \"奇想天外タイプ\":\n        - /url: /play/word-sense-personality/result/creative-playful\n      - text: きそうてんがい\n  - listitem:\n    - paragraph:\n      - link \"理路整然タイプ\":\n        - /url: /play/word-sense-personality/result/logical-clear\n      - text: りろせいぜん\n  - listitem:\n    - paragraph:\n      - link \"花鳥風月タイプ\":\n        - /url: /play/word-sense-personality/result/poetic-sensory\n      - text: かちょうふうげつ\n  - listitem:\n    - paragraph:\n      - link \"疾風迅雷タイプ\":\n        - /url: /play/word-sense-personality/result/bold-impact\n      - text: しっぷうじんらい\n  - listitem:\n    - paragraph:\n      - link \"抱腹絶倒タイプ\":\n        - /url: /play/word-sense-personality/result/humor-wit\n      - text: ほうふくぜっとう\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"柔和温順タイプ\":\n        - /url: /play/word-sense-personality/result/gentle-indirect\n      - text: にゅうわおんじゅん"
+ },
+ "word-sense-personality-375-light-resultpage": {
+  "h1": "抱腹絶倒（ほうふくぜっとう）タイプ",
+  "title": "抱腹絶倒（ほうふくぜっとう）タイプ | yolos.net",
+  "cur": {
+   "link": "抱腹絶倒タイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "抱腹絶倒タイプほうふくぜっとう"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 375
+ },
+ "word-sense-personality-375-dark": {
+  "heading": "H3 17px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "一字千金タイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|いちじせんきんあなたのタイプ"
+   },
+   {
+    "link": "和顔愛語タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|わがんあいご"
+   }
+  ],
+  "title": "あなたの言葉センス診断 - 診断 | yolos.net",
+  "resultH2": [
+   "一字千金（いちじせんきん）タイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 375,
+  "vw": 375,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"一字千金タイプ\":\n        - /url: /play/word-sense-personality/result/elegant-precise\n      - text: いちじせんきん\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"和顔愛語タイプ\":\n        - /url: /play/word-sense-personality/result/warm-empathy\n      - text: わがんあいご\n  - listitem:\n    - paragraph:\n      - link \"奇想天外タイプ\":\n        - /url: /play/word-sense-personality/result/creative-playful\n      - text: きそうてんがい\n  - listitem:\n    - paragraph:\n      - link \"理路整然タイプ\":\n        - /url: /play/word-sense-personality/result/logical-clear\n      - text: りろせいぜん\n  - listitem:\n    - paragraph:\n      - link \"花鳥風月タイプ\":\n        - /url: /play/word-sense-personality/result/poetic-sensory\n      - text: かちょうふうげつ\n  - listitem:\n    - paragraph:\n      - link \"疾風迅雷タイプ\":\n        - /url: /play/word-sense-personality/result/bold-impact\n      - text: しっぷうじんらい\n  - listitem:\n    - paragraph:\n      - link \"抱腹絶倒タイプ\":\n        - /url: /play/word-sense-personality/result/humor-wit\n      - text: ほうふくぜっとう\n  - listitem:\n    - paragraph:\n      - link \"柔和温順タイプ\":\n        - /url: /play/word-sense-personality/result/gentle-indirect\n      - text: にゅうわおんじゅん"
+ },
+ "word-sense-personality-375-dark-resultpage": {
+  "h1": "一字千金（いちじせんきん）タイプ",
+  "title": "一字千金（いちじせんきん）タイプ | yolos.net",
+  "cur": {
+   "link": "一字千金タイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "一字千金タイプいちじせんきん"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 375
+ },
+ "word-sense-personality-1280-light": {
+  "heading": "H3 33.28px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "一字千金タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|いちじせんきん"
+   },
+   {
+    "link": "和顔愛語タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|わがんあいご"
+   },
+   {
+    "link": "花鳥風月タイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|かちょうふうげつあなたのタイプ"
+   }
+  ],
+  "title": "あなたの言葉センス診断 - 診断 | yolos.net",
+  "resultH2": [
+   "花鳥風月（かちょうふうげつ）タイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 1280,
+  "vw": 1280,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"一字千金タイプ\":\n        - /url: /play/word-sense-personality/result/elegant-precise\n      - text: いちじせんきん\n  - listitem:\n    - paragraph:\n      - link \"和顔愛語タイプ\":\n        - /url: /play/word-sense-personality/result/warm-empathy\n      - text: わがんあいご\n  - listitem:\n    - paragraph:\n      - link \"奇想天外タイプ\":\n        - /url: /play/word-sense-personality/result/creative-playful\n      - text: きそうてんがい\n  - listitem:\n    - paragraph:\n      - link \"理路整然タイプ\":\n        - /url: /play/word-sense-personality/result/logical-clear\n      - text: りろせいぜん\n  - listitem:\n    - paragraph:\n      - link \"花鳥風月タイプ\":\n        - /url: /play/word-sense-personality/result/poetic-sensory\n      - text: かちょうふうげつ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"疾風迅雷タイプ\":\n        - /url: /play/word-sense-personality/result/bold-impact\n      - text: しっぷうじんらい\n  - listitem:\n    - paragraph:\n      - link \"抱腹絶倒タイプ\":\n        - /url: /play/word-sense-personality/result/humor-wit\n      - text: ほうふくぜっとう\n  - listitem:\n    - paragraph:\n      - link \"柔和温順タイプ\":\n        - /url: /play/word-sense-personality/result/gentle-indirect\n      - text: にゅうわおんじゅん"
+ },
+ "word-sense-personality-1280-light-resultpage": {
+  "h1": "花鳥風月（かちょうふうげつ）タイプ",
+  "title": "花鳥風月（かちょうふうげつ）タイプ | yolos.net",
+  "cur": {
+   "link": "花鳥風月タイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "花鳥風月タイプかちょうふうげつ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 1280
+ },
+ "word-sense-personality-1280-dark": {
+  "heading": "H3 33.28px 他のタイプ（8）",
+  "rows": [
+   {
+    "link": "一字千金タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|いちじせんきん"
+   },
+   {
+    "link": "和顔愛語タイプ",
+    "cur": null,
+    "fw": "400",
+    "td": "underline",
+    "rest": "|わがんあいご"
+   },
+   {
+    "link": "花鳥風月タイプ",
+    "cur": "true",
+    "fw": "700",
+    "td": "underline",
+    "rest": "|かちょうふうげつあなたのタイプ"
+   }
+  ],
+  "title": "あなたの言葉センス診断 - 診断 | yolos.net",
+  "resultH2": [
+   "花鳥風月（かちょうふうげつ）タイプ",
+   "よくある質問",
+   "この診断が楽しかったらシェア"
+  ],
+  "share": [],
+  "sw": 1280,
+  "vw": 1280,
+  "aria": "- heading \"他のタイプ（8）\" [level=3]\n- list \"他のタイプ（8）\":\n  - listitem:\n    - paragraph:\n      - link \"一字千金タイプ\":\n        - /url: /play/word-sense-personality/result/elegant-precise\n      - text: いちじせんきん\n  - listitem:\n    - paragraph:\n      - link \"和顔愛語タイプ\":\n        - /url: /play/word-sense-personality/result/warm-empathy\n      - text: わがんあいご\n  - listitem:\n    - paragraph:\n      - link \"奇想天外タイプ\":\n        - /url: /play/word-sense-personality/result/creative-playful\n      - text: きそうてんがい\n  - listitem:\n    - paragraph:\n      - link \"理路整然タイプ\":\n        - /url: /play/word-sense-personality/result/logical-clear\n      - text: りろせいぜん\n  - listitem:\n    - paragraph:\n      - link \"花鳥風月タイプ\":\n        - /url: /play/word-sense-personality/result/poetic-sensory\n      - text: かちょうふうげつ\n    - paragraph: あなたのタイプ\n  - listitem:\n    - paragraph:\n      - link \"疾風迅雷タイプ\":\n        - /url: /play/word-sense-personality/result/bold-impact\n      - text: しっぷうじんらい\n  - listitem:\n    - paragraph:\n      - link \"抱腹絶倒タイプ\":\n        - /url: /play/word-sense-personality/result/humor-wit\n      - text: ほうふくぜっとう\n  - listitem:\n    - paragraph:\n      - link \"柔和温順タイプ\":\n        - /url: /play/word-sense-personality/result/gentle-indirect\n      - text: にゅうわおんじゅん"
+ },
+ "word-sense-personality-1280-dark-resultpage": {
+  "h1": "花鳥風月（かちょうふうげつ）タイプ",
+  "title": "花鳥風月（かちょうふうげつ）タイプ | yolos.net",
+  "cur": {
+   "link": "花鳥風月タイプ",
+   "cur": "page",
+   "fw": "700",
+   "td": "none",
+   "li": "花鳥風月タイプかちょうふうげつ"
+  },
+  "hasYours": false,
+  "share": [],
+  "sw": 1280
+ }
+}

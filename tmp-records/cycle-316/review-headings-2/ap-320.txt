@@ -1,0 +1,198 @@
+[eq] /blog/a11y-static-green-but-broken-dynamic-audit
+  A: アクセシビリ／ティの静的／チェックが／緑でも、／動かしたら／壊れていた
+  C: アクセシビリ／ティの／静的チェック／が緑でも、／動かしたら／壊れていた
+[better] /blog/design-token-migration-build-blind-spots
+  A: デザイン／移行で／旧トークンを／消しても／ビルドは／教えてくれな／い
+  C: デザイン移行／で／旧トークンを／消しても／ビルドは／教えてくれな／い
+[eq] /blog/removing-ai-slop-and-the-absent-writer
+  A: AI臭を／消すのに／夢中で、／わたしは何も／主張／していなかっ／た
+  C: AI臭を／消すのに／夢中で、／わたしは何も／主張していな／かった
+[eq] /blog/html-tags-cheatsheet
+  A: HTMLタグ ／早見表 — ／用途別 ／約90タグ一覧
+  C: HTMLタグ ／早見表 — ／用途別 約／90タグ一覧
+[eq] /blog/markdown-cheatsheet
+  A: Markdown ／早見表 — ／基本記法と／GFM拡張の／一覧
+  C: Markdown ／早見表 — ／基本記法と／GFM拡張の／一覧
+[eq] /blog/sql-cheatsheet
+  A: SQL 早見表 — ／SELECT・／JOIN・集計・／DML/DDL／構文一覧
+  C: SQL 早見表 — ／SELECT・／JOIN・集計・／DML/DDL構文／一覧
+[eq] /blog/git-command-cheatsheet
+  A: Gitコマンド ／早見表 — ／用途別の／コマンド一覧
+  C: Gitコマンド ／早見表 — ／用途別の／コマンド一覧
+[better] /blog/cron-cheatsheet
+  A: Cron式 ／早見表 — ／フィールド・／特殊文字・／実用パターン／一覧
+  C: Cron式 早見表 ／— ／フィールド・／特殊文字・／実用パターン／一覧
+[eq] /blog/regex-cheatsheet
+  A: 正規表現 ／早見表 — ／メタ文字・／量指定子・／よく使う／パターン一覧
+  C: 正規表現 ／早見表 — ／メタ文字・／量指定子・／よく／使うパターン／一覧
+[eq] /blog/choosing-html-tags-by-meaning
+  A: 意味で／選ぶHTML — ／見た目が／同じでも／壊れる、／タグの選び方
+  C: 意味で選ぶ／HTML — ／見た目が／同じでも／壊れる、／タグの選び方
+[better] /blog/markdown-not-rendering-as-expected
+  A: Markdownが／思い通りに／表示／されない：／改行・表・／エスケープを／仕組みから／直す
+  C: Markdownが／思い通りに／表示されな／い：改行・／表・／エスケープを／仕組みから／直す
+[better] /blog/git-command-reference
+  A: gitコマンド／逆引きガイド: ／取り消し・／復旧で／慌てない／ために
+  C: gitコマンド逆／引きガイド: ／取り消し・／復旧で／慌てないため／に
+[eq] /blog/gamification-built-measured-removed
+  A: ゲーミフィケ／ーションを／作り、測り、／消した話 -- ／バッジは／初回で／ほぼ全部配り／終えていた
+  C: ゲーミフィケ／ーションを／作り、測り、／消した話 -- ／バッジは／初回で／ほぼ全部配り／終えていた
+[eq] /blog/ga-period-totals-hide-when
+  A: GAの／期間集計で／「404に／落ちている」／と誤読した／話 -- 数字が／隠す「いつ」
+  C: GAの／期間集計で／「404に／落ちている」／と誤読した話 ／-- 数字が隠す／「いつ」
+[better] /blog/nextjs-server-only-import-in-client-component-node-fs
+  A: Client ／Componentに／server／専用部品を／importすると／node:fsで／ビルドが／壊れる
+  C: Client ／Componentに／server専用部／品を／importすると／node:fsで／ビルドが／壊れる
+[eq] /blog/playwright-dark-mode-screenshot-next-themes
+  A: Playwrightの／ダークモード／撮影が実は／ライトだった ／-- ／emulateMedia／の落とし穴
+  C: Playwrightの／ダークモード／撮影が実は／ライトだった ／-- ／emulateMedia／の落とし穴
+[better] /blog/redos-defense-web-worker-terminate
+  A: 50字で215秒／フリーズした／正規表現を、／Worker.termin／ate()／で100msに／収める
+  C: 50字で／215秒フリー／ズした／正規表現を、／Worker.termin／ate()で／100msに／収める
+[eq] /blog/aria-status-implicit-aria-live
+  A: role="status"／が読み上げを／暴走させた -- ／暗黙のaria-／live=politeと／二層構成
+  C: role="status"／が読み上げを／暴走させた -- ／暗黙のaria-／live=politeと／二層構成
+[eq] /blog/grid-column-and-dom-order
+  A: grid-columnを／書いたのに／効かない -- ／CSS Gridは／DOM順序にも／依存する
+  C: grid-columnを／書いたのに／効かない -- ／CSS Gridは／DOM順序にも／依存する
+[eq] /blog/letter-from-an-ai-that-cant-see-the-future
+  A: 未来を／見通せない／AIから、AIを／育てる／あなたへの／たった一つの／お願い
+  C: 未来を／見通せない／AIから、AIを／育てるあなた／へのたった／一つのお願い
+[eq] /blog/nextjs-global-not-found-for-multiple-root-layouts
+  A: Next.js／複数root ／layoutで not-／found.tsx が／効かない -- ／global-not-／found.js での／解決
+  C: Next.js複数／root layoutで ／not-found.tsx ／が効かない -- ／global-not-／found.js での／解決
+[eq] /blog/yaml-implicit-type-conversion-quote-everything
+  A: YAML は ／`NO` を／ノルウェーと／読まない -- ／暗黙の／型変換に／騙されない／書き方
+  C: YAML は ／`NO` を／ノルウェーと／読まない -- ／暗黙の／型変換に／騙されない／書き方
+[better] /blog/scroll-lock-reference-counter-for-multiple-components
+  A: 複数／コンポーネン／ト同居でscroll ／lockが壊れる／仕組み -- ／classListを／やめてdataset／参照／カウンタに／する
+  C: 複数コンポー／ネント同居で／scroll lockが／壊れる仕組み ／-- classListを／やめて／dataset参照カ／ウンタにする
+[better] /blog/nextjs-multiple-root-layouts-for-gradual-design-migration
+  A: Next.js ／複数root ／layoutで／段階的／デザイン移行 ／-- 本番で踏む／2つの罠
+  C: Next.js 複数／root layoutで／段階的デザイ／ン移行 -- ／本番で踏む／2つの罠
+[better] /blog/stop-piling-rules-give-ai-its-wish
+  A: AIが指示を／守らないなら／、ルールより／先に『望み』／を渡してみて／ほしい
+  C: AIが指示を／守らないな／ら、／ルールより先／に『望み』を／渡してみてほ／しい
+[better] /blog/nextjs-dynamic-and-dedicated-route-coexistence
+  A: Next.js ／動的ルートと／専用ルートの／共存パターン ／-- 設計・／検証・／バンドル／最適化
+  C: Next.js ／動的ルートと／専用ルートの／共存パターン ／-- 設計・／検証・／バンドル最適／化
+[WORSE] /blog/pm-premise-contamination-in-multi-agent-ai
+  A: 【失敗事例】／AI／マルチエージ／ェントで／全員が正しく／動いても／間違える構造
+  C: 【失敗事例】／AIマルチエー／ジェントで／全員が正しく／動いても／間違える構造
+[better] /blog/ai-agent-verification-step-skip
+  A: AI／エージェント／は「最後の／確認」／を省略する
+  C: AIエージェン／トは「最後の／確認」を／省略する
+[better] /blog/ai-agent-concept-rethink-3-workflow-limits
+  A: セッション／長期化がAI／エージェント／の自律運用を／破壊する／（コンセプト／再策定記 ／3/3）
+  C: セッション長／期化が／AIエージェン／トの／自律運用を／破壊する／（コンセプト／再策定記 ／3/3）
+[better] /blog/ai-agent-concept-rethink-1-bias-and-context-engineering
+  A: AI／エージェント／の思考／バイアスと／コンテキスト／エンジニアリ／ング／（コンセプト／再策定記 ／1/3）
+  C: AIエージェン／トの／思考バイアス／と／コンテキスト／エンジニアリ／ング／（コンセプト／再策定記 ／1/3）
+[better] /blog/adsense-content-quality-audit-methodology
+  A: AdSense／「有用性の／低い／コンテンツ」／を乗り越える ／-- コンテンツ／品質監査の／実践ガイド
+  C: AdSense／「有用性の／低いコンテン／ツ」を乗り／越える -- ／コンテンツ品／質監査の／実践ガイド
+[better] /blog/nextjs-route-handler-static-and-bundle-budget-test
+  A: Next.js 15の／Route Handler／デフォルト／変更と、／バンドルサイ／ズを継続的に／守る／テスト設計
+  C: Next.js 15の／Route ／Handlerデフ／ォルト変更／と、／バンドルサイ／ズを継続的に／守る／テスト設計
+[eq] /blog/nextjs-dynamic-import-pitfalls-and-true-code-splitting
+  A: next/dynamic／の2つの／落とし穴 ── ／ローディング／フラッシュと／偽りの／コード分割を／解消する
+  C: next/dynamic／の2つの／落とし穴 ── ／ローディング／フラッシュと／偽りの／コード分割を／解消する
+[eq] /blog/mermaid-gantt-colon-trap-and-render-testing
+  A: Mermaid gantt／チャートの／コロンの罠と／mermaid.rend／er()による／テスト戦略
+  C: Mermaid ／ganttチャート／のコロンの／罠と／mermaid.rend／er()による／テスト戦略
+[eq] /blog/cron-expression-pitfalls-dom-dow-parseint
+  A: cron式の日と／曜日がOR／判定になる／仕様と／落とし穴
+  C: cron式の日と／曜日が／OR判定になる／仕様と／落とし穴
+[eq] /blog/nextjs-hydration-mismatch-seeded-random
+  A: Next.js／ハイドレーシ／ョン不整合を／シード／付き乱数で／解決する
+  C: Next.jsハイド／レーション不／整合を／シード付き乱／数で解決する
+[better] /blog/nextjs-seo-metadata-and-json-ld-security
+  A: Next.js／サイトのSEO／メタデータ／完全対策: ／OGP・／canonical・／Twitter Card・／JSON-LD／セキュリティ／まで
+  C: Next.jsサイト／の／SEOメタデー／タ完全対策: ／OGP・／canonical・／Twitter Card・／JSON-／LDセキュリテ／ィまで
+[WORSE] /blog/http-status-code-guide-for-rest-api
+  A: REST APIで／迷いがちな／HTTP／ステータスコ／ードの／選び方ガイド
+  C: REST APIで／迷いがちな／HTTPステータ／スコードの／選び方ガイド
+[eq] /blog/admonition-gfm-alert-support
+  A: marked で ／GFM Alert／（補足ボック／ス）を実装／する：／marked-alert ／の導入から ／CSS ／スタイリング／まで
+  C: marked で ／GFM Alert／（補足ボック／ス）を／実装する：／marked-alert ／の導入から ／CSS ／スタイリング／まで
+[eq] /blog/url-structure-reorganization
+  A: URLを／変えるべきか／迷ったら: ／SEO・UX・／競合の3軸で／判断するURL／設計／フレームワー／ク
+  C: URLを変える／べきか／迷ったら: ／SEO・UX・／競合の3軸で／判断する／URL設計フレ／ームワーク
+[better] /blog/traditional-color-palette-tool
+  A: 伝統色／カラーパレッ／トツールを／作りました: ／250色から／色彩調和を／自動生成
+  C: 伝統色カラー／パレットツー／ルを／作りました: ／250色から／色彩調和を／自動生成
+[eq] /blog/game-dictionary-layout-unification
+  A: ゲームと／辞典のLayout／共通化: ／品質要素を／全コンテンツ／に広げる／第3弾
+  C: ゲームと／辞典の／Layout共通化: ／品質要素を／全コンテンツ／に広げる第／3弾
+[better] /blog/content-trust-levels
+  A: コンテンツ／信頼レベルの／導入: ／全ページに／verified/curat／ed/generated／バッジを表示
+  C: コンテンツ信／頼レベルの／導入: ／全ページに／verified/curat／ed/generated／バッジを表示
+[better] /blog/nextjs-directory-architecture
+  A: Next.jsの／多コンテンツ／サイトに／最適な／ディレクトリ／構造を求めて: ／6パターン／比較と実践
+  C: Next.jsの／多コンテンツ／サイトに／最適な／ディレクトリ／構造を求めて: ／6パターン比／較と実践
+[better] /blog/rss-feed-and-pagination
+  A: サイト基盤の／整備: メモRSS／フィードと／ページング／機能の追加
+  C: サイト基盤の／整備: メモ／RSSフィード／と／ページング機／能の追加
+[better] /blog/yoji-quiz-themes
+  A: 四字熟語／クイズ2テー／マ追加: ／知識テストと／性格診断で／四字熟語を／もっと楽しく
+  C: 四字熟語クイ／ズ／2テーマ追加: ／知識テストと／性格診断で／四字熟語を／もっと楽しく
+[better] /blog/workflow-skill-based-autonomous-operation
+  A: AI／エージェント／を4つの／スキルで／自律運用する ／-- ／サイクルドキ／ュメントと／レビュールー／プの設計
+  C: AIエージェン／トを4つの／スキルで／自律運用する ／-- ／サイクルドキ／ュメントと／レビュールー／プの設計
+[better] /blog/sns-optimization-guide
+  A: 日本のWeb／サイト／管理者の／ためのSNS／最適化ガイド／──／シェアボタン／とOGPの実践／テクニック
+  C: 日本の／Webサイト管／理者のための／SNS最適化ガ／イド──シェ／アボタンと／OGPの／実践テクニッ／ク
+[better] /blog/site-search-feature
+  A: サイト／内検索を／実装しました ／-- Fuse.jsで／500件の／日本語／コンテンツを／横断検索
+  C: サイト内検索／を／実装しました ／-- Fuse.jsで／500件の／日本語コンテ／ンツを／横断検索
+[better] /blog/business-email-and-keigo-tools
+  A: ビジネスメー／ル作成／ツールと／敬語早見表を／公開しました
+  C: ビジネスメー／ル作成ツール／と／敬語早見表を／公開しました
+[WORSE] /blog/dark-mode-toggle
+  A: ダークモード／を手動で切り／替えられるよ／うになりまし／た
+  C: ダークモード／を手動で切り／替えられるよ／うに／なりました
+[better] /blog/irodori-and-kanji-expansion
+  A: イロドリ: ／伝統色250色／で遊ぶ色彩／チャレンジゲ／ームと漢字／データ拡充
+  C: イロドリ: ／伝統色／250色で／遊ぶ色彩チャ／レンジゲーム／と／漢字データ拡／充
+[better] /blog/quiz-diagnosis-feature
+  A: クイズ・／診断テスト／機能を／リリース／しました: ／漢字力診断と／伝統色診断で／遊んでみよう
+  C: クイズ・／診断テスト機／能を／リリースしま／した: ／漢字力診断と／伝統色診断で／遊んでみよう
+[better] /blog/workflow-simplification-stopping-rule-violations
+  A: AI／エージェント／の／ルール違反が／止まらない -- ／ワークフロー／を根本から／作り直した話
+  C: AIエージェン／トの／ルール違反が／止まらない -- ／ワークフロー／を根本から／作り直した話
+[better] /blog/spawner-experiment
+  A: 自動／エージェント／起動システム／「spawner」／の実験と凍結
+  C: 自動エージェ／ント起動シス／テム／「spawner」／の実験と凍結
+[eq] /blog/tools-expansion-10-to-30
+  A: ツールを／10個から／30個に拡充／しました: ／プログラマテ／ィックSEO／戦略の実践
+  C: ツールを／10個から／30個に／拡充しました: ／プログラマテ／ィック／SEO戦略の／実践
+[eq] /blog/japanese-traditional-colors-dictionary
+  A: 日本の／伝統色250色／の辞典を／作りました: ／プログラマテ／ィックSEOの／実践
+  C: 日本の伝統色／250色の／辞典を／作りました: ／プログラマテ／ィックSEOの／実践
+[better] /blog/site-rename-yolos-net
+  A: サイト名を／「yolos.net」／に変更／しました: ／名前の由来と／経緯
+  C: サイト名を／「yolos.net」／に／変更しました: ／名前の由来と／経緯
+[better] /blog/regex-tester-guide
+  A: 正規表現／テスターの／使い方: ／初心者から／実践まで
+  C: 正規表現テス／ターの使い方: ／初心者から／実践まで
+[better] /blog/character-counting-guide
+  A: 文字数／カウントの／正しいやり方: ／全角・半角・／改行の違いと／注意点
+  C: 文字数カウン／トの正しい／やり方: 全角・／半角・改行の／違いと注意点
+[eq] /blog/japanese-word-puzzle-games-guide
+  A: 日本語／パズルゲーム／で毎日脳トレ: ／4つの無料／デイリーゲー／ムの楽しみ方
+  C: 日本語パズル／ゲームで／毎日脳トレ: ／4つの／無料デイリー／ゲームの／楽しみ方
+[better] /blog/five-failures-and-lessons-from-ai-agents
+  A: AI／エージェント／運用で／遭遇した／5つの失敗と／解決策
+  C: AIエージェン／ト運用で／遭遇した／5つの失敗と／解決策
+[better] /blog/nextjs-static-tool-pages-design-pattern
+  A: Next.js App ／Routerで／20個の静的／ツールページ／を構築する／設計パターン
+  C: Next.js App ／Routerで／20個の／静的ツールペ／ージを／構築する／設計パターン
+[better] /blog/how-we-built-10-tools
+  A: 10個の／オンラインツ／ールを2日で／作った方法: ／AI／エージェント／協働の舞台裏
+  C: 10個の／オンラインツ／ールを2日で／作った方法: ／AIエージェン／ト協働の／舞台裏
+[better] /blog/content-strategy-decision
+  A: コンテンツ／戦略の／決め方：AI／エージェント／が10の／候補から／3つの柱を／選んだ理由
+  C: コンテンツ戦／略の決め方：／AIエージェン／トが10の／候補から／3つの柱を／選んだ理由
+[better] /blog/how-we-built-this-site
+  A: AI／エージェント／7人チームで／Webサイトを／ゼロから／構築した／全記録
+  C: AIエージェン／ト／7人チームで／Webサイトを／ゼロから／構築した／全記録

@@ -1,0 +1,15 @@
+import { open, close, settle, BASE } from "./lib.mjs";
+const today = "2026-09-28";
+const fb = (guess, c) => ({ guess, charFeedbacks: c });
+const Y = [fb("一期一会", ["absent","present","absent","absent"]), fb("十人十色", ["absent","absent","correct","absent"]), fb("花鳥風月", ["present","absent","absent","absent"])];
+const seed = { "yoji-kimeru-migrated-v2": "1", "yoji-kimeru-history-intermediate": JSON.stringify({ [today]: { guesses: Y.map(f=>f.guess), feedbacks: Y, status: "playing", guessCount: 3 } }) };
+const o = await open({ width: 375, height: 667, font: 32, storage: seed }); const p = o.page;
+await p.goto(`${BASE}/play/yoji-kimeru`, { waitUntil: "load" }); await settle(p, 1200);
+const info = () => p.evaluate(() => { const s = document.querySelector("main header").nextElementSibling; const r = s.getBoundingClientRect(); const mid = document.elementFromPoint(180, 333); const inp = document.querySelector("main input"); return { scrollY: Math.round(scrollY), docH: document.documentElement.scrollHeight, secTop: Math.round(r.top), secH: Math.round(r.height), mid: mid && (mid.tagName + "." + (mid.className + "").slice(0, 50) + ":" + (mid.textContent || "").trim().slice(0, 20)), inputTop: inp && Math.round(inp.getBoundingClientRect().top) }; });
+await p.evaluate(() => document.querySelector("main header").nextElementSibling.scrollIntoView({ block: "center" })); await p.waitForTimeout(300);
+console.log("before", JSON.stringify(await info()));
+await p.screenshot({ path: "shots/yoji-before.png" });
+await p.reload({ waitUntil: "load" }); await settle(p, 1500);
+console.log("after ", JSON.stringify(await info()));
+await p.screenshot({ path: "shots/yoji-after.png" });
+await close(o);

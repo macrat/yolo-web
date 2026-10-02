@@ -1,0 +1,17 @@
+import { chromium } from 'playwright';
+const [scheme, url, sel, name, dsf] = process.argv.slice(2);
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const ctx = await browser.newContext({ viewport: { width: 375, height: 800 }, colorScheme: scheme, deviceScaleFactor: +(dsf||1) });
+const page = await ctx.newPage();
+await page.goto('http://localhost:3955' + url, { waitUntil: 'networkidle' });
+const el = page.locator(sel).first();
+await el.scrollIntoViewIfNeeded();
+const b = await el.boundingBox();
+const clip = { x: Math.max(0,b.x-12), y: b.y-12, width: b.width+24, height: b.height+24 };
+await page.screenshot({ path: `tmp/review-t2-final/${name}-${scheme}-rest.png`, clip });
+await el.hover(); await page.waitForTimeout(100);
+await page.screenshot({ path: `tmp/review-t2-final/${name}-${scheme}-hover.png`, clip });
+await page.mouse.move(0,0);
+await el.focus(); await page.keyboard.press('Shift+Tab'); await page.keyboard.press('Tab');
+await page.screenshot({ path: `tmp/review-t2-final/${name}-${scheme}-focus.png`, clip });
+await browser.close();

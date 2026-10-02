@@ -1,0 +1,1915 @@
+[
+  {
+    "surface": "quizSolved",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "全力疾走と途中離脱の連鎖",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      },
+      {
+        "index": 1,
+        "heading": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      },
+      {
+        "index": 2,
+        "heading": "この診断が楽しかったらシェア",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "はてブに追加",
+            "name": "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"結果をコピー\"",
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"結果をコピー\"",
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）\": はてブに追加\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E7%A7%81%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%80%81%E5%8F%8B%E9%81%94%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%80%82%E7%9B%B8%E6%80%A7%E3%81%AF%E3%80%8C%E5%85%A8%E5%8A%9B%E7%96%BE%E8%B5%B0%E3%81%A8%E9%80%94%E4%B8%AD%E9%9B%A2%E8%84%B1%E3%81%AE%E9%80%A3%E9%8E%96%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F!%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality%2Fresult%2Fblazing-poet%3Fwith%3Dblazing-poet"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E7%A7%81%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%80%81%E5%8F%8B%E9%81%94%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%80%82%E7%9B%B8%E6%80%A7%E3%81%AF%E3%80%8C%E5%85%A8%E5%8A%9B%E7%96%BE%E8%B5%B0%E3%81%A8%E9%80%94%E4%B8%AD%E9%9B%A2%E8%84%B1%E3%81%AE%E9%80%A3%E9%8E%96%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F!%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality%2Fresult%2Fblazing-poet%3Fwith%3Dblazing-poet"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "私は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」、友達は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」。相性は「全力疾走と途中離脱の連鎖」でした! #あなたに似たキャラ診断 #yolosnet\nhttp://localhost:3447/play/character-personality/result/blazing-poet?with=blazing-poet"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      },
+      {
+        "group": 1,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F!%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality%2Fresult%2Fblazing-poet"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 1,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F!%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality%2Fresult%2Fblazing-poet"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 1,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "あなたに似たキャラ診断の結果は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」でした! #あなたに似たキャラ診断 #yolosnet\nhttp://localhost:3447/play/character-personality/result/blazing-poet"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      },
+      {
+        "group": 2,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "はてブに追加",
+        "opened": [
+          "https://b.hatena.ne.jp/entry/panel/?url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality&btitle=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "hatena",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "あなたに似たキャラ診断\nhttp://localhost:3447/play/character-personality"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "quizSolved",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "全力疾走と途中離脱の連鎖",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      },
+      {
+        "index": 1,
+        "heading": "「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      },
+      {
+        "index": 2,
+        "heading": "この診断が楽しかったらシェア",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "はてブに追加",
+            "name": "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\"",
+      "- button \"この結果をシェア\"",
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）\": はてブに追加\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "あなたに似たキャラ診断",
+            "text": "私は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」、友達は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」。相性は「全力疾走と途中離脱の連鎖」でした! #あなたに似たキャラ診断 #yolosnet",
+            "url": "http://localhost:3447/play/character-personality/result/blazing-poet?with=blazing-poet"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 1,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "あなたに似たキャラ診断",
+            "text": "あなたに似たキャラ診断の結果は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」でした! #あなたに似たキャラ診断 #yolosnet",
+            "url": "http://localhost:3447/play/character-personality/result/blazing-poet"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "はてブに追加",
+        "opened": [
+          "https://b.hatena.ne.jp/entry/panel/?url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fcharacter-personality&btitle=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "hatena",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 2,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "あなたに似たキャラ診断\nhttp://localhost:3447/play/character-personality"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "quiz",
+              "item_id": "character-personality",
+              "content_id": "character-personality"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "resultPage",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "このキャラの成り立ち",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"結果をコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F%EF%BC%81%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AF%3F%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet&url=https%3A%2F%2Fyolos.net%2Fplay%2Fcharacter-personality%2Fresult%2Fblazing-poet"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E3%80%8C%E3%82%88%E3%81%97%E8%A1%8C%E3%81%8F%E3%81%9E%EF%BC%81%E3%80%8D%E3%81%A8%E5%8F%AB%E3%82%93%E3%81%A73%E7%A7%92%E5%BE%8C%E3%81%AB%E7%A9%BA%E3%82%92%E8%A6%8B%E4%B8%8A%E3%81%92%E3%82%8B%E7%82%8E%E3%81%AE%E8%A9%A9%E4%BA%BA%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F%EF%BC%81%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AF%3F%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AB%E4%BC%BC%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet%0Ahttps%3A%2F%2Fyolos.net%2Fplay%2Fcharacter-personality%2Fresult%2Fblazing-poet"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "あなたに似たキャラ診断の結果は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」でした！あなたは? #あなたに似たキャラ診断 #yolosnet\nhttps://yolos.net/play/character-personality/result/blazing-poet"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "resultPage",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "このキャラの成り立ち",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "あなたに似たキャラ診断",
+            "text": "あなたに似たキャラ診断の結果は「「よし行くぞ！」と叫んで3秒後に空を見上げる炎の詩人」でした！あなたは? #あなたに似たキャラ診断 #yolosnet",
+            "url": "https://yolos.net/play/character-personality/result/blazing-poet"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-personality",
+              "content_id": "quiz-character-personality",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  },
+  {
+    "surface": "fortuneResult",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "お前、こういうとこあるだろ?",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      },
+      {
+        "index": 1,
+        "heading": "お前、こういうとこあるだろ?",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"結果をコピー\"",
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"結果をコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E7%B7%A0%E5%88%873%E5%88%86%E5%89%8D%E3%81%AB%E6%9C%AC%E6%B0%97%E5%87%BA%E3%81%99%E7%82%8E%E3%81%AE%E5%8F%B8%E4%BB%A4%E5%A1%94%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F%EF%BC%81%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AF%3F%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet&url=https%3A%2F%2Fyolos.net%2Fplay%2Fcharacter-fortune%2Fresult%2Fcommander"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E7%B7%A0%E5%88%873%E5%88%86%E5%89%8D%E3%81%AB%E6%9C%AC%E6%B0%97%E5%87%BA%E3%81%99%E7%82%8E%E3%81%AE%E5%8F%B8%E4%BB%A4%E5%A1%94%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F%EF%BC%81%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AF%3F%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet%0Ahttps%3A%2F%2Fyolos.net%2Fplay%2Fcharacter-fortune%2Fresult%2Fcommander"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "あなたの守護キャラ診断の結果は「締切3分前に本気出す炎の司令塔」でした！あなたは? #あなたの守護キャラ診断 #yolosnet\nhttps://yolos.net/play/character-fortune/result/commander"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      },
+      {
+        "group": 1,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E7%B7%A0%E5%88%873%E5%88%86%E5%89%8D%E3%81%AB%E6%9C%AC%E6%B0%97%E5%87%BA%E3%81%99%E7%82%8E%E3%81%AE%E5%8F%B8%E4%BB%A4%E5%A1%94%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F%EF%BC%81%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AF%3F%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet&url=https%3A%2F%2Fyolos.net%2Fplay%2Fcharacter-fortune%2Fresult%2Fcommander"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 1,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AF%E3%80%8C%E7%B7%A0%E5%88%873%E5%88%86%E5%89%8D%E3%81%AB%E6%9C%AC%E6%B0%97%E5%87%BA%E3%81%99%E7%82%8E%E3%81%AE%E5%8F%B8%E4%BB%A4%E5%A1%94%E3%80%8D%E3%81%A7%E3%81%97%E3%81%9F%EF%BC%81%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AF%3F%20%23%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E5%AE%88%E8%AD%B7%E3%82%AD%E3%83%A3%E3%83%A9%E8%A8%BA%E6%96%AD%20%23yolosnet%0Ahttps%3A%2F%2Fyolos.net%2Fplay%2Fcharacter-fortune%2Fresult%2Fcommander"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 1,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "あなたの守護キャラ診断の結果は「締切3分前に本気出す炎の司令塔」でした！あなたは? #あなたの守護キャラ診断 #yolosnet\nhttps://yolos.net/play/character-fortune/result/commander"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "fortuneResult",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "お前、こういうとこあるだろ?",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      },
+      {
+        "index": 1,
+        "heading": "お前、こういうとこあるだろ?",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\"",
+      "- button \"この結果をシェア\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "あなたの守護キャラ診断",
+            "text": "あなたの守護キャラ診断の結果は「締切3分前に本気出す炎の司令塔」でした！あなたは? #あなたの守護キャラ診断 #yolosnet",
+            "url": "https://yolos.net/play/character-fortune/result/commander"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 1,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "あなたの守護キャラ診断",
+            "text": "あなたの守護キャラ診断の結果は「締切3分前に本気出す炎の司令塔」でした！あなたは? #あなたの守護キャラ診断 #yolosnet",
+            "url": "https://yolos.net/play/character-fortune/result/commander"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "diagnosis",
+              "item_id": "quiz-character-fortune",
+              "content_id": "quiz-character-fortune",
+              "surface": "text"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  },
+  {
+    "surface": "daily",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "他のジャンルも試してみよう",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"結果をコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E4%BB%8A%E6%97%A5%E3%81%AE%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E9%81%8B%E5%8B%A2%E3%81%AF%E3%80%8C%E6%8A%98%E3%82%8A%E7%B4%99%E9%81%8B%20%E5%A4%89%E5%BD%A2%E4%B8%AD%E3%80%8D(4.5%2F5)%20%E3%81%A7%E3%81%97%E3%81%9F!%20%23%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E9%81%8B%E5%8B%A2%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fdaily"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "fortune",
+              "item_id": "fortune-daily",
+              "content_id": "fortune-daily"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E4%BB%8A%E6%97%A5%E3%81%AE%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E9%81%8B%E5%8B%A2%E3%81%AF%E3%80%8C%E6%8A%98%E3%82%8A%E7%B4%99%E9%81%8B%20%E5%A4%89%E5%BD%A2%E4%B8%AD%E3%80%8D(4.5%2F5)%20%E3%81%A7%E3%81%97%E3%81%9F!%20%23%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E9%81%8B%E5%8B%A2%20%23yolosnet%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fplay%2Fdaily"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "fortune",
+              "item_id": "fortune-daily",
+              "content_id": "fortune-daily"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "今日のユーモア運勢は「折り紙運 変形中」(4.5/5) でした! #ユーモア運勢 #yolosnet\nhttp://localhost:3447/play/daily"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "fortune",
+              "item_id": "fortune-daily",
+              "content_id": "fortune-daily"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "daily",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "他のジャンルも試してみよう",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "今日のユーモア運勢",
+            "text": "今日のユーモア運勢は「折り紙運 変形中」(4.5/5) でした! #ユーモア運勢 #yolosnet",
+            "url": "http://localhost:3447/play/daily"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "fortune",
+              "item_id": "fortune-daily",
+              "content_id": "fortune-daily"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  },
+  {
+    "surface": "nakamawake",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "残念...",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"結果をコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23226%20X%0A%0A%23%E3%83%8A%E3%82%AB%E3%83%9E%E3%83%AF%E3%82%B1%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fnakamawake"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "game",
+              "item_id": "nakamawake",
+              "content_id": "nakamawake"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "ナカマワケ #226 X\n\n#ナカマワケ #yolosnet\nhttp://localhost:3447/play/nakamawake"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "game",
+              "item_id": "nakamawake",
+              "content_id": "nakamawake"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "nakamawake",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "残念...",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "ナカマワケ",
+            "text": "ナカマワケ #226 X\n\n#ナカマワケ #yolosnet",
+            "url": "http://localhost:3447/play/nakamawake"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "game",
+              "item_id": "nakamawake",
+              "content_id": "nakamawake"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  },
+  {
+    "surface": "gamePage",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "このゲームが楽しかったらシェア",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "はてブに追加",
+            "name": "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）\": はてブに追加\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E6%BC%A2%E5%AD%97%E3%82%AB%E3%83%8A%E3%83%BC%E3%83%AB&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fkanji-kanaru"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E6%BC%A2%E5%AD%97%E3%82%AB%E3%83%8A%E3%83%BC%E3%83%AB%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fplay%2Fkanji-kanaru"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "はてブに追加",
+        "opened": [
+          "https://b.hatena.ne.jp/entry/panel/?url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Fkanji-kanaru&btitle=%E6%BC%A2%E5%AD%97%E3%82%AB%E3%83%8A%E3%83%BC%E3%83%AB"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "hatena",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "漢字カナール\nhttp://localhost:3447/play/kanji-kanaru"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "blog",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "この記事をシェア",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "はてブに追加",
+            "name": "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）\": はてブに追加\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%82%BF%E3%82%A4%E3%83%97%E8%A8%BA%E6%96%AD%E3%81%AE%E5%90%8C%E7%82%B9%E3%81%AF%E8%A8%AD%E5%95%8F%E3%81%AE%E6%AC%A0%E9%99%A5%E3%80%81%E5%85%A8%E5%9B%9E%E7%AD%94%E3%82%92%E6%95%B0%E3%81%88%E4%B8%8A%E3%81%92%E3%81%A6%E8%A6%8B%E3%81%A4%E3%81%91%E3%82%8B&url=http%3A%2F%2Flocalhost%3A3447%2Fblog%2Fpersonality-quiz-tie-enumeration"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "blog",
+              "item_id": "personality-quiz-tie-enumeration",
+              "content_id": "personality-quiz-tie-enumeration"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%82%BF%E3%82%A4%E3%83%97%E8%A8%BA%E6%96%AD%E3%81%AE%E5%90%8C%E7%82%B9%E3%81%AF%E8%A8%AD%E5%95%8F%E3%81%AE%E6%AC%A0%E9%99%A5%E3%80%81%E5%85%A8%E5%9B%9E%E7%AD%94%E3%82%92%E6%95%B0%E3%81%88%E4%B8%8A%E3%81%92%E3%81%A6%E8%A6%8B%E3%81%A4%E3%81%91%E3%82%8B%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fblog%2Fpersonality-quiz-tie-enumeration"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "blog",
+              "item_id": "personality-quiz-tie-enumeration",
+              "content_id": "personality-quiz-tie-enumeration"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "はてブに追加",
+        "opened": [
+          "https://b.hatena.ne.jp/entry/panel/?url=http%3A%2F%2Flocalhost%3A3447%2Fblog%2Fpersonality-quiz-tie-enumeration&btitle=%E3%82%BF%E3%82%A4%E3%83%97%E8%A8%BA%E6%96%AD%E3%81%AE%E5%90%8C%E7%82%B9%E3%81%AF%E8%A8%AD%E5%95%8F%E3%81%AE%E6%AC%A0%E9%99%A5%E3%80%81%E5%85%A8%E5%9B%9E%E7%AD%94%E3%82%92%E6%95%B0%E3%81%88%E4%B8%8A%E3%81%92%E3%81%A6%E8%A6%8B%E3%81%A4%E3%81%91%E3%82%8B"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "hatena",
+              "content_type": "blog",
+              "item_id": "personality-quiz-tie-enumeration",
+              "content_id": "personality-quiz-tie-enumeration"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "タイプ診断の同点は設問の欠陥、全回答を数え上げて見つける\nhttp://localhost:3447/blog/personality-quiz-tie-enumeration"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "blog",
+              "item_id": "personality-quiz-tie-enumeration",
+              "content_id": "personality-quiz-tie-enumeration"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "tool",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "このツールが便利だったらシェア",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "はてブに追加",
+            "name": "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）\": はてブに追加\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E6%96%87%E5%AD%97%E6%95%B0%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88&url=http%3A%2F%2Flocalhost%3A3447%2Ftools%2Fchar-count"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "tool",
+              "item_id": "char-count",
+              "content_id": "char-count"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E6%96%87%E5%AD%97%E6%95%B0%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%0Ahttp%3A%2F%2Flocalhost%3A3447%2Ftools%2Fchar-count"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "tool",
+              "item_id": "char-count",
+              "content_id": "char-count"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "はてブに追加",
+        "opened": [
+          "https://b.hatena.ne.jp/entry/panel/?url=http%3A%2F%2Flocalhost%3A3447%2Ftools%2Fchar-count&btitle=%E6%96%87%E5%AD%97%E6%95%B0%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "hatena",
+              "content_type": "tool",
+              "item_id": "char-count",
+              "content_id": "char-count"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "文字数カウント\nhttp://localhost:3447/tools/char-count"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "tool",
+              "item_id": "char-count",
+              "content_id": "char-count"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "kanji",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "基本情報",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E6%BC%A2%E5%AD%97%E3%80%8C%E6%B0%B4%E3%80%8D%E3%81%AE%E6%83%85%E5%A0%B1&url=http%3A%2F%2Flocalhost%3A3447%2Fdictionary%2Fkanji%2F%25E6%25B0%25B4"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "dictionary",
+              "item_id": "/dictionary/kanji/%E6%B0%B4",
+              "content_id": "/dictionary/kanji/%E6%B0%B4"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E6%BC%A2%E5%AD%97%E3%80%8C%E6%B0%B4%E3%80%8D%E3%81%AE%E6%83%85%E5%A0%B1%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fdictionary%2Fkanji%2F%25E6%25B0%25B4"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "dictionary",
+              "item_id": "/dictionary/kanji/%E6%B0%B4",
+              "content_id": "/dictionary/kanji/%E6%B0%B4"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "漢字「水」の情報\nhttp://localhost:3447/dictionary/kanji/%E6%B0%B4"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "dictionary",
+              "item_id": "/dictionary/kanji/%E6%B0%B4",
+              "content_id": "/dictionary/kanji/%E6%B0%B4"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "humor",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "解説",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "LINE でシェア",
+            "name": "LINE でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "はてブに追加",
+            "name": "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "URLをコピー",
+            "name": "URLをコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"LINE でシェア（外部サイト・新しいタブで開く）\": LINE でシェア\n- button \"はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）\": はてブに追加\n- button \"URLをコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%80%90%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E8%BE%9E%E6%9B%B8%E3%80%91%E6%9C%9D%3A%201%E6%97%A5%E3%81%AE%E4%B8%AD%E3%81%A7%E5%94%AF%E4%B8%80%E3%80%81%E6%A0%B9%E6%8B%A0%E3%81%AE%E3%81%AA%E3%81%84%E6%B8%85%E3%80%85%E3%81%97%E3%81%95%E3%81%A8%E6%A0%B9%E6%8B%A0%E3%81%AE%E3%81%82%E3%82%8B%E7%9C%A0%E6%B0%97%E3%81%8C%E5%90%8C%E6%99%82%E3%81%AB%E5%AD%98%E5%9C%A8%E3%81%99%E3%82%8B%E6%99%82%E9%96%93%E5%B8%AF%E3%80%82%E7%9B%AE%E8%A6%9A%E3%81%BE%E3%81%97%E6%99%82%E8%A8%88%E3%81%AF%E3%81%9D%E3%81%AE%E7%9F%9B%E7%9B%BE%E3%82%92%E6%AF%8E%E6%9C%9D%E6%AD%A3%E7%A2%BA%E3%81%AB%E8%A8%98%E9%8C%B2%E3%81%99%E3%82%8B%E3%80%82%20%7C%20yolos.net&url=http%3A%2F%2Flocalhost%3A3447%2Fdictionary%2Fhumor%2Fmorning"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "humor-dictionary",
+              "item_id": "morning",
+              "content_id": "morning"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "LINE でシェア",
+        "opened": [
+          "https://line.me/R/share?text=%E3%80%90%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E8%BE%9E%E6%9B%B8%E3%80%91%E6%9C%9D%3A%201%E6%97%A5%E3%81%AE%E4%B8%AD%E3%81%A7%E5%94%AF%E4%B8%80%E3%80%81%E6%A0%B9%E6%8B%A0%E3%81%AE%E3%81%AA%E3%81%84%E6%B8%85%E3%80%85%E3%81%97%E3%81%95%E3%81%A8%E6%A0%B9%E6%8B%A0%E3%81%AE%E3%81%82%E3%82%8B%E7%9C%A0%E6%B0%97%E3%81%8C%E5%90%8C%E6%99%82%E3%81%AB%E5%AD%98%E5%9C%A8%E3%81%99%E3%82%8B%E6%99%82%E9%96%93%E5%B8%AF%E3%80%82%E7%9B%AE%E8%A6%9A%E3%81%BE%E3%81%97%E6%99%82%E8%A8%88%E3%81%AF%E3%81%9D%E3%81%AE%E7%9F%9B%E7%9B%BE%E3%82%92%E6%AF%8E%E6%9C%9D%E6%AD%A3%E7%A2%BA%E3%81%AB%E8%A8%98%E9%8C%B2%E3%81%99%E3%82%8B%E3%80%82%20%7C%20yolos.net%0Ahttp%3A%2F%2Flocalhost%3A3447%2Fdictionary%2Fhumor%2Fmorning"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "line",
+              "content_type": "humor-dictionary",
+              "item_id": "morning",
+              "content_id": "morning"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "はてブに追加",
+        "opened": [
+          "https://b.hatena.ne.jp/entry/panel/?url=http%3A%2F%2Flocalhost%3A3447%2Fdictionary%2Fhumor%2Fmorning&btitle=%E3%80%90%E3%83%A6%E3%83%BC%E3%83%A2%E3%82%A2%E8%BE%9E%E6%9B%B8%E3%80%91%E6%9C%9D%3A%201%E6%97%A5%E3%81%AE%E4%B8%AD%E3%81%A7%E5%94%AF%E4%B8%80%E3%80%81%E6%A0%B9%E6%8B%A0%E3%81%AE%E3%81%AA%E3%81%84%E6%B8%85%E3%80%85%E3%81%97%E3%81%95%E3%81%A8%E6%A0%B9%E6%8B%A0%E3%81%AE%E3%81%82%E3%82%8B%E7%9C%A0%E6%B0%97%E3%81%8C%E5%90%8C%E6%99%82%E3%81%AB%E5%AD%98%E5%9C%A8%E3%81%99%E3%82%8B%E6%99%82%E9%96%93%E5%B8%AF%E3%80%82%E7%9B%AE%E8%A6%9A%E3%81%BE%E3%81%97%E6%99%82%E8%A8%88%E3%81%AF%E3%81%9D%E3%81%AE%E7%9F%9B%E7%9B%BE%E3%82%92%E6%AF%8E%E6%9C%9D%E6%AD%A3%E7%A2%BA%E3%81%AB%E8%A8%98%E9%8C%B2%E3%81%99%E3%82%8B%E3%80%82%20%7C%20yolos.net"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "hatena",
+              "content_type": "humor-dictionary",
+              "item_id": "morning",
+              "content_id": "morning"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "URLをコピー",
+        "opened": [],
+        "copied": [
+          "【ユーモア辞書】朝: 1日の中で唯一、根拠のない清々しさと根拠のある眠気が同時に存在する時間帯。目覚まし時計はその矛盾を毎朝正確に記録する。 | yolos.net\nhttp://localhost:3447/dictionary/humor/morning"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "humor-dictionary",
+              "item_id": "morning",
+              "content_id": "morning"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "irodori",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "結果",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          },
+          {
+            "text": "画像を保存",
+            "name": "画像を保存"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"結果をコピー\"\n- button \"画像を保存\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E3%82%A4%E3%83%AD%E3%83%89%E3%83%AA%20%23220%20%E3%82%B9%E3%82%B3%E3%82%A2%3A%2039%2F100%20(D%E3%83%A9%E3%83%B3%E3%82%AF)%0A%F0%9F%9F%A9%F0%9F%9F%A5%F0%9F%9F%A5%F0%9F%9F%A5%F0%9F%9F%A5%0A%23%E3%82%A4%E3%83%AD%E3%83%89%E3%83%AA%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3447%2Fplay%2Firodori"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "game",
+              "item_id": "irodori",
+              "content_id": "irodori"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "イロドリ #220 スコア: 39/100 (Dランク)\n🟩🟥🟥🟥🟥\n#イロドリ #yolosnet\nhttp://localhost:3447/play/irodori"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "game",
+              "item_id": "irodori",
+              "content_id": "irodori"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "irodori",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "結果",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          },
+          {
+            "text": "画像を保存",
+            "name": "画像を保存"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\"\n- button \"画像を保存\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "イロドリ",
+            "text": "イロドリ #220 スコア: 39/100 (Dランク)\n🟩🟥🟥🟥🟥\n#イロドリ #yolosnet",
+            "url": "http://localhost:3447/play/irodori"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "game",
+              "item_id": "irodori",
+              "content_id": "irodori"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+ {
+  "w": 375,
+  "fs": 16,
+  "msgs": [
+   "warning: [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net"
+  ],
+  "devOverlay": ":host {\n  all: initial;\n\n  /* the direction property is not reset by 'all' */\n  direction: ltr;\n}\n\n/*!\n * Bootstrap Reboot v4.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 The Bootstrap Authors\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blo"
+ },
+ {
+  "w": 320,
+  "fs": 32,
+  "msgs": [
+   "warning: [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net"
+  ],
+  "devOverlay": ":host {\n  all: initial;\n\n  /* the direction property is not reset by 'all' */\n  direction: ltr;\n}\n\n/*!\n * Bootstrap Reboot v4.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 The Bootstrap Authors\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blo"
+ },
+ {
+  "w": 1280,
+  "fs": 16,
+  "msgs": [
+   "warning: [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net"
+  ],
+  "devOverlay": ":host {\n  all: initial;\n\n  /* the direction property is not reset by 'all' */\n  direction: ltr;\n}\n\n/*!\n * Bootstrap Reboot v4.4.1 (https://getbootstrap.com/)\n * Copyright 2011-2019 The Bootstrap Authors\n * Copyright 2011-2019 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blo"
+ }
+]

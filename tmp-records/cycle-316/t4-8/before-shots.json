@@ -1,0 +1,410 @@
+[
+ {
+  "name": "before-megane-375x667-light",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★★☆(4.4)",
+   "☆"
+  ],
+  "starColors": [
+   "lab(77.0975 7.60436 62.8056)",
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "4.4 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1078,
+   "w": 100,
+   "h": 44,
+   "bottom": 1122
+  }
+ },
+ {
+  "name": "before-megane-375x667-dark",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★★☆(4.4)",
+   "☆"
+  ],
+  "starColors": [
+   "lab(79.426 7.46208 62.3152)",
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "4.4 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1078,
+   "w": 100,
+   "h": 44,
+   "bottom": 1122
+  }
+ },
+ {
+  "name": "before-megane-1280x800-light",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★★☆(4.4)",
+   "☆"
+  ],
+  "starColors": [
+   "lab(77.0975 7.60436 62.8056)",
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "4.4 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 348,
+   "y": 969,
+   "w": 100,
+   "h": 44,
+   "bottom": 1013
+  }
+ },
+ {
+  "name": "before-megane-1280x800-dark",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★★☆(4.4)",
+   "☆"
+  ],
+  "starColors": [
+   "lab(79.426 7.46208 62.3152)",
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "4.4 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 348,
+   "y": 969,
+   "w": 100,
+   "h": 44,
+   "bottom": 1013
+  }
+ },
+ {
+  "name": "before-megane-320x667-light",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★★☆(4.4)",
+   "☆"
+  ],
+  "starColors": [
+   "lab(77.0975 7.60436 62.8056)",
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "4.4 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1241,
+   "w": 100,
+   "h": 44,
+   "bottom": 1285
+  }
+ },
+ {
+  "name": "before-megane-320x667-dark",
+  "fortune": "メガネ運 ピント合ってます",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★★☆(4.4)",
+   "☆"
+  ],
+  "starColors": [
+   "lab(79.426 7.46208 62.3152)",
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "4.4 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1241,
+   "w": 100,
+   "h": 44,
+   "bottom": 1285
+  }
+ },
+ {
+  "name": "before-kasa-375x667-light",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★☆☆(3.2)",
+   "☆☆"
+  ],
+  "starColors": [
+   "lab(77.0975 7.60436 62.8056)",
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "3.2 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1065,
+   "w": 100,
+   "h": 44,
+   "bottom": 1109
+  }
+ },
+ {
+  "name": "before-kasa-375x667-dark",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★☆☆(3.2)",
+   "☆☆"
+  ],
+  "starColors": [
+   "lab(79.426 7.46208 62.3152)",
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "3.2 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1065,
+   "w": 100,
+   "h": 44,
+   "bottom": 1109
+  }
+ },
+ {
+  "name": "before-kasa-1280x800-light",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★☆☆(3.2)",
+   "☆☆"
+  ],
+  "starColors": [
+   "lab(77.0975 7.60436 62.8056)",
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "3.2 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 348,
+   "y": 956,
+   "w": 100,
+   "h": 44,
+   "bottom": 1000
+  }
+ },
+ {
+  "name": "before-kasa-1280x800-dark",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★☆☆(3.2)",
+   "☆☆"
+  ],
+  "starColors": [
+   "lab(79.426 7.46208 62.3152)",
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "3.2 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 348,
+   "y": 956,
+   "w": 100,
+   "h": 44,
+   "bottom": 1000
+  }
+ },
+ {
+  "name": "before-kasa-320x667-light",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★☆☆(3.2)",
+   "☆☆"
+  ],
+  "starColors": [
+   "lab(77.0975 7.60436 62.8056)",
+   "lab(3.04863 0 0)"
+  ],
+  "inkRgb": "lab(3.04863 0 0)",
+  "ink": "lab(3.04863% 0 0)",
+  "starRole": [
+   "3.2 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1259,
+   "w": 100,
+   "h": 44,
+   "bottom": 1303
+  }
+ },
+ {
+  "name": "before-kasa-320x667-dark",
+  "fortune": "傘運 やや上向き",
+  "scrollWidth": 320,
+  "innerWidth": 320,
+  "box": null,
+  "boxName": null,
+  "heading": null,
+  "starText": [
+   "★★★☆☆(3.2)",
+   "☆☆"
+  ],
+  "starColors": [
+   "lab(79.426 7.46208 62.3152)",
+   "lab(96.52 -0.0000298023 0.0000119209)"
+  ],
+  "inkRgb": "lab(96.52 -0.0000298023 0.0000119209)",
+  "ink": "lab(96.52% -.0000298023 .0000119209)",
+  "starRole": [
+   "3.2 / 5",
+   null
+  ],
+  "tsutsumi": true,
+  "seal": true,
+  "h1": null,
+  "boxAnimation": null,
+  "shareBtn": {
+   "x": 35,
+   "y": 1259,
+   "w": 100,
+   "h": 44,
+   "bottom": 1303
+  }
+ }
+]

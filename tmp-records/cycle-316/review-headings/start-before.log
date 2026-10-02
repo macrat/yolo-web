@@ -1,0 +1,10 @@
+▲ Next.js 16.3.0
+- Local:         http://localhost:3917
+- Network:       http://192.0.2.2:3917
+✓ Ready in 539ms
+✓ Running next.config.ts took 62ms
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3917". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase

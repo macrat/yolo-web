@@ -1,0 +1,6997 @@
+{
+ "solved-cp-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 371,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1126,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 1338,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 1738,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 2226,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 2712,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 5521,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 6146,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 6781,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 7024,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 7631,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-cp-ref-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 371,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1126,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 1338,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 1738,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 2226,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "炎の夢と霧の夢",
+    "y": 2614,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 3277,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 6086,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 6711,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 7346,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 7589,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 8196,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-tc-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "山吹色",
+    "y": 413,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 835,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色の物語",
+    "y": 1071,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が映える風景",
+    "y": 1377,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が現れる場面",
+    "y": 1568,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色からのひとこと",
+    "y": 2087,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 2299,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3012,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3606,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4084,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4327,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4934,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-an-ref-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "日本にしかいない動物で性格診断",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ニホンキツネ⁠—⁠—お稲荷さんの看板を背負う孤高のリアリスト",
+    "y": 371,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1312,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの強み",
+    "y": 1471,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの弱み",
+    "y": 1856,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この動物に似た行動パターン",
+    "y": 2139,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日試してほしいこと",
+    "y": 2595,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "日本昔話の共演者",
+    "y": 2889,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（12）",
+    "y": 3647,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 5053,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 5647,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 6125,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 6368,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6975,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-mu-ref-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "音楽性格診断",
+    "y": 183,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ひとり開拓民",
+    "y": 285,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 854,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な強み",
+    "y": 1013,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な弱み",
+    "y": 1359,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽あるある",
+    "y": 1704,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日の音楽ライフのヒント",
+    "y": 2286,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "布教者と隠者の対話",
+    "y": 2549,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 3181,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3889,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4483,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 5024,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5267,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5874,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-st-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "理系思考タイプ診断 — あなたはアインシュタイン型？チューリ",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "キュリー型思考者",
+    "y": 496,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1300,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考タイプの持ち味",
+    "y": 1459,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "理系脳あるある",
+    "y": 2198,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考をもっと活かすには",
+    "y": 3031,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（10）",
+    "y": 3306,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 4144,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "あなたの思考プロフィール",
+    "y": 4669,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 5408,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 5981,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 6223,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6831,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-cf-ref-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたの守護キャラ診断",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "傘を3本持ち歩く晴れの日の守護神",
+    "y": 371,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 953,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "こういうこと、してないかな...多分ね",
+    "y": 1270,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "守護神からの本音",
+    "y": 1936,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 2650,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "データと直感の安全保障会議",
+    "y": 3290,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4068,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4502,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4745,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5352,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-jc-ref-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたが極めるべき日本文化診断",
+    "y": 227,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "落語タイプ⁠—⁠—人を笑わせる「話芸」の天才",
+    "y": 413,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1339,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 1591,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "静かな書斎と賑やかな寄席",
+    "y": 2200,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3073,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3645,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3888,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4495,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-kl-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字力診断",
+    "y": 183,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "漢字の卵",
+    "y": 285,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 570,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 893,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 1486,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このクイズを勧める",
+    "y": 1902,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2144,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2598,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-cp-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 1192,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 1593,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 2143,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 2710,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 5426,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5601,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6208,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-cp-with-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 1192,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 1593,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 2143,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "熱量の方向が違う同志",
+    "y": 2552,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 3185,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 5901,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 6076,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6683,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-cf-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に本気出す炎の司令塔",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "お前、こういうとこあるだろ?",
+    "y": 665,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "司令塔からの本音",
+    "y": 1279,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの守護を受けている人と一緒にいると",
+    "y": 1868,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（6）",
+    "y": 2430,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3226,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3401,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4008,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-ws-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "一字千金タイプ",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この言葉センスの持ち味",
+    "y": 1182,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "こんな言葉づかいをしがち",
+    "y": 2015,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "言葉センスをもっと活かすには",
+    "y": 2691,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2966,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3857,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4032,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4639,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-tc-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色",
+    "y": 321,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "y": 890,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "y": 1196,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "y": 1387,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "y": 1969,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2293,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2913,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3088,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3695,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-an-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 321,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 1331,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 1716,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 1999,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 2423,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 2779,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 4092,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4267,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4874,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-an-with-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 321,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 1331,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 1716,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 1999,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 2423,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ボスと癒し担当",
+    "y": 2770,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 3285,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 4598,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4774,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5381,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-mu-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 984,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 1329,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 1675,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 2225,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2549,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3165,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3340,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3947,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-mu-with-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 984,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 1329,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 1675,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 2225,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "最強の拡散装置",
+    "y": 2514,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 3030,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3645,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3820,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4427,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-yo-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "初志貫徹",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語の成り立ち",
+    "y": 732,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語のルーツ",
+    "y": 1007,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語が現れる日常",
+    "y": 1313,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "座右の銘として",
+    "y": 1801,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2093,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2708,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2884,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3491,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-ia-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "時間魔術師見習い",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あなたの悩みの本質",
+    "y": 870,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ついやってしまうこと",
+    "y": 1207,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "本当に使える小さなヒント",
+    "y": 1663,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（7）",
+    "y": 1937,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2488,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2663,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3270,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-co-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "逆オプティミスト",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あるある行動",
+    "y": 838,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人物像",
+    "y": 1389,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人と一緒にいると",
+    "y": 1821,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプを数字で見ると",
+    "y": 2190,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2512,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3127,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3302,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3909,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-uc-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "自動販売機",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在の本質",
+    "y": 901,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "なぜ相性が良いのか",
+    "y": 1207,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在と共鳴する日常",
+    "y": 1482,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在から学べること",
+    "y": 2001,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2275,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2890,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3065,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3672,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-kl-320": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字ビギナー",
+    "y": 277,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 611,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 786,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 1240,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-cp-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 139,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 283,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 944,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 1155,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 1493,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 1981,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 2436,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 4930,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 5492,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 6033,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 6276,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6883,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-cp-ref-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 139,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 283,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 944,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 1155,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 1493,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 1981,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "炎の夢と霧の夢",
+    "y": 2338,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 2969,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 5463,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 6026,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 6567,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 6809,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 7417,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-tc-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "y": 183,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "山吹色",
+    "y": 327,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 687,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色の物語",
+    "y": 922,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が映える風景",
+    "y": 1197,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が現れる場面",
+    "y": 1388,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色からのひとこと",
+    "y": 1875,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 2056,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 2769,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3332,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3747,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3990,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4597,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-an-ref-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "日本にしかいない動物で性格診断",
+    "y": 183,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ニホンキツネ⁠—⁠—お稲荷さんの看板を背負う孤高のリアリスト",
+    "y": 327,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1112,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの強み",
+    "y": 1271,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの弱み",
+    "y": 1594,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この動物に似た行動パターン",
+    "y": 1877,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日試してほしいこと",
+    "y": 2238,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "日本昔話の共演者",
+    "y": 2501,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（12）",
+    "y": 3195,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 4539,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 5102,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 5517,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5760,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6367,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-mu-ref-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "音楽性格診断",
+    "y": 139,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ひとり開拓民",
+    "y": 241,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 747,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な強み",
+    "y": 906,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な弱み",
+    "y": 1189,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽あるある",
+    "y": 1472,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日の音楽ライフのヒント",
+    "y": 1959,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "布教者と隠者の対話",
+    "y": 2191,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 2791,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3499,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4062,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4509,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4751,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5358,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-st-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "理系思考タイプ診断 — あなたはアインシュタイン型？チューリ",
+    "y": 183,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "キュリー型思考者",
+    "y": 410,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1088,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考タイプの持ち味",
+    "y": 1248,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "理系脳あるある",
+    "y": 1892,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考をもっと活かすには",
+    "y": 2600,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（10）",
+    "y": 2843,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3681,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "あなたの思考プロフィール",
+    "y": 4175,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4965,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 5443,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5685,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6293,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-cf-ref-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたの守護キャラ診断",
+    "y": 139,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "傘を3本持ち歩く晴れの日の守護神",
+    "y": 283,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 802,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "こういうこと、してないかな...多分ね",
+    "y": 1088,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "守護神からの本音",
+    "y": 1607,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 2226,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "データと直感の安全保障会議",
+    "y": 2835,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3582,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3922,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4164,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4771,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-jc-ref-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたが極めるべき日本文化診断",
+    "y": 183,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "落語タイプ⁠—⁠—人を笑わせる「話芸」の天才",
+    "y": 327,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1098,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 1350,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "静かな書斎と賑やかな寄席",
+    "y": 1927,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 2737,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3278,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3521,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4128,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-kl-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字力診断",
+    "y": 139,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "漢字の卵",
+    "y": 241,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 494,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 798,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 1361,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このクイズを勧める",
+    "y": 1776,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2019,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2473,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-cp-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 993,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 1331,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 1787,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 2303,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 4704,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4879,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5487,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-cp-with-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 993,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 1331,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 1787,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "熱量の方向が違う同志",
+    "y": 2164,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 2747,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 5148,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5323,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5930,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-cf-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に本気出す炎の司令塔",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "お前、こういうとこあるだろ?",
+    "y": 560,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "司令塔からの本音",
+    "y": 1048,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの守護を受けている人と一緒にいると",
+    "y": 1543,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（6）",
+    "y": 2074,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2662,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2837,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3444,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-ws-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "一字千金タイプ",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この言葉センスの持ち味",
+    "y": 1024,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "こんな言葉づかいをしがち",
+    "y": 1700,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "言葉センスをもっと活かすには",
+    "y": 2314,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2557,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3273,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3448,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4056,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-tc-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "y": 751,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "y": 1026,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "y": 1217,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "y": 1704,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1978,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2598,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2773,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3380,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-an-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 1129,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 1451,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 1703,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 2064,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 2369,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3620,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3795,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4402,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-an-with-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 1129,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 1451,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 1703,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 2064,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ボスと癒し担当",
+    "y": 2379,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 2844,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 4095,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4270,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4877,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-mu-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 189,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 782,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 1065,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 1347,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 1803,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2077,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2692,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2867,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3475,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-mu-with-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 189,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 782,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 1065,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 1347,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 1803,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "最強の拡散装置",
+    "y": 2061,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2526,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3141,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3317,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3924,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-yo-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "初志貫徹",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語の成り立ち",
+    "y": 688,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語のルーツ",
+    "y": 931,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語が現れる日常",
+    "y": 1206,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "座右の銘として",
+    "y": 1631,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1905,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2520,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2695,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3302,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-ia-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "時間魔術師見習い",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あなたの悩みの本質",
+    "y": 763,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ついやってしまうこと",
+    "y": 1038,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "本当に使える小さなヒント",
+    "y": 1462,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（7）",
+    "y": 1736,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2287,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2462,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3069,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-co-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "逆オプティミスト",
+    "y": 189,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あるある行動",
+    "y": 719,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人物像",
+    "y": 1206,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人と一緒にいると",
+    "y": 1607,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプを数字で見ると",
+    "y": 1945,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2204,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2819,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2994,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3601,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-uc-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "自動販売機",
+    "y": 233,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在の本質",
+    "y": 794,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "なぜ相性が良いのか",
+    "y": 1069,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在と共鳴する日常",
+    "y": 1313,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在から学べること",
+    "y": 1737,
+    "fontSize": "17px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1979,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2595,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2770,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3377,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-kl-375": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字ビギナー",
+    "y": 189,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 492,
+    "fontSize": "17px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 667,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 1121,
+    "fontSize": "23.84px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-cp-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 297,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 741,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 920,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 1153,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 1535,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 1916,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3650,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4124,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4477,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4728,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5194,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-cp-ref-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 297,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 741,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 920,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 1153,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 1535,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "炎の夢と霧の夢",
+    "y": 1818,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 2292,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 4026,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4500,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4853,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5105,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5571,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-tc-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "山吹色",
+    "y": 379,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 713,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色の物語",
+    "y": 916,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が映える風景",
+    "y": 1117,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が現れる場面",
+    "y": 1297,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色からのひとこと",
+    "y": 1679,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 1849,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 2556,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3030,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3383,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3635,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4101,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-an-ref-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "日本にしかいない動物で性格診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ニホンキツネ⁠—⁠—お稲荷さんの看板を背負う孤高のリアリスト",
+    "y": 379,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 885,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの強み",
+    "y": 1013,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの弱み",
+    "y": 1261,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この動物に似た行動パターン",
+    "y": 1501,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日試してほしいこと",
+    "y": 1758,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "日本昔話の共演者",
+    "y": 1978,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（12）",
+    "y": 2484,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3444,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3919,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4272,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4523,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4989,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-mu-ref-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "音楽性格診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ひとり開拓民",
+    "y": 297,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 620,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な強み",
+    "y": 747,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な弱み",
+    "y": 987,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽あるある",
+    "y": 1228,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日の音楽ライフのヒント",
+    "y": 1610,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "布教者と隠者の対話",
+    "y": 1830,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 2304,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 3007,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3481,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3834,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4086,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4552,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-st-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "理系思考タイプ診断 — あなたはアインシュタイン型？チューリ",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "キュリー型思考者",
+    "y": 461,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 861,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考タイプの持ち味",
+    "y": 988,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "理系脳あるある",
+    "y": 1371,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考をもっと活かすには",
+    "y": 1847,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（10）",
+    "y": 2048,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 2880,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "あなたの思考プロフィール",
+    "y": 3254,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 4096,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 4449,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 4700,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 5166,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-cf-ref-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたの守護キャラ診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "傘を3本持ち歩く晴れの日の守護神",
+    "y": 297,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 604,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "こういうこと、してないかな...多分ね",
+    "y": 826,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "守護神からの本音",
+    "y": 1208,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 1628,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "データと直感の安全保障会議",
+    "y": 2085,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 2706,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 3015,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3266,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3732,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-jc-ref-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたが極めるべき日本文化診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "落語タイプ⁠—⁠—人を笑わせる「話芸」の天才",
+    "y": 379,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 869,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 1090,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "静かな書斎と賑やかな寄席",
+    "y": 1547,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 2200,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 2553,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2804,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3270,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-kl-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字力診断",
+    "y": 147,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "漢字の卵",
+    "y": 297,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 615,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 887,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 1361,
+    "fontSize": "17.6px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このクイズを勧める",
+    "y": 1714,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 1965,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2336,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-cp-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 777,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 1010,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 1360,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 1803,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3509,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3661,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4127,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-cp-with-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 777,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 1010,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 1360,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "熱量の方向が違う同志",
+    "y": 1638,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 2126,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3833,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3984,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 4450,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-cf-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に本気出す炎の司令塔",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "お前、こういうとこあるだろ?",
+    "y": 565,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "司令塔からの本音",
+    "y": 947,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの守護を受けている人と一緒にいると",
+    "y": 1274,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（6）",
+    "y": 1688,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2305,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2456,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2922,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-ws-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "一字千金タイプ",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この言葉センスの持ち味",
+    "y": 737,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "こんな言葉づかいをしがち",
+    "y": 1182,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "言葉センスをもっと活かすには",
+    "y": 1564,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1765,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2510,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2662,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3128,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-tc-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "y": 653,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "y": 853,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "y": 1033,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "y": 1416,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1678,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2326,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2478,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2944,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-an-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 840,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 1089,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 1266,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 1523,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 1785,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2687,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2838,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3304,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-an-with-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 840,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 1089,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 1266,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 1523,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ボスと癒し担当",
+    "y": 1769,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 2140,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 3041,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 3193,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3659,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-mu-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 633,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 873,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 1114,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 1464,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1727,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2371,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2522,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2988,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-mu-with-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 633,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 873,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 1114,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 1464,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "最強の拡散装置",
+    "y": 1685,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 2056,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2699,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2851,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3317,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-yo-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "初志貫徹",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語の成り立ち",
+    "y": 539,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語のルーツ",
+    "y": 740,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語が現れる日常",
+    "y": 941,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "座右の銘として",
+    "y": 1260,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1522,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2166,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2318,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2784,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-ia-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "時間魔術師見習い",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あなたの悩みの本質",
+    "y": 633,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ついやってしまうこと",
+    "y": 834,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "本当に使える小さなヒント",
+    "y": 1122,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（7）",
+    "y": 1384,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 1964,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2115,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2581,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-co-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "逆オプティミスト",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あるある行動",
+    "y": 602,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人物像",
+    "y": 984,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人と一緒にいると",
+    "y": 1247,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプを数字で見ると",
+    "y": 1480,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1759,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2403,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2555,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 3021,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-uc-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "自動販売機",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在の本質",
+    "y": 633,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "なぜ相性が良いのか",
+    "y": 834,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在と共鳴する日常",
+    "y": 1035,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在から学べること",
+    "y": 1354,
+    "fontSize": "33.28px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 1585,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 2229,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 2380,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2846,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "result-kl-1280": {
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字ビギナー",
+    "y": 189,
+    "fontSize": "65.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 500,
+    "fontSize": "33.28px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 652,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 1022,
+    "fontSize": "46.72px",
+    "borderTop": "0px"
+   }
+  ]
+ },
+ "solved-cp-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 368,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 839,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 3657,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 4117,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 5588,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 7334,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 8925,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 17048,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 18625,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 20458,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 20999,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 22708,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-cp-ref-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたに似たキャラ診断",
+    "y": 368,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "夢の中で3本の論文を書き終えた学術夢想家",
+    "y": 839,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 3657,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの成り立ち",
+    "y": 4117,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このキャラの日常",
+    "y": 5588,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "キャラからのメッセージ",
+    "y": 7334,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "炎の夢と霧の夢",
+    "y": 8630,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（24）",
+    "y": 10649,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 18771,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 20349,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 22182,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 22722,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 24432,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-tc-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "y": 368,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "山吹色",
+    "y": 922,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1998,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色の物語",
+    "y": 2473,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が映える風景",
+    "y": 3461,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色が現れる場面",
+    "y": 3868,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この色からのひとこと",
+    "y": 5677,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 6330,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 7913,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 9365,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 10569,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 11109,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 12945,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-an-ref-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "日本にしかいない動物で性格診断",
+    "y": 368,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ニホンキツネ⁠—⁠—お稲荷さんの看板を背負う孤高のリアリスト",
+    "y": 922,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 4362,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの強み",
+    "y": 4679,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの弱み",
+    "y": 5852,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この動物に似た行動パターン",
+    "y": 6827,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日試してほしいこと",
+    "y": 8196,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "日本昔話の共演者",
+    "y": 9157,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（12）",
+    "y": 11533,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 15423,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 16812,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 18016,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 18557,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 20266,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-mu-ref-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "音楽性格診断",
+    "y": 328,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "ひとり開拓民",
+    "y": 633,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 2643,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な強み",
+    "y": 2960,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽的な弱み",
+    "y": 3998,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "このタイプの音楽あるある",
+    "y": 5163,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "今日の音楽ライフのヒント",
+    "y": 7097,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "布教者と隠者の対話",
+    "y": 7807,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（8）",
+    "y": 9679,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 11174,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 12563,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 13893,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 14433,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 16142,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-st-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "理系思考タイプ診断 — あなたはアインシュタイン型？チューリ",
+    "y": 452,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "キュリー型思考者",
+    "y": 1506,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 4569,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考タイプの持ち味",
+    "y": 4886,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "理系脳あるある",
+    "y": 7618,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "この思考をもっと活かすには",
+    "y": 10517,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "すべてのタイプ（10）",
+    "y": 11464,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 13402,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "あなたの思考プロフィール",
+    "y": 14666,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 16021,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 17603,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 18143,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 19853,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-cf-ref-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたの守護キャラ診断",
+    "y": 368,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "傘を3本持ち歩く晴れの日の守護神",
+    "y": 839,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 3078,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "こういうこと、してないかな...多分ね",
+    "y": 3930,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "守護神からの本音",
+    "y": 6096,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 8671,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "データと直感の安全保障会議",
+    "y": 10296,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 12560,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 13638,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 14179,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 15888,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-jc-ref-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたが極めるべき日本文化診断",
+    "y": 368,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "落語タイプ⁠—⁠—人を笑わせる「話芸」の天才",
+    "y": 1005,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 4622,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 5099,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "静かな書斎と賑やかな寄席",
+    "y": 6472,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 9114,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この診断を勧める",
+    "y": 10884,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 11424,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 13134,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "solved-kl-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字力診断",
+    "y": 328,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "漢字の卵",
+    "y": 581,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "この結果を共有",
+    "y": 1274,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H3",
+    "text": "次はこれを試してみよう",
+    "y": 1947,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "y": 3525,
+    "fontSize": "35.2px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このクイズを勧める",
+    "y": 4540,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 5140,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 6388,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-cp-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 3723,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 5130,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 6877,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 8579,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 16601,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 16934,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 18644,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-cp-with-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "y": 3723,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "y": 5130,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "y": 6877,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "熱量の方向が違う同志",
+    "y": 8306,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（24）",
+    "y": 9960,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 17981,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 18314,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 20024,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-cf-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に本気出す炎の司令塔",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "お前、こういうとこあるだろ?",
+    "y": 1686,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "司令塔からの本音",
+    "y": 3789,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの守護を受けている人と一緒にいると",
+    "y": 6078,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（6）",
+    "y": 7950,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 9801,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 10134,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 11844,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-ws-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "一字千金タイプ",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この言葉センスの持ち味",
+    "y": 3886,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "こんな言葉づかいをしがち",
+    "y": 6996,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "言葉センスをもっと活かすには",
+    "y": 9476,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 10423,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 12810,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 13143,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 14852,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-tc-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "y": 2021,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "y": 3135,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "y": 3604,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "y": 5539,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 6367,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 7798,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 8131,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 9966,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-an-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 487,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 4111,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 5283,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 6070,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 7439,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 8435,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 12225,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 12558,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 14267,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-an-with-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "ニホンザル⁠—⁠—温泉を発明した革命児",
+    "y": 487,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの強み",
+    "y": 4111,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの弱み",
+    "y": 5283,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この動物に似た行動パターン",
+    "y": 6070,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日試してほしいこと",
+    "y": 7439,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ボスと癒し担当",
+    "y": 8533,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（12）",
+    "y": 9962,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 13751,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 14084,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 15794,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-mu-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 447,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 2898,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 3937,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 5038,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 6784,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 7718,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 9111,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 9444,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 11154,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-mu-with-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "フェス一番乗り族",
+    "y": 447,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な強み",
+    "y": 2898,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽的な弱み",
+    "y": 3937,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの音楽あるある",
+    "y": 5038,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "今日の音楽ライフのヒント",
+    "y": 6784,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "最強の拡散装置",
+    "y": 7660,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 8963,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 10356,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 10689,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 12399,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-yo-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "初志貫徹",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語の成り立ち",
+    "y": 1818,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語のルーツ",
+    "y": 2785,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この四字熟語が現れる日常",
+    "y": 3816,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "座右の銘として",
+    "y": 5373,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 6096,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 7112,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 7445,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 9217,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-ia-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "時間魔術師見習い",
+    "y": 539,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あなたの悩みの本質",
+    "y": 2545,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "ついやってしまうこと",
+    "y": 3701,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "本当に使える小さなヒント",
+    "y": 5259,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（7）",
+    "y": 5961,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 7070,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 7403,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 9175,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-co-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "逆オプティミスト",
+    "y": 499,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "あるある行動",
+    "y": 2399,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人物像",
+    "y": 4229,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプの人と一緒にいると",
+    "y": 5888,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "このタイプを数字で見ると",
+    "y": 7339,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 8058,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 9514,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 9847,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 11557,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-uc-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "自動販売機",
+    "y": 499,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在の本質",
+    "y": 2505,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "なぜ相性が良いのか",
+    "y": 3493,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在と共鳴する日常",
+    "y": 4398,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "この存在から学べること",
+    "y": 6081,
+    "fontSize": "34px",
+    "borderTop": "1px"
+   },
+   {
+    "tag": "H2",
+    "text": "すべてのタイプ（8）",
+    "y": 6720,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 7736,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 8069,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 9779,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ },
+ "result-kl-320-200": {
+  "root": "32px",
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字ビギナー",
+    "y": 403,
+    "fontSize": "66.56px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "この結果を共有",
+    "y": 1416,
+    "fontSize": "34px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "y": 1749,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "y": 2997,
+    "fontSize": "47.68px",
+    "borderTop": "0px"
+   }
+  ],
+  "overflow": {
+   "count": 0,
+   "sample": [],
+   "scrollWidth": 320,
+   "vw": 320
+  }
+ }
+}

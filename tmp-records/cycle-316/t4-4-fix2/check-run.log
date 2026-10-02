@@ -1,0 +1,15 @@
+{"check":"keyboard","button":"結果をコピー","key":"Enter","before":true,"open":true,"focused":"結果をコピー","status":"コピーしました","opened":0,"gtag":["clipboard"],"clipboardStart":"四字キメル #226 (中級) X/6\n"}
+{"check":"keyboard","button":"結果をコピー","key":"Space","before":true,"open":true,"focused":"結果をコピー","status":"コピーしました","opened":0,"gtag":["clipboard"],"clipboardStart":"四字キメル #226 (中級) X/6\n"}
+{"check":"keyboard","button":"LINE でシェア","key":"Enter","before":true,"open":true,"focused":"LINE でシェア","status":"","opened":1,"gtag":["line"]}
+{"check":"keyboard","button":"X でシェア","key":"Space","before":true,"open":true,"focused":"X でシェア","status":"","opened":1,"gtag":["twitter"]}
+{"check":"keyboard","button":"閉じる","key":"Enter","before":true,"open":false,"focused":"四字キメル","status":null,"opened":0,"gtag":[]}
+{"check":"backdrop-click","open":false}
+{"check":"padding-click","open":true}
+{"check":"escape","open":false}
+{"check":"tool-copy","mode":"api-ok","buttonLabel":"コピーしました","execSelected":[],"clipboard":"ABC123","textareasLeft":0}
+{"check":"tool-copy","mode":"api-denied","buttonLabel":"コピーしました","execSelected":["ABC123"],"clipboard":"ABC123","textareasLeft":0}
+{"check":"tool-copy","mode":"all-fail","buttonLabel":"コピー","execSelected":["ABC123"],"clipboard":"","textareasLeft":0}
+{"check":"fail-message","name":"yojiGame","text":"コピーできませんでした。ほかの共有先をお使いください","spans":[["コピーできませんでした。",401,1],["ほかの共有先をお使いください",427,1]]}
+{"check":"fail-message","name":"tool","text":"コピーできませんでした。ほかの共有先をお使いください","spans":[["コピーできませんでした。",364,1],["ほかの共有先をお使いください",390,1]]}
+{"check":"color-detail-all-fail","label":"コピー失敗"}
+{"check":"color-detail-api-denied","label":"コピー済み","clipboard":"#eea9a9"}

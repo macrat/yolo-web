@@ -1,0 +1,11 @@
+import { open, close, settle, URL, SEEDS } from "./lib.mjs";
+const o = await open({ width: 320, height: 568, font: 32, storage: SEEDS.mid }); const p = o.page;
+await p.goto(URL, { waitUntil: "load" }); await settle(p);
+const snap = () => p.evaluate(() => { const g = document.querySelector("[aria-label='言葉の格子']"); const q=(s)=>{const e=document.querySelector(s);return e?Math.round(e.getBoundingClientRect().top+scrollY)+"/"+Math.round(e.getBoundingClientRect().height):null}; const chk=[...document.querySelectorAll("button")].find(b=>b.textContent.trim()==="チェック"); return { max: document.documentElement.scrollHeight-innerHeight, sy: Math.round(scrollY), grid: q("[aria-label='言葉の格子']"), status: q("[role=status]"), solved: q("main ul[aria-label='当てた組']"), chk: Math.round(chk.getBoundingClientRect().top+scrollY), order: [...g.querySelectorAll("button")].filter(b=>getComputedStyle(b).display!=="none").map(b=>b.textContent).join(","), heights:[...g.querySelectorAll("button")].filter(b=>getComputedStyle(b).display!=="none").map(b=>Math.round(b.getBoundingClientRect().height)).join(","), style: document.getElementById("nakamawake-saved-layout")?.textContent?.slice(0,300) }; });
+const a = await snap();
+await p.getByRole("button", { name: "チェック" }).evaluate((b) => b.scrollIntoView({ block: "center" })); await p.waitForTimeout(300);
+const a2 = await snap();
+await p.reload({ waitUntil: "load" }); await settle(p, 2000);
+const b = await snap();
+console.log(JSON.stringify({a,a2,b},null,1));
+await close(o);

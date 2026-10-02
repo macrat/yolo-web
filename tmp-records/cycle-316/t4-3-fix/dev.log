@@ -1,0 +1,26 @@
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3347
+- Network:       http://192.0.2.2:3347
+✓ Ready in 512ms
+✓ Running next.config.ts took 38ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+○ Compiling /storybook ...
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /storybook 200 in 6.7s (next.js: 6.1s, application-code: 577ms)
+ GET /storybook 200 in 197ms (next.js: 6ms, application-code: 192ms)
+ GET /storybook 200 in 249ms (next.js: 18ms, application-code: 231ms)
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /storybook 200 in 178ms (next.js: 8ms, application-code: 170ms)
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /storybook 200 in 237ms (next.js: 4ms, application-code: 233ms)
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+[?25h

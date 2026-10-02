@@ -1,0 +1,662 @@
+### game 320 H2
+[same] /play/kanji-kanaru
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-kimeru
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/nakamawake
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/irodori
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+### quiz 320 H2
+[same] /play/kanji-level
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/kotowaza-level
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/traditional-color
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-level
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-personality
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/impossible-advice
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/contrarian-fortune
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/unexpected-compatibility
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/music-personality
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-fortune
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/animal-personality
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/science-thinking
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/japanese-culture
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-personality
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/word-sense-personality
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/daily
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+### quiz 320 H1
+[worse] /play/science-thinking
+   wide: 理系思考タイプ診断 — あなたは／アインシュタイン型？チューリン／グ型？
+   base: 理系思考タイプ診断 — あなたは／アインシュタイン型？／チューリング型？
+### result 320 H2
+[same] /play/traditional-color/result/ai
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/traditional-color/result/shu
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/traditional-color/result/wakakusa
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/traditional-color/result/fuji
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-personality/result/shoshikantetsu
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-personality/result/tenshinranman
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-personality/result/sessatakuma
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/yoji-personality/result/ichigoichie
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/impossible-advice/result/timemagician
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/impossible-advice/result/gravityfighter
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/impossible-advice/result/digitalmonk
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/impossible-advice/result/sleeparchitect
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/contrarian-fortune/result/reverseoptimist
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/contrarian-fortune/result/overthinker
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/contrarian-fortune/result/cosmicworrier
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/contrarian-fortune/result/paradoxmaster
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/unexpected-compatibility/result/vendingmachine
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/unexpected-compatibility/result/oldclock
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/unexpected-compatibility/result/streetlight
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/unexpected-compatibility/result/benchpark
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/music-personality/result/festival-pioneer
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/music-personality/result/playlist-evangelist
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/music-personality/result/solo-explorer
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/music-personality/result/repeat-warrior
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-fortune/result/commander
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-fortune/result/professor
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-fortune/result/dreamer
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-fortune/result/trickster
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/animal-personality/result/nihon-zaru
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/animal-personality/result/hondo-tanuki
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/animal-personality/result/nihon-kitsune
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/animal-personality/result/iriomote-yamaneko
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/science-thinking/result/einstein
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/science-thinking/result/curie
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/science-thinking/result/turing
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/science-thinking/result/davinci
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-personality/result/blazing-strategist
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-personality/result/blazing-poet
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-personality/result/blazing-schemer
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/character-personality/result/blazing-warden
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/word-sense-personality/result/elegant-precise
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/word-sense-personality/result/warm-empathy
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/word-sense-personality/result/creative-playful
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+[same] /play/word-sense-personality/result/logical-clear
+   wide: 他のジャンルも試して／みよう
+   base: 他のジャンルも／試してみよう
+### result 320 H1
+[same] /play/animal-personality/result/hondo-tanuki
+   wide: ホンドタヌキ／——化かす／どころか／化かされる／愛されキャラ
+   base: ホンドタヌキ／——／化かすどころか／化かされる／愛されキャラ
+[same] /play/animal-personality/result/iriomote-yamaneko
+   wide: イリオモテ／ヤマネコ——／西表島だけで／生き残った究極の／サバイバー
+   base: イリオモテヤマ／ネコ——／西表島だけで／生き残った究極の／サバイバー
+[same] /play/science-thinking/result/einstein
+   wide: アインシュタ／イン型思考者
+   base: アインシュタイ／ン型思考者
+[same] /play/science-thinking/result/davinci
+   wide: ダ・ヴィンチ／型思考者
+   base: ダ・／ヴィンチ型思考者
+[same] /play/character-personality/result/blazing-schemer
+   wide: 正攻法3秒で／飽きて全員を／裏道に連れ込む／司令塔
+   base: 正攻法3秒で／飽きて全員を／裏道に／連れ込む司令塔
+### blog 320 H1
+[same] /blog/a11y-static-green-but-broken-dynamic-audit
+   wide: アクセシビリ／ティの静的／チェックが／緑でも、／動かしたら／壊れていた
+   base: アクセシビリ／ティの／静的チェック／が緑でも、／動かしたら／壊れていた
+[worse] /blog/clickable-list-row-stretched-link
+   wide: 一覧の／行全体を／クリッ／クできる／CSSと、その／落とし穴の／直し方
+   base: 一覧の／行全体を／クリックでき／るCSSと、／その／落とし穴の／直し方
+[worse] /blog/top-page-toolbox-launch
+   wide: トップ／ページを／「道具箱」／にしました／——並べた／道具が、／再訪しても／残る
+   base: トップページ／を「道具箱」／にしました／——並べた／道具が、／再訪しても／残る
+[worse] /blog/playwright-dark-mode-screenshot-next-themes
+   wide: Playwrightの／ダーク／モード撮影が／実は／ライトだった ／-- ／emulateMedia／の落とし穴
+   base: Playwrightの／ダークモード／撮影が実は／ライトだった ／-- ／emulateMedia／の落とし穴
+[same] /blog/scroll-lock-reference-counter-for-multiple-components
+   wide: 複数コンポー／ネント同居で／scroll lockが／壊れる仕組み ／-- classListを／やめてdataset／参照／カウンタに／する
+   base: 複数／コンポーネン／ト同居でscroll ／lockが壊れる／仕組み -- ／classListを／やめてdataset／参照カウンタ／にする
+[worse] /blog/ai-agent-verification-step-skip
+   wide: AIエー／ジェントは／「最後の／確認」／を省略する
+   base: AI／エージェント／は「最後の／確認」／を省略する
+[worse] /blog/ai-agent-concept-rethink-3-workflow-limits
+   wide: セッション／長期化がAI／エー／ジェントの／自律運用を／破壊する／（コンセプト／再策定記 ／3/3）
+   base: セッション／長期化がAI／エージェント／の自律運用を／破壊する／（コンセプト／再策定記 ／3/3）
+[same] /blog/ai-agent-concept-rethink-1-bias-and-context-engineering
+   wide: AIエー／ジェントの／思考／バイアスと／コンテキスト／エンジ／ニアリング／（コンセプト／再策定記 ／1/3）
+   base: AI／エージェント／の／思考バイアス／と／コンテキスト／エンジニアリ／ング／（コンセプト／再策定記 ／1/3）
+[worse] /blog/javascript-date-pitfalls-and-fixes
+   wide: JavaScriptの／Date APIに／潜む2つの／落とし穴: ／自動補正と／タイム／ゾーン解釈
+   base: JavaScriptの／Date APIに／潜む2つの／落とし穴: ／自動補正と／タイムゾーン／解釈
+[worse] /blog/nextjs-seo-metadata-and-json-ld-security
+   wide: Next.js／サイトのSEO／メタデータ／完全対策: ／OGP・／canonical・／Twitter Card・／JSON-LD／セキュリ／ティまで
+   base: Next.js／サイトのSEO／メタデータ完／全対策: OGP・／canonical・／Twitter Card・／JSON-LD／セキュリティ／まで
+[worse] /blog/admonition-gfm-alert-support
+   wide: marked で ／GFM Alert／（補足ボック／ス）を実装／する：／marked-alert ／の導入から ／CSS スタ／イリングまで
+   base: marked で ／GFM Alert／（補足ボック／ス）／を実装する：／marked-alert ／の導入から ／CSS ／スタイリング／まで
+[same] /blog/traditional-color-palette-tool
+   wide: 伝統色カラー／パレット／ツールを／作りました: ／250色から／色彩調和を／自動生成
+   base: 伝統色／カラーパレッ／トツールを／作りました: ／250色から／色彩調和を／自動生成
+[worse] /blog/game-dictionary-layout-unification
+   wide: ゲームと／辞典のLayout／共通化: ／品質要素を／全コン／テンツに／広げる第3弾
+   base: ゲームと／辞典のLayout／共通化: ／品質要素を／全コンテンツ／に広げる／第3弾
+[same] /blog/yoji-quiz-themes
+   wide: 四字熟語クイ／ズ2テーマ／追加: ／知識テストと／性格診断で／四字熟語を／もっと楽しく
+   base: 四字熟語／クイズ2テー／マ追加: ／知識テストと／性格診断で／四字熟語を／もっと楽しく
+[worse] /blog/workflow-skill-based-autonomous-operation
+   wide: AIエー／ジェントを／4つの／スキルで／自律運用する ／-- サイクル／ドキュ／メントと／レビュー／ループの設計
+   base: AI／エージェント／を4つの／スキルで／自律運用する ／-- ／サイクルドキ／ュメントと／レビュールー／プの設計
+[worse] /blog/workflow-simplification-stopping-rule-violations
+   wide: AIエー／ジェントの／ルール違反が／止まらない -- ／ワーク／フローを／根本から／作り直した話
+   base: AI／エージェント／の／ルール違反が／止まらない -- ／ワークフロー／を根本から／作り直した話
+[worse] /blog/cheatsheets-introduction
+   wide: 10種類の／コンテンツ／タイプを／比較して／チート／シートを／選んだ話
+   base: 10種類の／コンテンツタ／イプを／比較して／チートシート／を選んだ話
+[worse] /blog/tools-expansion-10-to-30
+   wide: ツールを／10個から／30個に拡充／しました: プロ／グラマ／ティックSEO／戦略の実践
+   base: ツールを／10個から／30個に／拡充しました: ／プログラマテ／ィックSEO／戦略の実践
+[same] /blog/japanese-traditional-colors-dictionary
+   wide: 日本の／伝統色250色／の辞典を／作りました: ／プログラマ／ティッ／クSEOの実践
+   base: 日本の／伝統色250色／の辞典を／作りました: ／プログラマテ／ィックSEOの／実践
+[worse] /blog/japanese-word-puzzle-games-guide
+   wide: 日本語パズル／ゲームで毎日／脳トレ: 4つの／無料デイリー／ゲームの／楽しみ方
+   base: 日本語／パズルゲーム／で毎日脳トレ: ／4つの／無料デイリー／ゲームの／楽しみ方
+[worse] /blog/content-strategy-decision
+   wide: コンテンツ／戦略の／決め方：AI／エー／ジェントが／10の候補から／3つの柱を／選んだ理由
+   base: コンテンツ／戦略の／決め方：AI／エージェント／が10の／候補から／3つの柱を／選んだ理由
+[worse] /blog/how-we-built-this-site
+   wide: AIエー／ジェント7人／チームでWeb／サイトを／ゼロから／構築した／全記録
+   base: AI／エージェント／7人チームで／Webサイトを／ゼロから／構築した／全記録
+### misc 320 H2
+
+### quiz 375 H2
+[same] /play/kanji-level
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/kotowaza-level
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/traditional-color
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/yoji-level
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/yoji-personality
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/impossible-advice
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/contrarian-fortune
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/unexpected-compatibility
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/music-personality
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-fortune
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/animal-personality
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/science-thinking
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/japanese-culture
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-personality
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/word-sense-personality
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+### result 375 H2
+[same] /play/traditional-color/result/ai
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/traditional-color/result/shu
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/traditional-color/result/wakakusa
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/traditional-color/result/fuji
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/yoji-personality/result/shoshikantetsu
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/yoji-personality/result/tenshinranman
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/yoji-personality/result/sessatakuma
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/yoji-personality/result/ichigoichie
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/impossible-advice/result/timemagician
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/impossible-advice/result/gravityfighter
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/impossible-advice/result/digitalmonk
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/impossible-advice/result/sleeparchitect
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/contrarian-fortune/result/reverseoptimist
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/contrarian-fortune/result/overthinker
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/contrarian-fortune/result/cosmicworrier
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/contrarian-fortune/result/paradoxmaster
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/unexpected-compatibility/result/vendingmachine
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/unexpected-compatibility/result/oldclock
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/unexpected-compatibility/result/streetlight
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/unexpected-compatibility/result/benchpark
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/music-personality/result/festival-pioneer
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/music-personality/result/playlist-evangelist
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/music-personality/result/solo-explorer
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/music-personality/result/repeat-warrior
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-fortune/result/commander
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-fortune/result/professor
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-fortune/result/dreamer
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-fortune/result/trickster
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/animal-personality/result/nihon-zaru
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/animal-personality/result/hondo-tanuki
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/animal-personality/result/nihon-kitsune
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/animal-personality/result/iriomote-yamaneko
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/science-thinking/result/einstein
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/science-thinking/result/curie
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/science-thinking/result/turing
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/science-thinking/result/davinci
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-personality/result/blazing-strategist
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-personality/result/blazing-poet
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-personality/result/blazing-schemer
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/character-personality/result/blazing-warden
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/word-sense-personality/result/elegant-precise
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/word-sense-personality/result/warm-empathy
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/word-sense-personality/result/creative-playful
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+[same] /play/word-sense-personality/result/logical-clear
+   wide: 他のクイズ・診断も試して／みよう
+   base: 他のクイズ・診断も／試してみよう
+### result 375 H1
+[same] /play/animal-personality/result/nihon-kitsune
+   wide: ニホンキツネ——お／稲荷さんの看板を／背負う孤高の／リアリスト
+   base: ニホンキツネ——／お稲荷さんの看板を／背負う孤高の／リアリスト
+[same] /play/science-thinking/result/davinci
+   wide: ダ・ヴィンチ／型思考者
+   base: ダ・／ヴィンチ型思考者
+### blog 375 H1
+[worse] /blog/a11y-static-green-but-broken-dynamic-audit
+   wide: アクセシビリ／ティの静的／チェックが／緑でも、／動かしたら／壊れていた
+   base: アクセシビリティ／の静的チェックが／緑でも、／動かしたら／壊れていた
+[same] /blog/removing-ai-slop-and-the-absent-writer
+   wide: AI臭を消すのに／夢中で、わたしは／何も主張していな／かった
+   base: AI臭を消すのに／夢中で、わたしは／何も／主張していなかっ／た
+[same] /blog/markdown-not-rendering-as-expected
+   wide: Markdownが／思い通りに表示／されない：改行・／表・エスケープを／仕組みから直す
+   base: Markdownが／思い通りに／表示されない：／改行・表・／エスケープを／仕組みから直す
+[worse] /blog/playwright-dark-mode-screenshot-next-themes
+   wide: Playwrightの／ダーク／モード撮影が実は／ライトだった -- ／emulateMediaの／落とし穴
+   base: Playwrightの／ダークモード撮影／が実は／ライトだった -- ／emulateMediaの／落とし穴
+[worse] /blog/scroll-lock-reference-counter-for-multiple-components
+   wide: 複数コンポー／ネント同居で／scroll lockが／壊れる仕組み -- ／classListをやめて／dataset参照／カウンタにする
+   base: 複数／コンポーネント／同居でscroll ／lockが壊れる／仕組み -- ／classListをやめて／dataset／参照カウンタに／する
+[same] /blog/pm-premise-contamination-in-multi-agent-ai
+   wide: 【失敗事例】AI／マルチエー／ジェントで全員が／正しく動いても／間違える構造
+   base: 【失敗事例】AI／マルチエージェン／トで全員が正しく／動いても間違える／構造
+[worse] /blog/ai-agent-concept-rethink-3-workflow-limits
+   wide: セッション／長期化がAIエー／ジェントの／自律運用を／破壊する／（コンセプト再策／定記 3/3）
+   base: セッション／長期化がAI／エージェントの／自律運用を／破壊する／（コンセプト再策／定記 3/3）
+[worse] /blog/nextjs-hydration-mismatch-seeded-random
+   wide: Next.jsハイドレー／ション不整合を／シード付き乱数で／解決する
+   base: Next.js／ハイドレーション／不整合を／シード付き乱数で／解決する
+[worse] /blog/javascript-date-pitfalls-and-fixes
+   wide: JavaScriptのDate ／APIに潜む2つの／落とし穴: ／自動補正とタイム／ゾーン解釈
+   base: JavaScriptのDate ／APIに潜む2つの／落とし穴: ／自動補正と／タイムゾーン解釈
+[worse] /blog/nextjs-seo-metadata-and-json-ld-security
+   wide: Next.jsサイトの／SEOメタデータ／完全対策: OGP・／canonical・／Twitter Card・／JSON-LDセキュリ／ティまで
+   base: Next.jsサイトの／SEO／メタデータ完全対／策: OGP・／canonical・／Twitter Card・／JSON-LD／セキュリティまで
+[worse] /blog/http-status-code-guide-for-rest-api
+   wide: REST APIで／迷いがちなHTTP／ステータス／コードの／選び方ガイド
+   base: REST APIで／迷いがちなHTTP／ステータスコード／の選び方ガイド
+[worse] /blog/game-dictionary-layout-unification
+   wide: ゲームと辞典の／Layout共通化: ／品質要素を全コン／テンツに広げる／第3弾
+   base: ゲームと辞典の／Layout共通化: ／品質要素を／全コンテンツに／広げる第3弾
+[worse] /blog/series-navigation-ui
+   wide: ブログシリーズ／ナビゲー／ションUIの導入: ／手動管理から／自動生成へ
+   base: ブログシリーズナ／ビゲーションUIの／導入: 手動／管理から／自動生成へ
+[same] /blog/tool-reliability-improvements
+   wide: ツールの／信頼性向上: ／ReDoS対策と／プライバシー／注記の導入
+   base: ツールの／信頼性向上: ／ReDoS対策と／プライバシー注記／の導入
+[worse] /blog/yoji-quiz-themes
+   wide: 四字熟語クイ／ズ2テーマ追加: ／知識テストと／性格診断で／四字熟語をもっと／楽しく
+   base: 四字熟語／クイズ2テーマ／追加: ／知識テストと／性格診断で／四字熟語をもっと／楽しく
+[worse] /blog/workflow-skill-based-autonomous-operation
+   wide: AIエージェントを／4つのスキルで／自律運用する -- ／サイクルドキュ／メントとレビュー／ループの設計
+   base: AIエージェントを／4つのスキルで／自律運用する -- ／サイクルドキュメ／ントと／レビューループの／設計
+[worse] /blog/sns-optimization-guide
+   wide: 日本のWebサイト／管理者のための／SNS最適化ガイド／──シェア／ボタンとOGPの／実践テクニック
+   base: 日本のWeb／サイト管理者の／ためのSNS／最適化ガイド──／シェアボタンと／OGPの／実践テクニック
+[moreLines] /blog/site-search-feature
+   wide: サイト内検索を／実装しました -- ／Fuse.jsで500件の／日本語／コンテンツを／横断検索
+   base: サイト内検索を／実装しました -- ／Fuse.jsで500件の／日本語コンテンツ／を横断検索
+[worse] /blog/cheatsheets-introduction
+   wide: 10種類の／コンテンツ／タイプを比較して／チートシートを／選んだ話
+   base: 10種類の／コンテンツタイプ／を比較して／チートシートを／選んだ話
+[worse] /blog/workflow-evolution-direct-agent-collaboration
+   wide: ワークフロー／進化: ／エージェント／直接連携と／サイクル／カタログの導入
+   base: ワークフロー／進化: ／エージェント直接／連携と／サイクルカタログ／の導入
+[worse] /blog/tools-expansion-10-to-30
+   wide: ツールを10個から／30個に拡充／しました: プロ／グラマ／ティックSEO／戦略の実践
+   base: ツールを10個から／30個に／拡充しました: ／プログラマティッ／クSEO戦略の実践
+[worse] /blog/japanese-traditional-colors-dictionary
+   wide: 日本の／伝統色250色の／辞典を／作りました: プロ／グラマティッ／クSEOの実践
+   base: 日本の／伝統色250色の／辞典を／作りました: ／プログラマティッ／クSEOの実践
+[same] /blog/cron-parser-guide
+   wide: cron式の書き方／ガイド: 環境別の／違いと限界を／徹底解説
+   base: cron式の／書き方ガイド: ／環境別の違いと／限界を徹底解説
+[same] /blog/five-failures-and-lessons-from-ai-agents
+   wide: AIエージェント／運用で遭遇した／5つの失敗と／解決策
+   base: AI／エージェント運用／で遭遇した5つの／失敗と解決策
+[worse] /blog/nextjs-static-tool-pages-design-pattern
+   wide: Next.js App ／Routerで20個の／静的ツール／ページを構築する／設計パターン
+   base: Next.js App ／Routerで20個の／静的ツールページ／を構築する／設計パターン
+[worse] /blog/how-we-built-10-tools
+   wide: 10個のオンライン／ツールを2日で／作った方法: AI／エージェント／協働の舞台裏
+   base: 10個の／オンラインツール／を2日で作った／方法: AI／エージェント協働／の舞台裏
+[worse] /blog/content-strategy-decision
+   wide: コンテンツ戦略の／決め方：AIエー／ジェントが10の／候補から3つの／柱を選んだ理由
+   base: コンテンツ戦略の／決め方：AI／エージェントが／10の候補から／3つの柱を選んだ／理由
+[worse] /blog/how-we-built-this-site
+   wide: AIエー／ジェント7人／チームでWeb／サイトをゼロから／構築した全記録
+   base: AI／エージェント7人／チームでWeb／サイトをゼロから／構築した全記録
+### misc 375 H1
+
+### result 1280 H1
+[same] /play/animal-personality/result/hondo-tanuki
+   wide: ホンドタヌキ——化かす／どころか化かされる／愛されキャラ
+   base: ホンドタヌキ——／化かすどころか化かされる／愛されキャラ
+### blog 1280 H1
+[worse] /blog/removing-ai-slop-and-the-absent-writer
+   wide: AI臭を消すのに／夢中で、わたしは／何も主張していな／かった
+   base: AI臭を消すのに／夢中で、わたしは／何も／主張していなかった
+[same] /blog/markdown-not-rendering-as-expected
+   wide: Markdownが／思い通りに表示／されない：改行・／表・エスケープを／仕組みから直す
+   base: Markdownが／思い通りに／表示されない：／改行・表・／エスケープを／仕組みから直す
+[worse] /blog/playwright-dark-mode-screenshot-next-themes
+   wide: Playwrightのダーク／モード撮影が実は／ライトだった -- ／emulateMediaの／落とし穴
+   base: Playwrightの／ダークモード撮影が／実はライトだった -- ／emulateMediaの／落とし穴
+[same] /blog/redos-defense-web-worker-terminate
+   wide: 50字で215秒／フリーズした／正規表現を、／Worker.terminate()／で100msに収める
+   base: 50字で／215秒フリーズした／正規表現を、／Worker.terminate()／で100msに収める
+[same] /blog/scroll-lock-reference-counter-for-multiple-components
+   wide: 複数コンポーネント／同居でscroll lockが／壊れる仕組み -- ／classListをやめて／dataset参照／カウンタにする
+   base: 複数コンポーネント／同居でscroll lockが／壊れる仕組み -- ／classListをやめて／dataset／参照カウンタにする
+[same] /blog/nextjs-multiple-root-layouts-for-gradual-design-migration
+   wide: Next.js 複数root ／layoutで段階的／デザイン移行 -- ／本番で踏む2つの罠
+   base: Next.js 複数root ／layoutで／段階的デザイン移行 -／- 本番で踏む2つの罠
+[same] /blog/stop-piling-rules-give-ai-its-wish
+   wide: AIが指示を守ら／ないなら、／ルールより先に／『望み』／を渡してみてほしい
+   base: AIが指示を／守らないなら、／ルールより先に／『望み』／を渡してみてほしい
+[worse] /blog/pm-premise-contamination-in-multi-agent-ai
+   wide: 【失敗事例】AI／マルチエー／ジェントで全員が／正しく動いても／間違える構造
+   base: 【失敗事例】AI／マルチエージェント／で全員が正しく／動いても間違える／構造
+[moreLines] /blog/adsense-content-quality-audit-methodology
+   wide: AdSense「有用性の／低いコンテンツ」／を乗り越える -- ／コンテンツ／品質監査の／実践ガイド
+   base: AdSense「有用性の／低いコンテンツ」／を乗り越える -- ／コンテンツ品質監査／の実践ガイド
+[worse] /blog/nextjs-route-handler-static-and-bundle-budget-test
+   wide: Next.js 15のRoute ／Handlerデフォルト／変更と、バンドル／サイズを継続的に／守るテスト設計
+   base: Next.js 15のRoute ／Handler／デフォルト変更と、／バンドルサイズを／継続的に守る／テスト設計
+[worse] /blog/nextjs-hydration-mismatch-seeded-random
+   wide: Next.jsハイドレー／ション不整合を／シード付き乱数で／解決する
+   base: Next.js／ハイドレーション不／整合を／シード付き乱数で／解決する
+[worse] /blog/url-structure-reorganization
+   wide: URLを変えるべきか／迷ったら: SEO・UX・／競合の3軸で判断する／URL設計フレーム／ワーク
+   base: URLを変えるべきか／迷ったら: SEO・UX・／競合の3軸で判断する／URL／設計フレームワーク
+[worse] /blog/game-dictionary-layout-unification
+   wide: ゲームと辞典の／Layout共通化: ／品質要素を全コン／テンツに広げる第3弾
+   base: ゲームと辞典の／Layout共通化: ／品質要素を／全コンテンツに／広げる第3弾
+[worse] /blog/nextjs-directory-architecture
+   wide: Next.jsの／多コンテンツ／サイトに最適な／ディレクトリ構造を／求めて: 6パターン／比較と実践
+   base: Next.jsの／多コンテンツサイト／に最適な／ディレクトリ構造を／求めて: ／6パターン比較と実践
+[worse] /blog/yoji-quiz-themes
+   wide: 四字熟語クイ／ズ2テーマ追加: ／知識テストと／性格診断で／四字熟語をもっと／楽しく
+   base: 四字熟語／クイズ2テーマ追加: ／知識テストと／性格診断で／四字熟語をもっと／楽しく
+[worse] /blog/workflow-skill-based-autonomous-operation
+   wide: AIエージェントを／4つのスキルで／自律運用する -- ／サイクルドキュ／メントとレビュー／ループの設計
+   base: AIエージェントを／4つのスキルで／自律運用する -- ／サイクルドキュメン／トと／レビューループの／設計
+[worse] /blog/game-infrastructure-refactoring
+   wide: ゲームインフラの／リファクタリング: ／12モーダルの／共通化とレジストリ／パターンの導入
+   base: ゲームインフラの／リファクタリング: ／12モーダルの／共通化と／レジストリパターン／の導入
+[same] /blog/sns-optimization-guide
+   wide: 日本のWebサイト／管理者のためのSNS／最適化ガイド──／シェアボタンと／OGPの実践／テクニック
+   base: 日本のWeb／サイト管理者の／ためのSNS／最適化ガイド──／シェアボタンと／OGPの／実践テクニック
+[same] /blog/irodori-and-kanji-expansion
+   wide: イロドリ: ／伝統色250色で遊ぶ／色彩チャレンジ／ゲームと漢字／データ拡充
+   base: イロドリ: ／伝統色250色で／遊ぶ色彩チャレンジ／ゲームと／漢字データ拡充
+[same] /blog/quiz-diagnosis-feature
+   wide: クイズ・診断テスト／機能をリリース／しました: ／漢字力診断と／伝統色診断で遊んで／みよう
+   base: クイズ・／診断テスト機能を／リリースしました: ／漢字力診断と／伝統色診断で遊んで／みよう
+[worse] /blog/workflow-simplification-stopping-rule-violations
+   wide: AIエージェントの／ルール違反が／止まらない -- ワーク／フローを根本から／作り直した話
+   base: AIエージェントの／ルール違反が／止まらない -- ／ワークフローを／根本から／作り直した話
+[worse] /blog/cheatsheets-introduction
+   wide: 10種類のコンテンツ／タイプを比較して／チートシートを／選んだ話
+   base: 10種類の／コンテンツタイプを／比較して／チートシートを／選んだ話
+[same] /blog/workflow-evolution-direct-agent-collaboration
+   wide: ワークフロー進化: ／エージェント／直接連携とサイクル／カタログの導入
+   base: ワークフロー進化: ／エージェント直接連／携と／サイクルカタログの／導入
+[moreLines] /blog/tools-expansion-10-to-30
+   wide: ツールを10個から／30個に拡充しました: ／プログラマ／ティックSEO戦略の／実践
+   base: ツールを10個から／30個に拡充しました: ／プログラマティックS／EO戦略の実践
+[same] /blog/japanese-traditional-colors-dictionary
+   wide: 日本の伝統色250色の／辞典を作りました: ／プログラマティッ／クSEOの実践
+   base: 日本の伝統色250色の／辞典を作りました: ／プログラマティックS／EOの実践
+[same] /blog/site-rename-yolos-net
+   wide: サイト名を／「yolos.net」に変更／しました: 名前の／由来と経緯
+   base: サイト名を／「yolos.net」／に変更しました: ／名前の由来と経緯
+[worse] /blog/json-formatter-guide
+   wide: JSON整形・フォー／マッターの／使い方ガイド
+   base: JSON整形・／フォーマッターの／使い方ガイド
+[same] /blog/cron-parser-guide
+   wide: cron式の書き方／ガイド: 環境別の／違いと限界を／徹底解説
+   base: cron式の／書き方ガイド: ／環境別の違いと／限界を徹底解説
+[worse] /blog/japanese-word-puzzle-games-guide
+   wide: 日本語パズル／ゲームで毎日脳トレ: ／4つの無料デイリー／ゲームの楽しみ方
+   base: 日本語／パズルゲームで毎日／脳トレ: 4つの／無料デイリーゲーム／の楽しみ方
+[same] /blog/five-failures-and-lessons-from-ai-agents
+   wide: AIエージェント／運用で遭遇した5つの／失敗と解決策
+   base: AI／エージェント運用で／遭遇した5つの失敗と／解決策
+[worse] /blog/nextjs-static-tool-pages-design-pattern
+   wide: Next.js App Routerで／20個の静的ツール／ページを構築する／設計パターン
+   base: Next.js App Routerで／20個の／静的ツールページを／構築する／設計パターン
+[worse] /blog/how-we-built-10-tools
+   wide: 10個のオンライン／ツールを2日で作った／方法: AIエージェント／協働の舞台裏
+   base: 10個の／オンラインツールを／2日で作った方法: AI／エージェント協働の／舞台裏
+[worse] /blog/content-strategy-decision
+   wide: コンテンツ戦略の／決め方：AIエー／ジェントが10の／候補から3つの柱を／選んだ理由
+   base: コンテンツ戦略の／決め方：AI／エージェントが10の／候補から3つの柱を／選んだ理由
+### misc 1280 H1

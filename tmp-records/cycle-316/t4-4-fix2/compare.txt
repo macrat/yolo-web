@@ -1,0 +1,33 @@
+('blog', False) SAME
+('daily', False) SAME
+('daily', True) SAME
+('fortuneResult', False) SAME
+('fortuneResult', True) SAME
+('gamePage', False) SAME
+('humor', False) SAME
+('irodori', False) SAME
+('irodori', True) SAME
+('kanji', False) SAME
+('kanjiGame', False) SAME
+('kanjiGame', True) SAME
+('nakamawake', False) 
+    click (0, 'LINE でシェア') opened: ["https://line.me/R/share?text=ナカマワケ #226 X
+
+#ナカマワケ #yolosnet
+http://localhost:3447/play/nakamawake"] -> ["https://line.me/R/share?text=ナカマワケ #226 X
+#ナカマワケ #yolosnet
+http://localhost:3447/play/nakamawake"]
+    click (0, 'X でシェア') opened: ["https://twitter.com/intent/tweet?text=ナカマワケ #226 X
+
+#ナカマワケ #yolosnet&url=http://localhost:3447/play/nakamawake"] -> ["https://twitter.com/intent/tweet?text=ナカマワケ #226 X
+#ナカマワケ #yolosnet&url=http://localhost:3447/play/nakamawake"]
+    click (0, '結果をコピー') copied: ["ナカマワケ #226 X\n\n#ナカマワケ #yolosnet\nhttp://localhost:3447/play/nakamawake"] -> ["ナカマワケ #226 X\n#ナカマワケ #yolosnet\nhttp://localhost:3447/play/nakamawake"]
+('nakamawake', True) 
+    click (0, 'この結果をシェア') shared: [{"title": "ナカマワケ", "text": "ナカマワケ #226 X\n\n#ナカマワケ #yolosnet", "url": "http://localhost:3447/play/nakamawake"}] -> [{"title": "ナカマワケ", "text": "ナカマワケ #226 X\n#ナカマワケ #yolosnet", "url": "http://localhost:3447/play/nakamawake"}]
+('quizSolved', False) SAME
+('quizSolved', True) SAME
+('resultPage', False) SAME
+('resultPage', True) SAME
+('tool', False) SAME
+('yojiGame', False) SAME
+('yojiGame', True) SAME

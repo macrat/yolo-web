@@ -1,0 +1,7 @@
+diff --git a/.claude/skills/frontend-design/SKILL.md b/.claude/skills/frontend-design/SKILL.md
+index 19cc17dd..e0683721 100644
+--- a/.claude/skills/frontend-design/SKILL.md
++++ b/.claude/skills/frontend-design/SKILL.md
+@@ -123 +123 @@ OGP 画像と保存する結果の画像（§10）は、HTML と CSS で組ま
+-- **Web フォントは `font-display: swap` で読み込み、読み込みの前後のずれを CLS で確かめる。** 欧文は、同じ `unicode-range` を付けてメトリクスを合わせた代わりの書体を置き、行の高さと字面を揃える。見出しの和文は、代わりの書体との送り幅と詰めの差で折り返しが変わりうるので、主要な見出しを読み込みの前後で見比べる。§12 の「読み込みのずれ」はこれで確かめる。
++- **Web フォントは `font-display: swap` で読み込み、読み込みの前後のずれを CLS で確かめる。** 欧文は、同じ `unicode-range` を付けてメトリクスを合わせた代わりの書体を置き、行の高さと字面を揃える。見出しの和文は、端末の和文の書体ごとに `local()` と `unicode-range` を分けた代わりの書体を置き、字の種類ごとの `size-adjust` で送り幅を Zen Antique に揃える（`globals.css` の `--font-zen-antique-fallback`。倍率の求め方と確かめ方は `docs/knowledge/web-fonts.md`）。見出しの書体の並びを変えたときは、`--font-zen-antique` を無い書体の名前に差し替えた組みと比べ、見出しの行の数が読み込みの前後で変わらないことを確かめる。§12 の「読み込みのずれ」はこれで確かめる。

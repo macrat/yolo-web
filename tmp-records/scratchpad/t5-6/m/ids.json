@@ -1,0 +1,361 @@
+{
+ "kanji-level": {
+  "type": "knowledge",
+  "ids": [
+   "beginner",
+   "egg",
+   "intermediate",
+   "advanced",
+   "master"
+  ],
+  "detailed": [],
+  "metrics": []
+ },
+ "kotowaza-level": {
+  "type": "knowledge",
+  "ids": [
+   "beginner",
+   "learner",
+   "intermediate",
+   "advanced",
+   "master"
+  ],
+  "detailed": [],
+  "metrics": []
+ },
+ "traditional-color": {
+  "type": "personality",
+  "ids": [
+   "ai",
+   "shu",
+   "wakakusa",
+   "fuji",
+   "yamabuki",
+   "kon",
+   "sakura",
+   "hisui"
+  ],
+  "detailed": [
+   "ai",
+   "shu",
+   "wakakusa",
+   "fuji",
+   "yamabuki",
+   "kon",
+   "sakura",
+   "hisui"
+  ],
+  "metrics": []
+ },
+ "yoji-level": {
+  "type": "knowledge",
+  "ids": [
+   "beginner",
+   "learner",
+   "intermediate",
+   "advanced",
+   "master"
+  ],
+  "detailed": [],
+  "metrics": []
+ },
+ "yoji-personality": {
+  "type": "personality",
+  "ids": [
+   "shoshikantetsu",
+   "tenshinranman",
+   "sessatakuma",
+   "ichigoichie",
+   "rinkiohen",
+   "meikyoshisui",
+   "ishindenshin",
+   "yuoumaishin"
+  ],
+  "detailed": [
+   "shoshikantetsu",
+   "tenshinranman",
+   "sessatakuma",
+   "ichigoichie",
+   "rinkiohen",
+   "meikyoshisui",
+   "ishindenshin",
+   "yuoumaishin"
+  ],
+  "metrics": []
+ },
+ "impossible-advice": {
+  "type": "personality",
+  "ids": [
+   "timemagician",
+   "gravityfighter",
+   "digitalmonk",
+   "sleeparchitect",
+   "conversationsamurai",
+   "weathercontroller",
+   "snackphilosopher"
+  ],
+  "detailed": [
+   "timemagician",
+   "gravityfighter",
+   "digitalmonk",
+   "sleeparchitect",
+   "conversationsamurai",
+   "weathercontroller",
+   "snackphilosopher"
+  ],
+  "metrics": []
+ },
+ "contrarian-fortune": {
+  "type": "personality",
+  "ids": [
+   "reverseoptimist",
+   "overthinker",
+   "cosmicworrier",
+   "paradoxmaster",
+   "accidentalprophet",
+   "calmchaos",
+   "inversefortune",
+   "mundaneoracle"
+  ],
+  "detailed": [
+   "reverseoptimist",
+   "overthinker",
+   "cosmicworrier",
+   "paradoxmaster",
+   "accidentalprophet",
+   "calmchaos",
+   "inversefortune",
+   "mundaneoracle"
+  ],
+  "metrics": [
+   "reverseoptimist",
+   "overthinker",
+   "cosmicworrier",
+   "accidentalprophet",
+   "inversefortune",
+   "mundaneoracle"
+  ]
+ },
+ "unexpected-compatibility": {
+  "type": "personality",
+  "ids": [
+   "vendingmachine",
+   "oldclock",
+   "streetlight",
+   "benchpark",
+   "windchime",
+   "rainyday",
+   "cloudspecific",
+   "404page"
+  ],
+  "detailed": [
+   "vendingmachine",
+   "oldclock",
+   "streetlight",
+   "benchpark",
+   "windchime",
+   "rainyday",
+   "cloudspecific",
+   "404page"
+  ],
+  "metrics": []
+ },
+ "music-personality": {
+  "type": "personality",
+  "ids": [
+   "festival-pioneer",
+   "playlist-evangelist",
+   "solo-explorer",
+   "repeat-warrior",
+   "bgm-craftsman",
+   "karaoke-healer",
+   "midnight-shuffle",
+   "lyrics-dweller"
+  ],
+  "detailed": [
+   "festival-pioneer",
+   "playlist-evangelist",
+   "solo-explorer",
+   "repeat-warrior",
+   "bgm-craftsman",
+   "karaoke-healer",
+   "midnight-shuffle",
+   "lyrics-dweller"
+  ],
+  "metrics": []
+ },
+ "character-fortune": {
+  "type": "personality",
+  "ids": [
+   "commander",
+   "professor",
+   "dreamer",
+   "trickster",
+   "guardian",
+   "artist"
+  ],
+  "detailed": [
+   "commander",
+   "professor",
+   "dreamer",
+   "trickster",
+   "guardian",
+   "artist"
+  ],
+  "metrics": []
+ },
+ "animal-personality": {
+  "type": "personality",
+  "ids": [
+   "nihon-zaru",
+   "hondo-tanuki",
+   "nihon-kitsune",
+   "iriomote-yamaneko",
+   "amami-kuro-usagi",
+   "yamane",
+   "nihon-momonga",
+   "nihon-kamoshika",
+   "hondo-ten",
+   "musasabi",
+   "nihon-risu",
+   "ezo-shika"
+  ],
+  "detailed": [
+   "nihon-zaru",
+   "hondo-tanuki",
+   "nihon-kitsune",
+   "iriomote-yamaneko",
+   "amami-kuro-usagi",
+   "yamane",
+   "nihon-momonga",
+   "nihon-kamoshika",
+   "hondo-ten",
+   "musasabi",
+   "nihon-risu",
+   "ezo-shika"
+  ],
+  "metrics": []
+ },
+ "science-thinking": {
+  "type": "personality",
+  "ids": [
+   "einstein",
+   "curie",
+   "turing",
+   "davinci",
+   "darwin",
+   "edison",
+   "newton",
+   "nightingale",
+   "faraday",
+   "fabre"
+  ],
+  "detailed": [
+   "einstein",
+   "curie",
+   "turing",
+   "davinci",
+   "darwin",
+   "edison",
+   "newton",
+   "nightingale",
+   "faraday",
+   "fabre"
+  ],
+  "metrics": []
+ },
+ "japanese-culture": {
+  "type": "personality",
+  "ids": [
+   "sado",
+   "shodo",
+   "budo",
+   "kado",
+   "rakugo",
+   "haiku",
+   "togei"
+  ],
+  "detailed": [],
+  "metrics": []
+ },
+ "character-personality": {
+  "type": "personality",
+  "ids": [
+   "blazing-strategist",
+   "blazing-poet",
+   "blazing-schemer",
+   "blazing-warden",
+   "blazing-canvas",
+   "dreaming-scholar",
+   "contrarian-professor",
+   "careful-scholar",
+   "academic-artist",
+   "star-chaser",
+   "tender-dreamer",
+   "dreaming-canvas",
+   "clever-guardian",
+   "creative-disruptor",
+   "gentle-fortress",
+   "ultimate-commander",
+   "endless-researcher",
+   "eternal-dreamer",
+   "ultimate-trickster",
+   "ultimate-guardian",
+   "ultimate-artist",
+   "data-fortress",
+   "vibe-rebel",
+   "guardian-charger"
+  ],
+  "detailed": [
+   "blazing-strategist",
+   "blazing-poet",
+   "blazing-schemer",
+   "blazing-warden",
+   "blazing-canvas",
+   "dreaming-scholar",
+   "contrarian-professor",
+   "careful-scholar",
+   "academic-artist",
+   "star-chaser",
+   "tender-dreamer",
+   "dreaming-canvas",
+   "clever-guardian",
+   "creative-disruptor",
+   "gentle-fortress",
+   "ultimate-commander",
+   "endless-researcher",
+   "eternal-dreamer",
+   "ultimate-trickster",
+   "ultimate-guardian",
+   "ultimate-artist",
+   "data-fortress",
+   "vibe-rebel",
+   "guardian-charger"
+  ],
+  "metrics": []
+ },
+ "word-sense-personality": {
+  "type": "personality",
+  "ids": [
+   "elegant-precise",
+   "warm-empathy",
+   "creative-playful",
+   "logical-clear",
+   "poetic-sensory",
+   "bold-impact",
+   "humor-wit",
+   "gentle-indirect"
+  ],
+  "detailed": [
+   "elegant-precise",
+   "warm-empathy",
+   "creative-playful",
+   "logical-clear",
+   "poetic-sensory",
+   "bold-impact",
+   "humor-wit",
+   "gentle-indirect"
+  ],
+  "metrics": []
+ }
+}

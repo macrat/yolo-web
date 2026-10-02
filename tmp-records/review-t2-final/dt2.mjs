@@ -1,0 +1,1 @@
+export default async (page) => { const out=[]; for (let i=0;i<22;i++){ await page.keyboard.press('Tab'); await page.waitForTimeout(50); const r = await page.evaluate(()=>{const e=document.activeElement; return e.type==='date'? `${e.getAttribute('aria-label')} fv=${e.matches(':focus-visible')} o=${getComputedStyle(e).outlineStyle}`:null}); if(r) out.push(i+' '+r);} return out; };

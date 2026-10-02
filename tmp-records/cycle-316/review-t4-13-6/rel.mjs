@@ -1,0 +1,11 @@
+import { open, close, settle, URL, BASE, SEEDS } from "./lib.mjs";
+const o = await open({ width: 375, height: 667, storage: SEEDS.mid }); const p = o.page;
+await p.goto(URL, { waitUntil: "load" }); await settle(p, 500);
+const a = await p.evaluate(() => !!document.getElementById("nakamawake-saved-layout"));
+await p.evaluate(() => document.querySelector('a[href="/play/kanji-kanaru"]').click());
+await p.waitForURL("**/kanji-kanaru"); await p.waitForTimeout(800);
+const b = await p.evaluate(() => !!document.getElementById("nakamawake-saved-layout"));
+await p.goBack(); await p.waitForURL("**/nakamawake"); await settle(p, 800);
+const c = await p.evaluate(() => [!!document.getElementById("nakamawake-saved-layout"), document.querySelectorAll("[aria-label='言葉の格子'] button").length]);
+console.log({ onPage: a, afterLeave: b, afterBack: c });
+await close(o);

@@ -1,0 +1,13 @@
+▲ Next.js 16.3.0
+- Local:         http://localhost:3315
+- Network:       http://192.0.2.2:3315
+✓ Ready in 130ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/user/yolo-web/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /home/user/yolo-web/tmp/t1a3/site/package-lock.json
+
+✓ Running next.config.ts took 33ms
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net

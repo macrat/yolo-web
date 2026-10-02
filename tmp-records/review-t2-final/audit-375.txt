@@ -1,0 +1,604 @@
+== /play/kanji-kanaru (375 light) sw=375
+== /play/yoji-kimeru (375 light) sw=375
+== /play/nakamawake (375 light) sw=375
+  NOCUE BUTTON "飛行機" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "東京" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "のぞみ" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "ひかり" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "小田急" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "JR" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "京急" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "つばさ" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "バス" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "こだま" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "浜松町" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "電車" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "上野" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "東武" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "秋葉原" cls=WordGrid-module__32ggfa__wordButton shape=true
+  NOCUE BUTTON "自転車" cls=WordGrid-module__32ggfa__wordButton shape=true
+== /play/irodori (375 light) sw=375
+== /play/kanji-level (375 light) sw=375
+== /play/kotowaza-level (375 light) sw=375
+== /play/traditional-color (375 light) sw=375
+== /play/yoji-level (375 light) sw=375
+== /play/yoji-personality (375 light) sw=375
+== /play/impossible-advice (375 light) sw=375
+== /play/contrarian-fortune (375 light) sw=375
+== /play/unexpected-compatibility (375 light) sw=375
+== /play/music-personality (375 light) sw=375
+== /play/character-fortune (375 light) sw=375
+== /play/animal-personality (375 light) sw=375
+== /play/science-thinking (375 light) sw=375
+== /play/japanese-culture (375 light) sw=375
+== /play/character-personality (375 light) sw=375
+== /play/word-sense-personality (375 light) sw=375
+== /play/daily (375 light) sw=375
+== /play/traditional-color/result/ai (375 light) sw=375
+== /play/yoji-personality/result/shoshikantetsu (375 light) sw=375
+== /play/impossible-advice/result/timemagician (375 light) sw=375
+== /play/contrarian-fortune/result/reverseoptimist (375 light) sw=375
+== /play/unexpected-compatibility/result/vendingmachine (375 light) sw=375
+== /play/music-personality/result/festival-pioneer (375 light) sw=375
+== /play/character-fortune/result/commander (375 light) sw=375
+== /play/animal-personality/result/nihon-zaru (375 light) sw=375
+== /play/character-personality/result/blazing-strategist (375 light) sw=375
+== /play/word-sense-personality/result/elegant-precise (375 light) sw=375
+== /play/science-thinking/result/einstein (375 light) sw=375
+== /tools/age-calculator (375 light) sw=375
+== /tools/base64 (375 light) sw=375
+== /tools/bmi-calculator (375 light) sw=375
+== /tools/business-email (375 light) sw=375
+== /tools/byte-counter (375 light) sw=375
+== /tools/char-count (375 light) sw=375
+== /tools/color-converter (375 light) sw=375
+== /tools/cron-parser (375 light) sw=375
+== /tools/csv-converter (375 light) sw=375
+== /tools/date-calculator (375 light) sw=375
+== /tools/dummy-text (375 light) sw=375
+== /tools/email-validator (375 light) sw=375
+== /tools/fullwidth-converter (375 light) sw=375
+== /tools/hash-generator (375 light) sw=375
+== /tools/html-entity (375 light) sw=375
+== /tools/image-base64 (375 light) sw=375
+== /tools/image-resizer (375 light) sw=375
+== /tools/json-formatter (375 light) sw=375
+== /tools/kana-converter (375 light) sw=375
+== /tools/keigo-reference (375 light) sw=375
+== /tools/line-break-remover (375 light) sw=375
+== /tools/markdown-preview (375 light) sw=375
+== /tools/number-base-converter (375 light) sw=375
+== /tools/password-generator (375 light) sw=375
+== /tools/percent-calculator (375 light) sw=375
+== /tools/qr-code (375 light) sw=375
+== /tools/regex-tester (375 light) sw=375
+== /tools/sql-formatter (375 light) sw=375
+== /tools/text-diff (375 light) sw=375
+== /tools/text-replace (375 light) sw=375
+== /tools/traditional-color-palette (375 light) sw=375
+  NOCUE BUTTON "鴇 (#eea9a9)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鴇 (#eea9a9)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "真朱 (#ab3b3a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "真朱 (#ab3b3a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "長春 (#bf6766)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "長春 (#bf6766)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "甚三紅 (#eb7a77)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "甚三紅 (#eb7a77)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "銀朱 (#c73e3a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "銀朱 (#c73e3a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "蘇芳香 (#a96360)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "蘇芳香 (#a96360)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "小豆 (#954a45)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "小豆 (#954a45)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "栗梅 (#904840)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "栗梅 (#904840)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "深緋 (#86473f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "深緋 (#86473f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅樺 (#b54434)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅樺 (#b54434)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "猩猩緋 (#e83015)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "猩猩緋 (#e83015)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅鳶 (#994639)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅鳶 (#994639)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "珊瑚朱 (#f17c67)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "珊瑚朱 (#f17c67)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "曙 (#f19483)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "曙 (#f19483)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "芝翫茶 (#b55d4c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "芝翫茶 (#b55d4c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "緋 (#cc543a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "緋 (#cc543a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "水がき (#b9887d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "水がき (#b9887d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "海老茶 (#734338)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "海老茶 (#734338)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅緋 (#f75c2f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅緋 (#f75c2f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "檜皮 (#854836)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "檜皮 (#854836)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅檜皮 (#884c3a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅檜皮 (#884c3a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "照柿 (#c46243)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "照柿 (#c46243)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "柿渋 (#a35e47)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "柿渋 (#a35e47)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "ときがら茶 (#db8e71)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "ときがら茶 (#db8e71)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "弁柄 (#9a5034)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "弁柄 (#9a5034)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "唐茶 (#b47157)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "唐茶 (#b47157)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "纁 (#ed784a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "纁 (#ed784a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "洗朱 (#fb966e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "洗朱 (#fb966e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "百塩茶 (#724938)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "百塩茶 (#724938)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "樺茶 (#b35c37)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "樺茶 (#b35c37)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "赤香 (#e3916e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "赤香 (#e3916e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "江戸茶 (#af5f3c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "江戸茶 (#af5f3c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "遠州茶 (#ca7853)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "遠州茶 (#ca7853)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄丹 (#f05e1c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄丹 (#f05e1c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "灰桜 (#d7c4bb)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "灰桜 (#d7c4bb)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "宗伝唐茶 (#a0674b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "宗伝唐茶 (#a0674b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "宍 (#f0a986)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "宍 (#f0a986)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "樺 (#c1693c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "樺 (#c1693c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "深支子 (#fb9966)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "深支子 (#fb9966)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鳶 (#724832)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鳶 (#724832)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "雀茶 (#8f5a3c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "雀茶 (#8f5a3c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "栗皮茶 (#6a4028)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "栗皮茶 (#6a4028)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "洗柿 (#e79460)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "洗柿 (#e79460)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "代赭 (#a36336)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "代赭 (#a36336)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "焦茶 (#563f2e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "焦茶 (#563f2e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "赤白橡 (#e1a679)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "赤白橡 (#e1a679)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "洒落柿 (#ffba84)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "洒落柿 (#ffba84)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "赤朽葉 (#c78550)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "赤朽葉 (#c78550)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "梅染 (#e9a368)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "梅染 (#e9a368)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "萱草 (#fc9f4d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "萱草 (#fc9f4d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "薄柿 (#ecb88a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "薄柿 (#ecb88a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "枇杷茶 (#b17844)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "枇杷茶 (#b17844)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄櫨染 (#7d532c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄櫨染 (#7d532c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "礪茶 (#985f2a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "礪茶 (#985f2a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "琥珀 (#ca7a2c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "琥珀 (#ca7a2c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "煎茶 (#855b32)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "煎茶 (#855b32)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅鬱金 (#e98b2a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅鬱金 (#e98b2a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "丁子茶 (#96632e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "丁子茶 (#96632e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "柴染 (#967249)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "柴染 (#967249)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "丁子染 (#b07736)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "丁子染 (#b07736)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "朽葉 (#e2943b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "朽葉 (#e2943b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "金茶 (#c7802d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "金茶 (#c7802d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "伽羅 (#78552b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "伽羅 (#78552b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "薄香 (#ebb471)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "薄香 (#ebb471)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "白茶 (#bc9f77)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "白茶 (#bc9f77)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄土 (#b68e55)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄土 (#b68e55)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "砥粉 (#d7b98e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "砥粉 (#d7b98e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "煤竹 (#6e552f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "煤竹 (#6e552f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "媚茶 (#876633)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "媚茶 (#876633)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "銀煤竹 (#82663a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "銀煤竹 (#82663a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "狐 (#9b6e23)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "狐 (#9b6e23)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "白橡 (#dcb879)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "白橡 (#dcb879)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄唐茶 (#c18a26)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄唐茶 (#c18a26)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "山吹 (#ffb11b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "山吹 (#ffb11b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "山吹茶 (#d19826)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "山吹茶 (#d19826)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鳥の子 (#dac9a6)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鳥の子 (#dac9a6)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "桑茶 (#c99833)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "桑茶 (#c99833)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "玉子 (#f9bf45)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "玉子 (#f9bf45)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "浅黄 (#fad689)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "浅黄 (#fad689)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "櫨染 (#dda52d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "櫨染 (#dda52d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "玉蜀黍 (#e8b647)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "玉蜀黍 (#e8b647)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "生壁 (#7d6c46)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "生壁 (#7d6c46)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄朽葉 (#d9ab42)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄朽葉 (#d9ab42)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "梔子 (#f6c555)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "梔子 (#f6c555)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄橡 (#ba9132)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄橡 (#ba9132)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "利休白茶 (#b4a582)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "利休白茶 (#b4a582)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "花葉 (#f7c242)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "花葉 (#f7c242)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "芥子 (#caad5f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "芥子 (#caad5f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鬱金 (#efbb24)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鬱金 (#efbb24)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "肥後煤竹 (#8d742a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "肥後煤竹 (#8d742a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "路考茶 (#74673e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "路考茶 (#74673e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "籐黄 (#ffc408)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "籐黄 (#ffc408)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "菜種油 (#a28c37)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "菜種油 (#a28c37)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "刈安 (#e9cd4c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "刈安 (#e9cd4c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "菜の花 (#f7d94c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "菜の花 (#f7d94c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄海松茶 (#867835)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄海松茶 (#867835)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "海松茶 (#62592c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "海松茶 (#62592c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鶯茶 (#6c6024)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鶯茶 (#6c6024)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "蒸栗 (#d9cd90)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "蒸栗 (#d9cd90)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黄蘗 (#fbe251)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黄蘗 (#fbe251)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青朽葉 (#ada142)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青朽葉 (#ada142)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "女郎花 (#ddd23b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "女郎花 (#ddd23b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鶸茶 (#a5a051)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鶸茶 (#a5a051)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鶯 (#6c6a2d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鶯 (#6c6a2d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "璃寛茶 (#616138)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "璃寛茶 (#616138)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鶸 (#bec23f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鶸 (#bec23f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "柳茶 (#939650)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "柳茶 (#939650)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "麹塵 (#b1b479)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "麹塵 (#b1b479)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "苔 (#838a2d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "苔 (#838a2d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藍媚茶 (#4b4e2a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藍媚茶 (#4b4e2a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "海松 (#5b622e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "海松 (#5b622e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鶸萌黄 (#90b44b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鶸萌黄 (#90b44b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "萌黄 (#7ba23f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "萌黄 (#7ba23f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "柳染 (#91ad70)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "柳染 (#91ad70)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "裏柳 (#b5caa0)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "裏柳 (#b5caa0)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "松葉 (#42602d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "松葉 (#42602d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青丹 (#516e41)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青丹 (#516e41)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "苗 (#86c166)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "苗 (#86c166)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "常磐 (#1b813e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "常磐 (#1b813e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "白緑 (#a8d8b9)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "白緑 (#a8d8b9)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "若竹 (#5dac81)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "若竹 (#5dac81)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "木賊 (#2d6d4b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "木賊 (#2d6d4b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "緑 (#227d51)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "緑 (#227d51)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "緑青 (#24936e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "緑青 (#24936e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "ビロード (#096148)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "ビロード (#096148)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "虫襖 (#20604f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "虫襖 (#20604f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鉄 (#26453d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鉄 (#26453d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青竹 (#00896c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青竹 (#00896c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青緑 (#00aa90)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青緑 (#00aa90)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "高麗納戸 (#305a56)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "高麗納戸 (#305a56)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青磁 (#69b0ac)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青磁 (#69b0ac)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "水浅葱 (#66bab7)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "水浅葱 (#66bab7)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青碧 (#268785)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青碧 (#268785)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "白群 (#78c2c4)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "白群 (#78c2c4)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "御召茶 (#376b6d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "御召茶 (#376b6d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "瓶覗 (#a5dee4)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "瓶覗 (#a5dee4)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鉄御納戸 (#255359)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鉄御納戸 (#255359)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藍 (#0d5661)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藍 (#0d5661)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "浅葱 (#33a6b8)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "浅葱 (#33a6b8)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "水 (#81c7d4)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "水 (#81c7d4)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "新橋 (#0089a7)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "新橋 (#0089a7)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "錆御納戸 (#336774)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "錆御納戸 (#336774)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "花浅葱 (#1e88a8)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "花浅葱 (#1e88a8)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "縹 (#006284)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "縹 (#006284)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "御召御納戸 (#2e5c6e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "御召御納戸 (#2e5c6e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "熨斗目花 (#2b5f75)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "熨斗目花 (#2b5f75)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "露草 (#2ea9df)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "露草 (#2ea9df)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "空 (#58b2dc)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "空 (#58b2dc)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "千草 (#3a8fb7)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "千草 (#3a8fb7)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "群青 (#51a8dd)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "群青 (#51a8dd)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "勿忘草 (#7db9de)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "勿忘草 (#7db9de)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "瑠璃 (#005caf)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "瑠璃 (#005caf)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "瑠璃紺 (#0b346e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "瑠璃紺 (#0b346e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紺青 (#113285)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紺青 (#113285)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅碧 (#7b90d2)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅碧 (#7b90d2)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅掛花 (#4e4f97)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅掛花 (#4e4f97)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紺桔梗 (#211e55)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紺桔梗 (#211e55)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藤 (#8b81c3)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藤 (#8b81c3)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "楝 (#9b90c2)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "楝 (#9b90c2)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藤紫 (#8a6bbe)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藤紫 (#8a6bbe)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "桔梗 (#6a4c9c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "桔梗 (#6a4c9c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紫苑 (#8f77b5)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紫苑 (#8f77b5)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "薄 (#b28fce)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "薄 (#b28fce)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "半 (#986db2)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "半 (#986db2)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "深紫 (#4a225d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "深紫 (#4a225d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "菫 (#66327c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "菫 (#66327c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "江戸紫 (#77428d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "江戸紫 (#77428d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "菖蒲 (#6f3381)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "菖蒲 (#6f3381)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紫 (#592c63)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紫 (#592c63)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅藤 (#b481bb)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅藤 (#b481bb)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "杜若 (#622954)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "杜若 (#622954)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "蒲葡 (#6d2e5b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "蒲葡 (#6d2e5b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "牡丹 (#c1328e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "牡丹 (#c1328e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "梅紫 (#a8497a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "梅紫 (#a8497a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "躑躅 (#e03c8a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "躑躅 (#e03c8a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "茄子紺 (#572a3f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "茄子紺 (#572a3f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "撫子 (#dc9fb4)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "撫子 (#dc9fb4)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "韓紅花 (#d0104c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "韓紅花 (#d0104c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅梅 (#e16b8c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅梅 (#e16b8c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅 (#cb1b45)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅 (#cb1b45)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "蘇芳 (#8e354a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "蘇芳 (#8e354a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "中紅 (#db4d6d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "中紅 (#db4d6d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "似紫 (#562e37)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "似紫 (#562e37)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "桃 (#f596aa)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "桃 (#f596aa)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "薄紅 (#e87a90)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "薄紅 (#e87a90)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紫鳶 (#60373e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紫鳶 (#60373e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "今様 (#d05a6e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "今様 (#d05a6e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "苺 (#b5495b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "苺 (#b5495b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "桑染 (#64363c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "桑染 (#64363c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "燕脂 (#9f353a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "燕脂 (#9f353a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "赤紅 (#cb4042)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "赤紅 (#cb4042)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鉛丹 (#d75455)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鉛丹 (#d75455)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "一斥染 (#f4a7b9)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "一斥染 (#f4a7b9)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "退紅 (#f8c3cd)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "退紅 (#f8c3cd)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "桜 (#fedfe1)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "桜 (#fedfe1)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "白練 (#fcfaf2)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "白練 (#fcfaf2)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "胡粉 (#fffffb)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "胡粉 (#fffffb)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鉛 (#787878)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鉛 (#787878)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "灰 (#828282)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "灰 (#828282)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "消炭 (#434343)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "消炭 (#434343)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鈍 (#656765)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鈍 (#656765)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "素鼠 (#787d7b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "素鼠 (#787d7b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "青鈍 (#535953)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "青鈍 (#535953)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藍墨茶 (#373c38)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藍墨茶 (#373c38)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "白鼠 (#bdc0ba)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "白鼠 (#bdc0ba)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "溝鼠 (#4f4f48)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "溝鼠 (#4f4f48)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "利休鼠 (#707c74)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "利休鼠 (#707c74)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藤煤竹 (#574c57)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藤煤竹 (#574c57)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "銀鼠 (#91989f)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "銀鼠 (#91989f)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鳩羽鼠 (#72636e)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鳩羽鼠 (#72636e)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "柳鼠 (#808f7c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "柳鼠 (#808f7c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "岩井茶 (#646a58)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "岩井茶 (#646a58)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "老竹 (#6a8372)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "老竹 (#6a8372)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "灰汁 (#877f6c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "灰汁 (#877f6c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "御納戸茶 (#465d4c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "御納戸茶 (#465d4c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藍鼠 (#566c73)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藍鼠 (#566c73)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紅消鼠 (#52433d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紅消鼠 (#52433d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "深川鼠 (#77969a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "深川鼠 (#77969a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "梅幸茶 (#89916b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "梅幸茶 (#89916b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "錆青磁 (#86a697)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "錆青磁 (#86a697)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "胡桃 (#947a6d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "胡桃 (#947a6d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "梅鼠 (#9e7a7a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "梅鼠 (#9e7a7a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紫紺 (#3c2f41)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紫紺 (#3c2f41)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "桜鼠 (#b19693)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "桜鼠 (#b19693)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "千歳茶 (#4d5139)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "千歳茶 (#4d5139)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "錆鉄御納戸 (#405b55)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "錆鉄御納戸 (#405b55)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "沈香茶 (#4f726c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "沈香茶 (#4f726c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "柳煤竹 (#4a593d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "柳煤竹 (#4a593d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黒紅 (#3f2b36)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黒紅 (#3f2b36)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "薄青 (#91b493)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "薄青 (#91b493)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "滅紫 (#533d5b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "滅紫 (#533d5b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "二藍 (#70649a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "二藍 (#70649a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "葡萄鼠 (#5e3d50)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "葡萄鼠 (#5e3d50)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黒鳶 (#554236)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黒鳶 (#554236)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "舛花 (#577c8a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "舛花 (#577c8a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "千歳緑 (#36563c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "千歳緑 (#36563c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藤鼠 (#6e75a4)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藤鼠 (#6e75a4)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "利休茶 (#897d55)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "利休茶 (#897d55)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "錆浅葱 (#6699a1)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "錆浅葱 (#6699a1)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黒 (#080808)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黒 (#080808)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "呂 (#0c0c0c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "呂 (#0c0c0c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "黒橡 (#0b1013)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "黒橡 (#0b1013)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "褐 (#08192d)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "褐 (#08192d)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "墨 (#1c1c1c)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "墨 (#1c1c1c)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "紺 (#0f2540)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "紺 (#0f2540)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "御納戸 (#0c4842)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "御納戸 (#0c4842)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "藍海松茶 (#0f4c3a)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "藍海松茶 (#0f4c3a)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "憲法染 (#43341b)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "憲法染 (#43341b)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "檳榔子染 (#3a3226)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "檳榔子染 (#3a3226)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+  NOCUE BUTTON "鉄紺 (#261e47)" cls=TraditionalColorPaletteTile-module__9WDvEq__swatch shape=true
+  SMALL BUTTON "鉄紺 (#261e47)" 43x43 cls=TraditionalColorPaletteTile-module__9WDvEq__swatch
+== /tools/unit-converter (375 light) sw=375
+== /tools/unix-timestamp (375 light) sw=375
+== /tools/url-encode (375 light) sw=375
+== /tools/yaml-formatter (375 light) sw=375
+== /tools/yoji-search (375 light) sw=375
+== /tools (375 light) sw=375
+== /play (375 light) sw=375
+== /dictionary (375 light) sw=375
+== /dictionary/kanji/%E6%9C%A8 (375 light) sw=375
+  SMALL A "木" 16x20 cls=
+  SMALL A "4画" 26x20 cls=
+  SMALL A "小学1年" 58x20 cls=
+== /dictionary/yoji (375 light) sw=375
+== /dictionary/colors (375 light) sw=375
+== /dictionary/humor (375 light) sw=375
+== /about (375 light) sw=375
+== /privacy (375 light) sw=375
+== /storybook (375 light) sw=375
+== /blog/category/japanese-culture (375 light) sw=375
+== /dictionary/colors/toki (375 light) sw=375
+== /dictionary/colors/shinsyu (375 light) sw=375
+== /dictionary/humor/morning (375 light) sw=375
+== /blog/personality-quiz-tie-enumeration (375 light) sw=375
+== /blog/does-personality-quiz-see-your-answers (375 light) sw=375
+== /blog/auto-opened-dialog-focus-restore-body (375 light) sw=375
+== /blog/tag/AI%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88 (375 light) sw=375

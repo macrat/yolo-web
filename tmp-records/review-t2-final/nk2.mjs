@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const scheme = process.argv[2];
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const ctx = await browser.newContext({ viewport: { width: 375, height: 800 }, colorScheme: scheme, deviceScaleFactor: 3 });
+const page = await ctx.newPage();
+await page.goto('http://localhost:3955/play/nakamawake', { waitUntil: 'networkidle' });
+await page.keyboard.press('Escape'); await page.waitForTimeout(200);
+const btns = page.locator('button[aria-pressed]');
+await btns.nth(1).hover();
+const b = await btns.nth(0).boundingBox();
+await page.screenshot({ path: `tmp/review-t2-final/nk-hover-${scheme}.png`, clip: { x: b.x-4, y: b.y-4, width: b.width*2+20, height: b.height+8 } });
+console.log(await btns.nth(1).evaluate(e => getComputedStyle(e).boxShadow));
+await browser.close();

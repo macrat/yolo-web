@@ -1,0 +1,5566 @@
+[
+ {
+  "mode": "normal",
+  "name": "top",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 4440,
+  "docH": 4677,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "top",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 4440,
+  "docH": 4677,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "top",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 4099,
+  "docH": 4304,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "top",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 4099,
+  "docH": 4304,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "top",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2833,
+  "docH": 3007,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 203
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "top",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2833,
+  "docH": 3007,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 203
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "play",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2656,
+  "docH": 2893,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 39
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "play",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2656,
+  "docH": 2893,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 39
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "play",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2223,
+  "docH": 2428,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 39
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "play",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2223,
+  "docH": 2428,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 39
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "play",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1791,
+  "docH": 1965,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "play",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1791,
+  "docH": 1965,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "char",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 3134,
+  "docH": 3371,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "char",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 3134,
+  "docH": 3371,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "char",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2781,
+  "docH": 2987,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "char",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2781,
+  "docH": 2987,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "char",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2336,
+  "docH": 2510,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "char",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2336,
+  "docH": 2510,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "kanji",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2466,
+  "docH": 2702,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 131
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "kanji",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2466,
+  "docH": 2702,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 131
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "kanji",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2187,
+  "docH": 2392,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 131
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "kanji",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2187,
+  "docH": 2392,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 131
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "kanji",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1892,
+  "docH": 2066,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 448
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "kanji",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1892,
+  "docH": 2066,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 448
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "blog",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 94,
+    "top": 176,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 110,
+    "r": 153,
+    "top": 176,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 20980,
+  "docH": 22322,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]"
+  ],
+  "overCount": 399,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "blog",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 94,
+    "top": 176,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 110,
+    "r": 153,
+    "top": 176,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 20980,
+  "docH": 22322,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]"
+  ],
+  "overCount": 399,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "blog",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 94,
+    "top": 132,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 110,
+    "r": 153,
+    "top": 132,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 17983,
+  "docH": 19115,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]"
+  ],
+  "overCount": 251,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "blog",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 94,
+    "top": 132,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 110,
+    "r": 153,
+    "top": 132,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 17983,
+  "docH": 19115,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]"
+  ],
+  "overCount": 251,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "blog",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 203,
+    "r": 246,
+    "top": 96,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 262,
+    "r": 305,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 11578,
+  "docH": 12415,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 203
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "blog",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 203,
+    "r": 246,
+    "top": 96,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 262,
+    "r": 305,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 11578,
+  "docH": 12415,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 203
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "story",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 15607,
+  "docH": 15844,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "story",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 15607,
+  "docH": 15844,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "story",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 14638,
+  "docH": 14844,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "story",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 14638,
+  "docH": 14844,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "story",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 12347,
+  "docH": 12521,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 179
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "story",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 12347,
+  "docH": 12521,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 179
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "normal",
+  "name": "404",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 1129,
+  "docH": 1366,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "normal",
+  "name": "404",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 1129,
+  "docH": 1366,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "normal",
+  "name": "404",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 1003,
+  "docH": 1209,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "normal",
+  "name": "404",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   100
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 1003,
+  "docH": 1209,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "normal",
+  "name": "404",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "32px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "normal",
+  "name": "404",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   252
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 276,
+    "r": 311,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 327,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 394,
+    "r": 428,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 444,
+    "r": 497,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 513,
+    "r": 599,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "32px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "normal",
+  "name": "410",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   102
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 563,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "normal",
+  "name": "410",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "oklch(0.18 0 0)",
+  "bodyFont": "17px",
+  "headerH": 151,
+  "site": [
+   27,
+   8,
+   102
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 113,
+    "top": 96,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 563,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "normal",
+  "name": "410",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   102
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 595,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "normal",
+  "name": "410",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "oklch(0.18 0 0)",
+  "bodyFont": "17px",
+  "headerH": 107,
+  "site": [
+   27,
+   8,
+   102
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 61,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 69,
+    "r": 121,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 129,
+    "r": 163,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 171,
+    "r": 223,
+    "top": 52,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 231,
+    "r": 318,
+    "top": 52,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 595,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "normal",
+  "name": "410",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   254
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 278,
+    "r": 312,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 328,
+    "r": 380,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 396,
+    "r": 430,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 446,
+    "r": 498,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 514,
+    "r": 600,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "65.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 179
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "normal",
+  "name": "410",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "oklch(0.18 0 0)",
+  "bodyFont": "17px",
+  "headerH": 63,
+  "site": [
+   179,
+   8,
+   254
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 278,
+    "r": 312,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 328,
+    "r": 380,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 396,
+    "r": 430,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 446,
+    "r": 498,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 514,
+    "r": 600,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "65.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 179
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "font32",
+  "name": "top",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 11158,
+  "docH": 11791,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "96px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "top",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 9061,
+  "docH": 9631,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "96px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "top",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 4674,
+  "docH": 4930,
+  "vh": 800,
+  "h1": {
+   "text": "yolos.net",
+   "size": "96px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "play",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 9834,
+  "docH": 10467,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "35.2px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "button.QuizContainer-module__BM7iiG__startButton [51,435]"
+  ],
+  "overCount": 1,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "play",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 7139,
+  "docH": 7709,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "35.2px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "button.QuizContainer-module__BM7iiG__startButton [51,435]"
+  ],
+  "overCount": 1,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "play",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 3341,
+  "docH": 3597,
+  "vh": 800,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "40px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 59
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "char",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 7637,
+  "docH": 8270,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "40px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [
+   "div.CharCountTile-module__ilr-9q__stat [207,309]",
+   "div.CharCountTile-module__ilr-9q__stat [207,309]"
+  ],
+  "overCount": 2,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "char",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 6461,
+  "docH": 7031,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "40px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "char",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 3447,
+  "docH": 3703,
+  "vh": 800,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "50px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 43
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "kanji",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 6916,
+  "docH": 7549,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "50px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "kanji",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 5065,
+  "docH": 5635,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "50px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 195
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "kanji",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 2788,
+  "docH": 3044,
+  "vh": 800,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "50px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 274
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "blog",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 136,
+    "top": 297,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 169,
+    "r": 255,
+    "top": 297,
+    "vis": true
+   }
+  ],
+  "navRows": 4,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 52322,
+  "docH": 55956,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "66.56px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,1004]",
+   "span.line [68,739]",
+   "span. [68,739]",
+   "span.line [68,1004]",
+   "span. [68,1004]",
+   "span.line [68,708]",
+   "span. [68,708]",
+   "code. [68,996]",
+   "span.line [68,916]",
+   "span. [271,739]"
+  ],
+  "overCount": 722,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "blog",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 136,
+    "top": 234,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 169,
+    "r": 255,
+    "top": 234,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 47844,
+  "docH": 50905,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "66.56px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,1004]",
+   "span.line [68,739]",
+   "span. [68,739]",
+   "span.line [68,1004]",
+   "span. [68,1004]",
+   "span.line [68,708]",
+   "span. [68,708]",
+   "code. [68,996]",
+   "span.line [68,916]",
+   "span. [271,739]"
+  ],
+  "overCount": 629,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "blog",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ホーム",
+    "l": 51,
+    "r": 136,
+    "top": 116,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 169,
+    "r": 255,
+    "top": 116,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 21436,
+  "docH": 22650,
+  "vh": 800,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "66.56px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 51
+  },
+  "over": [
+   "code. [68,1316]",
+   "span.line [68,1316]",
+   "span. [1223,1269]",
+   "span. [1269,1316]"
+  ],
+  "overCount": 4,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "story",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 35696,
+  "docH": 36329,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "66.56px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [
+   "li. [93,335]",
+   "a. [93,335]",
+   "li. [93,359]",
+   "a. [93,359]",
+   "li. [93,321]",
+   "a. [93,321]"
+  ],
+  "overCount": 6,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "story",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 30695,
+  "docH": 31265,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "66.56px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [
+   "li. [93,359]",
+   "a. [93,359]"
+  ],
+  "overCount": 2,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "story",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 17529,
+  "docH": 17784,
+  "vh": 800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "66.56px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 200
+ },
+ {
+  "mode": "font32",
+  "name": "404",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2627,
+  "docH": 3260,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 59
+  },
+  "over": [
+   "a.global-not-found-module__SU5qpW__card [59,509]",
+   "h3.global-not-found-module__SU5qpW__cardTitle [108,460]",
+   "p.global-not-found-module__SU5qpW__cardDescription [108,460]",
+   "a.global-not-found-module__SU5qpW__card [59,509]",
+   "h3.global-not-found-module__SU5qpW__cardTitle [108,460]",
+   "p.global-not-found-module__SU5qpW__cardDescription [108,460]",
+   "a.global-not-found-module__SU5qpW__card [59,509]",
+   "h3.global-not-found-module__SU5qpW__cardTitle [108,460]",
+   "p.global-not-found-module__SU5qpW__cardDescription [108,460]",
+   "a.global-not-found-module__SU5qpW__card [59,509]"
+  ],
+  "overCount": 12,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "font32",
+  "name": "404",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2446,
+  "docH": 3017,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 59
+  },
+  "over": [
+   "a.global-not-found-module__SU5qpW__card [59,509]",
+   "h3.global-not-found-module__SU5qpW__cardTitle [108,460]",
+   "p.global-not-found-module__SU5qpW__cardDescription [108,460]",
+   "a.global-not-found-module__SU5qpW__card [59,509]",
+   "h3.global-not-found-module__SU5qpW__cardTitle [108,460]",
+   "p.global-not-found-module__SU5qpW__cardDescription [108,460]",
+   "a.global-not-found-module__SU5qpW__card [59,509]",
+   "h3.global-not-found-module__SU5qpW__cardTitle [108,460]",
+   "p.global-not-found-module__SU5qpW__cardDescription [108,460]",
+   "a.global-not-found-module__SU5qpW__card [59,509]"
+  ],
+  "overCount": 12,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "font32",
+  "name": "404",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   173
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 197,
+    "r": 266,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 274,
+    "r": 378,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 386,
+    "r": 454,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 462,
+    "r": 566,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 574,
+    "r": 747,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 1322,
+  "docH": 1578,
+  "vh": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "64px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\",",
+   "left": 72
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 404
+ },
+ {
+  "mode": "font32",
+  "name": "410",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyFont": "34px",
+  "headerH": 271,
+  "site": [
+   27,
+   8,
+   176
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 27,
+    "r": 199,
+    "top": 197,
+    "vis": true
+   }
+  ],
+  "navRows": 3,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 1208,
+  "docH": 1841,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "66.56px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "font32",
+  "name": "410",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyFont": "34px",
+  "headerH": 208,
+  "site": [
+   27,
+   8,
+   176
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 27,
+    "r": 96,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 104,
+    "r": 207,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 215,
+    "r": 283,
+    "top": 71,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 27,
+    "r": 131,
+    "top": 134,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 139,
+    "r": 312,
+    "top": 134,
+    "vis": true
+   }
+  ],
+  "navRows": 2,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 1082,
+  "docH": 1652,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "66.56px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ },
+ {
+  "mode": "font32",
+  "name": "410",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyFont": "34px",
+  "headerH": 82,
+  "site": [
+   27,
+   8,
+   176
+  ],
+  "nav": [
+   {
+    "t": "遊び",
+    "l": 200,
+    "r": 269,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ツール",
+    "l": 277,
+    "r": 381,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "辞典",
+    "l": 389,
+    "r": 457,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "ブログ",
+    "l": 465,
+    "r": 569,
+    "top": 8,
+    "vis": true
+   },
+   {
+    "t": "サイト紹介",
+    "l": 577,
+    "r": 749,
+    "top": 8,
+    "vis": true
+   }
+  ],
+  "navRows": 1,
+  "mainRect": [
+   16,
+   1264
+  ],
+  "footerTop": 544,
+  "docH": 800,
+  "vh": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "66.56px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragin",
+   "left": 27
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "status": 410
+ }
+]

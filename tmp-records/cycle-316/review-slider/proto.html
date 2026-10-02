@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--paper:oklch(0.99 0 0);--paper-2:oklch(0.95 0 0);--ink:oklch(0.15 0 0);--ink-2:oklch(0.44 0 0);--rule:var(--ink);--rule-2:oklch(0.62 0 0);--rule-w:3px;--rule-w-hair:1px;--text-box-pad:8px;
+--focus-ring:var(--rule-w) solid var(--ink);--focus-ring-offset:var(--rule-w);--focus-ring-fill:0 0 0 var(--rule-w) var(--paper);--hover-line:inset 0 0 0 var(--rule-w-hair) var(--rule-2);}
+:root.dark{--paper:oklch(0.18 0 0);--paper-2:oklch(0.24 0 0);--ink:oklch(0.97 0 0);--ink-2:oklch(0.74 0 0);--rule-2:oklch(0.53 0 0);}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.85 sans-serif}
+.c{margin:0 16px;border-inline:3px solid var(--rule);padding:16px 8px}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-ring-offset);box-shadow:var(--focus-ring-fill)}
+input[type=range]{--focus-ring-offset:calc(-1*var(--rule-w));--focus-ring-fill:inset 0 0 0 calc(2*var(--rule-w)) var(--paper);}
+input[type=range]:hover{box-shadow:var(--hover-line)}
+input[type=range]{appearance:none;-webkit-appearance:none;height:44px;padding-inline:var(--text-box-pad);margin-inline:calc(-1*var(--text-box-pad));margin-block:0;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{box-sizing:border-box;height:16px;border:var(--rule-w-hair) solid var(--rule-2);background:var(--track,var(--paper-2))}
+input[type=range]::-moz-range-track{box-sizing:border-box;height:16px;border:var(--rule-w-hair) solid var(--rule-2);background:var(--track,var(--paper-2))}
+input[type=range]::-webkit-slider-thumb{WEBKITAPP box-sizing:border-box;width:16px;height:32px;border:var(--rule-w) solid var(--rule);background:var(--paper);border-radius:0;margin-top:calc((16px - 2*var(--rule-w-hair) - 32px)/2)}
+input[type=range]::-moz-range-thumb{box-sizing:border-box;width:16px;height:32px;border:var(--rule-w) solid var(--rule);background:var(--paper);border-radius:0}
+.sliders{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:8px;max-width:40rem}
+.row{display:contents}
+.value{min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+.pw{display:flex;flex-direction:column;gap:.5rem}
+.pw input{width:100%;max-width:400px}
+</style></head><body><div class="c">
+<div class="sliders" id="s">
+ <div class="row"><label for="h">色相</label><input id="h" type="range" min="0" max="360" value="0"><span class="value">0</span></div>
+ <div class="row"><label for="s2">彩度</label><input id="s2" type="range" min="0" max="100" value="50"><span class="value">50</span></div>
+ <div class="row"><label for="l">明度</label><input id="l" type="range" min="0" max="100" value="50"><span class="value">50</span></div>
+</div>
+<div class="pw"><label for="pw">文字数: 16</label><input id="pw" type="range" min="8" max="128" value="16"></div>
+</div>
+<script>
+const H=document.getElementById('h'),S=document.getElementById('s2'),L=document.getElementById('l');
+function upd(){const h=+H.value,s=+S.value,l=+L.value;
+H.style.setProperty('--track','linear-gradient(to right, hsl(0,100%,50%), hsl(60,100%,50%), hsl(120,100%,50%), hsl(180,100%,50%), hsl(240,100%,50%), hsl(300,100%,50%), hsl(360,100%,50%))');
+S.style.setProperty('--track',`linear-gradient(to right, hsl(${h},0%,${l}%), hsl(${h},100%,${l}%))`);
+L.style.setProperty('--track',`linear-gradient(to right, hsl(${h},${s}%,0%), hsl(${h},${s}%,50%), hsl(${h},${s}%,100%))`);
+for(const i of [H,S,L]) i.nextElementSibling.textContent=i.value;}
+for(const i of [H,S,L]) i.addEventListener('input',upd); upd();
+</script></body></html>

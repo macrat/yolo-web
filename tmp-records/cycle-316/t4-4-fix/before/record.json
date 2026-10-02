@@ -1,0 +1,242 @@
+[
+  {
+    "surface": "kanjiGame",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "残念...",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"結果をコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E6%BC%A2%E5%AD%97%E3%82%AB%E3%83%8A%E3%83%BC%E3%83%AB%20%23226%20(%E4%B8%AD%E7%B4%9A)%20X%2F6%0A%E2%AC%9C%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%E2%AC%9C%F0%9F%9F%A9%0A%23%E6%BC%A2%E5%AD%97%E3%82%AB%E3%83%8A%E3%83%BC%E3%83%AB%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3448%2Fplay%2Fkanji-kanaru"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "漢字カナール #226 (中級) X/6\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n#漢字カナール #yolosnet\nhttp://localhost:3448/play/kanji-kanaru"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "kanjiGame",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "残念...",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "漢字カナール",
+            "text": "漢字カナール #226 (中級) X/6\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n⬜⬜🟨⬜⬜🟩\n#漢字カナール #yolosnet",
+            "url": "http://localhost:3448/play/kanji-kanaru"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "game",
+              "item_id": "kanji-kanaru",
+              "content_id": "kanji-kanaru"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  },
+  {
+    "surface": "yojiGame",
+    "webShare": false,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "残念...",
+        "buttons": [
+          {
+            "text": "X でシェア",
+            "name": "X でシェア（外部サイト・新しいタブで開く）"
+          },
+          {
+            "text": "結果をコピー",
+            "name": "結果をコピー"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"X でシェア（外部サイト・新しいタブで開く）\": X でシェア\n- button \"結果をコピー\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "X でシェア",
+        "opened": [
+          "https://twitter.com/intent/tweet?text=%E5%9B%9B%E5%AD%97%E3%82%AD%E3%83%A1%E3%83%AB%20%23226%20(%E4%B8%AD%E7%B4%9A)%20X%2F6%0A%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%F0%9F%9F%A9%0A%E2%AC%9C%F0%9F%9F%A8%E2%AC%9C%F0%9F%9F%A9%0A%23%E5%9B%9B%E5%AD%97%E3%82%AD%E3%83%A1%E3%83%AB%20%23yolosnet&url=http%3A%2F%2Flocalhost%3A3448%2Fplay%2Fyoji-kimeru"
+        ],
+        "copied": [],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "twitter",
+              "content_type": "game",
+              "item_id": "yoji-kimeru",
+              "content_id": "yoji-kimeru"
+            }
+          ]
+        ],
+        "status": ""
+      },
+      {
+        "group": 0,
+        "button": "結果をコピー",
+        "opened": [],
+        "copied": [
+          "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3448/play/yoji-kimeru"
+        ],
+        "shared": [],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "clipboard",
+              "content_type": "game",
+              "item_id": "yoji-kimeru",
+              "content_id": "yoji-kimeru"
+            }
+          ]
+        ],
+        "status": "コピーしました"
+      }
+    ]
+  },
+  {
+    "surface": "yojiGame",
+    "webShare": true,
+    "shareVisible": true,
+    "groups": [
+      {
+        "index": 0,
+        "heading": "残念...",
+        "buttons": [
+          {
+            "text": "この結果をシェア",
+            "name": "この結果をシェア"
+          }
+        ],
+        "status": ""
+      }
+    ],
+    "aria": [
+      "- button \"この結果をシェア\""
+    ],
+    "clicks": [
+      {
+        "group": 0,
+        "button": "この結果をシェア",
+        "opened": [],
+        "copied": [],
+        "shared": [
+          {
+            "title": "四字キメル",
+            "text": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet",
+            "url": "http://localhost:3448/play/yoji-kimeru"
+          }
+        ],
+        "gtag": [
+          [
+            "event",
+            "share",
+            {
+              "method": "web_share",
+              "content_type": "game",
+              "item_id": "yoji-kimeru",
+              "content_id": "yoji-kimeru"
+            }
+          ]
+        ],
+        "status": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,1 @@
+export default async (page) => { for (let i=0;i<12;i++){ await page.keyboard.press('Tab'); } await page.waitForTimeout(100); const i = page.locator('input[type=date]').first(); const b = await i.boundingBox(); await page.screenshot({path:'tmp/review-t2-final/date-picker-focus.png', clip:{x:b.x-10,y:b.y-10,width:b.width+20,height:b.height+20}, scale:'device'}); };

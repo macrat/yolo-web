@@ -1,0 +1,9 @@
+blog 375 /blog/choosing-html-tags-by-meaning H1
+  A: 意味で／選ぶHTML — 見た／目が同じでも／壊れる、タグの／選び方
+  B: 意味で選ぶHTML ／— 見た目が同じ／でも壊れる、タグ／の選び方
+blog 375 /blog/ai-agent-concept-rethink-3-workflow-limits H1
+  A: セッション／長期化がAI／エージェントの／自律運用を／破壊する／（コンセプト再策／定記 3/3）
+  B: セッション長期化／がAIエージェント／の自律運用を破壊／する（コンセプト／再策定記 3/3）
+blog 1280 /blog/dark-mode-toggle H1
+  A: ダークモードを／手動で切り／替えられるようにな／りました
+  B: ダークモードを手動／で切り替えられるよ／うになりました

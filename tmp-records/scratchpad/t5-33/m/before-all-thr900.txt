@@ -1,0 +1,58 @@
+irodori	finished	320	100%	CLS=0.1625
+   t=8961 v=0.1625
+      details.HowToPlay.howToPlay[くわしい遊び方毎日、お題] y687->0 h44->0
+      p.GameContainer.date[2026年10月2日の問] y755->0 h26->0
+      section.Section.section[{"@context":] y813->0 h87->0
+irodori	finished	375	100%	CLS=0.1687
+   t=8837 v=0.1687
+      details.HowToPlay.howToPlay[くわしい遊び方毎日、お題] y683->0 h44->0
+      p.GameContainer.date[2026年10月2日の問] y751->0 h26->0
+      section.Section.section[{"@context":] y809->0 h91->0
+irodori	finished	1280	100%	CLS=0.0889
+   t=9110 v=0.0889
+      details.HowToPlay.howToPlay[くわしい遊び方毎日、お題] y719->0 h44->0
+      p.GameContainer.date[2026年10月2日の問] y787->0 h26->0
+      section.Section.section[{"@context":] y861->0 h39->0
+irodori	finished	320	200%	CLS=0.0000
+irodori	finished	375	200%	CLS=0.0000
+irodori	finished	1280	200%	CLS=0.0139
+   t=8903 v=0.0139
+      details.HowToPlay.howToPlay[くわしい遊び方毎日、お題] y887->0 h13->0
+kanji-kanaru	finished	320	100%	CLS=0.0096
+   t=9074 v=0.0000
+      #text(不一致) y307->307 h22->22
+   t=10446 v=0.0095
+      details[くわしい遊び方毎日1つの] y890->0 h10->0
+kanji-kanaru	finished	375	100%	CLS=0.0620
+   t=9277 v=0.0000
+      #text(不一致) y263->263 h22->22
+   t=10510 v=0.0619
+      details[くわしい遊び方毎日1つの] y820->0 h44->0
+      fieldset.RadioGroup.group[難易度初級中級上級] y880->0 h20->0
+kanji-kanaru	finished	1280	100%	CLS=0.0379
+   t=9224 v=0.0000
+      #text(不一致) y280->280 h22->22
+   t=10589 v=0.0379
+      details[くわしい遊び方毎日1つの] y837->0 h44->0
+      fieldset.RadioGroup.group[難易度初級中級上級] y897->0 h3->0
+kanji-kanaru	finished	320	200%	CLS=0.0000
+kanji-kanaru	finished	375	200%	CLS=0.0003
+kanji-kanaru	finished	1280	200%	CLS=0.0001
+yoji-kimeru	finished	320	100%	CLS=0.0001
+yoji-kimeru	finished	375	100%	CLS=0.0001
+yoji-kimeru	finished	1280	100%	CLS=0.0000
+yoji-kimeru	finished	320	200%	CLS=0.0000
+yoji-kimeru	finished	375	200%	CLS=0.0000
+yoji-kimeru	finished	1280	200%	CLS=0.0001
+nakamawake	finished	320	100%	CLS=0.0000
+nakamawake	finished	375	100%	CLS=0.0000
+nakamawake	finished	1280	100%	CLS=0.1886
+   t=8844 v=0.1886
+      details[くわしい遊び方16の言葉] y647->0 h44->0
+      p.GameContainer-module__z-Ee5a__date[2026年10月2日の問] y707->0 h26->0
+      section.Section.section[{"@context":] y781->0 h119->0
+nakamawake	finished	320	200%	CLS=0.0000
+nakamawake	finished	375	200%	CLS=0.0000
+nakamawake	finished	1280	200%	CLS=0.0675
+   t=8689 v=0.0675
+      details[くわしい遊び方16の言葉] y825->0 h63->0

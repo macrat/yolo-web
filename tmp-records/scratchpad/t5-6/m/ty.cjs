@@ -1,0 +1,2 @@
+const { openContext, settle } = require("./lib.cjs");
+(async () => { for (const [w,big] of [[320,false],[375,false],[1280,false],[320,true]]) { const { ctx, close } = await openContext({ width: w, height: 800, big }); const p = await ctx.newPage(); await p.goto("http://localhost:3461/play/contrarian-fortune/result/overthinker"); await settle(p); console.log(w, big, await p.evaluate(() => Math.round(document.querySelector("main table").getBoundingClientRect().top + scrollY))); await close(); } })();

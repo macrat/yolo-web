@@ -1,0 +1,1586 @@
+{
+ "cp-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1192,
+    "heading": "このタイプについて",
+    "headTop": 1192,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2743,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2743,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 5441,
+    "heading": "この結果を共有",
+    "headTop": 5458,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 5618,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 5634,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 6206,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 6241,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 7098
+ },
+ "kanji-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 594,
+    "heading": "この結果を共有",
+    "headTop": 611,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 770,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 786,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1205,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1240,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 2097
+ },
+ "cf-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 838,
+    "heading": "このタイプについて",
+    "headTop": 838,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2635,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2635,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3233,
+    "heading": "この結果を共有",
+    "headTop": 3250,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3409,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3425,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3998,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4033,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4890
+ },
+ "tc-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 890,
+    "heading": "このタイプについて",
+    "headTop": 890,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2322,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2322,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2925,
+    "heading": "この結果を共有",
+    "headTop": 2942,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3101,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3117,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3689,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3724,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4581
+ },
+ "cp-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1192,
+    "heading": "このタイプについて",
+    "headTop": 1192,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2743,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2743,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 5441,
+    "heading": "この結果を共有",
+    "headTop": 5458,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 5618,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 5634,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 6206,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 6241,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 7098
+ },
+ "kanji-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 594,
+    "heading": "この結果を共有",
+    "headTop": 611,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 770,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 786,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1205,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1240,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 2097
+ },
+ "cf-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 838,
+    "heading": "このタイプについて",
+    "headTop": 838,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2635,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2635,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3233,
+    "heading": "この結果を共有",
+    "headTop": 3250,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3409,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3425,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3998,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4033,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4890
+ },
+ "tc-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 890,
+    "heading": "このタイプについて",
+    "headTop": 890,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2322,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2322,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2925,
+    "heading": "この結果を共有",
+    "headTop": 2942,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3101,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3117,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3689,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3724,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4581
+ },
+ "cp-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 993,
+    "heading": "このタイプについて",
+    "headTop": 993,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2336,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2336,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 4720,
+    "heading": "この結果を共有",
+    "headTop": 4737,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 4896,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 4912,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 5484,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 5519,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 6252
+ },
+ "kanji-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 475,
+    "heading": "この結果を共有",
+    "headTop": 492,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 651,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 667,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 1086,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1121,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 1854
+ },
+ "cf-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 687,
+    "heading": "このタイプについて",
+    "headTop": 687,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2264,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2264,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2862,
+    "heading": "この結果を共有",
+    "headTop": 2879,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3038,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3054,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3627,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3662,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4394
+ },
+ "tc-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 751,
+    "heading": "このタイプについて",
+    "headTop": 751,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2007,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2007,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2609,
+    "heading": "この結果を共有",
+    "headTop": 2626,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2786,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2802,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3374,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3409,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4142
+ },
+ "cp-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 993,
+    "heading": "このタイプについて",
+    "headTop": 993,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2336,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2336,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 4720,
+    "heading": "この結果を共有",
+    "headTop": 4737,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 4896,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 4912,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 5484,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 5519,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 6252
+ },
+ "kanji-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 475,
+    "heading": "この結果を共有",
+    "headTop": 492,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 651,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 667,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 1086,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1121,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 1854
+ },
+ "cf-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 687,
+    "heading": "このタイプについて",
+    "headTop": 687,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2264,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2264,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2862,
+    "heading": "この結果を共有",
+    "headTop": 2879,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3038,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3054,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3627,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3662,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4394
+ },
+ "tc-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 751,
+    "heading": "このタイプについて",
+    "headTop": 751,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2007,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2007,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2609,
+    "heading": "この結果を共有",
+    "headTop": 2626,
+    "headFs": "17px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2786,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2802,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3374,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3409,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 4142
+ },
+ "cp-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 777,
+    "heading": "このタイプについて",
+    "headTop": 777,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1865,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 1865,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3554,
+    "heading": "この結果を共有",
+    "headTop": 3571,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3698,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3722,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 4137,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4188,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 4825
+ },
+ "kanji-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 483,
+    "heading": "この結果を共有",
+    "headTop": 500,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 628,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 652,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 971,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1022,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 1659
+ },
+ "cf-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 602,
+    "heading": "このタイプについて",
+    "headTop": 602,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1848,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 1848,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2475,
+    "heading": "この結果を共有",
+    "headTop": 2492,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2619,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2643,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3058,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3109,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 3746
+ },
+ "tc-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 653,
+    "heading": "このタイプについて",
+    "headTop": 653,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1735,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 1735,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2367,
+    "heading": "この結果を共有",
+    "headTop": 2384,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2511,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2535,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2950,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3001,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 3638
+ },
+ "cp-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 777,
+    "heading": "このタイプについて",
+    "headTop": 777,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1865,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 1865,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3554,
+    "heading": "この結果を共有",
+    "headTop": 3571,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3698,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3722,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 4137,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4188,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 4825
+ },
+ "kanji-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 483,
+    "heading": "この結果を共有",
+    "headTop": 500,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 628,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 652,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 971,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1022,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 1659
+ },
+ "cf-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 602,
+    "heading": "このタイプについて",
+    "headTop": 602,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1848,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 1848,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2475,
+    "heading": "この結果を共有",
+    "headTop": 2492,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2619,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2643,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3058,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3109,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 3746
+ },
+ "tc-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 653,
+    "heading": "このタイプについて",
+    "headTop": 653,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1735,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 1735,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2367,
+    "heading": "この結果を共有",
+    "headTop": 2384,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2511,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2535,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2950,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3001,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 3638
+ },
+ "cp-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3723,
+    "heading": "このタイプについて",
+    "headTop": 3723,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 8709,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 8709,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 16714,
+    "heading": "この結果を共有",
+    "headTop": 16731,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 17048,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 17064,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 18738,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 18773,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 20818
+ },
+ "kanji-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1399,
+    "heading": "この結果を共有",
+    "headTop": 1416,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1733,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 1749,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2962,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 2997,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 5167
+ },
+ "cf-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2316,
+    "heading": "このタイプについて",
+    "headTop": 2316,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 8404,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 8404,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 9843,
+    "heading": "この結果を共有",
+    "headTop": 9860,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 10177,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 10193,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 11868,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 11903,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 13947
+ },
+ "tc-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2021,
+    "heading": "このタイプについて",
+    "headTop": 2021,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 6545,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 6545,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 7958,
+    "heading": "この結果を共有",
+    "headTop": 7975,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 8293,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 8309,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 10109,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 10144,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 12188
+ },
+ "cp-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 3723,
+    "heading": "このタイプについて",
+    "headTop": 3723,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 8709,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 8709,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 16714,
+    "heading": "この結果を共有",
+    "headTop": 16731,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 17048,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 17064,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 18738,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 18773,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 20818
+ },
+ "kanji-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1399,
+    "heading": "この結果を共有",
+    "headTop": 1416,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 1733,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 1749,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2962,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 2997,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 5167
+ },
+ "cf-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2316,
+    "heading": "このタイプについて",
+    "headTop": 2316,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 8404,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 8404,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 9843,
+    "heading": "この結果を共有",
+    "headTop": 9860,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 10177,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 10193,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 11868,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 11903,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 13947
+ },
+ "tc-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 2021,
+    "heading": "このタイプについて",
+    "headTop": 2021,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 6545,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 6545,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 7958,
+    "heading": "この結果を共有",
+    "headTop": 7975,
+    "headFs": "34px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 8293,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 8309,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 10109,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 10144,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 12188
+ }
+}

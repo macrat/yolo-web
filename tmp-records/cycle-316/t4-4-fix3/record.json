@@ -1,0 +1,136 @@
+[
+  {
+    "width": 375,
+    "check": "drag text -> backdrop",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "drag padding -> backdrop",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "drag backdrop -> inside",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "click padding",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "click backdrop",
+    "open": false
+  },
+  {
+    "width": 375,
+    "check": "tap inside",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "tap backdrop",
+    "open": false
+  },
+  {
+    "width": 375,
+    "check": "keyboard Enter on 結果をコピー",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "keyboard Space on LINE でシェア",
+    "open": true
+  },
+  {
+    "width": 375,
+    "check": "Escape",
+    "open": false
+  },
+  {
+    "width": 1280,
+    "check": "drag text -> backdrop",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "drag padding -> backdrop",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "drag backdrop -> inside",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "click padding",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "click backdrop",
+    "open": false
+  },
+  {
+    "width": 1280,
+    "check": "tap inside",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "tap backdrop",
+    "open": false
+  },
+  {
+    "width": 1280,
+    "check": "keyboard Enter on 結果をコピー",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "keyboard Space on LINE でシェア",
+    "open": true
+  },
+  {
+    "width": 1280,
+    "check": "Escape",
+    "open": false
+  },
+  {
+    "check": "invite AbortError",
+    "status": "",
+    "clipboardStart": "",
+    "gtag": []
+  },
+  {
+    "check": "invite NotAllowedError",
+    "status": "リンクをコピーしました",
+    "clipboardStart": "似たキャラ診断で相性を調べよう!\nhttp://localh",
+    "gtag": [
+      {
+        "method": "clipboard",
+        "content_type": "diagnosis",
+        "item_id": "quiz-character-personality",
+        "content_id": "quiz-character-personality",
+        "surface": "invite"
+      }
+    ]
+  },
+  {
+    "check": "invite no-share",
+    "status": "リンクをコピーしました",
+    "clipboardStart": "似たキャラ診断で相性を調べよう!\nhttp://localh",
+    "gtag": [
+      {
+        "method": "clipboard",
+        "content_type": "diagnosis",
+        "item_id": "quiz-character-personality",
+        "content_id": "quiz-character-personality",
+        "surface": "invite"
+      }
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+import { open, close, settle } from "./lib.mjs";
+import fs from "node:fs";
+const B2 = "http://127.0.0.1:" + fs.readFileSync(new URL("./port2", import.meta.url), "utf8").trim();
+const o = await open({ width: 375, height: 800 }); const p = o.page;
+await p.goto(B2 + "/play/nakamawake", { waitUntil: "load" }); await settle(p, 800);
+console.log(await p.getByRole("group", { name: "言葉の格子" }).ariaSnapshot());
+const cdp = await o.context.newCDPSession(p);
+const { nodes } = await cdp.send("Accessibility.getFullAXTree");
+console.log(nodes.filter(n => n.role?.value === "button" && /に|が|は|も/.test(n.name?.value ?? "")).map(n => JSON.stringify(n.name.value) + " pressed=" + (n.properties||[]).find(x=>x.name==="pressed")?.value?.value).join("\n"));
+await close(o);

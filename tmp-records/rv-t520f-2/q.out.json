@@ -1,0 +1,182 @@
+[
+  {
+    "finished": false,
+    "dest": "a_next_and_rel",
+    "views": 17,
+    "users": 8,
+    "views_to_newrel": 17,
+    "users_to_newrel": 8,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "b_next_and_rec",
+    "views": 15,
+    "users": 12,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 4
+  },
+  {
+    "finished": false,
+    "dest": "c_next_only",
+    "views": 50,
+    "users": 36,
+    "views_to_newrel": 50,
+    "users_to_newrel": 36,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "d_rel_only",
+    "views": 30,
+    "users": 20,
+    "views_to_newrel": 24,
+    "users_to_newrel": 17,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "e_rec_only",
+    "views": 5,
+    "users": 5,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "f_none",
+    "views": 60,
+    "users": 43,
+    "views_to_newrel": 13,
+    "users_to_newrel": 12,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "w_other",
+    "views": 64,
+    "users": 35,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "x_ownresult",
+    "views": 9,
+    "users": 8,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "y_same",
+    "views": 772,
+    "users": 615,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": false,
+    "dest": "z_exit",
+    "views": 2631,
+    "users": 2513,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "a_next_and_rel",
+    "views": 36,
+    "users": 25,
+    "views_to_newrel": 36,
+    "users_to_newrel": 25,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "b_next_and_rec",
+    "views": 34,
+    "users": 24,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 11
+  },
+  {
+    "finished": true,
+    "dest": "c_next_only",
+    "views": 37,
+    "users": 29,
+    "views_to_newrel": 37,
+    "users_to_newrel": 29,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "d_rel_only",
+    "views": 19,
+    "users": 16,
+    "views_to_newrel": 11,
+    "users_to_newrel": 11,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "e_rec_only",
+    "views": 9,
+    "users": 9,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "f_none",
+    "views": 39,
+    "users": 28,
+    "views_to_newrel": 12,
+    "users_to_newrel": 10,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "w_other",
+    "views": 70,
+    "users": 33,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "x_ownresult",
+    "views": 72,
+    "users": 66,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "y_same",
+    "views": 175,
+    "users": 174,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  },
+  {
+    "finished": true,
+    "dest": "z_exit",
+    "views": 2938,
+    "users": 2903,
+    "views_to_newrel": 0,
+    "users_to_newrel": 0,
+    "to_daily": 0
+  }
+]

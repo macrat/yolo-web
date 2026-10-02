@@ -1,0 +1,43 @@
+▲ Next.js 16.3.0 (webpack)
+- Local:         http://localhost:3917
+- Network:       http://192.0.2.2:3917
+✓ Ready in 976ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /tmp/claude-0/-home-user-yolo-web/7ec6fd95-5319-581a-b78e-9e5ca394946c/scratchpad/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /tmp/claude-0/-home-user-yolo-web/7ec6fd95-5319-581a-b78e-9e5ca394946c/scratchpad/rev-t5a2/exp/package-lock.json
+
+✓ Running next.config.ts took 80ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+○ Compiling /play/[slug] ...
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /play/character-personality 200 in 44s (next.js: 38.7s, generate-params: 2.7s, application-code: 3.0s)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+ GET /play/character-personality 200 in 1768ms (next.js: 39ms, generate-params: 213ms, application-code: 1516ms)
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 2.2s (next.js: 3ms, generate-params: 76ms, application-code: 2.2s)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 955ms (next.js: 4ms, generate-params: 46ms, application-code: 906ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 929ms (next.js: 4ms, generate-params: 48ms, application-code: 877ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 1436ms (next.js: 14ms, generate-params: 67ms, application-code: 1355ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+ GET /play/character-personality 200 in 827ms (next.js: 3ms, generate-params: 40ms, application-code: 785ms)
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[browser] [constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net (src/lib/constants.ts:10:11)
+[?25h

@@ -1,0 +1,7 @@
+const fs=require("fs");
+const src=fs.readFileSync("simanalyze.js","utf8"); const mSrc=src.slice(src.indexOf("const NLS"),src.indexOf("const byKey")); eval(mSrc.replace("function m(","globalThis.m=function(").replace(/const (NLS|NLE|seg|kata) =/g,"globalThis.$1 ="));
+const toLines=h=>{const c=[...h.text];const out=[];let s=0;for(const b of [...h.breaks,c.length]){out.push(c.slice(s,b).join(""));s=b;}return out.join("／");};
+const cnt=(file,w)=>{let n=0,hw=0,iw=0,kata=0,one=0,kin=0;for(const r of require(file)){if(r.g!=="blog"||r.w!==w||!r.headings)continue;for(const h of r.headings){if(h.tag!=="H1")continue;n++;const x=m(toLines(h).trim());iw+=x.inWord;kata+=x.kataSplit;one+=x.oneChar;kin+=x.kinsoku;if(x.inWord)hw++;}}return {n,hw,iw,kata,one,kin}};
+for(const w of [320,375,1280])for(const f of ["../review-headings/data-before-16.json","../review-headings/data-after-16.review.json","../review-headings/data-after-16.json","./data-after-16.json"])console.log(w,f,JSON.stringify(cnt(f,w)));
+// identity check
+const a=require("./data-after-16.json"),b=require("../review-headings/data-after-16.json");const bm=new Map(b.map(r=>[r.u+"@"+r.w,r]));let diff=0;for(const r of a){const o=bm.get(r.u+"@"+r.w);r.headings.forEach((h,i)=>{const oh=o.headings[i];if(!oh||toLines(oh)!==toLines(h)){diff++;if(diff<6)console.log("DIFF",r.u,r.w,toLines(h),"|",oh&&toLines(oh))}})}console.log("diff vs builder 16",diff);

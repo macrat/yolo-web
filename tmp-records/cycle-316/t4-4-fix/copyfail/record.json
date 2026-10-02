@@ -1,0 +1,80 @@
+[
+  {
+    "mode": "execCommand-ok",
+    "name": "tool",
+    "status": "コピーしました",
+    "focused": "URLをコピー",
+    "exec": [
+      {
+        "c": "copy",
+        "selected": "文字数カウント\nhttp://localhost:3447/tools/char-count"
+      }
+    ],
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "tool",
+          "item_id": "char-count",
+          "content_id": "char-count"
+        }
+      ]
+    ],
+    "textareas": 0
+  },
+  {
+    "mode": "execCommand-ok",
+    "name": "yojiGame",
+    "status": "コピーしました",
+    "focused": "結果をコピー",
+    "exec": [
+      {
+        "c": "copy",
+        "selected": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3447/play/yoji-kimeru"
+      }
+    ],
+    "gtag": [
+      [
+        "event",
+        "share",
+        {
+          "method": "clipboard",
+          "content_type": "game",
+          "item_id": "yoji-kimeru",
+          "content_id": "yoji-kimeru"
+        }
+      ]
+    ],
+    "textareas": 0
+  },
+  {
+    "mode": "all-fail",
+    "name": "tool",
+    "status": "コピーできませんでした。ほかの共有先をお使いください",
+    "focused": "URLをコピー",
+    "exec": [
+      {
+        "c": "copy",
+        "selected": "文字数カウント\nhttp://localhost:3447/tools/char-count"
+      }
+    ],
+    "gtag": [],
+    "textareas": 0
+  },
+  {
+    "mode": "all-fail",
+    "name": "yojiGame",
+    "status": "コピーできませんでした。ほかの共有先をお使いください",
+    "focused": "結果をコピー",
+    "exec": [
+      {
+        "c": "copy",
+        "selected": "四字キメル #226 (中級) X/6\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n⬜🟨⬜🟩\n#四字キメル #yolosnet\nhttp://localhost:3447/play/yoji-kimeru"
+      }
+    ],
+    "gtag": [],
+    "textareas": 0
+  }
+]

@@ -1,0 +1,2394 @@
+[
+ {
+  "name": "top",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 4396,
+  "docH": 4633,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "top",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 4396,
+  "docH": 4633,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "top",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 4099,
+  "docH": 4304,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "top",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 4099,
+  "docH": 4304,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "top",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2833,
+  "docH": 3007,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 95
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "top",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2833,
+  "docH": 3007,
+  "h1": {
+   "text": "yolos.net",
+   "size": "48px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 95
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "play",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2612,
+  "docH": 2849,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": 181
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "play",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2612,
+  "docH": 2849,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": 181
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "play",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2223,
+  "docH": 2428,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": 160
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "play",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2223,
+  "docH": 2428,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": 160
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "play",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1791,
+  "docH": 1965,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 132
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "play",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1791,
+  "docH": 1965,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 132
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "char",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 3090,
+  "docH": 3327,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 160
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 200
+ },
+ {
+  "name": "char",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 3090,
+  "docH": 3327,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 160
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 200
+ },
+ {
+  "name": "char",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2781,
+  "docH": 2987,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 160
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 200
+ },
+ {
+  "name": "char",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2781,
+  "docH": 2987,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 160
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 200
+ },
+ {
+  "name": "char",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2336,
+  "docH": 2510,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 35,
+   "top": 132
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 200
+ },
+ {
+  "name": "char",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 2336,
+  "docH": 2510,
+  "h1": {
+   "text": "文字数カウント",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 35,
+   "top": 132
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 200
+ },
+ {
+  "name": "kanji",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2422,
+  "docH": 2658,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 31,
+   "top": 254
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "kanji",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2422,
+  "docH": 2658,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 31,
+   "top": 254
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "kanji",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2187,
+  "docH": 2392,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 31,
+   "top": 254
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "kanji",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2187,
+  "docH": 2392,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 31,
+   "top": 254
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "kanji",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1892,
+  "docH": 2066,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 31,
+   "top": 183
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "kanji",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1892,
+  "docH": 2066,
+  "h1": {
+   "text": "漢字「山」",
+   "size": "25px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 31,
+   "top": 183
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "blog",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 20936,
+  "docH": 22278,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 208,
+   "top": 194
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]",
+   "span. [403,492]",
+   "span.line [68,506]"
+  ],
+  "overCount": 399,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "blog",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 20936,
+  "docH": 22278,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 208,
+   "top": 194
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]",
+   "span. [403,492]",
+   "span.line [68,506]"
+  ],
+  "overCount": 399,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "blog",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 17983,
+  "docH": 19115,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 208,
+   "top": 194
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]",
+   "span. [403,492]",
+   "span.line [68,506]"
+  ],
+  "overCount": 251,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "blog",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 17983,
+  "docH": 19115,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 208,
+   "top": 194
+  },
+  "over": [
+   "code. [68,536]",
+   "span.line [68,403]",
+   "span. [68,403]",
+   "span.line [68,536]",
+   "span. [68,536]",
+   "span.line [68,388]",
+   "span. [68,388]",
+   "code. [68,532]",
+   "span.line [68,492]",
+   "span. [169,403]",
+   "span. [403,492]",
+   "span.line [68,506]"
+  ],
+  "overCount": 251,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "blog",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 11578,
+  "docH": 12415,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 326,
+   "top": 116
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "blog",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 11578,
+  "docH": 12415,
+  "h1": {
+   "text": "SQL 早見表 — SELECT・JOIN・集計・DML/DDL構文一覧",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 326,
+   "top": 116
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "story",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 15563,
+  "docH": 15800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 83,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "story",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 15563,
+  "docH": 15800,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 83,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "story",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 14638,
+  "docH": 14844,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 83,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "story",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 14638,
+  "docH": 14844,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "33.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 83,
+   "top": 139
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "story",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 12347,
+  "docH": 12521,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 82,
+   "top": 111
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "story",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 12347,
+  "docH": 12521,
+  "h1": {
+   "text": "Storybook（開発者向け）",
+   "size": "65.28px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 82,
+   "top": 111
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ],
+  "status": 200
+ },
+ {
+  "name": "404",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 1085,
+  "docH": 1322,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 90,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 404
+ },
+ {
+  "name": "404",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 1085,
+  "docH": 1322,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 90,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 404
+ },
+ {
+  "name": "404",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 1003,
+  "docH": 1209,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 404
+ },
+ {
+  "name": "404",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 1003,
+  "docH": 1209,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "24px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 60,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 404
+ },
+ {
+  "name": "404",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "32px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 40,
+   "top": 111
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 404
+ },
+ {
+  "name": "404",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "h1": {
+   "text": "ページが見つかりませんでした",
+   "size": "32px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 40,
+   "top": 111
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "plexSans 400",
+   "plexSans 700"
+  ],
+  "status": 404
+ },
+ {
+  "name": "410",
+  "w": 320,
+  "s": "light",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyColor": "oklch(0.15 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "\"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\", \"Yu Goth",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 563,
+  "docH": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragino Kaku Got",
+   "weight": "400",
+   "h": 125,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [],
+  "status": 410
+ },
+ {
+  "name": "410",
+  "w": 320,
+  "s": "dark",
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "oklch(0.18 0 0)",
+  "bodyColor": "oklch(0.97 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "\"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\", \"Yu Goth",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 563,
+  "docH": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragino Kaku Got",
+   "weight": "400",
+   "h": 125,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [],
+  "status": 410
+ },
+ {
+  "name": "410",
+  "w": 375,
+  "s": "light",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyColor": "oklch(0.15 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "\"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\", \"Yu Goth",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 595,
+  "docH": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragino Kaku Got",
+   "weight": "400",
+   "h": 83,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [],
+  "status": 410
+ },
+ {
+  "name": "410",
+  "w": 375,
+  "s": "dark",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "oklch(0.18 0 0)",
+  "bodyColor": "oklch(0.97 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "\"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\", \"Yu Goth",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 595,
+  "docH": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "33.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragino Kaku Got",
+   "weight": "400",
+   "h": 83,
+   "top": 155
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [],
+  "status": 410
+ },
+ {
+  "name": "410",
+  "w": 1280,
+  "s": "light",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "oklch(0.99 0 0)",
+  "bodyColor": "oklch(0.15 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "\"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\", \"Yu Goth",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "65.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragino Kaku Got",
+   "weight": "400",
+   "h": 163,
+   "top": 111
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [],
+  "status": 410
+ },
+ {
+  "name": "410",
+  "w": 1280,
+  "s": "dark",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "oklch(0.18 0 0)",
+  "bodyColor": "oklch(0.97 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "\"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\", \"Yu Goth",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 626,
+  "docH": 800,
+  "h1": {
+   "text": "このコンテンツは終了しました",
+   "size": "65.28px",
+   "fam": "\"IBM Plex Sans Fallback\", \"BIZ UDGothic\", \"Hiragino Kaku Got",
+   "weight": "400",
+   "h": 163,
+   "top": 111
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [],
+  "status": 410
+ },
+ {
+  "name": "play-result",
+  "w": 320,
+  "s": "light",
+  "url": "http://localhost:4731/play/character-personality",
+  "answered": 40,
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2983,
+  "docH": 3220,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": -181
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ]
+ },
+ {
+  "name": "play-result",
+  "w": 320,
+  "s": "dark",
+  "url": "http://localhost:4731/play/character-personality",
+  "answered": 40,
+  "innerWidth": 320,
+  "scrollWidth": 320,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   304
+  ],
+  "footerTop": 2983,
+  "docH": 3220,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": -181
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ]
+ },
+ {
+  "name": "play-result",
+  "w": 375,
+  "s": "light",
+  "url": "http://localhost:4731/play/character-personality",
+  "answered": 40,
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2531,
+  "docH": 2737,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": -69
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ]
+ },
+ {
+  "name": "play-result",
+  "w": 375,
+  "s": "dark",
+  "url": "http://localhost:4731/play/character-personality",
+  "answered": 40,
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 107,
+  "mainRect": [
+   16,
+   359
+  ],
+  "footerTop": 2531,
+  "docH": 2737,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "17.6px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 25,
+   "top": -69
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ]
+ },
+ {
+  "name": "play-result",
+  "w": 1280,
+  "s": "light",
+  "url": "http://localhost:4731/play/character-personality",
+  "answered": 40,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(98.84 0.0000298023 -0.0000119209)",
+  "bodyColor": "lab(3.04863 0 0)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1904,
+  "docH": 2078,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 132
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ]
+ },
+ {
+  "name": "play-result",
+  "w": 1280,
+  "s": "dark",
+  "url": "http://localhost:4731/play/character-personality",
+  "answered": 40,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "bodyBg": "lab(5.26802 0 0)",
+  "bodyColor": "lab(96.52 -0.0000298023 0.0000119209)",
+  "bodyFont": "17px",
+  "bodyFamily": "plexSans, \"IBM Plex Sans Fallback\", \"BIZ UDPGothic\", \"Hiragino Kaku Gothic ProN\"",
+  "headerH": 63,
+  "mainRect": [
+   160,
+   1120
+  ],
+  "footerTop": 1904,
+  "docH": 2078,
+  "h1": {
+   "text": "あなたに似たキャラ診断",
+   "size": "20px",
+   "fam": "plexSans, \"IBM Plex Sans Fallback\", \"Zen Antique\", \"BIZ UDGo",
+   "weight": "400",
+   "h": 28,
+   "top": 132
+  },
+  "over": [],
+  "overCount": 0,
+  "themeColor": [
+   "(prefers-color-scheme: light):#fcfcfc",
+   "(prefers-color-scheme: dark):#121212"
+  ],
+  "fontsLoaded": [
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400",
+   "Zen Antique 400"
+  ]
+ }
+]

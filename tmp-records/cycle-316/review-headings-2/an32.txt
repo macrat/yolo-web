@@ -1,0 +1,242 @@
+tool 1280 {"n":205,"unmatched":0,"same":205,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+tool 375 {"n":205,"unmatched":0,"same":145,"better":60,"worse":0,"oneB":20,"oneA":2,"kinB":39,"kinA":0,"iwB":26,"iwA":2,"ovB":0,"ovA":0}
+tool 320 {"n":205,"unmatched":0,"same":154,"better":51,"worse":0,"oneB":46,"oneA":3,"kinB":2,"kinA":1,"iwB":130,"iwA":42,"ovB":0,"ovA":0}
+game 320 {"n":26,"unmatched":0,"same":18,"better":8,"worse":0,"oneB":2,"oneA":2,"kinB":0,"kinA":0,"iwB":11,"iwA":3,"ovB":0,"ovA":0}
+game 375 {"n":26,"unmatched":0,"same":18,"better":8,"worse":0,"oneB":9,"oneA":1,"kinB":0,"kinA":0,"iwB":9,"iwA":1,"ovB":0,"ovA":0}
+game 1280 {"n":26,"unmatched":0,"same":26,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+quiz 320 {"n":79,"unmatched":1,"same":24,"better":54,"worse":0,"oneB":30,"oneA":1,"kinB":2,"kinA":1,"iwB":73,"iwA":2,"ovB":0,"ovA":0}
+quiz 375 {"n":79,"unmatched":1,"same":60,"better":18,"worse":0,"oneB":16,"oneA":0,"kinB":2,"kinA":1,"iwB":19,"iwA":0,"ovB":0,"ovA":0}
+quiz 1280 {"n":79,"unmatched":1,"same":78,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+result 320 {"n":375,"unmatched":4,"same":237,"better":133,"worse":1,"oneB":52,"oneA":8,"kinB":4,"kinA":4,"iwB":198,"iwA":22,"ovB":0,"ovA":0}
+result 375 {"n":375,"unmatched":4,"same":282,"better":89,"worse":0,"oneB":51,"oneA":6,"kinB":3,"kinA":3,"iwB":98,"iwA":10,"ovB":0,"ovA":0}
+result 1280 {"n":375,"unmatched":4,"same":371,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+blog 375 {"n":1502,"unmatched":17,"same":1340,"better":131,"worse":14,"oneB":263,"oneA":221,"kinB":146,"kinA":149,"iwB":1144,"iwA":921,"ovB":0,"ovA":0}
+blog 320 {"n":1502,"unmatched":17,"same":1342,"better":121,"worse":22,"oneB":262,"oneA":349,"kinB":267,"kinA":196,"iwB":1606,"iwA":1393,"ovB":0,"ovA":0}
+blog 1280 {"n":1502,"unmatched":17,"same":1454,"better":31,"worse":0,"oneB":18,"oneA":15,"kinB":8,"kinA":6,"iwB":92,"iwA":58,"ovB":0,"ovA":0}
+list 320 {"n":75,"unmatched":0,"same":70,"better":5,"worse":0,"oneB":5,"oneA":1,"kinB":1,"kinA":1,"iwB":9,"iwA":3,"ovB":9,"ovA":9}
+list 375 {"n":75,"unmatched":0,"same":70,"better":4,"worse":1,"oneB":3,"oneA":1,"kinB":1,"kinA":0,"iwB":6,"iwA":4,"ovB":9,"ovA":9}
+list 1280 {"n":75,"unmatched":0,"same":75,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":9,"ovA":9}
+kanji 320 {"n":171,"unmatched":0,"same":171,"better":0,"worse":0,"oneB":50,"oneA":50,"kinB":20,"kinA":20,"iwB":10,"iwA":10,"ovB":0,"ovA":0}
+kanji 375 {"n":171,"unmatched":0,"same":152,"better":19,"worse":0,"oneB":10,"oneA":10,"kinB":10,"kinA":10,"iwB":19,"iwA":0,"ovB":0,"ovA":0}
+kanji 1280 {"n":171,"unmatched":0,"same":171,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+yoji 375 {"n":110,"unmatched":0,"same":90,"better":10,"worse":10,"oneB":0,"oneA":10,"kinB":0,"kinA":10,"iwB":20,"iwA":0,"ovB":0,"ovA":0}
+yoji 320 {"n":110,"unmatched":0,"same":90,"better":20,"worse":0,"oneB":10,"oneA":0,"kinB":0,"kinA":0,"iwB":50,"iwA":10,"ovB":0,"ovA":0}
+yoji 1280 {"n":110,"unmatched":0,"same":110,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+color 320 {"n":98,"unmatched":0,"same":84,"better":14,"worse":0,"oneB":24,"oneA":24,"kinB":4,"kinA":4,"iwB":35,"iwA":21,"ovB":0,"ovA":0}
+color 375 {"n":98,"unmatched":0,"same":84,"better":14,"worse":0,"oneB":3,"oneA":3,"kinB":2,"kinA":2,"iwB":17,"iwA":3,"ovB":0,"ovA":0}
+color 1280 {"n":98,"unmatched":0,"same":98,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+humor 320 {"n":20,"unmatched":0,"same":20,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+humor 375 {"n":20,"unmatched":0,"same":20,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+humor 1280 {"n":20,"unmatched":0,"same":20,"better":0,"worse":0,"oneB":1,"oneA":1,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+misc 320 {"n":30,"unmatched":1,"same":17,"better":10,"worse":2,"oneB":6,"oneA":3,"kinB":4,"kinA":2,"iwB":23,"iwA":14,"ovB":0,"ovA":0}
+misc 375 {"n":30,"unmatched":1,"same":16,"better":11,"worse":2,"oneB":4,"oneA":2,"kinB":2,"kinA":1,"iwB":18,"iwA":9,"ovB":0,"ovA":0}
+misc 1280 {"n":30,"unmatched":1,"same":29,"better":0,"worse":0,"oneB":0,"oneA":0,"kinB":0,"kinA":0,"iwB":0,"iwA":0,"ovB":0,"ovA":0}
+WORSE 52
+result 320 /play/character-personality/result/blazing-poet H1
+  A: 「よし行／くぞ！／」／と叫んで／3秒後に／空を／見上げる／炎の詩人  {"lines":8,"oneChar":1,"kinsoku":1,"inWord":1,"kataSplit":0}
+  B: 「よし行／くぞ！／」と／叫んで／3秒後に／空を／見上げる／炎の詩人  {"lines":8,"oneChar":0,"kinsoku":1,"inWord":1,"kataSplit":0}
+  wbr: 8,12,16,18,22,24
+blog 320 /blog/personality-quiz-tie-enumeration H1
+  A: タイプ／診断の／同点は／設問の／欠陥、／全回答／を／数え上／げて／見つけ／る  {"lines":11,"oneChar":2,"kinsoku":0,"inWord":2,"kataSplit":0}
+  B: タイプ／診断の／同点は／設問の／欠陥、／全回答／を数え／上げて／見つけ／る  {"lines":10,"oneChar":1,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 3,6,9,12,15,19,24
+blog 320 /blog/a11y-static-green-but-broken-dynamic-audit H1
+  A: アクセ／シビリ／ティの／静的／チェッ／クが／緑でも／、／動かし／たら／壊れて／いた  {"lines":12,"oneChar":1,"kinsoku":1,"inWord":5,"kataSplit":3}
+  B: アクセ／シビリ／ティの／静的チ／ェック／が緑で／も、動／かした／ら壊れ／ていた  {"lines":10,"oneChar":0,"kinsoku":1,"inWord":5,"kataSplit":3}
+  wbr: 9,11,16,20,25
+blog 320 /blog/clickable-list-row-stretched-link H1
+  A: 一覧の／行全体／を／クリッ／クでき／る／CSSと／、その／落とし／穴の／直し方  {"lines":11,"oneChar":2,"kinsoku":1,"inWord":3,"kataSplit":1}
+  B: 一覧の／行全体／をクリ／ックで／きる／CSS／と、そ／の落と／し穴の／直し方  {"lines":10,"oneChar":0,"kinsoku":1,"inWord":4,"kataSplit":1}
+  wbr: 3,7,14,19,21,26
+blog 320 /blog/html-tags-cheatsheet H1
+  A: HTML／タグ ／早見表 ／— ／用途別 ／約90タ／グ一覧  {"lines":7,"oneChar":1,"kinsoku":1,"inWord":1,"kataSplit":1}
+  B: HTML／タグ 早／見表 — ／用途別 ／約90タ／グ一覧  {"lines":6,"oneChar":0,"kinsoku":0,"inWord":2,"kataSplit":1}
+  wbr: 4
+blog 375 /blog/html-tags-cheatsheet H1
+  A: HTML／タグ ／早見表 ／— ／用途別 ／約90タ／グ一覧  {"lines":7,"oneChar":1,"kinsoku":1,"inWord":1,"kataSplit":1}
+  B: HTMLタ／グ 早見／表 — 用／途別 約／90タグ／一覧  {"lines":6,"oneChar":0,"kinsoku":0,"inWord":2,"kataSplit":1}
+  wbr: 4
+blog 375 /blog/markdown-cheatsheet H1
+  A: Markdo／wn ／早見表 ／— ／基本記法／とGFM／拡張の／一覧  {"lines":8,"oneChar":1,"kinsoku":1,"inWord":1,"kataSplit":0}
+  B: Markdo／wn 早見／表 — 基／本記法と／GFM拡張／の一覧  {"lines":6,"oneChar":0,"kinsoku":0,"inWord":2,"kataSplit":0}
+  wbr: 20,23,26
+blog 320 /blog/sql-cheatsheet H1
+  A: SQL ／早見表 ／— ／SELEC／T・／JOIN／・／集計・／DML/D／DL／構文一／覧  {"lines":12,"oneChar":3,"kinsoku":2,"inWord":3,"kataSplit":0}
+  B: SQL 早／見表 — ／SELEC／T・／JOIN／・集／計・／DML/D／DL構文／一覧  {"lines":10,"oneChar":0,"kinsoku":1,"inWord":4,"kataSplit":0}
+  wbr: 17,22,25,32
+blog 375 /blog/sql-cheatsheet H1
+  A: SQL ／早見表 ／— ／SELECT／・／JOIN・／集計・／DML/DD／L／構文一覧  {"lines":10,"oneChar":3,"kinsoku":2,"inWord":1,"kataSplit":0}
+  B: SQL 早見／表 — ／SELECT／・／JOIN・／集計・／DML/DD／L構文一／覧  {"lines":9,"oneChar":2,"kinsoku":1,"inWord":2,"kataSplit":0}
+  wbr: 17,22,25,32
+blog 320 /blog/git-command-cheatsheet H1
+  A: Git／コマン／ド ／早見表 ／— ／用途別／の／コマン／ド一覧  {"lines":9,"oneChar":3,"kinsoku":1,"inWord":2,"kataSplit":2}
+  B: Gitコ／マンド ／早見表 ／— 用途／別のコ／マンド／一覧  {"lines":7,"oneChar":0,"kinsoku":1,"inWord":2,"kataSplit":2}
+  wbr: 3,18
+blog 375 /blog/cron-cheatsheet H1
+  A: Cron式 ／早見表 ／— ／フィール／ド・／特殊文字／・／実用パタ／ーン一覧  {"lines":9,"oneChar":2,"kinsoku":3,"inWord":2,"kataSplit":2}
+  B: Cron式 ／早見表 ／— フィ／ールド・／特殊文／字・実用／パターン／一覧  {"lines":8,"oneChar":0,"kinsoku":2,"inWord":2,"kataSplit":1}
+  wbr: 4,18,23,29
+blog 375 /blog/regex-cheatsheet H1
+  A: 正規表現 ／早見表 ／— ／メタ文字／・／量指定子／・よく／使う／パターン／一覧  {"lines":10,"oneChar":2,"kinsoku":3,"inWord":0,"kataSplit":0}
+  B: 正規表現 ／早見表 ／— メタ／文字・量／指定子・／よく使う／パターン／一覧  {"lines":8,"oneChar":0,"kinsoku":1,"inWord":0,"kataSplit":0}
+  wbr: 16,21,23,25
+blog 320 /blog/regex-cheatsheet H1
+  A: 正規表／現 ／早見表 ／— ／メタ文／字・／量指定／子・／よく／使う／パター／ン一覧  {"lines":12,"oneChar":2,"kinsoku":1,"inWord":3,"kataSplit":1}
+  B: 正規表／現 早見／表 — ／メタ文／字・量／指定／子・よ／く使う／パター／ン一覧  {"lines":10,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":1}
+  wbr: 16,21,23,25
+blog 320 /blog/sql-execution-order-guide H1
+  A: SQLの／実行順／を／地図に／する: ／WHER／Eと／HAVIN／Gで／迷わな／い／読み方  {"lines":12,"oneChar":2,"kinsoku":0,"inWord":3,"kataSplit":0}
+  B: SQLの／実行順／を地図／にす／る: ／WHER／Eと／HAVIN／Gで迷／わない／読み方  {"lines":11,"oneChar":0,"kinsoku":0,"inWord":3,"kataSplit":0}
+  wbr: 4,8,11,21,28,32
+blog 320 /blog/git-command-reference H1
+  A: git／コマン／ド／逆引き／ガイド／: ／取り消／し・／復旧で／慌てな／い／ために  {"lines":12,"oneChar":3,"kinsoku":1,"inWord":3,"kataSplit":1}
+  B: gitコマ／ンド逆／引きガ／イド: ／取り消／し・復／旧で慌／てない／ために  {"lines":9,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":2}
+  wbr: 3,7,10,20,23,27
+blog 375 /blog/nextjs-server-only-import-in-client-component-node-fs H1
+  A: Client ／Compon／entに／server／専用部品／を／importす／ると／node:fs／で／ビルドが／壊れる  {"lines":12,"oneChar":2,"kinsoku":0,"inWord":2,"kataSplit":0}
+  B: Client ／Compon／entに／server専／用部品を／importす／ると／node:fs／でビルド／が壊れる  {"lines":10,"oneChar":0,"kinsoku":0,"inWord":3,"kataSplit":0}
+  wbr: 17,23,28,37,45,49
+blog 320 /blog/stop-piling-rules-give-ai-its-wish H1
+  A: AIが／指示を／守らな／いなら／、／ルール／より／先に／『望み／』／を渡し／てみて／ほしい  {"lines":13,"oneChar":2,"kinsoku":2,"inWord":1,"kataSplit":0}
+  B: AIが指／示を守／らない／なら、／ルール／より先／に『望／み』を／渡して／みてほ／しい  {"lines":11,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":0}
+  wbr: 3,6,13,18,20,24
+blog 375 /blog/ai-agent-verification-step-skip H1
+  A: AI／エージェ／ントは／「最後の／確認」／を省略す／る  {"lines":7,"oneChar":1,"kinsoku":0,"inWord":2,"kataSplit":1}
+  B: AIエージ／ェントは／「最後の／確認」を／省略する  {"lines":5,"oneChar":0,"kinsoku":1,"inWord":1,"kataSplit":1}
+  wbr: 2,9,13,16
+blog 320 /blog/ai-agent-concept-rethink-3-workflow-limits H1
+  A: セッシ／ョン／長期化／がAI／エージ／ェント／の／自律運／用を／破壊す／る／（コン／セプト／再策定／記 ／3/3）  {"lines":16,"oneChar":3,"kinsoku":2,"inWord":5,"kataSplit":3}
+  B: セッシ／ョン長／期化が／AIエー／ジェン／トの自／律運用／を破壊／する／（コン／セプト／再策定／記 ／3/3）  {"lines":14,"oneChar":1,"kinsoku":1,"inWord":6,"kataSplit":4}
+  wbr: 5,9,11,18,23,27
+blog 375 /blog/ai-agent-concept-rethink-3-workflow-limits H1
+  A: セッショ／ン／長期化が／AI／エージェ／ントの／自律運用／を／破壊する／（コンセ／プト再策／定記 ／3/3）  {"lines":13,"oneChar":2,"kinsoku":0,"inWord":4,"kataSplit":3}
+  B: セッショ／ン長期化／がAIエー／ジェント／の自律運／用を破壊／する（コ／ンセプト／再策定記 ／3/3）  {"lines":10,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":3}
+  wbr: 5,9,11,18,23,27
+blog 375 /blog/ai-agent-concept-rethink-2-forced-ideation-1728 H1
+  A: 1,728通／りの／強制発想／法で／バイアス／を／構造的に／排除する／（コンセ／プト再策／定記 ／2/3）  {"lines":12,"oneChar":1,"kinsoku":0,"inWord":3,"kataSplit":1}
+  B: 1,728通／りの強制／発想法で／バイアス／を構造的／に排除す／る（コン／セプト再／策定記 ／2/3）  {"lines":10,"oneChar":0,"kinsoku":0,"inWord":3,"kataSplit":1}
+  wbr: 8,14,19,23,27
+blog 320 /blog/nextjs-route-handler-static-and-bundle-budget-test H1
+  A: Next.js ／15の／Route ／Handle／r／デフォ／ルト／変更と／、／バンド／ル／サイズ／を／継続的／に守る／テスト／設計  {"lines":17,"oneChar":4,"kinsoku":1,"inWord":3,"kataSplit":3}
+  B: Next.js ／15の／Route ／Handle／rデフ／ォルト／変更／と、バ／ンドル／サイズ／を継続／的に守／るテス／ト設計  {"lines":14,"oneChar":0,"kinsoku":1,"inWord":5,"kataSplit":4}
+  wbr: 11,24,29,33,37,41,45,47
+blog 320 /blog/nextjs-hydration-mismatch-seeded-random H1
+  A: Next.js／ハイド／レーシ／ョン／不整合／を／シード／付き乱／数で／解決す／る  {"lines":11,"oneChar":2,"kinsoku":1,"inWord":4,"kataSplit":2}
+  B: Next.js／ハイド／レーシ／ョン不／整合を／シード／付き乱／数で解／決する  {"lines":9,"oneChar":0,"kinsoku":1,"inWord":4,"kataSplit":2}
+  wbr: 7,15,19,22,27
+blog 375 /blog/nextjs-seo-metadata-and-json-ld-security H1
+  A: Next.js／サイトの／SEO／メタデー／タ／完全対策／: OGP・／canonica／l・／Twitter ／Card・／JSON-LD／セキュリ／ティまで  {"lines":14,"oneChar":1,"kinsoku":1,"inWord":3,"kataSplit":2}
+  B: Next.js／サイトの／SEOメタ／データ完／全対策: ／OGP・／canonica／l・／Twitter ／Card・／JSON-LD／セキュリ／ティまで  {"lines":13,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":2}
+  wbr: 7,11,14,19,29,39,52,59
+blog 320 /blog/traditional-color-palette-tool H1
+  A: 伝統色／カラー／パレッ／ト／ツール／を／作りま／した: ／250色／から／色彩調／和を／自動生／成  {"lines":14,"oneChar":3,"kinsoku":0,"inWord":3,"kataSplit":3}
+  B: 伝統色／カラー／パレッ／トツー／ルを作／りまし／た: ／250色／から色／彩調和／を自動／生成  {"lines":12,"oneChar":0,"kinsoku":0,"inWord":5,"kataSplit":3}
+  wbr: 3,6,10,14,27,32
+blog 375 /blog/kotowaza-quiz H1
+  A: ことわざ／・／慣用句力／診断: ／10問の／クイズで／語彙力を／測定しよ／う  {"lines":9,"oneChar":2,"kinsoku":1,"inWord":1,"kataSplit":0}
+  B: ことわ／ざ・慣用／句力診／断: 10問／のクイズ／で語彙力／を測定し／よう  {"lines":8,"oneChar":0,"kinsoku":0,"inWord":3,"kataSplit":0}
+  wbr: 5,17,21,25
+blog 320 /blog/kotowaza-quiz H1
+  A: ことわ／ざ・／慣用句／力診断／: ／10問の／クイズ／で／語彙力／を／測定し／よう  {"lines":12,"oneChar":3,"kinsoku":1,"inWord":2,"kataSplit":0}
+  B: ことわ／ざ・慣／用句力／診断: ／10問の／クイズ／で語彙／力を測／定しよ／う  {"lines":10,"oneChar":1,"kinsoku":0,"inWord":4,"kataSplit":0}
+  wbr: 5,17,21,25
+blog 320 /blog/rss-feed-and-pagination H1
+  A: サイト／基盤の／整備: ／メモRS／S／フィー／ドと／ページ／ング／機能の／追加  {"lines":11,"oneChar":1,"kinsoku":0,"inWord":3,"kataSplit":2}
+  B: サイト／基盤の／整備: ／メモ／RSSフ／ィード／とペー／ジング／機能の／追加  {"lines":10,"oneChar":0,"kinsoku":1,"inWord":2,"kataSplit":2}
+  wbr: 3,6,15,20,25,28
+blog 320 /blog/business-email-and-keigo-tools H1
+  A: ビジネ／ス／メール／作成／ツール／と／敬語早／見表を／公開し／ました  {"lines":10,"oneChar":2,"kinsoku":0,"inWord":3,"kataSplit":2}
+  B: ビジネ／スメー／ル作成／ツール／と敬語／早見表／を公開／しまし／た  {"lines":9,"oneChar":1,"kinsoku":0,"inWord":3,"kataSplit":2}
+  wbr: 4,7,9,13,19
+blog 375 /blog/quiz-diagnosis-feature H1
+  A: クイズ・／診断テス／ト機能を／リリース／しました／: ／漢字力診／断と／伝統色診／断で／遊んで／みよう  {"lines":12,"oneChar":1,"kinsoku":1,"inWord":3,"kataSplit":1}
+  B: クイズ・／診断テス／ト機能を／リリース／しまし／た: 漢字／力診断と／伝統色診／断で遊ん／でみよう  {"lines":10,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":1}
+  wbr: 4,9,12,16,22,28,34,37
+blog 375 /blog/cheatsheets-introduction H1
+  A: 10種類／の／コンテン／ツ／タイプを／比較して／チートシ／ートを／選んだ話  {"lines":9,"oneChar":2,"kinsoku":1,"inWord":2,"kataSplit":3}
+  B: 10種類／のコンテ／ンツタイ／プを比較／してチー／トシート／を選んだ／話  {"lines":8,"oneChar":1,"kinsoku":0,"inWord":3,"kataSplit":3}
+  wbr: 5,10,14,18,25
+blog 375 /blog/tools-expansion-10-to-30 H1
+  A: ツールを／10個か／ら／30個に／拡充／しました／: ／プログラ／マティッ／クSEO／戦略の／実践  {"lines":12,"oneChar":2,"kinsoku":1,"inWord":2,"kataSplit":2}
+  B: ツールを／10個か／ら30個／に拡充し／ました: ／プログラ／マティッ／クSEO戦／略の実践  {"lines":9,"oneChar":0,"kinsoku":0,"inWord":4,"kataSplit":2}
+  wbr: 4,9,13,15,21,30,33,36
+blog 320 /blog/regex-tester-guide H1
+  A: 正規表／現／テスタ／ーの／使い方／: ／初心者／から／実践ま／で  {"lines":10,"oneChar":3,"kinsoku":2,"inWord":3,"kataSplit":1}
+  B: 正規表／現テス／ターの／使い／方: 初／心者か／ら実践／まで  {"lines":8,"oneChar":0,"kinsoku":0,"inWord":5,"kataSplit":1}
+  wbr: 4,9,19
+blog 320 /blog/yojijukugo-learning-guide H1
+  A: 四字熟／語の／覚え方／: ／意味・／由来を／知って／楽しく／学ぶ方／法  {"lines":10,"oneChar":2,"kinsoku":1,"inWord":2,"kataSplit":0}
+  B: 四字熟／語の覚／え方: ／意味・／由来を／知って／楽しく／学ぶ方／法  {"lines":9,"oneChar":1,"kinsoku":0,"inWord":3,"kataSplit":0}
+  wbr: 5,13,16,19,22
+blog 320 /blog/japanese-word-puzzle-games-guide H1
+  A: 日本語／パズル／ゲーム／で毎日／脳トレ／: 4つの／無料／デイリ／ー／ゲーム／の／楽しみ／方  {"lines":13,"oneChar":3,"kinsoku":2,"inWord":1,"kataSplit":3}
+  B: 日本語／パズル／ゲーム／で毎日／脳ト／レ: 4つ／の無料／デイリ／ーゲー／ムの楽／しみ方  {"lines":11,"oneChar":0,"kinsoku":1,"inWord":3,"kataSplit":4}
+  wbr: 3,6,10,12,20,22,26,30
+blog 320 /blog/nextjs-static-tool-pages-design-pattern H1
+  A: Next.js ／App ／Router／で／20個の／静的／ツール／ページ／を／構築す／る／設計パ／ターン  {"lines":13,"oneChar":3,"kinsoku":0,"inWord":2,"kataSplit":2}
+  B: Next.js ／App ／Router／で20個／の静的／ツール／ページ／を構築／する設／計パタ／ーン  {"lines":11,"oneChar":0,"kinsoku":1,"inWord":2,"kataSplit":2}
+  wbr: 19,23,25,28,32,36
+blog 320 /blog/how-we-built-this-site H1
+  A: AI／エージ／ェント／7人／チーム／でWeb／サイト／を／ゼロか／ら／構築し／た／全記録  {"lines":13,"oneChar":3,"kinsoku":1,"inWord":3,"kataSplit":1}
+  B: AIエー／ジェン／ト7人／チーム／でWeb／サイト／をゼロ／から構／築した／全記録  {"lines":10,"oneChar":0,"kinsoku":0,"inWord":3,"kataSplit":2}
+  wbr: 2,10,14,17,21,25,29
+list 375 /blog/category/ai-workflow H1
+  A: AI／ワークフ／ロー  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":1}
+  B: AIワーク／フロー  {"lines":2,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":1}
+  wbr: 2
+yoji 375 /dictionary/yoji/%E4%B8%80%E5%88%80%E4%B8%A1%E6%96%AD H1
+  A: 四字熟語／「一刀両断／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「一刀両／断」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E4%B8%80%E4%B8%96%E4%B8%80%E4%BB%A3 H1
+  A: 四字熟語／「一世一代／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「一世一／代」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E4%B8%80%E6%9C%9F%E4%B8%80%E4%BC%9A H1
+  A: 四字熟語／「一期一会／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「一期一／会」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E4%B8%80%E7%9F%B3%E4%BA%8C%E9%B3%A5 H1
+  A: 四字熟語／「一石二鳥／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「一石二／鳥」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E6%B8%A9%E6%95%85%E7%9F%A5%E6%96%B0 H1
+  A: 四字熟語／「温故知新／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「温故知／新」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E8%87%A5%E8%96%AA%E5%98%97%E8%83%86 H1
+  A: 四字熟語／「臥薪嘗胆／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「臥薪嘗／胆」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E4%B8%83%E8%BB%A2%E5%85%AB%E8%B5%B7 H1
+  A: 四字熟語／「七転八起／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「七転八／起」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E4%BB%A5%E5%BF%83%E4%BC%9D%E5%BF%83 H1
+  A: 四字熟語／「以心伝心／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「以心伝／心」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E7%94%BB%E7%AB%9C%E7%82%B9%E7%9D%9B H1
+  A: 四字熟語／「画竜点睛／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「画竜点／睛」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+yoji 375 /dictionary/yoji/%E8%87%AA%E7%94%BB%E8%87%AA%E8%B3%9B H1
+  A: 四字熟語／「自画自賛／」  {"lines":3,"oneChar":1,"kinsoku":1,"inWord":0,"kataSplit":0}
+  B: 四字熟語／「自画自／賛」  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  wbr: 4
+misc 320 /this-page-does-not-exist H2
+  A: 主要／コンテン／ツ  {"lines":3,"oneChar":1,"kinsoku":0,"inWord":1,"kataSplit":1}
+  B: 主要コン／テンツ  {"lines":2,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":1}
+  wbr: 2
+misc 320 /about H2
+  A: AIが／運営して／います  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":1,"kataSplit":0}
+  B: AIが運営し／ています  {"lines":2,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":0}
+  wbr: 3,7
+misc 375 /privacy H2
+  A: 情報の／管理と／安全管理措／置  {"lines":4,"oneChar":1,"kinsoku":0,"inWord":1,"kataSplit":0}
+  B: 情報の管理／と安全管理／措置  {"lines":3,"oneChar":0,"kinsoku":0,"inWord":0,"kataSplit":0}
+  wbr: 3,6
+misc 375 /privacy H2
+  A: プライバシ／ー／ポリシーの／変更  {"lines":4,"oneChar":1,"kinsoku":1,"inWord":1,"kataSplit":2}
+  B: プライバシ／ーポリシー／の変更  {"lines":3,"oneChar":0,"kinsoku":1,"inWord":1,"kataSplit":1}
+  wbr: 6,11

@@ -1,0 +1,12 @@
+
+> yolo-web@0.1.0 start
+> next start
+
+▲ Next.js 16.3.0
+- Local:         http://localhost:3447
+- Network:       http://192.0.2.2:3447
+✓ Ready in 146ms
+✓ Running next.config.ts took 34ms
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net

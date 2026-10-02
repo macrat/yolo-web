@@ -1,0 +1,17 @@
+import { chromium } from "playwright";
+const B = "http://localhost:3187";
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+const ctx = await browser.newContext({ viewport: { width: 375, height: 667 } });
+const p = await ctx.newPage();
+let release; const gate = new Promise(r => release = r);
+let held = 0;
+await p.route(/\.js(\?|$)/, async (route) => { held++; await Promise.race([gate, new Promise(r => setTimeout(r, 15000))]); await route.continue(); });
+await p.goto(B + "/storybook/list/101", { waitUntil: "domcontentloaded" });
+await p.waitForTimeout(500);
+await p.locator("input[type=search]").pressSequentially("一", { delay: 30 });
+const before = await p.evaluate(() => [document.querySelector("input[type=search]").value, document.querySelector('[role=status]').textContent]);
+release();
+await p.waitForLoadState("networkidle"); await p.waitForTimeout(1000);
+const after = await p.evaluate(() => [document.querySelector("input[type=search]").value, document.querySelector('[role=status]').textContent, location.search, document.querySelectorAll('ul[aria-label] > li').length]);
+console.log("held", held, "typed before", JSON.stringify(before), "after", JSON.stringify(after));
+await browser.close();

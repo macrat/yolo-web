@@ -1,0 +1,1874 @@
+{
+ "cp-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 261,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1160,
+    "heading": "このタイプについて",
+    "headTop": 1195,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2746,
+    "heading": "この結果を共有",
+    "headTop": 2781,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2989,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 3024,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 5722,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 5757,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 6329,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 6364,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 7173
+ },
+ "kanji-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "漢字ビギナー",
+    "headTop": 261,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 570,
+    "heading": "この結果を共有",
+    "headTop": 605,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 813,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 848,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1267,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1302,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 2111
+ },
+ "cf-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "考えすぎ予報士",
+    "headTop": 261,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 806,
+    "heading": "このタイプについて",
+    "headTop": 841,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2638,
+    "heading": "この結果を共有",
+    "headTop": 2673,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2881,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2916,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3514,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3549,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 4121,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4156,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4965
+ },
+ "tc-320-light": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "藍色",
+    "headTop": 305,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 858,
+    "heading": "このタイプについて",
+    "headTop": 893,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2325,
+    "heading": "この結果を共有",
+    "headTop": 2360,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2567,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2602,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3205,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3240,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3812,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3847,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4656
+ },
+ "cp-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 261,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1160,
+    "heading": "このタイプについて",
+    "headTop": 1195,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2746,
+    "heading": "この結果を共有",
+    "headTop": 2781,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2989,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 3024,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 5722,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 5757,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 6329,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 6364,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 7173
+ },
+ "kanji-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "漢字ビギナー",
+    "headTop": 261,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 570,
+    "heading": "この結果を共有",
+    "headTop": 605,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 813,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 848,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1267,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1302,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 2111
+ },
+ "cf-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "考えすぎ予報士",
+    "headTop": 261,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 806,
+    "heading": "このタイプについて",
+    "headTop": 841,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2638,
+    "heading": "この結果を共有",
+    "headTop": 2673,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2881,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2916,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3514,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3549,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 4121,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4156,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4965
+ },
+ "tc-320-dark": {
+  "innerW": 320,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 107,
+    "heading": "藍色",
+    "headTop": 305,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 858,
+    "heading": "このタイプについて",
+    "headTop": 893,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2325,
+    "heading": "この結果を共有",
+    "headTop": 2360,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2567,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2602,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3205,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3240,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3812,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3847,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4656
+ },
+ "cp-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 217,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 961,
+    "heading": "このタイプについて",
+    "headTop": 996,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2339,
+    "heading": "この結果を共有",
+    "headTop": 2374,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2582,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2617,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 5001,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 5036,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 5608,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 5643,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 6328
+ },
+ "kanji-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "漢字ビギナー",
+    "headTop": 173,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 451,
+    "heading": "この結果を共有",
+    "headTop": 486,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 693,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 728,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 1147,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1182,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 1867
+ },
+ "cf-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "考えすぎ予報士",
+    "headTop": 173,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 655,
+    "heading": "このタイプについて",
+    "headTop": 690,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2267,
+    "heading": "この結果を共有",
+    "headTop": 2302,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2510,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2545,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3143,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3178,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3750,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3785,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4470
+ },
+ "tc-375-light": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "藍色",
+    "headTop": 217,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 719,
+    "heading": "このタイプについて",
+    "headTop": 754,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2010,
+    "heading": "この結果を共有",
+    "headTop": 2045,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2252,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2287,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2890,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2925,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3497,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3532,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4217
+ },
+ "cp-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 217,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 961,
+    "heading": "このタイプについて",
+    "headTop": 996,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2339,
+    "heading": "この結果を共有",
+    "headTop": 2374,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2582,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2617,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 5001,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 5036,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 5608,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 5643,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 6328
+ },
+ "kanji-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "漢字ビギナー",
+    "headTop": 173,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 451,
+    "heading": "この結果を共有",
+    "headTop": 486,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 693,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 728,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 1147,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1182,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 0,
+  "height": 1867
+ },
+ "cf-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "考えすぎ予報士",
+    "headTop": 173,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 655,
+    "heading": "このタイプについて",
+    "headTop": 690,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2267,
+    "heading": "この結果を共有",
+    "headTop": 2302,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2510,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2545,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3143,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3178,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3750,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3785,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4470
+ },
+ "tc-375-dark": {
+  "innerW": 375,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "藍色",
+    "headTop": 217,
+    "headFs": "33.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 719,
+    "heading": "このタイプについて",
+    "headTop": 754,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2010,
+    "heading": "この結果を共有",
+    "headTop": 2045,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2252,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2287,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 2890,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2925,
+    "headFs": "23.84px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 375,
+    "top": 3497,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3532,
+    "headFs": "23.84px"
+   }
+  ],
+  "nested": 2,
+  "height": 4217
+ },
+ "cp-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 769,
+    "heading": "このタイプについて",
+    "headTop": 820,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1924,
+    "heading": "この結果を共有",
+    "headTop": 1975,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2175,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2226,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3900,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3951,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 4366,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4417,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 2,
+  "height": 5006
+ },
+ "kanji-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "漢字ビギナー",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 483,
+    "heading": "この結果を共有",
+    "headTop": 534,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 735,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 786,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1105,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1156,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 1745
+ },
+ "cf-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "考えすぎ予報士",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 594,
+    "heading": "このタイプについて",
+    "headTop": 645,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1907,
+    "heading": "この結果を共有",
+    "headTop": 1958,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2158,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2209,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2852,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2903,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3318,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3369,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 2,
+  "height": 3958
+ },
+ "tc-1280-light": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "藍色",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 645,
+    "heading": "このタイプについて",
+    "headTop": 696,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1794,
+    "heading": "この結果を共有",
+    "headTop": 1845,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2046,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2097,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2744,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2795,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3210,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3261,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 2,
+  "height": 3850
+ },
+ "cp-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 769,
+    "heading": "このタイプについて",
+    "headTop": 820,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1924,
+    "heading": "この結果を共有",
+    "headTop": 1975,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2175,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 2226,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3900,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 3951,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 4366,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 4417,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 2,
+  "height": 5006
+ },
+ "kanji-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "漢字ビギナー",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 483,
+    "heading": "この結果を共有",
+    "headTop": 534,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 735,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 786,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1105,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 1156,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 0,
+  "height": 1745
+ },
+ "cf-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "考えすぎ予報士",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 594,
+    "heading": "このタイプについて",
+    "headTop": 645,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1907,
+    "heading": "この結果を共有",
+    "headTop": 1958,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2158,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2209,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2852,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2903,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3318,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3369,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 2,
+  "height": 3958
+ },
+ "tc-1280-dark": {
+  "innerW": 1280,
+  "rootFs": "16px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 63,
+    "heading": "藍色",
+    "headTop": 181,
+    "headFs": "65.28px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 645,
+    "heading": "このタイプについて",
+    "headTop": 696,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 1794,
+    "heading": "この結果を共有",
+    "headTop": 1845,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2046,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 2097,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 2744,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 2795,
+    "headFs": "46.72px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 1280,
+    "top": 3210,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3261,
+    "headFs": "46.72px"
+   }
+  ],
+  "nested": 2,
+  "height": 3850
+ },
+ "cp-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 523,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3691,
+    "heading": "このタイプについて",
+    "headTop": 3726,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8712,
+    "heading": "この結果を共有",
+    "headTop": 8747,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 9181,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 9216,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 17221,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 17256,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 18930,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 18965,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 2,
+  "height": 20962
+ },
+ "kanji-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "漢字ビギナー",
+    "headTop": 387,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1375,
+    "heading": "この結果を共有",
+    "headTop": 1410,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1844,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 1879,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3091,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3126,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 5249
+ },
+ "cf-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "考えすぎ予報士",
+    "headTop": 483,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2284,
+    "heading": "このタイプについて",
+    "headTop": 2319,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8303,
+    "heading": "この結果を共有",
+    "headTop": 8338,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8772,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 8807,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 10246,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 10281,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 11956,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 11991,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 2,
+  "height": 13987
+ },
+ "tc-320x200-light": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "藍色",
+    "headTop": 565,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2031,
+    "heading": "このタイプについて",
+    "headTop": 2066,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 6590,
+    "heading": "この結果を共有",
+    "headTop": 6625,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 7059,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 7094,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8507,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 8542,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 10343,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 10378,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 2,
+  "height": 12374
+ },
+ "cp-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "締切3分前に5手先を読む炎の策士",
+    "headTop": 523,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3691,
+    "heading": "このタイプについて",
+    "headTop": 3726,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8712,
+    "heading": "この結果を共有",
+    "headTop": 8747,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 9181,
+    "heading": "すべてのタイプ（24）",
+    "headTop": 9216,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 17221,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 17256,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 18930,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 18965,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 2,
+  "height": 20962
+ },
+ "kanji-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "漢字ビギナー",
+    "headTop": 387,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1375,
+    "heading": "この結果を共有",
+    "headTop": 1410,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 1844,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 1879,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 3091,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 3126,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 0,
+  "height": 5249
+ },
+ "cf-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "考えすぎ予報士",
+    "headTop": 483,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2284,
+    "heading": "このタイプについて",
+    "headTop": 2319,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8303,
+    "heading": "この結果を共有",
+    "headTop": 8338,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8772,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 8807,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 10246,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 10281,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 11956,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 11991,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 2,
+  "height": 13987
+ },
+ "tc-320x200-dark": {
+  "innerW": 320,
+  "rootFs": "32px",
+  "overflow": 0,
+  "sections": [
+   {
+    "tag": "SECTION",
+    "rule": false,
+    "ruleW": 0,
+    "top": 208,
+    "heading": "藍色",
+    "headTop": 565,
+    "headFs": "66.56px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 2031,
+    "heading": "このタイプについて",
+    "headTop": 2066,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 6590,
+    "heading": "この結果を共有",
+    "headTop": 6625,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 7059,
+    "heading": "すべてのタイプ（8）",
+    "headTop": 7094,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 8507,
+    "heading": "他のクイズ・診断も試してみよう",
+    "headTop": 8542,
+    "headFs": "47.68px"
+   },
+   {
+    "tag": "SECTION",
+    "rule": true,
+    "ruleW": 320,
+    "top": 10343,
+    "heading": "他のジャンルも試してみよう",
+    "headTop": 10378,
+    "headFs": "47.68px"
+   }
+  ],
+  "nested": 2,
+  "height": 12374
+ }
+}

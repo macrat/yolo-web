@@ -1,0 +1,8 @@
+▲ Next.js 16.3.0
+- Local:         http://127.0.0.1:49535
+- Network:       http://127.0.0.1:49535
+✓ Ready in 135ms
+✓ Running next.config.ts took 41ms
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net

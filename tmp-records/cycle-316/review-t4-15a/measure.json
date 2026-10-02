@@ -1,0 +1,5200 @@
+[
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 320,
+  "n": 0,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 181,
+  "tableRightOver": -74,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 320,
+  "n": 7,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 192,
+  "tableRightOver": -63,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 320,
+  "n": 1234,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 217,
+  "tableRightOver": -38,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 320,
+  "n": 123456,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 237,
+  "tableRightOver": -18,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 320,
+  "n": 1234567,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,234,",
+     "567"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,",
+     "701"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 375,
+  "n": 0,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 181,
+  "tableRightOver": -129,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 375,
+  "n": 7,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 192,
+  "tableRightOver": -118,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 375,
+  "n": 1234,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 217,
+  "tableRightOver": -93,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 375,
+  "n": 123456,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 237,
+  "tableRightOver": -73,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 375,
+  "n": 1234567,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 252,
+  "tableRightOver": -58,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234,567"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,701"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 1280,
+  "n": 0,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 181,
+  "tableRightOver": -722,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 1280,
+  "n": 7,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 192,
+  "tableRightOver": -711,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 1280,
+  "n": 1234,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 217,
+  "tableRightOver": -686,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 1280,
+  "n": 123456,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 237,
+  "tableRightOver": -666,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "light",
+  "w": 1280,
+  "n": 1234567,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 252,
+  "tableRightOver": -651,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234,567"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,701"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 320,
+  "n": 0,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 181,
+  "tableRightOver": -74,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 320,
+  "n": 7,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 192,
+  "tableRightOver": -63,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 320,
+  "n": 1234,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 217,
+  "tableRightOver": -38,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 320,
+  "n": 123456,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 237,
+  "tableRightOver": -18,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 320,
+  "n": 1234567,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,234,",
+     "567"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,",
+     "701"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 196,
+    "tdR": 282
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 375,
+  "n": 0,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 181,
+  "tableRightOver": -129,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 219
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 375,
+  "n": 7,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 192,
+  "tableRightOver": -118,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 230
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 375,
+  "n": 1234,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 217,
+  "tableRightOver": -93,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 255
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 375,
+  "n": 123456,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 237,
+  "tableRightOver": -73,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 275
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 375,
+  "n": 1234567,
+  "root": "16px",
+  "step": "main",
+  "fs": "33.28px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 252,
+  "tableRightOver": -58,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234,567"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,701"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 201,
+    "tdR": 290
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 0,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 181,
+  "tableRightOver": -722,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 379
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 7,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 192,
+  "tableRightOver": -711,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 390
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 1234,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 217,
+  "tableRightOver": -686,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 415
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 123456,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 237,
+  "tableRightOver": -666,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 435
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 100,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 1234567,
+  "root": "16px",
+  "step": "main",
+  "fs": "65.28px",
+  "sw": 884,
+  "cw": 884,
+  "numRight": 1082,
+  "boxRight": 1101,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 252,
+  "tableRightOver": -651,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234,567"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,701"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 361,
+    "tdR": 450
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 320,
+  "n": 0,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 320,
+  "n": 7,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 320,
+  "n": 1234,
+  "root": "32px",
+  "step": "section",
+  "fs": "47.68px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "702"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 320,
+  "n": 123456,
+  "root": "32px",
+  "step": "sub",
+  "fs": "34px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "123,",
+     "456"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "370,",
+     "368"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,",
+     "728"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 320,
+  "n": 1234567,
+  "root": "32px",
+  "step": "sub",
+  "fs": "34px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234,",
+     "567"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "703,",
+     "701"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,",
+     "284"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 375,
+  "n": 0,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 375,
+  "n": 7,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 375,
+  "n": 1234,
+  "root": "32px",
+  "step": "section",
+  "fs": "47.68px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "702"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 375,
+  "n": 123456,
+  "root": "32px",
+  "step": "section",
+  "fs": "47.68px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "123,",
+     "456"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "370,",
+     "368"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,",
+     "728"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 375,
+  "n": 1234567,
+  "root": "32px",
+  "step": "sub",
+  "fs": "34px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234,",
+     "567"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "703,",
+     "701"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,",
+     "284"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 1280,
+  "n": 0,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 346,
+  "tableRightOver": -869,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 1280,
+  "n": 7,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 366,
+  "tableRightOver": -849,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 1280,
+  "n": 1234,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 416,
+  "tableRightOver": -799,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 1280,
+  "n": 123456,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 457,
+  "tableRightOver": -758,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "light",
+  "w": 1280,
+  "n": 1234567,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 487,
+  "tableRightOver": -728,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234,567"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,701"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 320,
+  "n": 0,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 253,
+    "tdR": 282
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 320,
+  "n": 7,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 282
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 320,
+  "n": 1234,
+  "root": "32px",
+  "step": "section",
+  "fs": "47.68px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "702"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 208,
+    "tdR": 282
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 320,
+  "n": 123456,
+  "root": "32px",
+  "step": "sub",
+  "fs": "34px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "123,",
+     "456"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "370,",
+     "368"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,",
+     "728"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 198,
+    "tdR": 282
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 320,
+  "n": 1234567,
+  "root": "32px",
+  "step": "sub",
+  "fs": "34px",
+  "sw": 244,
+  "cw": 244,
+  "numRight": 282,
+  "boxRight": 293,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 244,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234,",
+     "567"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "703,",
+     "701"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,",
+     "284"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 197,
+    "tdR": 282
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 375,
+  "n": 0,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 308,
+    "tdR": 337
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 375,
+  "n": 7,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 288,
+    "tdR": 337
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 375,
+  "n": 1234,
+  "root": "32px",
+  "step": "section",
+  "fs": "47.68px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "702"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 255,
+    "tdR": 337
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 375,
+  "n": 123456,
+  "root": "32px",
+  "step": "section",
+  "fs": "47.68px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "123,",
+     "456"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "370,",
+     "368"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,",
+     "728"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 239,
+    "tdR": 337
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 375,
+  "n": 1234567,
+  "root": "32px",
+  "step": "sub",
+  "fs": "34px",
+  "sw": 299,
+  "cw": 299,
+  "numRight": 337,
+  "boxRight": 348,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 299,
+  "tableRightOver": -11,
+  "rows": [
+   {
+    "th": [
+     "空白を",
+     "除いた",
+     "文字数"
+    ],
+    "td": [
+     "1,",
+     "234,",
+     "567"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "UTF-8の",
+     "バイト数"
+    ],
+    "td": [
+     "3,",
+     "703,",
+     "701"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,",
+     "284"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 233,
+    "tdR": 337
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 0,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "0文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 346,
+  "tableRightOver": -869,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "0"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 384
+   }
+  ],
+  "status": "テキストを入力してください"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 7,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "7文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 366,
+  "tableRightOver": -849,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "7"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "21"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "4"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 404
+   }
+  ],
+  "status": "7文字、21バイト、1行、4単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 1234,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "1,234文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 416,
+  "tableRightOver": -799,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,702"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 454
+   }
+  ],
+  "status": "1234文字、3702バイト、1行、617単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 123456,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "123,456文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 457,
+  "tableRightOver": -758,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "123,456"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "370,368"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "61,728"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 495
+   }
+  ],
+  "status": "123456文字、370368バイト、1行、61728単語"
+ },
+ {
+  "scale": 200,
+  "scheme": "dark",
+  "w": 1280,
+  "n": 1234567,
+  "root": "32px",
+  "step": "main",
+  "fs": "66.56px",
+  "sw": 1204,
+  "cw": 1204,
+  "numRight": 1242,
+  "boxRight": 1253,
+  "lines": 1,
+  "text": "1,234,567文字",
+  "docOverflow": 0,
+  "framedAroundInput": [],
+  "innerBorders": [
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px",
+   "TD.:1px"
+  ],
+  "regionBorder": "3px",
+  "tableW": 487,
+  "tableRightOver": -728,
+  "rows": [
+   {
+    "th": [
+     "空白を除いた文字数"
+    ],
+    "td": [
+     "1,234,567"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "UTF-8のバイト数"
+    ],
+    "td": [
+     "3,703,701"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "単語数"
+    ],
+    "td": [
+     "617,284"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "行数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   },
+   {
+    "th": [
+     "段落数"
+    ],
+    "td": [
+     "1"
+    ],
+    "gap": 0,
+    "thR": 355,
+    "tdR": 525
+   }
+  ],
+  "status": "1234567文字、3703701バイト、1行、617284単語"
+ }
+]

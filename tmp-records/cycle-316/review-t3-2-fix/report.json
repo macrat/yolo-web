@@ -1,0 +1,3674 @@
+{
+ "top-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "yolos.net",
+    "fs": "48px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 139
+   },
+   {
+    "tag": "H2",
+    "text": "あなたに似たキャラ診断",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "32px",
+    "x": 76,
+    "top": 633
+   },
+   {
+    "tag": "H2",
+    "text": "診断・占い・あそび",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1585
+   },
+   {
+    "tag": "H2",
+    "text": "辞典",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2830
+   },
+   {
+    "tag": "H2",
+    "text": "道具",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3533
+   },
+   {
+    "tag": "H2",
+    "text": "読みもの",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 4295
+   }
+  ]
+ },
+ "tool-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "文字数カウント",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 204
+   },
+   {
+    "tag": "H2",
+    "text": "このツールについて",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1246
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1749
+   },
+   {
+    "tag": "H2",
+    "text": "このツールが便利だったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 2051
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2294
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2980
+   }
+  ]
+ },
+ "color-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "鴇（toki）",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 523
+   },
+   {
+    "tag": "H2",
+    "text": "カラーコード",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 578
+   },
+   {
+    "tag": "H2",
+    "text": "カテゴリ",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 932
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1058
+   },
+   {
+    "tag": "H2",
+    "text": "同じカテゴリの伝統色（赤系）",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1184
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 51,
+    "top": 1727
+   },
+   {
+    "tag": "H2",
+    "text": "こちらもおすすめ",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2337
+   }
+  ]
+ },
+ "humor-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "朝",
+    "fs": "31px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 227
+   },
+   {
+    "tag": "H2",
+    "text": "解説",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 554
+   },
+   {
+    "tag": "H2",
+    "text": "用例",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1031
+   },
+   {
+    "tag": "H2",
+    "text": "関連語",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1327
+   }
+  ]
+ },
+ "cpres-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 350
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1242
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1711
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2362
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（24）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3026
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 6413
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 7001
+   }
+  ]
+ },
+ "tcres-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色(あいいろ)",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 378
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1274
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1661
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1864
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2567
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（8）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2938
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3903
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 4522
+   }
+  ]
+ },
+ "tcquiz-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 204
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 702
+   },
+   {
+    "tag": "H2",
+    "text": "この診断が楽しかったらシェア",
+    "fs": "15.2px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 1217
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 1426
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 2061
+   }
+  ]
+ },
+ "game-320-light": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字カナール",
+    "fs": "22.4px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 90,
+    "top": 698
+   },
+   {
+    "tag": "H2",
+    "text": "遊び方",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 41,
+    "top": -397
+   },
+   {
+    "tag": "H2",
+    "text": "残念...",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "統計",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1546
+   },
+   {
+    "tag": "H2",
+    "text": "このゲームが楽しかったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1832
+   },
+   {
+    "tag": "H2",
+    "text": "関連ゲーム",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2051
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2456
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3044
+   }
+  ]
+ },
+ "top-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "yolos.net",
+    "fs": "48px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 95
+   },
+   {
+    "tag": "H2",
+    "text": "あなたに似たキャラ診断",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "32px",
+    "x": 76,
+    "top": 492
+   },
+   {
+    "tag": "H2",
+    "text": "診断・占い・あそび",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1380
+   },
+   {
+    "tag": "H2",
+    "text": "辞典",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2531
+   },
+   {
+    "tag": "H2",
+    "text": "道具",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3139
+   },
+   {
+    "tag": "H2",
+    "text": "読みもの",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3807
+   }
+  ]
+ },
+ "tool-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "文字数カウント",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 139
+   },
+   {
+    "tag": "H2",
+    "text": "このツールについて",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1158
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1600
+   },
+   {
+    "tag": "H2",
+    "text": "このツールが便利だったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1901
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2120
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2775
+   }
+  ]
+ },
+ "color-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "鴇（toki）",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 407
+   },
+   {
+    "tag": "H2",
+    "text": "カラーコード",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 463
+   },
+   {
+    "tag": "H2",
+    "text": "カテゴリ",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 758
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 884
+   },
+   {
+    "tag": "H2",
+    "text": "同じカテゴリの伝統色（赤系）",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1010
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 51,
+    "top": 1553
+   },
+   {
+    "tag": "H2",
+    "text": "こちらもおすすめ",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2048
+   }
+  ]
+ },
+ "humor-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "朝",
+    "fs": "31px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 160
+   },
+   {
+    "tag": "H2",
+    "text": "解説",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 457
+   },
+   {
+    "tag": "H2",
+    "text": "用例",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 842
+   },
+   {
+    "tag": "H2",
+    "text": "関連語",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1108
+   }
+  ]
+ },
+ "cpres-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 287
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1113
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1500
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2073
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（24）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2667
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 5592
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 6181
+   }
+  ]
+ },
+ "tcres-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色(あいいろ)",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 268
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1088
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1393
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1596
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2195
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（8）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2525
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3386
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3974
+   }
+  ]
+ },
+ "tcquiz-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 160
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 583
+   },
+   {
+    "tag": "H2",
+    "text": "この診断が楽しかったらシェア",
+    "fs": "15.2px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 972
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 1181
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 1785
+   }
+  ]
+ },
+ "game-375-light": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字カナール",
+    "fs": "22.4px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 117,
+    "top": 591
+   },
+   {
+    "tag": "H2",
+    "text": "遊び方",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 44,
+    "top": -158
+   },
+   {
+    "tag": "H2",
+    "text": "残念...",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "統計",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1439
+   },
+   {
+    "tag": "H2",
+    "text": "このゲームが楽しかったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1694
+   },
+   {
+    "tag": "H2",
+    "text": "関連ゲーム",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 1888
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2293
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2881
+   }
+  ]
+ },
+ "top-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "yolos.net",
+    "fs": "48px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 95
+   },
+   {
+    "tag": "H2",
+    "text": "あなたに似たキャラ診断",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "48px",
+    "x": 236,
+    "top": 445
+   },
+   {
+    "tag": "H2",
+    "text": "診断・占い・あそび",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 880
+   },
+   {
+    "tag": "H2",
+    "text": "辞典",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 1643
+   },
+   {
+    "tag": "H2",
+    "text": "道具",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 2154
+   },
+   {
+    "tag": "H2",
+    "text": "読みもの",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 2725
+   }
+  ]
+ },
+ "tool-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "文字数カウント",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 155
+   },
+   {
+    "tag": "H2",
+    "text": "このツールについて",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 947
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 1232
+   },
+   {
+    "tag": "H2",
+    "text": "このツールが便利だったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 1447
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 1622
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 2172
+   }
+  ]
+ },
+ "color-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "鴇（toki）",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 430
+   },
+   {
+    "tag": "H2",
+    "text": "カラーコード",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 485
+   },
+   {
+    "tag": "H2",
+    "text": "カテゴリ",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 750
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 876
+   },
+   {
+    "tag": "H2",
+    "text": "同じカテゴリの伝統色（赤系）",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 1002
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 203,
+    "top": 1536
+   },
+   {
+    "tag": "H2",
+    "text": "こちらもおすすめ",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 1885
+   }
+  ]
+ },
+ "humor-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "朝",
+    "fs": "39px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 139
+   },
+   {
+    "tag": "H2",
+    "text": "解説",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 352
+   },
+   {
+    "tag": "H2",
+    "text": "用例",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 586
+   },
+   {
+    "tag": "H2",
+    "text": "関連語",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 760
+   }
+  ]
+ },
+ "cpres-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 224
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 925
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1175
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1568
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（24）",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 2046
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 4084
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 4573
+   }
+  ]
+ },
+ "tcres-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色(あいいろ)",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 224
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 903
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1126
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1303
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1722
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（8）",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1993
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 2848
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 3337
+   }
+  ]
+ },
+ "tcquiz-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 155
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 573
+   },
+   {
+    "tag": "H2",
+    "text": "この診断が楽しかったらシェア",
+    "fs": "15.2px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 876
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 1041
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 1496
+   }
+  ]
+ },
+ "game-1280-light": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字カナール",
+    "fs": "25.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 559,
+    "top": 418
+   },
+   {
+    "tag": "H2",
+    "text": "遊び方",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 465,
+    "top": -77
+   },
+   {
+    "tag": "H2",
+    "text": "残念...",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "統計",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 348,
+    "top": 1276
+   },
+   {
+    "tag": "H2",
+    "text": "このゲームが楽しかったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 348,
+    "top": 1499
+   },
+   {
+    "tag": "H2",
+    "text": "関連ゲーム",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 1642
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 1977
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(3.04863 0 0)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 2466
+   }
+  ]
+ },
+ "top-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "yolos.net",
+    "fs": "48px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 139
+   },
+   {
+    "tag": "H2",
+    "text": "あなたに似たキャラ診断",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "32px",
+    "x": 76,
+    "top": 633
+   },
+   {
+    "tag": "H2",
+    "text": "診断・占い・あそび",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1585
+   },
+   {
+    "tag": "H2",
+    "text": "辞典",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2830
+   },
+   {
+    "tag": "H2",
+    "text": "道具",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3533
+   },
+   {
+    "tag": "H2",
+    "text": "読みもの",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 4295
+   }
+  ]
+ },
+ "tool-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "文字数カウント",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 204
+   },
+   {
+    "tag": "H2",
+    "text": "このツールについて",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1246
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1749
+   },
+   {
+    "tag": "H2",
+    "text": "このツールが便利だったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 2051
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2294
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2980
+   }
+  ]
+ },
+ "color-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "鴇（toki）",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 523
+   },
+   {
+    "tag": "H2",
+    "text": "カラーコード",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 578
+   },
+   {
+    "tag": "H2",
+    "text": "カテゴリ",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 932
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1058
+   },
+   {
+    "tag": "H2",
+    "text": "同じカテゴリの伝統色（赤系）",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1184
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 51,
+    "top": 1727
+   },
+   {
+    "tag": "H2",
+    "text": "こちらもおすすめ",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2337
+   }
+  ]
+ },
+ "humor-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "朝",
+    "fs": "31px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 227
+   },
+   {
+    "tag": "H2",
+    "text": "解説",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 554
+   },
+   {
+    "tag": "H2",
+    "text": "用例",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1031
+   },
+   {
+    "tag": "H2",
+    "text": "関連語",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1327
+   }
+  ]
+ },
+ "cpres-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 350
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1242
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1711
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2362
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（24）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3026
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 6413
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 7001
+   }
+  ]
+ },
+ "tcres-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色(あいいろ)",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 378
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1274
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1661
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1864
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2567
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（8）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2938
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3903
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 4522
+   }
+  ]
+ },
+ "tcquiz-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 204
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 702
+   },
+   {
+    "tag": "H2",
+    "text": "この診断が楽しかったらシェア",
+    "fs": "15.2px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 1217
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 1426
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 2061
+   }
+  ]
+ },
+ "game-320-dark": {
+  "scrollWidth": 320,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字カナール",
+    "fs": "22.4px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 90,
+    "top": 698
+   },
+   {
+    "tag": "H2",
+    "text": "遊び方",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 41,
+    "top": -397
+   },
+   {
+    "tag": "H2",
+    "text": "残念...",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "統計",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1546
+   },
+   {
+    "tag": "H2",
+    "text": "このゲームが楽しかったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1832
+   },
+   {
+    "tag": "H2",
+    "text": "関連ゲーム",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2051
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2456
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3044
+   }
+  ]
+ },
+ "top-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "yolos.net",
+    "fs": "48px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 95
+   },
+   {
+    "tag": "H2",
+    "text": "あなたに似たキャラ診断",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "32px",
+    "x": 76,
+    "top": 492
+   },
+   {
+    "tag": "H2",
+    "text": "診断・占い・あそび",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1380
+   },
+   {
+    "tag": "H2",
+    "text": "辞典",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2531
+   },
+   {
+    "tag": "H2",
+    "text": "道具",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3139
+   },
+   {
+    "tag": "H2",
+    "text": "読みもの",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 3807
+   }
+  ]
+ },
+ "tool-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "文字数カウント",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 139
+   },
+   {
+    "tag": "H2",
+    "text": "このツールについて",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1158
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1600
+   },
+   {
+    "tag": "H2",
+    "text": "このツールが便利だったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 43,
+    "top": 1901
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2120
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 43,
+    "top": 2775
+   }
+  ]
+ },
+ "color-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "鴇（toki）",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 407
+   },
+   {
+    "tag": "H2",
+    "text": "カラーコード",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 463
+   },
+   {
+    "tag": "H2",
+    "text": "カテゴリ",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 758
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 884
+   },
+   {
+    "tag": "H2",
+    "text": "同じカテゴリの伝統色（赤系）",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1010
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 51,
+    "top": 1553
+   },
+   {
+    "tag": "H2",
+    "text": "こちらもおすすめ",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2048
+   }
+  ]
+ },
+ "humor-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "朝",
+    "fs": "31px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 160
+   },
+   {
+    "tag": "H2",
+    "text": "解説",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 457
+   },
+   {
+    "tag": "H2",
+    "text": "用例",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 842
+   },
+   {
+    "tag": "H2",
+    "text": "関連語",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1108
+   }
+  ]
+ },
+ "cpres-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 287
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1113
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1500
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2073
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（24）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2667
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 5592
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 6181
+   }
+  ]
+ },
+ "tcres-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色(あいいろ)",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 268
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1088
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1393
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 1596
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2195
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（8）",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 51,
+    "top": 2525
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3386
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 3974
+   }
+  ]
+ },
+ "tcquiz-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 160
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 583
+   },
+   {
+    "tag": "H2",
+    "text": "この診断が楽しかったらシェア",
+    "fs": "15.2px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 39,
+    "top": 972
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 1181
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 39,
+    "top": 1785
+   }
+  ]
+ },
+ "game-375-dark": {
+  "scrollWidth": 375,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字カナール",
+    "fs": "22.4px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 117,
+    "top": 591
+   },
+   {
+    "tag": "H2",
+    "text": "遊び方",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 44,
+    "top": -158
+   },
+   {
+    "tag": "H2",
+    "text": "残念...",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "統計",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1439
+   },
+   {
+    "tag": "H2",
+    "text": "このゲームが楽しかったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 35,
+    "top": 1694
+   },
+   {
+    "tag": "H2",
+    "text": "関連ゲーム",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 1888
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2293
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "23.84px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 35,
+    "top": 2881
+   }
+  ]
+ },
+ "top-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "yolos.net",
+    "fs": "48px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 95
+   },
+   {
+    "tag": "H2",
+    "text": "あなたに似たキャラ診断",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "48px",
+    "x": 236,
+    "top": 445
+   },
+   {
+    "tag": "H2",
+    "text": "診断・占い・あそび",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 880
+   },
+   {
+    "tag": "H2",
+    "text": "辞典",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 1643
+   },
+   {
+    "tag": "H2",
+    "text": "道具",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 2154
+   },
+   {
+    "tag": "H2",
+    "text": "読みもの",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 2725
+   }
+  ]
+ },
+ "tool-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "文字数カウント",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 155
+   },
+   {
+    "tag": "H2",
+    "text": "このツールについて",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 947
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 1232
+   },
+   {
+    "tag": "H2",
+    "text": "このツールが便利だったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 1447
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 1622
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 2172
+   }
+  ]
+ },
+ "color-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "鴇（toki）",
+    "fs": "25px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 430
+   },
+   {
+    "tag": "H2",
+    "text": "カラーコード",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 485
+   },
+   {
+    "tag": "H2",
+    "text": "カテゴリ",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 750
+   },
+   {
+    "tag": "H2",
+    "text": "関連ツール",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 876
+   },
+   {
+    "tag": "H2",
+    "text": "同じカテゴリの伝統色（赤系）",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 1002
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 203,
+    "top": 1536
+   },
+   {
+    "tag": "H2",
+    "text": "こちらもおすすめ",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 203,
+    "top": 1885
+   }
+  ]
+ },
+ "humor-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "朝",
+    "fs": "39px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 139
+   },
+   {
+    "tag": "H2",
+    "text": "解説",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 352
+   },
+   {
+    "tag": "H2",
+    "text": "用例",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 586
+   },
+   {
+    "tag": "H2",
+    "text": "関連語",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 320,
+    "top": 760
+   }
+  ]
+ },
+ "cpres-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "締切3分前に5手先を読む炎の策士",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 224
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの成り立ち",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 925
+   },
+   {
+    "tag": "H2",
+    "text": "このキャラの日常",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1175
+   },
+   {
+    "tag": "H2",
+    "text": "キャラからのメッセージ",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1568
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（24）",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 2046
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 4084
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 4573
+   }
+  ]
+ },
+ "tcres-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "藍色(あいいろ)",
+    "fs": "16px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 224
+   },
+   {
+    "tag": "H2",
+    "text": "この色の物語",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 903
+   },
+   {
+    "tag": "H2",
+    "text": "この色が映える風景",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1126
+   },
+   {
+    "tag": "H2",
+    "text": "この色が現れる場面",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1303
+   },
+   {
+    "tag": "H2",
+    "text": "この色からのひとこと",
+    "fs": "16.8px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1722
+   },
+   {
+    "tag": "H2",
+    "text": "他のタイプ（8）",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 364,
+    "top": 1993
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 2848
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 3337
+   }
+  ]
+ },
+ "tcquiz-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "あなたを日本の伝統色に例えると?",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 155
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 573
+   },
+   {
+    "tag": "H2",
+    "text": "この診断が楽しかったらシェア",
+    "fs": "15.2px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "24px",
+    "x": 195,
+    "top": 876
+   },
+   {
+    "tag": "H2",
+    "text": "他のクイズ・診断も試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 1041
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 195,
+    "top": 1496
+   }
+  ]
+ },
+ "game-1280-dark": {
+  "scrollWidth": 1280,
+  "headings": [
+   {
+    "tag": "H1",
+    "text": "漢字カナール",
+    "fs": "25.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 559,
+    "top": 418
+   },
+   {
+    "tag": "H2",
+    "text": "遊び方",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 465,
+    "top": -77
+   },
+   {
+    "tag": "H2",
+    "text": "残念...",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "統計",
+    "fs": "20px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "0px",
+    "secPadTop": "0px",
+    "x": 0,
+    "top": 0
+   },
+   {
+    "tag": "H2",
+    "text": "よくある質問",
+    "fs": "17.6px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 348,
+    "top": 1276
+   },
+   {
+    "tag": "H2",
+    "text": "このゲームが楽しかったらシェア",
+    "fs": "17.5px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "1px solid lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "24px",
+    "x": 348,
+    "top": 1499
+   },
+   {
+    "tag": "H2",
+    "text": "関連ゲーム",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 1642
+   },
+   {
+    "tag": "H2",
+    "text": "他のジャンルも試してみよう",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 1977
+   },
+   {
+    "tag": "H2",
+    "text": "関連ブログ記事",
+    "fs": "46.72px",
+    "ff": "plexSans, \"IBM Plex ",
+    "secBorderTop": "0px none lab(96.52 -0.0000298023 0.0000119209)",
+    "secMarginTop": "32px",
+    "secPadTop": "0px",
+    "x": 348,
+    "top": 2466
+   }
+  ]
+ }
+}

@@ -1,0 +1,230 @@
+▲ Next.js 16.3.0 (Turbopack)
+✓ Running next.config.ts took 48ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 102s
+  Collecting page data using 3 workers ...
+  Finalizing page optimization ...
+  Build ran with "compile" mode, to finalize the build run either "generate" or "generate-env" mode as well
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /about
+├ ƒ /api/kanji-kanaru/evaluate
+├ ƒ /api/kanji-kanaru/hints
+├ ƒ /api/quiz/compatibility
+├ ƒ /api/yoji-kimeru/evaluate
+├ ƒ /api/yoji-kimeru/puzzle
+├ ƒ /blog
+├ ƒ /blog/[slug]
+├ ƒ /blog/[slug]/opengraph-image
+├ ƒ /blog/[slug]/twitter-image
+├ ƒ /blog/category/[category]
+├ ƒ /blog/category/[category]/page/[page]
+├ ƒ /blog/page/[page]
+├ ƒ /blog/tag/[tag]
+├ ƒ /blog/tag/[tag]/page/[page]
+├ ƒ /dictionary
+├ ƒ /dictionary/colors
+├ ƒ /dictionary/colors/[slug]
+├ ƒ /dictionary/colors/[slug]/opengraph-image
+├ ƒ /dictionary/colors/category/[category]
+├ ƒ /dictionary/colors/category/[category]/page/[page]
+├ ƒ /dictionary/colors/page/[page]
+├ ƒ /dictionary/humor
+├ ƒ /dictionary/humor/[slug]
+├ ƒ /dictionary/humor/[slug]/opengraph-image
+├ ƒ /dictionary/humor/[slug]/twitter-image
+├ ƒ /dictionary/humor/page/[page]
+├ ƒ /dictionary/kanji
+├ ƒ /dictionary/kanji/[char]
+├ ƒ /dictionary/kanji/grade/[grade]
+├ ƒ /dictionary/kanji/grade/[grade]/page/[page]
+├ ƒ /dictionary/kanji/page/[page]
+├ ƒ /dictionary/kanji/radical/[radical]
+├ ƒ /dictionary/kanji/radical/[radical]/page/[page]
+├ ƒ /dictionary/kanji/stroke/[count]
+├ ƒ /dictionary/kanji/stroke/[count]/page/[page]
+├ ƒ /dictionary/yoji
+├ ƒ /dictionary/yoji/[yoji]
+├ ƒ /dictionary/yoji/category/[category]
+├ ƒ /dictionary/yoji/category/[category]/page/[page]
+├ ƒ /dictionary/yoji/page/[page]
+├ ƒ /feed
+├ ƒ /feed/atom
+├ ƒ /memos
+├ ƒ /memos/[id]
+├ ƒ /memos/feed
+├ ƒ /memos/feed/atom
+├ ƒ /memos/thread/[id]
+├ ƒ /opengraph-image
+├ ƒ /play
+├ ƒ /play/[slug]
+├ ƒ /play/[slug]/opengraph-image
+├ ƒ /play/[slug]/result/[resultId]
+├ ƒ /play/[slug]/result/[resultId]/opengraph-image
+├ ƒ /play/animal-personality/result/[resultId]
+├ ƒ /play/animal-personality/result/[resultId]/opengraph-image
+├ ƒ /play/character-fortune/result/[resultId]
+├ ƒ /play/character-fortune/result/[resultId]/opengraph-image
+├ ƒ /play/character-personality/result/[resultId]
+├ ƒ /play/character-personality/result/[resultId]/fuda-image
+├ ƒ /play/character-personality/result/[resultId]/opengraph-image
+├ ƒ /play/contrarian-fortune/result/[resultId]
+├ ƒ /play/contrarian-fortune/result/[resultId]/opengraph-image
+├ ƒ /play/daily
+├ ƒ /play/daily/opengraph-image
+├ ƒ /play/impossible-advice/result/[resultId]
+├ ƒ /play/impossible-advice/result/[resultId]/opengraph-image
+├ ƒ /play/irodori
+├ ƒ /play/irodori/opengraph-image
+├ ƒ /play/kanji-kanaru
+├ ƒ /play/kanji-kanaru/opengraph-image
+├ ƒ /play/music-personality
+├ ƒ /play/music-personality/result/[resultId]
+├ ƒ /play/music-personality/result/[resultId]/opengraph-image
+├ ƒ /play/nakamawake
+├ ƒ /play/nakamawake/opengraph-image
+├ ƒ /play/page/[page]
+├ ƒ /play/traditional-color/result/[resultId]
+├ ƒ /play/traditional-color/result/[resultId]/opengraph-image
+├ ƒ /play/unexpected-compatibility/result/[resultId]
+├ ƒ /play/unexpected-compatibility/result/[resultId]/opengraph-image
+├ ƒ /play/yoji-kimeru
+├ ƒ /play/yoji-kimeru/opengraph-image
+├ ƒ /play/yoji-personality/result/[resultId]
+├ ƒ /play/yoji-personality/result/[resultId]/opengraph-image
+├ ƒ /privacy
+├ ƒ /privacy/opengraph-image
+├ ƒ /privacy/twitter-image
+├ ƒ /robots.txt
+├ ƒ /sitemap.xml
+├ ƒ /storybook
+├ ƒ /storybook/list/[sample]
+├ ƒ /storybook/list/[sample]/page/[page]
+├ ƒ /tools
+├ ƒ /tools/age-calculator
+├ ƒ /tools/age-calculator/opengraph-image
+├ ƒ /tools/age-calculator/twitter-image
+├ ƒ /tools/base64
+├ ƒ /tools/base64/opengraph-image
+├ ƒ /tools/base64/twitter-image
+├ ƒ /tools/bmi-calculator
+├ ƒ /tools/bmi-calculator/opengraph-image
+├ ƒ /tools/bmi-calculator/twitter-image
+├ ƒ /tools/business-email
+├ ƒ /tools/business-email/opengraph-image
+├ ƒ /tools/business-email/twitter-image
+├ ƒ /tools/byte-counter
+├ ƒ /tools/byte-counter/opengraph-image
+├ ƒ /tools/byte-counter/twitter-image
+├ ƒ /tools/char-count
+├ ƒ /tools/char-count/opengraph-image
+├ ƒ /tools/char-count/twitter-image
+├ ƒ /tools/color-converter
+├ ƒ /tools/color-converter/opengraph-image
+├ ƒ /tools/color-converter/twitter-image
+├ ƒ /tools/cron-parser
+├ ƒ /tools/cron-parser/opengraph-image
+├ ƒ /tools/cron-parser/twitter-image
+├ ƒ /tools/csv-converter
+├ ƒ /tools/csv-converter/opengraph-image
+├ ƒ /tools/csv-converter/twitter-image
+├ ƒ /tools/date-calculator
+├ ƒ /tools/date-calculator/opengraph-image
+├ ƒ /tools/date-calculator/twitter-image
+├ ƒ /tools/dummy-text
+├ ƒ /tools/dummy-text/opengraph-image
+├ ƒ /tools/dummy-text/twitter-image
+├ ƒ /tools/email-validator
+├ ƒ /tools/email-validator/opengraph-image
+├ ƒ /tools/email-validator/twitter-image
+├ ƒ /tools/fullwidth-converter
+├ ƒ /tools/fullwidth-converter/opengraph-image
+├ ƒ /tools/fullwidth-converter/twitter-image
+├ ƒ /tools/hash-generator
+├ ƒ /tools/hash-generator/opengraph-image
+├ ƒ /tools/hash-generator/twitter-image
+├ ƒ /tools/html-entity
+├ ƒ /tools/html-entity/opengraph-image
+├ ƒ /tools/html-entity/twitter-image
+├ ƒ /tools/image-base64
+├ ƒ /tools/image-base64/opengraph-image
+├ ƒ /tools/image-base64/twitter-image
+├ ƒ /tools/image-resizer
+├ ƒ /tools/image-resizer/opengraph-image
+├ ƒ /tools/image-resizer/twitter-image
+├ ƒ /tools/json-formatter
+├ ƒ /tools/json-formatter/opengraph-image
+├ ƒ /tools/json-formatter/twitter-image
+├ ƒ /tools/kana-converter
+├ ƒ /tools/kana-converter/opengraph-image
+├ ƒ /tools/kana-converter/twitter-image
+├ ƒ /tools/keigo-reference
+├ ƒ /tools/keigo-reference/opengraph-image
+├ ƒ /tools/keigo-reference/twitter-image
+├ ƒ /tools/line-break-remover
+├ ƒ /tools/line-break-remover/opengraph-image
+├ ƒ /tools/line-break-remover/twitter-image
+├ ƒ /tools/markdown-preview
+├ ƒ /tools/markdown-preview/opengraph-image
+├ ƒ /tools/markdown-preview/twitter-image
+├ ƒ /tools/number-base-converter
+├ ƒ /tools/number-base-converter/opengraph-image
+├ ƒ /tools/number-base-converter/twitter-image
+├ ƒ /tools/page/[page]
+├ ƒ /tools/password-generator
+├ ƒ /tools/password-generator/opengraph-image
+├ ƒ /tools/password-generator/twitter-image
+├ ƒ /tools/percent-calculator
+├ ƒ /tools/percent-calculator/opengraph-image
+├ ƒ /tools/percent-calculator/twitter-image
+├ ƒ /tools/qr-code
+├ ƒ /tools/qr-code/opengraph-image
+├ ƒ /tools/qr-code/twitter-image
+├ ƒ /tools/regex-tester
+├ ƒ /tools/regex-tester/opengraph-image
+├ ƒ /tools/regex-tester/twitter-image
+├ ƒ /tools/sql-formatter
+├ ƒ /tools/sql-formatter/opengraph-image
+├ ƒ /tools/sql-formatter/twitter-image
+├ ƒ /tools/text-diff
+├ ƒ /tools/text-diff/opengraph-image
+├ ƒ /tools/text-diff/twitter-image
+├ ƒ /tools/text-replace
+├ ƒ /tools/text-replace/opengraph-image
+├ ƒ /tools/text-replace/twitter-image
+├ ƒ /tools/traditional-color-palette
+├ ƒ /tools/traditional-color-palette/opengraph-image
+├ ƒ /tools/traditional-color-palette/twitter-image
+├ ƒ /tools/unit-converter
+├ ƒ /tools/unit-converter/opengraph-image
+├ ƒ /tools/unit-converter/twitter-image
+├ ƒ /tools/unix-timestamp
+├ ƒ /tools/unix-timestamp/opengraph-image
+├ ƒ /tools/unix-timestamp/twitter-image
+├ ƒ /tools/url-encode
+├ ƒ /tools/url-encode/opengraph-image
+├ ƒ /tools/url-encode/twitter-image
+├ ƒ /tools/yaml-formatter
+├ ƒ /tools/yaml-formatter/opengraph-image
+├ ƒ /tools/yaml-formatter/twitter-image
+├ ƒ /tools/yoji-search
+├ ƒ /tools/yoji-search/opengraph-image
+├ ƒ /tools/yoji-search/twitter-image
+└ ƒ /twitter-image
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,365 @@
+{
+ "today": "2026-09-27",
+ "entries": [
+  {
+   "id": "denchu",
+   "title": "電柱運 上昇中",
+   "rating": 3.7,
+   "seed": 112
+  },
+  {
+   "id": "otsuri",
+   "title": "おつり運 絶好調",
+   "rating": 4.1,
+   "seed": 70
+  },
+  {
+   "id": "wifi",
+   "title": "Wi-Fi運 不安定",
+   "rating": 2.4,
+   "seed": 15
+  },
+  {
+   "id": "elevator",
+   "title": "エレベーター運 急上昇",
+   "rating": 4.5,
+   "seed": 226
+  },
+  {
+   "id": "battery3",
+   "title": "充電残量3%運",
+   "rating": 1.8,
+   "seed": 54
+  },
+  {
+   "id": "kaitenzushi",
+   "title": "回転寿司運",
+   "rating": 3.3,
+   "seed": 28
+  },
+  {
+   "id": "shingo-ao",
+   "title": "信号運 全部青",
+   "rating": 5,
+   "seed": 4
+  },
+  {
+   "id": "hidari-pocket",
+   "title": "左ポケット運",
+   "rating": 3.9,
+   "seed": 44
+  },
+  {
+   "id": "neko",
+   "title": "猫運 来訪中",
+   "rating": 4.8,
+   "seed": 30
+  },
+  {
+   "id": "kasa",
+   "title": "傘運 やや上向き",
+   "rating": 3.2,
+   "seed": 154
+  },
+  {
+   "id": "jihanki",
+   "title": "自販機運 点灯中",
+   "rating": 3.4,
+   "seed": 19
+  },
+  {
+   "id": "meishi",
+   "title": "名刺運 交換日和",
+   "rating": 3.6,
+   "seed": 36
+  },
+  {
+   "id": "surippa",
+   "title": "スリッパ運 快適",
+   "rating": 4.2,
+   "seed": 72
+  },
+  {
+   "id": "eraser",
+   "title": "消しゴム運 軟化中",
+   "rating": 2.9,
+   "seed": 10
+  },
+  {
+   "id": "earphone",
+   "title": "イヤホン運 絡まり中",
+   "rating": 2.1,
+   "seed": 56
+  },
+  {
+   "id": "reito",
+   "title": "冷凍庫運 保存中",
+   "rating": 3.1,
+   "seed": 27
+  },
+  {
+   "id": "kumo",
+   "title": "雲運 漂流中",
+   "rating": 4,
+   "seed": 8
+  },
+  {
+   "id": "stapler",
+   "title": "ホッチキス運 綾じ中",
+   "rating": 3.5,
+   "seed": 42
+  },
+  {
+   "id": "keitai-alarm",
+   "title": "アラーム運 鳴動中",
+   "rating": 2.7,
+   "seed": 108
+  },
+  {
+   "id": "escalator",
+   "title": "エスカレーター運 自動上昇",
+   "rating": 4.3,
+   "seed": 21
+  },
+  {
+   "id": "keshiki",
+   "title": "景色運 絶景",
+   "rating": 4.6,
+   "seed": 129
+  },
+  {
+   "id": "reizouko-light",
+   "title": "冷蔵庫のライト運",
+   "rating": 2.6,
+   "seed": 18
+  },
+  {
+   "id": "compass",
+   "title": "コンパス運 迷走中",
+   "rating": 3,
+   "seed": 32
+  },
+  {
+   "id": "megane",
+   "title": "メガネ運 ピント合ってます",
+   "rating": 4.4,
+   "seed": 90
+  },
+  {
+   "id": "kaidan",
+   "title": "階段運 一段飛ばし",
+   "rating": 3.8,
+   "seed": 79
+  },
+  {
+   "id": "sandwich",
+   "title": "サンドイッチ運 はみ出し中",
+   "rating": 3.4,
+   "seed": 184
+  },
+  {
+   "id": "yubiwa",
+   "title": "指輪運 光ってます",
+   "rating": 2.5,
+   "seed": 1
+  },
+  {
+   "id": "jisho",
+   "title": "辞書運 厚み増加中",
+   "rating": 3.7,
+   "seed": 151
+  },
+  {
+   "id": "post",
+   "title": "郵便ポスト運 投函日和",
+   "rating": 3.9,
+   "seed": 26
+  },
+  {
+   "id": "sentakumono",
+   "title": "洗濯物運 乾燥中",
+   "rating": 2.8,
+   "seed": 40
+  },
+  {
+   "id": "densha",
+   "title": "電車運 定時運行",
+   "rating": 3.6,
+   "seed": 14
+  },
+  {
+   "id": "kagami",
+   "title": "鏡運 反射中",
+   "rating": 3.3,
+   "seed": 16
+  },
+  {
+   "id": "okashi",
+   "title": "お菓子運 封切り中",
+   "rating": 4.1,
+   "seed": 23
+  },
+  {
+   "id": "koppu-mizu",
+   "title": "コップの水運 半分",
+   "rating": 3.5,
+   "seed": 171
+  },
+  {
+   "id": "kutsushita",
+   "title": "靴下運 左右不一致",
+   "rating": 2.3,
+   "seed": 80
+  },
+  {
+   "id": "jidou-door",
+   "title": "自動ドア運 全開",
+   "rating": 4.2,
+   "seed": 93
+  },
+  {
+   "id": "tsukue",
+   "title": "机運 整理整頓",
+   "rating": 3.1,
+   "seed": 65
+  },
+  {
+   "id": "tokei",
+   "title": "時計運 秒針の気分",
+   "rating": 2.9,
+   "seed": 69
+  },
+  {
+   "id": "kaban",
+   "title": "かばん運 詰め込み中",
+   "rating": 3.2,
+   "seed": 20
+  },
+  {
+   "id": "noren",
+   "title": "のれん運 くぐり抜け中",
+   "rating": 4,
+   "seed": 3
+  },
+  {
+   "id": "button",
+   "title": "ボタン運 プチッと",
+   "rating": 3.8,
+   "seed": 2
+  },
+  {
+   "id": "senpuuki",
+   "title": "扇風機運 回転中",
+   "rating": 3,
+   "seed": 103
+  },
+  {
+   "id": "fuurin",
+   "title": "風鈴運 涼やか",
+   "rating": 4.7,
+   "seed": 132
+  },
+  {
+   "id": "tissue",
+   "title": "ティッシュ運 最後の1枚",
+   "rating": 1.5,
+   "seed": 22
+  },
+  {
+   "id": "bench",
+   "title": "ベンチ運 着席中",
+   "rating": 4.3,
+   "seed": 156
+  },
+  {
+   "id": "hagaki",
+   "title": "はがき運 返信待ち",
+   "rating": 3.4,
+   "seed": 41
+  },
+  {
+   "id": "kasa-tate",
+   "title": "傘立て運 収納中",
+   "rating": 2.2,
+   "seed": 31
+  },
+  {
+   "id": "receipt",
+   "title": "レシート運 満足度測定",
+   "rating": 2.7,
+   "seed": 13
+  },
+  {
+   "id": "magnet",
+   "title": "磁石運 引き寄せ中",
+   "rating": 3.6,
+   "seed": 12
+  },
+  {
+   "id": "puzzle",
+   "title": "パズル運 はまり中",
+   "rating": 3.9,
+   "seed": 35
+  },
+  {
+   "id": "chapstick",
+   "title": "リップクリーム運 滑らか",
+   "rating": 4.1,
+   "seed": 33
+  },
+  {
+   "id": "bento",
+   "title": "弁当運 彩り豊か",
+   "rating": 4.4,
+   "seed": 105
+  },
+  {
+   "id": "suisou",
+   "title": "水槽運 漂ってます",
+   "rating": 3.3,
+   "seed": 25
+  },
+  {
+   "id": "stamp-card",
+   "title": "スタンプカード運 あと少し",
+   "rating": 3.7,
+   "seed": 66
+  },
+  {
+   "id": "origami",
+   "title": "折り紙運 変形中",
+   "rating": 4.5,
+   "seed": 83
+  },
+  {
+   "id": "shampoo",
+   "title": "シャンプー運 泡立ち中",
+   "rating": 2.6,
+   "seed": 37
+  },
+  {
+   "id": "konbini-bag",
+   "title": "コンビニ袋運 用意周到",
+   "rating": 3.5,
+   "seed": 11
+  },
+  {
+   "id": "manjuu",
+   "title": "まんじゅう運 あんたっぷり",
+   "rating": 4.6,
+   "seed": 5
+  },
+  {
+   "id": "calendar",
+   "title": "カレンダー運 めくり中",
+   "rating": 3.8,
+   "seed": 173
+  },
+  {
+   "id": "carpet",
+   "title": "カーペット運 足元注意",
+   "rating": 2.4,
+   "seed": 17
+  }
+ ]
+}

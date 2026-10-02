@@ -1,0 +1,24 @@
+▲ Next.js 16.3.0
+- Local:         http://localhost:3196
+- Network:       http://192.0.2.2:3196
+✓ Ready in 140ms
+✓ Running next.config.ts took 39ms
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+Error: Internal: NoFallbackError
+    at ignore-listed frames
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net

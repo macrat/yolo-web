@@ -1,0 +1,1274 @@
+{
+ "320 reverseoptimist": {
+  "cells": [
+   {
+    "text": "ネタ化までの速度",
+    "lines": "ネタ化までの速度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "転倒から約3秒",
+    "lines": "転倒から／約3秒",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "失敗エピソードの在庫数",
+    "lines": "失敗エピソードの／在庫数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "常時5本以上",
+    "lines": "常時5本以上",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "320 overthinker": {
+  "cells": [
+   {
+    "text": "1つの決断にかかる思考ループ回数",
+    "lines": "1つの決断にかかる／思考ループ回数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "平均7回",
+    "lines": "平均7回",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "寝る前の反省会の所要時間",
+    "lines": "寝る前の反省会の／所要時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "30分〜無制限",
+    "lines": "30分〜／無制限",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "320 cosmicworrier": {
+  "cells": [
+   {
+    "text": "心配の射程距離",
+    "lines": "心配の／射程距離",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "太陽系外縁部まで",
+    "lines": "太陽系外縁部まで",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "最悪シナリオの想定数",
+    "lines": "最悪／シナリオの／想定数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "毎日3件（控えめ見積もり）",
+    "lines": "毎日3件／（控えめ見積もり）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "320 accidentalprophet": {
+  "cells": [
+   {
+    "text": "的中率（自己申告）",
+    "lines": "的中率／（自己申告）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「そういえば当たってた」が多め",
+    "lines": "「そういえば／当たってた」が／多め",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "予言の記録件数",
+    "lines": "予言の／記録件数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "0件（記録する前に忘れる）",
+    "lines": "0件（記録する／前に忘れる）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "320 inversefortune": {
+  "cells": [
+   {
+    "text": "混雑ピーク後に行動するまでの待機時間",
+    "lines": "混雑ピーク後に／行動するまでの／待機時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "だいたい2週間",
+    "lines": "だいたい／2週間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "320 mundaneoracle": {
+  "cells": [
+   {
+    "text": "コンビニ立ち寄り頻度",
+    "lines": "コンビニ立ち寄／り頻度",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "週3〜（新商品チェック込み）",
+    "lines": "週3〜／（新商品チェッ／ク込み）",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「あ、ここ変わった」の発見数",
+    "lines": "「あ、／ここ変わった」／の発見数",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "散歩1回につき平均2件",
+    "lines": "散歩1回に／つき平均2件",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375 reverseoptimist": {
+  "cells": [
+   {
+    "text": "ネタ化までの速度",
+    "lines": "ネタ化までの速度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "転倒から約3秒",
+    "lines": "転倒から約3秒",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "失敗エピソードの在庫数",
+    "lines": "失敗エピソードの在庫数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "常時5本以上",
+    "lines": "常時5本以上",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375 overthinker": {
+  "cells": [
+   {
+    "text": "1つの決断にかかる思考ループ回数",
+    "lines": "1つの決断にかかる／思考ループ回数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "平均7回",
+    "lines": "平均7回",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "寝る前の反省会の所要時間",
+    "lines": "寝る前の反省会の所要時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "30分〜無制限",
+    "lines": "30分〜／無制限",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375 cosmicworrier": {
+  "cells": [
+   {
+    "text": "心配の射程距離",
+    "lines": "心配の射程距離",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "太陽系外縁部まで",
+    "lines": "太陽系外縁部まで",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "最悪シナリオの想定数",
+    "lines": "最悪シナリオの／想定数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "毎日3件（控えめ見積もり）",
+    "lines": "毎日3件／（控えめ見積もり）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375 accidentalprophet": {
+  "cells": [
+   {
+    "text": "的中率（自己申告）",
+    "lines": "的中率／（自己申告）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「そういえば当たってた」が多め",
+    "lines": "「そういえば／当たってた」が多め",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "予言の記録件数",
+    "lines": "予言の記録件数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "0件（記録する前に忘れる）",
+    "lines": "0件（記録する前に／忘れる）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375 inversefortune": {
+  "cells": [
+   {
+    "text": "混雑ピーク後に行動するまでの待機時間",
+    "lines": "混雑ピーク後に／行動するまでの待機時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "だいたい2週間",
+    "lines": "だいたい／2週間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375 mundaneoracle": {
+  "cells": [
+   {
+    "text": "コンビニ立ち寄り頻度",
+    "lines": "コンビニ立ち寄り／頻度",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "週3〜（新商品チェック込み）",
+    "lines": "週3〜／（新商品チェック／込み）",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「あ、ここ変わった」の発見数",
+    "lines": "「あ、／ここ変わった」の／発見数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "散歩1回につき平均2件",
+    "lines": "散歩1回に／つき平均2件",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280 reverseoptimist": {
+  "cells": [
+   {
+    "text": "ネタ化までの速度",
+    "lines": "ネタ化までの速度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "転倒から約3秒",
+    "lines": "転倒から約3秒",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "失敗エピソードの在庫数",
+    "lines": "失敗エピソードの在庫数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "常時5本以上",
+    "lines": "常時5本以上",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280 overthinker": {
+  "cells": [
+   {
+    "text": "1つの決断にかかる思考ループ回数",
+    "lines": "1つの決断にかかる思考ループ回数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "平均7回",
+    "lines": "平均7回",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "寝る前の反省会の所要時間",
+    "lines": "寝る前の反省会の所要時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "30分〜無制限",
+    "lines": "30分〜無制限",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280 cosmicworrier": {
+  "cells": [
+   {
+    "text": "心配の射程距離",
+    "lines": "心配の射程距離",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "太陽系外縁部まで",
+    "lines": "太陽系外縁部まで",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "最悪シナリオの想定数",
+    "lines": "最悪シナリオの想定数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "毎日3件（控えめ見積もり）",
+    "lines": "毎日3件（控えめ見積もり）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280 accidentalprophet": {
+  "cells": [
+   {
+    "text": "的中率（自己申告）",
+    "lines": "的中率（自己申告）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「そういえば当たってた」が多め",
+    "lines": "「そういえば当たってた」が多め",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "予言の記録件数",
+    "lines": "予言の記録件数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "0件（記録する前に忘れる）",
+    "lines": "0件（記録する前に忘れる）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280 inversefortune": {
+  "cells": [
+   {
+    "text": "混雑ピーク後に行動するまでの待機時間",
+    "lines": "混雑ピーク後に行動するまでの待機時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "だいたい2週間",
+    "lines": "だいたい2週間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280 mundaneoracle": {
+  "cells": [
+   {
+    "text": "コンビニ立ち寄り頻度",
+    "lines": "コンビニ立ち寄り頻度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "週3〜（新商品チェック込み）",
+    "lines": "週3〜（新商品チェック込み）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「あ、ここ変わった」の発見数",
+    "lines": "「あ、ここ変わった」の発見数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "散歩1回につき平均2件",
+    "lines": "散歩1回につき平均2件",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "320x200 reverseoptimist": {
+  "cells": [
+   {
+    "text": "ネタ化までの速度",
+    "lines": "ネタ化までの／速度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "転倒から約3秒",
+    "lines": "転倒から／約3秒",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "失敗エピソードの在庫数",
+    "lines": "失敗／エピソードの／在庫数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "常時5本以上",
+    "lines": "常時5本以上",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": true,
+  "pageOverflow": 0
+ },
+ "320x200 overthinker": {
+  "cells": [
+   {
+    "text": "1つの決断にかかる思考ループ回数",
+    "lines": "1つの決断に／かかる／思考ループ回数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "平均7回",
+    "lines": "平均7回",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "寝る前の反省会の所要時間",
+    "lines": "寝る前の／反省会の／所要時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "30分〜無制限",
+    "lines": "30分〜／無制限",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": true,
+  "pageOverflow": 0
+ },
+ "320x200 cosmicworrier": {
+  "cells": [
+   {
+    "text": "心配の射程距離",
+    "lines": "心配の／射程距離",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "太陽系外縁部まで",
+    "lines": "太陽系外縁部まで",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "最悪シナリオの想定数",
+    "lines": "最悪／シナリオの／想定数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "毎日3件（控えめ見積もり）",
+    "lines": "毎日3件／（控えめ見積もり）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": true,
+  "pageOverflow": 0
+ },
+ "320x200 accidentalprophet": {
+  "cells": [
+   {
+    "text": "的中率（自己申告）",
+    "lines": "的中率／（自己申告）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「そういえば当たってた」が多め",
+    "lines": "「そういえば／当たってた」／が多め",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "予言の記録件数",
+    "lines": "予言の／記録件数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "0件（記録する前に忘れる）",
+    "lines": "0件／（記録する／前に忘れる）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": true,
+  "pageOverflow": 0
+ },
+ "320x200 inversefortune": {
+  "cells": [
+   {
+    "text": "混雑ピーク後に行動するまでの待機時間",
+    "lines": "混雑ピーク後に／行動するまでの／待機時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "だいたい2週間",
+    "lines": "だいたい／2週間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": true,
+  "pageOverflow": 0
+ },
+ "320x200 mundaneoracle": {
+  "cells": [
+   {
+    "text": "コンビニ立ち寄り頻度",
+    "lines": "コンビニ立ち寄り頻度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "週3〜（新商品チェック込み）",
+    "lines": "週3〜／（新商品チェック込み）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「あ、ここ変わった」の発見数",
+    "lines": "「あ、ここ変わった」／の発見数",
+    "fits": 1,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "散歩1回につき平均2件",
+    "lines": "散歩1回につき平均2件",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": true,
+  "pageOverflow": 0
+ },
+ "375x200 reverseoptimist": {
+  "cells": [
+   {
+    "text": "ネタ化までの速度",
+    "lines": "ネタ化ま／での速度",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "転倒から約3秒",
+    "lines": "転倒から／約3秒",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "失敗エピソードの在庫数",
+    "lines": "失敗／エピソー／ドの／在庫数",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "常時5本以上",
+    "lines": "常時5本／以上",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375x200 overthinker": {
+  "cells": [
+   {
+    "text": "1つの決断にかかる思考ループ回数",
+    "lines": "1つの／決断に／かかる／思考ループ／回数",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "平均7回",
+    "lines": "平均7回",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "寝る前の反省会の所要時間",
+    "lines": "寝る前の／反省会の／所要時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "30分〜無制限",
+    "lines": "30分〜／無制限",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375x200 cosmicworrier": {
+  "cells": [
+   {
+    "text": "心配の射程距離",
+    "lines": "心配の／射程距離",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "太陽系外縁部まで",
+    "lines": "太陽系外／縁部まで",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "最悪シナリオの想定数",
+    "lines": "最悪／シナリオ／の想定数",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "毎日3件（控えめ見積もり）",
+    "lines": "毎日3件／（控えめ／見積もり／）",
+    "fits": 0,
+    "nofit": 2,
+    "oneChar": 1,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375x200 accidentalprophet": {
+  "cells": [
+   {
+    "text": "的中率（自己申告）",
+    "lines": "的中率／（自己申／告）",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「そういえば当たってた」が多め",
+    "lines": "「そうい／えば／当たって／た」が／多め",
+    "fits": 0,
+    "nofit": 2,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "予言の記録件数",
+    "lines": "予言の／記録件数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "0件（記録する前に忘れる）",
+    "lines": "0件／（記録す／る前に／忘れる）",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375x200 inversefortune": {
+  "cells": [
+   {
+    "text": "混雑ピーク後に行動するまでの待機時間",
+    "lines": "混雑／ピーク後／に／行動する／までの／待機時間",
+    "fits": 0,
+    "nofit": 2,
+    "oneChar": 1,
+    "overflow": false
+   },
+   {
+    "text": "だいたい2週間",
+    "lines": "だいたい／2週間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "375x200 mundaneoracle": {
+  "cells": [
+   {
+    "text": "コンビニ立ち寄り頻度",
+    "lines": "コンビニ／立ち寄り／頻度",
+    "fits": 0,
+    "nofit": 2,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "週3〜（新商品チェック込み）",
+    "lines": "週3〜／（新商品／チェック／込み）",
+    "fits": 0,
+    "nofit": 2,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「あ、ここ変わった」の発見数",
+    "lines": "「あ、／ここ変わ／った」の／発見数",
+    "fits": 0,
+    "nofit": 1,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "散歩1回につき平均2件",
+    "lines": "散歩1回／に／つき平均／2件",
+    "fits": 0,
+    "nofit": 2,
+    "oneChar": 1,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280x200 reverseoptimist": {
+  "cells": [
+   {
+    "text": "ネタ化までの速度",
+    "lines": "ネタ化までの速度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "転倒から約3秒",
+    "lines": "転倒から約3秒",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "失敗エピソードの在庫数",
+    "lines": "失敗エピソードの在庫数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "常時5本以上",
+    "lines": "常時5本以上",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280x200 overthinker": {
+  "cells": [
+   {
+    "text": "1つの決断にかかる思考ループ回数",
+    "lines": "1つの決断にかかる思考ループ回数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "平均7回",
+    "lines": "平均7回",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "寝る前の反省会の所要時間",
+    "lines": "寝る前の反省会の所要時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "30分〜無制限",
+    "lines": "30分〜無制限",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280x200 cosmicworrier": {
+  "cells": [
+   {
+    "text": "心配の射程距離",
+    "lines": "心配の射程距離",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "太陽系外縁部まで",
+    "lines": "太陽系外縁部まで",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "最悪シナリオの想定数",
+    "lines": "最悪シナリオの想定数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "毎日3件（控えめ見積もり）",
+    "lines": "毎日3件（控えめ見積もり）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280x200 accidentalprophet": {
+  "cells": [
+   {
+    "text": "的中率（自己申告）",
+    "lines": "的中率（自己申告）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「そういえば当たってた」が多め",
+    "lines": "「そういえば当たってた」が多め",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "予言の記録件数",
+    "lines": "予言の記録件数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "0件（記録する前に忘れる）",
+    "lines": "0件（記録する前に忘れる）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280x200 inversefortune": {
+  "cells": [
+   {
+    "text": "混雑ピーク後に行動するまでの待機時間",
+    "lines": "混雑ピーク後に行動するまでの待機時間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "だいたい2週間",
+    "lines": "だいたい2週間",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ },
+ "1280x200 mundaneoracle": {
+  "cells": [
+   {
+    "text": "コンビニ立ち寄り頻度",
+    "lines": "コンビニ立ち寄り頻度",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "週3〜（新商品チェック込み）",
+    "lines": "週3〜（新商品チェック込み）",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "「あ、ここ変わった」の発見数",
+    "lines": "「あ、ここ変わった」の発見数",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   },
+   {
+    "text": "散歩1回につき平均2件",
+    "lines": "散歩1回につき平均2件",
+    "fits": 0,
+    "nofit": 0,
+    "oneChar": 0,
+    "overflow": false
+   }
+  ],
+  "scrolls": false,
+  "pageOverflow": 0
+ }
+}
