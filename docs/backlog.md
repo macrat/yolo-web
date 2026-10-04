@@ -2,12 +2,14 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
+| B-784 | サイクルの文書の大きさをコミット前に検査する | P3 | cycle-317でB-754と同時に行う。cycle-316のindex.mdが227KBに肥大(AP-WF17候補N=3)。検査の対象と線はこのサイクルの設計で決める。詳細cycle-316/decisions.md |
+| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | P2 | cycle-317でB-754と同時に行う。他人の書きかけでコミットの検査が止まる・名前で探して他人のプロセスを止める。hookで症状を止めず、担当ごとの木とコミットする者の決め方で直す。詳細cycle-316/decisions.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 | B-756 | 診断・ゲームの刷新 | P2 | site-conceptの「人が運営する場所でも作られたか」で1面ずつ判定し、伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
 | B-672 | ソースコードのコメントの整理 | P4 | 経緯の堆積・旧コンセプトの語・存在しない§番号への参照が残っている。コンセプトを作り直し、引き直す先が決まった。詳細cycle-312 |
 | B-746 | about ページの作り直し | P1 | サイトの自己紹介が、cycle-315で作り直したコンセプトと別のことを名乗っている。`docs/site-concept.md`の「来訪者への約束」から書き直す。文言を固定しているテストも対象。詳細cycle-315/index.md |
@@ -83,7 +85,6 @@
 | B-781 | 動的ルートの値が % を含む URL（/blog/%25 など）が 404 でなく 500 になる | P3 | Next.js の「failed to decode param」。ページの前で起きる。cycle-316 review-t5-22b-1.md |
 | B-782 | 解き終えた画面の招待のボタンの多く（character-personality・music ほか）が contentId を渡さず、GA に share（invite）が送られない | P2 | cycle-316 review-t5-5b-13.md |
 | B-783 | docs/content-quality-requirements.md のチートシート・ToolLayout・CheatsheetLayout・道具の valueProposition の節が今のコードと合わない。今の形に書き直す | P2 | cycle-316 T5-3c の builder の報告 |
-| B-784 | サイクルの文書の大きさをコミット前に検査する | P3 | 着手: design-rolloutの1つ目のサイクル(B-754と同時)。cycle-316のindex.mdが227KBに肥大(AP-WF17候補N=3)。検査の対象と線はそのサイクルの設計で決める。詳細cycle-316/decisions.md |
 
 ## Deferred (すぐに着手できない)
 
@@ -150,7 +151,6 @@
 | B-503 | cron-parser プリセット拡充(5→8個) | P4 | 着手: R-1プルーニングで対象ツール存続時に再評価。 |
 | B-588 | git履歴の不要バイナリ/生成物を除去 | P3 | 着手: Ownerの指示まで着手しない(履歴書換+force pushの破壊的操作)。cycle284混入の.py5+.pyc1(未push)・cycle177/180のルートPNG7枚・cycle210のPNG14枚(追跡中)が.gitignore違反で肥大化。git rm不可で履歴書換要。詳細cycle-284.md |
 | B-785 | ステージした中身が作業ツリーと違うブログ記事でfrontmatter検証がコミットの中身を見ない | P4 | 着手: B-754の出荷後。pre-commitは作業ツリーのファイルを検証し、検証のスクリプトは記事の新旧をgitの履歴からパスで引く。詳細cycle-316/decisions.md |
-| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | P2 | 着手: design-rolloutの1つ目のサイクル(B-784と同時)。他人の書きかけでコミットの検査が止まる・名前で探して他人のプロセスを止める。hookで症状を止めず、担当ごとの木とコミットする者の決め方で直す。詳細cycle-316/decisions.md |
 
 ## Done/Cancel (完了・中止)
 
