@@ -6,7 +6,7 @@
 
 - **A. 他人の書きかけでコミット前の検査が止まる**: `.claude/hooks/pre-commit-check.sh`（`.claude/settings.json` 35-59 行の PreToolUse）は `.cwd` の木に cd してから `git status --porcelain` の全ファイルに prettier・eslint・残骸タグ・frontmatter の検査を掛ける（pre-commit-check.sh 22-23・41 行）。同じ木の別の builder の書きかけも対象になる（cycle-316/decisions.md 65・116 行）。
 - **B. push 前の検査が他人の書きかけで落ちる**: `pre-push-check.sh` は `.cwd` の木（19-20 行）の全体に format:check・lint・typecheck・test・build を掛ける。`next dev` は同じディレクトリの2つ目を `.next/dev/lock` で、`next build` は2つ目を `.next/lock` で止める（`docs/knowledge/playwright-mcp.md` 93 行）。同じ木の `.next` をほかの担当がビルドし直すと、起動中のサーバーが `ChunkLoadError` を出す（同 118 行）。
-- **C. 他人の変更が自分のコミットに入る**: index が木に1つなので `git add -A`・`git add .` が他人の変更を拾う（decisions.md 236 行。cycle-312 の PM の `git add -A`）。AP-WF50 は事後の問いにすぎない。`cycle-completion` の手順7（68・76 行）は「すべての変更を…コミット」「すべてのファイルをコミット」と書き、`git add .` を示す。
+- **C. 他人の変更が自分のコミットに入る**: index が木に1つなので `git add -A`・`git add .` が他人の変更を拾う（decisions.md 236 行。cycle-312 の PM の `git add -A`）。AP-WF50 は事後の問いにすぎない。`cycle-completion` の手順7は「すべての変更を…コミット」（68 行）、「すべてのファイルをコミット」（76 行）と書き、完了のコミットに `git add .` を示す（80 行）。同じ手順の 72 行の「`git add .` は使いません」は、統合のブランチの作業で main に作る手順のコミットだけの決まりで、完了のコミットには当たらない。
 - **D. 名前で探して他人のプロセスを止める**: `pkill -f` で他の builder の vitest と自分のシェルを止めた（decisions.md 115 行）。共有の scratchpad で同じ名前の `server.pid` を使い、上書きされたファイルでほかの作業者のサーバーを止めた（decisions.md 117 行）。共有の木で起こしたサーバーは cwd もプロセスの名前も同じで見分けられない（playwright-mcp.md 109 行）。
 - **E. 依頼側に決まりが無い**: `.claude/agents/` には `blog-writer.md` と `reviewer.md` だけがあり、builder の定義が無い。`.claude/rules/worktrees.md` は並行する担当を扱わない。
 
