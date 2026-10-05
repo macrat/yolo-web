@@ -3,8 +3,6 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
-| B-784 | サイクルの文書の大きさをコミット前に検査する | P3 | cycle-317でB-754と同時に行う。cycle-316のindex.mdが227KBに肥大(AP-WF17候補N=3)。検査の対象と線はこのサイクルの設計で決める。詳細cycle-316/decisions.md |
-| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | P2 | cycle-317でB-754と同時に行う。他人の書きかけでコミットの検査が止まる・名前で探して他人のプロセスを止める。hookで症状を止めず、担当ごとの木とコミットする者の決め方で直す。詳細cycle-316/decisions.md |
 
 ## Queued (すぐに着手できる)
 
@@ -158,6 +156,8 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-784 | サイクルの文書の大きさをコミット前に検査する | 317 | index・decisions・carryoverを50,000Bで止め40,000Bで注意するhookを足し、cycle-316の3本を40,000B以下に分けた。詳細cycle-317/b784-design.md |
+| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | 317 | 書く担当は専用の作業ツリーで動かし、主の木のコミットとpushはPMに限った(.claude/rules/delegation.md)。詳細cycle-317/b786-design.md |
 | B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | 316 | design-rolloutのT2で実装(共有の入力欄を16px以上に)。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | 316 | design-rolloutのT1(組版)で実装。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-577 | theme-color付与+410ダーク追従 | 316 | design-rolloutのT1で実装。manifestは扱わない(理由cycle-316/options.md)。出荷はB-754のmainへのマージで |
