@@ -42,7 +42,7 @@ import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
-import { revealControl } from "@/lib/reveal";
+import { revealControl, visibleRange } from "@/lib/reveal";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
 import GuessInput from "./GuessInput";
@@ -292,11 +292,9 @@ export default function GameContainer({
     }
     const box = resultBoxRef.current;
     if (!box) return;
-    const viewport = window.visualViewport;
-    const top = viewport ? viewport.offsetTop : 0;
-    const bottom = viewport ? top + viewport.height : window.innerHeight;
+    const range = visibleRange();
     const boxTop = box.getBoundingClientRect().top;
-    if (boxTop < top || boxTop >= bottom) {
+    if (boxTop < range.top || boxTop >= range.bottom) {
       box.scrollIntoView({ behavior: "instant", block: "start" });
     }
     box.focus({ preventScroll: true });
