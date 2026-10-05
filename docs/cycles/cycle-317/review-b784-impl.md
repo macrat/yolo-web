@@ -22,6 +22,14 @@
 
 PM の判断: 2 のとおり cycle-316 の carryover.md と index.md も分ける。分ければ 1 の危険も消える。
 
+## 第3回
+
+判定: 要修正（minor 3）。第2回の2件は解消（index.md 26,646 B・completion-criteria.md 18,467 B・carryover.md 12,607 B・carryover-tasks.md 37,587 B。元の行は付け替えを除いて欠けも重複も無い。index.md は TEMPLATE.md の構成を保つ）。いまの index.md に無い T5〜T10 の行への参照の付け替えは抜き取りで正しい。
+
+1. minor: t6-design.md 37 行の「index.md の favicon の完了の条件」は completion-criteria.md にだけある。付け替える。
+2. minor: いまの index.md に無い「PM の決定」「補足の決定」を index.md として指す参照が残る（t5-8b-design.md 307、t5-design.md 852、t5-20f-design.md 481・501・526・528・529・553・554・656・658、t3-completion.md 106・117・216・221・222・223・281、t3-design.md 592）。行の書き出しで検索して移った先の decisions-*.md に付け替える。
+3. minor: t2-inventory.md 298 行の「index.md の T2 以外の行」は、T5〜T12 の原文がいま carryover-tasks.md にあるので「index.md と carryover-tasks.md の、T2 以外の行」にする。
+
 ## builder が判断を求めた点への PM の判断
 
 - carryover.md の索引を、書き出しごとにファイル名を括弧で添える形（設計 4-3）でなく、タスクの行の中でファイルごとにまとめる形にしたこと: 認める。添えると 50,979 B で上限を超えるため。reviewer も賛成し、すべての書き出しが挙げたファイルで見つかることを確かめた。
