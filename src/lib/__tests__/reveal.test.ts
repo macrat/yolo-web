@@ -515,14 +515,17 @@ describe("chooseLanding", () => {
     });
   });
 
-  test("範囲の端は空きが欠けない向きに丸め、整数の送りから選ぶ", () => {
+  test("範囲の下の端は切り上げ、整数の送りから選ぶ", () => {
+    // 基準が範囲より下にあるので、候補は範囲の下の端から並ぶ。
+    expect(choose({ plan: { base: 30, span: { min: 50.5, max: 80 } } })).toBe(
+      51,
+    );
+  });
+
+  test("範囲の上の端は切り捨て、整数の送りから選ぶ", () => {
     expect(
-      choose({
-        plan: { base: 100, span: { min: 50.5, max: 300 } },
-        avoidFirst: [rect(560, 640)],
-        scrollable: { min: -1000, max: 120.5 },
-      }),
-    ).toBe(51);
+      choose({ plan: { base: 200, span: { min: 100, max: 150.5 } } }),
+    ).toBe(150);
   });
 
   test("見せる範囲を、ページが送れる範囲で打ち切る", () => {
