@@ -148,6 +148,10 @@ describe("イロドリの盤", () => {
       name: "合計点ごとの回数",
     });
     expect(within(distribution).getAllByText("今回")).toHaveLength(1);
+    expect(
+      within(box).getByRole("heading", { level: 2, name: "合計点ごとの回数" })
+        .innerHTML,
+    ).toBe(["合計点ごとの", "回数"].join("<wbr>"));
     expect(within(box).getByText("遊んだ回数").nextSibling).toHaveTextContent(
       "1回",
     );

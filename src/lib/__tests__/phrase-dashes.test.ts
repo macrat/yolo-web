@@ -43,10 +43,15 @@ describe("joinDashes", () => {
     expect(joinDashes("ISO-8601 の日付")).toBe(`ISO-${WJ}8601 の日付`);
   });
 
-  test("ダッシュの無い文と、空白の隣の「-」はそのまま返す", () => {
+  test("「-」で始まる語は、「-」の後ろに語結合子を置き、そこで折らない", () => {
+    expect(joinDashes("-ization")).toBe(`-${WJ}ization`);
+    expect(joinDashes("delude, -ization")).toBe(`delude, -${WJ}ization`);
+    expect(joinDashes("気温 -5度")).toBe(`気温 -${WJ}5度`);
+  });
+
+  test("ダッシュの無い文と、後ろが空白の「-」はそのまま返す", () => {
     expect(joinDashes("生年月日（必須）")).toBe("生年月日（必須）");
     expect(joinDashes("a - b")).toBe("a - b");
-    expect(joinDashes("-x")).toBe("-x");
   });
 
   test("文の頭のダッシュの前には何も置かない", () => {

@@ -2,6 +2,7 @@
 
 import {
   Fragment,
+  useContext,
   useLayoutEffect,
   useRef,
   type ReactElement,
@@ -15,15 +16,18 @@ import {
   LAYOUT_PREVIOUS_TABLE,
   layoutTable,
 } from "@/lib/scroll-frame";
+import { InDataTableGroup } from "./DataTableGroup";
 import styles from "./DataTable.module.css";
+
+export { default as DataTableGroup } from "./DataTableGroup";
 
 /**
  * セルの中身。
  * - 区切りの並び: セルの字を折り所で分けた並び。データから来る字は、サーバーで splitIntoPhrases
  *   （@/lib/phrase-breaks）の表のセルの指定（tableCell）で分けたものを渡す。コードが組み立てる値
  *   （「36歳」「4ヶ月」「13日」）は、組み立てた単位ごとの並びをそのまま渡す。
- * - 要素: セルに置くコントロール（行の頭の開閉のボタンなど）。面の字は、その要素が区切りの並びで組む
- *   （Button の phrases など）。
+ * - 要素: セルに置くコントロール（行の頭の開閉のボタンなど）と、中身を見せる見本（色見本など）。要素が字を
+ *   持つときは、その要素が区切りの並びで組む（Button の phrases・PhrasedText など）。
  */
 export type DataTableCell = readonly string[] | ReactElement;
 
@@ -59,7 +63,7 @@ type DataTableProps = DataTableName & {
   rows: readonly DataTableRow[];
   /**
    * 結果のボックス（ResultBox の kind="table"）の中に置くか。ボックスがこの表のボックスになり、収まらない表は
-   * ボックスの中で横に送る。表は枠を重ねない（§8）。
+   * ボックスの中で横に送る。表は枠を重ねない（§8）。DataTableGroup の中の表には渡せない。
    */
   inBox?: boolean;
 };
@@ -131,15 +135,17 @@ function contentKey(
  * 記事の外の表（DESIGN.md §4・§5。§8 の値の並びを含む）。§5 の表を組み、セルは渡された区切りの並びで文節で
  * 折る（§4）。列の幅と横に送るかは、記事の表と同じ関数（src/lib/scroll-frame.ts）で決める。各列はいちばん長い
  * 文節の幅を取り、表がコンテンツ幅に収まらなければ長い列から4字の幅を下限に細くし、それでも収まらない表だけを
- * ボックスに入れて横に送る。
+ * ボックスに入れて横に送る。収まる表に余りがあれば、行の見出しの列は見出しを1行に組める幅に留め、余りを値の列に
+ * 渡す。DataTableGroup の中の表は、組の中の行の見出しの列をいちばん広いものにそろえる。
  *
  * 値を写すコピーのボタンを持つ行は、値のセルの右端にボタンを置き、ボタンは行をまたいで1つの列に並ぶ。ボタンを
  * 横に置くのは、どの行の値も1行のままボタンの横に並び、どの列も細くせずに収まるときだけで、そうでなければ、
  * どの行もボタンを値の次の行の右端に送り、値に行の幅を渡す（§6）。
  *
- * 組みは最初の描画の前に決める。サーバーで描いた表は、枠の前のスクリプトが組み方を定め、枠の直後のスクリプトが
- * 組む。表が届き終えて組むまでは表を描かない。ブラウザで描く表は描く前に組む。そのあとは、置かれた幅・字の
- * 大きさ・Web フォントが変わったときと、中身が変わったときに組み直す。
+ * 組みは最初の描画の前に決める。サーバーで描いた表は、枠の前のスクリプトが組み方を定め、組の外の表は枠の直後の
+ * スクリプトがその表を組み、組の中の表は組の直後のスクリプトが組の全部を1度に組む。表が届き終えて組むまでは表を
+ * 描かず、組は組の全体が届いて組むまで、表のあいだの中身ごと描かない。ブラウザで描く表は描く前に組む。
+ * そのあとは、置かれた幅・字の大きさ・Web フォントが変わったときと、中身が変わったときに組み直す。
  */
 export default function DataTable({
   columns,
@@ -150,6 +156,10 @@ export default function DataTable({
   const frameRef = useRef<HTMLDivElement>(null);
   const laidOut = useRef(false);
   const isServerRendered = useIsServerRendered();
+  const inGroup = useContext(InDataTableGroup);
+  if (inBox && inGroup) {
+    throw new Error("DataTableGroup の中の DataTable には inBox を渡さない");
+  }
   const hasCopy = rows.some((row) => row.copy !== undefined);
   const content = contentKey(columns, rows);
 

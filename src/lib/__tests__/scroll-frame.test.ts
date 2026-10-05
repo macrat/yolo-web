@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import {
   createFrameLayout,
   FRAME_LAYOUT_DEFINE,
+  LAYOUT_PREVIOUS_GROUP,
   LAYOUT_PREVIOUS_TABLE,
   markScrollFrame,
   TABLE_LAYOUT_DEFINE,
@@ -173,6 +174,29 @@ describe("FRAME_LAYOUT_DEFINE・LAYOUT_PREVIOUS_TABLE", () => {
     expect(win.yolosFrameLayout).toBe(layout);
   });
 
+  test("組（data-table-group）の中の枠は、枠の直後の文では組まない", () => {
+    const group = document.createElement("div");
+    group.setAttribute("data-table-group", "");
+    const frame = document.createElement("div");
+    const script = document.createElement("script");
+    group.append(frame, script);
+    document.body.append(group);
+    Object.defineProperty(document, "currentScript", {
+      value: script,
+      configurable: true,
+    });
+    try {
+      // 組み方が無くても投げないので、組み方を呼んでいない。
+      delete (window as unknown as { yolosFrameLayout?: unknown })
+        .yolosFrameLayout;
+      new Function(LAYOUT_PREVIOUS_TABLE)();
+      expect(frame.hasAttribute("data-layout-failed")).toBe(false);
+    } finally {
+      delete (document as { currentScript?: unknown }).currentScript;
+      group.remove();
+    }
+  });
+
   test("組み方が無いか組む途中で失敗したら、組めなかった印を付けて表を見せ、失敗は投げる", () => {
     const win = window as unknown as { yolosFrameLayout?: unknown };
     delete win.yolosFrameLayout;
@@ -191,6 +215,66 @@ describe("FRAME_LAYOUT_DEFINE・LAYOUT_PREVIOUS_TABLE", () => {
       delete (document as { currentScript?: unknown }).currentScript;
       frame.remove();
       script.remove();
+    }
+  });
+});
+
+describe("LAYOUT_PREVIOUS_GROUP", () => {
+  /** 枠を2つ持つ組と、その直後のスクリプト。 */
+  function groupWithScript() {
+    const group = document.createElement("div");
+    group.setAttribute("data-table-group", "");
+    const frames = [0, 1].map(() => {
+      const frame = document.createElement("div");
+      frame.className = "table-phrased";
+      frame.innerHTML = "<table><tbody><tr><td>x</td></tr></tbody></table>";
+      frame.getBoundingClientRect = () => ({ width: 300 }) as DOMRect;
+      group.append(frame);
+      return frame;
+    });
+    const script = document.createElement("script");
+    document.body.append(group, script);
+    Object.defineProperty(document, "currentScript", {
+      value: script,
+      configurable: true,
+    });
+    const cleanup = () => {
+      delete (document as { currentScript?: unknown }).currentScript;
+      group.remove();
+      script.remove();
+    };
+    return { group, frames, cleanup };
+  }
+
+  test("直前の組の全部の枠と組そのものを組み、組んだ印を付ける", () => {
+    expect(LAYOUT_PREVIOUS_GROUP).not.toContain("</script");
+    const win = window as unknown as { yolosFrameLayout?: unknown };
+    delete win.yolosFrameLayout;
+    const { group, frames, cleanup } = groupWithScript();
+    try {
+      new Function(FRAME_LAYOUT_DEFINE)();
+      new Function(LAYOUT_PREVIOUS_GROUP)();
+      expect(group.hasAttribute("data-layout-key")).toBe(true);
+      for (const frame of frames) {
+        expect(frame.hasAttribute("data-layout-key")).toBe(true);
+      }
+    } finally {
+      cleanup();
+    }
+  });
+
+  test("組み方が無いか組む途中で失敗したら、組と組の全部の枠に組めなかった印を付けて見せ、失敗は投げる", () => {
+    delete (window as unknown as { yolosFrameLayout?: unknown })
+      .yolosFrameLayout;
+    const { group, frames, cleanup } = groupWithScript();
+    try {
+      expect(() => new Function(LAYOUT_PREVIOUS_GROUP)()).toThrow(TypeError);
+      expect(group.hasAttribute("data-layout-failed")).toBe(true);
+      for (const frame of frames) {
+        expect(frame.hasAttribute("data-layout-failed")).toBe(true);
+      }
+    } finally {
+      cleanup();
     }
   });
 });

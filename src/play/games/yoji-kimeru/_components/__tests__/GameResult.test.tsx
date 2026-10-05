@@ -102,6 +102,16 @@ describe("GameResult", () => {
     ]);
   });
 
+  test("heads the record and the distribution with h2 subheadings", () => {
+    renderResult("won", 3);
+    const box = screen.getByRole("region", { name: "一石二鳥" });
+    for (const name of ["中級のこれまでの成績", "何回目で正解したか（日数）"]) {
+      expect(
+        within(box).getByRole("heading", { level: 2, name }),
+      ).toBeInTheDocument();
+    }
+  });
+
   test("lines up the distribution with 今回 on this game's row", () => {
     renderResult("won", 3);
     const list = screen.getByRole("list", {

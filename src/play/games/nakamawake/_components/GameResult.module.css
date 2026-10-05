@@ -42,6 +42,7 @@
 .subheading {
   padding-block-start: var(--space-16);
   border-block-start: var(--rule-w-hair) solid var(--rule-2);
+  font-size: var(--text-heading-sub);
 }
 
 /* 当てられなかった組。行どうしを細い罫線で区切る。 */
@@ -70,21 +71,4 @@
 .difficulty {
   font-size: var(--text-small);
   color: var(--ink-2);
-}
-
-/* これまでの成績。名前と値の組の並びなので表で組む。表の幅は中身で決め、ボックスの幅に広げない。広い画面でも
- * 値が名前のすぐ右に来る。 */
-.stats {
-  align-self: start;
-}
-
-/* 成績の名前は文節の切れ目（<wbr>）で折る（§4 表のセル）。列は文節が割れない幅まで広がる。 */
-.stats th {
-  word-break: keep-all;
-}
-
-/* 値は数と単位の組で、あいだで折らない。数字の桁を揃える（§8）。 */
-.stats td {
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
 }
