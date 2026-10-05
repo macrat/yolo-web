@@ -9,11 +9,15 @@
 - MDN `@media (hover)`（https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover ）: `none` は主な入力が hover できないか、しにくいもの（長押しで hover を模すモバイル）。Baseline（2018年12月から）。
 - Apple「Safari Web Content Guide — Handling Events」（https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html ）: 押せる要素を1本指で押すと mouseover → mousemove → mousedown → mouseup → click が送られる。mouseout はほかの押せる要素を押したときだけ起きる。**保守されない古い文書**（2016-12-12 更新）なので、いまの iOS がそう振る舞う根拠にはしない。
 - CSS Values 4（W3C 作業草案 2024-03-12。https://www.w3.org/TR/css-values-4/#small-viewport-size ）: 小さいビューポートは、出入りする UI（ツールバー）を出した状態の大きさ。`100svh` は、その UI がすべて出ていても隠れない高さ。
-- MDN browser-compat-data `css/types/length.json`（https://github.com/mdn/browser-compat-data ）: `sv*` の単位は Safari 15.4・iOS の Safari 15.4・Chrome 108 から。
+- MDN browser-compat-data（https://github.com/mdn/browser-compat-data ）: `css/types/length.json` で `sv*` の単位は Safari 15.4・iOS の Safari 15.4・Chrome 108 から。`css/selectors/has.json` で `:has()` は Safari 15.4・iOS の Safari 15.4・Chrome 105 から。
 - HTML Standard 15.5.3 Button layout（https://html.spec.whatwg.org/multipage/rendering.html#button-layout ）: `button` の `display` が `inline-flex` などなら、その値どおりに組む。幅が `auto` なら fit-content。名前の無い内側の箱は定めていない。
 - CSS Fonts 4（W3C 作業草案 2026-09-13。https://www.w3.org/TR/css-fonts-4/#font-prop ）: `font` の一括指定は、`font-style`・`font-variant-*`（ligatures・numeric・position・alternates・east-asian・caps・emoji）・`font-weight`・`font-stretch`・`font-size`・`line-height`・`font-family`・`font-kerning`・`font-size-adjust`・`font-feature-settings`・`font-variation-settings`・`font-language-override`・`font-optical-sizing` を初期値に戻す。
-- WebKit `Source/WebCore/css/html.css`（https://github.com/WebKit/WebKit/blob/main/Source/WebCore/css/html.css 、main）: `input, textarea, select, button` の規則が `letter-spacing: normal`・`word-spacing: normal`・`line-height: normal`・`text-transform: none`・`text-indent: 0`・`text-shadow: none`・`text-align: start` を掛ける。そのあとの `button` を含む規則が、どの端末でも `text-align: center`・`padding-inline: 6px`・`cursor: default`・`box-sizing: border-box` を掛け、iOS ではさらに `font: 11px system-ui`・`padding-block: 0` を掛ける。
+- WebKit `Source/WebCore/css/html.css`（https://github.com/WebKit/WebKit/blob/main/Source/WebCore/css/html.css 、main）: `input, textarea, select, button` の規則が、iOS でないとき（Mac の Safari）に `font: -webkit-small-control` を掛け、どの端末でも `letter-spacing: normal`・`word-spacing: normal`・`line-height: normal`・`text-transform: none`・`text-indent: 0`・`text-shadow: none`・`text-align: start` を掛ける。そのあとの `button` を含む規則が、どの端末でも `text-align: center`・`padding-inline: 6px`・`cursor: default`・`box-sizing: border-box` を掛け、iOS ではさらに `font: 11px system-ui`・`padding-block: 0` を掛ける。
 - W3C Core-AAM 1.2（勧告候補草案 2026-09-23。https://www.w3.org/TR/core-aam-1.2/ ）: `aria-describedby` は macOS の AX API で `accessibilityCustomContent` か `AXHelp` に写す。iOS（UIAccessibility）の写し方は定めていない。
+
+## このリポジトリで確かめたこと
+
+- Next.js が同梱する `postcss-modules-local-by-default`（`node_modules/next/dist/compiled/`）を pure の決まりで動かすと、`:root:has(.<局所のクラス>) { … }` は通り（局所のクラスを含むため。クラスは局所の名に替わる）、`:root { … }` だけの形は「not pure」で止まる。ページの CSS モジュールに根の規則を書く形（D1）は、この形で書く。
 
 ## 一次資料で決まらないこと
 

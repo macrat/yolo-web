@@ -1,22 +1,24 @@
-# 振り分けを受けて PM が直す所（device-triage.md 6章）
+# 振り分けを受けてほかの文書を直す所（device-triage.md 6章）
 
-[device-triage.md](./device-triage.md) の振り分けを受けて、ほかの文書を直す場所と、置く文の案である。t5a-design.md・carryover-tasks.md・t5a-measure.md は、振り分けの文書では書き換えていない。PM が振り分けの承認のあとに直す。どの文も案で、PM がまわりの文ごと書き直してよい。
+[device-triage.md](./device-triage.md) の振り分けを受けて、ほかの文書を直す場所と、置く文の案である。振り分けの文書は、t5a-design.md・carryover-tasks.md・t5a-measure.md を書き換えていない。振り分けの承認のあと、`docs/cycles/` の文書は builder が主の木で直し、backlog の行は PM が起こす。どの文も案で、builder は、足した跡が残らないようまわりの文ごと書き直してよい。T5a-1 は t5a-design.md 5章を元に書き、T5a-3 は 7章の行を読むので、直しは T5a-1 を起こす前に入れる。
 
 ## D1（`touch-action` の範囲）
 
 - **t5a-design.md 4-4 の「`touch-action: manipulation`」の箇条**を、次にする。
-  > **`touch-action: manipulation`**: 2打目が拡大にならないよう、診断・クイズのページの中身の全体（`QuizPlayPageLayout` が並べるものを包む箱）に掛ける。2打目は入れ替わった先のどこからでも触れ始め、値は触れが始まった要素の祖先から効くからである。`manipulation` はつまむ拡大を残す（§12 の拡大を妨げない）。扱いは cycle-318/device-triage.md D1。
-- **t5a-design.md 4-12 の「解き終えた画面の `touch-action`」の箇条**を消す。解き終えた画面もページの箱が覆う。
-- **t5a-design.md 7章**: T5a-4 の行の中身に「ページの中身を包む箱と `touch-action`（4-4）」を、触るファイルに `src/app/play/[slug]/page.module.css` を足す。T5a-6 の行の中身から「`touch-action`」を消す。
+  > **`touch-action: manipulation`**: 2打目が拡大にならないよう、診断・クイズのページだけ、根の要素（`html`）に掛ける。`QuizPlayPageLayout` が並べるものを局所のクラスの箱で包み、そのページの CSS モジュール（`src/app/play/[slug]/page.module.css`）に `:root:has(.<箱のクラス>)` の規則を書く。2打目は入れ替わった先のどこからでも（ヘッダ・余白・フッタからも）触れ始め、値は触れが始まった要素の祖先から効くからである。`manipulation` はつまむ拡大を残す（§12 の拡大を妨げない）。扱いは cycle-318/device-triage.md D1。
+- **t5a-design.md 4-12 の「解き終えた画面の `touch-action`」の箇条**を消す。解き終えた画面も根が覆う。
+- **t5a-design.md 5章**の `frontend-design` スキルの文に、次の箇条を足す（「実装の技術」）。
+  > **診断・クイズのページは、そのページだけ根の要素に `touch-action: manipulation` を掛ける。** 押した点の下が入れ替わるので、二度押しの2打目はページのどこからでも触れ始める。iOS の Safari は速い2度の押しを拡大に取りうる（Slider の − と ＋ と同じ理由）。ページの CSS モジュールに `:root:has(.<ページの箱のクラス>)` で書き、ほかのページの2度の押しの身ぶりは残す。
+- **t5a-design.md 7章**: T5a-4 の行の中身に「ページの箱と、根の `touch-action`（4-4）」を、触るファイルに `src/app/play/[slug]/page.module.css` を足す。T5a-6 の行の中身から「`touch-action`」を消す。
 - **t5a-design.md 8章「PM が足す行」の1と、carryover-tasks.md の T6 の行**から、「あわせて、解き終えた画面の押す所（「もう一度挑戦する」・保存・共有）に `touch-action: manipulation` を掛ける（…t5a-design.md 4-4）。」の文を消す。
-- **backlog**（起こすかを PM が決める）:
-  > ゲーム（irodori・kanji-kanaru・yoji-kimeru・nakamawake）のページの中身の全体に `touch-action: manipulation` を掛ける。押した点の下が入れ替わる操作（決定・推測）の2打目が拡大にならないため（cycle-318/device-triage.md D1）。
+- **backlog**（PM が起こす）:
+  > ゲーム（irodori・kanji-kanaru・yoji-kimeru・nakamawake）のページだけ、根の要素に `touch-action: manipulation` を掛ける。押した点の下が入れ替わる操作（決定・推測）の2打目が拡大にならないため（cycle-318/device-triage.md D1）。
 
 ## D2（hover の線）
 
 - **t5a-design.md 4-2 の「hover」の箇条**の最後の文「iOS の Safari のふるまいは T9 の実機で見る。」を、次にする。
   > iOS の Safari で次の問の行に線が残るかは確かめず、見た目だけの差として受け入れる（cycle-318/device-triage.md D2）。
-- **backlog**（起こすかを PM が決める）:
+- **backlog**（PM が起こす）:
   > サイト全体の hover の線を `@media (hover: hover)` に限るかを決める。指で押したあと、入れ替わった先の行に線が残って選ばれたと読み違えないため（cycle-318/device-triage.md D2）。
 
 ## D3（`button` と `span` の字）
@@ -29,14 +31,19 @@
 
 ## D4（画面の範囲）
 
+- **t5a-design.md 3-2 の表**の「見える範囲は `visualViewport` で測るので、ツールバーで狭まった分も画面の外として扱う（推論。T9 の実機で確かめる）」を、次にする。
+  > 見える範囲は、`visualViewport` の高さと、ツールバーを出した小さいビューポート（`100svh`）の高さの小さいほうで測るので、ツールバーがあとで出ても、送ったまとまりの下は隠れない（cycle-318/device-triage.md D4）。
 - **t5a-design.md 4-5 の「どれだけ」**の「画面（`visualViewport` の範囲）」を、次にする。
-  > 画面（`visualViewport` の範囲。下端はツールバーを出した小さいビューポート（`100svh`）より下にしない。cycle-318/device-triage.md D4）
+  > 画面（`visibleRange()` の範囲。上端は `visualViewport.offsetTop`、下端はそこに `visualViewport` の高さと小さいビューポート（`100svh`）の高さの小さいほうを足した所。cycle-318/device-triage.md D4）
+- **t5a-design.md 5章**に、`DESIGN.md` §8 の文の書き換えを足す。§8 の「この節の送りはどれも、画面の範囲を文字盤で狭まった範囲（`visualViewport`）で測る。文字盤に隠れたものは、来訪者には見えていないからである。」を、次にする。
+  > この節の送りはどれも、画面の範囲を、文字盤で狭まった範囲（`visualViewport`）と、出入りするツールバーを出した範囲（小さいビューポート）の、狭いほうで測る。文字盤に隠れたものは来訪者に見えておらず、あとで出てくるツールバーに隠れるものも、そのときには見えなくなるからである。
 - **t5a-design.md 5章の `frontend-design` スキルの送りの項**に、次の文を足す。
-  > 画面の範囲は `visibleRange()` が、`visualViewport` と小さいビューポート（`100svh`）の小さいほうで決める。ツールバーが出ても、見せたものの下が隠れない。
-- **t5a-design.md 7章の T5a-3 の行**の触るファイルに、`src/play/games/nakamawake/_components/GameContainer.tsx`・`src/play/games/kanji-kanaru/_components/GameContainer.tsx` を足す（[device-triage-reveal.md](./device-triage-reveal.md)）。
+  > 画面の範囲は `visibleRange()` が決める。上端は `visualViewport.offsetTop`、下端は `offsetTop + min(visualViewport.height, 小さいビューポートの高さ)` で、小さいビューポートの高さは `height: 100vh; height: 100svh` の見えない箱の高さで読む（読めないとき（高さ 0 以下）は `visualViewport` の高さ）。面の中で同じ計算を書かない。
+- **t5a-design.md 7章の T5a-3 の行**: 中身に「`visibleRange()` を上の式にする（4-5）。nakamawake・kanji-kanaru の面の中の同じ計算を `visibleRange()` に替える。単体試験に cycle-318/device-triage-reveal.md 3章の6つを足し、道具とゲームの既存の試験が通ること」を足す。触るファイルに `src/play/games/nakamawake/_components/GameContainer.tsx`・`src/play/games/kanji-kanaru/_components/GameContainer.tsx` を足す。
 
 ## D5（2打目のずれ）
 
+- **t5a-design.md 3-1 の表**の「二度打ちで次の問が答えられる」の行の「（T9 で記録）」を、「（T5a-7 の条件7 と cycle-318/device-triage.md D5 の走査で記録）」にする。
 - **t5a-design.md 4-9 の「100 の出自」**の「T9 で、実機の二度押しの2打目のずれを記録する」を、「T5a-7 が、2打目をずらす走査で近似する（cycle-318/device-triage.md D5）」にする。
 - **t5a-design.md 4-9 の診断の答えのあとの箇条**の「150ms より後の2打目が次の問に落ちる数は T9 と 6章 条件7 で記録し」の「T9 と」を「device-triage.md D5 の走査と」にする。
 - **t5a-design.md 4-12 の B-620 の箇条**の「T9 で二度打ちを記録し」を、「T5a-7 が条件7 と device-triage.md D5 の走査で二度打ちを記録し」にする。
@@ -57,4 +64,4 @@
 - **carryover-tasks.md の T9 の行**の「B-623（知識クイズの最終問のあと「次へ」の2打目が FAQ を開く）は T5a が直す（…）。iOS の Safari の実機で、知識クイズの各問と最終問のあとの「次へ」を二度押しし、FAQ が開かないことを確かめる。」を、次にする。
   > B-623（知識クイズの最終問のあと「次へ」の2打目が FAQ を開く）は T5a が直し（問の区画を低くしない・着地の選び方。t5a-design.md 4-5・4-9）、T5a-7 の二度打ちの測りで閉じる（cycle-318/device-triage.md D9）。
 - **carryover-tasks.md の T9 の行**の「新しい回答の画面を二度打ちし（cycle-301 の再現手順）、設問が飛ぶかを記録する（B-620 の判断材料）。あわせて、…を確かめる（t5a-design.md 8章）。」を、次にする。
-  > 回答の画面の実機に頼る項目（t5a-design.md 8章）は、cycle-318/device-triage.md の振り分けに従い、実機の確かめは行わない。受け入れた危険（D1 の残り・D2・D3・D4 の上端・D5・D6・D7）を T9 の記録に写す。
+  > 回答の画面の実機に頼る項目（t5a-design.md 8章）は、cycle-318/device-triage.md の振り分けに従い、実機の確かめは行わない。T9 の記録には、次の分け方で写す。受け入れて ADR009 で見張る危険: D1 の残り（いまの iOS が `manipulation` を記述どおりに扱わない）・D4 の上端。見張らずに受け入れた危険: D2・D3・D5・D6・D7。Chromium の近似で代えたもの: D8。T5a-7 の測りで閉じたもの: D9（B-623）。
