@@ -50,7 +50,7 @@ offset と limit を付けずに Read で読み、返った行までのバイト
 
 - `git commit` を含むコマンドだけを見る。
 - `git status --porcelain -uall` で変更があり（削除を除く）、`docs/cycles/cycle-[0-9]*/(index|decisions|carryover).md` に当たるファイルを `wc -c` で測る。`-uall` は、新しいサイクルのディレクトリを中のファイルごとに出させるためである（既定ではディレクトリ1行になり、最初のコミットの index.md が漏れる）。pre-commit-check.sh と同じく未ステージの変更も含む。
-- 上限を超えたら exit 2 で止め、注意の線を超えただけなら stderr に注意を出して exit 0。
+- 上限を超えたら exit 2 で止め、注意の線を超えただけなら stdout に `{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"<注意の文とファイルの行>"}}` を jq で組んで出し、exit 0（`permissionDecision` は付けない）。exit 0 の hook の stderr は debug log にしか行かず Claude に届かないため（https://code.claude.com/docs/en/hooks）。
 
 止めたときの案内:
 
