@@ -34,7 +34,7 @@
 - ライトとダーク: `icon.svg` は色を1組しか持たない（completion-criteria.md の完了の条件は「ブラウザのタブのライトとダークの両方で見分けられる」）。
 - Google 検索の favicon: 対応形式は BMP・GIF・ICO・PNG・JPEG・PPM・TIFF で SVG は挙がっておらず、推奨は 48px より大きいもの（[facts-external-specs.md](./facts-external-specs.md) §9）。Google のガイドライン（https://developers.google.com/search/docs/appearance/favicon-in-search 、2026-09-28 にレビューで確認）は `rel` の値として `icon`・`shortcut icon` に加えて `apple-touch-icon`・`apple-touch-icon-precomposed` を受け付ける。いま出している `apple-touch-icon.png`（180×180 の PNG）で、48px を超える対応形式の条件は満たしている。
 - `site-metadata.ts:49-54` は `favicon.ico` を `sizes: "48x48"` と宣言しているが、ファイルは 16・32・48 の3枚を持つ。
-- クロールの条件（index.md の favicon の完了の条件「Googlebot-Image が favicon を、Googlebot がホームページをクロールできる」）: `src/app/robots.ts` は全体に `allow: "/"`、`disallow` は `/api/` だけで、`/favicon.ico`・`/icon.svg`・`/apple-touch-icon.png`・`/` はどれも拒んでいない（コードで確かめた。本番の `robots.txt` は T6-10 で確かめる）。
+- クロールの条件（completion-criteria.md の favicon の完了の条件「Googlebot-Image が favicon を、Googlebot がホームページをクロールできる」）: `src/app/robots.ts` は全体に `allow: "/"`、`disallow` は `/api/` だけで、`/favicon.ico`・`/icon.svg`・`/apple-touch-icon.png`・`/` はどれも拒んでいない（コードで確かめた。本番の `robots.txt` は T6-10 で確かめる）。
 - 404 と 410 のページ: `src/app/global-not-found.js` の `metadata` は `title` と `description` だけで `icons` を持たない。410 のページ（`src/middleware.ts` の `build410Html`）の `<head>` も icon の `<link>` を持たない。どちらでもブラウザは既定の `/favicon.ico` を取りに行くだけで、`icon.svg`（3-7 でダークの規則を持たせるもの）と `apple-touch-icon` は使われない。
 
 ### 1-3. 共通の OGP（`ogp-image.tsx`）
