@@ -60,3 +60,21 @@
 ### 判定
 
 改善指示（軽1件）。PM は記録の担当に review-t5-8b.md の impossible-advice の件数と合計を直させ、そのあと全体を見直す形で再レビューを受けること。
+
+## 第4回
+
+対象: HEAD aa4f79f7（fb5b8c41 からの差分は review-t5-8b.md の2行と review-final.md）。
+
+### 確かめたこと
+
+- 前回の指摘（impossible-advice の件数）: `grep -nP '(?:^|[^-])-(?=[^\s-])' src/play/quiz/data/impossible-advice.ts` から variant などの識別子を除くと 345 行の1文（「俳句（5-7-5）」）だけが残り、文字列の数は 1。合計は kanji 50＋humor-dict 3＋daily-fortunes 2＋impossible-advice 1＝56 で、review-t5-8b.md の「結果」「抜き取り」の行の 56 と一致する。「57 件」は記録のどこにも残っていない。解消している。
+- ブログ: `node` で `src/blog/content/` の front matter の `title`・`description` に同じ正規表現を当て、当たる文字列 18・当たりの数 30 を得た。記載と一致する。
+- 全体: 610766d0 からの差分は docs/cycles/cycle-317/ の index.md・review-final.md・review-t5-8b.md だけで、規則・ソース・backlog.md への変更は無い。backlog.md（B-641・B-787・B-754）、index.md のレビューの表と補足事項（74 行の扱い）は第3回の確かめのまま記録と合う。index.md は 11,707 B で上限内。ツギハギの対象のファイルへの経緯の書き込みは無い。
+
+### 指摘
+
+なし。
+
+### 判定
+
+承認。
