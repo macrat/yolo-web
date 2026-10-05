@@ -64,6 +64,6 @@
 全体のレビューの指摘1を受け、PM の依頼で記録の担当が 2026-10-05 に数えた。上の「サイトの全体で悪くなる例は見つからなかった」の範囲はこの節のとおり。
 
 - 対象: `PhrasedText`（と `phrased-name.ts`・`phrase-breaks.ts`）を通る中身の元のデータ。`src/data/yoji-data.json`・`kanji-data.json`・`traditional-colors.json`、`src/humor-dict/data.ts`、`src/play/fortune/data/daily-fortunes.ts`、`src/play/quiz/data/*.ts`（21本）、`src/blog/content/` の front matter の `title`・`description`。
-- 数え方: 正規表現 `(?:^|[^-])-(?=[^\s-])`（変更で振る舞いが変わる「-」）。ファイルの全文に当てると 3,259 件だが、ほとんどが id（`"q2-a"`）・slug・パス・URL・日時・コードで、画面に文として出ない。文字列の値のうち、それらを除いた文に当てた。
-- 結果: データの文で 28 件（kanji-data.json 21、humor-dict 3、daily-fortunes 2、impossible-advice 2）、ブログの title・description で 30 件。語の頭の「-」は 6 件で、すべて kanji-data.json の英語の意味（「-ship」「-times」「-ization」「-fold」「-ous」「-proof」）。ほかは語の中のハイフン（「Wi-Fi」「three-stroke」「11PM-1AM」「5-7-5」「JSON-LD」「not-found」「grid-column」など）。
-- 抜き取り: データの 28 件はすべて、ブログは10件ほどを見た。語の頭の6件は「-」が行末に取り残されなくなり、語の中の件は語が1行に収まる幅では割れなくなる。悪くなる例は無かった。
+- 数え方: 正規表現 `(?:^|[^-])-(?=[^\s-])`（変更で振る舞いが変わる「-」）。kanji-data.json は全字の `meanings` の文字列に当てた（`examples`・`onYomi`・`kunYomi` には当たりが無い）。ほかのデータはファイルの全文に当てると id（`"q2-a"`）・slug・パス・URL・日時・コードがほとんどで画面に文として出ないので、文字列の値のうち、パス・日時・URL と、英小文字・数字・ハイフンだけの文字列を除いたものに当てた。除いた文字列は当たるもので 607 種（1,543 件）あり、全部を並べて見ると、すべて id と slug だった（診断の結果の id「blazing-poet」と相性の組の id「blazing-poet--vibe-rebel」、選択肢の id「q2-a」、診断の slug「animal-personality」、占いの id「hidari-pocket」、ユーモア辞典の slug と relatedSlugs「rainy-season」「year-end」）。画面に出る語は無かった。数えたのは当たる文字列の数。
+- 結果: データの文字列で 57 件（kanji-data.json の `meanings` 50（重なりを除いて 48、文字列の中の当たりの数は 54）、humor-dict 3、daily-fortunes 2、impossible-advice 2）、ブログの title・description で 30 件。語の頭の「-」は 6 件で、すべて kanji-data.json の英語の意味（「-ship」「-times」「-ization」「-fold」「-ous」「-proof」）。ほかは語の中のハイフン（「Wi-Fi」「three-stroke」「fortune-telling」「son-in-law」「11PM-1AM」「5-7-5」「JSON-LD」「not-found」「grid-column」など）。
+- 抜き取り: データの 57 件はすべて（kanji-data.json の 50 件を含む）、ブログは10件ほどを見た。語の頭の6件は「-」が行末に取り残されなくなり、語の中の件は語が1行に収まる幅では割れなくなる。悪くなる例は無かった。

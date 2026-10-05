@@ -20,3 +20,24 @@
 ## 判定
 
 改善指示（軽2件）。来訪者に届くものと hook の実装に問題は無い。直したあと、前回の指摘だけでなく全体を見直す形で再レビューを受けること。
+
+## 第2回
+
+対象: HEAD 91ace5a1（差分は index.md・review-t5-8b.md・review-final.md）。
+
+### 確かめたこと
+
+- 前回の指摘2: index.md の補足事項の AP-WF08 の行に、PM がレビューの記録を要約して写したことと、その対象（review-b784-design*.md・review-b786-design*.md・review-b7*-impl.md）と、T5 の2本は reviewer が書いたことが入った。解消している。
+- 前回の指摘1: review-t5-8b.md に「joinDashes の確かめの範囲」が足され、index.md に扱いが書かれた。抜き取りで次を確かめた。
+  - `src/play/quiz/data/*.ts` は21本で合う。
+  - kanji-data.json の語の頭の「-」は「-ship」「-times」「-ization」「-fold」「-ous」「-proof」の6件で合う。
+  - humor-dict の3件（「Wi-Fi」が data.ts 145・150・152 行）で合う。
+- 全体: backlog.md（B-641・B-787・B-754）、index.md のレビューの表と補足事項は前回の確かめから変わっていない。ツギハギの対象外の文書だけの変更で、規則のファイルへの経緯の書き込みは無い。
+
+### 指摘
+
+1. 軽: review-t5-8b.md の「kanji-data.json 21」が再現しない。同じ正規表現 `(?:^|[^-])-(?=[^\s-])` を kanji-data.json の `meanings` に当てると、当たる文字列は 50 件（重なりを除いて 48、当たりの数は 54）で、`examples`・`onYomi`・`kunYomi` には無い。漢字カナールの出題予定（puzzle-schedule-*.json の `kanjiIndex`、1,248字）に絞っても 27 件で、21 にならない。何で絞った 21 かが書かれていないので、「データの 28 件はすべて見た」の範囲が事実と合わず、指摘1で直そうとした「何をどれだけ見たか」がまだ正確でない。来訪者への影響は無い（50 件の中身も「11PM-1AM」「fortune-telling」などの語の中のハイフンと既知の語の頭の6件で、結論の「悪くなる例は無い」は変わらない）。直し方: 件数を実際の数（kanji-data.json の meanings 50 件、合計の数も直す）にするか、21 の絞り方（どの画面に出る分か）を書き、抜き取りの範囲の文をそれに合わせる。根拠: review-t5-8b.md の「結果」「抜き取り」の行、`node` で kanji-data.json を数えた結果。
+
+### 判定
+
+改善指示（軽1件）。PM は builder（または記録の担当）に件数を数え直させて review-t5-8b.md と、必要なら index.md を直させ、そのあと全体を見直す形で再レビューを受けること。
