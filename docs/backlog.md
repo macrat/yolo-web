@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 | B-614 | 診断の回答フェーズの摩擦低減 | P3 | B-754のT5aで直す(独立のサイクルは立てない)。T5a-5・T5a-6(回答の画面の本体)で入り、T5a-7の測りで確かめてDoneへ。375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
 | B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | B-754のT5aで直す(独立のサイクルは立てない)。T5a-5(t5a-design.md 4-7)で入る。押したボタンがdisabledになるため。SR利用者は先頭からTabし直す。詳細cycle-301/review-log.md |
 | B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | B-754のT5aで直す(独立のサイクルは立てない。t5a-design.md 4-5・4-9)。T5a-7の二度打ちの測りで0を確かめてDoneへ。iOSの確かめはcycle-318/device-triage.md D9 |
