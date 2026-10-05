@@ -106,7 +106,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q1: 休日の朝の目覚め (除外: commander, professor / hi29 lo1)
     {
       id: "q1",
-      text: "休日の朝8時、アラームなしで自然に目が覚めた。まず何をする？",
+      text: "休日の朝8時、アラームなしで目が覚めた。まず何をする？",
       choices: [
         {
           id: "q1-a",
@@ -115,12 +115,12 @@ const characterPersonalityQuiz: QuizDefinition = {
         },
         {
           id: "q1-b",
-          text: "「二度寝と早起き、どっちが得かな」と考えつつ、いつもと違う朝を試したくなる",
+          text: "「二度寝と早起き、どっちが得かな」と考えて、いつもと違う朝を試したくなる",
           points: { trickster: 29, artist: 1 },
         },
         {
           id: "q1-c",
-          text: "「昨日やり残したことはなかったか」を思い返し、確認できてからゆっくり起きる",
+          text: "「昨日やり残したことはなかったか」を思い返し、確認してからゆっくり起きる",
           points: { guardian: 29, professor: 1 },
         },
         {
