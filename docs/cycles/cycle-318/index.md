@@ -19,7 +19,7 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 - [x] T5a-2b の前後のスクリーンショットを、Q1 を開いた状態で 375×550・320×550・1280×800 のライトとダークで撮り、来訪者の目で確かめる（画像は第11回のレビューで見てもらう）
 - [x] T5a-2: 振り分けの承認のあと、[t5a-measure.md](../cycle-316/t5a-measure.md) をレビュー第10回（[review-t5a-2-10.md](../cycle-316/review-t5a-2-10.md)）の指摘1（5-3 の押した行と進め方）と参考の4点、振り分けが求める追記から直し、0章の「コミットの名を書き入れる」指示を T5a-2b のコミットの名に置き換える。第11回のレビューで T5a-2b のコミットと組で見てもらい、承認まで続ける
 - [x] 振り分けの承認のあと、[device-triage-fixes.md](./device-triage-fixes.md) の直し（t5a-design.md・carryover-tasks.md の「T9 の実機で確かめる」などを振り分けの結果に合わせる）を入れ、backlog の案を起こし、レビューに通す
-- [ ] T5a-1: t5a-design.md 5章の文のうち `DESIGN.md` と `frontend-design` スキルのものを書き、振り分けが (i) としてこのタスクに渡すものを含めて、レビューに通す
+- [x] T5a-1: t5a-design.md 5章の文のうち `DESIGN.md` と `frontend-design` スキルのものを書き、振り分けが (i) としてこのタスクに渡すものを含めて、レビューに通す
 - [ ] T5a-3: `src/lib/reveal.ts` に、まとまりを見せる送りと着地の選び方（4-5・4-9）を足す。あわせて、見えている画面の範囲（`visibleRange()`）を振り分けの D4 のとおり直し、同じ計算を面の中に持つ nakamawake・kanji-kanaru の `GameContainer.tsx` を `reveal.ts` にそろえる（道具とゲームの送りも変わる）。単体試験とともにレビューに通す
 - [ ] 次のサイクルへの申し送りを書く: 残りの T5a のタスク（T5a-5・T5a-6・T5a-4・T5a-7）、T5a-7 での測りの道具の組み直しと、そのための履歴の深め方と `cycle-316-records` の取り方、振り分けの結果のうち T5a-5・T5a-6・T5a-7・T9・T10 に渡すもの
 
@@ -69,6 +69,7 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 | 実機に頼る項目の振り分け           | 5               | 承認     | [review-triage.md](./review-triage.md)〜[-5](./review-triage-5.md)                               |
 | 振り分けの結果を設計の文書に入れる | 3               | 承認     | [review-design-fixes.md](./review-design-fixes.md)〜[-3](./review-design-fixes-3.md)             |
 | T5a-2（t5a-measure.md）・T5a-2b    | 9（第11〜19回） | 承認     | [review-t5a-2-11.md](./review-t5a-2-11.md)〜[-19](./review-t5a-2-19.md)（第1〜10回は cycle-316） |
+| T5a-1（DESIGN.md・スキル）         | 2               | 承認     | [review-t5a-1.md](./review-t5a-1.md)・[-2](./review-t5a-1-2.md)                                  |
 
 計画: 第1回の6件（振り分けを T5a-2 の前に置く順・振り分けの行き先と B-623・T5a-2b の受け渡し・前提のコミットの取り方・撮る範囲・担当を起こす時点）と第2回の4件（撮る時点と画像のレビュー・B-620・T5a-3 が (i) を受けること・取り込みで名が変わらない理由）をすべて直した。
 
