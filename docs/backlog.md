@@ -88,7 +88,8 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: design-rolloutのT5-8b・T5-18のサイクル(B-754)。記事の表はT4で済んだ。残りは記事の外の表。詳細cycle-302/incident-2.md |
+| B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: design-rolloutのT5-18のサイクル(B-754)。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
+| B-787 | 漢字カナールの結果の2表で送る表だけ見出しの右端が1.35字ずれる | P4 | 着手: 遊んだ日が1000日に届く前。320・200%・成績4桁で成績の表だけ送る表になり内側の余白分ずれる。送る表の余白を見込んでそろえる規則を設計に足す。詳細cycle-317/review-t5-8b.md |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | 着手: design-rolloutのT7のサイクル(B-754)。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: design-rolloutのT6のサイクル(B-754)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
 | B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 着手: design-rolloutのT6-7のサイクル(B-754)。開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md |
