@@ -1,5 +1,5 @@
-/* 表の枠。表はコンテンツ幅いっぱいに組む。列の幅と、横に送るか（data-scrolls）は src/lib/scroll-frame.ts が
- * 描く前に決める。 */
+/* 表の枠。表はコンテンツ幅いっぱいに組む。列の幅（余りのある表の行の見出しの列の幅と、組の中でそろえる幅を
+ * 含む）と、横に送るか（data-scrolls）は src/lib/scroll-frame.ts が描く前に決める。 */
 .frame {
   overflow-x: auto;
 }
@@ -13,6 +13,20 @@
  *   回線で表が届き終えるまでより長く、来訪者が表の無い所を待つには短い。 */
 @media (scripting: enabled) {
   .frame:not([data-layout-key], [data-layout-failed]) {
+    visibility: hidden;
+    animation: frame-reveal 0s 3s forwards;
+  }
+}
+
+/* 表の組（DataTableGroup）。箱を持たず、親の並びとあきに影を落とさない。組は組の全部の表を1度に組むので、組み
+ * 終えるまで、表のあいだの中身（小見出しなど）ごと描かない。表だけを隠すと、あいだの中身が先に描かれ、上の表を
+ * 組んで高さが変わったときに動く。見せる道は表の枠と同じ3つで、visibility は箱を持たない組からも中身に継がれる。 */
+.group {
+  display: contents;
+}
+
+@media (scripting: enabled) {
+  .group:not([data-layout-key], [data-layout-failed]) {
     visibility: hidden;
     animation: frame-reveal 0s 3s forwards;
   }

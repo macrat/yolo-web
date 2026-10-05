@@ -3,15 +3,27 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
-import DataTable, { type DataTableRow } from "@/components/DataTable";
-import { layoutTable } from "@/lib/scroll-frame";
+import DataTable, {
+  DataTableGroup,
+  type DataTableRow,
+} from "@/components/DataTable";
+import { layoutGroup, layoutTable } from "@/lib/scroll-frame";
 
 /*
- * jsdom は字を組まないので、組みを次の決まりで返す。字の大きさは 10px で、4字の下限は 40px。
- * - 表の幅を0にした組み（列を最小の幅にした組み）のセルの幅は、その列のセルのいちばん長い文節の字数 × 10px。
+ * jsdom は字を組まないので、組みを次の決まりで返す。字の大きさは 10px で、4字の下限は 40px。セルは余白を持たない。
+ * - セルの最小の幅（min-content）は、いちばん長い文節の字数 × 10px。1行に組んだ幅（max-content）は、文節の
+ *   字数の和 × 10px。
  * - コピーのボタンは 60px。値の横に置くあいだは値もボタンも折らないので、値のセルは値を1行にした幅
- *   （字数 × 10px）・あき（16px）・ボタンの幅を取る。値の次の行に送ると、値のセルはいちばん長い文節と
- *   ボタンの広いほうの幅を取る。
+ *   （字数 × 10px）・あき（16px）・ボタンの幅を取る。値の次の行に送ると、値のセルの最小の幅はいちばん長い
+ *   文節とボタンの広いほうの幅、1行に組んだ幅は値を1行にした幅とボタンの広いほうの幅。
+ * - 列の最小の幅と1行に組んだ幅は、その列のセル（表の幅いっぱいのセルを除く）のいちばん広いもの。ただし、
+ *   見えている開いた行の中身は、max-content の組みで1行に組んだ幅を最初の列に足す（表の幅いっぱいのセルの長い
+ *   文が列に混ざる）。隠した行（display: none）のセルは数えない。
+ * - 表の幅を0にした組みは各列の最小の幅、max-content の組みは各列の1行に組んだ幅を取る。幅を指定した列は、
+ *   その指定（と最小の幅の広いほう）を取る。table-layout: fixed の表は、最初の行のセルの指定の幅を取る。
+ * - 自動の組み（表の幅は置かれた幅）では、幅を指定した列が先に幅を取り、残りを指定の無い列に配る。残りが
+ *   1行に組んだ幅の和を超えれば、各列は1行に組んだ幅に、余りをその幅に比例して足して取る。超えなければ、
+ *   最小の幅と1行に組んだ幅のあいだを同じ割合で取る。最小の幅の和に足りなければ、最小の幅を取る。
  * - 枠（と、結果のボックスの中の表では、その親）の幅は、試験ごとに決める。
  */
 const CHAR = 10;
@@ -27,27 +39,87 @@ function phraseLengths(element: Element): number[] {
     .map((phrase) => phrase.length);
 }
 
+function sum(values: readonly number[]): number {
+  return values.reduce((total, value) => total + value, 0);
+}
+
+function copyBelow(cell: HTMLTableCellElement): boolean {
+  return cell.closest("[data-copy-column]")!.hasAttribute("data-copy-below");
+}
+
 function minWidth(cell: HTMLTableCellElement): number {
   const line = cell.querySelector("div");
   if (!line) return Math.max(...phraseLengths(cell)) * CHAR;
   const phrases = phraseLengths(line.firstElementChild!);
-  const below = cell
-    .closest("[data-copy-column]")!
-    .hasAttribute("data-copy-below");
-  if (below) return Math.max(Math.max(...phrases) * CHAR, BUTTON);
-  const oneLine = phrases.reduce((sum, length) => sum + length, 0) * CHAR;
+  if (copyBelow(cell)) return Math.max(Math.max(...phrases) * CHAR, BUTTON);
+  return sum(phrases) * CHAR + GAP + BUTTON;
+}
+
+function maxWidth(cell: HTMLTableCellElement): number {
+  const line = cell.querySelector("div");
+  if (!line) return sum(phraseLengths(cell)) * CHAR;
+  const oneLine = sum(phraseLengths(line.firstElementChild!)) * CHAR;
+  if (copyBelow(cell)) return Math.max(oneLine, BUTTON);
   return oneLine + GAP + BUTTON;
 }
 
-/** 列の幅。表の列はどの行でも同じ幅なので、その列のどのセルの最小の幅も入る幅を取る。 */
-function columnWidth(cell: HTMLTableCellElement): number {
-  const table = cell.closest("table")!;
-  return Math.max(
-    ...[...table.rows]
-      .map((row) => row.cells[cell.cellIndex])
-      .filter((other) => other && other.colSpan === 1)
-      .map(minWidth),
+/** 各列の幅。 */
+function columnWidths(table: HTMLTableElement): number[] {
+  const head = table.rows[0];
+  const indexes = [...head.cells].map((_, index) => index);
+  const rows = [...table.rows].filter((row) => row.style.display !== "none");
+  const columnCells = (index: number) =>
+    rows
+      .map((row) => row.cells[index])
+      .filter((cell) => cell && cell.colSpan === 1);
+  const mins = indexes.map((index) =>
+    Math.max(...columnCells(index).map(minWidth)),
   );
+  const maxes = indexes.map((index) =>
+    Math.max(mins[index], ...columnCells(index).map(maxWidth)),
+  );
+  const specified = [...head.cells].map((cell) =>
+    cell.style.width === "" ? null : parseFloat(cell.style.width),
+  );
+  if (table.style.tableLayout === "fixed") {
+    return specified.map((width) => width ?? 0);
+  }
+  const taken = (index: number, free: number) => {
+    const width = specified[index];
+    return width === null ? free : Math.max(width, mins[index]);
+  };
+  if (parseFloat(table.style.width) === 0) {
+    return mins.map((min, index) => taken(index, min));
+  }
+  if (table.style.width === "max-content") {
+    const details = rows
+      .flatMap((row) => [...row.cells])
+      .filter((cell) => cell.colSpan > 1)
+      .map((cell) => (cell.textContent ?? "").length * CHAR);
+    maxes[0] = Math.max(maxes[0], ...details);
+    return maxes.map((max, index) => taken(index, max));
+  }
+  const frame = table.closest<HTMLElement>(".table-phrased")!;
+  const total = frame.hasAttribute("data-in-box") ? placed.box : placed.frame;
+  const free = indexes.filter((index) => specified[index] === null);
+  const rest =
+    total -
+    sum(
+      indexes
+        .filter((index) => specified[index] !== null)
+        .map((index) => taken(index, 0)),
+    );
+  const freeMin = sum(free.map((index) => mins[index]));
+  const freeMax = sum(free.map((index) => maxes[index]));
+  return indexes.map((index) => {
+    if (specified[index] !== null) return taken(index, 0);
+    if (rest >= freeMax) return maxes[index] * (rest / freeMax);
+    if (rest > freeMin) {
+      const share = (rest - freeMin) / (freeMax - freeMin);
+      return mins[index] + (maxes[index] - mins[index]) * share;
+    }
+    return mins[index];
+  });
 }
 
 function fakeRect(this: HTMLElement): DOMRect {
@@ -57,12 +129,9 @@ function fakeRect(this: HTMLElement): DOMRect {
   } else if (this.dataset.box !== undefined) {
     width = placed.box;
   } else if (this instanceof HTMLTableCellElement) {
-    width = columnWidth(this);
+    width = columnWidths(this.closest("table")!)[this.cellIndex];
   } else if (this instanceof HTMLTableElement) {
-    width = [...this.rows[0].cells].reduce(
-      (sum, cell) => sum + columnWidth(cell),
-      0,
-    );
+    width = sum(columnWidths(this));
   }
   return { width } as DOMRect;
 }
@@ -289,6 +358,254 @@ describe("DataTable の組み", () => {
   });
 });
 
+/** 最初の行のセルに指定した幅。 */
+function headWidths(table: HTMLTableElement): string[] {
+  return [...table.rows[0].cells].map((cell) => cell.style.width);
+}
+
+describe("DataTable の行の見出しの列", () => {
+  test("収まる表に余りがあれば、行の見出しの列を見出しを1行に組める幅に留め、値の列には幅を指定しない", () => {
+    // 見出しの列の max-content は「失敗エピソードの在庫数」の 110px。
+    placed.frame = 1000;
+    const { container } = render(<DataTable label="指標" rows={METRICS} />);
+    const table = frameOf(container).querySelector("table")!;
+    expect(headWidths(table)).toEqual(["110px", ""]);
+    expect(table.style.width).toBe("");
+    expect(table.style.tableLayout).toBe("");
+  });
+
+  test("余りが無ければ、どのセルにも幅を指定しない", () => {
+    // 列の最小の幅の和 140px にちょうど置かれ、見出しの列は 80px のまま max-content の 110px に届かない。
+    placed.frame = 140;
+    const { container } = render(<DataTable label="指標" rows={METRICS} />);
+    const table = frameOf(container).querySelector("table")!;
+    for (const row of table.rows) {
+      for (const cell of row.cells) expect(cell.style.width).toBe("");
+    }
+  });
+
+  test("行の見出しを持たない表（列の見出しだけの表）には、どのセルにも幅を指定しない", () => {
+    placed.frame = 1000;
+    const { container } = render(
+      <DataTable
+        label="指標"
+        columns={[["指標"], ["値"]]}
+        rows={METRICS.map(({ key, header, cells }) => ({
+          key,
+          cells: [header!, ...cells],
+        }))}
+      />,
+    );
+    const table = frameOf(container).querySelector("table")!;
+    for (const row of table.rows) {
+      for (const cell of row.cells) expect(cell.style.width).toBe("");
+    }
+  });
+
+  test("見出しの列の幅は開いた行を隠して測り、測ったあとに開いた行を元に戻す", () => {
+    placed.frame = 1000;
+    const { container } = render(
+      <DataTable
+        label="指標"
+        rows={METRICS.map((row, index) => ({
+          ...row,
+          detail: index === 0 ? <p>{"例".repeat(50)}</p> : undefined,
+        }))}
+      />,
+    );
+    const table = frameOf(container).querySelector("table")!;
+    expect(headWidths(table)).toEqual(["110px", ""]);
+    const detailRow = screen.getByText("例".repeat(50)).closest("tr")!;
+    expect(detailRow.style.display).toBe("");
+  });
+
+  test("コピーのボタンを持つ表も、余りがあれば行の見出しの列を留める", () => {
+    // 見出しの列 30px と、1行の値とボタンの 236px。
+    placed.frame = 1000;
+    const { container } = render(
+      <DataTable label="カラーコード" rows={CODES} />,
+    );
+    const frame = frameOf(container);
+    expect(frame.hasAttribute("data-copy-below")).toBe(false);
+    expect(headWidths(frame.querySelector("table")!)).toEqual(["30px", ""]);
+  });
+});
+
+describe("DataTableGroup", () => {
+  /** 見出しの列（2字）と値の列（3字）の短い表。 */
+  const SHORT: DataTableRow[] = [
+    { key: "speed", header: ["速度"], cells: [["約3秒"]] },
+  ];
+
+  function groupTables(container: HTMLElement): HTMLTableElement[] {
+    return [...container.querySelectorAll<HTMLTableElement>("table")];
+  }
+
+  test("組の中の表の行の見出しの列を、いちばん広いものにそろえる", () => {
+    placed.frame = 1000;
+    const { container } = render(
+      <DataTableGroup>
+        <DataTable label="指標" rows={METRICS} />
+        <h2>あいだの小見出し</h2>
+        <DataTable label="速度" rows={SHORT} />
+      </DataTableGroup>,
+    );
+    const [metrics, short] = groupTables(container);
+    expect(headWidths(metrics)).toEqual(["110px", ""]);
+    expect(headWidths(short)).toEqual(["110px", ""]);
+    const group = container.querySelector("[data-table-group]")!;
+    expect(group.hasAttribute("data-layout-key")).toBe(true);
+    for (const frame of group.querySelectorAll(".table-phrased")) {
+      expect(frame.hasAttribute("data-layout-key")).toBe(true);
+    }
+  });
+
+  test("そろえる幅と値の列の最小の幅の和が表の幅を超える表は、そろえずに自分の組みのまま残す", () => {
+    // 指標の表の見出しの列は 110px。値の列の最小の幅が 90px の表は 110 + 90 > 190 なので、自分の 20px に留める。
+    placed.frame = 190;
+    const long: DataTableRow[] = [
+      { key: "value", header: ["速度"], cells: [["とても長い値の文節"]] },
+    ];
+    const { container } = render(
+      <DataTableGroup>
+        <DataTable label="指標" rows={METRICS} />
+        <DataTable label="長い値" rows={long} />
+      </DataTableGroup>,
+    );
+    const [metrics, own] = groupTables(container);
+    expect(headWidths(metrics)).toEqual(["110px", ""]);
+    expect(headWidths(own)).toEqual(["20px", ""]);
+  });
+
+  test("細くした表は、そろえる幅を決めるのにも数えず、そろえる幅も受けない", () => {
+    // 130px では指標の表を細くする（70px と 60px）。短い表だけが自分の見出しの列 20px に留まる。
+    placed.frame = 130;
+    const { container } = render(
+      <DataTableGroup>
+        <DataTable label="指標" rows={METRICS} />
+        <DataTable label="速度" rows={SHORT} />
+      </DataTableGroup>,
+    );
+    const [metrics, short] = groupTables(container);
+    expect(metrics.style.tableLayout).toBe("fixed");
+    expect(headWidths(metrics)).toEqual(["70px", "60px"]);
+    expect(headWidths(short)).toEqual(["20px", ""]);
+  });
+
+  test("送る表は、そろえる幅を決めるのにも数えず、そろえる幅も受けない", () => {
+    // 79px では指標の表を4字まで細くしても収まらず、送る。
+    placed.frame = 79;
+    const { container } = render(
+      <DataTableGroup>
+        <DataTable label="指標" rows={METRICS} />
+        <DataTable label="速度" rows={SHORT} />
+      </DataTableGroup>,
+    );
+    const [metrics, short] = groupTables(container);
+    expect(
+      metrics.closest(".table-phrased")!.hasAttribute("data-scrolls"),
+    ).toBe(true);
+    expect(headWidths(metrics)).toEqual(["", ""]);
+    expect(headWidths(short)).toEqual(["20px", ""]);
+  });
+
+  test("組の1つの枠を組むと組の全部を組む。同じなら組み直さず、中身を描き替えたときと枠の数が変わったときは組み直す", () => {
+    placed.frame = 1000;
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(
+      <DataTableGroup>
+        <DataTable label="指標" rows={METRICS} />
+        <DataTable label="速度" rows={SHORT} />
+      </DataTableGroup>,
+    );
+    document.body.appendChild(container);
+    try {
+      const group = container.querySelector<HTMLElement>("[data-table-group]")!;
+      const frames = [...group.querySelectorAll<HTMLElement>(".table-phrased")];
+      layoutTable(frames[1]);
+      expect(group.hasAttribute("data-layout-key")).toBe(true);
+      for (const frame of frames) {
+        expect(frame.hasAttribute("data-layout-key")).toBe(true);
+      }
+      const [metrics, short] = groupTables(container);
+      expect(headWidths(short)).toEqual(["110px", ""]);
+
+      const layout = vi.spyOn(HTMLTableElement.prototype, "rows", "get");
+      layoutTable(frames[0]);
+      expect(layout).not.toHaveBeenCalled();
+
+      short.rows[0].cells[0].style.width = "";
+      layoutTable(frames[0], true);
+      expect(headWidths(short)).toEqual(["110px", ""]);
+
+      frames[0].remove();
+      layout.mockClear();
+      layoutGroup(group);
+      expect(layout).toHaveBeenCalled();
+      expect(headWidths(short)).toEqual(["20px", ""]);
+      expect(metrics.isConnected).toBe(false);
+    } finally {
+      container.remove();
+    }
+  });
+
+  test("組の中の DataTable に inBox を渡すと、描くときに Error を投げる。組は入れ子にしない", () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(() =>
+      render(
+        <DataTableGroup>
+          <DataTable label="指標" rows={METRICS} inBox />
+        </DataTableGroup>,
+      ),
+    ).toThrow("inBox");
+    expect(() =>
+      render(
+        <DataTableGroup>
+          <DataTableGroup>
+            <DataTable label="指標" rows={METRICS} />
+          </DataTableGroup>
+        </DataTableGroup>,
+      ),
+    ).toThrow("入れ子");
+    errors.mockRestore();
+  });
+
+  test("サーバーで描くと、組み方を定める文・組・組の全部を組む文の順に並び、水和で警告を出さない", async () => {
+    placed.frame = 1000;
+    const element = (
+      <DataTableGroup>
+        <DataTable label="指標" rows={METRICS} />
+        <h2>あいだの小見出し</h2>
+        <DataTable label="速度" rows={SHORT} />
+      </DataTableGroup>
+    );
+    const html = renderToString(element);
+    expect(html).toMatch(
+      /^<script>window\.yolosFrameLayout\|\|[\s\S]*?<\/script><div [^>]*data-table-group=""[\s\S]*<\/div><script>\(function\(g\)\{try\{window\.yolosFrameLayout\.layoutGroup\(g\)[\s\S]*<\/script>$/,
+    );
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    layoutGroup(container.querySelector<HTMLElement>("[data-table-group]")!);
+
+    const actEnvironment = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
+    const previousActEnvironment = actEnvironment.IS_REACT_ACT_ENVIRONMENT;
+    actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    let root: Root | undefined;
+    try {
+      root = await act(async () => hydrateRoot(container, element));
+      expect(errors).not.toHaveBeenCalled();
+      expect(headWidths(groupTables(container)[1])).toEqual(["110px", ""]);
+    } finally {
+      errors.mockRestore();
+      if (root) act(() => root!.unmount());
+      container.remove();
+      actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+    }
+  });
+});
+
 describe("DataTable のコピーのボタン", () => {
   test("値のセルの中で、値の後ろにボタンを置く。ボタンは何を写すかを名前で言う", () => {
     placed.frame = 1000;
@@ -427,7 +744,7 @@ describe("DataTable をサーバーで描く", () => {
       /^<script>window\.yolosFrameLayout\|\|[\s\S]*?<\/script><div /,
     );
     expect(html).toMatch(
-      /<\/table><\/div><script>\(function\(f\)\{try\{window\.yolosFrameLayout\.layoutTable\(f\)/,
+      /<\/table><\/div><script>\(function\(f\)\{if\(f\.closest\("\[data-table-group\]"\)\)return;try\{window\.yolosFrameLayout\.layoutTable\(f\)/,
     );
     const { container } = render(<DataTable label="指標" rows={METRICS} />);
     expect(container.querySelector("script")).toBeNull();

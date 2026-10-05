@@ -245,6 +245,23 @@ describe("解き終えたとき", () => {
     expect(heading.innerHTML).toBe(["この", "結果を", "共有"].join("<wbr>"));
   });
 
+  test("結果のボックスの中の小見出しも、ゲームのセクションの中の小見出し（h2）で、文節の切れ目でだけ折れる", () => {
+    winWithOneMistake();
+    const result = screen.getByRole("region", { name: "4組すべて正解" });
+    const records = within(result).getByRole("heading", {
+      level: 2,
+      name: "これまでの成績",
+    });
+    expect(records.innerHTML).toBe(["これまでの", "成績"].join("<wbr>"));
+    const distribution = within(result).getByRole("heading", {
+      level: 2,
+      name: "ミスの数ごとの回数",
+    });
+    expect(distribution.innerHTML).toBe(
+      ["ミスの", "数ごとの", "回数"].join("<wbr>"),
+    );
+  });
+
   test("成績の名前は文節の切れ目で、組の語の並びは語の切れ目で折れるようにする", () => {
     winWithOneMistake();
     const table = screen.getByRole("table");

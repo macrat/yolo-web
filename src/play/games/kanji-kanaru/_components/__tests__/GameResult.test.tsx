@@ -89,6 +89,15 @@ describe("GameResult", () => {
     ).toBeInTheDocument();
   });
 
+  test("the reading table and the records table share one group so their row headers line up", () => {
+    renderResult(state("won", [MISS, MISS, HIT]));
+    const readings = screen.getByRole("table", { name: "「山」の読みと意味" });
+    const records = screen.getByRole("table", { name: "中級のこれまでの成績" });
+    const group = readings.closest("[data-table-group]");
+    expect(group).not.toBeNull();
+    expect(records.closest("[data-table-group]")).toBe(group);
+  });
+
   test("the distribution marks this time's row with 今回 in words", () => {
     renderResult(state("won", [MISS, MISS, HIT]));
     const list = screen.getByRole("list", {

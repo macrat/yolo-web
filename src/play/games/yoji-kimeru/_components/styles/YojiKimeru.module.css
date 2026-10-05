@@ -252,20 +252,6 @@
   font-size: var(--text-heading-sub);
 }
 
-.statsTable {
-  width: 100%;
-}
-
-/* 成績の名前は文節の切れ目で折る（§4 表のセル）。列は文節が割れない幅まで広がる。 */
-.statsTable th {
-  word-break: keep-all;
-}
-
-/* 値は数と単位の組で、あいだで折らない（§8）。値の列はいつもその幅を取る。 */
-.statsTable td {
-  white-space: nowrap;
-}
-
 .share {
   display: flex;
   flex-direction: column;

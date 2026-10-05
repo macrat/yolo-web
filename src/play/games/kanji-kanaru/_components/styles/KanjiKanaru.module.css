@@ -203,38 +203,6 @@
   line-height: var(--leading-body);
 }
 
-/* 結果の中の値の並び（§5 の表）。見出しの列は、どの表でもいちばん長い見出し（4字）の幅にし、同じ結果の中の
- * 表どうしで値の始まりをそろえる。セルは置いた折り所（文節の切れ目）でだけ折る（§4）。表がボックスに収まらない
- * ときだけ、枠を付けて横に送る。 */
-.tableFrame {
-  overflow-x: auto;
-}
-
-.tableFrame[data-scrolls] {
-  border: var(--rule-w) solid var(--rule);
-  padding: var(--box-padding);
-}
-
-.resultTable {
-  width: 100%;
-}
-
-.resultTable :is(th, td) {
-  word-break: keep-all;
-}
-
-/* 見出しの列の幅は、太字の4字（字の幅が 1em を少し超える）と右の余白で決め、表の幅が足りなくても縮めない。
- * どの表の見出しの列も同じ幅になり、2つの表で値の始まりがそろう。 */
-.resultTable th {
-  width: calc(4.1em + var(--space-8));
-  min-width: calc(4.1em + var(--space-8));
-}
-
-/* 数と単位（「8日」「88%」）は離さない（§8）。 */
-.unbreakable {
-  white-space: nowrap;
-}
-
 /* ボックスの中の小見出し。答えのあとに来るので、上に細い線を引いて分ける（§5）。 */
 .subHeading {
   padding-top: var(--space-16);
