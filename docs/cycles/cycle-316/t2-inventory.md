@@ -295,7 +295,7 @@ HEAD の `globals.css` で、関わるトークンは次の値を指す。
 
 変更前にも HEAD にも、`role="tab"`・`role="tablist"`・`aria-selected` を持つ要素と、名前に `tab` を含むクラスは無い。
 
-### 1-9. 色で状態を示すもので、index.md の T2 以外の行が名指しするもの
+### 1-9. 色で状態を示すもので、index.md と carryover-tasks.md の、T2 以外の行が名指しするもの
 
 1 章の表に載せていないもの、または載せたが T2 以外の行が名指ししているもの。
 

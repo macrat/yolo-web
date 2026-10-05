@@ -150,7 +150,7 @@
 | B-448 | モードラベル補助テキスト追加(旧タイルUI) | P5 | 着手: R-1プルーニングで対象ツール存続時に再評価。着手条件に加え新デザインでの意味残存も確認 |
 | B-503 | cron-parser プリセット拡充(5→8個) | P4 | 着手: R-1プルーニングで対象ツール存続時に再評価。 |
 | B-588 | git履歴の不要バイナリ/生成物を除去 | P3 | 着手: Ownerの指示まで着手しない(履歴書換+force pushの破壊的操作)。cycle284混入の.py5+.pyc1(未push)・cycle177/180のルートPNG7枚・cycle210のPNG14枚(追跡中)が.gitignore違反で肥大化。git rm不可で履歴書換要。詳細cycle-284.md |
-| B-785 | ステージした中身が作業ツリーと違うブログ記事でfrontmatter検証がコミットの中身を見ない | P4 | 着手: B-754の出荷後。pre-commitは作業ツリーのファイルを検証し、検証のスクリプトは記事の新旧をgitの履歴からパスで引く。詳細cycle-316/decisions.md |
+| B-785 | ステージした中身が作業ツリーと違うブログ記事でfrontmatter検証がコミットの中身を見ない | P4 | 着手: B-754の出荷後。pre-commitは作業ツリーのファイルを検証し、検証のスクリプトは記事の新旧をgitの履歴からパスで引く。詳細cycle-316/decisions-process-3.md |
 
 ## Done/Cancel (完了・中止)
 
@@ -161,7 +161,7 @@
 | B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | 316 | design-rolloutのT2で実装(共有の入力欄を16px以上に)。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | 316 | design-rolloutのT1(組版)で実装。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-577 | theme-color付与+410ダーク追従 | 316 | design-rolloutのT1で実装。manifestは扱わない(理由cycle-316/options.md)。出荷はB-754のmainへのマージで |
-| B-597 | テーマトグルのタップ標的高さ(28px) | 316 | design-rolloutのT1でテーマ切替を置かないと決めた(理由cycle-316/decisions.md)。出荷はB-754のmainへのマージで |
+| B-597 | テーマトグルのタップ標的高さ(28px) | 316 | design-rolloutのT1でテーマ切替を置かないと決めた(理由cycle-316/decisions-t1-t3.md)。出荷はB-754のmainへのマージで |
 | B-578 | クイズデータ内の旧青hexクレンジング | 316 | design-rolloutのT4-9で描かれない色の値を型とデータから外した。出荷はB-754のmainへのマージで |
 | B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | 316 | design-rolloutのT3で実装(一覧の行の名前を名前だけに)。出荷はB-754のmainへのマージで。詳細cycle-316/t3-design.md 6章 |
 | B-599 | 辞典/共有まわりのa11y軽微群 | 316 | design-rolloutのT3で実装(同部首の索引・大字のaria-hidden・共有の予告)。出荷はB-754のmainへのマージで。詳細cycle-316/t3-design.md 6章 |

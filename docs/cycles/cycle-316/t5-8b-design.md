@@ -1,6 +1,6 @@
 # T5-8b 縦に並ぶ表の見出しの列の幅の設計
 
-[decisions.md](./decisions.md) の「T5-12・T5-20d のレビュー（review-t5-12.md・review-t5-20d.md）を受けた PM の決定」の (2) と、review-t5-20d.md の指摘1に応える。`DataTable` が余った幅をどう配るかを共有の部品の側で決め、漢字カナールの結果のボックスで縦に並ぶ2つの表の縦の罫線をそろえる。案を比べて1つを推し、コードの変え方・試験・完了の条件・`DESIGN.md` と SKILL の文・順序を決める。実装はしない。レビューの記録は [第1回](./review-t5-8b-design.md)・[第2回](./review-t5-8b-design-2.md)。
+[decisions-t5-2.md](./decisions-t5-2.md) の「T5-12・T5-20d のレビュー（review-t5-12.md・review-t5-20d.md）を受けた PM の決定」の (2) と、review-t5-20d.md の指摘1に応える。`DataTable` が余った幅をどう配るかを共有の部品の側で決め、漢字カナールの結果のボックスで縦に並ぶ2つの表の縦の罫線をそろえる。案を比べて1つを推し、コードの変え方・試験・完了の条件・`DESIGN.md` と SKILL の文・順序を決める。実装はしない。レビューの記録は [第1回](./review-t5-8b-design.md)・[第2回](./review-t5-8b-design-2.md)。
 
 数には出自を付ける。
 
@@ -304,7 +304,7 @@ AP-I08 のとおり、この設計のレビューで文を確かめてから実�
 
 ## 6. 順序とコミット
 
-- **T5-8b と T5-20d は1つのコミットにする**（index.md「T5-8b の設計のレビュー（review-t5-8b-design.md）を受けた PM の決定」）。
+- **T5-8b と T5-20d は1つのコミットにする**（decisions-t5-1.md「T5-8b の設計のレビュー（review-t5-8b-design.md）を受けた PM の決定」）。
   - 理由: SKILL.md の `DataTable` の項は Markdown の1行で、T5-20d の直し（要素のセル）と T5-8b の書き換え（5-2）が同じ行に乗る。
   - コミットに入れるもの:
     - T5-20d の11ファイル
