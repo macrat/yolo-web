@@ -9,7 +9,7 @@
 - y 座標はページ先頭からの CSS px（ことわりのあるものは画面の上端から）。x 座標は画面の左端からの px で、見出し・パンくず・サイト名は最初の字の左端。
 - §5 のコンテンツ幅の左端は、320・375px で **27**、1280px で **179**（`DESIGN.md` §5 の表と同じ式）。§4 の主見出しは 45rem 未満で **33.28px**（2.08rem）、1280px で **65.28px**（4.08rem）。セクションの見出しは **23.84px** / **46.72px**、小見出しは **17px** / **33.28px**。
 - 数は、ことわりの無いものは `src/` のテスト（`__tests__`・`*.test.*`）を除いて数えた。
-- T5 の行は [index.md](./index.md) の「実施する作業」の T5。決定と申し送りの T5 に触れる行（[decisions-t1-t3.md](./decisions-t1-t3.md) の T3-9・T3-6/8、[decisions-t4.md](./decisions-t4.md) の T4 の棚卸しのレビュー・T4-7 の (6)・T4-17・T4-4c、[decisions-t5-1.md](./decisions-t5-1.md) の `Unix／タイムスタンプ` の折れ・unix-timestamp の表）も含めた。本文で「書き直す前の T5 の行」と書くのは、行を本書の事実にそろえて書き直す（`8ecefc6`）より前の行の言葉で、いまの行には無い。
+- T5 の行は [carryover-tasks.md](./carryover-tasks.md) の T5。決定と申し送りの T5 に触れる行（[decisions-t1-t3.md](./decisions-t1-t3.md) の T3-9・T3-6/8、[decisions-t4.md](./decisions-t4.md) の T4 の棚卸しのレビュー・T4-7 の (6)・T4-17・T4-4c、[decisions-t5-1.md](./decisions-t5-1.md) の `Unix／タイムスタンプ` の折れ・unix-timestamp の表）も含めた。本文で「書き直す前の T5 の行」と書くのは、行を本書の事実にそろえて書き直す（`8ecefc6`）より前の行の言葉で、いまの行には無い。
 - 数え方の手順と測ったページの一覧は 12章。
 
 ---

@@ -1,6 +1,6 @@
 # T6 サイトの外に出る画像の棚卸しと設計
 
-対象は `DESIGN.md` §10（サイトの外での見え方）と、それが引く §2（色）・§3（書体）・§5（線）です。index.md の T6 の行と [decisions-t6-t12.md](./decisions-t6-t12.md)（「——」の隙間）・[decisions-t4.md](./decisions-t4.md)（`resultHeadingName`）、[t4-design.md](./t4-design.md) 7-1・7-2・9章の T6 への受け渡しを、ここで1つずつ決めます。
+対象は `DESIGN.md` §10（サイトの外での見え方）と、それが引く §2（色）・§3（書体）・§5（線）です。carryover-tasks.md の T6 の行と [decisions-t6-t12.md](./decisions-t6-t12.md)（「——」の隙間）・[decisions-t4.md](./decisions-t4.md)（`resultHeadingName`）、[t4-design.md](./t4-design.md) 7-1・7-2・9章の T6 への受け渡しを、ここで1つずつ決めます。
 
 - 1章・2章は事実の列挙です（案と評価は3章から）。推測は「推測」と書きます。
 - 対象のコードは `fc9b08c`（`src/`・`public/`・`scripts/` の最後の変更は `d91cb5b`）。
@@ -69,7 +69,7 @@ character-personality（blazing-canvas）・traditional-color（ai）・伝統�
 | 色の上の字           | traditional-color と伝統色辞典は `result.color`・色の hex で面を塗り、字の色を `getContrastTextColor`（`src/play/color-utils.ts`）で決めて面の上に置く                                                                | §2「コンテンツの色の上に文字を置かない」「色見本には文字を載せず」に反する                                                          |
 | 印                   | 右上に円と一字（診断は「診」、伝統色辞典は「色」）を -6° 回して置く                                                                                                                                                   | §10「ほかの画像や印を足さない」に反する                                                                                             |
 | 名前                 | traditional-color は `result.title` をそのまま描き、「藍色(あいいろ)」（半角の丸括弧）が題になる。画面の見出しは `resultHeadingName` で「藍色」と、その下の読み「あいいろ」に分けている                               | decisions-t4.mdの「`resultHeadingName` にそろえる」                                                                                 |
-| 伝統色辞典           | 題は `{name}（{romaji}）`（「鴇（toki）」）、品名の欄に hex（「#eea9a9」）、`alt` は「日本の伝統色」                                                                                                                  | `alt` は一覧の名前「伝統色辞典」にそろえる（index.md の T6 の行）                                                                   |
+| 伝統色辞典           | 題は `{name}（{romaji}）`（「鴇（toki）」）、品名の欄に hex（「#eea9a9」）、`alt` は「日本の伝統色」                                                                                                                  | `alt` は一覧の名前「伝統色辞典」にそろえる（carryover-tasks.md の T6 の行）                                                         |
 | コメントとテストの名 | 3-6 の表                                                                                                                                                                                                              | t4-design.md 7-1                                                                                                                    |
 
 札の保存と共有の部品は `src/play/quiz/_components/FudaActions.tsx`。解き終えた画面の「この結果を共有」の区画（`ResultCard.tsx:496-521`）に、character-personality のときだけ「画像を保存」（プライマリ）と「画像を共有」を置く。保存はアンカーの `download` で PNG を落とし、`trackSave(…, "download", "fuda")`、`download` を持たない端末では共有シートへ進んで `web_share_files`。共有は `navigator.share({files})` で `trackShare("web_share", …, "fuda")`、できない端末では結果のページの URL を写して `clipboard`。共有の文は `result.title` をそのまま使う（`FudaActions.tsx:72`。同じ区画の文の共有 `ResultCard.tsx:456` は `resultNameWithReading` を使う）。
@@ -174,7 +174,7 @@ A' にしたときに消すもの・変えるもの:
 - **消す**: `src/lib/fuda-image.tsx`（描き方は新しい共通の描き方の1つにまとめる）・`src/lib/wairoHex.ts`（`WAIRO_HEX`・`pickResultWairoColor`・`WAIRO_INK_*`）・`src/lib/fudaSymbol.ts`・`src/play/color-utils.ts` と、それぞれのテスト（`fuda-image.test.tsx`・`wairoHex.test.ts`・`fudaSymbol.test.ts`・`src/play/__tests__/color-utils.test.ts`）。`wairoHex.test.ts` のうち、トークンの hex が globals.css のトークンから作れることを試す部分は、先にトークンの hex のテストへ移す（T6-0）。
 - **変える**: `FudaActions` は、名前を今の見た目の呼び名（結果の画像の保存と共有）にし、character-personality だけでなく、結果のページを持つ診断・クイズのすべての解き終えた画面に置く。画像の固定 URL を返す Route Handler は、character-personality の1つ（`…/fuda-image/route.ts`）をやめ、どの診断の結果も返す1つにする。置き場所は、専用の結果のディレクトリを持つ9本（`src/app/play/{animal-personality,character-fortune,character-personality,contrarian-fortune,impossible-advice,music-personality,traditional-color,unexpected-compatibility,yoji-personality}/result/[resultId]`）とも `[slug]` とも経路がぶつからない所を builder が決める（静的な名前のセグメントが `[slug]` より先に当たるので、`[slug]` の下に置くと専用のディレクトリを持つ診断に届かない）。共有の文は、同じ区画の文の共有と同じく `resultNameWithReading` で名前を組む。
 - **変えない**: GA に送る `surface` の値 `"fuda"`。ADR009 の率の分子がこの値で数えているので、値を変えると出荷の前後で数がつながらなくなる。コードの中では、この値を1か所（`src/lib/analytics.ts` の `ShareSurface`）で、次のとおり説明する: 「結果の画像の保存と共有を指す。診断・クイズの結果の画像と、irodori の結果の画像の保存（`content_type="game"`・`content_id="irodori"`）を含む。札（診断・クイズの結果の画像）に限った数を読むときは `content_type`・`content_id` で分ける。値の名前は、出荷の前後で数をつなげるためにそのまま残す」。
-- **ADR009 に書くこと**: 出荷の日から変わるものを ADR009 に書くのは T10 の受け持ち（index.md の T10 の行）なので、PM が T10 の行に次の2つを足す。
+- **ADR009 に書くこと**: 出荷の日から変わるものを ADR009 に書くのは T10 の受け持ち（carryover-tasks.md の T10 の行）なので、PM が T10 の行に次の2つを足す。
   - 同時に変わるもの（前後の差の原因を1つに断定できないもの。「来訪者の変化と読まない」の一覧には入れない。画像が変わったことによる本当の増減まで読み捨てることになるため）: 保存と共有する結果の画像の見た目が変わる（和色の面と印が消え、サイトの画面と同じ組み方になる）。T4-5 で保存と共有のボタンが最初の画面から出たことと同じ出荷で起きる。
   - 計測の出方が変わるもの: 出荷の日から、`surface="fuda"` は、character-personality の結果の画像に加えて、ほかの診断・クイズの結果の画像の保存と共有と、irodori の結果の画像の保存（`save`・`content_type="game"`・`content_id="irodori"`。3-5）を含む。札（診断・クイズの結果の画像）に限った数を読むときは `content_type`・`content_id` で分ける。ADR009 の率は `content_id` で character-personality に絞っているので、率の数え方は変わらない。値の名前「fuda」は、出荷の前後で数をつなげるためにそのまま残している。
 
@@ -212,7 +212,7 @@ A' にしたときに消すもの・変えるもの:
 - 名前に Zen Antique に無い字（𠮟・剝・塡・頰・纁。t4-inventory.md 3-2）があるときは、§3 のとおり名前の和文を丸ごと `"BIZ UDGothic"` で組む（`charsMissingFromZenAntique`、`src/lib/zen-antique-charset.ts`）。BIZ UDGothic にも無い字（纁・彐など）は、§3 の本文の書体の並びの末尾の Noto Sans JP で描き、幅もその書体で測る。Noto Sans JP はこのモジュールが自分で取り、取れなければ例外を投げてビルドを止める（`next/og` が黙って別の書体を取りに行き、失敗すると豆腐の画像を 200 で返すのに頼らない）。4つの書体のどれにも無い字は、絵文字のほか「₂」「₃」「✔」「✕」「✗」「❤」などもあり、画像に書く欄に来るとビルドが止まる。画像を出すルートを足すタスク（T6-3 以降）は、そのルートの欄の字を4書体の字の表で確かめる。
 - **書体を取れなかったら、ビルドを失敗させる。** いまは取れないと黙って `sans-serif` に落とし、違う顔の画像がそのまま出荷される（`ogp-image.tsx:213-214` のコメントのとおり）。画像はビルドで書き出すので、そこで止めれば出荷の前に分かる。
 
-代替テキスト: 画像に書いてある字を言う（例「yolos.net 動物性格診断の結果 エゾシカ——北の大地を群れで駆ける繊細戦士」）。ルートごとの決まった文（「クイズ結果」など）をやめる。伝統色辞典は「伝統色辞典」の語を含める（index.md の T6 の行）。
+代替テキスト: 画像に書いてある字を言う（例「yolos.net 動物性格診断の結果 エゾシカ——北の大地を群れで駆ける繊細戦士」）。ルートごとの決まった文（「クイズ結果」など）をやめる。伝統色辞典は「伝統色辞典」の語を含める（carryover-tasks.md の T6 の行）。
 
 **名前ごとの代替テキストの渡し方**（T6-2 で決まった形。T6-3 以降はそれに従う）。規約のファイル `opengraph-image.tsx` の `alt` は、ファイルごとに1つの決まった文しか出せない。ファイルが1ページに1つのルート（道具36本・privacy・ルート・daily・ゲーム4本・一覧のページ・`/about`）は、モジュールの読み込みのときにレジストリから画像の字どおりの文を作ればよいので、規約のファイルのままにする（下の「規約のファイルのままにするルート」）。動的なセグメント（ブログ・ユーモア・プレイ面・診断の結果・伝統色・索引・タグ・漢字・四字熟語）は、1つのファイルが多くのページの画像を描くので、次の渡し方を比べた（事実は2巡目・3巡目のレビューと T6-2 のレビューが `node_modules/next`（16.3.0）と最小のアプリで確かめたもの）。
 
