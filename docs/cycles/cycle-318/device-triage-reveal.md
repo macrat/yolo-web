@@ -31,7 +31,7 @@
 ## 3. 読み方と確かめ方の限り
 
 - 小さいビューポートの高さは、`height: 100vh; height: 100svh` を持つ見えない箱の `getBoundingClientRect().height` で読む。`svh` が効かないエンジンでは `100vh` になる。
-- 下端は「`100svh` がツールバーを出した高さに等しい」ことに頼る。iOS の版やアプリの中の Safari（4.9%）では、これが外れうる（WebKit bug 261185・255708。[device-triage-sources.md](./device-triage-sources.md) の「一次資料で決まらないこと」）。大きく読めるときは、今と同じふるまいに戻るだけで悪くならない。小さく読めるときは送りが余計に増え、まとまりが「画面より高い」と判じられると、4-5 の帯を上端から 8px に置く形に移りうる。device-triage.md D4 は、これを (iii) の残りとして 5章で見張る。
+- 下端は「`100svh` がツールバーを出した高さに等しい」ことに頼る。iOS 17.4 より前の Safari では、タブバーが隠れると `svh` が大きく読めうる（WebKit bug 261185）が、今と同じふるまいに戻るだけで悪くならない。アプリの中のブラウザ（SFSafariViewController・WKWebView）での値は確かめられない（bug 255708 と GA の分類のことは [device-triage-sources.md](./device-triage-sources.md) の「一次資料で決まらないこと」）。仮に小さく読めても、害は送りが数 px 増えることで、終えた率に出ない。device-triage.md D4 は、これを見張らずに受け入れる。
 - コンテナの Chromium にはツールバーが無く、`100svh` は `innerHeight` に等しい。この変更は、どの面の測りでも値を変えない。確かめられるのは単体試験だけである。
 - jsdom では、見えない箱は組まれず、高さが 0 になる。そのまま小さいほうを取ると範囲の高さが 0 になり、送りを使うほかの面の試験とふるまいが崩れる。そこで、読んだ高さが 0 以下のときは小さいほうを取らず、`visualViewport` の高さ（`visualViewport` が無ければ `innerHeight`）をそのまま使う。
 

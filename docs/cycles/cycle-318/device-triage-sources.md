@@ -29,6 +29,6 @@
 - iOS の VoiceOver が `aria-describedby` の文を読むか、いつ読むか（読み上げの詳しさの設定に左右されるかを含む）。
 - iOS の VoiceOver が、ページがプログラムで動かしたフォーカス（`focus()`）にカーソルを移すか。
 - ツールバーが出入りしたとき、画面の上端がページに対してどう動くか。
-- いまの iOS の Safari とアプリの中の Safari で、`100svh` がツールバーを出した高さに等しいか。WebKit に次の不具合がある（どれも 2026-10-05 に開いて状態を確かめた）。
+- いまの iOS の Safari とアプリの中のブラウザで、`100svh` がツールバーを出した高さに等しいか。WebKit に次の不具合がある（どれも 2026-10-05 に開いて状態を確かめた）。
   - bug 261185「[iOS] `svh`/`dvh` units are unexpectedly equal when Safari tab bar is not visible」（https://bugs.webkit.org/show_bug.cgi?id=261185 ）: RESOLVED FIXED（2023-11-13 にコミット）。タブバーが隠れると `svh` も大きくなっていた。直った版は、bug 255708 のコメントで iOS 17.4 とされる（Apple の文書では確かめていない）。それより前の iOS では、`min` が `visualViewport` の高さに戻る。
-  - bug 255708「lvh/vh viewport units are incorrectly sized relative to the small viewport in SFSVC」（https://bugs.webkit.org/show_bug.cgi?id=255708 ）: NEW（最後の変更 2025-12-05）。アプリの中の Safari（SFSafariViewController）で、ビューポートの単位が誤った大きさになる。2025-11-20 のコメントは、iOS 26.1 ではよくなったが、ツールバーが出ているときに `100dvh` が `100svh` より少し大きい（663px と 657px）と書く。`svh` が小さく読める向きで、送りが数 px 増える。
+  - bug 255708「lvh/vh viewport units are incorrectly sized relative to the small viewport in SFSVC」（https://bugs.webkit.org/show_bug.cgi?id=255708 ）: NEW（最後の変更 2025-12-05）。SFSafariViewController で、誤るのは `vh`・`lvh`（小さいビューポートに合わせた大きさになる）で、コメント9（2024-07-16）は `99svh` は正しい大きさだと書く。コメント17（2025-11-20）は、iOS 26.1 ではよくなったが、ツールバーが出ているときに `100dvh` が `100svh` より少し大きい（663px と 657px）と書き、どちらの単位の誤りかは言っていない。D4 の式は `svh` が効くエンジンでは `100vh` を使わないので、`vh` の誤りは当たらない。GA の「Safari (in-app)」（1章の 4.9%）は LINE などのアプリの中の WKWebView を含むので、この bug が当たる来訪者の割合は分からない。
