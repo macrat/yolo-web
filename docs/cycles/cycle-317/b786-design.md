@@ -18,7 +18,7 @@
 
 - 担当の Bash の cwd は担当の木に留まる。PostToolUse の整形は担当の木で Edit・Write したファイルに効き、`.claude/rules/` の paths（coding-rules.md・testing.md など）も担当の木のファイルに当たる。
 - 担当の木で担当が打った `git commit` では、pre-commit-check.sh の `.cwd` が担当の木になり、その木を検査する。担当の木に eslint の error（`@ts-ignore` と `as any`）を含む `src/__probe2.ts` を Write で作って `git commit` を打つと、hook が「ESLint check failed」で止め、出力のパスは担当の木（`.claude/worktrees/agent-<id>/src/__probe2.ts`）だった。よって hook は変えない（decisions.md 227・231・267 行と整合）。hook が eslint の warning では止めないのは、主の木でも同じ。
-- 主の木の検査は `tmp/` を拾わない（eslint.config.mjs 27 行の `globalIgnores`、tsconfig.json 34 行の `exclude`、vitest.config.mts 25 行の `exclude`、prettier は `.gitignore` 30 行の `tmp/*`）。`.claude/worktrees/` は拾う。主の木の `git status --porcelain` に `?? .claude/worktrees/` が出るので、`git add .` が担当の木を入れうる。第3節で除外を足す。
+- 主の木の検査は `tmp/` を拾わない（eslint.config.mjs 27 行の `globalIgnores`、tsconfig.json 34 行の `exclude`、vitest.config.mts 25 行の `exclude`、prettier は `.gitignore` 30 行の `tmp/*`）。`.claude/worktrees/` は拾う。主の木の `git status --porcelain` に `?? .claude/worktrees/` が出るので、`git add .` が担当の木を入れ、pre-commit-check.sh が担当の木を検査しうる。第3節で除外を足す。
 
 手順:
 
@@ -40,7 +40,7 @@
 - `.claude/agents/reviewer.md`: tools に `Write(/docs/cycles/**)` を足し、記録を新しいファイルとして書けるようにする。本文に第2節の手順5・6と、書くのはレビューの記録1本で、コミットしないことを書く。
 - `.claude/rules/worktrees.md`: paths は `.claude/worktrees/**` のまま。本文を第2節の手順2〜4・8の担当の側（起点を揃える・依存を置き書き換えない・自分の木だけをコミットする・push しない・取り込みはマージで PM がする・ファイルを主の木に写さない・採らないコミットは revert する）に書き直す。
 - `.claude/rules/` の常時読まれる規則（PM の依頼の決まり）: コミットに入るファイルを書く担当は必ず `isolation: "worktree"` で起こし、依頼に作業ブランチの名前と HEAD・ポートを書く。`docs/cycles/` の記録だけを書く担当は主の木で書かせる。手順1のとおり渡す中身をコミット済みにしてから起こす。並行させるのは触るファイルが重ならない担当だけ。依存を変える仕事は主の木で1つだけ。取り込みと消し方は第2節の手順7・8。push するのは作業ブランチだけで、担当の枝は push しない。reviewer とスクリーンショットの担当には、見る木のパス・枝・ポートを書く。主の木では PM 以外にコミットさせない。
-- `.gitignore` に `.claude/worktrees/`、eslint.config.mjs の `globalIgnores`・tsconfig.json の `exclude`・vitest.config.mts の `exclude` に `.claude/worktrees/**` を足す。主の木の `git add .`・format:check・lint・typecheck・test が担当の木を拾わない。
+- `.gitignore` に `.claude/worktrees/`、eslint.config.mjs の `globalIgnores`・tsconfig.json の `exclude`・vitest.config.mts の `exclude` に `.claude/worktrees/**` を足す。主の木の `git add .`・pre-commit-check.sh・format:check・lint・typecheck・test が担当の木を拾わない。prettier は `.gitignore` を読むので、prettier には別の設定は要らない。この追加は、担当を `isolation: "worktree"` で起こす最初の時点より前にコミットする。それより前に担当の木があると、主の木の `git status --porcelain` に `?? .claude/worktrees/` が出て、PM のコミット前の検査が担当の木を丸ごと prettier・eslint に掛ける（第1節 A と同じ道）。B-784 が pre-commit-check.sh に入れる `-uall`（b784-design.md）は、この追加と同じコミットかそのあとに入れる。
 - `docs/knowledge/playwright-mcp.md`: 結論に合わせて、関わる3か所を一貫した形で書き直す。
   - 93 行の「止めずに、自分で取り出した別のディレクトリ（`git worktree add` で取り出した木）で起こすか…」と、続く「`git diff HEAD -- <自分のパス> > "$DIR/mine.patch"` … `git -C <木> apply "$DIR/mine.patch"` で木に当ててから起こす」は、共有の木で書いた未コミットの変更を別の木へ運ぶ手順で、担当の木で書く担当には要らない。担当の木では自分の木でそのまま起こす、を主に書き直し、patch の手順は消す（主の木で書く担当はサーバーを起こす仕事を受けない）。
   - 109 行の「共有の作業ツリーで起こしたサーバーは…cwd もプロセスの名前（`next-server`）も同じなので、それでは見分けられない」は、担当の木で起こしたものは `ls -l /proc/<PID>/cwd` がその木を指すことで見分ける、を主に書き直す。
