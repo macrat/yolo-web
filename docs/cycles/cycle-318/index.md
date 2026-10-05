@@ -13,12 +13,14 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 
 ## 実施する作業
 
-- [ ] 実機に頼る項目（t5a-design.md 8章の8項目）を、項目ごとに (i) 端末に頼らない作り・(ii) Chromium の近似・(iii) 受け入れて出荷のあと GA で見張る、のどれで扱うかに振り分け（[device-triage.md](./device-triage.md)）、レビューに通す。重み付けに、8章の任意の GA の照会（character-personality の画面の大きさの割合）を使う
-- [ ] T5a-2: [t5a-measure.md](../cycle-316/t5a-measure.md) をレビュー第10回（[review-t5a-2-10.md](../cycle-316/review-t5a-2-10.md)）の指摘1（5-3 の押した行と進め方）と参考の4点から直し、承認までレビューを続ける
-- [ ] T5a-2b: `design-rollout-wip` の `20a29292`（character-personality の Q1 の文言）を戻し、T5a-2 の承認とあわせてコミットする。t5a-measure.md 0章の「コミットの名を書き入れる」指示を、コミットの名に置き換える
-- [ ] T5a-1: t5a-design.md 5章の文のうち `DESIGN.md` と `frontend-design` スキルのものを書き、レビューに通す
+- [x] 8章の任意の GA の照会（直近28日の診断のプレイ面の画面の大きさと OS・ブラウザ）を行う。結果の要約は振り分けの文書に写す
+- [ ] 実機に頼る項目を、項目ごとに (i) 端末に頼らない作り・(ii) Chromium の近似・(iii) 受け入れて出荷のあと GA で見張る、のどれで扱うかに振り分け（[device-triage.md](./device-triage.md)）、行き先（受け持つタスク）とともにレビューに通す。項目は t5a-design.md 8章の8項目と、B-623 の iOS の確かめ（知識クイズの「次へ」の二度押しで FAQ が開かないこと）
+- [ ] T5a-2b: `design-rollout-wip` の `20a29292`（character-personality の Q1 の文言）を担当の木で戻してコミットする（取り込みは T5a-2 の承認のあと）
+- [ ] T5a-2: 振り分けの承認のあと、[t5a-measure.md](../cycle-316/t5a-measure.md) をレビュー第10回（[review-t5a-2-10.md](../cycle-316/review-t5a-2-10.md)）の指摘1（5-3 の押した行と進め方）と参考の4点、振り分けが求める追記から直し、0章の「コミットの名を書き入れる」指示を T5a-2b のコミットの名に置き換える。第11回のレビューで T5a-2b のコミットと組で見てもらい、承認まで続ける
+- [ ] T5a-1: t5a-design.md 5章の文のうち `DESIGN.md` と `frontend-design` スキルのものを書き、振り分けが (i) としてこのタスクに渡すものを含めて、レビューに通す
 - [ ] T5a-3: `src/lib/reveal.ts` に、まとまりを見せる送りと着地の選び方（4-5・4-9）を足し、単体試験とともにレビューに通す
-- [ ] UI の変更（T5a-2b の Q1 の文言）の前後のスクリーンショットを撮り、来訪者の目で確かめる（375×550・320×550）
+- [ ] UI の変更（T5a-2b の Q1 の文言）の前後のスクリーンショットを、375×550・320×550・1280×800 のライトとダークで撮り、来訪者の目で確かめる
+- [ ] 次のサイクルへの申し送りを書く: 残りの T5a のタスク（T5a-5・T5a-6・T5a-4・T5a-7）、T5a-7 での測りの道具の組み直しと、そのための履歴の深め方と `cycle-316-records` の取り方、振り分けの結果のうち T5a-5・T5a-6・T5a-7・T9・T10 に渡すもの
 
 ## 作業計画
 
@@ -30,14 +32,17 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 
 ### 作業内容
 
-1. **実機に頼る項目の振り分け**: planner（general-purpose）が t5a-design.md 2章・4章・8章と、MDN・WebKit の一次資料を読み、8項目を (i)〜(iii) に振り分けて device-triage.md に書く。(iii) の項目は、見張る GA の数と戻す判断の線の案を添える（ADR009 に書くのは T10）。GA の照会は MCP を使うので foreground の担当で行う。reviewer に通す。
-2. **T5a-2**: builder（主の木。`docs/cycles/` の記録だけを書く）が t5a-measure.md を直す。5-3 の押した行と進め方は、cycle-316-records の記録（`tmp-records/scratchpad/rev-t5a2/` ほか）から分かれば書き、分からなければ5-3 の5つの画面を参考の値とし、T5a-7 が基準の版でも同じ手順で測り直す、と書く。reviewer の第11回に通す。測りの道具の組み直しは、それを使う T5a-7（次のサイクル）で行う。
-3. **T5a-2b**: builder（担当の木）が `git cherry-pick --no-commit 20a29292` で戻し、`git restore --staged -- .` で下ろし、差分が Q1 の3行だけであることを確かめてコミットする。T5a-2 が承認されてから PM が取り込む。
-4. **T5a-1**: builder（担当の木）が書き、reviewer に通す。T5a-2 の承認を待つ（t5a-design.md 7章）。
-5. **T5a-3**: builder（担当の木）が書き、reviewer に通す。T5a-1 の承認を待つ。
-6. すべてのあとに全体のレビューを受け、完了の処理で `design-rollout` に push する。
+順は「振り分け → T5a-2 → T5a-1 → T5a-3」である。振り分けは T5a-2 に入る前にレビューに通す（carryover.md の T5a の行・t5a-design.md 8章）。(i) や (ii) を選べば、t5a-measure.md の追記や組みの見直しが要りうるからである。T5a-2b だけは振り分けに左右されない（Q1 の文言は decisions-t5-2.md の「T5a-2 の測り」で決まっている）ので、振り分けと並べて作る。
 
-並行させるのは触るファイルが重ならないものだけにする（`.claude/rules/delegation.md`）。1（`docs/cycles/cycle-318/`）と 2（`docs/cycles/cycle-316/t5a-measure.md`）と 3（`src/play/quiz/data/character-personality.ts`）は重ならないので並行させる。
+1. **実機に頼る項目の振り分け**: planner（general-purpose。主の木で `docs/cycles/cycle-318/` だけを書く）が t5a-design.md 2章・4章・8章、MDN・WebKit の一次資料、GA の照会の結果を読み、9項目を (i)〜(iii) に振り分けて device-triage.md に書く。項目ごとに行き先を書く: (i) は作りを受け持つタスク（T5a-1 の規則の文・T5a-3・次のサイクルの T5a-5・T5a-6）、(ii) は T5a-7 に足す測り、(iii) は T9 に渡す確かめと、見張る GA の数と戻す線の案（ADR009 に書くのは T10）。GA の照会の要約（期間・数・留保）もこの文書に写す（照会の作業ファイルは `tmp/` で追われないため）。reviewer に通す。
+2. **T5a-2b**: builder（担当の木）が `git fetch origin design-rollout-wip` のあと `git cherry-pick --no-commit 20a29292` で戻し、`git restore --staged -- .` で下ろし、差分が Q1 の3行だけであることを確かめてコミットする。PM はまだ取り込まない。
+3. **T5a-2**: 振り分けの承認と、それが t5a-measure.md に求める追記が決まってから起こす。builder（主の木。`docs/cycles/` の記録だけを書く）が t5a-measure.md を直す。5-3 の押した行と進め方は、`cycle-316-records` の記録（`tmp-records/scratchpad/rev-t5a2/` ほか。`git fetch origin cycle-316-records` で取る）から分かれば書き、分からなければ 5-3 の5つの画面を参考の値とし、T5a-7 が基準の版でも同じ手順で測り直す、と書く。0章の指示は、2 のコミットの名に置き換える（取り込みは fast-forward なので名は変わらない）。reviewer の第11回は、t5a-measure.md と T5a-2b の担当の枝のコミットを組で見る。このクローンは浅く、0章が起点にする fff3d31f・db847969 が無いので、依頼に `git fetch --unshallow origin design-rollout`（または `--deepen`）を書く。承認されたら、PM が T5a-2b の枝を取り込み、t5a-measure.md をコミットする。測りの道具の組み直しは、それを使う T5a-7（次のサイクル）で行う。
+4. **T5a-1**: T5a-2 を主の木でコミットしてから、builder（担当の木）を起こす。振り分けが (i) として規則の文に渡すものを含めて書き、reviewer に通す。承認されたら PM が取り込む。
+5. **T5a-3**: T5a-1 を取り込んでから、builder（担当の木）を起こす。reviewer に通し、承認されたら PM が取り込む。
+6. **スクリーンショット**: 変更前は主の木の HEAD を、変更後は T5a-2b の担当の木のサーバー（依頼にポートを書く）を、375×550・320×550・1280×800 のライトとダークで撮る。
+7. すべてのあとに全体のレビューを受け、完了の処理で `design-rollout` に push する。
+
+並行させるのは触るファイルが重ならないものだけにする（`.claude/rules/delegation.md`）。1（`docs/cycles/cycle-318/`）と 2（`src/play/quiz/data/character-personality.ts`）は重ならないので並行させる。担当を起こす前に、担当が前提にする変更を主の木でコミットする。
 
 ### 検討した他の選択肢と判断理由
 
@@ -48,6 +53,7 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 ### 計画にあたって参考にした情報
 
 - [cycle-316/split-plan.md](../cycle-316/split-plan.md) 4・7、[cycle-316/carryover.md](../cycle-316/carryover.md)、[cycle-316/decisions-t5-2.md](../cycle-316/decisions-t5-2.md) の「T5a-2 の測り」、[cycle-316/t5a-design.md](../cycle-316/t5a-design.md) 7章・8章、[cycle-316/review-t5a-2-10.md](../cycle-316/review-t5a-2-10.md)、[cycle-317/index.md](../cycle-317/index.md)
+- GA4（Data API。property の runReport。2026-09-07〜2026-10-04）: 診断のプレイ面（15本）の page_view は 2,862、うち 89.7% が character-personality。iOS の Safari が 48.6%、アプリの中の Safari（4.9%）・iOS の Chrome（5.5%）・Mac の Safari を足すと、WebKit で描かれるものは約 64%。幅 360 以下 8.5%、画面の高さ 667 以下 5.1%、幅 320 以下 1.2%。BigQuery のエクスポートには解像度の列が無いので Data API を使った。要約と留保は device-triage.md に写す。
 - 外部仕様への依存: 実機の項目の振り分けは、iOS の Safari が `touch-action: manipulation` でダブルタップの拡大をしないことに依る（(i) の例）。2026-10-05 に一次資料で確かめた。
   - MDN `touch-action`（https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action ）: `manipulation` はパンとピンチの拡大を残し、ダブルタップの拡大などを止める。2019年9月からどのブラウザでも使える（Baseline Widely available）。
   - WebKit blog「More Responsive Tapping on iOS」（2015-12-15。https://webkit.org/blog/5610/more-responsive-tapping-on-ios/ ）: `touch-action: manipulation` の要素で始まる触れは、パンとピンチの拡大だけに使われ、ダブルタップの判定をしない。
