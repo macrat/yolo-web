@@ -2,6 +2,9 @@ import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   chooseLanding,
   groupRevealDistance,
+  measureGroupPlan,
+  measureHeadedBoxPlan,
+  measurePageTopPlan,
   planFromPageTop,
   planGroup,
   planHeadedBox,
@@ -118,7 +121,7 @@ describe("revealControl", () => {
     });
   });
 
-  test("visibleRange() の画面の下端（visualViewport の offsetTop + height）で測る", () => {
+  test("文字盤で visualViewport が狭まったときは、その下端（offsetTop + height）で測る", () => {
     vi.stubGlobal("visualViewport", { offsetTop: 0, height: 400 });
     revealControl(box(420, 468));
     expect(window.scrollBy).toHaveBeenCalledWith({
@@ -210,7 +213,7 @@ describe("revealResult", () => {
     });
   });
 
-  test("visibleRange() の画面の範囲（visualViewport の上端と高さ）で測る", () => {
+  test("文字盤で visualViewport が狭まったときは、その範囲で測る", () => {
     vi.stubGlobal("visualViewport", { offsetTop: 200, height: 300 });
     revealResult(box(450, 500), box(510, 3000));
     expect(window.scrollBy).toHaveBeenCalledWith({
@@ -258,6 +261,30 @@ describe("revealGroup", () => {
   });
 });
 
+describe("要素を測って着地の組を返す関数", () => {
+  test("measureGroupPlan は、最初の要素の上端から最後の要素の下端までをまとまりとする", () => {
+    expect(measureGroupPlan(box(300, 340), box(660, 700))).toEqual({
+      base: 108,
+      span: { min: 108, max: 292 },
+    });
+  });
+
+  test("measurePageTopPlan は、いまの送りの位置からページの頭へ戻す量（−scrollY）を基準にする", () => {
+    vi.stubGlobal("scrollY", 1200);
+    expect(measurePageTopPlan(box(-900, -860), box(-740, -700))).toEqual({
+      base: -1200,
+      span: { min: -1292, max: -908 },
+    });
+  });
+
+  test("measureHeadedBoxPlan は、頭の要素の下端で範囲を決める", () => {
+    expect(measureHeadedBoxPlan(box(400, 2000), box(900, 950))).toEqual({
+      base: 392,
+      span: { min: 358, max: 392 },
+    });
+  });
+});
+
 describe("groupRevealDistance", () => {
   test("端数は 8px の空きが欠けない向きに丸める", () => {
     const range = { top: 0, bottom: 600 };
@@ -295,6 +322,38 @@ describe("着地の組", () => {
       base: -1092,
       span: { min: -1092, max: -908 },
     });
+  });
+
+  test("画面より高い開始の画面は範囲が空で、押した点があってもキーボードでも、「はじめる」の下端が画面の下端から 8px 上に来る基準に着く", () => {
+    // 200% の開始の画面: いまの位置 1200、事実の行から「はじめる」まで 900 の高さ。
+    const plan = planFromPageTop({ top: -900, bottom: 0 }, 1200, range);
+    expect(plan.base).toBe(-592);
+    expect(plan.span.min).toBeGreaterThan(plan.span.max);
+    const landing = (point: { x: number; y: number } | null): number =>
+      chooseLanding({
+        plan,
+        point,
+        avoidFirst: [rect(400, 600)],
+        avoidNext: [],
+        scrollable: { min: -1200, max: 5000 },
+      });
+    expect(landing({ x: 100, y: 500 })).toBe(-592);
+    expect(landing(null)).toBe(-592);
+  });
+
+  test("画面より高いまとまりは、上端が端数でも、押した点があってもキーボードでも同じ整数の基準に着く", () => {
+    const plan = planGroup({ top: 100.3, bottom: 800 }, range);
+    expect(plan.base).toBe(92);
+    const landing = (point: { x: number; y: number } | null): number =>
+      chooseLanding({
+        plan,
+        point,
+        avoidFirst: [],
+        avoidNext: [],
+        scrollable: { min: -5000, max: 5000 },
+      });
+    expect(landing({ x: 100, y: 500 })).toBe(92);
+    expect(landing(null)).toBe(92);
   });
 
   test("頭を持つボックスは、上端を画面の上端から 8px 以上・画面の高さの 1/3 以下に置く送りの範囲を持つ", () => {
@@ -385,6 +444,11 @@ describe("chooseLanding", () => {
       ).toBe(6);
     });
 
+    test("上下に同じ近さで真下から外れる送りがあれば、下へ送るほうを選ぶ", () => {
+      // 下へ 21 送っても、上へ 21 送っても、矩形が点の真下から外れる。
+      expect(choose({ plan, avoidFirst: [rect(480, 520)] })).toBe(21);
+    });
+
     test("範囲の中にほかの押せるものを外す送りが無ければ、送らない", () => {
       expect(choose({ plan, avoidFirst: [rect(0, 1000)] })).toBe(0);
     });
@@ -439,6 +503,26 @@ describe("chooseLanding", () => {
         }),
       ).toBe(50);
     });
+
+    test("上下に同じ点の送りがあれば、下へ送るほうを選ぶ", () => {
+      // 範囲の両端（0 と 100）で、押せるものが点から同じ 40 離れる。
+      expect(
+        choose({
+          plan: { base: 50, span: { min: 0, max: 100 } },
+          avoidFirst: [rect(540, 560)],
+        }),
+      ).toBe(100);
+    });
+  });
+
+  test("範囲の端は空きが欠けない向きに丸め、整数の送りから選ぶ", () => {
+    expect(
+      choose({
+        plan: { base: 100, span: { min: 50.5, max: 300 } },
+        avoidFirst: [rect(560, 640)],
+        scrollable: { min: -1000, max: 120.5 },
+      }),
+    ).toBe(51);
   });
 
   test("見せる範囲を、ページが送れる範囲で打ち切る", () => {

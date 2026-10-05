@@ -109,7 +109,10 @@ export interface ScrollSpan {
   max: number;
 }
 
-/** 基準の送りと、見せるものが決めた形で画面に入っている送りの範囲。どちらもいまの位置から送る量で持つ。 */
+/**
+ * 基準の送りと、見せるものが決めた形で画面に入っている送りの範囲。どちらもいまの位置から送る量で持つ。
+ * 基準は、8px の空きが欠けない向きに丸めた整数で持つ。
+ */
 export interface LandingPlan {
   base: number;
   span: ScrollSpan;
@@ -148,21 +151,26 @@ export function groupRevealDistance(group: Edges, range: VisibleRange): number {
 }
 
 /**
- * まとまりが、上下に 8px をあけて画面に丸ごと入る送りの範囲。画面より高いまとまりは、上端を画面の上端から
- * 8px 下に置く送りだけにする。
+ * まとまりが、上下に 8px をあけて画面に丸ごと入る送りの範囲。上下の 8px を除いた画面より高いまとまりでは
+ * 空になる。
  */
-function groupSpan(group: Edges, range: VisibleRange): ScrollSpan {
-  const toTopAtGap = group.top - (range.top + REVEAL_GAP);
-  const toBottomAtGap = group.bottom - (range.bottom - REVEAL_GAP);
-  if (toBottomAtGap > toTopAtGap) return { min: toTopAtGap, max: toTopAtGap };
-  return { min: toBottomAtGap, max: toTopAtGap };
+function fittingSpan(group: Edges, range: VisibleRange): ScrollSpan {
+  return {
+    min: group.bottom - (range.bottom - REVEAL_GAP),
+    max: group.top - (range.top + REVEAL_GAP),
+  };
 }
 
-/** 上下どちらにも外れうるまとまり（問のまとまりなど）を見せる着地の組。基準は groupRevealDistance の送り。 */
+/**
+ * 上下どちらにも外れうるまとまり（問のまとまりなど）を見せる着地の組。基準は groupRevealDistance の送り。
+ * 範囲は丸ごと入る送りで、画面より高いまとまりでは、上端を画面の上端から 8px 下に置く基準の送りだけにする。
+ */
 export function planGroup(group: Edges, range: VisibleRange): LandingPlan {
+  const base = groupRevealDistance(group, range);
+  const span = fittingSpan(group, range);
   return {
-    base: groupRevealDistance(group, range),
-    span: groupSpan(group, range),
+    base,
+    span: span.min > span.max ? { min: base, max: base } : span,
   };
 }
 
@@ -171,6 +179,8 @@ export function planGroup(group: Edges, range: VisibleRange): LandingPlan {
  * 「はじめる」まで）の上端と下端。scrollY はいまの送りの位置。
  *
  * 基準はページの頭へ戻す送りで、そこで group の下端が画面の下端から 8px 上に入らなければ、そこに来るまで送る。
+ * 範囲は group が丸ごと入る送りで、画面より高い group では空になり、着地は基準（「はじめる」が画面に残る送り）
+ * のままになる。
  */
 export function planFromPageTop(
   group: Edges,
@@ -179,10 +189,10 @@ export function planFromPageTop(
 ): LandingPlan {
   return {
     base: Math.max(
-      -scrollY,
+      Math.floor(-scrollY),
       Math.ceil(group.bottom - (range.bottom - REVEAL_GAP)),
     ),
-    span: groupSpan(group, range),
+    span: fittingSpan(group, range),
   };
 }
 
@@ -242,7 +252,12 @@ function distanceToNearest(
   return nearest;
 }
 
-/** 範囲の中の送りを 1px 刻みで、基準に近い順に並べる。同じ近さなら下へ送るほうを先にする。 */
+/**
+ * 範囲の中の送りを 1px 刻みで、基準に近い順に並べる。
+ *
+ * 同じ近さなら下へ送るほうを先にする。来訪者は上から下へ読み進めるので、下へ送れば、これから読む続き
+ * （下の選択肢や説明）が画面に多く入る。
+ */
 function stepsNearBase(base: number, span: ScrollSpan): number[] {
   const start = Math.min(Math.max(base, span.min), span.max);
   const steps = [start];
@@ -287,9 +302,10 @@ export interface LandingChoice {
  */
 export function chooseLanding(choice: LandingChoice): number {
   const { plan, point, avoidFirst, avoidNext, scrollable } = choice;
+  // 範囲の端は 8px の空きが欠けない向きに丸め、整数の基準と同じ 1px の刻みの上で選ぶ。
   const span = {
-    min: Math.max(plan.span.min, scrollable.min),
-    max: Math.min(plan.span.max, scrollable.max),
+    min: Math.ceil(Math.max(plan.span.min, scrollable.min)),
+    max: Math.floor(Math.min(plan.span.max, scrollable.max)),
   };
   if (!point || span.min > span.max) return plan.base;
 
