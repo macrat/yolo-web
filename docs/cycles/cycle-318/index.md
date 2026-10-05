@@ -86,13 +86,14 @@ T5a-3: 第1回で、開始の画面が画面より高いとき押した点があ
 次のサイクルは、split-plan.md 7 の表の2行目（T5a）の後半を続ける。
 
 - **残りのタスク**: T5a-5（回答の本体）→ T5a-6（流れ）→ T5a-4（区切りとページの根の `touch-action`）→ T5a-7（測りと完了のレビュー）。中身・触るファイル・順は [t5a-design.md](../cycle-316/t5a-design.md) 7章。振り分けが各タスクに渡すものは [device-triage.md](./device-triage.md) 7章の行き先ごとの一覧（T5a-5 の答えたあとの字の13の宣言と `aria-describedby`、T5a-6 で `.intro`・`.stage` に `touch-action` を掛けないこと、T5a-4 の根の `touch-action`、T5a-7 に足す測り）。
-- **T5a-7 の測りの道具**: T5a-2 の builder の道具は残っていないので、T5a-7 が [t5a-measure.md](../cycle-316/t5a-measure.md) の文から組み直す。元にできるのはレビュアーの再測りの道具（`git fetch origin cycle-316-records` のあと `origin/cycle-316-records:tmp-records/scratchpad/rev-t5a2/`）だけである。基準の版の起点 fff3d31f・db847969 が手元に無いときは `git fetch --unshallow origin design-rollout` で取る。5-3 の基準の版の値は参考の値なので、T5a-7 が押す行と進め方を決め、基準の版でも測り直す。
+- **T5a-7 の測りの道具**: T5a-2 の builder の道具は残っていないので、T5a-7 が [t5a-measure.md](../cycle-316/t5a-measure.md) の文から組み直す。元にできるのはレビュアーの再測りの道具（`git fetch origin cycle-316-records` のあと `origin/cycle-316-records:tmp-records/scratchpad/rev-t5a2/`）だけである。基準の版の起点 fff3d31f・db847969 が手元に無いときは `git fetch --unshallow origin design-rollout` で取る。5-3 の基準の版の値は参考の値なので、T5a-7 が押す行と進め方を決め、基準の版でも測り直す。0章の二度押しの走査の手順のうち、「2打目で離れたか」「離れたとき」「別のタブや共有の画面を開く押し」「走査の次の1打目」と、押しごとの記録をページの外へ送る形は、このサイクルのレビューで文だけを詰めたもので、どの版でも走らせていない（走らせて確かめたのは、開いたタブの行き先の取り方を試しのページでだけ）。T5a-7 は道具を組んだら、比べる測りの前に、基準の版で数本を走らせて文のとおりに動くかを確かめ、動かない所は手順の文を直してレビューに通してから測る。
 - **T9・T10 に渡すもの**: device-triage.md 7章の T9・T10 の行（見張る危険・見張らずに受け入れた危険・Chromium の近似で代えたもの・T5a-7 で閉じたもの）と、5章の GA の見張りの案。carryover-tasks.md の T9 の行にも道筋を置いた。
 - **開始の画面の語**: `QuizContainer.tsx` の開始の画面の説明（「事実（種別・問題数・所要時間・タイプ数）」）を、開始の画面を触るタスクで DESIGN.md §8 の語（種別・問の数・かかる時間の行）と合わせて読めるか確かめる（T5a-1 のレビュー第2回の申し送り）。
 - backlog に起こしたもの: B-788（ゲームのページの根に `touch-action`）、B-789（サイト全体の hover の線を `(hover: hover)` に限るか）。
 
 ## 補足事項
 
+- 完了の処理のアンチパターンの点検（[review-ap-check.md](./review-ap-check.md)）で、PM が成果物を自分で読んでいなかったこと（AP-WF11）を指摘された。PM が、DESIGN.md・スキル・`reveal.ts`・2つの `GameContainer.tsx`・Q1 の文言・t5a-design.md の差分と、t5a-measure.md 0章、device-triage.md の 4章 D1〜D4・5〜7章を読み、前後の画像12枚をすべて見た。直すものは見つからなかった。t5a-measure.md 0章の走らせていない手順は、キャリーオーバーで T5a-7 に渡した。
 - ブログは書かない。来訪者に届く変更（Q1 の文言・`reveal.ts` の送り）は `design-rollout` の出荷まで本番に出ず、振り分けと測りの手順は内部の作業の材料で、読者の学びや楽しみにならない。
 - ADR は起票しない。出荷した賭けが無い。振り分けの GA の見張りの案（device-triage.md 5章）は、T10 が ADR009 に書く。
 - このサイクルは、セッションの初めに読み込まれるもの（`.claude/rules/`・CLAUDE.md）と、統合のブランチを扱う2つのスキルを変えていないので、main への手順のコミットは作らない。
