@@ -35,7 +35,7 @@ import {
   HISTORY_KEY,
 } from "@/play/games/nakamawake/_lib/storage";
 import { generateShareText } from "@/play/games/nakamawake/_lib/share";
-import { revealControl } from "@/lib/reveal";
+import { isInside, revealControl, visibleRange } from "@/lib/reveal";
 import {
   releaseSavedLayout,
   resultAreaNames,
@@ -168,21 +168,15 @@ function restoredState(state: NakamawakeGameState): NakamawakeGameState {
   };
 }
 
-/** 端末の今の画面の上端と下端（DESIGN.md §8。文字盤で狭まった範囲で測る）。 */
-function visibleRange(): { top: number; bottom: number } {
-  const viewport = window.visualViewport;
-  return viewport
-    ? { top: viewport.offsetTop, bottom: viewport.offsetTop + viewport.height }
-    : { top: 0, bottom: window.innerHeight };
-}
-
-/** フォーカスを受け取った語が画面の上に出ていれば、リングの幅を空けて語の上端まで即時に送り戻す。 */
+/** フォーカスを受け取った語が画面から出ていれば、リングの幅を空けて語の上端まで即時に送る。 */
 function revealFocusedWord(word: HTMLElement): void {
   const range = visibleRange();
-  const rect = word.getBoundingClientRect();
-  if (rect.top >= range.top && rect.bottom <= range.bottom) return;
+  if (isInside(word, range)) return;
   const margin = 16;
-  window.scrollBy({ top: rect.top - range.top - margin, behavior: "instant" });
+  window.scrollBy({
+    top: word.getBoundingClientRect().top - range.top - margin,
+    behavior: "instant",
+  });
 }
 
 /** 結果のボックスの頭（結果の名前の行）が画面から出ていれば、ボックスの上端を画面の上端のそばまで即時に送る。 */
