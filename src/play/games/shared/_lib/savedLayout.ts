@@ -55,7 +55,9 @@ interface SavedLayoutBaseOptions {
   /**
    * 解き終えた回の結果の区画。入力欄を見せない値と、前に同じ日・同じ難易度・同じ画面の幅と字の大きさで描いた
    * ときの結果の区画の高さ（ReservedResultArea が覚えたもの）を書く。その大きさで描いたことが無ければ、同じ字の
-   * 大きさでいちばん近い幅で描いた高さから見積もる。
+   * 大きさでいちばん近い幅で描いた高さから見積もる。同じ字の大きさで描いたことも無ければ、画面の高さ（100vh）を
+   * 書く。結果の区画（結果のボックス・共有・次の問題まで・ほかのゲームへの案内）は画面より高いので、区画の下の
+   * ものは読み込みのあいだ画面の外にあり、結果が出ても見えている所は動かない。
    */
   resultArea?: ResultAreaNames;
   /**
@@ -246,9 +248,9 @@ export function reserveSavedLayout(options: SavedLayoutOptions): void {
   if (finished && options.resultArea) {
     values.push(`${options.resultArea.inputVisibilityProperty}:hidden`);
     const height = heightFor(resultHeight, true);
-    if (height !== null) {
-      values.push(`${options.resultArea.heightProperty}:${height}px`);
-    }
+    values.push(
+      `${options.resultArea.heightProperty}:${height === null ? "100vh" : `${height}px`}`,
+    );
   }
   if (values.length === 0) return;
   const style = document.createElement("style");

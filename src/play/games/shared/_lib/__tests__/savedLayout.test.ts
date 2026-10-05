@@ -91,7 +91,7 @@ describe("reserveSavedLayout", () => {
     saveToday("intermediate", 4, "won");
     expect(reserve(YOJI)).toBe(":root{--board-rows:4;--hint-lines:4}");
     expect(reserve(KANJI)).toBe(
-      ":root{--board-rows:4;--game-input-visibility:hidden}",
+      ":root{--board-rows:4;--game-input-visibility:hidden;--game-result-height:100vh}",
     );
   });
 
@@ -103,7 +103,7 @@ describe("reserveSavedLayout", () => {
     );
   });
 
-  test("does not use a result height measured on another day, difficulty or text size", () => {
+  test("reserves the screen height when no result height was measured on the same day, difficulty and text size", () => {
     saveToday("intermediate", 6, "lost");
     const font = getComputedStyle(document.documentElement).fontSize;
     for (const record of [
@@ -125,7 +125,7 @@ describe("reserveSavedLayout", () => {
     ]) {
       localStorage.setItem("game-result-height", JSON.stringify(record));
       expect(reserve(KANJI)).toBe(
-        ":root{--board-rows:6;--game-input-visibility:hidden}",
+        ":root{--board-rows:6;--game-input-visibility:hidden;--game-result-height:100vh}",
       );
     }
   });
@@ -193,13 +193,17 @@ describe("reserveSavedLayout", () => {
     saveTodayWithoutDifficulty("playing");
     expect(reserve(NAKAMA)).toBeNull();
     saveTodayWithoutDifficulty("lost");
-    expect(reserve(NAKAMA)).toBe(":root{--game-input-visibility:hidden}");
+    expect(reserve(NAKAMA)).toBe(
+      ":root{--game-input-visibility:hidden;--game-result-height:100vh}",
+    );
     saveResultHeight("game-result-height", today, "", 980.2);
     expect(reserve(NAKAMA)).toBe(
       ":root{--game-input-visibility:hidden;--game-result-height:981px}",
     );
     saveResultHeight("game-result-height", today, "intermediate", 980.2);
-    expect(reserve(NAKAMA)).toBe(":root{--game-input-visibility:hidden}");
+    expect(reserve(NAKAMA)).toBe(
+      ":root{--game-input-visibility:hidden;--game-result-height:100vh}",
+    );
   });
 
   test("a game with its own finished status reserves the result area only for that status", () => {
