@@ -6,7 +6,7 @@
 # Read が一度に返すのは 25,000 トークンまでで、返るバイト数は中身で違う。実測では長い1行の
 # 文の箇条書き（cycle-316 の decisions.md）が 51,621 バイトで切れた（cycle-317 の b784-design.md）。
 #   LIMIT: これを超えたら確実に切れる線。コミットを止める。
-#   WARN:  どの中身でも Read 1回に収まると見込む線。超えたら注意を出し、そのサイクルの中で分ける。
+#   WARN:  どの中身でも Read 1回に収まると見込む線。超えたら Claude に注意を渡し、そのサイクルの中で分ける。
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
@@ -54,11 +54,11 @@ if [ -n "$OVER" ]; then
   exit 2
 fi
 
+# 注意はコミットを止めずに Claude の文脈へ届ける。exit 0 の stderr は debug log にしか行かないので、
+# stdout の JSON の additionalContext で渡す。
 if [ -n "$NEAR" ]; then
-  {
-    echo "サイクル文書が ${WARN} バイトを超えました（上限 ${LIMIT}）。このサイクルの中で別ファイルへ分けてください。"
-    printf '%s' "$NEAR"
-  } >&2
+  MESSAGE="サイクル文書が ${WARN} バイトを超えました（上限 ${LIMIT}）。このサイクルの中で別ファイルへ分けてください。"$'\n'"${NEAR}"
+  jq -n --arg msg "$MESSAGE" '{hookSpecificOutput: {hookEventName: "PreToolUse", additionalContext: $msg}}'
 fi
 
 exit 0
