@@ -59,6 +59,7 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 - 外部仕様への依存: 実機の項目の振り分けは、iOS の Safari が `touch-action: manipulation` でダブルタップの拡大をしないことに依る（(i) の例）。2026-10-05 に一次資料で確かめた。
   - MDN `touch-action`（https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action ）: `manipulation` はパンとピンチの拡大を残し、ダブルタップの拡大などを止める。2019年9月からどのブラウザでも使える（Baseline Widely available）。
   - WebKit blog「More Responsive Tapping on iOS」（2015-12-15。https://webkit.org/blog/5610/more-responsive-tapping-on-ios/ ）: `touch-action: manipulation` の要素で始まる触れは、パンとピンチの拡大だけに使われ、ダブルタップの判定をしない。
+  - 振り分けが頼るほかの仕様（Pointer Events 3 §8.2 の拡大の決まり・CSS Values 4 の `svh` と WebKit のその実装・`:has()` など）と、一次資料で決まらないことは [device-triage-sources.md](./device-triage-sources.md) にある。T5a-3 は画面の範囲を `100svh` の読みに頼る形に変える。
 
 ## レビュー結果
 
