@@ -21,7 +21,7 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 - [x] 振り分けの承認のあと、[device-triage-fixes.md](./device-triage-fixes.md) の直し（t5a-design.md・carryover-tasks.md の「T9 の実機で確かめる」などを振り分けの結果に合わせる）を入れ、backlog の案を起こし、レビューに通す
 - [x] T5a-1: t5a-design.md 5章の文のうち `DESIGN.md` と `frontend-design` スキルのものを書き、振り分けが (i) としてこのタスクに渡すものを含めて、レビューに通す
 - [ ] T5a-3: `src/lib/reveal.ts` に、まとまりを見せる送りと着地の選び方（4-5・4-9）を足す。あわせて、見えている画面の範囲（`visibleRange()`）を振り分けの D4 のとおり直し、同じ計算を面の中に持つ nakamawake・kanji-kanaru の `GameContainer.tsx` を `reveal.ts` にそろえる（道具とゲームの送りも変わる）。単体試験とともにレビューに通す
-- [ ] 次のサイクルへの申し送りを書く: 残りの T5a のタスク（T5a-5・T5a-6・T5a-4・T5a-7）、T5a-7 での測りの道具の組み直しと、そのための履歴の深め方と `cycle-316-records` の取り方、振り分けの結果のうち T5a-5・T5a-6・T5a-7・T9・T10 に渡すもの
+- [x] 次のサイクルへの申し送りを書く: 残りの T5a のタスク（T5a-5・T5a-6・T5a-4・T5a-7）、T5a-7 での測りの道具の組み直しと、そのための履歴の深め方と `cycle-316-records` の取り方、振り分けの結果のうち T5a-5・T5a-6・T5a-7・T9・T10 に渡すもの
 
 ## 作業計画
 
@@ -78,6 +78,14 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 T5a-2・T5a-2b: t5a-measure.md は第19回で承認された。5-3 の押した行と進め方は `cycle-316-records` から分からず、参考の値とし、T5a-7 が基準の版で測り直す。二度押しの走査の手順（次の1打目の決め方・離れた走査の扱い・比べる値・別のタブの行き先の取り方）を、どの組でも1通りに組める形にした。PM の判断: 2打目でページを離れた走査はやり直して消さず、来訪者にいちばん重い結果として数えて比べる。T5a-2b（Q1 の文言）は第11回で指摘が無く、前後の画像も来訪者の目で問題が無いと確かめられた。
 
 ## キャリーオーバー
+
+次のサイクルは、split-plan.md 7 の表の2行目（T5a）の後半を続ける。
+
+- **残りのタスク**: T5a-5（回答の本体）→ T5a-6（流れ）→ T5a-4（区切りとページの根の `touch-action`）→ T5a-7（測りと完了のレビュー）。中身・触るファイル・順は [t5a-design.md](../cycle-316/t5a-design.md) 7章。振り分けが各タスクに渡すものは [device-triage.md](./device-triage.md) 7章の行き先ごとの一覧（T5a-5 の答えたあとの字の13の宣言と `aria-describedby`、T5a-6 で `.intro`・`.stage` に `touch-action` を掛けないこと、T5a-4 の根の `touch-action`、T5a-7 に足す測り）。
+- **T5a-7 の測りの道具**: T5a-2 の builder の道具は残っていないので、T5a-7 が [t5a-measure.md](../cycle-316/t5a-measure.md) の文から組み直す。元にできるのはレビュアーの再測りの道具（`git fetch origin cycle-316-records` のあと `origin/cycle-316-records:tmp-records/scratchpad/rev-t5a2/`）だけである。基準の版の起点 fff3d31f・db847969 が手元に無いときは `git fetch --unshallow origin design-rollout` で取る。5-3 の基準の版の値は参考の値なので、T5a-7 が押す行と進め方を決め、基準の版でも測り直す。
+- **T9・T10 に渡すもの**: device-triage.md 7章の T9・T10 の行（見張る危険・見張らずに受け入れた危険・Chromium の近似で代えたもの・T5a-7 で閉じたもの）と、5章の GA の見張りの案。carryover-tasks.md の T9 の行にも道筋を置いた。
+- **開始の画面の語**: `QuizContainer.tsx` の開始の画面の説明（「事実（種別・問題数・所要時間・タイプ数）」）を、開始の画面を触るタスクで DESIGN.md §8 の語（種別・問の数・かかる時間の行）と合わせて読めるか確かめる（T5a-1 のレビュー第2回の申し送り）。
+- backlog に起こしたもの: B-788（ゲームのページの根に `touch-action`）、B-789（サイト全体の hover の線を `(hover: hover)` に限るか）。
 
 ## 補足事項
 
