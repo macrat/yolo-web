@@ -44,7 +44,7 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
 - 選択肢は `QuestionCard.tsx` が素の `button`（`styles.choiceButton`）で描き（107〜115行）、答えた知識クイズの行は `span`（`styles.choiceText`）に替わる（105〜106行）。押した診断の行の形は無く、`handleSelect`（54〜68行）が `onAnswer` を呼ぶと、`QuizContainer.tsx` の `handleAnswer`（98〜119行）がすぐ次の問か結果へ移る。`QuestionCard` は問ごとに作り直される（`QuizContainer.tsx` 203行の `key={question.id}`）。
 - 問の見出しへのフォーカスは、いまも `QuestionCard.tsx` 43〜46行がマウントのときに `focus({ preventScroll: true })` で移している。iOS の VoiceOver が新しい問の見出しで何を読むかは、T5a の前から出荷している振る舞いである。
 - 回答の画面に `touch-action` は無い。`src` で `touch-action` を持つのは `Slider.module.css` 59行の − と ＋ だけ。
-- ビューポートは Next.js の既定（`node_modules/next/dist/lib/metadata/default-metadata.js` 26行の `width: 'device-width'`）。`src/lib/site-metadata.ts` の `sharedViewport` は `themeColor` だけを決める。
+- ビューポートは Next.js の既定の `width=device-width`（`node_modules/next/dist/lib/metadata/default-metadata.js` 26行。`sharedViewport` は `themeColor` だけを決める）。
 - 診断のページの中身は、`QuizPlayPageLayout.tsx` が片の中に `QuizContainer`（開始・回答・解き終えた画面）と、よくある質問・勧める・関連・おすすめのセクションを並べる（63〜120行）。その外は `SiteFrame` の `main` とフッタである。
 - `globals.css` の hover の線（537〜567行）は、入力の種類で分けていない。指で押しても `:hover` に当たれば出る。
 - `globals.css` は `button` に `font-family: inherit`・`font-size: inherit`（332〜339行）だけを掛け、`*` を `box-sizing: border-box` にする（241〜244行）。`Button.module.css` の `.button` は `line-height: 1.4`・`text-align: start`・`border: none`・`cursor: pointer` を持つ。`src/play/quiz/` の CSS には、選択肢の祖先で字間や字形を決める規則は無い。
@@ -65,7 +65,7 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
   - **(b') 診断・クイズのページだけ、根の要素（`html`）に掛ける**: ヘッダ・余白・フッタを含め、ページのどこから始まる触れも覆う。ほかのページは変えない。
   - (c) サイトの全体（`html`）: ゲームも覆うが、2度の押しが害にならないブログ・辞典の読みものからも、2度の押しの身ぶりを奪う。T5a の範囲を越える。
 - **選ぶのは (b')**。2打目が落ちうる所をすべて覆い、失うものは (b) と同じで、2度の押しが害になるページだけに限る。覆いに穴があると、「1打目が `manipulation` の要素で、2打目がそうでない要素で始まったとき拡大になるか」という決まらないことが、そのまま来訪者に残る。ゲームにも同じ得があるので、ゲームのページに掛けることは、PM が backlog の行として起こす（6章）。
-- **組み方**: `QuizPlayPageLayout.tsx` が並べるもの（`QuizContainer` からおすすめまで）を、局所のクラスを持つ1つの箱で包み、`src/app/play/[slug]/page.module.css`（`QuizPlayPageLayout.tsx` が読み込む）に `:root:has(.<箱のクラス>) { touch-action: manipulation; }` を書く。このモジュールを読み込むのは診断・クイズのページ（`/play/[slug]` と `/play/music-personality`）だけである。CSS モジュールでこの形が書けることと `:has()` の対応は [device-triage-sources.md](./device-triage-sources.md) にある。`html` と `body` は `overflow-x: clip` で送れる要素にならないので、根の値は画面の送りまで届く（推論）。
+- **組み方**: `QuizPlayPageLayout.tsx` が並べるもの（`QuizContainer` からおすすめまで）を、局所のクラスを持つ1つの箱で包み、`src/app/play/[slug]/page.module.css`（`QuizPlayPageLayout.tsx` が読み込む）に `:root:has(.<箱のクラス>) { touch-action: manipulation; }` を書く。このモジュールを読み込むのは診断・クイズのページ（`/play/[slug]` と `/play/music-personality`）だけである。Pointer Events 3 §8.2 は、拡大の身ぶりについて、触れた要素から文書の要素（`html`）までの各要素の値を見ると定めるので、途中に送れる要素があっても根の値で2度の押しの拡大は止まる。Turbopack の `next build` でこの規則が組めて効くこと、`:has()` の対応、仕様の文は [device-triage-sources.md](./device-triage-sources.md) にある。
 - **害**: iOS の WebKit 58.9%。拡大は、来訪者が位置を見失い、ページを離れうる。押した形は見た目だけ。
 - **(iii) の残り**: いまの iOS が `manipulation` を記述どおりに扱わないことは確かめられない。起きれば iOS で解き終える来訪者が減りうるので、5章で見張る。
 
@@ -74,7 +74,7 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
 - T5a-4: 上の箱と `:root:has()` の規則を書く（`QuizPlayPageLayout.tsx`・`src/app/play/[slug]/page.module.css`）。T5a-4 はもとから `QuizPlayPageLayout.tsx` を触り、T5-3c のあとに置かれている。`Section` の間の罫線（`.section + .section`）が箱の中で同じに引かれることを確かめる。
 - T5a-6: `.intro`・`.stage` には掛けない（根が覆う）。
 - T5a-1: `frontend-design` スキルの「実装の技術」に、診断・クイズのページは、2打目がどこから触れ始めても拡大にならないよう、そのページだけ根の要素に `touch-action: manipulation` を掛ける、と書く。Slider の項と同じ理由（iOS の Safari は速い2度の押しを拡大に取りうる）で書く。
-- T5a-7（ii）: 全15本の開始・問・解き終えた画面のそれぞれで、`document.documentElement` の計算値の `touch-action` が `manipulation` であること。点で見る所は、問の区画・パンくず・よくある質問・関連・おすすめ・フッタ・ヘッダ・`main` の左右の余白とその外の余白で、`elementFromPoint` の要素から根までの祖先の値の交わりが `manipulation` を外れないこと。対として、診断・クイズでないページ（`/blog` と `/tools` の1つずつ）では根の値が `auto` であること。条件3 の 150ms（±1フレーム）。変更前の値は要らない。
+- T5a-7（ii）: 全15本の開始・問・解き終えた画面のそれぞれで、`document.documentElement` の計算値の `touch-action` が `manipulation` であること。点で見る所は、問の区画・パンくず・よくある質問・関連・おすすめ・フッタ・ヘッダ・`main` の左右の余白とその外の余白で、`elementFromPoint` の要素から根までの祖先の値の交わりが `manipulation` を外れないこと。対として、診断・クイズでないページ（`/blog` と `/tools` の1つずつ）を直に開いたときと、診断のページからヘッダのリンクで `/blog` に移ったあとに、根の値が `auto` であること。条件3 の 150ms（±1フレーム）。変更前の値は要らない。
 
 ### D2. 診断で押した行の hover の線が、押したあと出るか消えるか
 
@@ -107,7 +107,7 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
 **行き先**:
 
 - T5a-5: 答えたあとの字の `span` の規則（`QuestionCard.module.css`）に上の13の宣言を書く。
-- T5a-7（ii）: 全15本の各本1問で、押す前の `button` と押したあとの `span`（診断の押した行と答えた行、知識クイズの答えた行）の計算値を比べ、次がすべて等しいこと: `font-family`・`font-size`・`font-style`・`font-weight`・`font-stretch`・`font-variant-ligatures`・`font-variant-numeric`・`font-variant-position`・`font-variant-alternates`・`font-variant-east-asian`・`font-variant-caps`・`font-variant-emoji`・`font-kerning`・`font-size-adjust`・`font-feature-settings`・`font-variation-settings`・`font-optical-sizing`・`line-height`・`letter-spacing`・`word-spacing`・`text-transform`・`text-indent`・`text-align`・`white-space`・`word-break`・`overflow-wrap`・`line-break`・`padding-*`・`border-*-width`・`box-sizing`・`display`・`align-items`・`max-width`・`min-height`。Chromium が返さない値は比べず、その名を記録する。本ごとに名前の行数がいちばん多い問を選び、1行の名前・2行以上の名前・字を添える行が入るようにする。変更前の値は要らない（押したあとの形が新しい）。
+- T5a-7（ii）: 全15本の各本1問で、押す前の `button` と押したあとの `span`（診断の押した行と答えた行、知識クイズの答えた行）の計算値を比べ、次がすべて等しいこと: `font-` の family・size・style・weight・stretch・kerning・size-adjust・feature-settings・variation-settings・optical-sizing、`font-variant-` の ligatures・numeric・position・alternates・east-asian・caps・emoji、`line-height`・`letter-spacing`・`word-spacing`・`text-transform`・`text-indent`・`text-align`・`white-space`・`word-break`・`overflow-wrap`・`line-break`・`padding-*`・`border-*-width`・`box-sizing`・`display`・`align-items`・`max-width`・`min-height`。Chromium が返さない値は比べず、その名を記録する。本ごとに名前の行数がいちばん多い問を選び、1行の名前・2行以上の名前・字を添える行が入るようにする。変更前の値は要らない（押したあとの形が新しい）。
 - T9・T10: WebKit の `button` の内側の組みの差を、見張らずに受け入れた危険として記録する。
 
 ### D4. 問ごとの送りで、iOS のツールバーが出入りしたときも、まとまりが画面に入るか
@@ -115,9 +115,11 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
 **振り分け**: (i)。従に (ii)。残り（上端）を (iii)。
 
 - いまの `visibleRange()` は `visualViewport` の高さを使う。送ったときにツールバーが縮んでいれば、その大きい高さに合わせて送り、あとでツールバーが出ると、下の選択肢がツールバーの下に隠れうる（推論）。
-- **(i)**: 画面の範囲を `{ top: offsetTop, bottom: offsetTop + min(visualViewport.height, 小さいビューポートの高さ) }` にする（`offsetTop` は `visualViewport.offsetTop`）。高さどうしを比べてから上端に足すので、つまんで拡大して `offsetTop` が大きいときも、下端が画面の上のほうで切られない。小さいビューポートの高さは、`height: 100vh; height: 100svh` を持つ見えない箱の高さを読む（`svh` が効かないエンジンでは `100vh` になる）。小さいビューポートはツールバーが出た状態の大きさなので、ツールバーがどちらでも下は入る。文字盤が開いて `visualViewport` が縮んだときは、そちらが小さいので今までどおり文字盤の上で測る。ツールバーが縮んだ状態では送りが少し多めになることがあるが、来訪者が見るのは、まとまりが入った画面で変わらない。
+- **(i)**: 画面の範囲を `{ top: offsetTop, bottom: offsetTop + min(visualViewport.height, 小さいビューポートの高さ) }` にする（`offsetTop` は `visualViewport.offsetTop`）。`visualViewport` が無いときは `{ top: 0, bottom: min(innerHeight, 小さいビューポートの高さ) }`。読んだ高さが 0 以下のときの扱いは device-triage-reveal.md 3章。高さどうしを比べてから上端に足すので、つまんで拡大して `offsetTop` が大きいときも、下端が画面の上のほうで切られない。小さいビューポートの高さは、`height: 100vh; height: 100svh` を持つ見えない箱の高さを読む（`svh` が効かないエンジンでは `100vh` になる）。小さいビューポートはツールバーが出た状態の大きさなので、ツールバーがどちらでも下は入る。文字盤が開いて `visualViewport` が縮んだときは、そちらが小さいので今までどおり文字盤の上で測る。
 - **範囲をどこまで変えるか**: `reveal.ts` の `visibleRange()` を変え、nakamawake・kanji-kanaru の面の中の同じ計算もそろえる（案 (a)）。T5a-3 は道具とゲームのふるまいも変える。診断だけの範囲を別に持つ案と比べた理由、ふるまいが変わる面の一覧、読んだ高さが 0 のときの落とし先は [device-triage-reveal.md](./device-triage-reveal.md) にある。
-- **(iii) の残り（上端）**: 範囲の上端は今までどおり `visualViewport.offsetTop` で、ツールバーの出入りで上端がどう動くかは決まらない。上の 8px の空きを守る仕組みは無い。帯が上のツールバーの下に入りうる形を、確かめられない危険として受け入れ、5章で見張る。
+- **(iii) の残り**: 2つある。どちらも確かめられない危険として受け入れ、5章で見張る。
+  - 上端: 範囲の上端は今までどおり `visualViewport.offsetTop` で、ツールバーの出入りで上端がどう動くかは決まらない。上の 8px の空きを守る仕組みは無く、帯が上のツールバーの下に入りうる。
+  - `svh` の実装: 下端は `100svh` がツールバーを出した高さに等しいことに頼り、iOS の版やアプリの中の Safari（4.9%）では外れうる。外れ方と WebKit の不具合は device-triage-reveal.md 3章にある。
 - **害と得**: iOS 58.9% と Android の Chrome 27.7%（アドレスバーが出入りする）。高さ ≤667 の画面 5.1% で起きやすい（推論）。起きると、最後の選択肢が隠れ、来訪者が自分で送る。答えは変わらないが、B-614 の約束（選択肢が1画面に入る）が崩れる。
 
 **行き先**:
@@ -210,7 +212,7 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
 - **基線の回数**（BigQuery、2026-09-07〜10-04。実測）: iOS の Safari は `level_start` 776・`level_end` 577（74.4%）、Android の Chrome は 448・311（69.4%）。
 - **比べ方**: 出荷の前の28日（T10 の基線）と出荷のあとの28日で、iOS の Safari の率の変化から Android の Chrome の率の変化を引いた差を見る。出荷で同時に変わるもの（サイト全体の刷新・計測の出方の変化）は、両方のブラウザに同じに効くかぎり差で消える（推論）。
 - **拾える差の大きさ**: 上の回数で、前と後の回数が同じとすると、差の標準誤差は約 3.8 ポイント（算術。二項の近似）。線を標準誤差の2倍とすると約 7.6 ポイントで、iOS の Safari の終えた率が Android の Chrome と比べて約1割落ちないと越えない。56日にすると標準誤差は約 2.7、線は約 5.4 ポイントになる（算術）。28日と56日のどちらで読むかは PM が選ぶ。T10 は基線の回数で計算し直して ADR009 に書く。
-- **見張るもの**: 残りが終えた率に出うるもの。D1 の残り（いまの iOS が `manipulation` を記述どおりに扱わず、2度の押しで拡大する）と、D4 の残り（ツールバーの出入りで帯が上のツールバーの下に入る）。
+- **見張るもの**: 残りが終えた率に出うるもの。D1 の残り（いまの iOS が `manipulation` を記述どおりに扱わず、2度の押しで拡大する）と、D4 の残り（ツールバーの出入りで帯が上のツールバーの下に入る。`svh` が誤って読まれる）。
 - **線を越えたら**: PM が T5a の回答の画面のどの変更によるかを調べ、戻すかを決める。
 - **見張らずに受け入れるもの**: D2（見た目だけ）、D3（字が数 px 動くか行が変わるだけ）、D5（設問の飛びはむしろ早く結果に着き、終えた率に出ない。B-613 まで見えない）、D6・D7（GA は読み上げの来訪者を見分けられない）。ADR009 に「見張らずに受け入れた危険」として書く。
 
@@ -220,14 +222,14 @@ GA4 の Data API で取った（期間 2026-09-07〜2026-10-04、28日、JST。�
 
 ## 7. 行き先ごとの一覧
 
-| 行き先                 | 受け持つこと                                                                                                                                                                                                                |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| T5a-1                  | スキルの「実装の技術」に、診断・クイズのページだけ根の要素に `touch-action: manipulation` を掛けることを書く（D1）。`DESIGN.md` §8 の画面の範囲の文を書き換え、スキルの送りの項に `visibleRange()` の式を書く（D4）         |
-| T5a-3                  | `visibleRange()` を `offsetTop + min(visualViewport の高さ, 100svh の高さ)` の下端にし、読んだ高さが 0 以下なら `visualViewport` に落とす。nakamawake・kanji-kanaru の同じ計算をそろえる。単体試験の6つ（D4）               |
-| T5a-2 / t5a-measure.md | 0章の終わりに1文を足す: 「T5a-7 は、この文書の測りに加えて、cycle-318/device-triage.md 7章の T5a-7 の行の測りを行う。D2 の `:hover` の記録と D5 の2打目をずらす走査は、基準の版と変更後の版で測る。」ほかの追記は要らない   |
-| T5a-4                  | `QuizPlayPageLayout.tsx` が並べるものを局所のクラスの箱で包み、`src/app/play/[slug]/page.module.css` に `:root:has(.<箱のクラス>) { touch-action: manipulation; }` を書く（D1）                                             |
-| T5a-5                  | 答えたあとの字の `span` に `button` の既定と同じ13の宣言（D3）。`aria-describedby` は押した行だけ、正誤は行の中の字（D6）                                                                                                   |
-| T5a-6                  | `.intro`・`.stage` に `touch-action` を掛けない（根が覆う。D1）。区画を低くしない・着地の選び方（D9）                                                                                                                       |
-| T5a-7                  | D1 の根の `touch-action`（ヘッダ・余白・フッタの点と、ほかのページの対を含む）、D2 の `:hover`、D3 の計算値の一致、D4 の `100svh`、D5 のずらしの走査（D9 を兼ねる）、D6・D7 のアクセシビリティの木。D8 は条件1・2・8 のまま |
-| T9                     | 実機の確かめは行わない。見張らずに受け入れた危険: D2・D3・D5・D6・D7。見張る危険: D1 の残り・D4 の上端。近似で代えた: D8。T5a-7 の測りで閉じた: D9（B-623）                                                                 |
-| T10                    | ADR009 に、5章の見張り（数・線・28日か56日か）、見張らずに受け入れた危険、B-620 の材料が T5a-7 のずらしの走査と B-613 であることを書く                                                                                      |
+| 行き先                 | 受け持つこと                                                                                                                                                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T5a-1                  | スキルの「実装の技術」に、診断・クイズのページだけ根の要素に `touch-action: manipulation` を掛けることを書く（D1）。`DESIGN.md` §8 の画面の範囲の文を書き換え、スキルの送りの項に `visibleRange()` の式を書く（D4）                         |
+| T5a-3                  | `visibleRange()` を `offsetTop + min(visualViewport の高さ, 100svh の高さ)` の下端にし（無いときは `min(innerHeight, …)`）、読んだ高さが 0 以下なら小さいほうを取らない。nakamawake・kanji-kanaru の同じ計算をそろえる。単体試験の6つ（D4） |
+| T5a-2 / t5a-measure.md | 0章の終わりに1文を足す: 「T5a-7 は、この文書の測りに加えて、cycle-318/device-triage.md 7章の T5a-7 の行の測りを行う。D2 の `:hover` の記録と D5 の2打目をずらす走査は、基準の版と変更後の版で測る。」ほかの追記は要らない                   |
+| T5a-4                  | `QuizPlayPageLayout.tsx` が並べるものを局所のクラスの箱で包み、`src/app/play/[slug]/page.module.css` に `:root:has(.<箱のクラス>) { touch-action: manipulation; }` を書く（D1）                                                             |
+| T5a-5                  | 答えたあとの字の `span` に `button` の既定と同じ13の宣言（D3）。`aria-describedby` は押した行だけ、正誤は行の中の字（D6）                                                                                                                   |
+| T5a-6                  | `.intro`・`.stage` に `touch-action` を掛けない（根が覆う。D1）。区画を低くしない・着地の選び方（D9）                                                                                                                                       |
+| T5a-7                  | D1 の根の `touch-action`（ヘッダ・余白・フッタの点と、ほかのページの対を含む）、D2 の `:hover`、D3 の計算値の一致、D4 の `100svh`、D5 のずらしの走査（D9 を兼ねる）、D6・D7 のアクセシビリティの木。D8 は条件1・2・8 のまま                 |
+| T9                     | 実機の確かめは行わない。見張らずに受け入れた危険: D2・D3・D5・D6・D7。見張る危険: D1 の残り・D4 の上端と `svh` の実装。近似で代えた: D8。T5a-7 の測りで閉じた: D9（B-623）                                                                  |
+| T10                    | ADR009 に、5章の見張り（数・線・28日か56日か）、見張らずに受け入れた危険、B-620 の材料が T5a-7 のずらしの走査と B-613 であることを書く                                                                                                      |

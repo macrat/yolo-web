@@ -4,7 +4,8 @@
 
 ## 確かめたこと
 
-- MDN `touch-action`（https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action ）: `manipulation` はパンとつまむ拡大を残し、ダブルタップの拡大を止め、click を遅らせる必要を無くす。触れが始まったとき、触れた要素とその祖先（最初の送れる要素まで）の値の交わりが効く。触れの途中で値を変えても、その触れには効かない。
+- MDN `touch-action`（https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action ）: `manipulation` はパンとつまむ拡大を残し、ダブルタップの拡大を止め、click を遅らせる必要を無くす。触れが始まったとき、触れた要素とその祖先の値の交わりが効く（MDN は「最初の送れる要素まで」と書くが、これはパンの決まりで、拡大は下の Pointer Events 3 のとおり文書の要素まで見る）。触れの途中で値を変えても、その触れには効かない。
+- W3C Pointer Events Level 3（勧告 2026-06-30。https://www.w3.org/TR/pointerevents3/ ）§8.2: 「A direct manipulation interaction for panning is supported if it conforms to the touch-action property of each element between the hit tested element and its nearest inclusive ancestor that is a scroll container」「A direct manipulation interaction for zooming is supported if it conforms to the touch-action property of each element between the hit tested element and the document element of the top-level browsing context」。拡大を止めるには根（`html`）の値で足り、途中に送れる要素（`ProgressBar` の `overflow: hidden` など）があっても変わらない。
 - WebKit blog「More Responsive Tapping on iOS」（2015年。https://webkit.org/blog/5610/more-responsive-tapping-on-ios/ ）: iOS は1回の押しと2度の押しを見分けるため 350ms 待つ。`width=device-width` のページで初めの倍率のときは、**2度の押しの身ぶりを止めることで**1回の押しを速くした。初めの倍率でないとき（つまんで拡大したあと）は、この扱いにならない。`touch-action: manipulation` の要素で始まる触れは、パンとつまむ拡大だけに使われ、これは**どの倍率でも**効く。祖先のどれかが `manipulation` なら1回の押しは速い。
 - MDN `@media (hover)`（https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover ）: `none` は主な入力が hover できないか、しにくいもの（長押しで hover を模すモバイル）。Baseline（2018年12月から）。
 - Apple「Safari Web Content Guide — Handling Events」（https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html ）: 押せる要素を1本指で押すと mouseover → mousemove → mousedown → mouseup → click が送られる。mouseout はほかの押せる要素を押したときだけ起きる。**保守されない古い文書**（2016-12-12 更新）なので、いまの iOS がそう振る舞う根拠にはしない。
@@ -17,7 +18,7 @@
 
 ## このリポジトリで確かめたこと
 
-- Next.js が同梱する `postcss-modules-local-by-default`（`node_modules/next/dist/compiled/`）を pure の決まりで動かすと、`:root:has(.<局所のクラス>) { … }` は通り（局所のクラスを含むため。クラスは局所の名に替わる）、`:root { … }` だけの形は「not pure」で止まる。ページの CSS モジュールに根の規則を書く形（D1）は、この形で書く。
+- このリポジトリの `npm run build` は `next build`（Next 16.3.0）で、CSS Modules は Turbopack が組む。小さなアプリを `next build` で組んだ結果（[review-triage-3.md](./review-triage-3.md) の「D1 (b') を確かめたこと」）: `:root:has(.box) { touch-action: manipulation; }` は止まらずに通り、出力は `:root:has(.p-module__37q2Da__box){touch-action:manipulation}` だった。Chromium での `html` の計算値の `touch-action` は、箱のあるページで `manipulation`、箱の無いページを直に開いたときと、箱のあるページからリンクで移ったとき（クライアントの遷移で、CSS は読み込まれたまま残る）に `auto`、戻ったときに再び `manipulation` だった。ページの CSS モジュールに根の規則を書く形（D1）は、この形で書く。古いブラウザで `:has()` が効かなくても、今と同じに戻るだけである。
 
 ## 一次資料で決まらないこと
 
@@ -28,3 +29,6 @@
 - iOS の VoiceOver が `aria-describedby` の文を読むか、いつ読むか（読み上げの詳しさの設定に左右されるかを含む）。
 - iOS の VoiceOver が、ページがプログラムで動かしたフォーカス（`focus()`）にカーソルを移すか。
 - ツールバーが出入りしたとき、画面の上端がページに対してどう動くか。
+- いまの iOS の Safari とアプリの中の Safari で、`100svh` がツールバーを出した高さに等しいか。WebKit に次の不具合がある（どれも 2026-10-05 に開いて状態を確かめた）。
+  - bug 261185「[iOS] `svh`/`dvh` units are unexpectedly equal when Safari tab bar is not visible」（https://bugs.webkit.org/show_bug.cgi?id=261185 ）: RESOLVED FIXED（2023-11-13 にコミット）。タブバーが隠れると `svh` も大きくなっていた。直った版は、bug 255708 のコメントで iOS 17.4 とされる（Apple の文書では確かめていない）。それより前の iOS では、`min` が `visualViewport` の高さに戻る。
+  - bug 255708「lvh/vh viewport units are incorrectly sized relative to the small viewport in SFSVC」（https://bugs.webkit.org/show_bug.cgi?id=255708 ）: NEW（最後の変更 2025-12-05）。アプリの中の Safari（SFSafariViewController）で、ビューポートの単位が誤った大きさになる。2025-11-20 のコメントは、iOS 26.1 ではよくなったが、ツールバーが出ているときに `100dvh` が `100svh` より少し大きい（663px と 657px）と書く。`svh` が小さく読める向きで、送りが数 px 増える。

@@ -1,6 +1,6 @@
 # 画面の範囲を変える案と影響（device-triage.md D4）
 
-[device-triage.md](./device-triage.md) D4 は、送りが使う「画面の範囲」を `{ top: offsetTop, bottom: offsetTop + min(visualViewport.height, 小さいビューポートの高さ) }` にする（`offsetTop` は `visualViewport.offsetTop`）。ここには、その範囲をどこまで変えるかの案の比べと、変えたときにふるまいが変わる面を置く。
+[device-triage.md](./device-triage.md) D4 は、送りが使う「画面の範囲」を `{ top: offsetTop, bottom: offsetTop + min(visualViewport.height, 小さいビューポートの高さ) }` にする（`offsetTop` は `visualViewport.offsetTop`）。`visualViewport` が無いときは `{ top: 0, bottom: min(innerHeight, 小さいビューポートの高さ) }` で、2つの枝を同じ形にする。ここには、その範囲をどこまで変えるかの案の比べと、変えたときにふるまいが変わる面を置く。
 
 ## 1. 案
 
@@ -31,7 +31,8 @@
 ## 3. 読み方と確かめ方の限り
 
 - 小さいビューポートの高さは、`height: 100vh; height: 100svh` を持つ見えない箱の `getBoundingClientRect().height` で読む。`svh` が効かないエンジンでは `100vh` になる。
+- 下端は「`100svh` がツールバーを出した高さに等しい」ことに頼る。iOS の版やアプリの中の Safari（4.9%）では、これが外れうる（WebKit bug 261185・255708。[device-triage-sources.md](./device-triage-sources.md) の「一次資料で決まらないこと」）。大きく読めるときは、今と同じふるまいに戻るだけで悪くならない。小さく読めるときは送りが余計に増え、まとまりが「画面より高い」と判じられると、4-5 の帯を上端から 8px に置く形に移りうる。device-triage.md D4 は、これを (iii) の残りとして 5章で見張る。
 - コンテナの Chromium にはツールバーが無く、`100svh` は `innerHeight` に等しい。この変更は、どの面の測りでも値を変えない。確かめられるのは単体試験だけである。
-- jsdom では、見えない箱は組まれず、高さが 0 になる。そのまま小さいほうを取ると範囲の高さが 0 になり、送りを使うほかの面の試験とふるまいが崩れる。そこで、読んだ高さが 0 以下のときは `visualViewport` の高さ（`visualViewport` が無ければ `innerHeight`）を使う。
+- jsdom では、見えない箱は組まれず、高さが 0 になる。そのまま小さいほうを取ると範囲の高さが 0 になり、送りを使うほかの面の試験とふるまいが崩れる。そこで、読んだ高さが 0 以下のときは小さいほうを取らず、`visualViewport` の高さ（`visualViewport` が無ければ `innerHeight`）をそのまま使う。
 
-T5a-3 の単体試験に入れるもの（6つ）: 小さいビューポートが `visualViewport` より低い・高い・等しい、読んだ高さが 0、`visualViewport` が無い、`offsetTop` が 0 でなく `offsetTop + visualViewport.height` が小さいビューポートの高さを超える（つまんで拡大したとき。下端が `offsetTop + min(…)` になり、小さいビューポートの高さで切られないこと）。道具とゲームの既存の試験がそのまま通ること。
+T5a-3 の単体試験に入れるもの（6つ）: 小さいビューポートが `visualViewport` より低い・高い・等しい、読んだ高さが 0（範囲は `{ top: offsetTop, bottom: offsetTop + visualViewport.height }`）、`visualViewport` が無い（小さいビューポートが `innerHeight` より低いとき範囲は `{ top: 0, bottom: 小さいビューポートの高さ }`、読んだ高さが 0 のとき `{ top: 0, bottom: innerHeight }`）、`offsetTop` が 0 でなく `offsetTop + visualViewport.height` が小さいビューポートの高さを超える（つまんで拡大したとき。下端が `offsetTop + min(…)` になり、小さいビューポートの高さで切られないこと）。道具とゲームの既存の試験がそのまま通ること。

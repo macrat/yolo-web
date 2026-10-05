@@ -38,7 +38,7 @@
 - **t5a-design.md 5章**に、`DESIGN.md` §8 の文の書き換えを足す。§8 の「この節の送りはどれも、画面の範囲を文字盤で狭まった範囲（`visualViewport`）で測る。文字盤に隠れたものは、来訪者には見えていないからである。」を、次にする。
   > この節の送りはどれも、画面の範囲を、文字盤で狭まった範囲（`visualViewport`）と、出入りするツールバーを出した範囲（小さいビューポート）の、狭いほうで測る。文字盤に隠れたものは来訪者に見えておらず、あとで出てくるツールバーに隠れるものも、そのときには見えなくなるからである。
 - **t5a-design.md 5章の `frontend-design` スキルの送りの項**に、次の文を足す。
-  > 画面の範囲は `visibleRange()` が決める。上端は `visualViewport.offsetTop`、下端は `offsetTop + min(visualViewport.height, 小さいビューポートの高さ)` で、小さいビューポートの高さは `height: 100vh; height: 100svh` の見えない箱の高さで読む（読めないとき（高さ 0 以下）は `visualViewport` の高さ）。面の中で同じ計算を書かない。
+  > 画面の範囲は `visibleRange()` が決める。上端は `visualViewport.offsetTop`、下端は `offsetTop + min(visualViewport.height, 小さいビューポートの高さ)` で、小さいビューポートの高さは `height: 100vh; height: 100svh` の見えない箱の高さで読む。`visualViewport` が無いときは、上端 0、下端 `min(innerHeight, 小さいビューポートの高さ)`。読んだ高さが 0 以下のときは小さいほうを取らない。面の中で同じ計算を書かない。
 - **t5a-design.md 7章の T5a-3 の行**: 中身に「`visibleRange()` を上の式にする（4-5）。nakamawake・kanji-kanaru の面の中の同じ計算を `visibleRange()` に替える。単体試験に cycle-318/device-triage-reveal.md 3章の6つを足し、道具とゲームの既存の試験が通ること」を足す。触るファイルに `src/play/games/nakamawake/_components/GameContainer.tsx`・`src/play/games/kanji-kanaru/_components/GameContainer.tsx` を足す。
 
 ## D5（2打目のずれ）
@@ -60,8 +60,8 @@
 - **t5a-design.md 1-1 の表**の「iOS の Safari での二度打ち・押した形の見え方・送りを T9 の実機で確かめる」を、「iOS の Safari での二度打ち・押した形の見え方・送りの扱いは cycle-318/device-triage.md に従う」にする。
 - **t5a-design.md 6章の冒頭の「測りの共通の決まり」**の最後に、次を足す。
   > cycle-318/device-triage.md 7章の T5a-7 の行が足す測りも、この章の条件に含める。
-- **t5a-design.md 8章の「実機に頼る項目」の段落**の最後に、「振り分けの結果と行き先は cycle-318/device-triage.md にある。」を足す。「PM が足す行」の3（T9 の行に足す文）は、下の T9 の行の文に替わる。
+- **t5a-design.md 8章の「実機に頼る項目」の段落**の最後に、「振り分けの結果と行き先は cycle-318/device-triage.md にある。」を足す。「PM が足す行」の2（T9 の行の B-623 を iOS の Safari の実機で確かめる文）と3（T9 の行に足す文）は、下の T9 の行の2つの文に替わる。2の「iOS の Safari の実機で、…FAQ が開かないことを確かめる。」は、T9 が `grep -rn "実機"` で拾うので、残さない。
 - **carryover-tasks.md の T9 の行**の「B-623（知識クイズの最終問のあと「次へ」の2打目が FAQ を開く）は T5a が直す（…）。iOS の Safari の実機で、知識クイズの各問と最終問のあとの「次へ」を二度押しし、FAQ が開かないことを確かめる。」を、次にする。
   > B-623（知識クイズの最終問のあと「次へ」の2打目が FAQ を開く）は T5a が直し（問の区画を低くしない・着地の選び方。t5a-design.md 4-5・4-9）、T5a-7 の二度打ちの測りで閉じる（cycle-318/device-triage.md D9）。
 - **carryover-tasks.md の T9 の行**の「新しい回答の画面を二度打ちし（cycle-301 の再現手順）、設問が飛ぶかを記録する（B-620 の判断材料）。あわせて、…を確かめる（t5a-design.md 8章）。」を、次にする。
-  > 回答の画面の実機に頼る項目（t5a-design.md 8章）は、cycle-318/device-triage.md の振り分けに従い、実機の確かめは行わない。T9 の記録には、次の分け方で写す。受け入れて ADR009 で見張る危険: D1 の残り（いまの iOS が `manipulation` を記述どおりに扱わない）・D4 の上端。見張らずに受け入れた危険: D2・D3・D5・D6・D7。Chromium の近似で代えたもの: D8。T5a-7 の測りで閉じたもの: D9（B-623）。
+  > 回答の画面の実機に頼る項目（t5a-design.md 8章）は、cycle-318/device-triage.md の振り分けに従い、実機の確かめは行わない。T9 の記録には、次の分け方で写す。受け入れて ADR009 で見張る危険: D1 の残り（いまの iOS が `manipulation` を記述どおりに扱わない）・D4 の上端と、小さいビューポートの高さが iOS の版やアプリの中の Safari でツールバーを出した高さと違いうること。見張らずに受け入れた危険: D2・D3・D5・D6・D7。Chromium の近似で代えたもの: D8。T5a-7 の測りで閉じたもの: D9（B-623）。
