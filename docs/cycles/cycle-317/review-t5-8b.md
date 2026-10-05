@@ -58,3 +58,12 @@
 ### 結論
 
 **承認**。
+
+## joinDashes の確かめの範囲
+
+全体のレビューの指摘1を受け、PM の依頼で記録の担当が 2026-10-05 に数えた。上の「サイトの全体で悪くなる例は見つからなかった」の範囲はこの節のとおり。
+
+- 対象: `PhrasedText`（と `phrased-name.ts`・`phrase-breaks.ts`）を通る中身の元のデータ。`src/data/yoji-data.json`・`kanji-data.json`・`traditional-colors.json`、`src/humor-dict/data.ts`、`src/play/fortune/data/daily-fortunes.ts`、`src/play/quiz/data/*.ts`（21本）、`src/blog/content/` の front matter の `title`・`description`。
+- 数え方: 正規表現 `(?:^|[^-])-(?=[^\s-])`（変更で振る舞いが変わる「-」）。ファイルの全文に当てると 3,259 件だが、ほとんどが id（`"q2-a"`）・slug・パス・URL・日時・コードで、画面に文として出ない。文字列の値のうち、それらを除いた文に当てた。
+- 結果: データの文で 28 件（kanji-data.json 21、humor-dict 3、daily-fortunes 2、impossible-advice 2）、ブログの title・description で 30 件。語の頭の「-」は 6 件で、すべて kanji-data.json の英語の意味（「-ship」「-times」「-ization」「-fold」「-ous」「-proof」）。ほかは語の中のハイフン（「Wi-Fi」「three-stroke」「11PM-1AM」「5-7-5」「JSON-LD」「not-found」「grid-column」など）。
+- 抜き取り: データの 28 件はすべて、ブログは10件ほどを見た。語の頭の6件は「-」が行末に取り残されなくなり、語の中の件は語が1行に収まる幅では割れなくなる。悪くなる例は無かった。

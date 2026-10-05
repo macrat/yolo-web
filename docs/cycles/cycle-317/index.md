@@ -70,7 +70,8 @@ B-784・B-786 は来訪者に直接見えないが、残り十数サイクルの
 - 完了の処理のアンチパターンの点検（[review-ap-check.md](./review-ap-check.md)）で、次の発生が見つかった。どれも来訪者に届くものに欠陥を残していない。
   - AP-WF05: T5-33 の builder が第1回の報告で画面を撮って確かめていなかった（直す回で撮った）。
   - AP-WF12: b784-design.md の「注意を stderr に出して exit 0」（Claude に届かない）と、実在しない `decisions-process.md` への付け替えが、設計のレビュー4回を通り、実装のレビューで初めて見つかった。
-  - AP-WF08: PM が b784-design.md の第3節を自分で書き換えた（中身は実装のレビューの指摘1と公式文書に合う）。書き換えは完了の全体のレビューの範囲に含めて見てもらう。
+  - AP-WF08: PM が b784-design.md の第3節を自分で書き換え（中身は実装のレビューの指摘1と公式文書に合い、完了の全体のレビューの範囲に含めて見てもらった）、B-784・B-786 の設計と実装のレビューの記録（review-b784-design*.md・review-b786-design*.md・review-b7*-impl.md）は reviewer 本人でなく PM が報告を要約して写した（reviewer に Write が無かった回と、ファイルを書かないよう依頼した回。T5-33・T5-8b の記録は reviewer が書いた）。
+- 全体のレビューの指摘1（T5-8b のレビューの `joinDashes` の確かめに範囲が無い）は、数えた対象と件数と抜き取りの結果を [review-t5-8b.md](./review-t5-8b.md) の「joinDashes の確かめの範囲」に足して扱った。
 
 - `design-rollout-wip` のコミットのうち、このサイクルの受け持ちの1（`3001f167` T5-33）と2（`83a8cbd9` T5-8b・T5-20d）は戻し終えた。残りは3（T5-6）・4（T5-13）・5（T5a-2b）。
 - B-786 の実測で作ったローカルの枝 `worktree-agent-a52d271328a2c0c7f`・`worktree-agent-ae170970c57f79e1e` は probe のコミットを持ち、取り込まないので木だけ消して枝はローカルに残した（`.claude/rules/delegation.md` の取り込まない枝の扱い。push しないのでコンテナとともに消える）。
