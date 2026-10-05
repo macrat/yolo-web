@@ -86,6 +86,7 @@
 | B-781 | 動的ルートの値が % を含む URL（/blog/%25 など）が 404 でなく 500 になる | P3 | Next.js の「failed to decode param」。ページの前で起きる。cycle-316 review-t5-22b-1.md |
 | B-782 | 解き終えた画面の招待のボタンの多く（character-personality・music ほか）が contentId を渡さず、GA に share（invite）が送られない | P2 | cycle-316 review-t5-5b-13.md |
 | B-783 | docs/content-quality-requirements.md のチートシート・ToolLayout・CheatsheetLayout・道具の valueProposition の節が今のコードと合わない。今の形に書き直す | P2 | cycle-316 T5-3c の builder の報告 |
+| B-790 | tmp外へのsed -i・perl -iを止めるhookを入れるか決める | P3 | B-754の統合のブランチの上で扱う。コミットに入るファイルをシェルで書く型がcycle-316・318で再発(AP-WF54候補)。止めすぎる害と取りこぼす害を比べる。詳細cycle-318/review-ap-check.md |
 
 ## Deferred (すぐに着手できない)
 
@@ -94,7 +95,6 @@
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: design-rolloutのT5-18のサイクル(B-754)。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
 | B-787 | 漢字カナールの結果の2表で送る表だけ見出しの右端が1.35字ずれる | P4 | 着手: 遊んだ日が1000日に届く前。320・200%・成績4桁で成績の表だけ送る表になり内側の余白分ずれる。送る表の余白を見込んでそろえる規則を設計に足す。詳細cycle-317/review-t5-8b.md |
 | B-788 | ゲームの2打目が拡大にならないよう根にtouch-actionを掛ける | P3 | 着手: design-rolloutのT5a-4が診断のページに入れたあと(B-754。同じ形を写す)。irodori・kanji-kanaru・yoji-kimeru・nakamawakeの決定・推測。詳細cycle-318/device-triage.md D1 |
-| B-790 | tmp外へのsed -i・perl -iを止めるhookを入れるか決める | P3 | 着手: いつでも(B-754の統合のブランチの上で)。コミットに入るファイルをシェルで書く型がcycle-316・318で再発(AP-WF54候補)。止めすぎる害と取りこぼす害を比べる。詳細cycle-318/review-ap-check.md |
 | B-789 | サイト全体のhoverの線を(hover: hover)に限るか決める | P4 | 着手: design-rolloutのT5a-7のあと(B-754)。指で押したあと入れ替わった行に線が残り、選ばれたと読み違える。詳細cycle-318/device-triage.md D2 |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | 着手: design-rolloutのT7のサイクル(B-754)。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: design-rolloutのT6のサイクル(B-754)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
