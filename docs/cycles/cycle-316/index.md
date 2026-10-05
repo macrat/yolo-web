@@ -166,7 +166,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 | 並行して直したもの      | 4      | 13   | すべて承認                                                                                                                                                                                          |
 | 分割と完了の処理        | 3      | 33   | 分割は7巡目で承認。完了の処理のアンチパターンの点検は19巡目で承認。点検の重い1〜3 への対処は7巡目まで改善指示で、対処の hook を取り消したのでこの系列は終わり、残したスキル・knowledge は点検で見る |
 
-最後の指摘のあとレビューを受けずに閉じたもの（T3 の完了の判定・T4 の設計・T5-3c・T6-9 ほか）は、AP-WF01 の発生として [decisions.md](./decisions.md) に記録した。
+最後の指摘のあとレビューを受けずに閉じたもの（T3 の完了の判定・T4 の設計・T5-3c・T6-9 ほか）は、AP-WF01 の発生として [decisions-process-1.md](./decisions-process-1.md)（AP の点検の2巡目の中4）と [decisions-t4.md](./decisions-t4.md)（T4 の設計のレビューを4巡目で止めた行）に記録した。
 
 ## キャリーオーバー
 
@@ -178,7 +178,7 @@ B-754 の残りは、統合のブランチ `design-rollout` の上で後続の�
 
 - 事故: サブエージェントの完了をコマンドで待ち続け、その再発防止をアンチパターン集のルールに反する形で書いた（取り下げ済み）。[incident-1.md](./incident-1.md)
 - 事故: 転送量の「増分0」に執着し、サイトの開発を約21時間止めた（AP-P01）。[incident-2.md](./incident-2.md)
-- 完了の処理のワークフローのアンチパターンの点検の記録は、[review-ap-check.md](./review-ap-check.md) から [review-ap-check-19.md](./review-ap-check-19.md) までのすべてを、[review-log.md](./review-log.md) の「分割と完了の処理」の点検の行に巡の順に並べた。指摘を受けた扱いは decisions.md の各行に書いた。点検の重い1〜3 への対処のレビューは [review-ap-fixes.md](./review-ap-fixes.md)・[review-ap-fixes-2.md](./review-ap-fixes-2.md)・[review-ap-fixes-3.md](./review-ap-fixes-3.md)・[review-ap-fixes-4.md](./review-ap-fixes-4.md)・[review-ap-fixes-5.md](./review-ap-fixes-5.md)・[review-ap-fixes-6.md](./review-ap-fixes-6.md)・[review-ap-fixes-7.md](./review-ap-fixes-7.md) がどれも改善指示で、そのあと対処の hook をすべて取り消した（[decisions-process-3.md](./decisions-process-3.md) の「hook の取り消し」の行）ので、この系列は終わった。残したスキル・knowledge は点検で見る。
+- 完了の処理のワークフローのアンチパターンの点検の記録は、[review-ap-check.md](./review-ap-check.md) から [review-ap-check-19.md](./review-ap-check-19.md) までのすべてを、[review-log.md](./review-log.md) の「分割と完了の処理」の点検の行に巡の順に並べた。指摘を受けた扱いは [decisions-process-1.md](./decisions-process-1.md)〜[decisions-process-4.md](./decisions-process-4.md) の各巡目の行に書いた。点検の重い1〜3 への対処のレビューは [review-ap-fixes.md](./review-ap-fixes.md)・[review-ap-fixes-2.md](./review-ap-fixes-2.md)・[review-ap-fixes-3.md](./review-ap-fixes-3.md)・[review-ap-fixes-4.md](./review-ap-fixes-4.md)・[review-ap-fixes-5.md](./review-ap-fixes-5.md)・[review-ap-fixes-6.md](./review-ap-fixes-6.md)・[review-ap-fixes-7.md](./review-ap-fixes-7.md) がどれも改善指示で、そのあと対処の hook をすべて取り消した（[decisions-process-3.md](./decisions-process-3.md) の「hook の取り消し」の行）ので、この系列は終わった。残したスキル・knowledge は点検で見る。
 - 完了の処理での判断: ブログは書かない（成果は統合のブランチにあり、来訪者に出ていない）。ADR は足さない・変えない。理由は [decisions-process-1.md](./decisions-process-1.md) の「完了の処理での判断」の行。
 
 ## サイクル終了時のチェックリスト

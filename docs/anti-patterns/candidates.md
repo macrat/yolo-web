@@ -46,7 +46,7 @@
 ## AP-WF32 候補: PM のソース直接編集（AP-WF08 の再発）をどう担保するか
 
 - **概要**: AP-WF08（PM の「即時編集」を機械的整形以外に広げない＝コメント/テスト文言の訂正も判断を含むため builder へ差し戻す）は人手点検頼みで、再発が止まっていない。これは新規 AP ではなく、既存 AP-WF08 の担保の候補。
-  → cycle-290 で、SSoT 化に伴い削除済みになった変数名 `markedInstance` を参照する陳腐化コメントを、PM が即時編集で `instance.parse()` に訂正した。cycle-294 では、PM が末尾の数値の是正だけを builder へ差し戻し（AP-WF08 を明示して認識していた）ながら、テストファイルの新規著述と doc コメントの本体は自ら実装した。認識していても運用で守れない実例である。cycle-316 では、PM がサイクルを通じてソースコード・`DESIGN.md`・スキル・knowledge を Edit・Write を通さずシェルで書き、ソースの実装を自分でコミットした。詳細 cycle-290/review-log.md・cycle-316/decisions-process.md の点検の15巡目の行。
+  → cycle-290 で、SSoT 化に伴い削除済みになった変数名 `markedInstance` を参照する陳腐化コメントを、PM が即時編集で `instance.parse()` に訂正した。cycle-294 では、PM が末尾の数値の是正だけを builder へ差し戻し（AP-WF08 を明示して認識していた）ながら、テストファイルの新規著述と doc コメントの本体は自ら実装した。認識していても運用で守れない実例である。cycle-316 では、PM がサイクルを通じてソースコード・`DESIGN.md`・スキル・knowledge を Edit・Write を通さずシェルで書き、ソースの実装を自分でコミットした。詳細 cycle-290/review-log.md・cycle-316/decisions-process-4.md の点検の15巡目の行。
 - **発生件数**: AP-WF08 本体の発生は N=10（cycle-163, 168, 188, 228, 243, 288, 290, 294, 300, 316）。AP-WF08 は本体にあるので、この候補は昇格させない。
 - **対症療法案**: `.claude/rules/file-editing.md` の規則（コミットに入るファイルの中身は Edit・Write で書き、PM は実装を builder に任せる）で担保する。機械で止めるなら、止めすぎる害と取りこぼす害を比べてから決める。
 
