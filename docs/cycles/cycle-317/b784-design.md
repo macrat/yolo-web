@@ -60,8 +60,8 @@ offset と limit を付けずに Read で読み、返った行までのバイト
 index.md・decisions.md・carryover.md は後続のサイクルとレビュアーが毎回全文を読む文書です。
 上限は Read 1回で全文が返る量です。超えると Read は途中で切れ、残りを読まずに判断されます。
 直し方: 長い中身を同じディレクトリの別ファイルに移し、元のファイルには1行の要約とリンクだけを残してください。
-  例) 決定の経緯・レビューの経過 → review-log.md や decisions-t5.md などのタスク別のファイル
-      元の行: 「- T5 の決定: <一言の要約>。詳細 [decisions-t5.md](./decisions-t5.md)」
+  例) 決定の経緯・レビューの経過 → review-log.md や decisions-t4.md などのタスク別のファイル
+      元の行: 「- T4 の決定: <一言の要約>。詳細 [decisions-t4.md](./decisions-t4.md)」
 index.md には計画・チェックリスト・完了サマリだけを書きます（.claude/rules/doc-directory.md）。
 文を削って字数を詰めること、ほかのサイクルのファイルに移すことはしないでください。
 ```
@@ -83,7 +83,7 @@ index.md には計画・チェックリスト・完了サマリだけを書き�
 - `docs/cycles/TEMPLATE.md`: 冒頭のコメントに、決定や申し送りが長くなったら別ファイルに分けてリンクする、を1行。
 - `docs/knowledge/ai-agent-communication.md`: 節「Claude Code の Read が一度に返す量」を足す。上限は 25,000 トークンで、返るバイト数は中身で違うこと（長い1行の文の箇条書きの decisions.md は 51,621 B で切れ、文とコードの split-plan.md は 56,796 B、表の多い文書は 80KB でも全文が返った）。記号や英数字の多い文書はもっと少ないバイトで切れうるので、一度で通読させたい文書は 40,000 バイトを安全な線とすること。超えるとエラーでなく、上限に入る最後の行までを返し、末尾の1行に全体のトークン数と次の offset・limit の案内が付くこと。大きい文書は offset・limit か Grep で読み、末尾の PARTIAL の行を見落とさないこと。1-2 の測り方（ファイルと大きさと返った行）を添える。
 - `docs/anti-patterns/candidates.md`: AP-WF17 候補の節を消す。
-- `docs/anti-patterns/workflow.md`: 機械の検査があるので本体に置かない項目の並び（AP-WF16・AP-WF22 の行）に、同じ書き方で「AP-WF17（毎回読むサイクル文書の肥大）: 候補（N=3。cycle-214・215・316）を本体に置かず、`.claude/hooks/cycle-doc-size-check.sh` が index.md・decisions.md・carryover.md の 50,000 バイト超えのコミットを止める機械の検査で担保する。（cycle-317）」を足す。文書の大きさは数えれば分かり、チェックリストで人が点検するより検査が確かなので、本採用しない。
+- `docs/anti-patterns/workflow.md`: 機械の検査があるので本体に置かない項目の並び（AP-WF16・AP-WF22 の行）に、81・82 行と同じ形で「AP-WF17（毎回読むサイクル文書の肥大）: `.claude/hooks/cycle-doc-size-check.sh` が index.md・decisions.md・carryover.md の 50,000 バイト超えのコミットを機械検出するため、本体に置かなかった。（cycle-214, 215, 316で実際に発生していた）」を足す。文書の大きさは数えれば分かり、チェックリストで人が点検するより検査が確かなので、本採用しない。
 - `docs/backlog.md`: B-784 を Done にする。
 
 ### 4-3. cycle-316 の decisions.md を分ける
@@ -105,11 +105,11 @@ decisions.md の行は記録した順に並び、行の書き出しが受け持�
 指す側の付け替え:
 
 - `cycle-316/carryover.md`:
-  - 「タスクから decisions.md の申し送りへの索引」を「タスクから決定と申し送りへの索引」にし、冒頭の説明を、挙げた書き出しのあとにその行のあるファイルを括弧で添える形に書き直す。各タスクの行の書き出しごとに、移した先のファイル名を添える（例「T5-3b の PM の決定」（decisions-t5.md））。
+  - 「タスクから decisions.md の申し送りへの索引」を「タスクから決定と申し送りへの索引」にし、冒頭の説明を、挙げた書き出しのあとにその行のあるファイルを括弧で添える形に書き直す。各タスクの行の書き出しごとに、移した先のファイル名を添える（例「T5-3b の PM の決定」（decisions-t5-1.md））。
   - 36・37 行の「decisions.md の完了の処理の3巡目の行」「decisions.md の「hook の取り消し」の行」を decisions-process.md に、40 行の [decisions.md](./decisions.md) を索引としての decisions.md のまま残す。
   - 47 行（T9）の grep のコマンドの `docs/cycles/cycle-316/decisions.md` を `docs/cycles/cycle-316/decisions*.md` にし、「[decisions.md](./decisions.md) の「WebKit の確かめ方」」を移した先のファイルにする。
 - `cycle-316/index.md` 169・177・181・182 行: 決定と申し送りの入口としての decisions.md（索引）は残し、特定の行を指す所（「hook の取り消し」の行・「完了の処理での判断」の行）は decisions-process.md にする。
-- ほかの指す側は列挙せず、`grep -rln "decisions" docs .claude` で拾ったもののうち、閉じた記録（`review-*.md`・`incident-*.md`）と旧形式の単一ファイル以外のすべてで、decisions.md の特定の行を指す所を移した先のファイルにする。いま当たるのは、cycle-316 の `split-plan.md`・`t5-design.md`・`t5a-design.md`・`t5-20f-design.md`・`t5-8b-design.md`・`t5-inventory.md`・`t6-design.md`、`docs/backlog.md`（B-597 → decisions-t1-t3.md）、`docs/anti-patterns/workflow.md`（AP-WF52 → decisions-process.md）である。
+- ほかの指す側は列挙せず、`grep -rln "decisions" docs .claude` で拾ったもののうち、閉じた記録（`review-*.md`・`incident-*.md`）と旧形式の単一ファイル以外のすべてで、decisions.md の特定の行を指す所を移した先のファイルにする。いま当たるのは、cycle-316 の `split-plan.md`・`t5-design.md`・`t5a-design.md`・`t5-20f-design.md`・`t5-8b-design.md`・`t5-inventory.md`・`t6-design.md`、`docs/backlog.md`（B-597 → decisions-t1-t3.md）、`docs/anti-patterns/workflow.md`（AP-WF52 → decisions-process.md）、`docs/anti-patterns/candidates.md` 55 行（AP-WF08 の候補が指す点検の15巡目の行 → decisions-process.md）である。grep に当たる `docs/research/` のファイルは URL の中の語で decisions.md を指しておらず、cycle-317 の文書もこの設計の記録なので、どちらも対象にしない。
 - 閉じた記録（`review-*.md`・`incident-*.md`）は書き換えない。そこからのリンクは索引の decisions.md に着き、そこから移した先へ進める。
 
 ### 4-4. 確かめ方
