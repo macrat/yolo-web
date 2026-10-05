@@ -38,7 +38,8 @@ fi
 # 2) 変更ファイルの収集
 # コミット対象が staging 前の場合 (git add . && git commit のような連結) もあるため、
 # staged / unstaged の両方の変更ファイルを対象にする (削除は除く)。
-FILES=$(git status --porcelain | grep -vE '^.?D' | sed -E 's/^..[[:space:]]//; s/^"(.*)"$/\1/; s/.* -> //')
+# -uall で新しいディレクトリの中のファイルも1つずつ出す。
+FILES=$(git status --porcelain -uall | grep -vE '^.?D' | sed -E 's/^..[[:space:]]//; s/^"(.*)"$/\1/; s/.* -> //')
 if [ -z "$FILES" ]; then
   exit 0
 fi
