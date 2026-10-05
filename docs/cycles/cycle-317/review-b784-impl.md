@@ -30,6 +30,10 @@ PM の判断: 2 のとおり cycle-316 の carryover.md と index.md も分け�
 2. minor: いまの index.md に無い「PM の決定」「補足の決定」を index.md として指す参照が残る（t5-8b-design.md 307、t5-design.md 852、t5-20f-design.md 481・501・526・528・529・553・554・656・658、t3-completion.md 106・117・216・221・222・223・281、t3-design.md 592）。行の書き出しで検索して移った先の decisions-*.md に付け替える。
 3. minor: t2-inventory.md 298 行の「index.md の T2 以外の行」は、T5〜T12 の原文がいま carryover-tasks.md にあるので「index.md と carryover-tasks.md の、T2 以外の行」にする。
 
+## 第4回
+
+判定: 承認（指摘なし）。第3回の1〜3は解消（付け替え先に引いている文の書き出しがあることを grep で確かめた。`index.md の(PM|補足)の決定` などで残りが無い）。hook・settings.json・pre-commit-check.sh、cycle-316 の文書の大きさ（最大 34,246 B）、ツギハギ、設計の第4節の網羅も問題なし。hook の頭のコメントが 50,000 B の根拠として実測と出典を引くのは、閾値の理由で経緯ではないので残す。
+
 ## builder が判断を求めた点への PM の判断
 
 - carryover.md の索引を、書き出しごとにファイル名を括弧で添える形（設計 4-3）でなく、タスクの行の中でファイルごとにまとめる形にしたこと: 認める。添えると 50,979 B で上限を超えるため。reviewer も賛成し、すべての書き出しが挙げたファイルで見つかることを確かめた。
