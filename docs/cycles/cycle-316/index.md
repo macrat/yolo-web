@@ -178,8 +178,8 @@ B-754 の残りは、統合のブランチ `design-rollout` の上で後続の�
 
 - 事故: サブエージェントの完了をコマンドで待ち続け、その再発防止をアンチパターン集のルールに反する形で書いた（取り下げ済み）。[incident-1.md](./incident-1.md)
 - 事故: 転送量の「増分0」に執着し、サイトの開発を約21時間止めた（AP-P01）。[incident-2.md](./incident-2.md)
-- 完了の処理のワークフローのアンチパターンの点検の記録は、[review-ap-check.md](./review-ap-check.md) から [review-ap-check-19.md](./review-ap-check-19.md) までのすべてを、[review-log.md](./review-log.md) の「分割と完了の処理」の点検の行に巡の順に並べた。指摘を受けた扱いは decisions.md の各行に書いた。点検の重い1〜3 への対処のレビューは [review-ap-fixes.md](./review-ap-fixes.md)・[review-ap-fixes-2.md](./review-ap-fixes-2.md)・[review-ap-fixes-3.md](./review-ap-fixes-3.md)・[review-ap-fixes-4.md](./review-ap-fixes-4.md)・[review-ap-fixes-5.md](./review-ap-fixes-5.md)・[review-ap-fixes-6.md](./review-ap-fixes-6.md)・[review-ap-fixes-7.md](./review-ap-fixes-7.md) がどれも改善指示で、そのあと対処の hook をすべて取り消した（decisions.md の「hook の取り消し」の行）ので、この系列は終わった。残したスキル・knowledge は点検で見る。
-- 完了の処理での判断: ブログは書かない（成果は統合のブランチにあり、来訪者に出ていない）。ADR は足さない・変えない。理由は decisions.md の「完了の処理での判断」の行。
+- 完了の処理のワークフローのアンチパターンの点検の記録は、[review-ap-check.md](./review-ap-check.md) から [review-ap-check-19.md](./review-ap-check-19.md) までのすべてを、[review-log.md](./review-log.md) の「分割と完了の処理」の点検の行に巡の順に並べた。指摘を受けた扱いは decisions.md の各行に書いた。点検の重い1〜3 への対処のレビューは [review-ap-fixes.md](./review-ap-fixes.md)・[review-ap-fixes-2.md](./review-ap-fixes-2.md)・[review-ap-fixes-3.md](./review-ap-fixes-3.md)・[review-ap-fixes-4.md](./review-ap-fixes-4.md)・[review-ap-fixes-5.md](./review-ap-fixes-5.md)・[review-ap-fixes-6.md](./review-ap-fixes-6.md)・[review-ap-fixes-7.md](./review-ap-fixes-7.md) がどれも改善指示で、そのあと対処の hook をすべて取り消した（[decisions-process-3.md](./decisions-process-3.md) の「hook の取り消し」の行）ので、この系列は終わった。残したスキル・knowledge は点検で見る。
+- 完了の処理での判断: ブログは書かない（成果は統合のブランチにあり、来訪者に出ていない）。ADR は足さない・変えない。理由は [decisions-process-1.md](./decisions-process-1.md) の「完了の処理での判断」の行。
 
 ## サイクル終了時のチェックリスト
 

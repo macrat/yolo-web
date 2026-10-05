@@ -650,6 +650,6 @@ T5a-1 が `DESIGN.md` とスキルに書き、T5a-7 が知識の文書に書く�
 
    > 材料: docs/cycles/cycle-316/t5a-design.md 3-1 の案2（ラジオボタン＋「次へ」）と、それを入れ直す条件（T5a-7 の二度打ちの測りと、8章で振り分けた方法での二度押しの確かめと、B-613 で設問の飛びが多いと分かったとき）、t5a-measure.md の条件7 の診断の答えのあとに次の問の選択肢に落ちた間隔ごとの数。答えを選び直す手段（前の問へ戻る）を持たない判断（t5a-design.md 4-12）も、B-613 で途中の離脱ややり直しが多いと分かったときにあわせて見直す
 
-6. [decisions.md](./decisions.md) の、PM の決定の箇条（「…を受けた PM の決定」などと並ぶ所）に、t5-design.md 10章の T5-11（四字熟語の詳細）と T5-17（道具の頭と `ErrorBoundary`）への申し送りとして足す（t5a-design.md 4-4 で見つけた、T5a の範囲の外の §4 の外れ）。t5-design.md は書き換えない:
+6. [decisions-t5-2.md](./decisions-t5-2.md) の、PM の決定の箇条（「…を受けた PM の決定」などと並ぶ所）に、t5-design.md 10章の T5-11（四字熟語の詳細）と T5-17（道具の頭と `ErrorBoundary`）への申し送りとして足す（t5a-design.md 4-4 で見つけた、T5a の範囲の外の §4 の外れ）。t5-design.md は書き換えない:
 
    > `src/dictionary/_components/yoji/YojiDetail.module.css:31`（四字熟語の詳細の h1）と `src/tools/_components/ErrorBoundary.module.css:18`（ツールのエラーの見出し）は、見出しを `line-height: 1.4` で組んでおり、§4「見出しは行間 1.25 以下」から外れる。T5-11 が `YojiDetail` の、T5-17 が `ErrorBoundary` の見出しの行間を §4 に合わせ、それぞれの完了の条件に入れる（t5a-design.md 4-4）。
