@@ -8,6 +8,10 @@
 2. minor: `docs/knowledge/nextjs.md` 165・167 行の対処（`git worktree add` で取り出した別の木で検査をやり直す）は「同じ作業ツリーで動くほかの作業者」が前提。担当の木ごとに `.next` が分かれる形に揃える。
 3. minor: `.claude/rules/worktrees.md` の paths（`.claude/worktrees/**/*`）は、PM や reviewer が主の木から担当の木のファイルを読むときに読み込まれ、担当向けの手順を自分への指示と取り違えうる。冒頭に対象（担当の木で書く担当）を書く。
 
+## 第2回
+
+判定: 承認（指摘なし）。1〜3は解消。take-screenshot の取り忘れ時の手順（作業ブランチのコミットを自分専用のディレクトリへ取り出し、`cp -al` で依存を置き、撮り終えたら止めて消す）も新しい決まりと合う。第3節の項目は漏れなく入り、規則・エージェント定義・スキル・knowledge・AP-WF50 のあいだに食い違いは無く、`mine.patch` と共有の木を前提にした古い手順はリポジトリに残っていない。`npm run lint`・`npm run typecheck` は通った。
+
 ## PM の判断
 
 blog-writer の tools に Write を足した（担当の木で記事を新しく作るため）。常に読まれる規則の置き場所は `.claude/rules/delegation.md` とした。

@@ -90,7 +90,7 @@ claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出し�
 
    起こしたら、ログ（`$DIR/server.log`）に `Ready` が出るまで、上限を決めて待ってから使う（無限に待たない）。`$!` は控えない。Bash ツールのシェルでは `setsid` が fork するので、`$!` はすぐに終わる `setsid` の PID になり、グループの PID と違う。また、起こしたプロセスは起こした直後から親が 1 になるので、親の PID が 1 であることは、自分のものでないことの印にならない。
 
-4. `next dev` は、同じディレクトリで2つ目を起こさない（`.next/dev/lock` を取る）。ログに `Another next dev server is already running.` と、先にいるサーバーの PID・URL と `kill <PID>` を勧める文が出たら、それはほかの作業者のサーバーなので、勧められた `kill` は打たない。止めずに、自分で取り出した別のディレクトリ（`git worktree add` で取り出した木）で起こすか、その木で本番ビルドを起こして撮る（下の「本番ビルドの実機検証の段取り」）。取り出した木はコミットの中身だけで、まだコミットしていない自分の変更は入らない。自分の変更を確かめるときは、`git diff HEAD -- <自分のパス> > "$DIR/mine.patch"` で自分の変更だけを書き出し、`git -C <木> apply "$DIR/mine.patch"` で木に当ててから起こす（`git diff` に出ない未追跡の新しいファイルは、同じパスで木へ写す）。作業ツリーの全体の差分を当てると、ほかの担当の書きかけの変更まで入る。`next build` も同じく `.next/lock` で2つ目を止める。
+4. `next dev` は、同じディレクトリで2つ目を起こさない（`.next/dev/lock` を取る）。ログに `Another next dev server is already running.` と、先にいるサーバーの PID・URL と `kill <PID>` を勧める文が出たら、それはほかの作業者のサーバーなので、勧められた `kill` は打たない。止めずに、自分の担当の木（`.claude/worktrees/agent-<id>`）で起こす。担当の木は `.next` をほかの木と分けるので、そこで書いた自分の変更をそのまま起こせる。`next build` も同じく `.next/lock` で2つ目を止める。
 
 5. グループごと止める。Bash ツールはコマンドの間でシェルの変数を引き継がないので、止めるコマンドでも `DIR` を書き直す。`npm start` は `sh` を通して `next start` を起こし、`next start` は自分のプロセスの名前を `next-server` に替える。`npm run dev` は `sh` を通して `next dev` を起こし、`next dev` は `next-server` の子を起こす。どちらも `npm` の PID だけを止めると `next-server` が残ってポートを持ち続けるので、グループに送る。
 
@@ -106,7 +106,7 @@ claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出し�
    lsof -nP -iTCP:3127 -sTCP:LISTEN                                        # 何も出なければよい
    ```
 
-止めるときは、上の手順で書き出した PGID を使う。名前やポートで探したものをそのまま止める形（`pkill`・`killall`・`npx kill-port`・`fuser -k`、`pgrep`・`lsof` の結果をそのまま `kill` に渡す形）と、`kill` の的に `-1` や `0` を渡す形は、ほかの作業者のプロセスを巻き込むので使わない。PGID を控え損ねた自分のプロセス（迷子になったサーバーなど）を止めるときは、名前やポートで候補を探してよいが、止める前に1つずつ自分のものかを確かめ、確かめられたものだけを PID かグループで止める。共有の作業ツリーで起こしたサーバーは、ほかの作業者のものと cwd もプロセスの名前（`next-server`）も同じなので、それでは見分けられない。自分で選んだポートを `PORT` で渡して起こしたものは、`tr '\0' '\n' < /proc/<PID>/environ | grep '^PORT='` が自分の番号を返すことで見分ける。自分で取り出した木で起こしたものは、`ls -l /proc/<PID>/cwd` がその木を指すことで見分ける。自分のものと確かめられないプロセスは止めず、PM に知らせる。
+止めるときは、上の手順で書き出した PGID を使う。名前やポートで探したものをそのまま止める形（`pkill`・`killall`・`npx kill-port`・`fuser -k`、`pgrep`・`lsof` の結果をそのまま `kill` に渡す形）と、`kill` の的に `-1` や `0` を渡す形は、ほかの作業者のプロセスを巻き込むので使わない。PGID を控え損ねた自分のプロセス（迷子になったサーバーなど）を止めるときは、名前やポートで候補を探してよいが、止める前に1つずつ自分のものかを確かめ、確かめられたものだけを PID かグループで止める。自分の担当の木で起こしたものは、`ls -l /proc/<PID>/cwd` がその木を指すことで見分ける。自分で選んだポートを `PORT` で渡して起こしたものは、`tr '\0' '\n' < /proc/<PID>/environ | grep '^PORT='` が自分の番号を返すことでも見分ける。プロセスの名前（`next-server`）はどのサーバーも同じなので、それでは見分けられない。自分のものと確かめられないプロセスは止めず、PM に知らせる。
 
 **根拠**: `setsid` が fork して `$!` がグループの PID と違うこと、起こされた側が書いた PGID でグループごと止まること、止めたあとの2つの確かめ方、止めた直後に `<defunct>` が数に入り、少しおくと 0 になることは実測（cycle-316 の完了の処理。子を持つ代わりのサーバー、`npm start`、`npm run dev` で試した）。起こした直後から親が 1 になることは実測（同じ）。プロセスの木は実測で、`npm start` は `npm start` → `sh -c next start` → `next-server (v16.3.0)`、`npm run dev` は `npm run dev` → `sh -c next dev` → `node …/next dev` → `next-server (v16.3.0)` だった（Next.js 16.3.0。`next start` が名前を替えるのは `node_modules/next/dist/server/lib/start-server.js` の `process.title`、`next dev` が子を起こすのは `node_modules/next/dist/cli/next-dev.js` の `fork` で確認）。`next dev` と `next build` が2つ目を止めることと、そのときの文は、`node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js` の `.next/dev/lock`、`build/index.js` の `.next/lock`、`build/lockfile.js` で確認（Next.js 16.3.0）。共有の scratchpad の `server.pid` の取り違えでほかの作業者のサーバーを止めたこと、`pkill -f` でほかの作業者の試験と自分のシェルを止めたこと、`npm` の PID を止めて `next-server` が残ったことは実測（cycle-316）。`PORT` を渡して起こしたグループの子の `/proc/<PID>/environ` にもその値が残ることは実測（cycle-316 の完了の処理。`sh` と `sleep` の子で試した。`next-server` では試していない）。
 
@@ -115,7 +115,7 @@ claude.ai のクラウドのコンテナでは、Playwright MCP の呼び出し�
 - `npm run build` のあと、上の「バックグラウンドのプロセスを起こして止める」の形で `npm start`（任意のポート、例 `PORT=3127`）を起こしてから検証する。
 - `curl` で各ルートが 200 を返すことを確かめてから Playwright を当てる（起動の待ちも無限に待たない）。
 - スクリーンショットなどの生成物は、自分の専用のディレクトリの下にだけ保存する。
-- 複数のエージェントが同じ作業ツリーで並行して動くときは、作業ツリーの `.next` をほかのエージェントがビルドし直して、起動中のサーバーが `ChunkLoadError` を出すことがある。ほかのエージェントの `next build` が `.next/lock` を持っていれば、自分の `next build` は始まらない。確かめるコミットを `git worktree add` で別に取り出し、そこでビルドして起動する。worktree の `node_modules` はシンボリックリンクにすると Turbopack が拒むので、`cp -al` でハードリンクの写しを置く。
-- worktree で本番のビルドをすると、1つにつき 2GB 台の場所を使う（`.next` が大半）。コンテナの書ける場所には上限があり、並行するエージェントが別々にビルドすると埋まって、ビルドが `ENOSPC` で落ちる。確かめ終えたらサーバーのグループを止め、`.next` と worktree をすぐ消す。前と後を比べるときも2つを同時に置かず、1つずつビルドして測る。並行する負荷でブログのページの静的生成が 60 秒を超えて落ちることもあるので、そのときは負荷の低い時に組み直す。
+- 複数のエージェントが同じ作業ツリーで並行して動くときは、作業ツリーの `.next` をほかのエージェントがビルドし直して、起動中のサーバーが `ChunkLoadError` を出すことがある。ほかのエージェントの `next build` が `.next/lock` を持っていれば、自分の `next build` は始まらない。ビルドと起動は、`.next` をほかと分ける自分の担当の木でする。担当の木の `node_modules` はシンボリックリンクにすると Turbopack が拒むので、`cp -al <主の木>/node_modules ./node_modules` でハードリンクの写しを置く。ハードリンクの写しは中身を主の木とほかの木と分け合うので、担当の木では `node_modules` の下を書き換えない（`npm install` を打たない、パッケージのファイルを手で直さない）。
+- 担当の木で本番のビルドをすると、1つにつき 2GB 台の場所を使う（`.next` が大半）。コンテナの書ける場所には上限があり、並行するエージェントが別々にビルドすると埋まって、ビルドが `ENOSPC` で落ちる。確かめ終えたらサーバーのグループを止め、担当の木の `.next` をすぐ消す。前と後を比べるときも2つを同時に置かず、1つずつビルドして測る。並行する負荷でブログのページの静的生成が 60 秒を超えて落ちることもあるので、そのときは負荷の低い時に組み直す。
 
 **根拠**: 起動と `curl` での確かめ方は、cycle-227 の実機検証で使って動いた段取りで実測。`ChunkLoadError`・シンボリックリンクの拒否・場所の使い切り・静的生成のタイムアウトは実測（cycle-316）。

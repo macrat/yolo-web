@@ -1,6 +1,7 @@
 # claude
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+.claude/worktrees/
 
 # dependencies
 /node_modules

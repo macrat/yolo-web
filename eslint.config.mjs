@@ -24,7 +24,14 @@ const eslintConfig = defineConfig([
       "jsx-a11y/role-supports-aria-props": "error",
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "tmp/**"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    "tmp/**",
+    ".claude/worktrees/**",
+  ]),
 ]);
 
 export default eslintConfig;

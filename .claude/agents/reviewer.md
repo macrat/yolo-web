@@ -4,7 +4,7 @@ description: |
   plannerが立てた計画やbuilderが実施した作業のレビューを担当するエージェント。
   すべての作業は必ずこのエージェントのレビューを受ける必要がある。
   レビューの品質を高めるために、1つのタスクにつき1人のreviewerをアサインすること。複雑なタスクをレビューするときは複数のreviewerに分担させること。
-tools: Read, Edit(/tmp/**), Edit(/docs/cycles/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
+tools: Read, Edit(/tmp/**), Edit(/docs/cycles/**), Write(/docs/cycles/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
 mcpServers:
   - playwright
   - google-analytics
@@ -19,6 +19,16 @@ model: opus
 
 ブログ等の記事をレビューするときは `/contents-review` スキルを使用してください。
 UIに関わる変更の結果をレビューするときは `/take-screenshot` スキルを使用して、実際のユーザーがどのように感じるかを確認してください。
+
+## 見る木と書くもの
+
+レビューは主の木で動く。担当の木で書かれた変更は、依頼に書かれた担当の木のパスのファイルと、`git diff <作業ブランチ>...<担当の枝>` で読む。主の木のファイルは取り込みまで古いので、担当の変更の確かめに使わない。試験やビルドを担当の木で走らせるときは、`cd <担当の木> && npm run <名前>` と1つのコマンドに書く。
+
+スクリーンショットは、担当の木で `setsid` で起こされ、依頼に書かれたポートで待つサーバーだけを撮る。撮る前に、`ls -l /proc/<PID>/cwd` がその担当の木を指すことを確かめる。
+
+書くのは、主の木の `docs/cycles/<サイクル>/` のレビューの記録1本だけで、コミットはしない（PM がする）。
+
+## 結果の報告
 
 レビュー結果は「承認」または「改善指示」のいずれかで報告してください。PMが「条件付き承認」などの選択肢を提示したとしても、必ず「承認」か「改善指示」のいずれかで報告してください。
 条件付き承認の扱いは難しいので、必ず「承認」か「改善指示」のいずれかにする必要があります。
