@@ -71,6 +71,7 @@ T5a の残り（T5a-5 回答の本体・T5a-6 流れ・T5a-4 区切り・T5a-7 �
 | T5a-2（t5a-measure.md）・T5a-2b    | 9（第11〜19回） | 承認     | [review-t5a-2-11.md](./review-t5a-2-11.md)〜[-19](./review-t5a-2-19.md)（第1〜10回は cycle-316） |
 | T5a-1（DESIGN.md・スキル）         | 2               | 承認     | [review-t5a-1.md](./review-t5a-1.md)・[-2](./review-t5a-1-2.md)                                  |
 | T5a-3（`reveal.ts`）               | 3               | 承認     | [review-t5a-3.md](./review-t5a-3.md)〜[-3](./review-t5a-3-3.md)                                  |
+| サイクルの全体                     | 2               | 承認     | [review-final.md](./review-final.md)・[-2](./review-final-2.md)                                  |
 
 計画: 第1回の6件（振り分けを T5a-2 の前に置く順・振り分けの行き先と B-623・T5a-2b の受け渡し・前提のコミットの取り方・撮る範囲・担当を起こす時点）と第2回の4件（撮る時点と画像のレビュー・B-620・T5a-3 が (i) を受けること・取り込みで名が変わらない理由）をすべて直した。
 
