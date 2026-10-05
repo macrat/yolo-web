@@ -54,7 +54,7 @@ echo -n "あいう。" | head -c 6   # → あい（6バイト = 2文字）
 
 - 日本語を含む型で探すときと「無い」を確かめるときは、Claude Code の Grep の道具（ripgrep）か、`LC_ALL=C.UTF-8` を付けた `grep` だけを使う。`git grep`・`sed`・`awk` など、ほかの道具では探さない（C ロケールの `git grep`・`sed` と、ロケールによらず `awk`（mawk）は、日本語の型で一致を見落とす）。
 - `-w`・`\b`・`\<`・`\>`（語の切れ目）は、日本語にはどのロケール・どの道具でも使わない。
-- `.gitignore` に載るファイルと NUL を含むファイルまで含めて「無い」を言うときは、`LC_ALL=C.UTF-8 grep -ra --exclude-dir=.git --exclude-dir=worktrees --exclude-dir=.next --exclude-dir=node_modules` を使う。一致が出たら、パスを見てどの木・どのファイルの一致かを確かめる。
+- リポジトリの根から、`.gitignore` に載るファイル（`.git`・`.claude/worktrees/`・`.next`・`node_modules` の中を除く）と NUL を含むファイルまで含めて「無い」を言うときは、`LC_ALL=C.UTF-8 grep -ra --exclude-dir=.git --exclude-dir=worktrees --exclude-dir=.next --exclude-dir=node_modules <型> .` を使う。除く4つのどれかの中を探すときは、その `--exclude-dir` を外す。一致が出たら、パスを見てどの木・どのファイルの一致かを確かめる。
 
 ### C ロケールの grep の外れ方
 
@@ -102,7 +102,7 @@ Grep の道具は、ロケールによらず UTF-8 の文字を単位に一致�
 
 `LC_ALL=C.UTF-8` を付けた `grep -r` はどのファイルも終わりまで探すが、`-a` を付けないと一致行の一部を出さない。NUL を含むファイルでは NUL より後の一致行を、壊れた UTF-8 を含むファイルでは壊れたバイトのある一致行を出さず、代わりにファイルごとに1度、最後に標準エラーへ `grep: <ファイル名>: binary file matches` を出す（終了の値は 0。`2>/dev/null` を付けると抜けたことに気づけない）。`-a` を付けると、どちらのファイルでも一致行をすべて出す。
 
-`grep -r` は、除かない限り `.git`（コミットのメッセージ・reflog）・`.claude/worktrees/`（担当の木。主の木にまだ無い変更）・`.next`（前のビルドの出力）・`node_modules` の中まで探し、主の木のファイルに無い文言にも一致する（偽の「有る」）。決まり3の `--exclude-dir` はこの4つを名前で除く。このリポジトリでは `worktrees` という名前のディレクトリは `.claude/worktrees/` と `.git/worktrees/` だけなので、`.claude/` の規則・スキル・hook は除かれない。`tmp/` の作業ファイルは除かないので、一致が出たらパスを見る。
+`grep -r` は、除かない限り `.git`（コミットのメッセージ・reflog）・`.claude/worktrees/`（担当の木。主の木にまだ無い変更）・`.next`（前のビルドの出力）・`node_modules` の中まで探し、主の木のファイルに無い文言にも一致する（偽の「有る」）。決まり3の `--exclude-dir` はこの4つを名前で除く。名前で合うものは探す先に渡したディレクトリも除くので、`.next` や `.claude/worktrees` を探す先にしたまま付けると、何も探さずに知らせも出さず終了の値 1 を返す（偽の「無い」）。このリポジトリでは `worktrees` という名前のディレクトリは `.claude/worktrees/` と `.git/worktrees/` だけなので、`.claude/` の規則・スキル・hook は除かれない。`tmp/` の作業ファイルは除かないので、一致が出たらパスを見る。
 
 根拠: 実測（cycle-318、GNU grep 3.11・ripgrep 14.1.0）。試しの git の木で次を確かめた。
 
@@ -110,7 +110,7 @@ Grep の道具は、ロケールによらず UTF-8 の文字を単位に一致�
 - `printf '\0x\nあいう。1\nあいう。2\n'` のファイルは、Grep の道具と `rg -c "あいう" .` の結果に出ず、`LC_ALL=C.UTF-8 grep -n` は一致行を出さずに `binary file matches` だけを出し（`-c` は 2）、`-an` は2行を出した。
 - 「あいう。1」〜「あいう。100000」のあとに NUL と「あいう。end」を置いた約1.8MB のファイルは、Grep の道具の files_with_matches には出たが、「あいう。end」は Grep の道具でも `rg -c "あいう。end" .` でも見つからなかった（`rg` の終了の値 1）。`LC_ALL=C.UTF-8 grep -n "あいう"` は 98921 行目まで出して `binary file matches` を出し、`LC_ALL=C.UTF-8 grep -ra "あいう。end" .` は `./huge.txt:あいう。end` を出した。
 - 5行のうち2行目と4行目の末尾に `\377` を置いたファイルで、`LC_ALL=C.UTF-8 grep -n` は 1・3・5 行目と標準エラーの1行を出し、`-c` は 5、`-a` は5行を出した。
-- 主の木で、担当の木のファイルにだけある文言を `LC_ALL=C.UTF-8 grep -rla` で探すと `./.claude/worktrees/` の下のファイルに、コミットのメッセージにだけある文言を探すと `./.git/worktrees/`・`./.git/logs/` の下のファイルに一致した。決まり3の `--exclude-dir` を付けると、どちらもそれらに一致しなくなった。「の」を含むファイルを `--exclude-dir` の有無で比べると、付けて消えたのは `.git`・`.claude/worktrees`・`.next`・`node_modules` の下だけで、`docs/`・`src/`・`.claude/rules`・`.claude/skills`・`.claude/hooks`・`tmp/` の下は残った。`find` で、主の木の `worktrees` という名前のディレクトリが `.claude/worktrees/` と `.git/worktrees/` だけであることを確かめた。
+- 主の木で、担当の木のファイルにだけある文言を `LC_ALL=C.UTF-8 grep -rla` で探すと `./.claude/worktrees/` の下のファイルに、コミットのメッセージにだけある文言を探すと `./.git/worktrees/`・`./.git/logs/` の下のファイルに一致した。決まり3の `--exclude-dir` を付けると、どちらもそれらに一致しなくなった。「の」を含むファイルを `--exclude-dir` の有無で比べると、付けて消えたのは `.git`・`.claude/worktrees`・`.next`・`node_modules` の下だけで、`docs/`・`src/`・`.claude/rules`・`.claude/skills`・`.claude/hooks`・`tmp/` の下は残った。`find` で、主の木の `worktrees` という名前のディレクトリが `.claude/worktrees/` と `.git/worktrees/` だけであることを確かめた。探す先に `.next`・`./.next`・`.claude/worktrees` を渡して決まり3の `--exclude-dir` を付けると、どれも何も出さず終了の値 1 を返した（付けない `.next` では 14215 件、末尾に `/` を付けた `.next/` では付けても 14215 件のファイルが出た）。
 
 ### 合成済みの字と分けた字
 
