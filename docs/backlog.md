@@ -2,12 +2,15 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
+| B-614 | 診断の回答フェーズの摩擦低減 | P3 | B-754のT5aで直す(独立のサイクルは立てない)。T5a-5・T5a-6(回答の画面の本体)で入り、T5a-7の測りで確かめてDoneへ。375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
+| B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | B-754のT5aで直す(独立のサイクルは立てない)。T5a-5(t5a-design.md 4-7)で入る。押したボタンがdisabledになるため。SR利用者は先頭からTabし直す。詳細cycle-301/review-log.md |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | B-754のT5aで直す(独立のサイクルは立てない。t5a-design.md 4-5・4-9)。T5a-7の二度打ちの測りで0を確かめ、iOSのSafariはT5aの設計で(i)〜(iii)に振り分けた方法で確かめてDoneへ |
 | B-756 | 診断・ゲームの刷新 | P2 | site-conceptの「人が運営する場所でも作られたか」で1面ずつ判定し、伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
 | B-672 | ソースコードのコメントの整理 | P4 | 経緯の堆積・旧コンセプトの語・存在しない§番号への参照が残っている。コンセプトを作り直し、引き直す先が決まった。詳細cycle-312 |
 | B-746 | about ページの作り直し | P1 | サイトの自己紹介が、cycle-315で作り直したコンセプトと別のことを名乗っている。`docs/site-concept.md`の「来訪者への約束」から書き直す。文言を固定しているテストも対象。詳細cycle-315/index.md |
@@ -94,10 +97,7 @@
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: design-rolloutのT6のサイクル(B-754)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
 | B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 着手: design-rolloutのT6-7のサイクル(B-754)。開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md |
 | B-755 | 道具箱の作りの撤去 | P2 | 着手: design-rolloutのT5-18・T5-25bのサイクル(B-754)。同居を前提にした作りとコメントが残る。詳細cycle-315/index.md |
-| B-614 | 診断の回答フェーズの摩擦低減 | P3 | 着手: design-rolloutのT5aのサイクル(B-754)。375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
-| B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | 着手: design-rolloutのT5aのサイクル(B-754)。押したボタンがdisabledになるため。SR利用者は先頭からTabし直す。詳細cycle-301/review-log.md |
 | B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | 着手: design-rolloutのT5の各面のサイクル(B-754)。ゲーム4本はT4で済んだ。確かめはT9。詳細cycle-301/review-log.md |
-| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | 着手: design-rolloutのT5aのサイクル(B-754。t5a-design.md 4-5・4-9)。T5a-7の二度打ちの測りで0を確かめ、iOSのSafariはT5aの設計で(i)〜(iii)に振り分けた方法で確かめてDoneへ |
 | B-758 | 計測した5ページすべてで実験室のLCPが2.5秒を超えている(2026-09の計測) | P2 | 着手: B-754の出荷後、新しいデザインで測り直してから。診断のプレイ面3.8秒ほか。LCP要素は全て文字。実測cycle-316/facts-speed-before.md。一覧の操作も測る(cycle-316/review-t3-7-fix.md) |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: B-754の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
 | B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: B-754の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
