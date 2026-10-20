@@ -29,8 +29,17 @@ type QuestionCardProps = {
   onNext: () => void;
   /** 問の見出し。問が出たとき、QuizContainer がここへフォーカスを移す。 */
   headingRef: Ref<HTMLHeadingElement>;
+  /** 選択肢の並び。QuizContainer が、問のまとまりの下端（最後の行の下端）をここで測る。 */
+  choicesRef: Ref<HTMLUListElement>;
   /** 押した行。答えたとき、QuizContainer がここへフォーカスを移す。 */
   pressedRowRef: Ref<HTMLLIElement>;
+  /**
+   * 知識クイズで答えたあとの、押していない正解の行。QuizContainer が、答えたあとに見せる範囲の上端を、押した行と
+   * この行の上のほうで測る。
+   */
+  correctRowRef: Ref<HTMLLIElement>;
+  /** 知識クイズの「次へ」。QuizContainer が、答えたあとに見せる範囲の下端をここで測る。 */
+  nextButtonRef: Ref<HTMLButtonElement>;
 };
 
 /** 知識クイズで答えたあと、行の名前の下に添える正誤の字（DESIGN.md §8）。1つの行に1つの字だけを添える。 */
@@ -48,7 +57,7 @@ function feedbackOf(
  * 1つの問。選択肢は押すと回答が決まるボタンで、答えたあとはどれもボタンでない字に替わる（DESIGN.md §6）。
  * 診断では、押した行の字は次の問か結果が出るまで押す前と同じ下線を持ったままでいて（実行のさいちゅう）、ほかの行は
  * 下線の無い字（答えた選択肢）になる。知識クイズでは、どの行も答えた選択肢になり、正誤の字と解説と「次へ」が出る。
- * 自分ではフォーカスを動かさず、見出しと押した行の要素を QuizContainer に渡す。
+ * 自分では画面を送らずフォーカスも動かさず、送りの範囲を測る要素とフォーカスを受ける要素を QuizContainer に渡す。
  */
 export default function QuestionCard({
   question,
@@ -57,7 +66,10 @@ export default function QuestionCard({
   onAnswer,
   onNext,
   headingRef,
+  choicesRef,
   pressedRowRef,
+  correctRowRef,
+  nextButtonRef,
 }: QuestionCardProps) {
   const explanationId = useId();
 
@@ -82,19 +94,30 @@ export default function QuestionCard({
       >
         {question.text}
       </h2>
-      <ul className={styles.choices} data-text-box="rows">
+      <ul ref={choicesRef} className={styles.choices} data-text-box="rows">
         {shuffledChoices.map((choice) => {
           const pressed = choice.id === answeredChoiceId;
           const feedback =
             isKnowledge && answered
               ? feedbackOf(question, choice.id, pressed)
               : undefined;
+          const unpressedCorrect =
+            isKnowledge &&
+            answered &&
+            !pressed &&
+            isCorrectChoice(question, choice.id);
           // 押した行は、押したボタンが字に替わってもフォーカスを body に落とさないよう、プログラムからフォーカスを
           // 受ける。知識クイズでは、着いたときに名前と正誤の字に続けて解説が読まれる。
           return (
             <li
               key={choice.id}
-              ref={pressed ? pressedRowRef : undefined}
+              ref={
+                pressed
+                  ? pressedRowRef
+                  : unpressedCorrect
+                    ? correctRowRef
+                    : undefined
+              }
               tabIndex={pressed ? -1 : undefined}
               aria-describedby={
                 pressed && explanation ? explanationId : undefined
@@ -138,7 +161,7 @@ export default function QuestionCard({
             </p>
           )}
           <div className={styles.next}>
-            <Button variant="primary" onClick={onNext}>
+            <Button variant="primary" onClick={onNext} ref={nextButtonRef}>
               次へ
             </Button>
           </div>

@@ -1,13 +1,18 @@
 /**
- * QuizContainer — 結果に着いたとき。
+ * QuizContainer — 切り替わりのあとの送りと、結果に着いたとき。
  *
- * 最後の設問に答えると、結果のボックスまで画面を即時に送り（DESIGN.md §11）、ボックスにフォーカスを移す。
- * 結果は操作に応えて現れたものなので、ボックスに登場の動き（appear）を渡す。結果の見出しには、サーバーで
- * 作った区切りのうち、その結果のものを渡す。
+ * 来訪者の操作で画面が切り替わったら、QuizContainer が塗る前に、画面ごとに決めた範囲を見せる着地へ即時に送り
+ * （DESIGN.md §8・§11）、そのあとフォーカスを移す。
+ *  - 次の問が出たときは、問のまとまり（進み具合の帯から最後の選択肢の行まで）を見せる。
+ *  - 知識クイズで答えたあとは、押した行と正解の行の上のほうから「次へ」までを見せる。診断で押した行を見せるあいだは送らない。
+ *  - 解き終えたら、結果のボックスの上端を画面の上端から 8px に置き、ボックスにフォーカスを移す。
+ *  - 問の区画は、1回解くあいだ、それまでのいちばん高い区画より低くならない。
+ *  - 字の読み込みで高さが変わり、見せている範囲が画面から外れたら、来訪者が自分で送っていなければ送り直す。
+ * jsdom は組みを持たないので、要素の矩形を差し替えて送りの量を確かめる。塗る前であることは実ブラウザで確かめる。
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
 import type { ItemListItem } from "@/components/ItemList";
 import type {
@@ -19,15 +24,23 @@ import type {
 
 // gtag をモックして window.gtag に差し替える。analytics.ts は window.gtag を
 // 直接呼ぶので、ここで spy を仕込むことで送出 payload を検査できる。
-// 診断は押した選択肢を見せてから結果へ移るので、偽の時計で見せる長さを進める。
+// 診断は押した選択肢を見せてから次の問か結果へ移るので、偽の時計で見せる長さを進める。
+// 画面は高さ 600 で、送りの関数（window.scrollBy）を観察する。
 const gtagSpy = vi.fn();
+let scrollBySpy: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   gtagSpy.mockClear();
   (window as unknown as { gtag: typeof gtagSpy }).gtag = gtagSpy;
   vi.useFakeTimers();
+  scrollBySpy = vi.fn();
+  vi.stubGlobal("scrollBy", scrollBySpy);
+  vi.stubGlobal("visualViewport", undefined);
+  vi.stubGlobal("innerHeight", 600);
 });
 afterEach(() => {
   vi.useRealTimers();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 // Panel / Button は軽量モックでテスト集中対象を絞る
@@ -42,17 +55,20 @@ vi.mock("@/components/Button", () => ({
   default: ({
     children,
     onClick,
+    ref,
   }: {
     children: React.ReactNode;
     onClick: () => void;
+    ref?: React.Ref<HTMLButtonElement>;
   }) => (
-    <button type="button" onClick={onClick}>
+    <button type="button" onClick={onClick} ref={ref}>
       {children}
     </button>
   ),
 }));
 
-// ResultCard は、ページの頭・結果のボックスにあたる要素・追加の読みものだけを描く軽い形にし、受け取った値を属性で見せる。
+// ResultCard は、ページの頭・結果の名前で名付けた結果のボックスにあたる要素・追加の読みものだけを描く軽い形にし、
+// 受け取った値を属性で見せる。
 vi.mock("../ResultCard", () => ({
   default: ({
     head,
@@ -74,11 +90,14 @@ vi.mock("../ResultCard", () => ({
       <section
         ref={resultBoxRef}
         tabIndex={-1}
+        aria-labelledby="result-name"
         data-testid="result-box"
         data-phrases={heading.phrases.join("|")}
         data-appear={String(Boolean(appear))}
         data-next-items={String(nextItems?.length ?? 0)}
-      />
+      >
+        <h2 id="result-name">{heading.phrases.join("")}</h2>
+      </section>
       {extra}
     </>
   ),
@@ -103,24 +122,25 @@ vi.mock("next/link", () => ({
 }));
 
 /** 最小 personality quiz（type === "personality"）を組み立てる */
-function makePersonalityQuiz(): QuizDefinition {
+function makePersonalityQuiz(questionCount = 1): QuizDefinition {
   const meta: QuizMeta = {
     slug: "character-personality",
     title: "似たキャラ診断",
     type: "personality",
     description: "テスト",
-    questionCount: 1,
+    questionCount,
   } as QuizMeta;
-  const questions: QuizQuestion[] = [
-    {
-      id: "q1",
-      text: "問1",
+  const questions = Array.from(
+    { length: questionCount },
+    (_, index): QuizQuestion => ({
+      id: `q${index + 1}`,
+      text: `問${index + 1}`,
       choices: [
-        { id: "c1", text: "選択1", points: { "type-a": 1 } },
-        { id: "c2", text: "選択2", points: { "type-b": 1 } },
+        { id: `c${index + 1}a`, text: "選択1", points: { "type-a": 1 } },
+        { id: `c${index + 1}b`, text: "選択2", points: { "type-b": 1 } },
       ],
-    },
-  ];
+    }),
+  );
   const results: QuizResult[] = [
     { id: "type-a", title: "タイプA", description: "A" },
     { id: "type-b", title: "タイプB", description: "B" },
@@ -129,35 +149,36 @@ function makePersonalityQuiz(): QuizDefinition {
 }
 
 /** 最小 knowledge quiz（type === "knowledge"）を組み立てる */
-function makeKnowledgeQuiz(): QuizDefinition {
+function makeKnowledgeQuiz(questionCount = 1): QuizDefinition {
   const meta: QuizMeta = {
     slug: "yoji-level",
     title: "四字熟語レベル",
     type: "knowledge",
     description: "テスト",
-    questionCount: 1,
+    questionCount,
   } as QuizMeta;
-  const questions: QuizQuestion[] = [
-    {
-      id: "q1",
-      text: "問1",
+  const questions = Array.from(
+    { length: questionCount },
+    (_, index): QuizQuestion => ({
+      id: `q${index + 1}`,
+      text: `問${index + 1}`,
       choices: [
-        { id: "c1", text: "正解", isCorrect: true },
-        { id: "c2", text: "不正解", isCorrect: false },
+        { id: `c${index + 1}a`, text: "正解", isCorrect: true },
+        { id: `c${index + 1}b`, text: "不正解", isCorrect: false },
       ],
-    },
-  ];
+      explanation: `解説${index + 1}`,
+    }),
+  );
   const results: QuizResult[] = [
     { id: "lv-1", title: "Level 1", description: "L1" },
   ];
   return { meta, questions, results };
 }
 
-/** quiz をプレイして結果まで遷移する（level_end 発火まで待つ） */
-async function playToLevelEnd(
+function renderQuiz(
   quiz: QuizDefinition,
   recommendedContents?: ItemListItem[],
-) {
+): void {
   const resultHeadings = Object.fromEntries(
     quiz.results.map((result) => [result.id, { phrases: [...result.title] }]),
   );
@@ -170,84 +191,253 @@ async function playToLevelEnd(
       recommendedContents={recommendedContents}
     />,
   );
-  // "はじめる" を押して playing へ
-  const startBtn = screen.getByRole("button", { name: "はじめる" });
+}
+
+async function click(element: HTMLElement): Promise<void> {
   await act(async () => {
-    startBtn.click();
+    element.click();
   });
-  // playing phase: 設問1の選択肢ボタンを押す。
-  // QuestionCard は選択肢を shuffle するので、テキスト名ではなく問題テキストを
-  // 除いた残りの button 群（=選択肢）から最初の1つを押す。
-  // 「はじめる」「次へ」等のチェーンとは別の choice button をたどる。
-  const choiceButtons = screen
-    .getAllByRole("button")
-    .filter((b) => /^選択|^正解|^不正解$/.test(b.textContent ?? ""));
-  expect(choiceButtons.length).toBeGreaterThan(0);
+}
+
+async function advance(ms: number): Promise<void> {
   await act(async () => {
-    choiceButtons[0].click();
+    vi.advanceTimersByTime(ms);
   });
+}
+
+/** 選択肢のボタンのうち、名前が name のもの。 */
+function choiceButton(name: string): HTMLElement {
+  return screen.getByRole("button", { name });
+}
+
+/** quiz をプレイして結果まで遷移する（level_end 発火まで待つ） */
+async function playToLevelEnd(
+  quiz: QuizDefinition,
+  recommendedContents?: ItemListItem[],
+) {
+  renderQuiz(quiz, recommendedContents);
+  await click(screen.getByRole("button", { name: "はじめる" }));
   // 診断は押した選択肢を見せたあとに、knowledge は手動の「次へ」で結果へ移る
-  if (quiz.meta.type === "personality") {
-    await act(async () => {
-      vi.advanceTimersByTime(ANSWER_SHOWN_MS);
-    });
-  }
+  await click(
+    choiceButton(quiz.meta.type === "personality" ? "選択1" : "正解"),
+  );
+  if (quiz.meta.type === "personality") await advance(ANSWER_SHOWN_MS);
   if (quiz.meta.type === "knowledge") {
-    const nextBtn = screen.queryByRole("button", { name: /次へ|結果/ });
-    if (nextBtn) {
-      await act(async () => {
-        nextBtn.click();
-      });
-    }
+    await click(screen.getByRole("button", { name: "次へ" }));
   }
   const levelEndCalls = gtagSpy.mock.calls.filter((c) => c[1] === "level_end");
   expect(levelEndCalls.length).toBeGreaterThan(0);
 }
 
-describe("QuizContainer — 結果に着いたとき", () => {
-  let scrollIntoViewSpy: ReturnType<typeof vi.fn>;
-  let focusSpy: ReturnType<typeof vi.spyOn>;
-  // jsdom に元から scrollIntoView が無い場合の復元用（元記述子を退避）。
-  let originalScrollIntoView: PropertyDescriptor | undefined;
+function rect(top: number, bottom: number): DOMRect {
+  return {
+    top,
+    bottom,
+    left: 0,
+    right: 0,
+    width: 0,
+    height: bottom - top,
+    x: 0,
+    y: top,
+    toJSON: () => ({}),
+  } as DOMRect;
+}
 
-  beforeEach(() => {
-    originalScrollIntoView = Object.getOwnPropertyDescriptor(
-      window.HTMLElement.prototype,
-      "scrollIntoView",
-    );
-    // jsdom は scrollIntoView 未実装なので関数を差し込んで spy 化する。
-    // vi.fn() の汎用モック型は DOM メソッドのシグネチャに直接代入できないため、
-    // テストのスタブとして該当メソッド型へ局所的にアサートする（any/ts-expect-error は使わない）。
-    scrollIntoViewSpy = vi.fn();
-    window.HTMLElement.prototype.scrollIntoView =
-      scrollIntoViewSpy as unknown as HTMLElement["scrollIntoView"];
-    focusSpy = vi.spyOn(window.HTMLElement.prototype, "focus");
-  });
+/**
+ * 要素の矩形を差し替える。rectOf が返さない要素（小さいビューポートを読む見えない箱を含む）は大きさ 0 で、
+ * 画面の範囲は innerHeight（600）になる。押せるものも大きさ 0 なので、着地で避けるものは無い。
+ */
+function stubRects(rectOf: (element: Element) => DOMRect | undefined): void {
+  vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(
+    function (this: Element) {
+      return rectOf(this) ?? rect(0, 0);
+    },
+  );
+}
 
-  afterEach(() => {
-    focusSpy.mockRestore();
-    if (originalScrollIntoView) {
-      Object.defineProperty(
-        window.HTMLElement.prototype,
-        "scrollIntoView",
-        originalScrollIntoView,
-      );
-    } else {
-      // 元々存在しなかったので削除して環境を元に戻す（delete 演算子の型制約回避）。
-      Reflect.deleteProperty(window.HTMLElement.prototype, "scrollIntoView");
+/** 問の区画（進み具合の帯と問を縦に並べた要素）。 */
+function stageOf(): Element | null | undefined {
+  return document.querySelector("ul")?.parentElement?.parentElement;
+}
+
+/** 区画の上端と、問の最後の行の下端（＝問の中身の下端）を決める。 */
+function stubQuestion(stageTop: number, choicesBottom: number): void {
+  stubRects((element) => {
+    const stage = stageOf();
+    if (element === stage) return rect(stageTop, choicesBottom);
+    if (element.tagName === "UL") return rect(stageTop + 100, choicesBottom);
+    // 区画の最後の子（問）の下端。
+    if (element === stage?.lastElementChild) {
+      return rect(stageTop + 40, choicesBottom);
     }
+    return undefined;
+  });
+}
+
+describe("QuizContainer — 問のまとまりの送り", () => {
+  test("「はじめる」のあと、下に外れたまとまりの最後の行の下端を画面の下端から 8px 上まで送る", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(300, 700);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: 700 - (600 - 8),
+      behavior: "instant",
+    });
+    expect(document.activeElement).toBe(
+      screen.getByRole("heading", { level: 2, name: "問1" }),
+    );
   });
 
-  test("結果のボックスまで画面を即時に送り、ボックスにフォーカスを移す", async () => {
+  test("まとまりが画面に入っていれば送らない", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(100, 500);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    expect(scrollBySpy).not.toHaveBeenCalled();
+  });
+
+  test("診断で押した行を見せるあいだは送らず、150ms のあと次の問の上に外れたまとまりの帯を画面の上端から 8px に置く", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(100, 500);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    stubQuestion(-60, 340);
+    await click(choiceButton("選択1"));
+    expect(scrollBySpy).not.toHaveBeenCalled();
+    await advance(ANSWER_SHOWN_MS);
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: -60 - 8,
+      behavior: "instant",
+    });
+  });
+
+  test("まとまりが画面より高ければ、帯を画面の上端から 8px に置く", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(300, 1000);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: 300 - 8,
+      behavior: "instant",
+    });
+  });
+
+  test("知識クイズで答えたあと、押した行と正解の行の上のほうから「次へ」までを見せ、フォーカスは押した行にある", async () => {
+    renderQuiz(makeKnowledgeQuiz(2));
+    stubQuestion(100, 500);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    stubRects((element) => {
+      const name = element.textContent ?? "";
+      if (element.tagName === "LI" && name.startsWith("正解")) {
+        return rect(260, 330);
+      }
+      if (element.tagName === "LI" && name.startsWith("不正解")) {
+        return rect(330, 400);
+      }
+      if (element.tagName === "BUTTON" && name === "次へ") {
+        return rect(640, 684);
+      }
+      return undefined;
+    });
+    await click(choiceButton("不正解"));
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: 684 - (600 - 8),
+      behavior: "instant",
+    });
+    expect(document.activeElement).toBe(
+      screen.getByText("不正解").closest("li"),
+    );
+  });
+});
+
+describe("QuizContainer — 問の区画を低くしない", () => {
+  test("短い問に移っても、区画の最小の高さはそれまでのいちばん高い区画に保たれる", async () => {
+    renderQuiz(makePersonalityQuiz(3));
+    stubQuestion(100, 520);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    const stage = stageOf() as HTMLElement;
+    expect(stage.style.minHeight).toBe("420px");
+
+    stubQuestion(100, 400);
+    await click(choiceButton("選択1"));
+    await advance(ANSWER_SHOWN_MS);
+    expect(stage.style.minHeight).toBe("420px");
+
+    stubQuestion(100, 600);
+    await click(choiceButton("選択1"));
+    await advance(ANSWER_SHOWN_MS);
+    expect(stage.style.minHeight).toBe("500px");
+  });
+
+  test("区画の幅が変わったら、そのときの高さからやり直す", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(100, 520);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    const stage = stageOf() as HTMLElement;
+    expect(stage.style.minHeight).toBe("420px");
+
+    stubQuestion(100, 400);
+    vi.spyOn(stage, "clientWidth", "get").mockReturnValue(320);
+    fireEvent(window, new Event("resize"));
+    expect(stage.style.minHeight).toBe("300px");
+  });
+});
+
+describe("QuizContainer — 字の読み込みのあとの送り直し", () => {
+  let fonts: EventTarget;
+  beforeEach(() => {
+    fonts = new EventTarget();
+    Object.defineProperty(document, "fonts", {
+      value: fonts,
+      configurable: true,
+    });
+  });
+  afterEach(() => {
+    Reflect.deleteProperty(document, "fonts");
+  });
+
+  test("問を出したあと字の読み込みで高さが変わり、まとまりが画面から外れたら送り直す", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(100, 500);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+    expect(scrollBySpy).not.toHaveBeenCalled();
+
+    stubQuestion(100, 640);
+    fonts.dispatchEvent(new Event("loadingdone"));
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: 640 - (600 - 8),
+      behavior: "instant",
+    });
+  });
+
+  test("来訪者が自分で送ったあとは、送り直さない", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestion(100, 500);
+    await click(screen.getByRole("button", { name: "はじめる" }));
+
+    fireEvent.wheel(window);
+    stubQuestion(100, 640);
+    fonts.dispatchEvent(new Event("loadingdone"));
+    expect(scrollBySpy).not.toHaveBeenCalled();
+  });
+});
+
+describe("QuizContainer — 結果に着いたとき", () => {
+  test("結果のボックスの上端を画面の上端から 8px に置く量で送り、ボックスにフォーカスを移す", async () => {
+    stubRects((element) => {
+      if (element.getAttribute("data-testid") === "result-box") {
+        return rect(900, 1500);
+      }
+      if (element.id === "result-name") return rect(940, 1000);
+      return undefined;
+    });
     await playToLevelEnd(makePersonalityQuiz());
     const box = screen.getByTestId("result-box");
-    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
-    expect(scrollIntoViewSpy.mock.contexts[0]).toBe(box);
-    expect(scrollIntoViewSpy).toHaveBeenCalledWith({
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: 900 - 8,
       behavior: "instant",
-      block: "start",
     });
-    expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
     expect(document.activeElement).toBe(box);
   });
 
@@ -260,10 +450,21 @@ describe("QuizContainer — 結果に着いたとき", () => {
     );
   });
 
-  test("知識クイズでも、結果のボックスへ送ってフォーカスを移す", async () => {
+  test("知識クイズでも、最後の「次へ」のあと結果のボックスへ送ってフォーカスを移す", async () => {
+    stubRects((element) => {
+      if (element.getAttribute("data-testid") === "result-box") {
+        return rect(700, 1000);
+      }
+      if (element.id === "result-name") return rect(740, 800);
+      return undefined;
+    });
     await playToLevelEnd(makeKnowledgeQuiz());
     const box = screen.getByTestId("result-box");
     expect(box).toHaveAttribute("data-phrases", "L|e|v|e|l| |1");
+    expect(scrollBySpy).toHaveBeenLastCalledWith({
+      top: 700 - 8,
+      behavior: "instant",
+    });
     expect(document.activeElement).toBe(box);
   });
 
@@ -295,18 +496,5 @@ describe("QuizContainer — 結果に着いたとき", () => {
       "data-slug",
       "japanese-culture",
     );
-  });
-
-  test("開始の画面では画面を送らない", () => {
-    const quiz = makePersonalityQuiz();
-    render(
-      <QuizContainer
-        head={<h1>見出し</h1>}
-        quiz={quiz}
-        resultHeadings={{ "type-a": { phrases: ["タイプA"] } }}
-        readingHeadings={{}}
-      />,
-    );
-    expect(scrollIntoViewSpy).not.toHaveBeenCalled();
   });
 });

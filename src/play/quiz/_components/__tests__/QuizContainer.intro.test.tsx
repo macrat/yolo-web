@@ -1,20 +1,46 @@
 /**
  * QuizContainer の開始の画面。事実の行 → 一文 →「はじめる」→ 説明 → 関連の入口の順に積み、
  * 説明は開始の画面だけに出る。
+ *
+ * ページを開いたとき（マウント）は、画面を送らずフォーカスも動かさない。ページの途中へのリンクや戻る操作で着いた
+ * 位置と、読み上げの位置を壊さないためである。「もう一度挑戦する」でやり直したあとは、状態の値が開いた直後と同じでも、
+ * 開始の画面をページの頭から見せ、フォーカスを「はじめる」に移す（DESIGN.md §8）。
  */
 
-import { test, expect, vi, beforeEach } from "vitest";
+import { test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-import QuizContainer from "../QuizContainer";
+import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
 import type { QuizDefinition, QuizMeta } from "../../types";
 
-// analytics.ts は window.gtag を直接呼ぶのでスタブを差し込む。
+// analytics.ts は window.gtag を直接呼ぶのでスタブを差し込む。送りの関数（window.scrollBy）を観察する。
+let scrollBySpy: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   (window as unknown as { gtag: () => void }).gtag = vi.fn();
+  scrollBySpy = vi.fn();
+  vi.stubGlobal("scrollBy", scrollBySpy);
+  vi.stubGlobal("visualViewport", undefined);
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
+// 結果の画面は、結果のボックスと「もう一度挑戦する」だけを描く。
 vi.mock("../ResultCard", () => ({
-  default: () => null,
+  default: ({
+    resultBoxRef,
+    onRetry,
+  }: {
+    resultBoxRef: React.Ref<HTMLElement>;
+    onRetry: () => void;
+  }) => (
+    <section ref={resultBoxRef} tabIndex={-1}>
+      <button type="button" onClick={onRetry}>
+        もう一度挑戦する
+      </button>
+    </section>
+  ),
 }));
 vi.mock("../ResultExtraLoader", () => ({
   default: () => null,
@@ -114,4 +140,78 @@ test("開始の画面と設問の画面は、ページの頭と本体を1つの�
   const [playing] = sectionsOf();
   expect(playing).toContainElement(screen.getByRole("heading", { level: 1 }));
   expect(playing).toContainElement(screen.getByText("選択1A"));
+});
+
+/** ページの送りの位置を決める。jsdom は送りを持たないので、読む値だけを差し替える。 */
+function stubScrollY(scrollY: number): void {
+  vi.stubGlobal("scrollY", scrollY);
+}
+
+test("途中まで送った位置で開いたときは、画面を送らずフォーカスも動かさない", () => {
+  stubScrollY(300);
+  renderQuiz();
+  expect(scrollBySpy).not.toHaveBeenCalled();
+  expect(document.activeElement).toBe(document.body);
+});
+
+test("ページの途中へのリンク（#faq）で着いたときは、画面を送らずフォーカスも動かさない", () => {
+  window.location.hash = "#faq";
+  try {
+    stubScrollY(800);
+    renderQuiz();
+    expect(scrollBySpy).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(document.body);
+  } finally {
+    window.location.hash = "";
+  }
+});
+
+test("「もう一度挑戦する」のあとは、開始の画面をページの頭から見せ、フォーカスを「はじめる」に移す", async () => {
+  vi.useFakeTimers();
+  renderQuiz();
+  await act(async () => {
+    screen.getByRole("button", { name: "はじめる" }).click();
+  });
+  await act(async () => {
+    screen.getByRole("button", { name: "選択1A" }).click();
+  });
+  await act(async () => {
+    vi.advanceTimersByTime(ANSWER_SHOWN_MS);
+  });
+  scrollBySpy.mockClear();
+
+  // 結果の画面を送った位置で押す。やり直したあとの状態は、開いた直後と同じ値になる。開始の画面の事実の行と
+  // 「はじめる」は、ページの頭から 300・500 の所にある（画面の上端から測ると、送った 1200 だけ上）。
+  stubScrollY(1200);
+  vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(
+    function (this: Element) {
+      const at = (top: number, bottom: number) =>
+        ({
+          top,
+          bottom,
+          left: 0,
+          right: 0,
+          width: 0,
+          height: bottom - top,
+        }) as DOMRect;
+      if (this.tagName === "P" && this.textContent?.includes("全1問")) {
+        return at(300 - 1200, 320 - 1200);
+      }
+      if (this.tagName === "BUTTON" && this.textContent === "はじめる") {
+        return at(456 - 1200, 500 - 1200);
+      }
+      return at(0, 0);
+    },
+  );
+  await act(async () => {
+    screen.getByRole("button", { name: "もう一度挑戦する" }).click();
+  });
+  expect(scrollBySpy).toHaveBeenCalledTimes(1);
+  expect(scrollBySpy).toHaveBeenCalledWith({
+    top: -1200,
+    behavior: "instant",
+  });
+  expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "はじめる" }),
+  );
 });
