@@ -86,7 +86,7 @@
 | B-781 | 動的ルートの値が % を含む URL（/blog/%25 など）が 404 でなく 500 になる | P3 | Next.js の「failed to decode param」。ページの前で起きる。cycle-316 review-t5-22b-1.md |
 | B-782 | 解き終えた画面の招待のボタンの多く（character-personality・music ほか）が contentId を渡さず、GA に share（invite）が送られない | P2 | cycle-316 review-t5-5b-13.md |
 | B-783 | docs/content-quality-requirements.md のチートシート・ToolLayout・CheatsheetLayout・道具の valueProposition の節が今のコードと合わない。今の形に書き直す | P2 | cycle-316 T5-3c の builder の報告 |
-| B-790 | tmp外へのsed -i・perl -iを止めるhookを入れるか決める | P3 | B-754の統合のブランチの上で扱う。コミットに入るファイルをシェルで書く型がcycle-316・318で再発(AP-WF54候補)。止めすぎる害と取りこぼす害を比べる。詳細cycle-318/review-ap-check.md |
+| B-790 | tmp外へのsed -i・perl -iを止めるhookを組む | P2 | B-754の統合のブランチの上で扱う。コミットに入るファイルをシェルで書く型がcycle-316・318・319で再発(AP-WF54候補N=3)。本体に置かずhookへ移すと決めた。止めすぎる害と取りこぼす害を比べて範囲を決める。詳細cycle-318/review-ap-check.md |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | B-754の統合のブランチの上で扱う。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
 
 ## Deferred (すぐに着手できない)
