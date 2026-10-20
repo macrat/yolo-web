@@ -30,15 +30,16 @@ T5a の残り（T5a-4 区切りと根の `touch-action`・T5a-7 測りと完了�
 順は「T5a-5 → T5a-6 → 申し送り」である。T5a-5 と T5a-6 はどちらも `QuizContainer.tsx` を触るので並行させない（t5a-design.md 7章「同じファイルは1つずつ触る」）。
 
 1. **T5a-5**: builder（担当の木）を起こす。中身・触るファイル・試験は t5a-design.md 7章の T5a-5 の行と 4-2〜4-4・4-6・4-7・4-11、振り分けが渡すものは device-triage.md 7章の T5a-5 の行。T5a-5 は面の字を区切らずに `Button` に渡す（区切りは T5a-4）。完了の条件:
-   - 4-3 の試験1〜6が通る。4-7 の「試験」のうちフォーカスの部分（マウントのときにフォーカスが `body` のまま・やり直したあとにフォーカスが移る・150ms 進めた切り替わりのあと `document.activeElement` が次の問の見出し）が通る。4-7 の試験のうち送りの関数の呼び方と量（マウントのときに呼ばれない・結果の着地の量で呼ばれる）は、送りを組む T5a-6 の試験が受け持つ。
+   - 4-3 の試験1〜6が通る。4-7 の「試験」のうち、問のあいだのフォーカス（マウントのときにフォーカスが `body` のまま・「はじめる」と 150ms 進めた切り替わりと「次へ」のあと `document.activeElement` が次の問の見出し・知識クイズで答えたあと押した行）が通る。結果と開始の画面への切り替わり（最後の答え・最後の「次へ」・「もう一度挑戦する」）は、送りもフォーカスも T5a-6 が受け持つ（t5a-design.md 7章の T5a-6 の行「結果と『もう一度挑戦する』の着地とフォーカス」）。
    - 6章の条件9（回答の画面に帯の伸びのほかの動きが無い。`fadeIn` の規則と `@keyframes` が0）と条件10（`QuestionCard.module.css` に `--radius`・`outline: none`・`.resultPhase` が0）を `grep` で確かめる。
    - 既存の試験・型・lint・`format:check`・build が通る。
-   - `Button.module.css` を変えるので、`frontend-design` スキルの「共有の部品の見た目にかかわる指定を変えたら」に従い、`Button` を使うすべてのページ（`src/` で部品の名前を `grep` して洗い出す）を、前（主の木の HEAD）と後（担当の木）で、320・375・1280px と既定・200% で、押したあとに出る状態も開いて画素で比べる。差が出たページは、診断の回答の画面のほかに無いことを確かめる。
+   - `Button.module.css` を変えるので、`frontend-design` スキルの「共有の部品の見た目にかかわる指定を変えたら」に従い、`Button` を使うすべてのページ（`src/` で部品の名前を `grep` して洗い出す。直に読み込むファイルに加えて、`Button` を中に持つ部品（`ShareButtons`・`CopyButton`・`ListStatus` と、それを使う `DataTable`・`BrowsableList` など）を読み込みの連なりでたどり、それらを使うページもすべて含める）を、前（主の木の HEAD）と後（担当の木）で、320・375・1280px と既定・200% で、押したあとに出る状態も開いて画素で比べる。差が出たページは、診断の回答の画面のほかに無いことを確かめる。
    - 押した形（診断で押した行だけが下線を持つ形・知識クイズで名前の下に正誤の字を添えた形）と答えたあとの知識クイズを、前と後で 375×550・320×550・1280×800 のライトとダークで撮り、来訪者の目で確かめる。
    - 送りは T5a-6 が組むので、T5a-5 の時点の画面は送りの無い途中の形でよい（出荷は `design-rollout` の最後の1回なので来訪者には出ない）。
      reviewer に通し、承認されたら PM が取り込む。
 2. **T5a-6**: T5a-5 を取り込んでから、builder（担当の木）を起こす。中身・触るファイル・試験は t5a-design.md 7章の T5a-6 の行と 4-5・4-6・4-8・4-9、振り分けが渡すものは device-triage.md 7章の T5a-6 の行。完了の条件:
-   - `QuizContainer.reveal`・`intro`・`secondPress` の試験が通る。4-7 の試験のうち送りの関数の呼び方と量（マウントのとき（`scrollY` を 0 以外にした状態と `location.hash` を付けた状態）に呼ばれない・結果への切り替わりのあと結果の着地の量で呼ばれフォーカスが結果のボックスにある）をここに入れる。
+   - `QuizContainer.reveal`・`intro`・`secondPress` の試験が通る。4-7 の試験のうち送りの関数の呼び方と量と、結果と開始の画面への切り替わりのフォーカスをここに入れる: マウントのとき（`scrollY` を 0 以外にした状態と `location.hash` を付けた状態）に送りの関数が呼ばれない・結果への切り替わりのあと結果の着地の量で呼ばれフォーカスが結果のボックスにある・やり直したあと（マウントと同じ状態の値）に送りの関数が呼ばれフォーカスが「はじめる」にある。
+   - `QuizContainer.tsx` の開始の画面の説明のコメント（「事実（種別・問題数・所要時間・タイプ数）」）が `DESIGN.md` §8 の語（種別・問の数・かかる時間の行）と合わせて読めるかを確かめ、合わなければ直す（cycle-318 のキャリーオーバー「開始の画面の語」）。
    - 全試験・型・lint・`format:check`・build が通る。
    - 開始・1問目・高い問のあとの短い問・知識クイズの答えたあと（既定と 200%）・結果・やり直しのあとを、前（T5a-5 を取り込んだ HEAD）と後で 375×550・1280×800 のライトとダークで撮って確かめる。
    - 全15本を 375×550 で「はじめる」から結果まで解き、問ごとにまとまりが画面に入ることを目で確かめる（数を揃えた測りは T5a-7）。
@@ -59,13 +60,13 @@ T5a の残り（T5a-4 区切りと根の `touch-action`・T5a-7 測りと完了�
 - 外部仕様への依存（2026-10-20 に一次資料で確かめた）:
   - react.dev `useLayoutEffect`（https://react.dev/reference/react/useLayoutEffect ）: 「React guarantees that the code inside `useLayoutEffect` and any state updates scheduled inside it will be processed before the browser repaints the screen.」設計 4-7 の「塗る前に送りとフォーカスを行う」はこれに依る。
   - react.dev `useEffect`（https://react.dev/reference/react/useEffect ）: クリックで起きたのでない更新の effect は「generally」塗ったあと、クリックで起きた更新の effect は「may」塗る前。設計 4-7 の読みと合う。
-  - `focus({ preventScroll: true })`: 設計 4-7・4-8 は、送ってからフォーカスを送らずに移す。MDN `HTMLElement.focus()`（https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus ）は Baseline Widely available。MDN の互換性のデータ（`@mdn/browser-compat-data` 8.1.6）は Chrome for Android を `version_added: false` とし、元に https://crbug.com/41453122 を挙げるが、この bug は文字を入れる要素で文字盤が出たときの送りの報告（「When showing software keyboard, preventScroll option is ignored」）である。Chromium の main の `third_party/blink/renderer/core/dom/element.cc` では、編集できない要素は `options->preventScroll()` が偽のときだけ送り、Android だけの分かれは無い。設計がフォーカスを置くのは見出し・行・「はじめる」・結果のボックスで、どれも編集できない要素なので、この設計は Chrome for Android でも送られない。
+  - `focus({ preventScroll: true })`: 設計 4-7・4-8 は、送ってからフォーカスを送らずに移す。MDN `HTMLElement.focus()`（https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus ）では `focus()` の方法が Baseline Widely available で、引数の互換性は次のとおり。MDN の互換性のデータ（`@mdn/browser-compat-data` 8.1.6）は Chrome for Android を `version_added: false` とし、元に https://crbug.com/41453122 を挙げるが、この bug は文字を入れる要素で文字盤が出たときの送りの報告（「When showing software keyboard, preventScroll option is ignored」）である。Chromium の main の `third_party/blink/renderer/core/dom/element.cc` の `UpdateSelectionOnFocus` では、編集できない要素は `options->preventScroll()` が偽のときだけ送り、Android だけの分かれは無い。文字盤が出たときの送り（`third_party/blink/renderer/core/frame/web_frame_widget_impl.cc` の `ScrollFocusedEditableElementIntoView`）は、`preventScroll` のときと、編集できない要素（EditContext も無いとき）で何もせずに戻る。設計がフォーカスを置くのは見出し・行・「はじめる」・結果のボックスで、どれも編集できない要素なので、この設計は Chrome for Android でも送られない。この結びはソースの読みによるもので、実機では確かめていない。
 
 ## レビュー結果
 
-| 対象 | 回数 | 最終判定 | 記録                               |
-| ---- | ---- | -------- | ---------------------------------- |
-| 計画 | 1    | 要修正   | [review-plan.md](./review-plan.md) |
+| 対象 | 回数 | 最終判定 | 記録                                                         |
+| ---- | ---- | -------- | ------------------------------------------------------------ |
+| 計画 | 2    | 要修正   | [review-plan.md](./review-plan.md)・[-2](./review-plan-2.md) |
 
 ## キャリーオーバー
 
