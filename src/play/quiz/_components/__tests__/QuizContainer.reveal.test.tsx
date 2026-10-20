@@ -498,6 +498,66 @@ describe("QuizContainer — 押した点の真下を避ける着地", () => {
     expect(scrollBySpy).not.toHaveBeenCalled();
   });
 
+  test("知識クイズの「次へ」の点の真下に次の問の選択肢が来るときは、選択肢の外へずらす（まだ読んでいない問に答えを入れない）", async () => {
+    renderQuiz(makeKnowledgeQuiz(2));
+    await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
+    await pressWithKeyboard(choiceButton("正解"));
+    scrollBySpy.mockClear();
+
+    // 2問目のまとまりは画面に入り、点 500 の真下に最初の選択肢（480〜524）が来る。
+    stubRects((element) => {
+      const stage = stageOf();
+      if (element === stage) return rect(300, 560);
+      if (element.tagName === "UL") return rect(340, 560);
+      if (element === stage?.lastElementChild) return rect(320, 560);
+      if (element.tagName === "BUTTON" && element.textContent === "正解") {
+        return pressable(480, 524);
+      }
+      if (element.tagName === "BUTTON" && element.textContent === "不正解") {
+        return pressable(525, 569);
+      }
+      return undefined;
+    });
+    await pressAt(screen.getByRole("button", { name: "次へ" }), 500);
+    expect(document.activeElement).toBe(
+      screen.getByRole("heading", { level: 2, name: "問2" }),
+    );
+    // 基準は送らない。点 500 が選択肢の上端 480 より上に出る、いちばん近い送り。
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: -21,
+      behavior: "instant",
+    });
+  });
+
+  test("知識クイズで答えたあと、基準の送りで点の真下に「次へ」が来るときは、「次へ」を点から遠ざける（解説を読ませずに次の問へ進めない）", async () => {
+    renderQuiz(makeKnowledgeQuiz(2));
+    await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
+
+    // 答えたあとのまとまり（正解の行の上端 260 から「次へ」の下端 684）は下に外れ、基準の送り 92 で「次へ」は
+    // 548〜592 に来て、点 560 の真下になる。
+    stubRects((element) => {
+      const name = element.textContent ?? "";
+      if (element.tagName === "LI" && name.startsWith("正解")) {
+        return rect(260, 330);
+      }
+      if (element.tagName === "LI" && name.startsWith("不正解")) {
+        return rect(330, 400);
+      }
+      if (element.tagName === "BUTTON" && name === "次へ") {
+        return pressable(640, 684);
+      }
+      return undefined;
+    });
+    await pressAt(choiceButton("不正解"), 560);
+    // 範囲（92〜252）の中で、「次へ」の下端が点から 100 離れる、基準にいちばん近い送り（684 − s が 460 以下）。
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: 224,
+      behavior: "instant",
+    });
+  });
+
   test("「もう一度挑戦する」のあとは、点の真下に「はじめる」が来ても避けず、ページの頭から見せる", async () => {
     renderQuiz(makePersonalityQuiz(1));
     await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
