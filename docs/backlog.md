@@ -88,7 +88,7 @@
 | B-783 | docs/content-quality-requirements.md のチートシート・ToolLayout・CheatsheetLayout・道具の valueProposition の節が今のコードと合わない。今の形に書き直す | P2 | cycle-316 T5-3c の builder の報告 |
 | B-790 | tmp外へのsed -i・perl -iを止めるhookを組む | P2 | B-754の統合のブランチの上で扱う。コミットに入るファイルをシェルで書く型がcycle-316・318・319で再発(AP-WF54候補N=3)。本体に置かずhookへ移すと決めた。止めすぎる害と取りこぼす害を比べて範囲を決める。詳細cycle-318/review-ap-check.md |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | B-754の統合のブランチの上で扱う。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
-| B-792 | 失敗した呼び出しの後の同じバッチのcommit・pushをhookで止められるか確かめる | P2 | B-754の統合のブランチの上で扱う。AP-WF29が7度目(cycle-319)。失敗後に走るhookで印を残しcommit等の前に見る形を、同じバッチが順に走るかから確かめる。詳細cycle-319/review-ap-check-2.md |
+| B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | B-754の統合のブランチの上で扱う。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 
 ## Deferred (すぐに着手できない)
 
