@@ -1,6 +1,6 @@
 # cycle-319 ワークフローのアンチパターンの点検（cycle-completion 手順5）
 
-- 対象: 主の木 `design-rollout`、HEAD fc9d5736。サイクルの起点 acef86e6 からの `git log`（43コミット）、docs/cycles/cycle-319/ の全体（index.md と review-*.md の17本）
+- 対象: 主の木 `design-rollout`、HEAD fc9d5736。サイクルの起点 acef86e6 からの `git log`（39コミット）、docs/cycles/cycle-319/ の全体（index.md と review-*.md の17本）
 - 照らしたもの: `docs/anti-patterns/workflow.md`（全項目）、planning.md・implementation.md・candidates.md、`.claude/rules/delegation.md`・`file-editing.md`・`worktrees.md`、`cycle-kickoff`・`cycle-completion` のスキル
 - 記録との突き合わせに使ったもの: PM のセッションの記録（`~/.claude/projects/-home-user-yolo-web/be086034-….jsonl`）から、PM が打ったツールの呼び出し311件と、その結果（コミット・push・マージの終了の値、Edit の成否、担当と reviewer の完了の通知の時刻）を取り出して読んだ。各マージの第2の親の `git log`、取り込みが fast-forward できたかを `git merge-base --is-ancestor` で確かめた
 - 判定: **要修正**
@@ -55,7 +55,7 @@
 確かめて、外れが無かったもの:
 
 - 担当を起こす前のコミットと HEAD: 5人の builder のどれも、直前に `git status --short`（出力は空）と `git rev-parse HEAD` を別々の呼び出しで打ち、出た HEAD を依頼に写した。起こす前のコミットの終了の値（`rc=0`）も見ている。コミットが hook（backlog の行の長さ）に止められた2回は、結果を見て直してからコミットし直した。
-- push の終了の値: 18回の push はどれも `git push … 2>&1 | tail -n; echo "push_rc=${PIPESTATUS[0]}"` で、パイプの前の push の値を読み、すべて `push_rc=0` だった。
+- push の終了の値: この点検を頼むまでの19回の push はどれも `git push … 2>&1 | tail -n; echo "push_rc=${PIPESTATUS[0]}"` で、パイプの前の push の値を読み、すべて `push_rc=0` だった。
 - 取り込みの後片付け: `git worktree remove` と `git branch -d` の終了の値を読み、`--force` 類は使っていない。いま `git worktree list` は主の木だけ、`worktree-*` の枝は0。
 - キックオフ: `git merge origin/main` は浅い clone のため「unrelated histories」で止まったが、PM は `--unshallow` で取り直し、`git log HEAD..origin/main` が空であること（main に取り込むものが無い）を確かめた。
 - 補足事項の3つ目の段落の事実: main への手順のコミットを作らない理由（このサイクルが `.claude/` で変えたのは `frontend-design` のスキル1つ）、ADR009 の次回確認日（`docs/ADR/open/2026-10-23-…`）は合う。
