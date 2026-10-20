@@ -3,7 +3,10 @@ import { createRef } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
-import Button from "@/components/Button";
+import Button, {
+  buttonFaceBoxClassName,
+  buttonUnderlineClassName,
+} from "@/components/Button";
 import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 
 describe("Button", () => {
@@ -92,11 +95,25 @@ describe("Button", () => {
     expect(screen.getByRole("button")).toHaveAttribute("type", "reset");
   });
 
-  it(".button has min-height: 44px (§6 tap target)", () => {
+  it("ボタンの面の箱は min-height: 44px を持つ（§6 tap target）", () => {
     const cssPath = resolve(__dirname, "../Button.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    const buttonBlock = css.match(/\.button\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(buttonBlock).toContain("min-height: 44px");
+    const faceBoxBlock = css.match(/\.faceBox\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(faceBoxBlock).toContain("min-height: 44px");
+  });
+
+  test("どの種類のボタンも面の箱を持ち、プライマリでないボタンは下線を持つ", () => {
+    render(
+      <>
+        <Button>既定</Button>
+        <Button variant="primary">主</Button>
+      </>,
+    );
+    const plain = screen.getByRole("button", { name: "既定" });
+    const primary = screen.getByRole("button", { name: "主" });
+    expect(plain).toHaveClass(buttonFaceBoxClassName, buttonUnderlineClassName);
+    expect(primary).toHaveClass(buttonFaceBoxClassName);
+    expect(primary).not.toHaveClass(buttonUnderlineClassName);
   });
 
   test("無効で理由があれば、理由を横に出してボタンの説明にする", () => {

@@ -1,20 +1,25 @@
 "use client";
 
 import {
-  useState,
   useCallback,
   useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
   useRef,
   type ReactNode,
 } from "react";
 import { trackContentStart, trackContentEnd } from "@/lib/analytics";
 import Link from "next/link";
-import type {
-  QuizDefinition,
-  QuizAnswer,
-  QuizPhase,
-  QuizResult,
-} from "@/play/quiz/types";
+import type { QuizDefinition, QuizResult } from "@/play/quiz/types";
+import {
+  answeredChoiceId,
+  currentQuestionId,
+  initialQuizProgress,
+  reduceQuizProgress,
+  type QuizProgress,
+  type QuizProgressAction,
+} from "@/play/quiz/quizProgress";
 import {
   determineResult,
   calculateKnowledgeScore,
@@ -52,6 +57,12 @@ type QuizContainerProps = {
 };
 
 /**
+ * 診断で押した選択肢を見せてから次の問か結果へ移るまでの長さ（ms）。§11 の操作フィードバックの上限で、動きではない
+ * ので prefers-reduced-motion でも変えない。
+ */
+export const ANSWER_SHOWN_MS = 150;
+
+/**
  * クイズ・診断の本体。開始 → 設問 → 結果の段階を持ち、段階ごとにページのセクションを描く（DESIGN.md §5）。
  * 開始の画面と設問では、ページの頭と本体を1つのセクションに置く。解き終えた画面では、ページの頭と結果に続けて
  * 「このタイプについて」「次はこれを試してみよう」「すべてのタイプ」を兄弟のセクションとして並べる（ResultCard）。
@@ -65,9 +76,62 @@ export default function QuizContainer({
   resultHeadings,
   readingHeadings,
 }: QuizContainerProps) {
-  const [phase, setPhase] = useState<QuizPhase>("intro");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+  const questionIds = useMemo(
+    () => quiz.questions.map((question) => question.id),
+    [quiz.questions],
+  );
+  const [progress, dispatch] = useReducer(
+    (state: QuizProgress, action: QuizProgressAction) =>
+      reduceQuizProgress(state, action, questionIds),
+    initialQuizProgress,
+  );
+  const { phase, currentIndex, answers } = progress;
+  const currentId = currentQuestionId(progress, questionIds);
+  const currentAnswer =
+    currentId === undefined ? undefined : answeredChoiceId(progress, currentId);
+
+  const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
+  const contentId = contentIdForQuiz(quiz.meta.slug);
+
+  // 開始と結果に着いたことの計測は、段階が変わったときに1度だけ送る。「はじめる」や最後の答えの二度押しで2回送らない。
+  const previousPhaseRef = useRef(phase);
+  useEffect(() => {
+    const previousPhase = previousPhaseRef.current;
+    previousPhaseRef.current = phase;
+    if (previousPhase === phase) return;
+    if (phase === "playing") trackContentStart(contentId, contentType);
+    if (phase === "result") trackContentEnd(contentId, contentType, true);
+  }, [phase, contentId, contentType]);
+
+  // 診断では、押した選択肢を見せてから次の問か結果へ進む。タイマーは答えた問の id を名指すので、ほかの経路と
+  // 重なっても進むのは1問だけで、見せているあいだに部品が外れたら止まる。
+  const isPersonality = quiz.meta.type === "personality";
+  useEffect(() => {
+    if (!isPersonality || currentId === undefined) return;
+    if (currentAnswer === undefined) return;
+    const timer = setTimeout(
+      () => dispatch({ type: "advance", questionId: currentId }),
+      ANSWER_SHOWN_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [isPersonality, currentId, currentAnswer]);
+
+  // 問のあいだのフォーカス。来訪者の操作で画面が切り替わったら、塗る前に、次の問が出たときは問の見出しへ、答えたときは
+  // 押した行へ移す。押したボタンが字に替わったり、「次へ」が消えたりしても、フォーカスが body にある画面は塗られない。
+  // 切り替わりの番号がマウントのときから変わっていなければ（開いた直後・作り直されたとき）何もせず、ページの途中への
+  // リンクや戻る操作で着いた位置と読み上げの位置を壊さない。
+  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const pressedRowRef = useRef<HTMLLIElement>(null);
+  const mountTransitionRef = useRef(progress.transition);
+  const answered = currentAnswer !== undefined;
+  useLayoutEffect(() => {
+    if (progress.transition === mountTransitionRef.current) return;
+    if (phase !== "playing") return;
+    const target = answered
+      ? pressedRowRef.current
+      : questionHeadingRef.current;
+    target?.focus({ preventScroll: true });
+  }, [progress.transition, phase, answered]);
 
   // 結果のボックス。解き終えたら、画面をボックスの上端まで即時に送り（DESIGN.md §11）、フォーカスを移して
   // 読み上げにも結果に着いたことを伝える。結果の画面に進めるのは最後の設問に答えたときだけなので、ページを
@@ -85,54 +149,22 @@ export default function QuizContainer({
   // パンくずと h1 を、その下の中身と同じ間隔で積む（§5 の間隔）。
   const pageHead = <div className={styles.head}>{head}</div>;
 
-  const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
-  const contentId = contentIdForQuiz(quiz.meta.slug);
-
-  const handleStart = useCallback(() => {
-    setPhase("playing");
-    setCurrentIndex(0);
-    setAnswers([]);
-    trackContentStart(contentId, contentType);
-  }, [contentId, contentType]);
+  const handleStart = useCallback(() => dispatch({ type: "start" }), []);
 
   const handleAnswer = useCallback(
     (choiceId: string) => {
-      const question = quiz.questions[currentIndex];
-      const newAnswer: QuizAnswer = {
-        questionId: question.id,
-        choiceId,
-      };
-      const newAnswers = [...answers, newAnswer];
-      setAnswers(newAnswers);
-
-      // personality type: advance immediately
-      if (quiz.meta.type === "personality") {
-        if (currentIndex + 1 >= quiz.questions.length) {
-          setPhase("result");
-          trackContentEnd(contentId, contentType, true);
-        } else {
-          setCurrentIndex((prev) => prev + 1);
-        }
-      }
+      if (currentId === undefined) return;
+      dispatch({ type: "answer", questionId: currentId, choiceId });
     },
-    [answers, currentIndex, quiz, contentId, contentType],
+    [currentId],
   );
 
   const handleNext = useCallback(() => {
-    // knowledge type: advance to next question or show result
-    if (currentIndex + 1 >= quiz.questions.length) {
-      setPhase("result");
-      trackContentEnd(contentId, contentType, true);
-    } else {
-      setCurrentIndex((prev) => prev + 1);
-    }
-  }, [currentIndex, quiz.questions.length, contentId, contentType]);
+    if (currentId === undefined) return;
+    dispatch({ type: "advance", questionId: currentId });
+  }, [currentId]);
 
-  const handleRetry = useCallback(() => {
-    setPhase("intro");
-    setCurrentIndex(0);
-    setAnswers([]);
-  }, []);
+  const handleRetry = useCallback(() => dispatch({ type: "retry" }), []);
 
   if (phase === "intro") {
     const questionCount = quiz.meta.questionCount;
@@ -203,8 +235,11 @@ export default function QuizContainer({
             key={question.id}
             question={question}
             quizType={quiz.meta.type}
+            answeredChoiceId={currentAnswer}
             onAnswer={handleAnswer}
             onNext={handleNext}
+            headingRef={questionHeadingRef}
+            pressedRowRef={pressedRowRef}
           />
         </div>
       </Section>
