@@ -8,7 +8,7 @@
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-import QuizContainer from "../QuizContainer";
+import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
 import type { ItemListItem } from "@/components/ItemList";
 import type {
   QuizDefinition,
@@ -19,10 +19,15 @@ import type {
 
 // gtag をモックして window.gtag に差し替える。analytics.ts は window.gtag を
 // 直接呼ぶので、ここで spy を仕込むことで送出 payload を検査できる。
+// 診断は押した選択肢を見せてから結果へ移るので、偽の時計で見せる長さを進める。
 const gtagSpy = vi.fn();
 beforeEach(() => {
   gtagSpy.mockClear();
   (window as unknown as { gtag: typeof gtagSpy }).gtag = gtagSpy;
+  vi.useFakeTimers();
+});
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 // Panel / Button は軽量モックでテスト集中対象を絞る
@@ -32,6 +37,8 @@ vi.mock("@/components/Panel", () => ({
   ),
 }));
 vi.mock("@/components/Button", () => ({
+  buttonFaceBoxClassName: "faceBox",
+  buttonUnderlineClassName: "underline",
   default: ({
     children,
     onClick,
@@ -179,7 +186,12 @@ async function playToLevelEnd(
   await act(async () => {
     choiceButtons[0].click();
   });
-  // knowledge は手動 next 必要
+  // 診断は押した選択肢を見せたあとに、knowledge は手動の「次へ」で結果へ移る
+  if (quiz.meta.type === "personality") {
+    await act(async () => {
+      vi.advanceTimersByTime(ANSWER_SHOWN_MS);
+    });
+  }
   if (quiz.meta.type === "knowledge") {
     const nextBtn = screen.queryByRole("button", { name: /次へ|結果/ });
     if (nextBtn) {

@@ -54,9 +54,18 @@ function faceText(children: ReactNode): string | undefined {
 }
 
 const variantClassMap: Record<ButtonVariant, string> = {
-  default: styles.variantDefault,
+  default: `${styles.variantDefault} ${styles.underline}`,
   primary: styles.variantPrimary,
 };
+
+/**
+ * ボタンの面の箱のクラス。押すとボタンから字に替わるもの（答えたあとの問の選択肢）は、字をこの箱に置き、押す前の
+ * ボタンと同じ位置・幅・行間・余白で組む（DESIGN.md §5・§6）。箱は `data-text-box="inline"` と組で使う。
+ */
+export const buttonFaceBoxClassName = styles.faceBox;
+
+/** プライマリでないボタンの下線のクラス。押したあとも下線を持ったままでいる字（§6 の実行のさいちゅう）が使う。 */
+export const buttonUnderlineClassName = styles.underline;
 
 /**
  * ボタン（DESIGN.md §6）。見え方は Button.module.css が持つ。ref は button 要素に渡るので、呼び出し側が
@@ -78,7 +87,12 @@ function Button({
   const facePhrases = phrases ?? (text === undefined ? undefined : [text]);
   const showReason = Boolean(disabled && disabledReason);
 
-  const classes = [styles.button, variantClassMap[variant], className]
+  const classes = [
+    styles.faceBox,
+    styles.button,
+    variantClassMap[variant],
+    className,
+  ]
     .filter(Boolean)
     .join(" ");
 

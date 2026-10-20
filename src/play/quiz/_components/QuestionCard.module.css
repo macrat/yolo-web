@@ -1,115 +1,85 @@
 /*
- * 設問カード。
- * 設問文=見出しの書体・選択肢=下線を持つボタンを1行ずつ並べた一覧。正誤フィードバックは
- * 文字で示す（WCAG 1.4.1）。リビールは 1 回・300ms・reduced-motion 尊重。
+ * 問の区画。問の見出しと、押すと回答が決まるボタンを1行に1つずつ並べた選択肢（§6）。押すと、その問の選択肢は
+ * どれもボタンから字に替わる。字はボタンの面と同じ箱（Button の buttonFaceBoxClassName と data-text-box）に置くので、
+ * 替わっても行の上端・高さと名前の字の位置と折り返しは変わらない。知識クイズでは、正誤の字を名前の下に添え、解説と
+ * 「次へ」を続ける（§8）。
  */
 
-.card {
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 設問文: 見出し書体で組む h2。読ませる文なので line-height はゆったり。 */
+/* 問の見出しは、最初のセクションの中の小見出しの段で組む（§4）。すぐ上の進み具合の帯が切れ目なので、上の罫線を
+ * 持たない（§5）。問が替わるとフォーカスを受け、リングは字の箱（data-text-box）に出る。 */
 .questionText {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  margin: 0 0 1.25rem;
-  line-height: 1.6;
+  margin: 0 0 var(--space-16);
+  font-size: var(--text-heading-sub);
+  line-height: var(--leading-heading);
   color: var(--ink);
 }
 
-/* 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。
- * キーボード tab で到達する要素ではないため、フォーカスの輪は出さない
- * （結果リビール region の .resultPhase:focus と同じ流儀）。 */
-.questionText:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-/* 選択肢は1行1項目の一覧（§7）。字を罫線の内側から始める行の左右の余白と、hover の線の形は
- * data-text-box（globals.css）が持つ。 */
+/* 選択肢の行は区切りの罫線で分ける。字を罫線の内側から始める行の左右の余白と、hover の線の形と、押した行に出す
+ * リングを行の内側に密着させる値は、data-text-box（globals.css）が持つ。 */
 .choices {
   list-style: none;
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
+/* 名前の箱を上に、知識クイズの添えた字をその下に、どちらも左に寄せて縦に並べる。上下の余白と 44px の高さは
+ * 名前の箱（ボタンの面と同じ箱）が持つ。押した行はプログラムからフォーカスを受け、リングは罫線の内側に出る。 */
 .choice {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  column-gap: 0.75rem;
-  min-height: 44px;
-  padding-block: 0.625rem;
+  flex-direction: column;
+  align-items: flex-start;
   border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 押すと回答が決まるので、下線を持つ（§6）。 */
-.choiceButton {
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--ink);
-  font-size: 1rem;
-  line-height: 1.6;
-  text-align: left;
-  text-decoration: underline;
-  text-decoration-thickness: var(--rule-w-hair);
-  text-underline-offset: 0.15em;
-  cursor: pointer;
-}
-
-/* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
-.choiceButton::after {
+/* 押せる範囲を行の全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に
+ * 出す。答えを決めて次の問へ進むさいちゅうの字も、押す前と同じ範囲に hover の線を出し、同じポインタの形を持つ。 */
+.choiceButton::after,
+.pressedFace::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
-.choiceText {
-  font-size: 1rem;
-  line-height: 1.6;
+.pressedFace {
+  cursor: pointer;
 }
 
-/* 正誤の文字（knowledge type のフィードバック）。正誤は色ではなくこの文字で伝える。 */
-.feedbackTag {
-  flex-shrink: 0;
+/* 答えたあとの字。ブラウザが button に掛ける既定のうち、globals.css と Button が決め直さない値を同じ値で書き、
+ * 祖先が字形や字間を決めても押す前のボタンと同じ字で組む。字の大きさは書かず、ボタンと同じく本文の大きさを継ぐ。 */
+.answeredFace {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-stretch: normal;
+  font-kerning: auto;
+  font-size-adjust: none;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  font-optical-sizing: auto;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0;
+}
+
+/* 正誤の字（知識クイズ）。操作への応えの中身なので、補助情報の大きさでも --ink で組む。名前の箱の下の余白に続け、
+ * 罫線までに 8px をあける。 */
+.feedback {
+  padding-block-end: var(--space-8);
   font-size: var(--text-small);
-  font-weight: 700;
-  white-space: nowrap;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
 }
 
-/* 解説ブロック（knowledge type） */
+/* 解説は操作への応えで、結果ではないので、ボックスに入れず本文の大きさ・本文の幅で組む（§8）。 */
 .explanation {
-  margin-top: 1rem;
-  padding: 0.875rem 1rem;
-  background-color: var(--paper-2);
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--ink-2);
-  animation: fadeIn 0.3s ease;
+  max-width: var(--measure);
+  margin-top: var(--space-16);
+  color: var(--ink);
 }
 
 /* 「次へ」ボタンの見え方は Button が持ち、ここは上の内容とのあいだだけを持つ。 */
 .next {
-  margin-top: 1rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .explanation {
-    animation: none;
-  }
+  margin-top: var(--space-16);
 }
