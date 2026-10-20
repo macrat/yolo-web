@@ -72,7 +72,7 @@ T5a の残り（T5a-4 区切りと根の `touch-action`・T5a-7 測りと完了�
 | 計画  | 5    | 承認     | [review-plan.md](./review-plan.md)〜[-5](./review-plan-5.md)    |
 | T5a-5 | 4    | 承認     | [review-t5a-5.md](./review-t5a-5.md)〜[-4](./review-t5a-5-4.md) |
 | T5a-6 | 3    | 承認     | [review-t5a-6.md](./review-t5a-6.md)〜[-3](./review-t5a-6-3.md) |
-| 全体  | 3    | 要修正   | [review-final.md](./review-final.md)〜[-3](./review-final-3.md) |
+| 全体  | 4    | 承認     | [review-final.md](./review-final.md)〜[-4](./review-final-4.md) |
 
 T5a-5: 第1回の2件（問の見出しの `margin` の一括指定が字の箱の左への張り出しを打ち消し、字が 8px 右にずれた・撮り比べで9つ目より後の `Button` を押していなかった）、第2回の2件（キーボードで問に着いたとき見出しのリングが字に重なる・スキルに足した左端の観点の文が §5 と食い違う）、第3回の1件（見出しの余白の説明が宣言と食い違う）をすべて直した。PM の判断: 第2回の指摘1は、見出しの箱を上下に 8px 広げ、上は負の余白で打ち消し、下は見出しの下の 16px のうち 8px を箱の内側に入れる。並んだボタンの面（上下 8px）のリングと同じく字とリングのあいだに地が残る。§5 は字の箱の上下を決めていないので `DESIGN.md` は変えない。`Button` を使う106の URL を前と後で撮り比べ、差は診断・クイズ15本の回答の画面だけだった（storybook・qr-code の差は撮り直しのゆらぎ）。
 
