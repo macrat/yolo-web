@@ -67,8 +67,8 @@ vi.mock("@/components/Button", () => ({
   ),
 }));
 
-// ResultCard は、ページの頭・結果の名前で名付けた結果のボックスにあたる要素・追加の読みものだけを描く軽い形にし、
-// 受け取った値を属性で見せる。
+// ResultCard は、ページの頭・結果の名前で名付けた結果のボックスにあたる要素・「もう一度挑戦する」・追加の読みものだけを
+// 描く軽い形にし、受け取った値を属性で見せる。
 vi.mock("../ResultCard", () => ({
   default: ({
     head,
@@ -77,6 +77,7 @@ vi.mock("../ResultCard", () => ({
     appear,
     extra,
     nextItems,
+    onRetry,
   }: {
     head: React.ReactNode;
     resultBoxRef: React.Ref<HTMLElement>;
@@ -84,6 +85,7 @@ vi.mock("../ResultCard", () => ({
     appear?: boolean;
     extra?: React.ReactNode;
     nextItems?: unknown[];
+    onRetry: () => void;
   }) => (
     <>
       {head}
@@ -98,6 +100,9 @@ vi.mock("../ResultCard", () => ({
       >
         <h2 id="result-name">{heading.phrases.join("")}</h2>
       </section>
+      <button type="button" onClick={onRetry}>
+        もう一度挑戦する
+      </button>
       {extra}
     </>
   ),
@@ -419,6 +424,107 @@ describe("QuizContainer — 字の読み込みのあとの送り直し", () => {
     stubQuestion(100, 640);
     fonts.dispatchEvent(new Event("loadingdone"));
     expect(scrollBySpy).not.toHaveBeenCalled();
+  });
+});
+
+describe("QuizContainer — 押した点の真下を避ける着地", () => {
+  // ページは高さ 3000 で 1000 まで送ってあり、上にも下にも送れる。押したものは幅 300 の矩形で、押した点は
+  // click の座標（detail が 1）で渡す。
+  beforeEach(() => {
+    vi.stubGlobal("scrollY", 1000);
+    Object.defineProperty(document.documentElement, "scrollHeight", {
+      configurable: true,
+      value: 3000,
+    });
+  });
+  afterEach(() => {
+    Reflect.deleteProperty(document.documentElement, "scrollHeight");
+  });
+
+  function pressable(top: number, bottom: number): DOMRect {
+    return { ...rect(top, bottom), right: 300, width: 300 } as DOMRect;
+  }
+
+  /** 画面に入る問のまとまり（区画 300〜560）と、点の高さ 500 の真下に来る最初の選択肢（480〜524）。 */
+  function stubQuestionUnderPoint(): void {
+    stubRects((element) => {
+      const stage = stageOf();
+      if (element === stage) return rect(300, 560);
+      if (element.tagName === "UL") return rect(340, 560);
+      if (element === stage?.lastElementChild) return rect(320, 560);
+      if (element.tagName === "BUTTON" && element.textContent === "選択1") {
+        return pressable(480, 524);
+      }
+      if (element.tagName === "BUTTON" && element.textContent === "選択2") {
+        return pressable(525, 569);
+      }
+      return undefined;
+    });
+  }
+
+  async function pressAt(element: HTMLElement, y: number): Promise<void> {
+    await act(async () => {
+      fireEvent.click(element, { detail: 1, clientX: 100, clientY: y });
+    });
+  }
+
+  async function pressWithKeyboard(element: HTMLElement): Promise<void> {
+    await act(async () => {
+      fireEvent.click(element, { detail: 0 });
+    });
+  }
+
+  test("「はじめる」の点の真下に1問目の選択肢が来るときは、選択肢の外へずらす（まだ読んでいない問に答えを入れない）", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestionUnderPoint();
+    await pressAt(screen.getByRole("button", { name: "はじめる" }), 500);
+    // 基準は送らない（まとまりは画面に入っている）。点 500 が選択肢の上端 480 より上に出る、いちばん近い送り。
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: -21,
+      behavior: "instant",
+    });
+  });
+
+  test("診断の答えのあとは、点の真下に次の問の選択肢が来ても送らない（問ごとに選択肢の位置を動かさない）", async () => {
+    renderQuiz(makePersonalityQuiz(2));
+    stubQuestionUnderPoint();
+    await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
+    await pressAt(choiceButton("選択1"), 500);
+    await advance(ANSWER_SHOWN_MS);
+    expect(screen.getByRole("heading", { level: 2, name: "問2" })).toBe(
+      document.activeElement,
+    );
+    expect(scrollBySpy).not.toHaveBeenCalled();
+  });
+
+  test("「もう一度挑戦する」のあとは、点の真下に「はじめる」が来ても避けず、ページの頭から見せる", async () => {
+    renderQuiz(makePersonalityQuiz(1));
+    await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
+    await pressWithKeyboard(choiceButton("選択1"));
+    await advance(ANSWER_SHOWN_MS);
+    scrollBySpy.mockClear();
+
+    // 開始の画面の事実の行と「はじめる」は、ページの頭から 300・456〜500 の所にある（画面の上端から測ると、送った
+    // 1000 だけ上）。頭へ戻すと、点 480 の真下に「はじめる」が来る。
+    stubRects((element) => {
+      if (element.tagName === "P" && element.textContent?.includes("全1問")) {
+        return rect(300 - 1000, 320 - 1000);
+      }
+      if (element.tagName === "BUTTON" && element.textContent === "はじめる") {
+        return pressable(456 - 1000, 500 - 1000);
+      }
+      return undefined;
+    });
+    await pressAt(
+      screen.getByRole("button", { name: "もう一度挑戦する" }),
+      480,
+    );
+    expect(scrollBySpy).toHaveBeenCalledTimes(1);
+    expect(scrollBySpy).toHaveBeenCalledWith({
+      top: -1000,
+      behavior: "instant",
+    });
   });
 });
 
