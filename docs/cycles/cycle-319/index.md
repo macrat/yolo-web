@@ -2,7 +2,7 @@
 id: 319
 description: 統合のブランチ design-rollout の3つ目のサイクル。診断の回答の画面（T5a）の本体として、回答の本体（T5a-5）と流れ（T5a-6）を組む
 started_at: 2026-10-20T02:53:12+0000
-completed_at: null
+completed_at: 2026-10-20T15:14:25+0000
 ---
 
 # サイクル-319
@@ -67,12 +67,13 @@ T5a の残り（T5a-4 区切りと根の `touch-action`・T5a-7 測りと完了�
 
 ## レビュー結果
 
-| 対象  | 回数 | 最終判定 | 記録                                                            |
-| ----- | ---- | -------- | --------------------------------------------------------------- |
-| 計画  | 5    | 承認     | [review-plan.md](./review-plan.md)〜[-5](./review-plan-5.md)    |
-| T5a-5 | 4    | 承認     | [review-t5a-5.md](./review-t5a-5.md)〜[-4](./review-t5a-5-4.md) |
-| T5a-6 | 3    | 承認     | [review-t5a-6.md](./review-t5a-6.md)〜[-3](./review-t5a-6-3.md) |
-| 全体  | 4    | 承認     | [review-final.md](./review-final.md)〜[-4](./review-final-4.md) |
+| 対象                 | 回数 | 最終判定 | 記録                                                                     |
+| -------------------- | ---- | -------- | ------------------------------------------------------------------------ |
+| 計画                 | 5    | 承認     | [review-plan.md](./review-plan.md)〜[-5](./review-plan-5.md)             |
+| T5a-5                | 4    | 承認     | [review-t5a-5.md](./review-t5a-5.md)〜[-4](./review-t5a-5-4.md)          |
+| T5a-6                | 3    | 承認     | [review-t5a-6.md](./review-t5a-6.md)〜[-3](./review-t5a-6-3.md)          |
+| 全体                 | 4    | 承認     | [review-final.md](./review-final.md)〜[-4](./review-final-4.md)          |
+| アンチパターンの点検 | 4    | 問題なし | [review-ap-check.md](./review-ap-check.md)〜[-4](./review-ap-check-4.md) |
 
 T5a-5: 第1回の2件（問の見出しの `margin` の一括指定が字の箱の左への張り出しを打ち消し、字が 8px 右にずれた・撮り比べで9つ目より後の `Button` を押していなかった）、第2回の2件（キーボードで問に着いたとき見出しのリングが字に重なる・スキルに足した左端の観点の文が §5 と食い違う）、第3回の1件（見出しの余白の説明が宣言と食い違う）をすべて直した。PM の判断: 第2回の指摘1は、見出しの箱を上下に 8px 広げ、上は負の余白で打ち消し、下は見出しの下の 16px のうち 8px を箱の内側に入れる。並んだボタンの面（上下 8px）のリングと同じく字とリングのあいだに地が残る。§5 は字の箱の上下を決めていないので `DESIGN.md` は変えない。`Button` を使う106の URL を前と後で撮り比べ、差は診断・クイズ15本の回答の画面だけだった（storybook・qr-code の差は撮り直しのゆらぎ）。
 
@@ -113,13 +114,13 @@ T5a-6: 第1回の2件（着地が避ける選択肢を、`::after` で行へ広�
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。**`typecheck` を必ず含める**——CI（`.github/workflows/deploy.yml`）は typecheck を**最初のステップ**で走らせ、`pre-push-check.sh` も再実行する。cycle-301 以前のテンプレートはこの4ゲート列挙から typecheck が抜けており、typecheck が赤のまま「全ゲート緑」と記録できる状態だった（cycle-301 で実際に発生）。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。**`typecheck` を必ず含める**——CI（`.github/workflows/deploy.yml`）は typecheck を**最初のステップ**で走らせ、`pre-push-check.sh` も再実行する。cycle-301 以前のテンプレートはこの4ゲート列挙から typecheck が抜けており、typecheck が赤のまま「全ゲート緑」と記録できる状態だった（cycle-301 で実際に発生）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
