@@ -360,8 +360,23 @@ export interface LandingTargets {
 }
 
 /**
- * 押した点の下が入れ替わる操作のあと、切り替わった画面の押せるものの矩形を集め、chooseLanding で選んだ所へ
- * 送る。切り替わったあとの組みで、塗る前に呼ぶ。
+ * 押せるものの、押せる範囲の矩形。`data-hit-area="after"` を持つ要素は、押せる範囲を `::after` で、位置を決めた
+ * 祖先（一覧と問の選択肢の行）の全体に広げている（DESIGN.md §6）ので、その祖先の矩形で数える。要素の箱で数えると、
+ * 行の区切りの罫線や名前の右の空きを「押せるものが無い」と取り違える。
+ */
+function pressableRectOf(element: Element): DOMRect {
+  const hitArea =
+    element instanceof HTMLElement &&
+    element.dataset.hitArea === "after" &&
+    element.offsetParent
+      ? element.offsetParent
+      : element;
+  return hitArea.getBoundingClientRect();
+}
+
+/**
+ * 押した点の下が入れ替わる操作のあと、切り替わった画面の押せるものの押せる範囲を集め、chooseLanding で選んだ
+ * 所へ送る。切り替わったあとの組みで、塗る前に呼ぶ。
  */
 export function revealLanding(
   plan: LandingPlan,
@@ -372,7 +387,7 @@ export function revealLanding(
   const avoidNext: TargetRect[] = [];
   for (const element of document.querySelectorAll(PRESSABLE_SELECTOR)) {
     if (targets.exclude?.contains(element)) continue;
-    const rect = element.getBoundingClientRect();
+    const rect = pressableRectOf(element);
     // 大きさの無いもの（隠れた入力など）は押せない。
     if (rect.width === 0 || rect.height === 0) continue;
     (targets.avoidNext?.contains(element) ? avoidNext : avoidFirst).push(rect);

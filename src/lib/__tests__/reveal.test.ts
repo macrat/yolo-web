@@ -628,6 +628,52 @@ describe("revealLanding", () => {
     expect(window.scrollBy).not.toHaveBeenCalled();
   });
 
+  describe('押せる範囲を行へ広げた要素（data-hit-area="after"）は、行の矩形で避ける', () => {
+    /** 行（480〜545・幅 300）と、その中の面の箱（490〜520・左 8〜右 120）の選択肢。 */
+    function placeChoiceRow(hitArea: boolean): HTMLElement {
+      const row = place(document.createElement("li"), 480, 545);
+      const face = document.createElement("button");
+      face.getBoundingClientRect = () =>
+        ({
+          top: 490,
+          bottom: 520,
+          left: 8,
+          right: 120,
+          width: 112,
+          height: 30,
+        }) as DOMRect;
+      if (hitArea) face.dataset.hitArea = "after";
+      // jsdom は組みを持たず offsetParent を返さないので、位置を決めた祖先（行）を差し込む。
+      Object.defineProperty(face, "offsetParent", { value: row });
+      row.appendChild(face);
+      return face;
+    }
+
+    test("面の箱の下の、行の区切りの罫線の上の点は、真下にあると数えて外へ送る", () => {
+      placeChoiceRow(true);
+      revealLanding(plan, { x: 100, y: 544.5 });
+      expect(window.scrollBy).toHaveBeenCalledWith({
+        top: 1,
+        behavior: "instant",
+      });
+    });
+
+    test("短い名前の右の空きの点も、真下にあると数えて外へ送る", () => {
+      placeChoiceRow(true);
+      revealLanding(plan, { x: 250, y: 500 });
+      expect(window.scrollBy).toHaveBeenCalledWith({
+        top: -21,
+        behavior: "instant",
+      });
+    });
+
+    test("data-hit-area を持たない要素は、要素の箱で数える", () => {
+      placeChoiceRow(false);
+      revealLanding(plan, { x: 250, y: 500 });
+      expect(window.scrollBy).not.toHaveBeenCalled();
+    });
+  });
+
   test("ページの頭より上へは送らない", () => {
     vi.stubGlobal("scrollY", 0);
     place(document.createElement("button"), 490, 520);

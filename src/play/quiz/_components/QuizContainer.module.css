@@ -12,7 +12,8 @@
   margin-block-end: var(--space-16);
 }
 
-/* 設問の画面の縦の並び。 */
+/* 設問の画面（問の区画）の縦の並び。1回解くあいだの最小の高さは、それまでに描いたいちばん高い区画の高さで、
+ * 描くたびに QuizContainer が測って持たせる（DESIGN.md §8）。最小の高さなので中身は欠けない。 */
 .stage {
   display: flex;
   flex-direction: column;
