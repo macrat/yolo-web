@@ -91,6 +91,7 @@
 | B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | B-754の統合のブランチの上で扱う。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 | B-793 | 表のセルで語の中に折り所が残る | P2 | B-754の統合のブランチの上で扱う。表のセル(記事の表とDataTable)は語の切れ目の足し引きをしない(T4)ため「品質管理体/制」などが残る。外すかをT4の決定とあわせて決める。詳細cycle-320/index.md |
 | B-794 | 複合動詞・複合形容詞とその名詞の形の中に折り所が残る | P2 | B-754の統合のブランチの上で扱う。「立ち/止まって」「振り/返り」など。辞書の補いの一覧では塞げないので、別の仕組みを設計する。材料はcycle-320のT5a-4の洗い出し。詳細cycle-320/index.md |
+| B-788 | ゲームの2打目が拡大にならないよう根にtouch-actionを掛ける | P3 | B-754の統合のブランチの上で扱う。T5a-4が診断のページに入れた形を写す。irodori・kanji-kanaru・yoji-kimeru・nakamawakeの決定・推測。詳細cycle-318/device-triage.md D1 |
 
 ## Deferred (すぐに着手できない)
 
@@ -98,7 +99,6 @@
 | --- | --- | --- | --- |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: design-rolloutのT5-18のサイクル(B-754)。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
 | B-787 | 漢字カナールの結果の2表で送る表だけ見出しの右端が1.35字ずれる | P4 | 着手: 遊んだ日が1000日に届く前。320・200%・成績4桁で成績の表だけ送る表になり内側の余白分ずれる。送る表の余白を見込んでそろえる規則を設計に足す。詳細cycle-317/review-t5-8b.md |
-| B-788 | ゲームの2打目が拡大にならないよう根にtouch-actionを掛ける | P3 | 着手: design-rolloutのT5a-4が診断のページに入れたあと(B-754。同じ形を写す)。irodori・kanji-kanaru・yoji-kimeru・nakamawakeの決定・推測。詳細cycle-318/device-triage.md D1 |
 | B-789 | サイト全体のhoverの線を(hover: hover)に限るか決める | P4 | 着手: design-rolloutのT5a-7のあと(B-754)。指で押したあと入れ替わった行に線が残り、選ばれたと読み違える。詳細cycle-318/device-triage.md D2 |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | 着手: design-rolloutのT7のサイクル(B-754)。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: design-rolloutのT6のサイクル(B-754)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
