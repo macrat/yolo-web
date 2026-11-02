@@ -1072,7 +1072,8 @@ const round1 = (value) => Math.round(value * 10) / 10;
  * 着地の関数の1回の呼び出しの記録。範囲の中に点の真下を外す送りがあったか（関数と同じ1px 刻み）と、範囲の中で
  * 点から避けるものまでを最も離せたときの隔たり（max(dx, dy)。第1の組だけと、両方の組の近いほう）を数える。
  * 避けるものの矩形は、関数が渡した `data-hit-area="after"` の祖先の要素の箱を、止め所が読んだ押せる範囲に直して
- * 数える（タッチの距離と同じ箱）。
+ * 数える（タッチの距離と同じ箱）。祖先の箱のうち関数の矩形のどれとも一致しなかった数（unmatched）も返す。関数が
+ * 避けないもの（exclude）の中の祖先のほかは 0 で、関数の矩形の取り方が変わって置き換えが外れると増える。
  */
 function summarizeLanding(landing, frames) {
   const { plan, point, scrollable } = landing.choice;
@@ -1081,8 +1082,12 @@ function summarizeLanding(landing, frames) {
     a.bottom === b.bottom &&
     a.left === b.left &&
     a.right === b.right;
-  const pressable = (rect) =>
-    landing.hit?.find(([box]) => same(box, rect))?.[1] ?? rect;
+  const hit = landing.hit ?? [];
+  const given = [...landing.choice.avoidFirst, ...landing.choice.avoidNext];
+  const unmatched = hit.filter(
+    ([box]) => !given.some((rect) => same(box, rect)),
+  ).length;
+  const pressable = (rect) => hit.find(([box]) => same(box, rect))?.[1] ?? rect;
   const avoidFirst = landing.choice.avoidFirst.map(pressable);
   const avoidNext = landing.choice.avoidNext.map(pressable);
   const span = {
@@ -1138,6 +1143,7 @@ function summarizeLanding(landing, frames) {
     farFirst: farFirst === null ? null : round1(farFirst),
     farBoth: farBoth === null ? null : round1(farBoth),
     chosen: frame ? frame.scrollY - landing.scrollY : null,
+    unmatched,
   };
 }
 
@@ -1289,6 +1295,7 @@ function compactPress(record) {
       landing.farFirst,
       landing.farBoth,
       landing.chosen,
+      landing.unmatched,
     ]),
     li: record.landingIndex,
     fr: record.frames.map((frame) => [
@@ -1825,6 +1832,7 @@ function summaryLine(op, run, outcome, records) {
         n: run.input === "touch" ? nearOut(record.near) : undefined,
         n2: record.near2 ? nearOut(record.near2) : undefined,
         l: landingOut(record) ?? undefined,
+        hu: record.landings?.[record.landingIndex]?.unmatched || undefined,
         cut: record.cut ? 1 : undefined,
         lo: record.nameLow ? 1 : undefined,
         ins: record.insertInView ? 1 : undefined,

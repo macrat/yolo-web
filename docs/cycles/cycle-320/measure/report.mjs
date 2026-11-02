@@ -17,15 +17,21 @@
 //   - fellFar10: 2打目がその組に、点の真下でなく寄せで落ち、その組までが 10px 以上。寄せの面は半辺 10px なので、
 //     隔たりを寄せに使われた組みで取っていれば 0 になる。
 //   - noClick: 2打目の click が無く、落ちた先が分からない回（mayFall16 に入れない）。
-// - 着地の関数の記録（l）と組み合わせた数（変更後の版。入力によらない）:
-//   - avoidable: 2打目がその組に落ちた回（押し）のうち、着地の範囲の中にそれを点の真下から外す送りがあった数
-//     （first は clearOfFirst、next は clearOfBoth）。
-//   - at16: 2打目がその組に落ちたか、落ちなかったがその組までが 16px より近い回（押し）の数（cases）と、そのうち
-//     範囲の中に点の真下から外す送りがあった数（clear）と、範囲の中でその組を 16px 以上離せた数（far16。first は
-//     farFirst、next は farBoth）。plan-t5a7.md 3 は「避けられたのに落ちた件」の合否を、この落ちうる件で判定する。
+// - 着地の関数の記録（l）と組み合わせた数（変更後の版。入力によらない）。plan-t5a7.md 3 は「避けられた」を、範囲の
+//   中に1打目の点からその組までの max(dx, dy) が 16px 以上になる送りがあった件（l の最も離せたときの値。first は
+//   farFirst、next は farBoth）と決める。点の真下を外すだけの送り（行の罫線の上に点を置くなど）は数えない。
+//   - avoidable: 2打目がその組に落ちた回（押し）の数（cases）と、そのうち範囲の中でその組を 10px 以上離せた数
+//     （far10。道具の面と Android のいちばん小さい面の半辺）と 16px 以上離せた数（far16。避けられた件）。
+//   - at16: 2打目がその組に落ちたか、落ちなかったがその組までが 16px より近い回（押し）の、同じ3つの数。
+//     plan-t5a7.md 3 の「避けられたのに落ちた件」の合否は、この落ちうる件の far16 で判定する。
 //   走査の押しは、落ちた押しを押しごとの記録（落ちた先 grp と着地の記録 land）で、落ちなかった押しを要約の n
 //   （max(dx, dy) が 0 より大きく 20 以下の押しの、落ちた先と着地の記録）で数える。答えの2打目が次の問の選択肢に
 //   落ちた押しは、押しごとの記録に置かないので avoidable と at16 に入らない（条件7 はこの件を数だけで見る）。
+//   D5 の束（ずれのある束）は出さない。着地の記録は1打目の点から数えた値で、ずらした2打目の点が避けられたかを
+//   表さないからである（D5 の合否は第1の組に落ちた件が 0 か）。
+//   - hitUnmatched（flags）: 着地の記録で、`data-hit-area="after"` の祖先の箱のうち関数の矩形と一致せず、押せる範囲に
+//     置き換えられなかった数の和。関数が避けないもの（診断の答えのあとの問のまとまりなど）の中の祖先のほかは 0 で、
+//     「はじめる」「最後の答え」「もう一度挑戦する」で 0 でなければ、関数の矩形の取り方が変わったので PM に報告する。
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
@@ -37,9 +43,9 @@ import path from "node:path";
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 const PRESSABLE = new Set([...FIRST, "next", "choice", "start"]);
 const SLOTS = [
-  // [組, 落ちたか, 要約の n の位置, 着地の記録 l の clearOf の位置, far の位置]
-  ["first", (landed) => FIRST.has(landed), 0, 0, 2],
-  ["next", (landed) => landed === "next", 1, 1, 3],
+  // [組, 落ちたか, 要約の n の位置, 着地の記録 l の最も離せたときの値の位置]
+  ["first", (landed) => FIRST.has(landed), 0, 2],
+  ["next", (landed) => landed === "next", 1, 3],
 ];
 
 function readLines(file) {
@@ -53,11 +59,11 @@ function readLines(file) {
 
 const reachOf = (entry) => (entry ? Math.max(entry[0], entry[1]) : Infinity);
 
-/** 押しごとの記録の着地の記録 land[li] を、要約の l と同じ4つにする。 */
-function landingOfPress(press) {
-  const landing = press.land?.[press.li];
-  return landing ? landing.slice(6, 10) : null;
-}
+/** 組ごとの、着地の記録と組み合わせた数の入れ物。 */
+const landingCounts = () => ({
+  first: { cases: 0, far10: 0, far16: 0 },
+  next: { cases: 0, far10: 0, far16: 0 },
+});
 
 /** タッチの1つの押しの調整の数え直し。landed は2打目の組、near は [第1の組, 選択肢] の隔たり。 */
 function countTouch(bundle, landed, near) {
@@ -76,23 +82,26 @@ function countTouch(bundle, landed, near) {
 }
 
 /**
- * 着地の記録と組み合わせた数。fellOnly なら落ちた組だけを、そうでなければ落ちなかった組だけを数える（走査は
- * 落ちた押しを押しごとの記録から、落ちなかった押しを要約の n から数えるので、二度数えないよう分ける）。
+ * 着地の記録と組み合わせた数。which が fallen なら落ちた組だけを、near なら落ちなかった組だけを、all なら両方を
+ * 数える（走査は落ちた押しを押しごとの記録から、落ちなかった押しを要約の n から数えるので、二度数えないよう分ける）。
+ * landing は要約の l と同じ4つ。
  */
 function countLanding(bundle, landed, near, landing, which) {
   if (!landing || landed === null || landed === undefined) return;
-  for (const [key, fell, slot, clearAt, farAt] of SLOTS) {
+  const add = (counts, far) => {
+    counts.cases++;
+    if (far !== null && far >= 10) counts.far10++;
+    if (far !== null && far >= 16) counts.far16++;
+  };
+  for (const [key, fell, slot, farAt] of SLOTS) {
     const fallen = fell(landed);
     if (which === "fallen" && !fallen) continue;
     if (which === "near" && fallen) continue;
     const distance = reachOf(near?.[slot]);
     const nearby = !PRESSABLE.has(landed) && distance > 0 && distance < 16;
     if (!fallen && !nearby) continue;
-    if (fallen && landing[clearAt]) bundle.avoidable[key]++;
-    const at = bundle.at16[key];
-    at.cases++;
-    if (landing[clearAt]) at.clear++;
-    if (landing[farAt] !== null && landing[farAt] >= 16) at.far16++;
+    if (fallen) add(bundle.avoidable[key], landing[farAt]);
+    add(bundle.at16[key], landing[farAt]);
   }
 }
 
@@ -161,11 +170,8 @@ function main() {
         mayFall16: { first: 0, next: 0 },
         fellFar10: { first: 0, next: 0 },
         noClick: 0,
-        avoidable: { first: 0, next: 0 },
-        at16: {
-          first: { cases: 0, clear: 0, far16: 0 },
-          next: { cases: 0, clear: 0, far16: 0 },
-        },
+        avoidable: shifted ? undefined : landingCounts(),
+        at16: shifted ? undefined : landingCounts(),
         flags: {},
         gaps: [],
         wallMs: 0,
@@ -207,15 +213,17 @@ function main() {
         for (const [, , landed, near, near2, landing] of line.n ?? []) {
           const reach = shifted ? near2 : near;
           countTouch(bundle, landed, reach);
-          countLanding(bundle, landed, reach, landing, "near");
+          if (!shifted) countLanding(bundle, landed, near, landing, "near");
         }
         for (const press of pressesOf.get(`${line.k}#${line.a}`) ?? []) {
-          const reach = shifted ? press.near2 : press.near;
+          const landing = press.land?.[press.li];
+          flag("hitUnmatched", landing?.[11] ?? 0);
+          if (shifted) continue;
           countLanding(
             bundle,
             press.grp,
-            reach,
-            landingOfPress(press),
+            press.near,
+            landing ? landing.slice(6, 10) : null,
             "fallen",
           );
         }
@@ -229,7 +237,8 @@ function main() {
         if (line.g !== null && line.g !== undefined) bundle.gaps.push(line.g);
         const reach = shifted ? line.n2 : line.n;
         if (input === "touch") countTouch(bundle, line.s, reach);
-        countLanding(bundle, line.s, reach, line.l, "all");
+        if (!shifted) countLanding(bundle, line.s, line.n, line.l, "all");
+        flag("hitUnmatched", line.hu ?? 0);
         flag("cut", !!line.cut);
         flag("nameLow", !!line.lo);
         flag("insert", !!line.ins);
