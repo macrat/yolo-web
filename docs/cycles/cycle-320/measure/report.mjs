@@ -39,8 +39,9 @@
 //   種類は一致しない数そのままで、期待する数はどの種類も 0。0 でない種類があれば、関数の矩形の取り方が変わったので
 //   PM に報告する。
 // - hitUnrecorded: 着地の記録はあるが、hitUnmatched に要る数（一致しなかった数、診断の答えでは問の行の数も）を
-//   持たない記録の数で、その押しは hitUnmatched に入らない。n の押しが7つ目からの欄を、押しごとの記録の land が
-//   問の行の数を持たない置き場（頭の行の tool が knowledge の blob を持たない道具で測ったもの）で 0 にならない。
+//   持たない記録の数で、その押しは hitUnmatched に入らない。1度の押しで終わる操作の l があって hu の無い行、走査の
+//   n の押しで7つ目からの欄の無いもの、診断の答えの land で問の行の数の無いものが入り、そうした形の記録の置き場
+//   （頭の行の tool が knowledge の blob を持たない道具で測ったもの）では 0 にならない。
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
@@ -287,7 +288,7 @@ function main() {
         const reach = shifted ? line.n2 : line.n;
         if (input === "touch") countTouch(bundle, line.s, reach);
         if (!shifted) countLanding(bundle, line.s, line.n, line.l, "all");
-        if (line.l) unmatched(null, line.hu ?? 0, null);
+        if (line.l) unmatched(null, line.hu, null);
         flag("cut", !!line.cut);
         flag("nameLow", !!line.lo);
         flag("insert", !!line.ins);

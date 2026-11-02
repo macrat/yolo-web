@@ -1841,6 +1841,8 @@ function summaryLine(op, run, outcome, records) {
   } else {
     const record = records.at(-1);
     if (record) {
+      // hu は l と組で、着地の記録があれば 0 でも書く（数えて 0 だった行と、数を持たない行を分けられるように）。
+      const landing = record.landings?.[record.landingIndex];
       Object.assign(line, {
         g: record.gap,
         s: record.group,
@@ -1849,7 +1851,7 @@ function summaryLine(op, run, outcome, records) {
         n: run.input === "touch" ? nearOut(record.near) : undefined,
         n2: record.near2 ? nearOut(record.near2) : undefined,
         l: landingOut(record) ?? undefined,
-        hu: record.landings?.[record.landingIndex]?.unmatched || undefined,
+        hu: landing ? landing.unmatched : undefined,
         cut: record.cut ? 1 : undefined,
         lo: record.nameLow ? 1 : undefined,
         ins: record.insertInView ? 1 : undefined,
