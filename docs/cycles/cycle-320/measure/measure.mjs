@@ -1082,8 +1082,9 @@ const round1 = (value) => Math.round(value * 10) / 10;
  * 避けるものの矩形は、関数が渡した `data-hit-area="after"` の祖先の要素の箱を、止め所が読んだ押せる範囲に直して
  * 数える（タッチの距離と同じ箱）。祖先の箱のうち関数の矩形のどれとも一致しなかった数（unmatched）と、一致しなかった
  * 箱のうちの問の選択肢の行の数（rows）も返す。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に
- * 渡すので、問の行は一致しないのが正しく、一致しなかった行でない箱（unmatched − rows）が 0 なのが正しい。ほかの
- * 呼び出しでは unmatched が 0 なのが正しい。関数の矩形の取り方が変わって置き換えが外れると、その数が増える。
+ * 渡すので、問の行は一致しないのが正しく、一致しなかった問の選択肢の行でない箱（unmatched − rows）が 0 なのが
+ * 正しい。ほかの呼び出しでは unmatched が 0 なのが正しい。関数の矩形の取り方が変わって置き換えが外れると、その数が
+ * 増える。
  */
 function summarizeLanding(landing, frames) {
   const { plan, point, scrollable } = landing.choice;

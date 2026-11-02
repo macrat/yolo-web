@@ -41,7 +41,8 @@
 //   変わったので PM に報告する。
 // - hitUnrecorded: 着地の記録はあるが、hitUnmatched に要る数（一致しなかった数、診断の答えでは一致しなかった問の
 //   行の数も）を持たない記録の数で、その押しは hitUnmatched に入らない。1度の押しで終わる操作の l があって hu の無い
-//   行、走査の n の押しで7つ目からの欄の無いもの、診断の答えの land で13番目の数の無いものが入る。
+//   行、走査の n の押しで7つ目からの欄の無いもの、押しごとの記録の land で一致しなかった数（12番目）の無いもの、
+//   診断の答えの land で一致しなかった問の行の数（13番目）の無いものが入る。
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
@@ -227,8 +228,8 @@ function main() {
           bundle.flags[key] = (bundle.flags[key] ?? 0) + (on === true ? 1 : on);
       };
       // 1つの着地の記録の置き換えの外れ。count は関数の矩形と一致しなかった祖先の数、rows は一致しなかった祖先のうちの
-      // 問の選択肢の行の数で、診断の答えは一致しなかった行でない祖先（count − rows）を、ほかの種類は count を足す。
-      // どちらも負にならない。要る数を持たない記録は hitUnrecorded に数える。
+      // 問の選択肢の行の数で、診断の答えは一致しなかった問の選択肢の行でない祖先（count − rows）を、ほかの種類は
+      // count を足す。どちらも負にならない。要る数を持たない記録は hitUnrecorded に数える。
       const unmatched = (kind, count, rows) => {
         const key = pressKindOf(head.op, kind, slug);
         const diagnosis = key === "diagnosis-answer";
