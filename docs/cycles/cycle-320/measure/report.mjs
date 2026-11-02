@@ -29,9 +29,12 @@
 //   落ちた押しは、押しごとの記録に置かないので avoidable と at16 に入らない（条件7 はこの件を数だけで見る）。
 //   D5 の束（ずれのある束）は出さない。着地の記録は1打目の点から数えた値で、ずらした2打目の点が避けられたかを
 //   表さないからである（D5 の合否は第1の組に落ちた件が 0 か）。
-//   - hitUnmatched（flags）: 着地の記録で、`data-hit-area="after"` の祖先の箱のうち関数の矩形と一致せず、押せる範囲に
-//     置き換えられなかった数の和。関数が避けないもの（診断の答えのあとの問のまとまりなど）の中の祖先のほかは 0 で、
-//     「はじめる」「最後の答え」「もう一度挑戦する」で 0 でなければ、関数の矩形の取り方が変わったので PM に報告する。
+// - hitUnmatched: 着地の記録で、`data-hit-area="after"` の祖先の箱のうち関数の矩形と一致せず、押せる範囲に置き換え
+//   られなかった数の和を、押しの種類ごとに出す（0 の種類は出さない）。走査は押しごとの記録に置いた押しの、1度の
+//   押しで終わる操作は要約の hu の数で、種類は押しごとの記録の kind（答えは診断の diagnosis-answer と知識クイズの
+//   knowledge-answer に分ける）か、操作から決めたもの（start・last-answer・last-next・retry・heading）。診断の答えの
+//   あとの呼び出しは問のまとまりを避けないもの（exclude）に渡すので、diagnosis-answer は押しごとにその問の行の数だけ
+//   必ず立つ。ほかの種類は 0 で、0 でなければ関数の矩形の取り方が変わったので PM に報告する。
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
@@ -40,6 +43,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// 知識クイズの本（measure.mjs の KNOWLEDGE と同じ）。
+const KNOWLEDGE = new Set(["kotowaza-level", "yoji-level", "kanji-level"]);
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 const PRESSABLE = new Set([...FIRST, "next", "choice", "start"]);
 const SLOTS = [
@@ -55,6 +60,17 @@ function readLines(file) {
     .split("\n")
     .filter(Boolean)
     .map((line) => JSON.parse(line));
+}
+
+/** hitUnmatched の押しの種類。kind は押しごとの記録の kind で、1度の押しで終わる操作では op から決める。 */
+function pressKindOf(op, kind, slug) {
+  const knowledge = KNOWLEDGE.has(slug);
+  if (op === "answers") {
+    if (kind !== "answer") return kind;
+    return knowledge ? "knowledge-answer" : "diagnosis-answer";
+  }
+  if (op === "last") return knowledge ? "last-next" : "last-answer";
+  return op === "select" ? "heading" : op;
 }
 
 const reachOf = (entry) => (entry ? Math.max(entry[0], entry[1]) : Infinity);
@@ -151,7 +167,7 @@ function main() {
     }
     for (const line of lines) {
       if (line.k === undefined) continue;
-      const [, input, interval, offset] = line.k.split("|");
+      const [slug, input, interval, offset] = line.k.split("|");
       const shifted = offset !== "0:0";
       const id = `${input}|${interval}|${offset}`;
       const bundle = bundles.get(id) ?? {
@@ -172,6 +188,7 @@ function main() {
         noClick: 0,
         avoidable: shifted ? undefined : landingCounts(),
         at16: shifted ? undefined : landingCounts(),
+        hitUnmatched: {},
         flags: {},
         gaps: [],
         wallMs: 0,
@@ -202,6 +219,11 @@ function main() {
         if (on)
           bundle.flags[key] = (bundle.flags[key] ?? 0) + (on === true ? 1 : on);
       };
+      const unmatched = (kind, count) => {
+        if (!count) return;
+        const key = pressKindOf(head.op, kind, slug);
+        bundle.hitUnmatched[key] = (bundle.hitUnmatched[key] ?? 0) + count;
+      };
       if (head.op === "answers") {
         for (const [group, count] of Object.entries(line.c ?? {})) {
           bundle.groups[group] = (bundle.groups[group] ?? 0) + count;
@@ -217,7 +239,7 @@ function main() {
         }
         for (const press of pressesOf.get(`${line.k}#${line.a}`) ?? []) {
           const landing = press.land?.[press.li];
-          flag("hitUnmatched", landing?.[11] ?? 0);
+          unmatched(press.kind, landing?.[11]);
           if (shifted) continue;
           countLanding(
             bundle,
@@ -238,7 +260,7 @@ function main() {
         const reach = shifted ? line.n2 : line.n;
         if (input === "touch") countTouch(bundle, line.s, reach);
         if (!shifted) countLanding(bundle, line.s, line.n, line.l, "all");
-        flag("hitUnmatched", line.hu ?? 0);
+        unmatched(null, line.hu);
         flag("cut", !!line.cut);
         flag("nameLow", !!line.lo);
         flag("insert", !!line.ins);
