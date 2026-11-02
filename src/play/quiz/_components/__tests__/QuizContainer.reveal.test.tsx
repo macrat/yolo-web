@@ -14,6 +14,7 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
+import { questionPhrases } from "../../questionPhrases";
 import type { ItemListItem } from "@/components/ItemList";
 import type {
   QuizDefinition,
@@ -54,15 +55,17 @@ vi.mock("@/components/Button", () => ({
   buttonUnderlineClassName: "underline",
   default: ({
     children,
+    phrases,
     onClick,
     ref,
   }: {
-    children: React.ReactNode;
+    children?: React.ReactNode;
+    phrases?: readonly string[];
     onClick: () => void;
     ref?: React.Ref<HTMLButtonElement>;
   }) => (
     <button type="button" onClick={onClick} ref={ref}>
-      {children}
+      {phrases ? phrases.join("") : children}
     </button>
   ),
 }));
@@ -191,6 +194,7 @@ function renderQuiz(
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
+      questionPhrases={questionPhrases(quiz)}
       resultHeadings={resultHeadings}
       readingHeadings={{}}
       recommendedContents={recommendedContents}

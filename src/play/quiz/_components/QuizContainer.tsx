@@ -20,6 +20,7 @@ import {
 } from "@/lib/reveal";
 import Link from "next/link";
 import type { QuizDefinition, QuizResult } from "@/play/quiz/types";
+import type { QuestionPhrases } from "@/play/quiz/questionPhrases";
 import {
   answeredChoiceId,
   currentQuestionId,
@@ -58,6 +59,8 @@ type QuizContainerProps = {
    * サーバーで行にしてから受け取る。
    */
   recommendedContents?: ItemListItem[];
+  /** 問の見出しと選択肢の面の文節の区切りと、見出しの書体の属性。問の id ごとに、サーバーで作ってから受け取る。 */
+  questionPhrases: Readonly<Record<string, QuestionPhrases>>;
   /** 結果の見出し（タイプ名）の文節の区切りと書体の属性。結果の id ごとに、サーバーで作ってから受け取る。 */
   resultHeadings: Readonly<Record<string, ResultHeading>>;
   /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ってから受け取る。 */
@@ -87,6 +90,7 @@ export default function QuizContainer({
   quiz,
   referrerTypeId,
   recommendedContents,
+  questionPhrases,
   resultHeadings,
   readingHeadings,
 }: QuizContainerProps) {
@@ -426,6 +430,7 @@ export default function QuizContainer({
           <QuestionCard
             key={question.id}
             question={question}
+            phrases={questionPhrases[question.id]}
             quizType={quiz.meta.type}
             answeredChoiceId={currentAnswer}
             onAnswer={handleAnswer}

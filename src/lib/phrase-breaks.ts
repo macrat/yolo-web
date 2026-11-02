@@ -2,7 +2,9 @@
  * 見出しと表のセルを文節で折るための区切り（DESIGN.md §4）。
  *
  * 文節は BudouX の日本語のモデルで分け、そのうえで行の頭と終わりに置けない字の所、数の後ろ、丸括弧の中の
- * 区切りを外す。見出しでは、語の切れ目の折り所をさらに次のように足し引きする。
+ * 区切りを外し、全角の空白は前の文節に付ける。見出しでは、語の切れ目の折り所をさらに次のように足し引きする。語は
+ * word-starts.ts の wordsOf（語の辞書と、辞書の補い）で見る。
+ * - 漢字か片仮名を含む語の中の折り所（BudouX の「今日|一日」）を外す。下の足す折り所も、語の中には置かない。
  * - 中点で並べた語（「ひらがな・カタカナ」）の後ろと、英字を含む語が漢字か片仮名の語に移る所（「Base64|エンコード」）に
  *   折り所を足し、中点で並べた平仮名の語の中の折り所を外す。
  * - 閉じ括弧の後ろに2字までの続きがある文節は、続きを次の文節の頭に移す。閉じ括弧の直後はブラウザが折るので、
@@ -10,7 +12,7 @@
  * - 最初の文節の、最初の空白より前には、字の種類が変わって語が始まる所の折り所を足す。この部分は行の頭から始まるので、
  *   この折り所は、この部分が1行に収まらないときの代わりにだけ使われる。
  * - 見出しの狭い行に収まらない幅の文節には、語と語の切れ目（漢字・片仮名・英字の語の頭と、「〜する」の頭）の折り所を
- *   足す。
+ *   足す。漢字どうしの所は、前の語が辞書の補いの語のときだけ語の頭とする。
  *   収まらない文節をブラウザが字の所で割ると、1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。
  *   <wbr> の折り所に優先の順は無く、文節が1行に収まる広い行でも行の終わりに来れば使われるので、語の中には置かない。
  * 名前に括弧で数を添えたもの（索引の語・アコーディオンのラベル・「部首（198）」の見出し）は、文節でなく、名前の中の語の
@@ -23,6 +25,7 @@
 import "server-only";
 import { jaModel, loadDefaultJapaneseParser } from "budoux";
 import {
+  isSupplementWord,
   scriptOf,
   toGraphemes,
   type Word,
@@ -40,6 +43,8 @@ const NO_LINE_END = /[(\[{（［｛〔〈《「『【〘〖〝‘“«]$/u;
 /** 数で終わる文。英字に続く数字（「Base64」）は語の一部で、数ではない。 */
 const ENDS_WITH_NUMBER = /(?:^|[^A-Za-z0-9０-９])[0-9０-９]+$/u;
 const STARTS_WITH_SPACE = /^\s/u;
+/** 全角の空白（U+3000）の続きで始まる文。 */
+const LEADING_IDEOGRAPHIC_SPACE = /^　+/u;
 
 /** ダッシュ（「—」「──」「--」）で始まる文。ダッシュは行の頭に置かず、前の語に付ける。 */
 const STARTS_WITH_DASH = /^(?:[—―─]|--)/u;
@@ -182,7 +187,10 @@ function isListedHiraganaWord(chars: string[], index: number): boolean {
   return chars[start - 1] === MIDDLE_DOT || chars[end + 1] === MIDDLE_DOT;
 }
 
-/** 漢字か片仮名を含む語の中の位置か（BudouX が語の中に置く境目「見た|目」「切り|替え」を見分ける）。 */
+/**
+ * 漢字か片仮名を含む語（wordsOf の語。辞書の補いの語を含む）の中の位置か。BudouX が語の中に置く境目（「見た|目」
+ * 「切り|替え」「今日|一日」）と、足す折り所が語の中に落ちる所（「基本省|エネ」「pH|値」）を見分ける。
+ */
 function isInsideWord(words: Word[], index: number): boolean {
   return words.some(
     (word) =>
@@ -195,7 +203,9 @@ function isInsideWord(words: Word[], index: number): boolean {
 /**
  * BudouX の分け方を、見出しの語の切れ目で直す。漢字か片仮名を含む語の中の境目（「見た|目」「切り|替え」）と、
  * 中点で並べた平仮名の語の中の境目を外し（BudouX は「ひらが|な・カタカナ」と割る）、ダッシュの後ろ（「ガイド──|シェア」。
- * ダッシュは前の語に付けて組むので、後ろに折り所が無いと前後の語がまるごと1つになる）と、中点の後ろと、英字を含む語から漢字か片仮名の語に移る所に境目を足す。丸括弧の中には足さない。
+ * ダッシュは前の語に付けて組むので、後ろに折り所が無いと前後の語がまるごと1つになる）と、中点の後ろと、英字を含む語から
+ * 漢字か片仮名の語に移る所に境目を足す。丸括弧の中と、漢字か片仮名を含む語の中（「ダ・|ヴィンチ型」「pH|値」）には
+ * 足さない。
  */
 function refineAtWords(chunks: string[]): string[] {
   const text = chunks.join("");
@@ -214,7 +224,7 @@ function refineAtWords(chunks: string[]): string[] {
     ),
   );
   for (let index = 1; index < chars.length; index += 1) {
-    if (depths[index] > 0) continue;
+    if (depths[index] > 0 || isInsideWord(segments, index)) continue;
     const before = chars[index - 1];
     const after = chars[index];
     const afterDot =
@@ -234,6 +244,25 @@ function refineAtWords(chunks: string[]): string[] {
     if (afterDot || latinToJapanese || afterDash) offsets.add(index);
   }
   return cut(chars, offsets);
+}
+
+/**
+ * 全角の空白で始まる文節（「あった！|　最初の」）は、空白を前の文節の終わりに移す（「あった！　|最初の」）。全角の空白は
+ * 行の頭で詰められないので、空白の前で折ると、次の行の頭に全角1字の空きが出る。
+ */
+function attachLeadingIdeographicSpaces(phrases: string[]): string[] {
+  const attached: string[] = [];
+  for (const phrase of phrases) {
+    const space = LEADING_IDEOGRAPHIC_SPACE.exec(phrase)?.[0] ?? "";
+    if (space === "" || attached.length === 0) {
+      attached.push(phrase);
+      continue;
+    }
+    attached[attached.length - 1] += space;
+    const rest = phrase.slice(space.length);
+    if (rest !== "") attached.push(rest);
+  }
+  return attached;
 }
 
 /**
@@ -262,11 +291,12 @@ function moveTailsAfterClosingBrackets(phrases: string[]): string[] {
 }
 
 /**
- * 最初の文節を、字の種類が変わって漢字か片仮名の語が始まる所（「チューリング|型思考者」「ことわざ|ビギナー」）で
+ * 最初の文節を、字の種類が変わって漢字か片仮名の語が始まる所（「メモリ|管理術」「ことわざ|ビギナー」）で
  * さらに分ける。収まらない文節をブラウザが字の所で割ると、「思考／者」のように1字の行や、行頭の長音符が出るので、
  * 代わりに語の切れ目で折れるようにする。
- * 分けるのは、最初の空白より前で、切れ目の前後がどちらも2字以上の同じ字の種類の続きで、丸括弧の中でない所だけ
- * （丸括弧の中でも折る指定のときは、丸括弧の中も分ける）。
+ * 分けるのは、最初の空白より前で、切れ目の前後がどちらも2字以上の同じ字の種類の続きで、丸括弧の中でも、漢字か
+ * 片仮名を含む語の中でもない所だけ（丸括弧の中でも折る指定のときは、丸括弧の中も分ける）。「基本省エネ」の字の種類の
+ * 変わり目は語（「省エネ」）の中なので分けない。
  * 最初の空白より前は行の頭から始まるので、この折り所は、そこが1行に収まらないときにしか使われない。空白の後ろは
  * ブラウザが空白で折れば行の途中から始まりうるので、分けると次の行に丸ごと入る語まで割る（「Unix タイムスタンプ／
  * 変換ツール」）。
@@ -276,6 +306,7 @@ function splitFirstPhraseAtWords(
   breakInParens: boolean,
 ): string[] {
   const chars = toGraphemes(phrase);
+  const words = wordsOf(phrase);
   const pieces: string[] = [];
   let start = 0;
   let depth = 0;
@@ -294,6 +325,7 @@ function splitFirstPhraseAtWords(
       before !== after &&
       scriptRunLength(chars, index - 1, -1) >= 2 &&
       scriptRunLength(chars, index, 1) >= 2 &&
+      !isInsideWord(words, index) &&
       !isUnbreakable(chars.slice(start, index).join(""), chars[index])
     ) {
       pieces.push(chars.slice(start, index).join(""));
@@ -353,19 +385,35 @@ function canStandAlone(chars: string[]): boolean {
 /** サ変の動詞の頭（「リリース|しました」「表示|されない」）。 */
 const SURU_VERB = /^[しさすせ]/u;
 
+/** text の中で、辞書の補いの語（wordsOf の語のうち isSupplementWord のもの）が終わる位置（字の番号）。 */
+function supplementWordEndsOf(text: string): Set<number> {
+  return new Set(
+    wordsOf(text)
+      .filter(isSupplementWord)
+      .map((word) => word.end),
+  );
+}
+
 /**
  * 文節の中の語の頭（wordStartsOf）の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
- * 0: 漢字・片仮名・英字の語が始まる所（「思考|バイアス」「マルチ|エージェント」「プログラマティック|SEO」）。漢字どうしの
- *    所（「漢字|力」）と、英字の語の中は除く。
+ * afterSupplementWord は、その所で辞書の補いの語が終わるか（supplementWordEndsOf）。
+ * 0: 漢字・片仮名・英字の語が始まる所（「思考|バイアス」「マルチ|エージェント」「プログラマティック|SEO」）。漢字の語の頭は、
+ *    前の字が漢字でない所と、前の語が補いの語で漢字で終わる所（「ダーウィン型|思考者」「サイト内|検索を」）に置き、ほかの
+ *    漢字どうしの所（「漢字|力」）には置かない。辞書は漢字の続きを刻み方の当てにならない所で刻むが、補いの語はサイトが
+ *    1つの語と決めた語で、その終わりは確かな語の切れ目だからである。英字の語の中は除く。
  * 1: 漢字か片仮名の語からサ変の動詞に移る所（「リリース|しました」）。
  * どちらも語と語の切れ目なので、文節が1行に収まる広い行で使われても語を割らない（`<wbr>` には優先の順が無く、
  * 行の終わりに来た折り所は幅によらず使われる）。語の中と、助詞や送り仮名の前には置かない。語が1行に入らないときは、
  * ブラウザがその語の中で折る。
  */
-function wordBreakRank(before: string, after: string): number | undefined {
+function wordBreakRank(
+  before: string,
+  after: string,
+  afterSupplementWord: boolean,
+): number | undefined {
   const left = scriptOf(before);
   const right = LATIN_LETTER.test(after) ? "latin" : scriptOf(after);
-  if (right === "han" && left !== "han") return 0;
+  if (right === "han" && (left !== "han" || afterSupplementWord)) return 0;
   if (right === "katakana") return 0;
   if (right === "latin" && left !== "other") return 0;
   if (
@@ -445,10 +493,15 @@ function splitWidePhraseAtWords(phrase: string): string[] {
     unit += ch.length;
   }
   const scores = boundaryScores(phrase);
+  const supplementEnds = supplementWordEndsOf(phrase);
   const candidates: { index: number; rank: number; score: number }[] = [];
   for (const index of wordStartsOf(phrase)) {
     if (depths[index] > 0) continue;
-    const rank = wordBreakRank(chars[index - 1], chars[index]);
+    const rank = wordBreakRank(
+      chars[index - 1],
+      chars[index],
+      supplementEnds.has(index),
+    );
     if (rank !== undefined) {
       candidates.push({ index, rank, score: scores[unitOffsets[index]] });
     }
@@ -486,6 +539,7 @@ function splitWidePhraseAtWords(phrase: string): string[] {
 function splitNameAtWords(text: string): string[] {
   const chars = toGraphemes(text);
   const depths = parenDepths(chars);
+  const supplementEnds = supplementWordEndsOf(text);
   const starts = new Set(
     [...wordStartsOf(text)].filter((index) => {
       if (
@@ -514,7 +568,11 @@ function splitNameAtWords(text: string): string[] {
     const breakable =
       OPEN_PAREN.test(chars[index]) ||
       (starts.has(index) &&
-        wordBreakRank(chars[index - 1], chars[index]) !== undefined &&
+        wordBreakRank(
+          chars[index - 1],
+          chars[index],
+          supplementEnds.has(index),
+        ) !== undefined &&
         canStandAlone(before) &&
         canStandAlone(chars.slice(index, nameEnd(index))));
     if (
@@ -576,6 +634,7 @@ export function splitIntoPhrases(
     parenDepth = parenDepthAfter(parenDepth, chunk);
   }
   if (!tableCell) phrases = moveTailsAfterClosingBrackets(phrases);
+  phrases = attachLeadingIdeographicSpaces(phrases);
   const last = phrases.length > 1 ? phrases[phrases.length - 1] : undefined;
   if (last !== undefined && toGraphemes(last).length === 1) {
     phrases.pop();
@@ -589,18 +648,26 @@ export function splitIntoPhrases(
 }
 
 /**
- * 手で区切った見出しの並び（コードに書いた決まった文。PhrasedText の約束）が、splitIntoPhrases と同じ禁則を
- * 満たすか。行の頭と終わりに置けない字の所・数とそれに続く字のあいだ・丸括弧の中に区切りが無く、最後の文節が
- * 1字でないこと。
+ * 手で区切った見出しの並び（コードに書いた決まった文。PhrasedText の約束）が、splitIntoPhrases と同じ決まりを
+ * 満たすか。行の頭と終わりに置けない字の所・数とそれに続く字のあいだ・丸括弧の中・漢字か片仮名を含む語の中
+ * （isInsideWord。「お問い|合わせ」「コピー|済み」）に区切りが無く、最後の文節が1字でないこと。
  */
 export function followsPhraseRules(phrases: readonly string[]): boolean {
+  const words = wordsOf(phrases.join(""));
   let depth = 0;
+  let offset = 0;
   for (const [index, phrase] of phrases.entries()) {
     if (phrase === "") return false;
-    if (index > 0 && (depth > 0 || isUnbreakable(phrases[index - 1], phrase))) {
+    if (
+      index > 0 &&
+      (depth > 0 ||
+        isUnbreakable(phrases[index - 1], phrase) ||
+        isInsideWord(words, offset))
+    ) {
       return false;
     }
     depth = parenDepthAfter(depth, phrase);
+    offset += toGraphemes(phrase).length;
   }
   const last = phrases.at(-1);
   return !(phrases.length > 1 && last && toGraphemes(last).length === 1);
