@@ -30,13 +30,17 @@
 //   D5 の束（ずれのある束）は出さない。着地の記録は1打目の点から数えた値で、ずらした2打目の点が避けられたかを
 //   表さないからである（D5 の合否は第1の組に落ちた件が 0 か）。
 // - hitUnmatched: 着地の記録で、`data-hit-area="after"` の祖先の箱のうち関数の矩形と一致せず、押せる範囲に置き換え
-//   られなかった数の和を、押しの種類ごとに出す（0 の種類は出さない）。走査は押しごとの記録に置いた押しの land の、
-//   1度の押しで終わる操作は要約の hu の数で、種類は押しごとの記録の kind（答えは診断の diagnosis-answer と知識クイズ
-//   の knowledge-answer に分ける）か、操作から決めたもの（start・last-answer・last-next・retry・heading）。走査の要約の
-//   n の押しの着地の記録は外れの数を持たないので、at16 に入る n の押しは数えられず、走査の種類の 0 は押しごとの記録に
-//   置いた押しだけの 0 である。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に渡すので、
-//   diagnosis-answer は押しごとにその問の行の数だけ必ず立ち、その数との差は出さない（診断の答えでの本当の外れは
-//   この数に埋もれる）。ほかの種類で 0 でなければ、関数の矩形の取り方が変わったので PM に報告する。
+//   られなかった数の、期待する数との差の和を、押しの種類ごとに出す（0 の種類は出さない）。走査は押しごとの記録に
+//   置いた押しの land と、そこに無い要約の n の押しの記録から、1度の押しで終わる操作は要約の hu から数えるので、
+//   avoidable と at16 に入る押しはどれも数に入る。種類は押しごとの記録（n の押しは n の記録）の kind（答えは診断の
+//   diagnosis-answer と知識クイズの knowledge-answer に分ける）か、操作から決めたもの（start・last-answer・
+//   last-next・retry・heading）。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に渡すので、
+//   その問の選択肢の行は一致しないのが正しく、diagnosis-answer は着地の記録が持つ問の行の数との差を出す。ほかの
+//   種類は一致しない数そのままで、期待する数はどの種類も 0。0 でない種類があれば、関数の矩形の取り方が変わったので
+//   PM に報告する。
+// - hitUnrecorded: 着地の記録はあるが、hitUnmatched に要る数（一致しなかった数、診断の答えでは問の行の数も）を
+//   持たない記録の数で、その押しは hitUnmatched に入らない。n の押しが7つ目からの欄を、押しごとの記録の land が
+//   問の行の数を持たない置き場（頭の行の tool が knowledge の blob を持たない道具で測ったもの）で 0 にならない。
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
@@ -44,9 +48,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { KNOWLEDGE } from "./knowledge.mjs";
 
-// 知識クイズの本（measure.mjs の KNOWLEDGE と同じ）。
-const KNOWLEDGE = new Set(["kotowaza-level", "yoji-level", "kanji-level"]);
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 const PRESSABLE = new Set([...FIRST, "next", "choice", "start"]);
 const SLOTS = [
@@ -191,6 +194,7 @@ function main() {
         avoidable: shifted ? undefined : landingCounts(),
         at16: shifted ? undefined : landingCounts(),
         hitUnmatched: {},
+        hitUnrecorded: 0,
         flags: {},
         gaps: [],
         wallMs: 0,
@@ -221,10 +225,22 @@ function main() {
         if (on)
           bundle.flags[key] = (bundle.flags[key] ?? 0) + (on === true ? 1 : on);
       };
-      const unmatched = (kind, count) => {
-        if (!count) return;
+      // 1つの着地の記録の置き換えの外れ。count は関数の矩形と一致しなかった祖先の数、rows はそのうちの問の選択肢の
+      // 行の数で、診断の答えは rows との差を、ほかの種類は count を足す。要る数を持たない記録は hitUnrecorded に数える。
+      const unmatched = (kind, count, rows) => {
         const key = pressKindOf(head.op, kind, slug);
-        bundle.hitUnmatched[key] = (bundle.hitUnmatched[key] ?? 0) + count;
+        const diagnosis = key === "diagnosis-answer";
+        if (
+          typeof count !== "number" ||
+          (diagnosis && typeof rows !== "number")
+        ) {
+          bundle.hitUnrecorded++;
+          return;
+        }
+        const off = diagnosis ? count - rows : count;
+        if (off) {
+          bundle.hitUnmatched[key] = (bundle.hitUnmatched[key] ?? 0) + off;
+        }
       };
       if (head.op === "answers") {
         for (const [group, count] of Object.entries(line.c ?? {})) {
@@ -233,15 +249,15 @@ function main() {
         for (const [group, count] of Object.entries(line.cm ?? {})) {
           bundle.marked[group] = (bundle.marked[group] ?? 0) + count;
         }
-        // n の押し: [押しの番号, 帯の番号, 落ちた先, 1打目の点からの隔たり, 2打目の点からの隔たり, 着地の記録]。
-        for (const [, , landed, near, near2, landing] of line.n ?? []) {
-          const reach = shifted ? near2 : near;
-          countTouch(bundle, landed, reach);
-          if (!shifted) countLanding(bundle, landed, near, landing, "near");
-        }
+        // 置き換えの外れは、押しごとの記録に置いた押しの land と、そこに無い n の押しの記録から数える（同じ押しを
+        // 二度数えない）。
+        const kept = new Set();
         for (const press of pressesOf.get(`${line.k}#${line.a}`) ?? []) {
           const landing = press.land?.[press.li];
-          unmatched(press.kind, landing?.[11]);
+          if (landing) {
+            kept.add(press.i);
+            unmatched(press.kind, landing[11], landing[12]);
+          }
           if (shifted) continue;
           countLanding(
             bundle,
@@ -250,6 +266,15 @@ function main() {
             landing ? landing.slice(6, 10) : null,
             "fallen",
           );
+        }
+        // n の押し: [押しの番号, 帯の番号, 落ちた先, 1打目の点からの隔たり, 2打目の点からの隔たり, 着地の記録,
+        // 押しの種類, 一致しなかった祖先の数, そのうちの問の選択肢の行の数]。
+        for (const entry of line.n ?? []) {
+          const [index, , landed, near, near2, landing, kind, count, rows] =
+            entry;
+          countTouch(bundle, landed, shifted ? near2 : near);
+          if (!shifted) countLanding(bundle, landed, near, landing, "near");
+          if (landing && !kept.has(index)) unmatched(kind, count, rows);
         }
         flag("cut", line.cut);
         flag("selected", line.w);
@@ -262,7 +287,7 @@ function main() {
         const reach = shifted ? line.n2 : line.n;
         if (input === "touch") countTouch(bundle, line.s, reach);
         if (!shifted) countLanding(bundle, line.s, line.n, line.l, "all");
-        unmatched(null, line.hu);
+        if (line.l) unmatched(null, line.hu ?? 0, null);
         flag("cut", !!line.cut);
         flag("nameLow", !!line.lo);
         flag("insert", !!line.ins);

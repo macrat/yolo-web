@@ -26,6 +26,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
+import { KNOWLEDGE } from "./knowledge.mjs";
 import { chunksDigest, compareFingerprints } from "./version.mjs";
 
 const CHROMIUM = "/opt/pw-browsers/chromium";
@@ -47,7 +48,6 @@ const ALL_SLUGS = [
   "yoji-level",
   "kanji-level",
 ];
-const KNOWLEDGE = new Set(["kotowaza-level", "yoji-level", "kanji-level"]);
 const EXTRA_SLUGS = new Set([
   "character-fortune",
   "science-thinking",
@@ -234,6 +234,7 @@ function toolBlobs() {
   return {
     measure: blobOf(path.join(here, "measure.mjs")),
     version: blobOf(path.join(here, "version.mjs")),
+    knowledge: blobOf(path.join(here, "knowledge.mjs")),
   };
 }
 
@@ -505,13 +506,20 @@ function pageProbe() {
     const area = hitArea(element);
     return area ? paddingBox(area) : edges(element.getBoundingClientRect());
   };
-  // 着地の関数の止め所が読む、`data-hit-area="after"` の祖先の [要素の箱, 押せる範囲]。関数は祖先の要素の箱
-  // （罫線を含む）を渡すので、道具はこれで押せる範囲に直して数える。
-  window.__yolosHitAreas = () =>
-    [...document.querySelectorAll('[data-hit-area="after"]')]
+  // 着地の関数の止め所が読む、`data-hit-area="after"` の祖先の [要素の箱, 押せる範囲, 問の選択肢の行なら 1]。
+  // 関数は祖先の要素の箱（罫線を含む）を渡すので、道具はこれで押せる範囲に直して数える。問の選択肢の行の印は、
+  // 関数が問のまとまりを避けないもの（exclude）にした呼び出しで、渡されないのが正しい祖先を数えるためのもの。
+  window.__yolosHitAreas = () => {
+    const list = choiceList();
+    return [...document.querySelectorAll('[data-hit-area="after"]')]
       .map(hitArea)
       .filter(Boolean)
-      .map((area) => [edges(area.getBoundingClientRect()), paddingBox(area)]);
+      .map((area) => [
+        edges(area.getBoundingClientRect()),
+        paddingBox(area),
+        list?.contains(area) ? 1 : 0,
+      ]);
+  };
   // 点から、組ごとに最も近い押せるものの押せる範囲までの横と縦の隔たり。最も近いものは max(dx, dy) で決める
   // （Chromium のタッチの調整は、点を中心にした触れた面と押せる範囲が交わるかで寄せる。t5a-measure.md 0章）。
   // 組は第1の組・問の選択肢・「はじめる」の3つで、それぞれ [dx, dy, 組:名前] か null。
@@ -1072,8 +1080,10 @@ const round1 = (value) => Math.round(value * 10) / 10;
  * 着地の関数の1回の呼び出しの記録。範囲の中に点の真下を外す送りがあったか（関数と同じ1px 刻み）と、範囲の中で
  * 点から避けるものまでを最も離せたときの隔たり（max(dx, dy)。第1の組だけと、両方の組の近いほう）を数える。
  * 避けるものの矩形は、関数が渡した `data-hit-area="after"` の祖先の要素の箱を、止め所が読んだ押せる範囲に直して
- * 数える（タッチの距離と同じ箱）。祖先の箱のうち関数の矩形のどれとも一致しなかった数（unmatched）も返す。関数が
- * 避けないもの（exclude）の中の祖先のほかは 0 で、関数の矩形の取り方が変わって置き換えが外れると増える。
+ * 数える（タッチの距離と同じ箱）。祖先の箱のうち関数の矩形のどれとも一致しなかった数（unmatched）と、そのうちの
+ * 問の選択肢の行の数（rows）も返す。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に渡すので、
+ * unmatched は rows に等しいのが正しく、ほかの呼び出しでは 0 が正しい。関数の矩形の取り方が変わって置き換えが
+ * 外れると、その差が増える。
  */
 function summarizeLanding(landing, frames) {
   const { plan, point, scrollable } = landing.choice;
@@ -1087,6 +1097,7 @@ function summarizeLanding(landing, frames) {
   const unmatched = hit.filter(
     ([box]) => !given.some((rect) => same(box, rect)),
   ).length;
+  const rows = hit.filter(([, , row]) => row).length;
   const pressable = (rect) => hit.find(([box]) => same(box, rect))?.[1] ?? rect;
   const avoidFirst = landing.choice.avoidFirst.map(pressable);
   const avoidNext = landing.choice.avoidNext.map(pressable);
@@ -1144,6 +1155,7 @@ function summarizeLanding(landing, frames) {
     farBoth: farBoth === null ? null : round1(farBoth),
     chosen: frame ? frame.scrollY - landing.scrollY : null,
     unmatched,
+    rows,
   };
 }
 
@@ -1296,6 +1308,7 @@ function compactPress(record) {
       landing.farBoth,
       landing.chosen,
       landing.unmatched,
+      landing.rows,
     ]),
     li: record.landingIndex,
     fr: record.frames.map((frame) => [
@@ -1792,6 +1805,7 @@ function summaryLine(op, run, outcome, records) {
           .map(([dx, dy]) => Math.max(dx, dy));
         const nearest = Math.min(...values);
         if (nearest > 0 && nearest <= NEAR_LIMIT) {
+          const landing = record.landings?.[record.landingIndex];
           near.push([
             record.i,
             record.band,
@@ -1799,6 +1813,9 @@ function summaryLine(op, run, outcome, records) {
             nearOut(record.near),
             record.near2 ? nearOut(record.near2) : null,
             landingOut(record),
+            record.kind,
+            landing ? landing.unmatched : null,
+            landing ? landing.rows : null,
           ]);
         }
       }
