@@ -270,7 +270,7 @@ export default function PrivacyPage() {
         <PhrasedText
           as="h2"
           className={styles.heading}
-          phrases={["お問い", "合わせ"]}
+          phrases={["お問い合わせ"]}
         />
         <div className={styles.body}>
           <p className={styles.text}>

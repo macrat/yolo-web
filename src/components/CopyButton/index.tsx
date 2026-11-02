@@ -9,17 +9,11 @@ import {
 } from "@/components/hooks/useCopyToClipboard";
 import styles from "./CopyButton.module.css";
 
-/** 押したあとの面で「コピー」に続ける語。押したあとの面は「コピー」とこの語の2つの文節で組む。 */
-const FACE_SUFFIXES: Record<Exclude<CopyStatus, "idle">, string> = {
-  copied: "済み",
-  failed: "失敗",
-};
-
-/** ボタンの面に出す字。押す前・写した・写せなかった。 */
+/** ボタンの面に出す字。押す前・写した・写せなかった。どれも短い1つの文節で、面の中では折らない。 */
 export const COPY_FACES: Record<CopyStatus, string> = {
   idle: "コピー",
-  copied: `コピー${FACE_SUFFIXES.copied}`,
-  failed: `コピー${FACE_SUFFIXES.failed}`,
+  copied: "コピー済み",
+  failed: "コピー失敗",
 };
 
 /**
@@ -110,12 +104,9 @@ export default function CopyButton({
   const [announcement, setAnnouncement] = useState({ id: 0, message: "" });
 
   // 面の字の区切りの並び。何を写すかも出す面は、何を写すかの文節と「を」の後ろで折れる。押したあとの面は
-  // 「コピー」と「済み」「失敗」のあいだでだけ折れる。
+  // 1つの文節で折れない。
   const facePhrases = (faceStatus: CopyStatus): readonly string[] => {
-    if (faceStatus !== "idle") {
-      return [COPY_FACES.idle, FACE_SUFFIXES[faceStatus]];
-    }
-    if (!showTarget) return [COPY_FACES.idle];
+    if (faceStatus !== "idle" || !showTarget) return [COPY_FACES[faceStatus]];
     return [
       ...targetPhrases.slice(0, -1),
       `${targetPhrases[targetPhrases.length - 1]}を`,
