@@ -137,24 +137,33 @@
 
 根拠: 実測（cycle-301。ビューポートと入力の種類は記録に無い）。`prefers-reduced-motion: reduce`（＝`scrollIntoView` が即時になり座標が動かない）で対照を取ると、離脱は **4/4** と通常の 3/4 より**むしろ多かった**。
 
-## 8. Chromium はタップの点を近くの押せるものへ寄せる。CDP で触れた面の大きさを渡さないと、Android の端末より狭い範囲でしか寄らない
+## 8. Chromium はタップの点を近くの押せるものへ寄せる。寄る範囲は触れた面の大きさと端末の種類で決まり、このコンテナの道具の押しと Android の端末とで違う
 
-Chromium（Blink）は、タップの点の真下の要素をそのまま当たりにせず、点を中心にした触れた面と交わる押せるものを探し、いちばん点数の良いものへ点を寄せる（touch adjustment）。
+Chromium は、タップの点の真下の要素をそのまま当たりにせず、点を中心にした触れた面と交わる押せるものを探し、いちばん点数の良いものへ点を寄せる（touch adjustment）。
 
 - **押せるもの**: click かマウスの動きに応える要素、マウスでフォーカスできる要素（iframe を除く）、`:hover`・`:active` で見た目が変わる要素。
-- **面**: 点を中心にした矩形で、来た触れた面の横と縦の大きさを、それぞれ 20〜32 dip に収めたもの（dip に端末の倍率を掛け、画面のつまみの拡大の倍率で割って、ページの座標に直す）。触れた面の横と縦が同じなら正方形になる。
-- **届く範囲**: 要素の矩形が面と交われば候補になる。点から要素の矩形までの横の隔たり dx と縦の隔たり dy の大きいほう（max(dx, dy)）が面の半辺より小さければ届く。半辺は、つまみで拡大していなければ 10〜16 CSS px で、斜めには点からの直線の距離で約 14〜22.6px まで届く。直線の距離を 10・16 と比べると、横にも縦にも 9px 離れたもの（直線で約 12.7px）を、最小の面でも届くのに届かないと数え誤る。
+- **面**: tap の面は、押した点を中心にした正方形で、一辺は次の2段で決まる。`radiusX` と `radiusY` を違えて渡しても、正方形のままである。
+  1. ブラウザの gesture の組み立てが、触れた面の半径（`radiusX`・`radiusY`）の大きいほうの2倍を一辺にし、端末の種類ごとの幅に収める。Android は 20〜32 dip に収める。Linux のデスクトップ（Aura）は、25 dip より小さければ 25 dip に広げ、上は収めない。
+  2. Blink がそれを 20〜32 dip に収め、端末の倍率を掛けて画面のつまみの拡大の倍率で割り、ページの座標に直す。
+- **届く範囲**: 要素の矩形が面と交われば候補になる。点から要素の矩形までの横の隔たり dx と縦の隔たり dy の大きいほう（max(dx, dy)）が面の半辺（一辺の半分。つまみで拡大していなければ CSS px で 10〜16）より小さければ届き、斜めには点からの直線の距離で半辺の約 1.41 倍まで届く。直線の距離を半辺と比べると、横にも縦にも 9px 離れたもの（直線で約 12.7px）を、半辺 10px の面でも届くのに届かないと数え誤る。
 - **選び方**: 点から矩形のいちばん近い所までの距離の2乗を、面の半分の対角線の2乗で割った値と、1 から「面と重なる面積 ÷ 重なりうる最大の面積」を引いた値を足し、いちばん小さいものを選ぶ。点の真下の押せるものは、ふつう両方が 0 になって選ばれる。点は、選んだ要素の矩形の中にあればそのまま、外にあれば矩形と面の交わりの中心へ寄せる。
 
 二度押しを Chromium で測るときは、次の差に気をつける。
 
-- CDP の `Input.dispatchTouchEvent` の `touchPoints` の `radiusX`・`radiusY` は、渡さなければ 1 になる。Playwright の `touchscreen.tap` も `x`・`y` だけを渡す。どちらも下限の 20 dip の正方形で探すので、届くのは max(dx, dy) が 10px より小さい所までである。
-- Android の Chrome は指の触れた面の大きさを渡し、同じ 20〜32 dip の幅に収めて使うので、max(dx, dy) が 16px より小さい所に押せるものがあれば寄りうる。道具の押しで2打目が押せるものに落ちなかった件も、Android の端末では落ちうる。
-- Android の端末での落ち先を見積もる形は2つある。(a) どの押しでも、点から押せるものまでの dx と dy を記録し、最小の面（半辺 10px）と最大の面（半辺 16px）の届く範囲と突き合わせる。測りの量は増えない。(b) `radiusX`・`radiusY` に 16 を渡した押しを並べ、最大の面での落ち先をじかに見る。測りの量が倍になる。(a) で判断が決まるときは (a) を使い、(b) は (a) で届く範囲の境目にある件を確かめるときに使う。
-- 点をずらした押し（指のずれの模し）で測った落ち先は、ずれに、最小の面での寄せを重ねた結果である。ずれだけの効果を見たいときは、ずらした点から押せるものまでの dx と dy も記録する。
+- このコンテナ（Linux）の Chromium では、CDP の `Input.dispatchTouchEvent` で `touchPoints` の `radiusX`・`radiusY` を渡さない押し（既定は 1）と、Playwright の `touchscreen.tap`（`x`・`y` だけを渡す）は、一辺 25 dip の面で探す。届くのは max(dx, dy) が 12.5px より小さい所までである。`radiusX`・`radiusY` に 12.5 以下を渡しても同じで、16 以上を渡すと一辺 32 dip になり、max(dx, dy) が 16px より小さい所まで届く。
+- Android の Chrome は指の触れた面の大きさを渡すので、面は一辺 20〜32 dip（半辺 10〜16px）になる。道具の押しの結果は、Android の端末と両向きに外れる。max(dx, dy) が 10〜12.5px の押せるものは、道具では寄っても、Android の小さい触れ方では寄らない。12.5〜16px のものは、道具では寄らなくても、Android の大きい触れ方では寄りうる。
+- Android の端末での落ち先を見積もる形は2つある。(a) どの押しでも、点から押せるものまでの dx と dy を記録し、道具の面（半辺 12.5px）で落ちた先を、Android の最小の面（半辺 10px）と最大の面（半辺 16px）の届く範囲と突き合わせる。測りの量は増えない。(b) `radiusX`・`radiusY` に 16 を渡した押しを並べ、最大の面での落ち先をじかに見る。測りの量が倍になる。(a) で判断が決まるときは (a) を使い、(b) は (a) で届く範囲の境目にある件を確かめるときに使う。
+- 点をずらした押し（指のずれの模し）で測った落ち先は、ずれに、道具の面（半辺 12.5px）での寄せを重ねた結果である。ずれだけの効果を見たいときは、ずらした点から押せるものまでの dx と dy も記録する。
 - iOS の Safari は WebKit の別の調整を持ち、このコンテナでは測れない。
 
-根拠: 確認と実測（cycle-320）。ソースは Chromium のタグ `153.0.8010.12`（`main` と同じ中身）で確かめた。押せるもの・面・届く範囲・選び方は、`third_party/blink/renderer/core/page/touch_adjustment.cc`（`kMaxAdjustmentSizeDip(32)`・`kMinAdjustmentSizeDip(20)`、`GetHitTestRectForAdjustment` が横と縦をそれぞれ `ShrunkTo`・`ExpandedTo` で収めること、`NodeRespondsToTapGesture`、`HybridDistanceFunction`、`SnapTo` の `bounds.Intersects(touch_area)` と交わりの中心）と、`third_party/blink/renderer/core/input/event_handler.cc`（点から大きさの半分を引いた所を左上にした `hit_rect_size` の矩形で当たりを取ること）で確認した。同じ 20・32 は Android の `ui/events/gesture_detection/gesture_configuration_android.cc` の `kMinGestureBoundsLengthDips`・`kMaxGestureBoundsLengthDips` で、指の面の大きさ（gesture bounds）に掛ける幅として置かれている。`radiusX`・`radiusY` の既定の 1 は CDP の定義（`third_party/blink/public/devtools_protocol/domains/Input.pdl`）、Playwright が面の大きさを渡さないことは `playwright-core` 1.61.1 の `Input.dispatchTouchEvent` の呼び出しで確認した。寄る距離が面で変わることは実測（cycle-320 のレビュー review-t5a-7a-1.md。Chrome for Testing 153.0.8010.12（`/opt/pw-browsers/chromium`、`chromium-1243`）の headless で、本番ビルドを `next start` で起こし、1280×800・`hasTouch: true`（ほかは Playwright の既定）・`--disable-smooth-scrolling` で、「はじめる」の中心を CDP の `Input.dispatchTouchEvent` で 300ms 空けて2度押した。kanji-level と impossible-advice では、2打目の `click` の座標が、`radiusX/Y` 1・5・10 で送った点から 6px、16・24 で 9px 寄った）。Android の Chrome が指の面の大きさを渡して実機で半辺 16px の範囲まで寄ることは、この2つのソースからの推論で、実機では測っていない。
+根拠: 確認と実測（cycle-320）。ソースは Chromium のタグ `153.0.8010.12` で確かめた。
+
+- ブラウザの側（面の1段目）: `content/browser/devtools/protocol/input_handler.cc` は `radiusX`・`radiusY` を `GetRadiusX(1.0f)`・`GetRadiusY(1.0f)` で読み、押しを `TouchEmulator`（`kInjectingTouchEvents`・`GestureProviderConfigType::CURRENT_PLATFORM`）に通して gesture に直す。`content/browser/renderer_host/input/motion_event_web.cc` の `GetTouchMajor` は `2 * max(radius_x, radius_y)`。`ui/events/gesture_detection/gesture_provider.cc` の `GetBoundingBox` は、tap では押し始めの点（`tap_down_point_`）を中心に、一辺 `max_diameter_before_show_press_`（touch major の最大）の正方形を作り、指（`FINGER`・`UNKNOWN`）の押しでは `ClampBoundingBox` が `min_gesture_bounds_length`・`max_gesture_bounds_length` で横と縦を同じく収める。`ui/events/BUILD.gn` は Android で `gesture_configuration_android.cc`（`kMinGestureBoundsLengthDips = 20.f`・`kMaxGestureBoundsLengthDips = 32.f`）、Aura で `gesture_configuration_aura.cc`（`set_min_gesture_bounds_length(default_radius())`）を使い、`gesture_configuration.h` は `default_radius_ = 25`・`max_gesture_bounds_length_ = 0`（収めない）。`ui/events/blink/blink_event_util.cc` は、その正方形の幅と高さを `data.tap.width`・`data.tap.height` に入れて Blink に渡す。
+- Blink の側（面の2段目・届く範囲・選び方）: `third_party/blink/renderer/core/page/touch_adjustment.cc`（`kMaxAdjustmentSizeDip(32)`・`kMinAdjustmentSizeDip(20)`、`GetHitTestRectForAdjustment` の `ShrunkTo`・`ExpandedTo`、`NodeRespondsToTapGesture`、`HybridDistanceFunction`、`SnapTo` の `bounds.Intersects(touch_area)` と交わりの中心）と、`third_party/blink/renderer/core/input/event_handler.cc`（点から大きさの半分を引いた所を左上にした `hit_rect_size` の矩形で当たりを取ること）で確認した。
+- CDP の `radiusX`・`radiusY` の既定の 1 は `third_party/blink/public/devtools_protocol/domains/Input.pdl` の定義、Playwright が面の大きさを渡さないことは `playwright-core` 1.61.1 の `Input.dispatchTouchEvent` の呼び出しで確認した。
+- 届く境は実測（cycle-320 の knowledge のレビュー review-knowledge-2.md。Chrome for Testing 153.0.8010.12（`/opt/pw-browsers/chromium`、`chromium-1243`）の headless、800×600、`hasTouch: true`。左上 (300, 100)・100×40 のボタンの縁から dy 離した点を CDP の `Input.dispatchTouchEvent` で押し、`click` の的と座標を取った）。`radiusX/Y` を渡さない押しと 1・10・12、Playwright の `touchscreen.tap` は dy 12 まで寄り、13 では寄らなかった。16・24 は dy 15.5 まで寄り、17 では寄らなかった。斜め（渡さない押し）は dx = dy = 12 で寄り、13 で寄らなかった。寄せた座標は面とボタンの交わりの中心と合った。
+- 寄る距離が面で2段に分かれることも実測（cycle-320 のレビュー review-t5a-7a-1.md。同じブラウザの headless で、本番ビルドを `next start` で起こし、1280×800・`hasTouch: true`（ほかは Playwright の既定）・`--disable-smooth-scrolling` で、「はじめる」の中心を CDP の `Input.dispatchTouchEvent` で 300ms 空けて2度押した。kanji-level と impossible-advice では、2打目の `click` の座標が、`radiusX/Y` 1・5・10 で送った点から 6px、16・24 で 9px 寄った）。
+- Android の Chrome が指の面の大きさを渡して実機で半辺 10〜16px の範囲で寄ることは、上のソースからの推論で、実機では測っていない。
 
 ---
 
