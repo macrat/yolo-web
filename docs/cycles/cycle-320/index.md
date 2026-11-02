@@ -13,7 +13,7 @@ T5a-7 の残りも次のサイクルが行う。着地の作りを直し T5a-8 �
 
 ## 実施する作業
 
-- [ ] T5a-4: 区切り（`questionPhrases.ts` をサーバーで作って渡し、`QuestionCard` が見出しと答えたあとの行を `PhrasedText` で、選択肢を `Button` の `phrases` で組む）と、`QuizPlayPageLayout` の箱とページの根の `touch-action: manipulation` を書き、根の計算値の確かめ・試験・撮った像とともにレビューに通す
+- [x] T5a-4: 区切り（`questionPhrases.ts` をサーバーで作って渡し、`QuestionCard` が見出しと答えたあとの行を `PhrasedText` で、選択肢を `Button` の `phrases` で組む）と、`QuizPlayPageLayout` の箱とページの根の `touch-action: manipulation` を書き、根の計算値の確かめ・試験・撮った像とともにレビューに通す
 - [x] B-788 を Queued に移す（T5a-4 を取り込み、根の `touch-action` が診断のページで効くと確かめたあと）
 - [ ] T5a-7a-1: 測りの道具を組み直して `measure/` に置き、基準の版と変更後の版で試しの走りを行って見積もり（t5a-measure.md 10章）を出し、着地の作りの欠け（下の補足事項）を見つけた。レビューは第2回で改善指示のままで、道具の直しは範囲の決め直しで次のサイクルへ送った
 - [x] knowledge の直し: Chromium の版の記述を確かめ方の形にし、タッチの調整の知見を、一次資料と実測に合う形で足す（T5a-7a-1 のレビュー第1回の指摘1・12、第2回の指摘1・2・9）
