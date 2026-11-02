@@ -1080,10 +1080,10 @@ const round1 = (value) => Math.round(value * 10) / 10;
  * 着地の関数の1回の呼び出しの記録。範囲の中に点の真下を外す送りがあったか（関数と同じ1px 刻み）と、範囲の中で
  * 点から避けるものまでを最も離せたときの隔たり（max(dx, dy)。第1の組だけと、両方の組の近いほう）を数える。
  * 避けるものの矩形は、関数が渡した `data-hit-area="after"` の祖先の要素の箱を、止め所が読んだ押せる範囲に直して
- * 数える（タッチの距離と同じ箱）。祖先の箱のうち関数の矩形のどれとも一致しなかった数（unmatched）と、そのうちの
- * 問の選択肢の行の数（rows）も返す。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に渡すので、
- * unmatched は rows に等しいのが正しく、ほかの呼び出しでは 0 が正しい。関数の矩形の取り方が変わって置き換えが
- * 外れると、その差が増える。
+ * 数える（タッチの距離と同じ箱）。祖先の箱のうち関数の矩形のどれとも一致しなかった数（unmatched）と、一致しなかった
+ * 箱のうちの問の選択肢の行の数（rows）も返す。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に
+ * 渡すので、問の行は一致しないのが正しく、一致しなかった行でない箱（unmatched − rows）が 0 なのが正しい。ほかの
+ * 呼び出しでは unmatched が 0 なのが正しい。関数の矩形の取り方が変わって置き換えが外れると、その数が増える。
  */
 function summarizeLanding(landing, frames) {
   const { plan, point, scrollable } = landing.choice;
@@ -1094,10 +1094,9 @@ function summarizeLanding(landing, frames) {
     a.right === b.right;
   const hit = landing.hit ?? [];
   const given = [...landing.choice.avoidFirst, ...landing.choice.avoidNext];
-  const unmatched = hit.filter(
-    ([box]) => !given.some((rect) => same(box, rect)),
-  ).length;
-  const rows = hit.filter(([, , row]) => row).length;
+  const missed = hit.filter(([box]) => !given.some((rect) => same(box, rect)));
+  const unmatched = missed.length;
+  const rows = missed.filter(([, , row]) => row).length;
   const pressable = (rect) => hit.find(([box]) => same(box, rect))?.[1] ?? rect;
   const avoidFirst = landing.choice.avoidFirst.map(pressable);
   const avoidNext = landing.choice.avoidNext.map(pressable);
