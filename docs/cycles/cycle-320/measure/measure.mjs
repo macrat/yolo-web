@@ -12,7 +12,7 @@
 // 記録は --out-dir の下に、操作と画面で分けて書く（版は置き場で分ける。plan-t5a7.md 3 の「記録の形と上限」）。
 //   fingerprint.jsonl                 版の指紋。1行目が測り始めた版で、2行目からは PM の決定で続けた版
 //   <組>-<画面>.jsonl                 1行目が頭の行で、2行目からが回（1つの走査か1つの二度押し）ごとの要約
-//   <組>-<画面>.presses.jsonl         判断に要る回の押しごとの記録
+//   <組>-<画面>.presses.jsonl         押しごとの記録。変更後の版の判断に要る押しと、誤りで終わった回の押し
 // 組は操作の名で、D5 のずれを渡した回は `<操作>-d5`。画面は `375x550`、200% は `375x550-200`。
 //
 // 1回を測り終えるたびに、その回の押しごとの記録（あれば）と要約の行を足してから次へ進む。要約の行に f（数える
@@ -1331,15 +1331,18 @@ function compactPress(record) {
 }
 
 /**
- * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。答えの2打目が次の問の
- * 選択肢に落ちた押し（診断の答え。知識クイズの答えのあとには次の問が出ない）は、条件7 が数だけを求めるので
- * 置かない（要約の `c` に数える）。語の選択の対（select）は、語が選ばれなかった押しを置く。
+ * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。判断（plan-t5a7.md 5）が
+ * 押しごとに読むのは変更後の版の件だけなので、着地の関数を持たない版（基準の版）では置かない（その版の数は
+ * 要約から出す）。答えの2打目が次の問の選択肢に落ちた押し（診断の答え。知識クイズの答えのあとには次の問が
+ * 出ない）は、条件7 が数だけを求めるので置かない（要約の `c` に数える）。語の選択の対（select）は、語が
+ * 選ばれなかった押しを置く。
  */
-function keepReasons(op, record) {
+function keepReasons(options, record) {
   const reasons = [];
+  if (!options.landing) return reasons;
   if (FIRST_GROUP.has(record.group)) reasons.push("first");
   if (record.group === "next" && record.kind !== "answer") reasons.push("next");
-  if (op === "select") {
+  if (options.op === "select") {
     if (!record.selection) reasons.push("no-selection");
   } else if (record.selection) reasons.push("selection");
   if (record.nameLow) reasons.push("name-low");
@@ -1991,11 +1994,11 @@ async function main() {
           ms: Date.now() - started,
           ...summaryLine(options.op, run, outcome, records),
         };
-        // 押しごとの記録は、判断に要る押しと、誤りで終わった回の押しを置く。
+        // 押しごとの記録は、判断に要る押し（変更後の版だけ）と、誤りで終わった回の押し（どちらの版も）を置く。
         const kept = records
           .map((record) => ({
             record,
-            why: error ? ["error"] : keepReasons(options.op, record),
+            why: error ? ["error"] : keepReasons(options, record),
           }))
           .filter(({ why }) => why.length > 0);
         if (error && kept.length === 0) {
