@@ -78,7 +78,7 @@ T5a-7 の残りも次のサイクルが行う。着地の作りを直し T5a-8 �
 | T5a-4                            | 10   | 承認                                                                                                                                                                       | [review-t5a-4.md](./review-t5a-4.md)〜[-10](./review-t5a-4-10.md)             |
 | T5a-7a-1（測りの道具）           | 2    | 改善指示のまま次のサイクルへ送った                                                                                                                                         | [review-t5a-7a-1.md](./review-t5a-7a-1.md)〜[-2](./review-t5a-7a-1-2.md)      |
 | knowledge の直しと範囲の決め直し | 10   | A（§8）は第7回・第8回で承認し、軽の直しのあと取り込んだ。B（範囲の決め直しの記録）は第5〜9回とも改善指示で planner と PM が直し、第10回で承認された（軽4件は PM が直した） | [review-knowledge.md](./review-knowledge.md)〜[-10](./review-knowledge-10.md) |
-| 全体                             | 2    | 第1回・第2回とも改善指示で、planner と PM が直した                                                                                                                         | [review-final.md](./review-final.md)〜[-2](./review-final-2.md)               |
+| 全体                             | 3    | 第1回・第2回とも改善指示で planner と PM が直し、第3回で承認された（軽1件は PM が直した）                                                                                  | [review-final.md](./review-final.md)〜[-3](./review-final-3.md)               |
 
 回ごとの指摘と PM の判断の要約は [review-log.md](./review-log.md) にある。
 
