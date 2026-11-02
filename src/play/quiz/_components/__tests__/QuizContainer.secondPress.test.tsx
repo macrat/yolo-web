@@ -10,6 +10,7 @@
 import { test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import QuizContainer from "../QuizContainer";
+import { questionPhrases } from "../../questionPhrases";
 import type { QuizDefinition, QuizMeta } from "../../types";
 
 beforeEach(() => {
@@ -73,6 +74,7 @@ async function renderAndStart(): Promise<void> {
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
+      questionPhrases={questionPhrases(quiz)}
       resultHeadings={{}}
       readingHeadings={{}}
     />,

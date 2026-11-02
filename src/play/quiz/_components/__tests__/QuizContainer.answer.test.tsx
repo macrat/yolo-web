@@ -10,6 +10,7 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
+import { questionPhrases } from "../../questionPhrases";
 import { buttonUnderlineClassName } from "@/components/Button";
 import type {
   QuizAnswer,
@@ -86,10 +87,12 @@ function makePersonalityQuiz(): QuizDefinition {
 }
 
 function renderQuiz() {
+  const quiz = makePersonalityQuiz();
   return render(
     <QuizContainer
       head={<h1>見出し</h1>}
-      quiz={makePersonalityQuiz()}
+      quiz={quiz}
+      questionPhrases={questionPhrases(quiz)}
       resultHeadings={{}}
       readingHeadings={{}}
     />,

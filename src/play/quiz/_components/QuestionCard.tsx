@@ -2,6 +2,7 @@
 
 import { useId, useMemo, type Ref } from "react";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
+import type { QuestionPhrases } from "@/play/quiz/questionPhrases";
 import { isCorrectChoice } from "@/play/quiz/scoring";
 import Button, {
   buttonFaceBoxClassName,
@@ -22,6 +23,8 @@ function shuffleArray<T>(array: readonly T[]): T[] {
 
 type QuestionCardProps = {
   question: QuizQuestion;
+  /** 問の見出しと選択肢の面の、文節の区切り。サーバーで作ってから受け取る（questionPhrases）。 */
+  phrases: QuestionPhrases;
   quizType: QuizType;
   /** この問に記録した答えの選択肢の id。まだ答えていなければ undefined。押した形はこの記録から描く。 */
   answeredChoiceId: string | undefined;
@@ -57,10 +60,13 @@ function feedbackOf(
  * 1つの問。選択肢は押すと回答が決まるボタンで、答えたあとはどれもボタンでない字に替わる（DESIGN.md §6）。
  * 診断では、押した行の字は次の問か結果が出るまで押す前と同じ下線を持ったままでいて（実行のさいちゅう）、ほかの行は
  * 下線の無い字（答えた選択肢）になる。知識クイズでは、どの行も答えた選択肢になり、正誤の字と解説と「次へ」が出る。
+ * 見出しと選択肢の字は、受け取った区切りのあいだでだけ折る（DESIGN.md §4）。ボタンの面と答えたあとの字は同じ区切りで
+ * 組むので、押しても折り返しは変わらない。
  * 自分では画面を送らずフォーカスも動かさず、送りの範囲を測る要素とフォーカスを受ける要素を QuizContainer に渡す。
  */
 export default function QuestionCard({
   question,
+  phrases,
   quizType,
   answeredChoiceId,
   onAnswer,
@@ -82,20 +88,23 @@ export default function QuestionCard({
   const answered = answeredChoiceId !== undefined;
   const isKnowledge = quizType === "knowledge";
   const explanation = isKnowledge && answered ? question.explanation : "";
+  const { phrases: headingPhrases, ...headingFont } = phrases.heading;
 
   return (
     <div>
       {/* 問の見出し（h2。ページの h1 は頭が持つ）。プログラムからだけフォーカスを受ける。 */}
-      <h2
+      <PhrasedText
+        as="h2"
+        phrases={headingPhrases}
+        {...headingFont}
         ref={headingRef}
         tabIndex={-1}
         className={styles.questionText}
         data-text-box="inline"
-      >
-        {question.text}
-      </h2>
+      />
       <ul ref={choicesRef} className={styles.choices} data-text-box="rows">
         {shuffledChoices.map((choice) => {
+          const choicePhrases = phrases.choices[choice.id];
           const pressed = choice.id === answeredChoiceId;
           const feedback =
             isKnowledge && answered
@@ -129,23 +138,22 @@ export default function QuestionCard({
                   className={styles.choiceButton}
                   onClick={() => onAnswer(choice.id)}
                   data-hit-area="after"
-                >
-                  {choice.text}
-                </Button>
+                  phrases={choicePhrases}
+                />
               ) : pressed && !isKnowledge ? (
                 <span
                   className={`${buttonFaceBoxClassName} ${buttonUnderlineClassName} ${styles.answeredFace} ${styles.pressedFace}`}
                   data-text-box="inline"
                   data-hit-area="after"
                 >
-                  <PhrasedText as="span" phrases={[choice.text]} />
+                  <PhrasedText as="span" phrases={choicePhrases} />
                 </span>
               ) : (
                 <span
                   className={`${buttonFaceBoxClassName} ${styles.answeredFace}`}
                   data-text-box="inline"
                 >
-                  <PhrasedText as="span" phrases={[choice.text]} />
+                  <PhrasedText as="span" phrases={choicePhrases} />
                 </span>
               )}
               {feedback && <span className={styles.feedback}>{feedback}</span>}
