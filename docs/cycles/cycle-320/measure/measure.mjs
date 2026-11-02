@@ -474,25 +474,53 @@ function pageProbe() {
     );
   }
 
-  // 押せるものの押せる範囲（reveal.ts の revealLanding と同じ集め方。`data-hit-area="after"` は位置を決めた祖先の矩形）。
+  // 押せるもの（reveal.ts の revealLanding と同じ集め方。Chromium のタッチの調整の候補より狭い。README の `n`）。
   const PRESSABLE =
     'a[href], button, summary, input, select, textarea, label, [role="button"], [role="link"]';
-  const hitRect = (element) =>
-    (element instanceof HTMLElement &&
+  const edges = (rect) => ({
+    top: rect.top,
+    bottom: rect.bottom,
+    left: rect.left,
+    right: rect.right,
+  });
+  // `data-hit-area="after"` の要素は `::after`（`position: absolute; inset: 0`）で押せる範囲を位置を決めた祖先に
+  // 広げており、押せる範囲は祖先の内側の箱（padding box）で、祖先の罫線は押せない。
+  const paddingBox = (box) => {
+    const rect = box.getBoundingClientRect();
+    const style = getComputedStyle(box);
+    return {
+      top: rect.top + parseFloat(style.borderTopWidth),
+      bottom: rect.bottom - parseFloat(style.borderBottomWidth),
+      left: rect.left + parseFloat(style.borderLeftWidth),
+      right: rect.right - parseFloat(style.borderRightWidth),
+    };
+  };
+  const hitArea = (element) =>
+    element instanceof HTMLElement &&
     element.dataset.hitArea === "after" &&
     element.offsetParent
       ? element.offsetParent
-      : element
-    ).getBoundingClientRect();
-  // 点から、組ごとに最も近い押せるものの矩形までの横と縦の隔たり。最も近いものは max(dx, dy) で決める
-  // （Chromium のタッチの調整は、点を中心にした正方形の触れた面と矩形が交わるかで寄せる。t5a-measure.md 0章）。
+      : null;
+  const hitRect = (element) => {
+    const area = hitArea(element);
+    return area ? paddingBox(area) : edges(element.getBoundingClientRect());
+  };
+  // 着地の関数の止め所が読む、`data-hit-area="after"` の祖先の [要素の箱, 押せる範囲]。関数は祖先の要素の箱
+  // （罫線を含む）を渡すので、道具はこれで押せる範囲に直して数える。
+  window.__yolosHitAreas = () =>
+    [...document.querySelectorAll('[data-hit-area="after"]')]
+      .map(hitArea)
+      .filter(Boolean)
+      .map((area) => [edges(area.getBoundingClientRect()), paddingBox(area)]);
+  // 点から、組ごとに最も近い押せるものの押せる範囲までの横と縦の隔たり。最も近いものは max(dx, dy) で決める
+  // （Chromium のタッチの調整は、点を中心にした触れた面と押せる範囲が交わるかで寄せる。t5a-measure.md 0章）。
   // 組は第1の組・問の選択肢・「はじめる」の3つで、それぞれ [dx, dy, 組:名前] か null。
   const nearFrom = (point) => {
     const list = choiceList();
     const best = [null, null, null];
     for (const element of document.querySelectorAll(PRESSABLE)) {
       const rect = hitRect(element);
-      if (rect.width === 0 || rect.height === 0) continue;
+      if (rect.right - rect.left <= 0 || rect.bottom - rect.top <= 0) continue;
       const dx = Math.max(rect.left - point.x, 0, point.x - rect.right);
       const dy = Math.max(rect.top - point.y, 0, point.y - rect.bottom);
       const slot = list?.contains(element) ? 1 : isStart(element) ? 2 : 0;
@@ -507,6 +535,28 @@ function pageProbe() {
     }
     return best;
   };
+  // タッチの隔たりは、2打目の pointerdown を受けた時の組みで取る。Chromium は受け手のあるページで、pointerdown を
+  // 出す前の組みで点を寄せる（docs/knowledge/input-events-and-guards.md §8）。この受け手はページの読み込みの前に
+  // window の捕捉の段階に置くので、寄せたすぐあと、ページの受け手が組みを変える前に走る。道具が押す前に置く
+  // __yolosPoints（1打目と2打目の点。D5 では2打目だけずれる）と、押しの数 __yolosDowns を読む。
+  window.addEventListener(
+    "pointerdown",
+    (event) => {
+      const points = window.__yolosPoints;
+      if (event.pointerType !== "touch" || !points) return;
+      window.__yolosDowns = (window.__yolosDowns ?? 0) + 1;
+      if (window.__yolosDowns !== 2) return;
+      const shifted =
+        points[1].x !== points[0].x || points[1].y !== points[0].y;
+      send({
+        ev: "near",
+        t: performance.timeOrigin + event.timeStamp,
+        near: nearFrom(points[0]),
+        near2: shifted ? nearFrom(points[1]) : undefined,
+      });
+    },
+    true,
+  );
 
   // 行の箱を、画面の上端が横切っているか（行の上端 < 0 < 行の下端）。
   const cutLines = (element) => {
@@ -560,10 +610,6 @@ function pageProbe() {
     const box = resultBox();
     const start = startButton();
     const focus = document.activeElement;
-    // 道具が押す前に置く、1打目と2打目の点（D5 では2打目だけずれる）。
-    const points = window.__yolosPoints;
-    const shifted =
-      points && (points[1].x !== points[0].x || points[1].y !== points[0].y);
     send({
       ev: "frame",
       t: performance.timeOrigin + performance.now(),
@@ -586,8 +632,6 @@ function pageProbe() {
         : null,
       selection: String(getSelection() ?? ""),
       innerHeight: window.innerHeight,
-      near: points ? nearFrom(points[0]) : undefined,
-      near2: shifted ? nearFrom(points[1]) : undefined,
     });
   };
   const observer = new MutationObserver((mutations) => {
@@ -768,7 +812,7 @@ async function prepare(browser, run, options, profileRoot) {
       const parameter = match[1];
       await session.send("Debugger.setBreakpoint", {
         location: { scriptId: event.scriptId, lineNumber, columnNumber },
-        condition: `(console.debug("__yolosLanding", JSON.stringify({ t: performance.timeOrigin + performance.now(), scrollY: window.scrollY, choice: ${parameter} })), false)`,
+        condition: `(console.debug("__yolosLanding", JSON.stringify({ t: performance.timeOrigin + performance.now(), scrollY: window.scrollY, choice: ${parameter}, hit: window.__yolosHitAreas?.() })), false)`,
       });
       state.hooked++;
     } catch {
@@ -974,11 +1018,12 @@ function sendPress(session, input, point, clickCount) {
     .catch(() => {});
 }
 
-/** 押す前に、1打目と2打目の点をページに置く（着地のあとの最初のフレームのタッチの距離の起点）。 */
+/** 押す前に、1打目と2打目の点をページに置き、押しの数を 0 に戻す（2打目の pointerdown で取るタッチの距離の起点）。 */
 async function placePoints(page, first, second) {
   await page.evaluate(
     (points) => {
       window.__yolosPoints = points;
+      window.__yolosDowns = 0;
     },
     [first, second],
   );
@@ -1026,9 +1071,20 @@ const round1 = (value) => Math.round(value * 10) / 10;
 /**
  * 着地の関数の1回の呼び出しの記録。範囲の中に点の真下を外す送りがあったか（関数と同じ1px 刻み）と、範囲の中で
  * 点から避けるものまでを最も離せたときの隔たり（max(dx, dy)。第1の組だけと、両方の組の近いほう）を数える。
+ * 避けるものの矩形は、関数が渡した `data-hit-area="after"` の祖先の要素の箱を、止め所が読んだ押せる範囲に直して
+ * 数える（タッチの距離と同じ箱）。
  */
 function summarizeLanding(landing, frames) {
-  const { plan, point, avoidFirst, avoidNext, scrollable } = landing.choice;
+  const { plan, point, scrollable } = landing.choice;
+  const same = (a, b) =>
+    a.top === b.top &&
+    a.bottom === b.bottom &&
+    a.left === b.left &&
+    a.right === b.right;
+  const pressable = (rect) =>
+    landing.hit?.find(([box]) => same(box, rect))?.[1] ?? rect;
+  const avoidFirst = landing.choice.avoidFirst.map(pressable);
+  const avoidNext = landing.choice.avoidNext.map(pressable);
   const span = {
     min: Math.ceil(Math.max(plan.span.min, scrollable.min)),
     max: Math.floor(Math.min(plan.span.max, scrollable.max)),
@@ -1118,13 +1174,13 @@ function pressRecord(state, index, extra) {
   );
   const gap =
     downs.length >= 2 ? Math.round((downs[1].t - downs[0].t) * 10) / 10 : null;
-  // 2打目が受けた画面: 2打目の押し下げの時点に出ていた画面（その着地と、着地のあとの最初のフレーム）。2打目より
-  // 前に画面が替わっていなければ、2打目のあとの最初のもの。タッチの距離と要約の着地はここから読む。
+  // 2打目が受けた画面の着地: 2打目の押し下げの時点までの最後の着地。2打目より前に画面が替わっていなければ、
+  // 2打目のあとの最初のもの。要約の着地はここから読む。
   const secondDown = downs[1]?.t;
   const until = (list) =>
     list.filter((item) => secondDown !== undefined && item.t <= secondDown);
-  const before = until(pressFrames);
-  const nearFrame = before.at(-1) ?? pressFrames[0];
+  // タッチの距離は、2打目の pointerdown を受けた時の組みで取ったもの。
+  const near = events.find((event) => event.ev === "near");
   const landingIndex = landings.length
     ? Math.max(until(pressLandings).length - 1, 0)
     : undefined;
@@ -1167,14 +1223,8 @@ function pressRecord(state, index, extra) {
       focus: frame.focus,
       innerHeight: frame.innerHeight,
     })),
-    near: extra.input === "touch" ? (nearFrame?.near ?? null) : undefined,
-    near2: extra.input === "touch" ? nearFrame?.near2 : undefined,
-    nearAt:
-      extra.input === "touch" && nearFrame
-        ? before.length
-          ? "before-second"
-          : "after-second"
-        : undefined,
+    near: extra.input === "touch" ? (near?.near ?? null) : undefined,
+    near2: extra.input === "touch" ? near?.near2 : undefined,
     selection: extra.input === "mouse" ? state.selections[index] : undefined,
     popups: state.popups
       .filter((popup) => popup.press === index)
@@ -1252,7 +1302,6 @@ function compactPress(record) {
     ]),
     near: record.near ?? undefined,
     near2: record.near2,
-    nearAt: record.nearAt === "after-second" ? "after" : undefined,
     cut: record.cut,
     lo: record.nameLow,
     h1a: record.h1Above,
@@ -1262,13 +1311,14 @@ function compactPress(record) {
 }
 
 /**
- * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。語の選択の対（select）は、
- * 語が選ばれなかった押しを置く。
+ * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。答えの2打目が次の問の
+ * 選択肢に落ちた押し（診断の答え。知識クイズの答えのあとには次の問が出ない）は、条件7 が数だけを求めるので
+ * 置かない（要約の `c` に数える）。語の選択の対（select）は、語が選ばれなかった押しを置く。
  */
 function keepReasons(op, record) {
   const reasons = [];
   if (FIRST_GROUP.has(record.group)) reasons.push("first");
-  if (record.group === "next") reasons.push("next");
+  if (record.group === "next" && record.kind !== "answer") reasons.push("next");
   if (op === "select") {
     if (!record.selection) reasons.push("no-selection");
   } else if (record.selection) reasons.push("selection");
@@ -1691,6 +1741,19 @@ const MEASURES = {
 const nearOut = (near) =>
   near ? near.slice(0, near[2] ? 3 : 2).map((entry) => entry ?? null) : null;
 
+/** 2打目が受けた画面の着地の記録（要約の `l`）。着地の関数の記録が無ければ null。 */
+function landingOut(record) {
+  const landing = record.landings?.[record.landingIndex];
+  return landing
+    ? [
+        landing.clearOfFirst ? 1 : 0,
+        landing.clearOfBoth ? 1 : 0,
+        landing.farFirst,
+        landing.farBoth,
+      ]
+    : null;
+}
+
 /**
  * 回の要約の行（README の「記録の形」）。1度の押しで終わる操作は、その押しの落ちた先の組・間隔・印を持ち、
  * 全問を解き切る走査は、落ちた先の組ごとの数と印を付けた押しの数を持つ。
@@ -1714,7 +1777,10 @@ function summaryLine(op, run, outcome, records) {
       if (record.selection && !record.detailMark) selections++;
       if (record.cut) cuts++;
       if (record.near) {
-        const values = [record.near[0], record.near[1], ...(record.near2 ?? [])]
+        const values = [
+          ...record.near.slice(0, 2),
+          ...(record.near2?.slice(0, 2) ?? []),
+        ]
           .filter(Boolean)
           .map(([dx, dy]) => Math.max(dx, dy));
         const nearest = Math.min(...values);
@@ -1722,8 +1788,10 @@ function summaryLine(op, run, outcome, records) {
           near.push([
             record.i,
             record.band,
-            ...nearOut(record.near),
-            ...(record.near2 ? [nearOut(record.near2)] : []),
+            record.group,
+            nearOut(record.near),
+            record.near2 ? nearOut(record.near2) : null,
+            landingOut(record),
           ]);
         }
       }
@@ -1749,7 +1817,6 @@ function summaryLine(op, run, outcome, records) {
   } else {
     const record = records.at(-1);
     if (record) {
-      const landing = record.landings?.[record.landingIndex];
       Object.assign(line, {
         g: record.gap,
         s: record.group,
@@ -1757,14 +1824,7 @@ function summaryLine(op, run, outcome, records) {
         w: run.input === "mouse" ? record.selection?.slice(0, 12) : undefined,
         n: run.input === "touch" ? nearOut(record.near) : undefined,
         n2: record.near2 ? nearOut(record.near2) : undefined,
-        l: landing
-          ? [
-              landing.clearOfFirst ? 1 : 0,
-              landing.clearOfBoth ? 1 : 0,
-              landing.farFirst,
-              landing.farBoth,
-            ]
-          : undefined,
+        l: landingOut(record) ?? undefined,
         cut: record.cut ? 1 : undefined,
         lo: record.nameLow ? 1 : undefined,
         ins: record.insertInView ? 1 : undefined,
