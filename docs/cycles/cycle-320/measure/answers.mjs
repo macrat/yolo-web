@@ -3,10 +3,11 @@
 //
 //   npx tsx docs/cycles/cycle-320/measure/answers.mjs <書き出した版のディレクトリ> <slug> [<slug>…]
 //
-// 1行に1本、`{"slug", "questionCount", "plans": {<結果の id>: [<問ごとの選択肢の字>…]}}` を出す。
-// 選択肢は並びが回ごとに変わる（`Math.random`）ので、id でなく画面に出る字で名指す。測りの道具は、問ごとに
-// この字の行を押す。答えの組は、問ごとの選択肢の組を決まった種の擬似乱数で引いて採点の関数に通し、結果ごとに
-// 最初に出た組を採る。引いても出ない結果は `missing` に挙げる。
+// 1行に1本、`{"slug", "questionCount", "plans": {<結果の id>: [<問ごとの選択肢の字>…]}, "names": {<結果の id>: <結果の名>}}`
+// を出す。選択肢は並びが回ごとに変わる（`Math.random`）ので、id でなく画面に出る字で名指す。測りの道具は、問ごとに
+// この字の行を押し、着いた結果の名前の字が `names` のどれかで、組の結果と同じかを確かめる。答えの組は、問ごとの
+// 選択肢の組を決まった種の擬似乱数で引いて採点の関数に通し、結果ごとに最初に出た組を採る。引いても出ない結果は
+// `missing` に挙げる。
 
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -75,6 +76,9 @@ async function plansFor(directory, slug) {
     slug,
     questionCount: quiz.questions.length,
     plans,
+    names: Object.fromEntries(
+      quiz.results.map((result) => [result.id, result.title]),
+    ),
     missing: quiz.results.map((result) => result.id).filter((id) => !plans[id]),
   };
 }

@@ -1,29 +1,39 @@
 // 測る版を書き出して本番ビルドし、その版の指紋を書く。2つの指紋を比べる。
 //
-//   node docs/cycles/cycle-320/measure/version.mjs build --label <名> --commit <コミット> [--overlay <コミット>:<パス>]...
-//   node docs/cycles/cycle-320/measure/version.mjs compare <指紋.json> <指紋.json>
+//   node docs/cycles/cycle-320/measure/version.mjs build --label <名> --commit <コミット> [--overlay <コミット>:<パス>]... [--replace]
+//   node docs/cycles/cycle-320/measure/version.mjs compare <指紋> <指紋>
 //
 // build は、リポジトリの中で動かす。コミットを `git archive` で `tmp/measure-builds/<名>` に書き出し、重ねる
 // ファイルを `git show` で上書きし、リポジトリの `node_modules` をハードリンクで写して `npm run build` を走らせ、
-// `tmp/measure-builds/<名>/fingerprint.json` に指紋を書く。その場所がもうあれば止まる。
+// `tmp/measure-builds/<名>/fingerprint.json` に指紋を書く。その場所がもうあれば止まり、`--replace` を渡せば
+// 消してから作り直す。
+//
+// `node_modules` はリポジトリのものを写すので、版のコミットの package-lock.json がリポジトリの package-lock.json と
+// 違えば、版のコミットと違う依存でビルドすることになる。そこで、2つの package-lock.json の blob が違えば止まる。
 //
 // 書き出す場所は名で決める。書き出した版はリポジトリの下にあり、Next.js はリポジトリの根の package-lock.json を
 // 見て、そこを Turbopack の根にする。チャンクには根からの道（`/ROOT/tmp/measure-builds/<名>/…`）が入り、その
 // 道でチャンクの名前（中身のハッシュ）も変わる。同じ名で作り直せば、同じ道になる。
 //
-// 指紋は、もとのソースの木のハッシュ・ビルドに使った Node と npm の版・書き出した場所・`.next/static/chunks` の
-// ファイルの名前と大きさの一覧である。ファイルを重ねた版の木は、`tmp/measure-builds/<名>.index` に置いた別の
-// 索引（GIT_INDEX_FILE）にもとのコミットを読み込み、重ねるファイルを足してから `git write-tree` で出す。主の木の
-// 索引は触らない。
+// 指紋は、もとのソースの木のハッシュ・package-lock.json の blob・ビルドに使った Node と npm の版・書き出した場所・
+// `.next/static/chunks` のファイルの名前と大きさの一覧（とその SHA-256）である。ファイルを重ねた版の木は、
+// `tmp/measure-builds/<名>.index` に置いた別の索引（GIT_INDEX_FILE）にもとのコミットを読み込み、重ねるファイルを
+// 足してから `git write-tree` で出す。主の木の索引は触らない。
 //
 // ビルドの前の `generate:release-id` は、`VERCEL_GIT_COMMIT_SHA` が無ければ `git rev-parse HEAD` を読む。
 // 書き出した版は主の木の下にあるので、その時の主の木の HEAD を拾い、版の中身（GA の release の字）が主の木の
 // 進みで変わる。そこで、もとのコミットとその日付を `VERCEL_GIT_COMMIT_SHA`・`VERCEL_GIT_COMMIT_DATE` で渡し、
 // 同じコミットからは同じ字になるようにする。
+//
+// compare の指紋は、ビルドの `fingerprint.json` か、記録の置き場の `fingerprint.jsonl`（measure.mjs が書く。
+// 1行目が測り始めた版の指紋で、2行目からが PM の決定で続けた版の指紋）のどちらでもよい。`.jsonl` は最後の行
+// （いま続けている版）を読む。
 
+import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 function git(args, options = {}) {
   return execFileSync("git", args, {
@@ -37,8 +47,13 @@ function parseBuildArguments(argv) {
   const overlays = [];
   let commit;
   let label;
+  let replace = false;
   for (let index = 0; index < argv.length; index++) {
     const flag = argv[index];
+    if (flag === "--replace") {
+      replace = true;
+      continue;
+    }
     const value = argv[++index];
     if (flag === "--commit") commit = value;
     else if (flag === "--label") label = value;
@@ -52,7 +67,7 @@ function parseBuildArguments(argv) {
   }
   if (!commit || !label) throw new Error("--commit and --label are required");
   if (!/^[a-z0-9-]+$/.test(label)) throw new Error("label: [a-z0-9-]+");
-  return { commit, overlays, label };
+  return { commit, overlays, label, replace };
 }
 
 function sourceTree(commit, overlays, indexFile) {
@@ -88,14 +103,40 @@ function chunkList(directory) {
   return list.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
 }
 
+/** チャンクの一覧の SHA-256 の頭 16 字。記録の各ファイルの頭の行は、一覧の代わりにこれを持つ。 */
+export function chunksDigest(chunks) {
+  return createHash("sha256")
+    .update(JSON.stringify(chunks))
+    .digest("hex")
+    .slice(0, 16);
+}
+
 function build(argv) {
-  const { commit, overlays, label } = parseBuildArguments(argv);
+  const { commit, overlays, label, replace } = parseBuildArguments(argv);
   const repository = git(["rev-parse", "--show-toplevel"]);
   const buildPath = `tmp/measure-builds/${label}`;
   const directory = path.join(repository, buildPath);
-  if (fs.existsSync(directory)) throw new Error(`${directory} already exists`);
-  fs.mkdirSync(directory, { recursive: true });
   const fullCommit = git(["rev-parse", `${commit}^{commit}`]);
+
+  const lock = git(["rev-parse", `${fullCommit}:package-lock.json`]);
+  const installedLock = git([
+    "hash-object",
+    path.join(repository, "package-lock.json"),
+  ]);
+  if (lock !== installedLock) {
+    throw new Error(
+      `package-lock.json of ${fullCommit} (${lock}) differs from the repository's (${installedLock}); node_modules would not match the commit`,
+    );
+  }
+
+  if (fs.existsSync(directory)) {
+    if (!replace) {
+      throw new Error(`${directory} already exists (pass --replace)`);
+    }
+    fs.rmSync(directory, { recursive: true, force: true });
+    fs.rmSync(`${directory}.index`, { force: true });
+  }
+  fs.mkdirSync(directory, { recursive: true });
 
   execFileSync(
     "bash",
@@ -129,6 +170,7 @@ function build(argv) {
   });
   if (result.status !== 0) throw new Error(`build failed (${result.status})`);
 
+  const chunks = chunkList(directory);
   const fingerprint = {
     commit: fullCommit,
     overlays: overlays.map((overlay) => ({
@@ -136,12 +178,14 @@ function build(argv) {
       path: overlay.path,
     })),
     tree,
+    lock,
     node: process.version,
     npm: execFileSync("npm", ["--version"], { encoding: "utf8" }).trim(),
     repository,
     buildPath,
     buildSeconds: Math.round((Date.now() - started) / 1000),
-    chunks: chunkList(directory),
+    chunksDigest: chunksDigest(chunks),
+    chunks,
   };
   fs.writeFileSync(
     path.join(directory, "fingerprint.json"),
@@ -151,18 +195,26 @@ function build(argv) {
     JSON.stringify({
       directory,
       tree,
+      lock,
       node: fingerprint.node,
       npm: fingerprint.npm,
-      chunkCount: fingerprint.chunks.length,
+      chunkCount: chunks.length,
+      chunksDigest: fingerprint.chunksDigest,
       buildSeconds: fingerprint.buildSeconds,
     }),
   );
 }
 
-function compare([first, second]) {
-  const [a, b] = [first, second].map((file) =>
-    JSON.parse(fs.readFileSync(file, "utf8")),
-  );
+/** 指紋のファイルを読む。`.jsonl` は最後の行を読む。 */
+export function readFingerprint(file) {
+  const text = fs.readFileSync(file, "utf8");
+  if (!file.endsWith(".jsonl")) return JSON.parse(text);
+  const lines = text.split("\n").filter(Boolean);
+  return JSON.parse(lines.at(-1));
+}
+
+/** 2つの指紋を比べる。`same` は版として同じか（木・package-lock.json・Node・npm・チャンク）。 */
+export function compareFingerprints(a, b) {
   const chunksOf = (fingerprint) =>
     new Map(fingerprint.chunks.map(([name, size]) => [name, size]));
   const [chunksA, chunksB] = [chunksOf(a), chunksOf(b)];
@@ -173,6 +225,7 @@ function compare([first, second]) {
   );
   const report = {
     tree: a.tree === b.tree,
+    lock: a.lock === b.lock,
     node: a.node === b.node,
     npm: a.npm === b.npm,
     buildPath: a.buildPath === b.buildPath,
@@ -182,16 +235,26 @@ function compare([first, second]) {
     onlyB,
     sizeDiffers,
   };
-  console.log(JSON.stringify(report, null, 1));
-  if (!report.tree || !report.node || !report.npm || !report.chunks) {
-    process.exitCode = 1;
-  }
+  report.same =
+    report.tree && report.lock && report.node && report.npm && report.chunks;
+  return report;
 }
 
-const [command, ...rest] = process.argv.slice(2);
-if (command === "build") build(rest);
-else if (command === "compare") compare(rest);
-else {
-  console.error("usage: version.mjs build|compare …");
-  process.exit(2);
+function compare([first, second]) {
+  const report = compareFingerprints(
+    readFingerprint(first),
+    readFingerprint(second),
+  );
+  console.log(JSON.stringify(report, null, 1));
+  if (!report.same) process.exitCode = 1;
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const [command, ...rest] = process.argv.slice(2);
+  if (command === "build") build(rest);
+  else if (command === "compare") compare(rest);
+  else {
+    console.error("usage: version.mjs build|compare …");
+    process.exit(2);
+  }
 }

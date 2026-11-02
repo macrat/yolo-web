@@ -1,7 +1,7 @@
 // 診断の回答の画面の二度押しを測る（t5a-design.md 6章 条件7・cycle-318/device-triage.md D5。手順は t5a-measure.md 0章・5章）。
 //
 //   node docs/cycles/cycle-320/measure/measure.mjs --base http://localhost:3112 --version <版のディレクトリ> \
-//     --op start|answers|last|retry --out <記録.jsonl> [絞り込み]
+//     --op start|answers|last|retry|select --out-dir <記録の置き場> [絞り込み] [--accept-chunks "<PM の決定>"]
 //
 // 絞り込み（どれも省けば、その操作の設計の範囲のすべて）:
 //   --slugs a,b  --viewports 375x550,375x550@200  --inputs touch,mouse  --intervals 90,300
@@ -9,15 +9,24 @@
 //   --answers <answers.mjs の出力>（last。渡せば extra を持つ3本は全結果を回り、渡さなければ1回ずつ）
 //   --limit <回の数>
 //
-// 1回（新しいブラウザの文脈で行う1つの走査か1つの二度押し）を測り終えるたびに、その回の記録を1行にして
-// --out の末尾に足してから次へ進む。--out にすでに記録のある回は飛ばすので、止まったら同じコマンドで続きから
-// 測れる。--out の1行目は版の行（版の指紋と、ブラウザの版と、この道具のファイルの git の blob）で、続きを
-// 測るときは、いま測る版の指紋・ブラウザ・道具のどれかがこの行と合わなければ止まる。
+// 記録は --out-dir の下に、操作と画面で分けて書く（版は置き場で分ける。plan-t5a7.md 3 の「記録の形と上限」）。
+//   fingerprint.jsonl                 版の指紋。1行目が測り始めた版で、2行目からは PM の決定で続けた版
+//   <組>-<画面>.jsonl                 1行目が頭の行で、2行目からが回（1つの走査か1つの二度押し）ごとの要約
+//   <組>-<画面>.presses.jsonl         判断に要る回の押しごとの記録
+// 組は操作の名で、D5 のずれを渡した回は `<操作>-d5`。画面は `375x550`、200% は `375x550-200`。
+//
+// 1回を測り終えるたびに、その回の押しごとの記録（あれば）と要約の行を足してから次へ進む。要約の行に f（数える
+// 回）のある回は飛ばすので、止まったら同じコマンドで続きから測れる。続きを測るときは、いま測る版の指紋を
+// fingerprint.jsonl の最後の行と比べ、木・package-lock.json・Node・npm のどれかが違えば止まる。チャンクだけが
+// 違えば止まり、PM が「続ける」と決めたときだけ、その決定を --accept-chunks で受けて記録に残して続ける。同じ組の
+// ファイルのどれかが別のブラウザの版か別の道具の blob で測ったものなら止まる（その組は、新しい置き場で全部を
+// 測り直す）。
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
+import { chunksDigest, compareFingerprints } from "./version.mjs";
 
 const CHROMIUM = "/opt/pw-browsers/chromium";
 
@@ -56,17 +65,22 @@ const CONDITION7_VIEWPORTS = [
 const D5_VIEWPORTS = ["375x550", "320x550"];
 
 const OP_DEFAULTS = {
-  start: { intervals: [0, 90, 150, 300, 500] },
-  answers: { intervals: [90, 300] },
-  last: { intervals: [0, 90, 150, 300, 500] },
-  retry: { intervals: [90, 300] },
+  start: { intervals: [0, 90, 150, 300, 500], inputs: ["touch", "mouse"] },
+  answers: { intervals: [90, 300], inputs: ["touch", "mouse"] },
+  last: { intervals: [0, 90, 150, 300, 500], inputs: ["touch", "mouse"] },
+  retry: { intervals: [90, 300], inputs: ["touch", "mouse"] },
+  // 語の選択の測りの対（問の見出しの字の上で1打目から始めるダブルクリック）。マウスだけ。
+  select: { intervals: [90, 300], inputs: ["mouse"] },
 };
 
 /** 見せる 150ms の内と外を試す間隔。実際の間隔が 150ms の側を越えた回を送り直す（plan-t5a7.md 4 の「間隔」）。 */
 const SHOWN_MS = 150;
 const BOUNDARY_INTERVALS = new Set([90, 300]);
-/** 1回で終わる操作の送り直しの上限。 */
+/** 送り直しの上限（最初の回のほかに）。5-2 の確かめの合わない走査は1度だけやり直す。 */
 const MAX_RESENDS = 3;
+const MAX_RECHECKS = 1;
+/** 1回のうちに誤りで終わってよい回数。越えたら、その回は数えないまま次へ進み、終わりに数を出す。 */
+const MAX_ERRORS = 2;
 /** 記録するまでの待ち（t5a-measure.md 0章）。 */
 const WAIT_AFTER_SECOND_MS = 700;
 const WAIT_FROM_FIRST_MS = 450;
@@ -75,6 +89,15 @@ const EXTRA_WAIT_MS = 6000;
 /** 「もう一度挑戦する」の中心を置く刻み（画面の上端 24px から下端 −24px まで）。 */
 const RETRY_STEP = 24;
 const GAP = 8;
+/** タッチの距離を要約に残す上の線（Chromium の触れた面の半辺の上限 16px の外まで少し見る）。 */
+const NEAR_LIMIT = 20;
+/** 1ファイルの上限（plan-t5a7.md 3）。越えたら終わりに知らせる。 */
+const FILE_LIMIT = 1024 * 1024;
+
+/** 第1の組（t5a-design.md 6章 条件7）。`start` は「はじめる」で、第1の組に数えない。 */
+const FIRST_GROUP = new Set(["link", "summary", "button", "pressable"]);
+
+class FatalError extends Error {}
 
 // ---------------------------------------------------------------------------
 // 引数
@@ -84,32 +107,39 @@ function parseArguments(argv) {
   for (let index = 0; index < argv.length; index += 2) {
     options[argv[index].replace(/^--/, "")] = argv[index + 1];
   }
-  for (const required of ["base", "version", "op", "out"]) {
+  for (const required of ["base", "version", "op", "out-dir"]) {
     if (!options[required]) throw new Error(`--${required} is required`);
   }
-  if (!OP_DEFAULTS[options.op]) throw new Error(`unknown op ${options.op}`);
+  const defaults = OP_DEFAULTS[options.op];
+  if (!defaults) throw new Error(`unknown op ${options.op}`);
   const list = (value) => (value ? value.split(",") : undefined);
   const offsets = (list(options.offsets) ?? ["0:0"]).map((pair) => {
     const [dx, dy] = pair.split(":").map(Number);
     return { dx, dy };
   });
   const isD5 = offsets.some((offset) => offset.dx !== 0 || offset.dy !== 0);
+  if (isD5 && (options.op === "retry" || options.op === "select")) {
+    throw new Error(`${options.op} is not part of D5`);
+  }
   return {
     base: options.base.replace(/\/$/, ""),
     version: options.version,
     op: options.op,
-    out: options.out,
+    group: isD5 ? `${options.op}-d5` : options.op,
+    outDir: options["out-dir"],
     slugs: list(options.slugs) ?? ALL_SLUGS,
     viewports:
       list(options.viewports) ?? (isD5 ? D5_VIEWPORTS : CONDITION7_VIEWPORTS),
-    inputs: list(options.inputs) ?? (isD5 ? ["touch"] : ["touch", "mouse"]),
+    inputs: list(options.inputs) ?? (isD5 ? ["touch"] : defaults.inputs),
     intervals:
       list(options.intervals)?.map(Number) ??
-      (isD5 ? [90, 300] : OP_DEFAULTS[options.op].intervals),
+      (isD5 ? [90, 300] : defaults.intervals),
     rows: list(options.rows) ?? ["first", "last"],
     offsets,
+    isD5,
     positions: list(options.positions)?.map(Number),
     answers: options.answers,
+    acceptChunks: options["accept-chunks"],
     limit: options.limit ? Number(options.limit) : Infinity,
   };
 }
@@ -117,7 +147,13 @@ function parseArguments(argv) {
 function parseViewport(text) {
   const [size, scale] = text.split("@");
   const [width, height] = size.split("x").map(Number);
-  return { name: text, width, height, big: scale === "200" };
+  return {
+    name: text,
+    file: text.replace("@", "-"),
+    width,
+    height,
+    big: scale === "200",
+  };
 }
 
 function retryPositions(height) {
@@ -141,11 +177,13 @@ function enumerateRuns(options, answerPlans) {
           for (const offset of options.offsets) {
             const common = { slug, viewport, input, interval, offset };
             if (options.op === "answers") {
-              for (const row of options.rows) runs.push({ ...common, row });
+              for (const row of options.rows) {
+                runs.push({ ...common, variant: row });
+              }
             } else if (options.op === "retry") {
               for (const position of options.positions ??
                 retryPositions(viewport.height)) {
-                runs.push({ ...common, position });
+                runs.push({ ...common, variant: position });
               }
             } else if (
               options.op === "last" &&
@@ -153,12 +191,16 @@ function enumerateRuns(options, answerPlans) {
               answerPlans.size > 0
             ) {
               // 条件7 は、extra を持つ3本を全結果について測る。D5 は --answers を渡さず、全15本を1回ずつ測る。
-              const plans = answerPlans.get(slug);
-              if (!plans) throw new Error(`--answers lacks ${slug}`);
-              for (const [resultId, choices] of Object.entries(plans)) {
-                runs.push({ ...common, plan: { resultId, choices } });
+              const entry = answerPlans.get(slug);
+              if (!entry) throw new Error(`--answers lacks ${slug}`);
+              for (const [resultId, choices] of Object.entries(entry.plans)) {
+                runs.push({
+                  ...common,
+                  variant: resultId,
+                  plan: { resultId, choices, names: entry.names },
+                });
               }
-            } else runs.push(common);
+            } else runs.push({ ...common, variant: "" });
           }
         }
       }
@@ -167,74 +209,169 @@ function enumerateRuns(options, answerPlans) {
   return runs;
 }
 
-function runKey(op, run) {
+/** 回の名（ファイルの中で一意）。操作と画面はファイルの名にある。 */
+function runKey(run) {
   return [
-    op,
-    run.viewport.name,
     run.slug,
     run.input,
     run.interval,
     `${run.offset.dx}:${run.offset.dy}`,
-    run.row ?? "",
-    run.position ?? "",
-    run.plan?.resultId ?? "",
+    run.variant,
   ].join("|");
 }
 
 // ---------------------------------------------------------------------------
 // 記録の置き場
 
-function toolBlob() {
-  return execFileSync(
-    "git",
-    ["hash-object", new URL(import.meta.url).pathname],
-    { encoding: "utf8" },
-  ).trim();
+function blobOf(file) {
+  return execFileSync("git", ["hash-object", file], {
+    encoding: "utf8",
+  }).trim();
 }
 
-function readRecords(file) {
+function toolBlobs() {
+  const here = path.dirname(new URL(import.meta.url).pathname);
+  return {
+    measure: blobOf(path.join(here, "measure.mjs")),
+    version: blobOf(path.join(here, "version.mjs")),
+  };
+}
+
+/**
+ * `.jsonl` を読む。書いている途中で止まって最後の行が欠けていれば（改行で終わっていなければ）、その行を
+ * 切り落として知らせる。途中の行が読めなければ止まる。
+ */
+function readLines(file) {
   if (!fs.existsSync(file)) return [];
-  return fs
-    .readFileSync(file, "utf8")
+  const text = fs.readFileSync(file, "utf8");
+  const end = text.lastIndexOf("\n") + 1;
+  if (end < text.length) {
+    console.error(`${file}: dropping an unfinished last line`);
+    fs.truncateSync(file, Buffer.byteLength(text.slice(0, end)));
+  }
+  return text
+    .slice(0, end)
     .split("\n")
     .filter(Boolean)
-    .map((line) => JSON.parse(line));
+    .map((line, index) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        throw new FatalError(`${file}:${index + 1} is not JSON`);
+      }
+    });
 }
 
-function ensureVersionLine(file, fingerprint, browserVersion) {
-  const records = readRecords(file);
-  const versionLine = {
-    type: "version",
-    commit: fingerprint.commit,
-    overlays: fingerprint.overlays,
-    tree: fingerprint.tree,
-    node: fingerprint.node,
-    npm: fingerprint.npm,
-    buildPath: fingerprint.buildPath,
-    chunks: fingerprint.chunks,
-    browser: browserVersion,
-    tool: toolBlob(),
-  };
-  if (records.length === 0) {
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, `${JSON.stringify(versionLine)}\n`);
-    return records;
+const appendLine = (file, value) =>
+  fs.appendFileSync(file, `${JSON.stringify(value)}\n`);
+
+/**
+ * 版の指紋を記録の指紋と比べる（plan-t5a7.md 3 の「日をまたぐ記録と版」）。初めてなら書く。チャンクだけが違い、
+ * --accept-chunks が渡されていれば、決定とともに新しい指紋を足して続ける。いま続けている版の指紋の digest を返す。
+ */
+function checkFingerprint(options, fingerprint) {
+  const file = path.join(options.outDir, "fingerprint.jsonl");
+  fs.mkdirSync(options.outDir, { recursive: true });
+  const lines = readLines(file);
+  if (lines.length === 0) {
+    appendLine(file, { ...fingerprint, at: new Date().toISOString() });
+    return { digest: fingerprint.chunksDigest, accepted: null };
   }
-  const head = records[0];
-  const same =
-    head.type === "version" &&
-    head.tree === versionLine.tree &&
-    head.node === versionLine.node &&
-    head.npm === versionLine.npm &&
-    head.browser === versionLine.browser &&
-    head.tool === versionLine.tool &&
-    JSON.stringify(head.chunks) === JSON.stringify(versionLine.chunks);
-  if (!same) {
-    throw new Error(
-      `${file} was recorded with another version, browser or tool (tree ${head.tree}, browser ${head.browser}, tool ${head.tool}); compare before continuing`,
+  const recorded = lines.at(-1);
+  const report = compareFingerprints(recorded, fingerprint);
+  if (!report.tree) {
+    throw new FatalError(
+      `source tree ${fingerprint.tree} differs from the record ${recorded.tree}: the build is wrong, rebuild it from the recorded commit`,
     );
   }
-  return records;
+  if (!report.lock) {
+    throw new FatalError(
+      `package-lock.json ${fingerprint.lock} differs from the record ${recorded.lock}`,
+    );
+  }
+  if (!report.node || !report.npm) {
+    throw new FatalError(
+      `built with node ${fingerprint.node} / npm ${fingerprint.npm}; rebuild with the recorded node ${recorded.node} / npm ${recorded.npm} and compare again`,
+    );
+  }
+  if (report.chunks) return { digest: recorded.chunksDigest, accepted: null };
+  if (!options.acceptChunks) {
+    throw new FatalError(
+      `chunks differ from the record (only in record: ${report.onlyA.join(", ")}; only in this build: ${report.onlyB.join(", ")}; size differs: ${report.sizeDiffers.join(", ")}). Report to the PM; continue only with --accept-chunks "<decision>"`,
+    );
+  }
+  const accepted = {
+    ...fingerprint,
+    at: new Date().toISOString(),
+    decision: options.acceptChunks,
+    previous: recorded.chunksDigest,
+  };
+  appendLine(file, accepted);
+  return { digest: fingerprint.chunksDigest, accepted };
+}
+
+/** 同じ組のファイルが、どれも同じブラウザの版と道具の blob で測ったものかを確かめる。 */
+function checkGroup(options, head) {
+  const prefix = `${options.group}-`;
+  for (const name of fs.readdirSync(options.outDir)) {
+    if (!name.startsWith(prefix) || name.endsWith(".presses.jsonl")) continue;
+    if (!name.endsWith(".jsonl")) continue;
+    // 組 start の接頭辞 `start-` は、組 start-d5 のファイルにも当たるので除く。
+    if (name.slice(prefix.length).startsWith("d5-")) continue;
+    const [recorded] = readLines(path.join(options.outDir, name));
+    if (!recorded) continue;
+    if (
+      recorded.browser !== head.browser ||
+      JSON.stringify(recorded.tool) !== JSON.stringify(head.tool)
+    ) {
+      throw new FatalError(
+        `${name} was measured with browser ${recorded.browser} and tool ${JSON.stringify(recorded.tool)}; this run has ${head.browser} and ${JSON.stringify(head.tool)}. Measure the whole ${options.group} again into a new --out-dir`,
+      );
+    }
+  }
+}
+
+/** 画面ごとの要約と押しごとの記録のファイル。開くときに、要約の無い押しごとの記録（書く途中で止まった回）を除く。 */
+function openViewportFiles(options, viewport, head, accepted) {
+  const base = path.join(options.outDir, `${options.group}-${viewport.file}`);
+  const summaryFile = `${base}.jsonl`;
+  const pressFile = `${base}.presses.jsonl`;
+  const lines = readLines(summaryFile);
+  if (lines.length === 0) appendLine(summaryFile, head);
+  else if (accepted && lines.at(-1).type !== "accept") {
+    appendLine(summaryFile, {
+      type: "accept",
+      chunksDigest: accepted.chunksDigest,
+      decision: accepted.decision,
+      at: accepted.at,
+    });
+  }
+  const runs = lines.filter((line) => line.k !== undefined);
+  const written = new Set(runs.map((line) => `${line.k}#${line.a}`));
+  const presses = readLines(pressFile);
+  const kept = presses.filter((line) => written.has(`${line.k}#${line.a}`));
+  if (kept.length !== presses.length) {
+    console.error(
+      `${pressFile}: dropping ${presses.length - kept.length} press records of an unfinished run`,
+    );
+    fs.writeFileSync(
+      pressFile,
+      kept.map((line) => `${JSON.stringify(line)}\n`).join(""),
+    );
+  }
+  const history = new Map();
+  for (const line of runs) {
+    const entry = history.get(line.k) ?? {
+      attempts: 0,
+      resends: 0,
+      final: false,
+    };
+    entry.attempts++;
+    if (line.f) entry.final = true;
+    else if (!line.r?.includes("error")) entry.resends++;
+    history.set(line.k, entry);
+  }
+  return { summaryFile, pressFile, history };
 }
 
 // ---------------------------------------------------------------------------
@@ -249,11 +386,11 @@ function pageProbe() {
       // 記録の口が無いページ（開いたタブ）では送らない。
     }
   };
-  // 見える字（innerText。構造化データの script の字を含めない）の頭の 24 字。
+  // 見える字（innerText。構造化データの script の字を含めない）の頭の 16 字。
   const text = (element) =>
     (element?.innerText ?? element?.textContent ?? "")
       .replace(/\s+/g, "")
-      .slice(0, 24);
+      .slice(0, 16);
   const questionHeading = () => document.querySelector('h2[tabindex="-1"]');
   const resultBox = () => document.querySelector('section[tabindex="-1"]');
   const band = () => {
@@ -265,10 +402,10 @@ function pageProbe() {
     const list = heading?.nextElementSibling;
     return list?.matches('ul[data-text-box="rows"]') ? list : null;
   };
+  const isStart = (element) =>
+    element.tagName === "BUTTON" && text(element) === "はじめる";
   const startButton = () =>
-    [...document.querySelectorAll("button")].find(
-      (button) => text(button) === "はじめる",
-    ) ?? null;
+    [...document.querySelectorAll("button")].find(isStart) ?? null;
   const describe = (node) => {
     const element = node instanceof Element ? node : node?.parentElement;
     if (!element) return { g: "none" };
@@ -291,6 +428,7 @@ function pageProbe() {
       if (list && list.contains(button)) {
         return { g: "choice", name: text(button) };
       }
+      if (isStart(button)) return { g: "start", name: text(button) };
       return { g: "button", name: text(button) };
     }
     const pressable = element.closest(
@@ -335,6 +473,40 @@ function pageProbe() {
       true,
     );
   }
+
+  // 押せるものの押せる範囲（reveal.ts の revealLanding と同じ集め方。`data-hit-area="after"` は位置を決めた祖先の矩形）。
+  const PRESSABLE =
+    'a[href], button, summary, input, select, textarea, label, [role="button"], [role="link"]';
+  const hitRect = (element) =>
+    (element instanceof HTMLElement &&
+    element.dataset.hitArea === "after" &&
+    element.offsetParent
+      ? element.offsetParent
+      : element
+    ).getBoundingClientRect();
+  // 点から、組ごとに最も近い押せるものの矩形までの横と縦の隔たり。最も近いものは max(dx, dy) で決める
+  // （Chromium のタッチの調整は、点を中心にした正方形の触れた面と矩形が交わるかで寄せる。t5a-measure.md 0章）。
+  // 組は第1の組・問の選択肢・「はじめる」の3つで、それぞれ [dx, dy, 組:名前] か null。
+  const nearFrom = (point) => {
+    const list = choiceList();
+    const best = [null, null, null];
+    for (const element of document.querySelectorAll(PRESSABLE)) {
+      const rect = hitRect(element);
+      if (rect.width === 0 || rect.height === 0) continue;
+      const dx = Math.max(rect.left - point.x, 0, point.x - rect.right);
+      const dy = Math.max(rect.top - point.y, 0, point.y - rect.bottom);
+      const slot = list?.contains(element) ? 1 : isStart(element) ? 2 : 0;
+      const known = best[slot];
+      if (known && Math.max(known[0], known[1]) <= Math.max(dx, dy)) continue;
+      const kind = describe(element);
+      best[slot] = [
+        Math.round(dx * 10) / 10,
+        Math.round(dy * 10) / 10,
+        `${kind.g}:${(kind.name ?? "").slice(0, 10)}`,
+      ];
+    }
+    return best;
+  };
 
   // 行の箱を、画面の上端が横切っているか（行の上端 < 0 < 行の下端）。
   const cutLines = (element) => {
@@ -388,6 +560,10 @@ function pageProbe() {
     const box = resultBox();
     const start = startButton();
     const focus = document.activeElement;
+    // 道具が押す前に置く、1打目と2打目の点（D5 では2打目だけずれる）。
+    const points = window.__yolosPoints;
+    const shifted =
+      points && (points[1].x !== points[0].x || points[1].y !== points[0].y);
     send({
       ev: "frame",
       t: performance.timeOrigin + performance.now(),
@@ -410,6 +586,8 @@ function pageProbe() {
         : null,
       selection: String(getSelection() ?? ""),
       innerHeight: window.innerHeight,
+      near: points ? nearFrom(points[0]) : undefined,
+      near2: shifted ? nearFrom(points[1]) : undefined,
     });
   };
   const observer = new MutationObserver((mutations) => {
@@ -468,33 +646,54 @@ function pageProbe() {
 const LANDING_PATTERN =
   /function\(([\w$]+)\)\{let\{plan:[\w$]+,point:[\w$]+,avoidFirst:/;
 
+/**
+ * 版が着地の関数を持つか（ソースに chooseLanding があるか）を見て、持つならビルドのチャンクに形があることを
+ * 確かめる。形が無ければ、最小化の出力が変わって着地の記録が黙って欠けるので止まる。
+ */
+function landingExpected(versionDirectory) {
+  const source = path.join(versionDirectory, "src/lib/reveal.ts");
+  const expected =
+    fs.existsSync(source) &&
+    fs.readFileSync(source, "utf8").includes("export function chooseLanding");
+  if (!expected) return false;
+  const root = path.join(versionDirectory, ".next/static/chunks");
+  const found = fs
+    .readdirSync(root, { recursive: true })
+    .filter((name) => String(name).endsWith(".js"))
+    .some((name) =>
+      LANDING_PATTERN.test(fs.readFileSync(path.join(root, name), "utf8")),
+    );
+  if (!found) {
+    throw new FatalError(
+      "the version has chooseLanding but no chunk matches LANDING_PATTERN; update the pattern",
+    );
+  }
+  return true;
+}
+
 // ---------------------------------------------------------------------------
 // ブラウザの文脈
 
-async function openContext(browser, run, base, profileRoot) {
+async function openContext(browser, run, profileRoot) {
   const options = {
     viewport: { width: run.viewport.width, height: run.viewport.height },
     hasTouch: run.input === "touch",
   };
-  let context;
-  if (run.viewport.big) {
-    // 200% は、プロファイルの既定の文字サイズを 32px にして作る（docs/knowledge/playwright-mcp.md）。毎回新しい
-    // プロファイルにして、Web フォントを読み込んでいない文脈から始める。
-    const profile = fs.mkdtempSync(path.join(profileRoot, "p-"));
-    fs.mkdirSync(path.join(profile, "Default"));
-    fs.writeFileSync(
-      path.join(profile, "Default/Preferences"),
-      JSON.stringify({ webkit: { webprefs: { default_font_size: 32 } } }),
-    );
-    context = await chromium.launchPersistentContext(profile, {
-      ...options,
-      executablePath: CHROMIUM,
-      args: ["--disable-smooth-scrolling"],
-    });
-    context.__profile = profile;
-  } else {
-    context = await browser.newContext(options);
-  }
+  if (!run.viewport.big) return browser.newContext(options);
+  // 200% は、プロファイルの既定の文字サイズを 32px にして作る（docs/knowledge/playwright-mcp.md）。毎回新しい
+  // プロファイルにして、Web フォントを読み込んでいない文脈から始める。
+  const profile = fs.mkdtempSync(path.join(profileRoot, "p-"));
+  fs.mkdirSync(path.join(profile, "Default"));
+  fs.writeFileSync(
+    path.join(profile, "Default/Preferences"),
+    JSON.stringify({ webkit: { webprefs: { default_font_size: 32 } } }),
+  );
+  const context = await chromium.launchPersistentContext(profile, {
+    ...options,
+    executablePath: CHROMIUM,
+    args: ["--disable-smooth-scrolling"],
+  });
+  context.__profile = profile;
   return context;
 }
 
@@ -510,13 +709,15 @@ async function closeContext(context) {
  * 返す state.events に、ページの記録が届いた順に、その時の押しの番号（state.press）を付けて入る。
  */
 async function prepare(browser, run, options, profileRoot) {
-  const context = await openContext(browser, run, options.base, profileRoot);
+  const context = await openContext(browser, run, profileRoot);
   const state = {
     press: -1,
     events: [],
     popups: [],
     landings: [],
     selections: {},
+    hooked: 0,
+    records: [],
   };
   // localhost の外への要求を止める（GA を含む）。開いたタブの最初の遷移は frame() が投げる要求で、その URL を
   // 行き先として、その時の押しに添える（t5a-measure.md 0章「別のタブや共有の画面を開く押し」）。
@@ -543,13 +744,11 @@ async function prepare(browser, run, options, profileRoot) {
   });
   await context.addInitScript(pageProbe);
   const page = context.pages()[0] ?? (await context.newPage());
-  state.page = page;
   // 開いたタブは拾ってすぐ閉じる。
   context.on("page", (opened) => {
     if (opened !== page) opened.close().catch(() => {});
   });
   const session = await context.newCDPSession(page);
-  state.session = session;
   // 着地の関数の記録は、本番のコードに測りの口を足さずに取るため、CDP の Debugger の条件付きの止め所（条件が
   // 記録を console に書いて false を返すので、止まらない）で取る。基準の版のチャンクには形が無いので、置かない。
   // 比べを揃えるため、Debugger はどちらの版でも有効にする。
@@ -571,6 +770,7 @@ async function prepare(browser, run, options, profileRoot) {
         location: { scriptId: event.scriptId, lineNumber, columnNumber },
         condition: `(console.debug("__yolosLanding", JSON.stringify({ t: performance.timeOrigin + performance.now(), scrollY: window.scrollY, choice: ${parameter} })), false)`,
       });
+      state.hooked++;
     } catch {
       // 読めないスクリプトは飛ばす。
     }
@@ -597,15 +797,12 @@ function readScreen() {
     (element?.textContent ?? "").replace(/\s+/g, "").slice(0, 24);
   const hydrated = (element) =>
     !!element && Object.keys(element).some((key) => key.startsWith("__react"));
-  const rect = (element) => {
-    const box = element.getBoundingClientRect();
-    return {
-      top: box.top,
-      bottom: box.bottom,
-      left: box.left,
-      right: box.right,
-    };
-  };
+  const rect = (box) => ({
+    top: box.top,
+    bottom: box.bottom,
+    left: box.left,
+    right: box.right,
+  });
   const heading = document.querySelector('h2[tabindex="-1"]');
   const list = heading?.nextElementSibling?.matches('ul[data-text-box="rows"]')
     ? heading.nextElementSibling
@@ -616,25 +813,45 @@ function readScreen() {
   const next = buttons.find((button) => text(button) === "次へ");
   const retry = buttons.find((button) => text(button) === "もう一度挑戦する");
   const rows = list ? [...list.children] : [];
+  // 問の見出しの最初の字（語の選択の対で押す所）。
+  let headingChar = null;
+  if (heading) {
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const offset = node.data.search(/\S/);
+      if (offset === -1) continue;
+      const range = document.createRange();
+      range.setStart(node, offset);
+      range.setEnd(node, offset + 1);
+      headingChar = rect(range.getBoundingClientRect());
+      break;
+    }
+  }
+  const box = document.querySelector('section[tabindex="-1"]');
+  const labelId = box?.getAttribute("aria-labelledby");
+  const nameElement = box && labelId ? document.getElementById(labelId) : box;
   return {
-    phase: document.querySelector('section[tabindex="-1"]')
-      ? "result"
-      : heading
-        ? "playing"
-        : start
-          ? "intro"
-          : "other",
+    phase: box ? "result" : heading ? "playing" : start ? "intro" : "other",
     band: bar ? Number(bar.getAttribute("aria-valuenow")) : null,
     total: bar ? Number(bar.getAttribute("aria-valuemax")) : null,
     heading: text(heading),
+    headingChar,
+    resultName: nameElement
+      ? (nameElement.innerText ?? "").replace(/\s+/g, "")
+      : null,
     choices: rows
       .map((row) => row.querySelector(":scope > button"))
       .filter((button) => button && hydrated(button))
-      .map((button) => ({ name: text(button), rect: rect(button) })),
+      .map((button) => ({
+        name: text(button),
+        rect: rect(button.getBoundingClientRect()),
+      })),
     answered: !!list && !list.querySelector("button"),
-    start: start && hydrated(start) ? rect(start) : null,
-    next: next && hydrated(next) ? rect(next) : null,
-    retry: retry && hydrated(retry) ? rect(retry) : null,
+    start:
+      start && hydrated(start) ? rect(start.getBoundingClientRect()) : null,
+    next: next && hydrated(next) ? rect(next.getBoundingClientRect()) : null,
+    retry:
+      retry && hydrated(retry) ? rect(retry.getBoundingClientRect()) : null,
     innerHeight: window.innerHeight,
     innerWidth: window.innerWidth,
     scrollY: window.scrollY,
@@ -757,25 +974,36 @@ function sendPress(session, input, point, clickCount) {
     .catch(() => {});
 }
 
+/** 押す前に、1打目と2打目の点をページに置く（着地のあとの最初のフレームのタッチの距離の起点）。 */
+async function placePoints(page, first, second) {
+  await page.evaluate(
+    (points) => {
+      window.__yolosPoints = points;
+    },
+    [first, second],
+  );
+}
+
 /**
  * 同じ点（D5 では2打目だけずらした点）を2度押す。1打目を送ってから指定の間隔だけ待って2打目を送る。
  * 待ちは、1打目から waitFromFirst か、2打目から waitAfterSecond のどちらか。
  */
 async function doublePress(context, run, point, waits) {
-  const { session, state } = context;
+  const { session, state, page } = context;
+  const second = { x: point.x + run.offset.dx, y: point.y + run.offset.dy };
+  await placePoints(page, point, second);
   state.press++;
   const index = state.press;
   const sentAt = Date.now();
   sendPress(session, run.input, point, 1);
   await sleep(run.interval);
-  const second = { x: point.x + run.offset.dx, y: point.y + run.offset.dy };
   await sendPress(session, run.input, second, 2);
   const secondAt = Date.now();
   if (waits.fromFirst !== undefined) {
     await sleep(Math.max(0, waits.fromFirst - (secondAt - sentAt)));
   } else await sleep(waits.afterSecond);
   // 語の選択の測り（マウス）: 記録の時点の選択。ページを離れたあとは読めない。
-  state.selections[index] = await context.page
+  state.selections[index] = await page
     .evaluate(() => String(getSelection() ?? ""))
     .catch(() => null);
   return index;
@@ -783,7 +1011,8 @@ async function doublePress(context, run, point, waits) {
 
 /** 1度だけの押し（最後の問までの進め方）。 */
 async function singlePress(context, run, point) {
-  const { session, state } = context;
+  const { session, state, page } = context;
+  await placePoints(page, point, point);
   state.press++;
   await sendPress(session, run.input, point, 1);
   return state.press;
@@ -792,50 +1021,82 @@ async function singlePress(context, run, point) {
 // ---------------------------------------------------------------------------
 // 押しごとの記録
 
+const round1 = (value) => Math.round(value * 10) / 10;
+
+/**
+ * 着地の関数の1回の呼び出しの記録。範囲の中に点の真下を外す送りがあったか（関数と同じ1px 刻み）と、範囲の中で
+ * 点から避けるものまでを最も離せたときの隔たり（max(dx, dy)。第1の組だけと、両方の組の近いほう）を数える。
+ */
 function summarizeLanding(landing, frames) {
   const { plan, point, avoidFirst, avoidNext, scrollable } = landing.choice;
   const span = {
     min: Math.ceil(Math.max(plan.span.min, scrollable.min)),
     max: Math.floor(Math.min(plan.span.max, scrollable.max)),
   };
-  const under = (rects, scroll) =>
-    !!point &&
-    rects.some(
-      (rect) =>
-        point.x >= rect.left &&
-        point.x <= rect.right &&
-        point.y >= rect.top - scroll &&
-        point.y <= rect.bottom - scroll,
-    );
+  const reach = (rects, scroll) => {
+    let nearest = 100;
+    for (const rect of rects) {
+      const dx = Math.max(rect.left - point.x, 0, point.x - rect.right);
+      const dy = Math.max(
+        rect.top - scroll - point.y,
+        0,
+        point.y - (rect.bottom - scroll),
+      );
+      nearest = Math.min(nearest, Math.max(dx, dy));
+    }
+    return nearest;
+  };
   let clearOfFirst = false;
   let clearOfBoth = false;
+  let farFirst = null;
+  let farBoth = null;
   if (point && span.min <= span.max) {
+    farFirst = 0;
+    farBoth = 0;
     for (let scroll = span.min; scroll <= span.max; scroll++) {
-      if (under(avoidFirst, scroll)) continue;
-      clearOfFirst = true;
-      if (!under(avoidNext, scroll)) {
-        clearOfBoth = true;
-        break;
-      }
+      const toFirst = reach(avoidFirst, scroll);
+      const toNext = reach(avoidNext, scroll);
+      if (toFirst > 0) clearOfFirst = true;
+      if (toFirst > 0 && toNext > 0) clearOfBoth = true;
+      farFirst = Math.max(farFirst, toFirst);
+      farBoth = Math.max(farBoth, Math.min(toFirst, toNext));
     }
   }
   const frame = frames.find((candidate) => candidate.t > landing.t);
+  const underAt = (scroll) =>
+    !point
+      ? null
+      : reach(avoidFirst, scroll) === 0
+        ? "first"
+        : reach(avoidNext, scroll) === 0
+          ? "next"
+          : null;
   return {
     s0: plan.base,
     span: [Math.round(plan.span.min), Math.round(plan.span.max)],
     range: [span.min, span.max],
     point: point ? [Math.round(point.x), Math.round(point.y)] : null,
-    underAtS0: under(avoidFirst, plan.base)
-      ? "first"
-      : under(avoidNext, plan.base)
-        ? "next"
-        : null,
+    underAtS0: underAt(plan.base),
     clearOfFirst,
     clearOfBoth,
+    farFirst: farFirst === null ? null : round1(farFirst),
+    farBoth: farBoth === null ? null : round1(farBoth),
     chosen: frame ? frame.scrollY - landing.scrollY : null,
-    nFirst: avoidFirst.length,
-    nNext: avoidNext.length,
   };
+}
+
+function crossesShown(interval, gap) {
+  if (!BOUNDARY_INTERVALS.has(interval) || gap === null) return false;
+  return interval < SHOWN_MS ? gap >= SHOWN_MS : gap < SHOWN_MS;
+}
+
+/** 2打目の落ちた先の組。問の選択肢は、1打目の問より後の問（「はじめる」と「もう一度挑戦する」のあとは1問目）なら next。 */
+function groupOf(record) {
+  const second = record.second;
+  if (!second) return null;
+  if (second.el.g !== "choice") return second.el.g;
+  if (record.band === null || (second.band ?? 0) > record.band) return "next";
+  return "choice";
 }
 
 function pressRecord(state, index, extra) {
@@ -849,11 +1110,24 @@ function pressRecord(state, index, extra) {
   const clicks = events.filter((event) => event.ev === "click");
   const frames = state.events.filter((event) => event.ev === "frame");
   const pressFrames = frames.filter((frame) => frame.press === index);
-  const landings = state.landings
-    .filter((landing) => landing.press === index)
-    .map((landing) => summarizeLanding(landing, frames));
+  const pressLandings = state.landings.filter(
+    (landing) => landing.press === index,
+  );
+  const landings = pressLandings.map((landing) =>
+    summarizeLanding(landing, frames),
+  );
   const gap =
     downs.length >= 2 ? Math.round((downs[1].t - downs[0].t) * 10) / 10 : null;
+  // 2打目が受けた画面: 2打目の押し下げの時点に出ていた画面（その着地と、着地のあとの最初のフレーム）。2打目より
+  // 前に画面が替わっていなければ、2打目のあとの最初のもの。タッチの距離と要約の着地はここから読む。
+  const secondDown = downs[1]?.t;
+  const until = (list) =>
+    list.filter((item) => secondDown !== undefined && item.t <= secondDown);
+  const before = until(pressFrames);
+  const nearFrame = before.at(-1) ?? pressFrames[0];
+  const landingIndex = landings.length
+    ? Math.max(until(pressLandings).length - 1, 0)
+    : undefined;
   const brief = (event) =>
     event
       ? {
@@ -865,7 +1139,8 @@ function pressRecord(state, index, extra) {
           scrollY: Math.round(event.scrollY),
         }
       : null;
-  return {
+  const md2 = mousedowns[1]?.detail;
+  const record = {
     i: index,
     kind: extra.kind,
     band: extra.band,
@@ -873,11 +1148,14 @@ function pressRecord(state, index, extra) {
     scrolled: extra.scrolled?.length ? extra.scrolled : undefined,
     gap,
     crossed: crossesShown(extra.interval, gap) || undefined,
+    // マウスの2打目の mousedown の detail が 2 でない押し（語の選択の数から外す）。
+    detailMark: (extra.input === "mouse" && md2 !== 2) || undefined,
     first: brief(clicks[0]),
     second: clicks[1] ? { ...brief(clicks[1]), path: clicks[1].path } : null,
     clicks: clicks.length,
-    md2: mousedowns[1]?.detail,
+    md2,
     landings: landings.length ? landings : undefined,
+    landingIndex,
     frames: pressFrames.map((frame) => ({
       sig: frame.sig,
       scrollY: Math.round(frame.scrollY),
@@ -887,17 +1165,116 @@ function pressRecord(state, index, extra) {
       boxTop: frame.boxTop,
       start: frame.start,
       focus: frame.focus,
+      innerHeight: frame.innerHeight,
     })),
+    near: extra.input === "touch" ? (nearFrame?.near ?? null) : undefined,
+    near2: extra.input === "touch" ? nearFrame?.near2 : undefined,
+    nearAt:
+      extra.input === "touch" && nearFrame
+        ? before.length
+          ? "before-second"
+          : "after-second"
+        : undefined,
     selection: extra.input === "mouse" ? state.selections[index] : undefined,
     popups: state.popups
       .filter((popup) => popup.press === index)
       .map((popup) => popup.url.split("?")[0]),
   };
+  record.group = groupOf(record);
+  const resultFrame = pressFrames.find((frame) => frame.name);
+  record.cut =
+    pressFrames.some(
+      (frame) => frame.h1?.cut || frame.heading?.cut || frame.name?.cut,
+    ) || undefined;
+  // 結果の名前の下端が、画面の下端から 8px 上より下にあった（t5a-design.md 4-9 の見せる範囲の欠け）。
+  record.nameLow =
+    (resultFrame && resultFrame.name.bottom > resultFrame.innerHeight - GAP) ||
+    undefined;
+  // 「もう一度挑戦する」のあとに、開始の画面の h1 が丸ごと画面の上端より上にある（外れた見出し）。
+  record.h1Above =
+    pressFrames.some(
+      (frame) =>
+        frame.sig.includes("|intro|") && frame.h1 && frame.h1.bottom < 0,
+    ) || undefined;
+  return record;
 }
 
-function crossesShown(interval, gap) {
-  if (!BOUNDARY_INTERVALS.has(interval) || gap === null) return false;
-  return interval < SHOWN_MS ? gap >= SHOWN_MS : gap < SHOWN_MS;
+/** 押しごとの記録のファイルに書く形（README の「押しごとの記録」）。 */
+function compactPress(record) {
+  const target = (click, more) =>
+    click
+      ? [
+          click.el.g,
+          click.el.g === "link" ? click.el.path : (click.el.name ?? ""),
+          ...click.at,
+          click.band,
+          ...more,
+        ]
+      : null;
+  const lines = (box) =>
+    box ? [box.top, box.bottom, box.lines, box.cut ?? 0] : 0;
+  return {
+    i: record.i,
+    kind: record.kind,
+    band: record.band,
+    pt: record.point,
+    sc: record.scrolled,
+    gap: record.gap,
+    x: record.crossed,
+    dm: record.detailMark,
+    c1: target(record.first, []),
+    c2: target(record.second, record.second ? [record.second.scrollY] : []),
+    nc: record.clicks === 2 ? undefined : record.clicks,
+    md2: record.md2,
+    grp: record.group,
+    sel: record.selection || undefined,
+    pop: record.popups.length ? record.popups : undefined,
+    land: record.landings?.map((landing) => [
+      landing.s0,
+      ...landing.span,
+      ...landing.range,
+      landing.underAtS0,
+      landing.clearOfFirst ? 1 : 0,
+      landing.clearOfBoth ? 1 : 0,
+      landing.farFirst,
+      landing.farBoth,
+      landing.chosen,
+    ]),
+    li: record.landingIndex,
+    fr: record.frames.map((frame) => [
+      frame.sig.split("|").slice(1).join("|"),
+      frame.scrollY,
+      lines(frame.h1),
+      lines(frame.heading),
+      lines(frame.name),
+      frame.boxTop ?? null,
+      frame.start ? [frame.start.top, frame.start.bottom] : null,
+    ]),
+    near: record.near ?? undefined,
+    near2: record.near2,
+    nearAt: record.nearAt === "after-second" ? "after" : undefined,
+    cut: record.cut,
+    lo: record.nameLow,
+    h1a: record.h1Above,
+    ins: record.insertInView,
+    at: record.reached === false ? 0 : undefined,
+  };
+}
+
+/**
+ * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。語の選択の対（select）は、
+ * 語が選ばれなかった押しを置く。
+ */
+function keepReasons(op, record) {
+  const reasons = [];
+  if (FIRST_GROUP.has(record.group)) reasons.push("first");
+  if (record.group === "next") reasons.push("next");
+  if (op === "select") {
+    if (!record.selection) reasons.push("no-selection");
+  } else if (record.selection) reasons.push("selection");
+  if (record.nameLow) reasons.push("name-low");
+  if (record.insertInView) reasons.push("insert");
+  return reasons;
 }
 
 /** 2打目でページを離れたか（t5a-measure.md 0章「2打目で離れたか」）。 */
@@ -946,9 +1323,9 @@ async function followLeave(page, leave) {
 // ---------------------------------------------------------------------------
 // 操作
 
-async function openQuiz(context, slug, base) {
-  const { page } = context;
-  await page.goto(`${base}/play/${slug}`, {
+async function openQuiz(context, slug, options) {
+  const { page, state } = context;
+  await page.goto(`${options.base}/play/${slug}`, {
     waitUntil: "load",
     timeout: 120000,
   });
@@ -959,6 +1336,15 @@ async function openQuiz(context, slug, base) {
     60000,
   );
   if (!ok) throw new Error("start button did not hydrate");
+  if (options.landing) {
+    const until = Date.now() + 5000;
+    while (state.hooked === 0 && Date.now() < until) await sleep(25);
+    if (state.hooked === 0) {
+      throw new FatalError(
+        "the landing breakpoint was not set on this page; the landing records would be missing",
+      );
+    }
+  }
   return opened;
 }
 
@@ -988,9 +1374,20 @@ function pickRow(current, row, plannedName) {
   return row === "last" ? current.choices.at(-1).rect : current.choices[0].rect;
 }
 
+/** 押しごとの記録を作って、走査の記録に足す（誤りで終わった回にも、それまでの押しが残る）。 */
+function recordPress(context, run, index, extra) {
+  const record = pressRecord(context.state, index, {
+    ...extra,
+    interval: run.interval,
+    input: run.input,
+  });
+  context.state.records.push(record);
+  return record;
+}
+
 /** 「はじめる」の二度押し。 */
 async function measureStart(context, run, options) {
-  const opened = await openQuiz(context, run.slug, options.base);
+  const opened = await openQuiz(context, run.slug, options);
   const placed = await bringIntoView(
     context.page,
     context.session,
@@ -1000,24 +1397,21 @@ async function measureStart(context, run, options) {
   const index = await doublePress(context, run, point, {
     afterSecond: WAIT_AFTER_SECOND_MS,
   });
-  const record = pressRecord(context.state, index, {
+  recordPress(context, run, index, {
     kind: "start",
     band: null,
     point,
     scrolled: placed.scrolled,
-    interval: run.interval,
-    input: run.input,
   });
-  return { rootFontSize: opened.rootFontSize, presses: [record] };
+  return { rootFontSize: opened.rootFontSize };
 }
 
 /** 全問を最初の行か最後の行で解き切る走査（t5a-measure.md 5-2・0章「走査の次の1打目」）。 */
 async function measureAnswers(context, run, options) {
-  const { page, session, state } = context;
-  const opened = await openQuiz(context, run.slug, options.base);
+  const { page, session } = context;
+  const opened = await openQuiz(context, run.slug, options);
   const { total } = await startByElementClick(page);
   const knowledge = KNOWLEDGE.has(run.slug);
-  const presses = [];
   let leave = null;
   for (let guard = 0; guard < 200; guard++) {
     let current = await screen(page);
@@ -1040,7 +1434,7 @@ async function measureAnswers(context, run, options) {
     }
     const pick =
       kind === "answer"
-        ? (now) => (now.answered ? null : pickRow(now, run.row))
+        ? (now) => (now.answered ? null : pickRow(now, run.variant))
         : (now) => now.next;
     const ready = await waitScreen(page, (now) => !!pick(now));
     if (!ready.ok) throw new Error(`no pressable ${kind}`);
@@ -1050,16 +1444,13 @@ async function measureAnswers(context, run, options) {
     const index = await doublePress(context, run, point, {
       fromFirst: WAIT_FROM_FIRST_MS,
     });
-    const record = pressRecord(state, index, {
+    const record = recordPress(context, run, index, {
       kind,
       band: current.band,
       point,
       scrolled: placed.scrolled,
-      interval: run.interval,
-      input: run.input,
     });
     record.last = current.band === current.total || undefined;
-    presses.push(record);
     leave = leaveOf(record);
     if (leave) {
       leave.at = index;
@@ -1069,10 +1460,9 @@ async function measureAnswers(context, run, options) {
   }
   return {
     rootFontSize: opened.rootFontSize,
-    presses,
     leave: leave ?? undefined,
     total,
-    check: leave ? undefined : countCheck(presses, total),
+    check: leave ? undefined : countCheck(context.state.records, total),
   };
 }
 
@@ -1100,17 +1490,28 @@ function countCheck(presses, total) {
   return { firsts, x, s, ok: firsts + x + s === total };
 }
 
+/** 結果の名前の字から、どの結果に着いたかを決める。 */
+function reachedResult(name, names) {
+  if (!name) return null;
+  // 見出しは折り所に語をつなぐ字（U+2060 など）を挟むので、空白と幅の無い字を除いて比べる。
+  const strip = (value) => value.replace(/[\s​-‍⁠﻿]+/g, "");
+  const found = Object.entries(names).find(([, title]) =>
+    strip(name).startsWith(strip(title)),
+  );
+  return found ? found[0] : null;
+}
+
 /** 最後の答え・最後の「次へ」→結果（5-3 で決めた進め方）。 */
 async function measureLast(context, run, options) {
   const { page, session, state } = context;
-  const opened = await openQuiz(context, run.slug, options.base);
+  const opened = await openQuiz(context, run.slug, options);
   await startByElementClick(page);
   const knowledge = KNOWLEDGE.has(run.slug);
   const choiceFor = (band) => run.plan?.choices[band - 1];
   const steps = [];
   // 最後の問の前までは、同じ入力で、決めた行を1度ずつ押して進める（来訪者が1問ずつ押す形）。
   for (let guard = 0; guard < 100; guard++) {
-    let current = await screen(page);
+    const current = await screen(page);
     if (current.phase !== "playing") {
       throw new Error(`unexpected phase ${current.phase}`);
     }
@@ -1163,16 +1564,35 @@ async function measureLast(context, run, options) {
       await sleep(100);
     }
   }
-  const record = pressRecord(state, index, {
+  const record = recordPress(context, run, index, {
     kind: knowledge ? "last-next" : "last-answer",
     band: placed.screen.band,
     point,
     scrolled: placed.scrolled,
-    interval: run.interval,
-    input: run.input,
   });
+  const inserts = state.events
+    .filter((event) => event.ev === "insert")
+    .map((event) => ({
+      sinceResult: Math.round(event.sinceResult),
+      top: event.top,
+      atBoxGap: event.atBoxGap,
+      inView: event.top < event.innerHeight,
+      tag: event.tag,
+      name: event.name,
+    }));
+  record.insertInView = inserts.some((insert) => insert.inView) || undefined;
   const leave = leaveOf(record);
   if (leave?.by === "link") leave.dest = await followLeave(page, leave);
+  // 答えの組で回った回は、着いた結果が組の結果かを確かめる（途中の押しが別の行に落ちれば別の結果に着く）。
+  let reached;
+  if (run.plan && !leave) {
+    const { screen: atResult } = await waitScreen(
+      page,
+      (now) => now.phase === "result",
+      3000,
+    );
+    reached = reachedResult(atResult.resultName, run.plan.names) ?? "?";
+  }
   return {
     rootFontSize: opened.rootFontSize,
     // 最後の押しの前の1度ずつの押しの数と、そのうち来訪者の送りを挟んだ押しの送りの量（押しの順の番号と量）。
@@ -1182,26 +1602,16 @@ async function measureLast(context, run, options) {
         .map((scrolled, order) => [order, ...scrolled])
         .filter((entry) => entry.length > 1),
     },
-    presses: [record],
     leave: leave ?? undefined,
-    resultId: run.plan?.resultId,
-    inserts: state.events
-      .filter((event) => event.ev === "insert")
-      .map((event) => ({
-        sinceResult: Math.round(event.sinceResult),
-        top: event.top,
-        atBoxGap: event.atBoxGap,
-        inView: event.top < event.innerHeight,
-        tag: event.tag,
-        name: event.name,
-      })),
+    reached,
+    inserts,
   };
 }
 
 /** 「もう一度挑戦する」の二度押し。中心を画面の上から position の高さに置いて押す。 */
 async function measureRetry(context, run, options) {
-  const { page, session, state } = context;
-  const opened = await openQuiz(context, run.slug, options.base);
+  const { page, session } = context;
+  const opened = await openQuiz(context, run.slug, options);
   await startByElementClick(page);
   for (let guard = 0; guard < 100; guard++) {
     const current = await screen(page);
@@ -1226,28 +1636,45 @@ async function measureRetry(context, run, options) {
   const { screen: atResult, ok } = await waitScreen(page, (now) => !!now.retry);
   if (!ok) throw new Error("retry button missing");
   const middle = (atResult.retry.top + atResult.retry.bottom) / 2;
-  const scrolled = await visitorScroll(page, session, middle - run.position);
+  const scrolled = await visitorScroll(page, session, middle - run.variant);
   const placed = await screen(page);
   const point = center(placed.retry);
   const index = await doublePress(context, run, point, {
     afterSecond: WAIT_AFTER_SECOND_MS,
   });
-  const record = pressRecord(state, index, {
+  const record = recordPress(context, run, index, {
     kind: "retry",
     band: null,
     point,
     scrolled: [Math.round(scrolled)],
-    interval: run.interval,
-    input: run.input,
   });
-  record.reached = Math.abs(point.y - run.position) <= 1;
+  record.reached = Math.abs(point.y - run.variant) <= 1;
   const leave = leaveOf(record);
   if (leave?.by === "link") leave.dest = await followLeave(page, leave);
-  return {
-    rootFontSize: opened.rootFontSize,
-    presses: [record],
-    leave: leave ?? undefined,
-  };
+  return { rootFontSize: opened.rootFontSize, leave: leave ?? undefined };
+}
+
+/**
+ * 語の選択の測りの対: 1問目の見出しの最初の字の上で、1打目から始めるダブルクリック（t5a-design.md 6章 条件7。
+ * 守りが字を選べなくしていないこと）。
+ */
+async function measureSelect(context, run, options) {
+  const { page, session } = context;
+  const opened = await openQuiz(context, run.slug, options);
+  await startByElementClick(page);
+  const placed = await bringIntoView(page, session, (now) => now.headingChar);
+  if (!placed.rect) throw new Error("question heading missing");
+  const point = center(placed.rect);
+  const index = await doublePress(context, run, point, {
+    afterSecond: WAIT_AFTER_SECOND_MS,
+  });
+  recordPress(context, run, index, {
+    kind: "heading",
+    band: placed.screen.band,
+    point,
+    scrolled: placed.scrolled,
+  });
+  return { rootFontSize: opened.rootFontSize };
 }
 
 const MEASURES = {
@@ -1255,19 +1682,118 @@ const MEASURES = {
   answers: measureAnswers,
   last: measureLast,
   retry: measureRetry,
+  select: measureSelect,
 };
 
 // ---------------------------------------------------------------------------
-// 送り直し
+// 回の要約
 
-/** 1回で終わる操作の回を送り直すか（実際の間隔が 150ms の側を越えたか、マウスの2打目の detail が 2 でないか）。 */
-function needsResend(op, run, outcome) {
-  if (op === "answers") return null;
-  const press = outcome.presses[0];
+const nearOut = (near) =>
+  near ? near.slice(0, near[2] ? 3 : 2).map((entry) => entry ?? null) : null;
+
+/**
+ * 回の要約の行（README の「記録の形」）。1度の押しで終わる操作は、その押しの落ちた先の組・間隔・印を持ち、
+ * 全問を解き切る走査は、落ちた先の組ごとの数と印を付けた押しの数を持つ。
+ */
+function summaryLine(op, run, outcome, records) {
+  const line = {};
+  if (op === "answers") {
+    const counts = {};
+    const marked = {};
+    let crossed = 0;
+    let detail = 0;
+    let selections = 0;
+    let cuts = 0;
+    const near = [];
+    for (const record of records) {
+      const bucket = record.crossed ? marked : counts;
+      const group = record.group ?? "none";
+      bucket[group] = (bucket[group] ?? 0) + 1;
+      if (record.crossed) crossed++;
+      if (record.detailMark) detail++;
+      if (record.selection && !record.detailMark) selections++;
+      if (record.cut) cuts++;
+      if (record.near) {
+        const values = [record.near[0], record.near[1], ...(record.near2 ?? [])]
+          .filter(Boolean)
+          .map(([dx, dy]) => Math.max(dx, dy));
+        const nearest = Math.min(...values);
+        if (nearest > 0 && nearest <= NEAR_LIMIT) {
+          near.push([
+            record.i,
+            record.band,
+            ...nearOut(record.near),
+            ...(record.near2 ? [nearOut(record.near2)] : []),
+          ]);
+        }
+      }
+    }
+    Object.assign(line, {
+      np: records.length,
+      c: counts,
+      cm: Object.keys(marked).length ? marked : undefined,
+      x: crossed || undefined,
+      dm: detail || undefined,
+      w: selections || undefined,
+      cut: cuts || undefined,
+      n: near.length ? near : undefined,
+      ck: outcome?.check
+        ? [
+            outcome.check.firsts,
+            outcome.check.x,
+            outcome.check.s,
+            outcome.check.ok ? 1 : 0,
+          ]
+        : undefined,
+    });
+  } else {
+    const record = records.at(-1);
+    if (record) {
+      const landing = record.landings?.[record.landingIndex];
+      Object.assign(line, {
+        g: record.gap,
+        s: record.group,
+        d: run.input === "mouse" ? record.md2 : undefined,
+        w: run.input === "mouse" ? record.selection?.slice(0, 12) : undefined,
+        n: run.input === "touch" ? nearOut(record.near) : undefined,
+        n2: record.near2 ? nearOut(record.near2) : undefined,
+        l: landing
+          ? [
+              landing.clearOfFirst ? 1 : 0,
+              landing.clearOfBoth ? 1 : 0,
+              landing.farFirst,
+              landing.farBoth,
+            ]
+          : undefined,
+        cut: record.cut ? 1 : undefined,
+        lo: record.nameLow ? 1 : undefined,
+        ins: record.insertInView ? 1 : undefined,
+        h1a: record.h1Above ? 1 : undefined,
+        at: op === "retry" && !record.reached ? 0 : undefined,
+      });
+    }
+    if (outcome?.reached !== undefined) line.res = outcome.reached;
+  }
+  if (outcome?.leave) {
+    line.v = outcome.leave.by === "link" ? `link:${outcome.leave.to}` : "retry";
+  }
+  return line;
+}
+
+/** 送り直す理由（1度の押しで終わる操作の、間隔の越え・detail・着いた結果の違い。走査の確かめの違い）。 */
+function resendReasons(op, run, outcome, records) {
+  if (op === "answers") {
+    return outcome.check && !outcome.check.ok ? ["check"] : [];
+  }
+  const record = records.at(-1);
   const reasons = [];
-  if (press.crossed) reasons.push("crossed");
-  if (run.input === "mouse" && press.md2 !== 2) reasons.push("detail");
-  return reasons.length ? reasons : null;
+  if (!record) return reasons;
+  if (op !== "select" && record.crossed) reasons.push("crossed");
+  if (record.detailMark) reasons.push("detail");
+  if (run.plan && outcome.reached !== run.plan.resultId && !outcome.leave) {
+    reasons.push("result");
+  }
+  return reasons;
 }
 
 // ---------------------------------------------------------------------------
@@ -1277,29 +1803,38 @@ async function main() {
   const fingerprint = JSON.parse(
     fs.readFileSync(path.join(options.version, "fingerprint.json"), "utf8"),
   );
+  if (!fingerprint.lock || !fingerprint.chunksDigest) {
+    throw new FatalError(
+      "the fingerprint lacks lock or chunksDigest; rebuild the version with this version.mjs",
+    );
+  }
+  if (chunksDigest(fingerprint.chunks) !== fingerprint.chunksDigest) {
+    throw new FatalError("fingerprint.json is inconsistent");
+  }
+  options.landing = landingExpected(options.version);
   const answerPlans = new Map();
   if (options.answers) {
-    for (const line of fs
-      .readFileSync(options.answers, "utf8")
-      .split("\n")
-      .filter(Boolean)) {
-      const entry = JSON.parse(line);
-      answerPlans.set(entry.slug, entry.plans);
+    for (const entry of readLines(options.answers)) {
+      answerPlans.set(entry.slug, entry);
     }
   }
+  const { digest, accepted } = checkFingerprint(options, fingerprint);
   const browser = await chromium.launch({
     executablePath: CHROMIUM,
     args: ["--disable-smooth-scrolling"],
   });
-  const browserVersion = browser.version();
-  const records = ensureVersionLine(options.out, fingerprint, browserVersion);
-  const attempts = new Map();
-  const finished = new Set();
-  for (const record of records) {
-    if (record.type !== "run") continue;
-    attempts.set(record.key, (attempts.get(record.key) ?? 0) + 1);
-    if (record.final) finished.add(record.key);
-  }
+  const head = {
+    type: "head",
+    op: options.op,
+    d5: options.isD5 || undefined,
+    tree: fingerprint.tree,
+    chunksDigest: digest,
+    browser: browser.version(),
+    tool: toolBlobs(),
+    landing: options.landing,
+  };
+  checkGroup(options, head);
+
   // 200% のプロファイルは、リポジトリの tmp/ の下に置く。
   const repository = execFileSync("git", ["rev-parse", "--show-toplevel"], {
     encoding: "utf8",
@@ -1308,68 +1843,127 @@ async function main() {
   const profileRoot = fs.mkdtempSync(
     path.join(repository, "tmp", "measure-profiles-"),
   );
-  const runs = enumerateRuns(options, answerPlans);
-  let done = 0;
-  for (const run of runs) {
-    const key = runKey(options.op, run);
-    if (finished.has(key)) continue;
-    if (done >= options.limit) break;
-    let attempt = attempts.get(key) ?? 0;
-    for (;;) {
-      const started = Date.now();
-      const context = await prepare(browser, run, options, profileRoot);
-      let outcome;
-      let error;
-      try {
-        outcome = await MEASURES[options.op](context, run, options);
-      } catch (caught) {
-        error = String(caught?.message ?? caught).slice(0, 200);
-      }
-      await closeContext(context.context);
-      const resend = outcome ? needsResend(options.op, run, outcome) : null;
-      const recheck =
-        options.op === "answers" && outcome?.check && !outcome.check.ok;
-      const reasons = error
-        ? ["error"]
-        : recheck
-          ? ["check"]
-          : (resend ?? undefined);
-      // 確かめの合わない走査は1度だけやり直す（t5a-measure.md 5-2）。ほかは3度まで送り直す。
-      const limit = recheck ? 1 : MAX_RESENDS;
-      const final = !reasons || attempt >= limit;
-      const line = {
-        type: "run",
-        key,
-        tree: fingerprint.tree,
-        op: options.op,
-        viewport: run.viewport.name,
-        slug: run.slug,
-        input: run.input,
-        interval: run.interval,
-        offset: [run.offset.dx, run.offset.dy],
-        row: run.row,
-        position: run.position,
-        attempt,
-        final,
-        // 送り直した回（数えない）の理由と、送り直しの上限まで越えたまま数える回の印。
-        resent: !final ? reasons : undefined,
-        exhausted: final ? reasons : undefined,
-        error,
-        at: new Date(started).toISOString(),
-        wallMs: Date.now() - started,
-        ...outcome,
-      };
-      fs.appendFileSync(options.out, `${JSON.stringify(line)}\n`);
-      attempt++;
-      if (final) break;
+  const files = new Map();
+  const filesOf = (viewport) => {
+    if (!files.has(viewport.file)) {
+      files.set(
+        viewport.file,
+        openViewportFiles(options, viewport, head, accepted),
+      );
     }
-    done++;
+    return files.get(viewport.file);
+  };
+  const runs = enumerateRuns(options, answerPlans);
+  const unresolved = [];
+  let done = 0;
+  try {
+    for (const run of runs) {
+      const key = runKey(run);
+      const target = filesOf(run.viewport);
+      const entry = target.history.get(key) ?? {
+        attempts: 0,
+        resends: 0,
+        final: false,
+      };
+      target.history.set(key, entry);
+      if (entry.final) continue;
+      if (done >= options.limit) break;
+      let errors = 0;
+      for (;;) {
+        const started = Date.now();
+        const context = await prepare(browser, run, options, profileRoot);
+        let outcome;
+        let error;
+        try {
+          outcome = await MEASURES[options.op](context, run, options);
+        } catch (caught) {
+          if (caught instanceof FatalError) {
+            await closeContext(context.context);
+            throw caught;
+          }
+          error = String(caught?.message ?? caught)
+            .split("\n")[0]
+            .slice(0, 200);
+        }
+        await closeContext(context.context);
+        const records = context.state.records;
+        let reasons = error
+          ? ["error"]
+          : resendReasons(options.op, run, outcome, records);
+        const limit = reasons.includes("check") ? MAX_RECHECKS : MAX_RESENDS;
+        // 誤りで終わった回は数えない（f を付けない）。続きを測るときにもう一度測る。
+        const final =
+          !error && (reasons.length === 0 || entry.resends >= limit);
+        if (reasons.length === 0) reasons = undefined;
+        const line = {
+          k: key,
+          a: entry.attempts,
+          f: final ? 1 : undefined,
+          r: reasons,
+          e: error,
+          ms: Date.now() - started,
+          ...summaryLine(options.op, run, outcome, records),
+        };
+        // 押しごとの記録は、判断に要る押しと、誤りで終わった回の押しを置く。
+        const kept = records
+          .map((record) => ({
+            record,
+            why: error ? ["error"] : keepReasons(options.op, record),
+          }))
+          .filter(({ why }) => why.length > 0);
+        if (error && kept.length === 0) {
+          kept.push({ record: { i: null }, why: ["error"] });
+        }
+        for (const { record, why } of kept) {
+          appendLine(target.pressFile, {
+            k: key,
+            a: entry.attempts,
+            why,
+            ...(record.i === null ? { i: null, error } : compactPress(record)),
+          });
+        }
+        if (kept.length) line.p = kept.length;
+        if (outcome?.before?.scrolled.length) {
+          line.bs = outcome.before.scrolled;
+        }
+        appendLine(target.summaryFile, line);
+        entry.attempts++;
+        if (error) {
+          errors++;
+          if (errors >= MAX_ERRORS) {
+            unresolved.push(`${run.viewport.name} ${key}: ${error}`);
+            break;
+          }
+          continue;
+        }
+        if (final) {
+          entry.final = true;
+          break;
+        }
+        entry.resends++;
+      }
+      done++;
+    }
+  } finally {
+    await browser.close();
+    fs.rmSync(profileRoot, { recursive: true, force: true });
   }
-  await browser.close();
-  fs.rmSync(profileRoot, { recursive: true, force: true });
+  for (const { summaryFile, pressFile } of files.values()) {
+    for (const file of [summaryFile, pressFile]) {
+      if (fs.existsSync(file) && fs.statSync(file).size > FILE_LIMIT) {
+        console.error(`${file} is over 1MB; report to the PM`);
+      }
+    }
+  }
+  if (unresolved.length) {
+    console.error(
+      `${unresolved.length} runs ended in errors and are not counted; run the same command again:\n${unresolved.join("\n")}`,
+    );
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {
   console.error(error);
-  process.exit(1);
+  process.exit(error instanceof FatalError ? 3 : 1);
 });
