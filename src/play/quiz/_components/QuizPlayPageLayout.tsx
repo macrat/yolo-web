@@ -15,6 +15,7 @@ import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
+import { questionPhrases } from "@/play/quiz/questionPhrases";
 import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
 import styles from "@/app/play/[slug]/page.module.css";
 
@@ -40,8 +41,11 @@ interface QuizPlayPageLayoutProps {
  *
  * h1 はどの段階でも §4 の主見出しのまま置く。クイズの説明は、開始の画面が「はじめる」の下に置く。
  *
- * 解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品が描くデータから作る
- * 見出しなので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って渡す。
+ * 並べるものは1つの箱で包む。箱のあるページだけ、根の要素が速い2度の押しを拡大に取らない（page.module.css）。
+ *
+ * 問の見出しと選択肢の面、解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品が
+ * 描くデータの文なので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って
+ * 渡す。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -68,54 +72,57 @@ export default async function QuizPlayPageLayout({
         />
       )}
 
-      <QuizContainer
-        head={
-          <>
-            <Breadcrumb
-              items={[
-                { label: "ホーム", href: "/" },
-                { label: "遊び", href: "/play" },
-                { label: quiz.meta.title, href: `/play/${slug}` },
-              ]}
-            />
-            <PhrasedText
-              as="h1"
-              phrases={splitIntoPhrases(quiz.meta.title)}
-              {...headingFontAttr(quiz.meta.title)}
-            />
-          </>
-        }
-        quiz={quiz}
-        referrerTypeId={referrerTypeId}
-        recommendedContents={resultNextContents}
-        resultHeadings={resultHeadings}
-        readingHeadings={readingHeadings}
-      />
+      <div className={styles.quizPage}>
+        <QuizContainer
+          head={
+            <>
+              <Breadcrumb
+                items={[
+                  { label: "ホーム", href: "/" },
+                  { label: "遊び", href: "/play" },
+                  { label: quiz.meta.title, href: `/play/${slug}` },
+                ]}
+              />
+              <PhrasedText
+                as="h1"
+                phrases={splitIntoPhrases(quiz.meta.title)}
+                {...headingFontAttr(quiz.meta.title)}
+              />
+            </>
+          }
+          quiz={quiz}
+          referrerTypeId={referrerTypeId}
+          recommendedContents={resultNextContents}
+          questionPhrases={questionPhrases(quiz)}
+          resultHeadings={resultHeadings}
+          readingHeadings={readingHeadings}
+        />
 
-      {faq.length > 0 && (
+        {faq.length > 0 && (
+          <Section>
+            <FaqSection faq={faq} />
+          </Section>
+        )}
+
         <Section>
-          <FaqSection faq={faq} />
+          <PhrasedText
+            as="h2"
+            className={styles.sectionHeading}
+            phrases={recommendHeading}
+          />
+          <ShareButtons
+            url={"/play/" + slug}
+            title={quiz.meta.title}
+            sns={["x", "line", "hatena", "copy"]}
+            contentType="quiz"
+            contentId={slug}
+          />
         </Section>
-      )}
 
-      <Section>
-        <PhrasedText
-          as="h2"
-          className={styles.sectionHeading}
-          phrases={recommendHeading}
-        />
-        <ShareButtons
-          url={"/play/" + slug}
-          title={quiz.meta.title}
-          sns={["x", "line", "hatena", "copy"]}
-          contentType="quiz"
-          contentId={slug}
-        />
-      </Section>
+        {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
 
-      {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
-
-      <RecommendedContent currentSlug={slug} />
+        <RecommendedContent currentSlug={slug} />
+      </div>
     </>
   );
 }

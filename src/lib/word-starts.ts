@@ -1,8 +1,9 @@
 /**
- * 見出しと名前の中の語の頭（DESIGN.md §4）。見出しの広い文節と名前を語の切れ目で分ける所（phrase-breaks.ts）と、
- * 組んだ見出しの折れが語の切れ目か語の中かを測る所（.claude/skills/frontend-design/SKILL.md の測り方）が、同じ語の頭を
- * 使う。語の辞書（Intl.Segmenter）だけで決まり、ほかのモジュールを読み込まないので、測るスクリプトは Node から
- * このファイルを直に読み込める（`node --experimental-strip-types`）。
+ * 見出しと名前の中の語と語の頭（DESIGN.md §4）。見出しの区切りを語の中に置かない所と、広い文節と名前を語の切れ目で
+ * 分ける所（phrase-breaks.ts）と、組んだ見出しの折れが語の切れ目か語の中かを測る所
+ * （.claude/skills/frontend-design/SKILL.md の測り方）が、同じ語と語の頭を使う。語の辞書（Intl.Segmenter）と、
+ * 辞書が2つ以上に刻む1つの語を戻す辞書の補い（SUPPLEMENT_WORDS）だけで決まり、ほかのモジュールを読み込まないので、
+ * 測るスクリプトは Node からこのファイルを直に読み込める（`node --experimental-strip-types`）。
  */
 
 const graphemes = new Intl.Segmenter("ja", { granularity: "grapheme" });
@@ -28,14 +29,105 @@ export interface Word {
   text: string;
 }
 
+/**
+ * 辞書の補い。語の辞書が2つ以上の語に刻む1つの語（「超|能力」「今日|一日」「アップ|ロード」）で、続けて並ぶ辞書の語を
+ * つないだものがこの語と等しいとき、1つの語とする。入れるのは次の3つの型の語だけで、語どうしの並び（「タイム|ゾーン」
+ * 「一度|決めた」）と、複合動詞・複合形容詞とその名詞の形（「振り|返って」「振り|返り」）は入れない（型と足し方は
+ * .claude/skills/frontend-design/SKILL.md の「辞書の補い」）。辞書の刻み方は前後の字で変わるので、見つけた文の中で辞書の
+ * 語の切れ目にそろう形を入れる。
+ */
+const SUPPLEMENT_WORDS: ReadonlySet<string> = new Set([
+  // 型1: 割れた片方が漢字1字（送り仮名を含めて）で、もう片方と合わせて1つの語になるもの。
+  "超能力",
+  "カーテン越し",
+  "アイデア出し",
+  "取り組み方",
+  "脅かし役",
+  "ダーウィン型",
+  "ダ・ヴィンチ型",
+  "エジソン型",
+  "アインシュタイン型",
+  "ファーブル型",
+  "ファラデー型",
+  "ニュートン型",
+  "ナイチンゲール型",
+  "チューリング型",
+  "キュリー型",
+  "pH値",
+  "Cron式",
+  "cron式",
+  "AI臭",
+  "ハッシュ値",
+  "エージェント間",
+  "サイト内",
+  "シード付き",
+  "アスペクト比",
+  "バイト数",
+  "インデント幅",
+  "コメント付き",
+  "エンコード済み",
+  "コピー済み",
+  // 型2: 2つの語を重ねて1つのことを言う4字の決まった言い回しと、四字熟語。
+  "今日一日",
+  "自分自身",
+  "一日一善",
+  "古今東西",
+  "唯々諾々",
+  "戦々慄々",
+  // 型3: 原語の綴りにスペースもハイフンも無い1語の外来語。
+  "フレームワーク",
+  "ワークフロー",
+  "アップロード",
+  "タイムスタンプ",
+  "マルチバイト",
+]);
+
+/** 補いの語の長さ（UTF-16 の長さ）のうち、いちばん長いもの。辞書の語をつなぐのは、この長さまで。 */
+const LONGEST_SUPPLEMENT_WORD = Math.max(
+  ...[...SUPPLEMENT_WORDS].map((word) => word.length),
+);
+
 /** text を Intl.Segmenter で語に刻み、字の番号で返す。 */
-export function wordsOf(text: string): Word[] {
+function dictionaryWordsOf(text: string): Word[] {
   const out: Word[] = [];
   let start = 0;
   for (const { segment } of words.segment(text)) {
     const length = toGraphemes(segment).length;
     out.push({ start, end: start + length, text: segment });
     start += length;
+  }
+  return out;
+}
+
+/**
+ * text の語を字の番号で返す。語の辞書の語のうち、続けて並ぶものをつないだものが補いの語（SUPPLEMENT_WORDS）と等しい
+ * 所は、1つの語にする。つなげる並びがいくつかあれば、頭から見て、いちばん長くつなげるものを採る。
+ */
+export function wordsOf(text: string): Word[] {
+  const dictionary = dictionaryWordsOf(text);
+  const out: Word[] = [];
+  let index = 0;
+  while (index < dictionary.length) {
+    let joined = dictionary[index].text;
+    let last = index;
+    for (
+      let next = index + 1;
+      next < dictionary.length &&
+      joined.length + dictionary[next].text.length <= LONGEST_SUPPLEMENT_WORD;
+      next += 1
+    ) {
+      joined += dictionary[next].text;
+      if (SUPPLEMENT_WORDS.has(joined)) last = next;
+    }
+    out.push({
+      start: dictionary[index].start,
+      end: dictionary[last].end,
+      text: dictionary
+        .slice(index, last + 1)
+        .map((word) => word.text)
+        .join(""),
+    });
+    index = last + 1;
   }
   return out;
 }
@@ -144,13 +236,18 @@ function katakanaWordStarts(words: Word[]): number[] {
 }
 
 /**
- * text の語の頭の位置（字の番号。0 は含めない）。Intl.Segmenter の語の境目を採り、片仮名の続きの中の境目は
- * katakanaWordStarts で選ぶ。
+ * text の語の頭の位置（字の番号。0 は含めない）。語（wordsOf。補いの語の中に頭は無い）の頭を採り、片仮名の続きの中の
+ * 頭は katakanaWordStarts で選ぶ。片仮名の続きの選び方は、語の辞書が刻んだ切れ端の形で見分けるので、補いでつなぐ前の
+ * 辞書の語で決める。
  */
 export function wordStartsOf(text: string): Set<number> {
   const chars = toGraphemes(text);
-  const all = wordsOf(text);
-  const starts = new Set(all.map((word) => word.start).filter((i) => i > 0));
+  const all = dictionaryWordsOf(text);
+  const starts = new Set(
+    wordsOf(text)
+      .map((word) => word.start)
+      .filter((i) => i > 0),
+  );
   let run = 0;
   while (run < chars.length) {
     if (scriptOf(chars[run]) !== "katakana") {
