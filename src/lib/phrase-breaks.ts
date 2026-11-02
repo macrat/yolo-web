@@ -12,7 +12,7 @@
  * - 最初の文節の、最初の空白より前には、字の種類が変わって語が始まる所の折り所を足す。この部分は行の頭から始まるので、
  *   この折り所は、この部分が1行に収まらないときの代わりにだけ使われる。
  * - 見出しの狭い行に収まらない幅の文節には、語と語の切れ目（漢字・片仮名・英字の語の頭と、「〜する」の頭）の折り所を
- *   足す。
+ *   足す。漢字どうしの所は、前の語が辞書の補いの語のときだけ語の頭とする。
  *   収まらない文節をブラウザが字の所で割ると、1字の行や行頭の約物が出るので、代わりに語の切れ目で折れるようにする。
  *   <wbr> の折り所に優先の順は無く、文節が1行に収まる広い行でも行の終わりに来れば使われるので、語の中には置かない。
  * 名前に括弧で数を添えたもの（索引の語・アコーディオンのラベル・「部首（198）」の見出し）は、文節でなく、名前の中の語の
@@ -25,6 +25,7 @@
 import "server-only";
 import { jaModel, loadDefaultJapaneseParser } from "budoux";
 import {
+  isSupplementWord,
   scriptOf,
   toGraphemes,
   type Word,
@@ -384,19 +385,35 @@ function canStandAlone(chars: string[]): boolean {
 /** サ変の動詞の頭（「リリース|しました」「表示|されない」）。 */
 const SURU_VERB = /^[しさすせ]/u;
 
+/** text の中で、辞書の補いの語（wordsOf の語のうち isSupplementWord のもの）が終わる位置（字の番号）。 */
+function supplementWordEndsOf(text: string): Set<number> {
+  return new Set(
+    wordsOf(text)
+      .filter(isSupplementWord)
+      .map((word) => word.end),
+  );
+}
+
 /**
  * 文節の中の語の頭（wordStartsOf）の、折り所としての順位。数の小さいほうを先に使う。折り所にしない所は undefined。
- * 0: 漢字・片仮名・英字の語が始まる所（「思考|バイアス」「マルチ|エージェント」「プログラマティック|SEO」）。漢字どうしの
- *    所（「漢字|力」）と、英字の語の中は除く。
+ * afterSupplementWord は、その所で辞書の補いの語が終わるか（supplementWordEndsOf）。
+ * 0: 漢字・片仮名・英字の語が始まる所（「思考|バイアス」「マルチ|エージェント」「プログラマティック|SEO」）。漢字の語の頭は、
+ *    前の字が漢字でない所と、前の語が補いの語で漢字で終わる所（「ダーウィン型|思考者」「サイト内|検索を」）に置き、ほかの
+ *    漢字どうしの所（「漢字|力」）には置かない。辞書は漢字の続きを刻み方の当てにならない所で刻むが、補いの語はサイトが
+ *    1つの語と決めた語で、その終わりは確かな語の切れ目だからである。英字の語の中は除く。
  * 1: 漢字か片仮名の語からサ変の動詞に移る所（「リリース|しました」）。
  * どちらも語と語の切れ目なので、文節が1行に収まる広い行で使われても語を割らない（`<wbr>` には優先の順が無く、
  * 行の終わりに来た折り所は幅によらず使われる）。語の中と、助詞や送り仮名の前には置かない。語が1行に入らないときは、
  * ブラウザがその語の中で折る。
  */
-function wordBreakRank(before: string, after: string): number | undefined {
+function wordBreakRank(
+  before: string,
+  after: string,
+  afterSupplementWord: boolean,
+): number | undefined {
   const left = scriptOf(before);
   const right = LATIN_LETTER.test(after) ? "latin" : scriptOf(after);
-  if (right === "han" && left !== "han") return 0;
+  if (right === "han" && (left !== "han" || afterSupplementWord)) return 0;
   if (right === "katakana") return 0;
   if (right === "latin" && left !== "other") return 0;
   if (
@@ -476,10 +493,15 @@ function splitWidePhraseAtWords(phrase: string): string[] {
     unit += ch.length;
   }
   const scores = boundaryScores(phrase);
+  const supplementEnds = supplementWordEndsOf(phrase);
   const candidates: { index: number; rank: number; score: number }[] = [];
   for (const index of wordStartsOf(phrase)) {
     if (depths[index] > 0) continue;
-    const rank = wordBreakRank(chars[index - 1], chars[index]);
+    const rank = wordBreakRank(
+      chars[index - 1],
+      chars[index],
+      supplementEnds.has(index),
+    );
     if (rank !== undefined) {
       candidates.push({ index, rank, score: scores[unitOffsets[index]] });
     }
@@ -517,6 +539,7 @@ function splitWidePhraseAtWords(phrase: string): string[] {
 function splitNameAtWords(text: string): string[] {
   const chars = toGraphemes(text);
   const depths = parenDepths(chars);
+  const supplementEnds = supplementWordEndsOf(text);
   const starts = new Set(
     [...wordStartsOf(text)].filter((index) => {
       if (
@@ -545,7 +568,11 @@ function splitNameAtWords(text: string): string[] {
     const breakable =
       OPEN_PAREN.test(chars[index]) ||
       (starts.has(index) &&
-        wordBreakRank(chars[index - 1], chars[index]) !== undefined &&
+        wordBreakRank(
+          chars[index - 1],
+          chars[index],
+          supplementEnds.has(index),
+        ) !== undefined &&
         canStandAlone(before) &&
         canStandAlone(chars.slice(index, nameEnd(index))));
     if (

@@ -82,6 +82,14 @@ const SUPPLEMENT_WORDS: ReadonlySet<string> = new Set([
   "マルチバイト",
 ]);
 
+/**
+ * word が辞書の補いの語か。補いの語はサイトが1つの語と決めた語なので、その終わりは確かな語の切れ目で、漢字どうしの所でも
+ * 語の頭として折り所にする（phrase-breaks.ts）。
+ */
+export function isSupplementWord(word: Word): boolean {
+  return SUPPLEMENT_WORDS.has(word.text);
+}
+
 /** 補いの語の長さ（UTF-16 の長さ）のうち、いちばん長いもの。辞書の語をつなぐのは、この長さまで。 */
 const LONGEST_SUPPLEMENT_WORD = Math.max(
   ...[...SUPPLEMENT_WORDS].map((word) => word.length),

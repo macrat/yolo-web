@@ -194,8 +194,41 @@ describe("splitIntoPhrases", () => {
       "基本省エネだけど、",
     ]);
     expect(splitIntoPhrases("チューリング型思考者")).toEqual([
-      "チューリング型思考者",
+      "チューリング型",
+      "思考者",
     ]);
+  });
+
+  test("辞書の補いの語が漢字で終わり、次の語が漢字で始まる所は、語の頭として分ける", () => {
+    expect(splitIntoPhrases("ダーウィン型思考者")).toEqual([
+      "ダーウィン型",
+      "思考者",
+    ]);
+    expect(splitIntoPhrases("サイト内検索を使う")).toEqual([
+      "サイト内",
+      "検索を",
+      "使う",
+    ]);
+    expect(splitIntoPhrases("バイト数計算、")).toEqual(["バイト数", "計算、"]);
+  });
+
+  test("辞書が補いの語より長い語を採る所には、補いの語の終わりを作らない", () => {
+    expect(splitIntoPhrases("サイト内容")).toEqual(["サイト", "内容"]);
+    expect(splitIntoPhrases("アスペクト比率")).toEqual(["アスペクト", "比率"]);
+    for (const [text, word] of [
+      ["サイト内容を確認する", "内容"],
+      ["アスペクト比率を変える", "比率"],
+    ]) {
+      const start = text.indexOf(word);
+      for (const options of [{}, { countedName: true }]) {
+        for (const offset of boundaryOffsets(splitIntoPhrases(text, options))) {
+          expect(
+            offset <= start || offset >= start + word.length,
+            `${text} ${offset}`,
+          ).toBe(true);
+        }
+      }
+    }
   });
 
   test("BudouX の境目も足す折り所も、辞書の補いの語の中には置かない", () => {
@@ -211,7 +244,8 @@ describe("splitIntoPhrases", () => {
       "pH値や",
     );
     expect(splitIntoPhrases("ダ・ヴィンチ型思考者")).toEqual([
-      "ダ・ヴィンチ型思考者",
+      "ダ・ヴィンチ型",
+      "思考者",
     ]);
     expect(
       splitIntoPhrases(
@@ -502,6 +536,24 @@ describe("splitIntoPhrases の名前に括弧で数を添えたもの（countedN
     expect(splitIntoPhrases("失敗と学び", counted)).toEqual(["失敗と", "学び"]);
     expect(splitIntoPhrases("中学以降", counted)).toEqual(["中学以降"]);
     expect(splitIntoPhrases("小学1年", counted)).toEqual(["小学1年"]);
+  });
+
+  test("辞書の補いの語が漢字で終わり、次の語が漢字で始まる所は、語の頭として区切る", () => {
+    expect(splitIntoPhrases("チューリング型思考者（3）", counted)).toEqual([
+      "チューリング型",
+      "思考者",
+      "（3）",
+    ]);
+    expect(splitIntoPhrases("サイト内検索（5）", counted)).toEqual([
+      "サイト内",
+      "検索",
+      "（5）",
+    ]);
+    expect(splitIntoPhrases("サイト内容（2）", counted)).toEqual([
+      "サイト",
+      "内容",
+      "（2）",
+    ]);
   });
 
   test("見出しの狭い行に収まる片仮名の続きは、語の辞書が刻んでも1語として区切らない", () => {
