@@ -54,11 +54,14 @@
 //   - runs・boxTop・nameBottom: rv のある回の数と、結果のボックスの上端と結果の名前の下端の [最小, 中央, 最大]
 //     （画面の上端からの px）。
 //   - spanRecorded・spanEmpty・emptyRuns: 結果への着地の範囲が分かった回（re のある回。着地の関数を持つ版だけ）の
-//     数と、そのうち範囲が空で基準の送り s0 にした回（re が 1。t5a-design.md 4-9 が受け入れた回）の数と、その回ごと
-//     の [回の名, ボックスの上端, 名前の下端]（条件7 の「その旨と値」）。
-//   - lowInSpan: 名前の下端が見せる範囲の外（lo）で、範囲が空ではなかった回（re が 1 でない回）の数。範囲が空で
-//     ない回の名前は着地の関数が見せる範囲の中に置くので、変更後の版では欠けか道具の誤りとして判断（plan-t5a7.md
-//     5）に渡す。基準の版は re を持たないので、lo のある回がすべて入る。
+//     数と、そのうち打ち切る前の範囲が高さで空で基準の送り s0 にした回（re が 1。t5a-design.md 4-9 が受け入れた
+//     回）の数と、その回ごとの [回の名, ボックスの上端, 名前の下端]（条件7 の「その旨と値」）。
+//   - clampEmptyRuns: 打ち切る前の範囲は空でないのに、ページの送れる範囲で打ち切って空になり s0 にした回（re が
+//     2）ごとの [回の名, ボックスの上端, 名前の下端]。4-9 は範囲が空になるのを高さで空のときだけとしているので、
+//     設計の前提が崩れた回として判断（plan-t5a7.md 5）に渡す。
+//   - lowInSpan: 名前の下端が見せる範囲の外（lo）で、4-9 が受け入れた回でない回（re が 1 でない回。re が 2 の回を
+//     含む）の数。範囲が空でない回の名前は着地の関数が見せる範囲の中に置くので、変更後の版では欠けか道具の誤りと
+//     して判断に渡す。基準の版は re を持たないので、lo のある回がすべて入る。
 // - wallMs: 行の ms の和。bytes: 要約と押しごとの記録のファイルのうち、この束の行のバイト数。
 
 import fs from "node:fs";
@@ -227,6 +230,7 @@ function main() {
           spanRecorded: 0,
           spanEmpty: 0,
           emptyRuns: [],
+          clampEmptyRuns: [],
           lowInSpan: 0,
         },
         gaps: [],
@@ -351,6 +355,9 @@ function main() {
         } else if (line.lo) {
           view.lowInSpan++;
         }
+        if (line.re === 2) {
+          view.clampEmptyRuns.push([line.k, line.rv[0], line.rv[1]]);
+        }
       }
     }
     for (const bundle of bundles.values()) {
@@ -370,6 +377,7 @@ function main() {
                   spanRecorded: resultView.spanRecorded,
                   spanEmpty: resultView.spanEmpty,
                   emptyRuns: resultView.emptyRuns,
+                  clampEmptyRuns: resultView.clampEmptyRuns,
                   lowInSpan: resultView.lowInSpan,
                 }
               : undefined,

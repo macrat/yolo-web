@@ -1200,6 +1200,8 @@ function summarizeLanding(landing, frames) {
     s0: plan.base,
     span: [Math.round(plan.span.min), Math.round(plan.span.max)],
     range: [span.min, span.max],
+    // 打ち切る前の範囲（見せる範囲の高さから決まる）が、同じ ceil・floor で空か。
+    heightEmpty: Math.ceil(plan.span.min) > Math.floor(plan.span.max),
     point: point ? [Math.round(point.x), Math.round(point.y)] : null,
     underAtS0: underAt(plan.base),
     clearOfFirst,
@@ -1314,7 +1316,9 @@ function pressRecord(state, index, extra) {
   // 結果への切り替わりの着地のあとの最初のフレームの、結果のボックスの上端と結果の名前の下端（t5a-design.md
   // 6章 条件7 の「結果の名前が見えること」）。範囲が空で基準の送り s0 にした回は、結果への切り替わりの着地の
   // 記録（そのフレームの1つ前のフレーム、無ければ押しの頭より後で、そのフレームより前の最後の着地）の打ち切った
-  // 範囲が空であることで分かる。そうした着地の記録が無ければ（着地の関数を持たない版など）書かない。
+  // 範囲が空であることで分かる。空になった訳を、打ち切る前の範囲が高さで空だった（t5a-design.md 4-9 が受け入れた
+  // 回）1と、ページの送れる範囲で打ち切って空になった2で分ける（空でなければ0）。そうした着地の記録が無ければ
+  // （着地の関数を持たない版など）書かない。
   if (resultFrame) {
     record.resultView = [resultFrame.boxTop ?? null, resultFrame.name.bottom];
     const previous = pressFrames[pressFrames.indexOf(resultFrame) - 1];
@@ -1322,8 +1326,14 @@ function pressRecord(state, index, extra) {
       (landing) =>
         landing.t < resultFrame.t && (!previous || landing.t > previous.t),
     );
-    const range = before === -1 ? null : landings[before].range;
-    record.resultSpanEmpty = range ? range[0] > range[1] : undefined;
+    const landing = before === -1 ? null : landings[before];
+    record.resultSpan = !landing
+      ? undefined
+      : landing.range[0] <= landing.range[1]
+        ? 0
+        : landing.heightEmpty
+          ? 1
+          : 2;
   }
   // 「もう一度挑戦する」のあとに、開始の画面の h1 が丸ごと画面の上端より上にある（外れた見出し）。
   record.h1Above =
@@ -1831,9 +1841,6 @@ const MEASURES = {
 const nearOut = (near) =>
   near ? near.slice(0, near[2] ? 3 : 2).map((entry) => entry ?? null) : null;
 
-/** 要約の `re`: 結果への着地の範囲が空なら 1、空でなければ 0、着地の記録が無ければ書かない。 */
-const emptyOut = (empty) => (empty === undefined ? undefined : empty ? 1 : 0);
-
 /** 2打目が受けた画面の着地の記録（要約の `l`）。着地の関数の記録が無ければ null。 */
 function landingOut(record) {
   const landing = record.landings?.[record.landingIndex];
@@ -1915,7 +1922,7 @@ function summaryLine(op, run, outcome, records) {
         ? [left.band, switches ? `last-${left.kind}` : left.kind]
         : undefined,
       rv: toResult?.resultView,
-      re: emptyOut(toResult?.resultSpanEmpty),
+      re: toResult?.resultSpan,
       n: near.length ? near : undefined,
       ck: outcome?.check
         ? [
@@ -1943,7 +1950,7 @@ function summaryLine(op, run, outcome, records) {
         cut: record.cut ? 1 : undefined,
         lo: record.nameLow ? 1 : undefined,
         rv: record.resultView,
-        re: emptyOut(record.resultSpanEmpty),
+        re: record.resultSpan,
         ins: record.insertInView ? 1 : undefined,
         h1a: record.h1Above ? 1 : undefined,
         at: op === "retry" && !record.reached ? 0 : undefined,
