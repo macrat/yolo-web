@@ -373,7 +373,7 @@ PM は文言の手当てを選んだ。見出しと2つ目・3つ目の選択肢
 
 ## 10. 条件7・D5 の測りの見積もり（T5a-7a-1）
 
-**状態**: 10-1 の表と 10-2 の値は、[cycle-320/review-t5a-7a-1-2.md](../cycle-320/review-t5a-7a-1-2.md) の指摘を直す前の道具（measure.mjs の blob `63750786`）の値である。いまの道具（measure.mjs の blob `6a4f271b`・version.mjs の blob `4657c81f`・knowledge.mjs の blob `d93ec11e`）は記録の形が違う（10-2 の「直した道具での記録の大きさ」）。測りの分け方と上限は、[cycle-320/carryover.md](../cycle-320/carryover.md) のとおり、着地の作りを決め直した版の走りから見積もり直す。
+**状態**: 10-1 の表と 10-2 の値は、[cycle-320/review-t5a-7a-1-2.md](../cycle-320/review-t5a-7a-1-2.md) の指摘を直す前の道具（measure.mjs の blob `63750786`）の値である。いまの道具（measure.mjs の blob `6a4f271b`・version.mjs の blob `4657c81f`・knowledge.mjs の blob `d93ec11e`）は記録の形が違う（10-2 の「直した道具での記録の大きさ」）。記録の上限（1ファイル 1MB・木の合計 4MB・履歴の合計 15MB）は cycle-320 で決めた（[cycle-320/plan-t5a7.md](../cycle-320/plan-t5a7.md) 3）。担当ごとの測りの分け方と、記録が上限に収まるかの見積もりは、[cycle-320/carryover.md](../cycle-320/carryover.md) のとおり、着地の作りを決め直した版の走りから出し直す。
 
 cycle-320 の T5a-7a-1 が、[cycle-320/measure/](../cycle-320/measure/README.md) の道具で、基準の版（2db1c7d9）と変更後の版（5ea1ab89）を試しに走らせた値からの見積もりである。PM が測りの分け方と記録の上限を決める材料（[cycle-320/plan-t5a7.md](../cycle-320/plan-t5a7.md) 3）。
 
