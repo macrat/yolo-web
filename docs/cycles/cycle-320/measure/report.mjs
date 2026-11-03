@@ -44,13 +44,20 @@
 //   行、走査の n の押しで7つ目からの欄の無いもの、押しごとの記録の land で一致しなかった数（12番目）の無いもの、
 //   診断の答えの land で一致しなかった問の行の数（13番目）の無いものが入る。
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow。1度の押しで終わる操作の回と、走査の
-//   結果に切り替わった押しの回）・extra の差し込みが画面の中（insert）・
-//   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
+//   結果に切り替わった押しの回で、範囲が空だった回も含む。分けた数は resultView）・extra の差し込みが画面の中
+//   （insert）・開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
-// - resultView: 結果に切り替わった回（要約の rv のある回）の数と、結果のボックスの上端と結果の名前の下端の
-//   [最小, 中央, 最大]（画面の上端からの px。t5a-design.md 6章 条件7 の「結果の名前が見えること」）、
-//   結果への着地の範囲が分かった回（re のある回。着地の関数を持つ版だけ）と、そのうち範囲が空で基準の送りに
-//   した回（re が 1）の数。束はファイルごとなので、値は画面ごとに出る。
+// - resultView（t5a-design.md 6章 条件7 の「結果の名前が見えること」）: 束はファイルごとなので、値は画面ごとに出る。
+//   - expected・missing: 結果に切り替わるはずの回（last のどの回と、2打目で離れなかった走査）の数と、そのうち rv の
+//     無い回の数。条件7 は結果への切り替わりのすべての回で値を求めるので、missing は 0 のはずである。
+//   - runs・boxTop・nameBottom: rv のある回の数と、結果のボックスの上端と結果の名前の下端の [最小, 中央, 最大]
+//     （画面の上端からの px）。
+//   - spanRecorded・spanEmpty・emptyRuns: 結果への着地の範囲が分かった回（re のある回。着地の関数を持つ版だけ）の
+//     数と、そのうち範囲が空で基準の送り s0 にした回（re が 1。t5a-design.md 4-9 が受け入れた回）の数と、その回ごと
+//     の [回の名, ボックスの上端, 名前の下端]（条件7 の「その旨と値」）。
+//   - lowInSpan: 名前の下端が見せる範囲の外（lo）で、範囲が空ではなかった回（re が 1 でない回）の数。範囲が空で
+//     ない回の名前は着地の関数が見せる範囲の中に置くので、変更後の版では欠けか道具の誤りとして判断（plan-t5a7.md
+//     5）に渡す。基準の版は re を持たないので、lo のある回がすべて入る。
 // - wallMs: 行の ms の和。bytes: 要約と押しごとの記録のファイルのうち、この束の行のバイト数。
 
 import fs from "node:fs";
@@ -211,11 +218,15 @@ function main() {
         hitUnrecorded: 0,
         flags: {},
         resultView: {
+          expected: 0,
+          missing: 0,
           runs: 0,
           boxTop: [],
           nameBottom: [],
           spanRecorded: 0,
           spanEmpty: 0,
+          emptyRuns: [],
+          lowInSpan: 0,
         },
         gaps: [],
         wallMs: 0,
@@ -319,13 +330,23 @@ function main() {
         flag("notReached", line.at === 0);
       }
       flag("left", !!line.v);
+      // 結果に切り替わるはずの回: last のどの回と、2打目で離れなかった走査。
+      const view = bundle.resultView;
+      if (head.op === "last" || (head.op === "answers" && !line.v)) {
+        view.expected++;
+        if (!line.rv) view.missing++;
+      }
       if (line.rv) {
-        const view = bundle.resultView;
         view.runs++;
         if (line.rv[0] !== null) view.boxTop.push(line.rv[0]);
         view.nameBottom.push(line.rv[1]);
         if (line.re !== undefined) view.spanRecorded++;
-        if (line.re === 1) view.spanEmpty++;
+        if (line.re === 1) {
+          view.spanEmpty++;
+          view.emptyRuns.push([line.k, line.rv[0], line.rv[1]]);
+        } else if (line.lo) {
+          view.lowInSpan++;
+        }
       }
     }
     for (const bundle of bundles.values()) {
@@ -334,15 +355,20 @@ function main() {
       console.log(
         JSON.stringify({
           ...rest,
-          resultView: resultView.runs
-            ? {
-                runs: resultView.runs,
-                boxTop: spread(resultView.boxTop),
-                nameBottom: spread(resultView.nameBottom),
-                spanRecorded: resultView.spanRecorded,
-                spanEmpty: resultView.spanEmpty,
-              }
-            : undefined,
+          resultView:
+            resultView.runs || resultView.expected
+              ? {
+                  expected: resultView.expected,
+                  missing: resultView.missing,
+                  runs: resultView.runs,
+                  boxTop: spread(resultView.boxTop),
+                  nameBottom: spread(resultView.nameBottom),
+                  spanRecorded: resultView.spanRecorded,
+                  spanEmpty: resultView.spanEmpty,
+                  emptyRuns: resultView.emptyRuns,
+                  lowInSpan: resultView.lowInSpan,
+                }
+              : undefined,
           gaps: spread(bundle.gaps),
         }),
       );
