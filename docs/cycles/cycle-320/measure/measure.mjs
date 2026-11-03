@@ -1,7 +1,11 @@
 // 診断の回答の画面の二度押しを測る（t5a-design.md 6章 条件7・cycle-318/device-triage.md D5。手順は t5a-measure.md 0章・5章）。
 //
 //   node docs/cycles/cycle-320/measure/measure.mjs --base http://localhost:3112 --version <版のディレクトリ> \
-//     --op start|answers|last|retry|select --out-dir <記録の置き場> [絞り込み] [--accept-chunks "<PM の決定>"]
+//     --op start|answers|last|retry|select --out-dir <記録の置き場> --landing on|off [絞り込み] \
+//     [--accept-chunks "<PM の決定>"]
+//
+// --landing は、版が着地の関数を持つかの期待（変更後の版と T5a-8 の版は on、基準の版は off）で、道具が版の
+// ソースから見分けた値と違えば、測り始める前に止まる。
 //
 // 絞り込み（どれも省けば、その操作の設計の範囲のすべて）:
 //   --slugs a,b  --viewports 375x550,375x550@200  --inputs touch,mouse  --intervals 90,300
@@ -18,7 +22,8 @@
 // 1回を測り終えるたびに、その回の押しごとの記録（あれば）と要約の行を足してから次へ進む。要約の行に f（数える
 // 回）のある回は飛ばすので、止まったら同じコマンドで続きから測れる。続きを測るときは、いま測る版の指紋を
 // fingerprint.jsonl の最後の行と比べ、木・package-lock.json・Node・npm のどれかが違えば止まる。チャンクだけが
-// 違えば止まり、PM が「続ける」と決めたときだけ、その決定を --accept-chunks で受けて記録に残して続ける。同じ組の
+// 違えば止まり、PM が「続ける」と決めたときだけ、その決定を --accept-chunks で受けて記録に残して続ける（決定の
+// 行は、測る回の残っているファイルにだけ、そこで測り始めるときに足し、測り終えたファイルは書き換えない）。同じ組の
 // ファイルのどれかが別のブラウザの版か別の道具の blob で測ったものなら止まる（その組は、新しい置き場で全部を
 // 測り直す）。
 
@@ -107,8 +112,11 @@ function parseArguments(argv) {
   for (let index = 0; index < argv.length; index += 2) {
     options[argv[index].replace(/^--/, "")] = argv[index + 1];
   }
-  for (const required of ["base", "version", "op", "out-dir"]) {
+  for (const required of ["base", "version", "op", "out-dir", "landing"]) {
     if (!options[required]) throw new Error(`--${required} is required`);
+  }
+  if (options.landing !== "on" && options.landing !== "off") {
+    throw new Error("--landing must be on or off");
   }
   const defaults = OP_DEFAULTS[options.op];
   if (!defaults) throw new Error(`unknown op ${options.op}`);
@@ -140,6 +148,7 @@ function parseArguments(argv) {
     positions: list(options.positions)?.map(Number),
     answers: options.answers,
     acceptChunks: options["accept-chunks"],
+    expectLanding: options.landing === "on",
     limit: options.limit ? Number(options.limit) : Infinity,
   };
 }
@@ -332,15 +341,20 @@ function checkGroup(options, head) {
   }
 }
 
-/** 画面ごとの要約と押しごとの記録のファイル。開くときに、要約の無い押しごとの記録（書く途中で止まった回）を除く。 */
+/**
+ * 画面ごとの要約と押しごとの記録のファイル。開くときに、要約の無い押しごとの記録（書く途中で止まった回）を除く。
+ * 頭の行と、チャンクを受け入れて続けたことの `accept` の行は、そのファイルで回を測り始めるときに書く
+ * （`beginViewportFile`）。測る回の残っていないファイルは書き換えないので、コミットした記録の新しい版を作らない。
+ */
 function openViewportFiles(options, viewport, head, accepted) {
   const base = path.join(options.outDir, `${options.group}-${viewport.file}`);
   const summaryFile = `${base}.jsonl`;
   const pressFile = `${base}.presses.jsonl`;
   const lines = readLines(summaryFile);
-  if (lines.length === 0) appendLine(summaryFile, head);
+  const pending = [];
+  if (lines.length === 0) pending.push(head);
   else if (accepted && lines.at(-1).type !== "accept") {
-    appendLine(summaryFile, {
+    pending.push({
       type: "accept",
       chunksDigest: accepted.chunksDigest,
       decision: accepted.decision,
@@ -372,7 +386,13 @@ function openViewportFiles(options, viewport, head, accepted) {
     else if (!line.r?.includes("error")) entry.resends++;
     history.set(line.k, entry);
   }
-  return { summaryFile, pressFile, history };
+  return { summaryFile, pressFile, history, pending };
+}
+
+/** そのファイルで回を測り始める前に、まだ書いていない頭の行と `accept` の行を書く。 */
+function beginViewportFile(target) {
+  for (const line of target.pending) appendLine(target.summaryFile, line);
+  target.pending = [];
 }
 
 // ---------------------------------------------------------------------------
@@ -1259,12 +1279,15 @@ function pressRecord(state, index, extra) {
     (resultFrame && resultFrame.name.bottom > resultFrame.innerHeight - GAP) ||
     undefined;
   // 結果への切り替わりの着地のあとの最初のフレームの、結果のボックスの上端と結果の名前の下端（t5a-design.md
-  // 6章 条件7 の「結果の名前が見えること」）。範囲が空で基準の送り s0 にした回は、そのフレームの前の最後の
-  // 着地の記録の打ち切った範囲が空であることで分かる（着地の関数を持たない版では分からない）。
+  // 6章 条件7 の「結果の名前が見えること」）。範囲が空で基準の送り s0 にした回は、結果への切り替わりの着地の
+  // 記録（そのフレームの1つ前のフレーム、無ければ押しの頭より後で、そのフレームより前の最後の着地）の打ち切った
+  // 範囲が空であることで分かる。そうした着地の記録が無ければ（着地の関数を持たない版など）書かない。
   if (resultFrame) {
     record.resultView = [resultFrame.boxTop ?? null, resultFrame.name.bottom];
+    const previous = pressFrames[pressFrames.indexOf(resultFrame) - 1];
     const before = pressLandings.findLastIndex(
-      (landing) => landing.t < resultFrame.t,
+      (landing) =>
+        landing.t < resultFrame.t && (!previous || landing.t > previous.t),
     );
     const range = before === -1 ? null : landings[before].range;
     record.resultSpanEmpty = range ? range[0] > range[1] : undefined;
@@ -1922,6 +1945,12 @@ async function main() {
     throw new FatalError("fingerprint.json is inconsistent");
   }
   options.landing = landingExpected(options.version);
+  // 見分けが外れると、着地の記録と押しごとの記録が誤りにならずに欠けるので、測る者が渡した期待と食い違えば止まる。
+  if (options.landing !== options.expectLanding) {
+    throw new FatalError(
+      `--landing ${options.expectLanding ? "on" : "off"} but the version ${options.landing ? "has" : "lacks"} export function chooseLanding in src/lib/reveal.ts; check the version, or update landingExpected and LANDING_PATTERN for the landing code`,
+    );
+  }
   const answerPlans = new Map();
   if (options.answers) {
     for (const entry of readLines(options.answers)) {
@@ -1978,6 +2007,7 @@ async function main() {
       target.history.set(key, entry);
       if (entry.final) continue;
       if (done >= options.limit) break;
+      beginViewportFile(target);
       let errors = 0;
       for (;;) {
         const started = Date.now();
