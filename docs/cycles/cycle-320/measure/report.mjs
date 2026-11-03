@@ -43,7 +43,8 @@
 //   行の数も）を持たない記録の数で、その押しは hitUnmatched に入らない。1度の押しで終わる操作の l があって hu の無い
 //   行、走査の n の押しで7つ目からの欄の無いもの、押しごとの記録の land で一致しなかった数（12番目）の無いもの、
 //   診断の答えの land で一致しなかった問の行の数（13番目）の無いものが入る。
-// - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
+// - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow。1度の押しで終わる操作の回と、走査の
+//   結果に切り替わった押しの回）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
 // - resultView: 結果に切り替わった回（要約の rv のある回）の数と、結果のボックスの上端と結果の名前の下端の
@@ -298,6 +299,7 @@ function main() {
           if (landing && !kept.has(index)) unmatched(kind, count, rows);
         }
         flag("cut", line.cut);
+        flag("nameLow", !!line.lo);
         flag("selected", line.w);
         flag("detailMarked", line.dm);
         flag("checkFailed", line.ck && !line.ck[3]);

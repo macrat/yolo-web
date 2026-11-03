@@ -23,7 +23,8 @@
 // 回）のある回は飛ばすので、止まったら同じコマンドで続きから測れる。続きを測るときは、いま測る版の指紋を
 // fingerprint.jsonl の最後の行と比べ、木・package-lock.json・Node・npm のどれかが違えば止まる。チャンクだけが
 // 違えば止まり、PM が「続ける」と決めたときだけ、その決定を --accept-chunks で受けて記録に残して続ける（決定の
-// 行は、測る回の残っているファイルにだけ、そこで測り始めるときに足し、測り終えたファイルは書き換えない）。同じ組の
+// 行は、受け入れたチャンクで初めて回を足すファイルにだけ、そこで測り始めるときに、どの呼び出しで受け入れたかに
+// よらず fingerprint.jsonl の決定から足し、測り終えたファイルは書き換えない）。同じ組の
 // ファイルのどれかが別のブラウザの版か別の道具の blob で測ったものなら止まる（その組は、新しい置き場で全部を
 // 測り直す）。
 
@@ -284,8 +285,9 @@ function checkFingerprint(options, fingerprint) {
   fs.mkdirSync(options.outDir, { recursive: true });
   const lines = readLines(file);
   if (lines.length === 0) {
-    appendLine(file, { ...fingerprint, at: new Date().toISOString() });
-    return { digest: fingerprint.chunksDigest, accepted: null };
+    const first = { ...fingerprint, at: new Date().toISOString() };
+    appendLine(file, first);
+    return { digest: fingerprint.chunksDigest, fingerprints: [first] };
   }
   const recorded = lines.at(-1);
   const report = compareFingerprints(recorded, fingerprint);
@@ -304,7 +306,9 @@ function checkFingerprint(options, fingerprint) {
       `built with node ${fingerprint.node} / npm ${fingerprint.npm}; rebuild with the recorded node ${recorded.node} / npm ${recorded.npm} and compare again`,
     );
   }
-  if (report.chunks) return { digest: recorded.chunksDigest, accepted: null };
+  if (report.chunks) {
+    return { digest: recorded.chunksDigest, fingerprints: lines };
+  }
   if (!options.acceptChunks) {
     throw new FatalError(
       `chunks differ from the record (only in record: ${report.onlyA.join(", ")}; only in this build: ${report.onlyB.join(", ")}; size differs: ${report.sizeDiffers.join(", ")}). Report to the PM; continue only with --accept-chunks "<decision>"`,
@@ -317,7 +321,10 @@ function checkFingerprint(options, fingerprint) {
     previous: recorded.chunksDigest,
   };
   appendLine(file, accepted);
-  return { digest: fingerprint.chunksDigest, accepted };
+  return {
+    digest: fingerprint.chunksDigest,
+    fingerprints: [...lines, accepted],
+  };
 }
 
 /** 同じ組のファイルが、どれも同じブラウザの版と道具の blob で測ったものかを確かめる。 */
@@ -343,24 +350,18 @@ function checkGroup(options, head) {
 
 /**
  * 画面ごとの要約と押しごとの記録のファイル。開くときに、要約の無い押しごとの記録（書く途中で止まった回）を除く。
- * 頭の行と、チャンクを受け入れて続けたことの `accept` の行は、そのファイルで回を測り始めるときに書く
+ * `digest` は、そのファイルの回がいま測ったものとしているチャンク（頭の行か、最後の `accept` の行の
+ * `chunksDigest`。まだ無いファイルは null）。頭の行と `accept` の行は、そのファイルで回を測り始めるときに書く
  * （`beginViewportFile`）。測る回の残っていないファイルは書き換えないので、コミットした記録の新しい版を作らない。
  */
-function openViewportFiles(options, viewport, head, accepted) {
+function openViewportFiles(options, viewport) {
   const base = path.join(options.outDir, `${options.group}-${viewport.file}`);
   const summaryFile = `${base}.jsonl`;
   const pressFile = `${base}.presses.jsonl`;
   const lines = readLines(summaryFile);
-  const pending = [];
-  if (lines.length === 0) pending.push(head);
-  else if (accepted && lines.at(-1).type !== "accept") {
-    pending.push({
-      type: "accept",
-      chunksDigest: accepted.chunksDigest,
-      decision: accepted.decision,
-      at: accepted.at,
-    });
-  }
+  const digest =
+    lines.findLast((line) => line.type === "head" || line.type === "accept")
+      ?.chunksDigest ?? null;
   const runs = lines.filter((line) => line.k !== undefined);
   const written = new Set(runs.map((line) => `${line.k}#${line.a}`));
   const presses = readLines(pressFile);
@@ -386,13 +387,46 @@ function openViewportFiles(options, viewport, head, accepted) {
     else if (!line.r?.includes("error")) entry.resends++;
     history.set(line.k, entry);
   }
-  return { summaryFile, pressFile, history, pending };
+  return { summaryFile, pressFile, history, digest, begun: false };
 }
 
-/** そのファイルで回を測り始める前に、まだ書いていない頭の行と `accept` の行を書く。 */
-function beginViewportFile(target) {
-  for (const line of target.pending) appendLine(target.summaryFile, line);
-  target.pending = [];
+/**
+ * そのファイルで回を測り始める前に、まだ無いファイルには頭の行を書く。ファイルのチャンクがいま測る版のチャンク
+ * （`head.chunksDigest`）と違えば、`fingerprint.jsonl` の、ファイルのチャンクの行より後の PM の決定ごとに `accept`
+ * の行を書く。どの呼び出しで受け入れたかによらず、受け入れたあとに初めて回を足すファイルにだけ入る。決定の記録で
+ * いまのチャンクまでたどれなければ、記録とチャンクの合わない回を足さないよう止まる。
+ */
+function beginViewportFile(target, head, fingerprints) {
+  if (target.begun) return;
+  target.begun = true;
+  if (target.digest === null) {
+    appendLine(target.summaryFile, head);
+    target.digest = head.chunksDigest;
+    return;
+  }
+  if (target.digest === head.chunksDigest) return;
+  const from = fingerprints.findLastIndex(
+    (line) => line.chunksDigest === target.digest,
+  );
+  const steps = from === -1 ? [] : fingerprints.slice(from + 1);
+  if (
+    steps.length === 0 ||
+    steps.some((line) => !line.decision) ||
+    steps.at(-1).chunksDigest !== head.chunksDigest
+  ) {
+    throw new FatalError(
+      `${target.summaryFile} was measured with chunks ${target.digest}, and fingerprint.jsonl has no PM decision that leads from them to ${head.chunksDigest}`,
+    );
+  }
+  for (const step of steps) {
+    appendLine(target.summaryFile, {
+      type: "accept",
+      chunksDigest: step.chunksDigest,
+      decision: step.decision,
+      at: step.at,
+    });
+  }
+  target.digest = head.chunksDigest;
 }
 
 // ---------------------------------------------------------------------------
@@ -1870,6 +1904,7 @@ function summaryLine(op, run, outcome, records) {
       dm: detail || undefined,
       w: selections || undefined,
       cut: cuts || undefined,
+      lo: toResult?.nameLow ? 1 : undefined,
       rv: toResult?.resultView,
       re: emptyOut(toResult?.resultSpanEmpty),
       n: near.length ? near : undefined,
@@ -1957,7 +1992,7 @@ async function main() {
       answerPlans.set(entry.slug, entry);
     }
   }
-  const { digest, accepted } = checkFingerprint(options, fingerprint);
+  const { digest, fingerprints } = checkFingerprint(options, fingerprint);
   const browser = await chromium.launch({
     executablePath: CHROMIUM,
     args: ["--disable-smooth-scrolling"],
@@ -1985,10 +2020,7 @@ async function main() {
   const files = new Map();
   const filesOf = (viewport) => {
     if (!files.has(viewport.file)) {
-      files.set(
-        viewport.file,
-        openViewportFiles(options, viewport, head, accepted),
-      );
+      files.set(viewport.file, openViewportFiles(options, viewport));
     }
     return files.get(viewport.file);
   };
@@ -2007,7 +2039,7 @@ async function main() {
       target.history.set(key, entry);
       if (entry.final) continue;
       if (done >= options.limit) break;
-      beginViewportFile(target);
+      beginViewportFile(target, head, fingerprints);
       let errors = 0;
       for (;;) {
         const started = Date.now();
