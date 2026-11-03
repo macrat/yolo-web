@@ -46,6 +46,10 @@
 // - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
 //   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
+// - resultView: 結果に切り替わった回（要約の rv のある回）の数と、結果のボックスの上端と結果の名前の下端の
+//   [最小, 中央, 最大]（画面の上端からの px。t5a-design.md 6章 条件7 の「結果の名前が見えること」）、
+//   結果への着地の範囲が分かった回（re のある回。着地の関数を持つ版だけ）と、そのうち範囲が空で基準の送りに
+//   した回（re が 1）の数。束はファイルごとなので、値は画面ごとに出る。
 // - wallMs: 行の ms の和。bytes: 要約と押しごとの記録のファイルのうち、この束の行のバイト数。
 
 import fs from "node:fs";
@@ -78,6 +82,13 @@ function pressKindOf(op, kind, slug) {
   }
   if (op === "last") return knowledge ? "last-next" : "last-answer";
   return op === "select" ? "heading" : op;
+}
+
+/** 値の [最小, 中央, 最大]。値が無ければ undefined。 */
+function spread(values) {
+  if (!values.length) return undefined;
+  const sorted = [...values].sort((a, b) => a - b);
+  return [sorted[0], sorted[Math.floor(sorted.length / 2)], sorted.at(-1)];
 }
 
 const reachOf = (entry) => (entry ? Math.max(entry[0], entry[1]) : Infinity);
@@ -198,6 +209,13 @@ function main() {
         hitUnmatched: {},
         hitUnrecorded: 0,
         flags: {},
+        resultView: {
+          runs: 0,
+          boxTop: [],
+          nameBottom: [],
+          spanRecorded: 0,
+          spanEmpty: 0,
+        },
         gaps: [],
         wallMs: 0,
         bytes: 0,
@@ -299,17 +317,31 @@ function main() {
         flag("notReached", line.at === 0);
       }
       flag("left", !!line.v);
+      if (line.rv) {
+        const view = bundle.resultView;
+        view.runs++;
+        if (line.rv[0] !== null) view.boxTop.push(line.rv[0]);
+        view.nameBottom.push(line.rv[1]);
+        if (line.re !== undefined) view.spanRecorded++;
+        if (line.re === 1) view.spanEmpty++;
+      }
     }
     for (const bundle of bundles.values()) {
-      const gaps = bundle.gaps.sort((a, b) => a - b);
-      const { keys, ...rest } = bundle;
+      const { keys, resultView, ...rest } = bundle;
       void keys;
       console.log(
         JSON.stringify({
           ...rest,
-          gaps: gaps.length
-            ? [gaps[0], gaps[Math.floor(gaps.length / 2)], gaps.at(-1)]
+          resultView: resultView.runs
+            ? {
+                runs: resultView.runs,
+                boxTop: spread(resultView.boxTop),
+                nameBottom: spread(resultView.nameBottom),
+                spanRecorded: resultView.spanRecorded,
+                spanEmpty: resultView.spanEmpty,
+              }
             : undefined,
+          gaps: spread(bundle.gaps),
         }),
       );
     }
