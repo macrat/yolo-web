@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
 | B-614 | 診断の回答フェーズの摩擦低減 | P3 | B-754のT5aで直す(独立のサイクルなし)。design-rolloutにT5a-5・T5a-6で入り、T5a-7の測りで確かめてDoneへ。本番では375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
 | B-624 | 知識クイズで回答したあとのフォーカスが見えず、読み上げが正誤と解説を飛ばす | P3 | B-754のT5a。design-rolloutにT5a-5・T5a-6(t5a-design.md 4-6・4-7)で入り、T5a-7の条件5で確かめてDoneへ。本番では「次へ」へ送らずにフォーカスが移り、「次へ」が画面の下にあると見えない(同1-2) |
 | B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | B-754のT5aで直す(独立のサイクルは立てない。t5a-design.md 4-5・4-9)。T5a-7の二度打ちの測りで0を確かめてDoneへ。iOSの確かめはcycle-318/device-triage.md D9 |
