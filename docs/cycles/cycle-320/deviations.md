@@ -1,6 +1,6 @@
 # cycle-320 の手順を外れたこと
 
-[index.md](./index.md) の補足事項の「手順を外れたこと」の本文である。完了の点検（[review-ap-check.md](./review-ap-check.md)〜[-5](./review-ap-check-5.md)）とレビューが捕まえたものと、それぞれへの対応を書く。
+[index.md](./index.md) の補足事項の「手順を外れたこと」の本文である。完了の点検（[review-ap-check.md](./review-ap-check.md)〜[-6](./review-ap-check-6.md)）とレビューが捕まえたものと、それぞれへの対応を書く。
 
 ## T5a-4 のチェックと根拠
 
