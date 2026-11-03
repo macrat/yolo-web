@@ -43,9 +43,29 @@
 //   行の数も）を持たない記録の数で、その押しは hitUnmatched に入らない。1度の押しで終わる操作の l があって hu の無い
 //   行、走査の n の押しで7つ目からの欄の無いもの、押しごとの記録の land で一致しなかった数（12番目）の無いもの、
 //   診断の答えの land で一致しなかった問の行の数（13番目）の無いものが入る。
-// - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow）・extra の差し込みが画面の中（insert）・
-//   開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
+// - flags: 切れた見出し（cut）・結果の名前の下端が見せる範囲の外（nameLow。1度の押しで終わる操作の回と、走査の
+//   結果に切り替わった押しの回で、範囲が空だった回も含む。分けた数は resultView）・extra の差し込みが画面の中
+//   （insert）・開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
+// - resultView（t5a-design.md 6章 条件7 の「結果の名前が見えること」）: 束はファイルごとなので、値は画面ごとに出る。
+//   - expected・missing: 結果に切り替わるはずの回（last のどの回と、2打目で離れなかった走査と、結果に切り替えた
+//     押しの2打目で離れた走査。離れた押しは要約の vp）の数と、そのうち rv の無い回の数。条件7 は結果への切り替わり
+//     のすべての回で値を求めるので、missing は 0 のはずである。
+//   - runs・boxTop・nameBottom: rv のある回の数と、結果のボックスの上端と結果の名前の下端の [最小, 中央, 最大]
+//     （画面の上端からの px）。
+//   - spanRecorded・spanEmpty・emptyRuns: 結果への着地の範囲が分かった回（re のある回。着地の関数を持つ版だけ）の
+//     数と、そのうち打ち切る前の範囲が高さで空で基準の送り s0 にした回（re が 1。関数と同じ ceil・floor で丸めて
+//     整数の送りが無い回で、1px より狭い範囲も入る。t5a-design.md 4-9 が受け入れた回）の数と、その回ごとの
+//     [回の名, ボックスの上端, 名前の下端]（条件7 の「その旨と値」）。
+//   - spanMissing: 着地の関数を持つ版（頭の行の landing が true）の束で、rv があって re の無い回の数。結果への
+//     着地の記録が取れなかった回で、範囲が空で s0 にした回でもどこにも出ずに消えるので、0 のはずで、0 でなければ
+//     PM に報告する。着地の関数を持たない版の束では出さない。
+//   - clampEmptyRuns: 打ち切る前の範囲は空でないのに、ページの送れる範囲で打ち切って空になり s0 にした回（re が
+//     2）ごとの [回の名, ボックスの上端, 名前の下端]。4-9 は範囲が空になるのを高さで空のときだけとしているので、
+//     設計の前提が崩れた回として判断（plan-t5a7.md 5）に渡す。
+//   - lowInSpan: 名前の下端が見せる範囲の外（lo）で、4-9 が受け入れた回でない回（re が 1 でない回。re が 2 の回を
+//     含む）の数。範囲が空でない回の名前は着地の関数が見せる範囲の中に置くので、変更後の版では欠けか道具の誤りと
+//     して判断に渡す。基準の版は re を持たないので、lo のある回がすべて入る。
 // - wallMs: 行の ms の和。bytes: 要約と押しごとの記録のファイルのうち、この束の行のバイト数。
 
 import fs from "node:fs";
@@ -78,6 +98,13 @@ function pressKindOf(op, kind, slug) {
   }
   if (op === "last") return knowledge ? "last-next" : "last-answer";
   return op === "select" ? "heading" : op;
+}
+
+/** 値の [最小, 中央, 最大]。値が無ければ undefined。 */
+function spread(values) {
+  if (!values.length) return undefined;
+  const sorted = [...values].sort((a, b) => a - b);
+  return [sorted[0], sorted[Math.floor(sorted.length / 2)], sorted.at(-1)];
 }
 
 const reachOf = (entry) => (entry ? Math.max(entry[0], entry[1]) : Infinity);
@@ -198,6 +225,19 @@ function main() {
         hitUnmatched: {},
         hitUnrecorded: 0,
         flags: {},
+        resultView: {
+          expected: 0,
+          missing: 0,
+          runs: 0,
+          boxTop: [],
+          nameBottom: [],
+          spanRecorded: 0,
+          spanMissing: 0,
+          spanEmpty: 0,
+          emptyRuns: [],
+          clampEmptyRuns: [],
+          lowInSpan: 0,
+        },
         gaps: [],
         wallMs: 0,
         bytes: 0,
@@ -280,6 +320,7 @@ function main() {
           if (landing && !kept.has(index)) unmatched(kind, count, rows);
         }
         flag("cut", line.cut);
+        flag("nameLow", !!line.lo);
         flag("selected", line.w);
         flag("detailMarked", line.dm);
         flag("checkFailed", line.ck && !line.ck[3]);
@@ -299,17 +340,57 @@ function main() {
         flag("notReached", line.at === 0);
       }
       flag("left", !!line.v);
+      // 結果に切り替わるはずの回: last のどの回と、2打目で離れなかった走査と、結果に切り替えた押しで離れた走査。
+      const view = bundle.resultView;
+      const switched =
+        head.op === "answers" &&
+        (!line.v || String(line.vp?.[1]).startsWith("last-"));
+      if (head.op === "last" || switched) {
+        view.expected++;
+        if (!line.rv) view.missing++;
+      }
+      if (line.rv) {
+        view.runs++;
+        if (line.rv[0] !== null) view.boxTop.push(line.rv[0]);
+        view.nameBottom.push(line.rv[1]);
+        if (line.re !== undefined) view.spanRecorded++;
+        else if (head.landing) view.spanMissing++;
+        if (line.re === 1) {
+          view.spanEmpty++;
+          view.emptyRuns.push([line.k, line.rv[0], line.rv[1]]);
+        } else if (line.lo) {
+          view.lowInSpan++;
+        }
+        if (line.re === 2) {
+          view.clampEmptyRuns.push([line.k, line.rv[0], line.rv[1]]);
+        }
+      }
     }
     for (const bundle of bundles.values()) {
-      const gaps = bundle.gaps.sort((a, b) => a - b);
-      const { keys, ...rest } = bundle;
+      const { keys, resultView, ...rest } = bundle;
       void keys;
       console.log(
         JSON.stringify({
           ...rest,
-          gaps: gaps.length
-            ? [gaps[0], gaps[Math.floor(gaps.length / 2)], gaps.at(-1)]
-            : undefined,
+          resultView:
+            resultView.runs || resultView.expected
+              ? {
+                  expected: resultView.expected,
+                  missing: resultView.missing,
+                  runs: resultView.runs,
+                  boxTop: spread(resultView.boxTop),
+                  nameBottom: spread(resultView.nameBottom),
+                  spanRecorded: resultView.spanRecorded,
+                  spanMissing: head.landing
+                    ? resultView.spanMissing
+                    : undefined,
+                  spanEmpty: resultView.spanEmpty,
+                  emptyRuns: resultView.emptyRuns,
+                  clampEmptyRuns: resultView.clampEmptyRuns,
+                  lowInSpan: resultView.lowInSpan,
+                }
+              : undefined,
+          gaps: spread(bundle.gaps),
         }),
       );
     }

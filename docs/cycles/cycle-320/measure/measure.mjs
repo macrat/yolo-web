@@ -1,7 +1,11 @@
 // 診断の回答の画面の二度押しを測る（t5a-design.md 6章 条件7・cycle-318/device-triage.md D5。手順は t5a-measure.md 0章・5章）。
 //
 //   node docs/cycles/cycle-320/measure/measure.mjs --base http://localhost:3112 --version <版のディレクトリ> \
-//     --op start|answers|last|retry|select --out-dir <記録の置き場> [絞り込み] [--accept-chunks "<PM の決定>"]
+//     --op start|answers|last|retry|select --out-dir <記録の置き場> --landing on|off [絞り込み] \
+//     [--accept-chunks "<PM の決定>"]
+//
+// --landing は、版が着地の関数を持つかの期待（変更後の版と T5a-8 の版は on、基準の版は off）で、道具が版の
+// ソースから見分けた値と違えば、測り始める前に止まる。
 //
 // 絞り込み（どれも省けば、その操作の設計の範囲のすべて）:
 //   --slugs a,b  --viewports 375x550,375x550@200  --inputs touch,mouse  --intervals 90,300
@@ -12,15 +16,16 @@
 // 記録は --out-dir の下に、操作と画面で分けて書く（版は置き場で分ける。plan-t5a7.md 3 の「記録の形と上限」）。
 //   fingerprint.jsonl                 版の指紋。1行目が測り始めた版で、2行目からは PM の決定で続けた版
 //   <組>-<画面>.jsonl                 1行目が頭の行で、2行目からが回（1つの走査か1つの二度押し）ごとの要約
-//   <組>-<画面>.presses.jsonl         判断に要る回の押しごとの記録
+//   <組>-<画面>.presses.jsonl         押しごとの記録。変更後の版の判断に要る押しと、誤りで終わった回の押し
 // 組は操作の名で、D5 のずれを渡した回は `<操作>-d5`。画面は `375x550`、200% は `375x550-200`。
 //
 // 1回を測り終えるたびに、その回の押しごとの記録（あれば）と要約の行を足してから次へ進む。要約の行に f（数える
 // 回）のある回は飛ばすので、止まったら同じコマンドで続きから測れる。続きを測るときは、いま測る版の指紋を
 // fingerprint.jsonl の最後の行と比べ、木・package-lock.json・Node・npm のどれかが違えば止まる。チャンクだけが
-// 違えば止まり、PM が「続ける」と決めたときだけ、その決定を --accept-chunks で受けて記録に残して続ける。同じ組の
-// ファイルのどれかが別のブラウザの版か別の道具の blob で測ったものなら止まる（その組は、新しい置き場で全部を
-// 測り直す）。
+// 違えば止まり、PM が「続ける」と決めたときだけ、その決定を --accept-chunks で受けて記録に残して続ける。決定の
+// 行は、受け入れたチャンクで初めて回を足すファイルにだけ、そこで測り始めるときに、どの呼び出しで受け入れたかに
+// よらず fingerprint.jsonl の決定から足し、測り終えたファイルは書き換えない。同じ組のファイルのどれかが別の
+// ブラウザの版か別の道具の blob で測ったものなら止まる（その組は、新しい置き場で全部を測り直す）。
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -107,8 +112,11 @@ function parseArguments(argv) {
   for (let index = 0; index < argv.length; index += 2) {
     options[argv[index].replace(/^--/, "")] = argv[index + 1];
   }
-  for (const required of ["base", "version", "op", "out-dir"]) {
+  for (const required of ["base", "version", "op", "out-dir", "landing"]) {
     if (!options[required]) throw new Error(`--${required} is required`);
+  }
+  if (options.landing !== "on" && options.landing !== "off") {
+    throw new Error("--landing must be on or off");
   }
   const defaults = OP_DEFAULTS[options.op];
   if (!defaults) throw new Error(`unknown op ${options.op}`);
@@ -140,6 +148,7 @@ function parseArguments(argv) {
     positions: list(options.positions)?.map(Number),
     answers: options.answers,
     acceptChunks: options["accept-chunks"],
+    expectLanding: options.landing === "on",
     limit: options.limit ? Number(options.limit) : Infinity,
   };
 }
@@ -275,8 +284,9 @@ function checkFingerprint(options, fingerprint) {
   fs.mkdirSync(options.outDir, { recursive: true });
   const lines = readLines(file);
   if (lines.length === 0) {
-    appendLine(file, { ...fingerprint, at: new Date().toISOString() });
-    return { digest: fingerprint.chunksDigest, accepted: null };
+    const first = { ...fingerprint, at: new Date().toISOString() };
+    appendLine(file, first);
+    return { digest: fingerprint.chunksDigest, fingerprints: [first] };
   }
   const recorded = lines.at(-1);
   const report = compareFingerprints(recorded, fingerprint);
@@ -295,7 +305,9 @@ function checkFingerprint(options, fingerprint) {
       `built with node ${fingerprint.node} / npm ${fingerprint.npm}; rebuild with the recorded node ${recorded.node} / npm ${recorded.npm} and compare again`,
     );
   }
-  if (report.chunks) return { digest: recorded.chunksDigest, accepted: null };
+  if (report.chunks) {
+    return { digest: recorded.chunksDigest, fingerprints: lines };
+  }
   if (!options.acceptChunks) {
     throw new FatalError(
       `chunks differ from the record (only in record: ${report.onlyA.join(", ")}; only in this build: ${report.onlyB.join(", ")}; size differs: ${report.sizeDiffers.join(", ")}). Report to the PM; continue only with --accept-chunks "<decision>"`,
@@ -308,7 +320,10 @@ function checkFingerprint(options, fingerprint) {
     previous: recorded.chunksDigest,
   };
   appendLine(file, accepted);
-  return { digest: fingerprint.chunksDigest, accepted };
+  return {
+    digest: fingerprint.chunksDigest,
+    fingerprints: [...lines, accepted],
+  };
 }
 
 /** 同じ組のファイルが、どれも同じブラウザの版と道具の blob で測ったものかを確かめる。 */
@@ -332,21 +347,20 @@ function checkGroup(options, head) {
   }
 }
 
-/** 画面ごとの要約と押しごとの記録のファイル。開くときに、要約の無い押しごとの記録（書く途中で止まった回）を除く。 */
-function openViewportFiles(options, viewport, head, accepted) {
+/**
+ * 画面ごとの要約と押しごとの記録のファイル。開くときに、要約の無い押しごとの記録（書く途中で止まった回）を除く。
+ * `digest` は、そのファイルの回がいま測ったものとしているチャンク（頭の行か、最後の `accept` の行の
+ * `chunksDigest`。まだ無いファイルは null）。頭の行と `accept` の行は、そのファイルで回を測り始めるときに書く
+ * （`beginViewportFile`）。測る回の残っていないファイルは書き換えないので、コミットした記録の新しい版を作らない。
+ */
+function openViewportFiles(options, viewport) {
   const base = path.join(options.outDir, `${options.group}-${viewport.file}`);
   const summaryFile = `${base}.jsonl`;
   const pressFile = `${base}.presses.jsonl`;
   const lines = readLines(summaryFile);
-  if (lines.length === 0) appendLine(summaryFile, head);
-  else if (accepted && lines.at(-1).type !== "accept") {
-    appendLine(summaryFile, {
-      type: "accept",
-      chunksDigest: accepted.chunksDigest,
-      decision: accepted.decision,
-      at: accepted.at,
-    });
-  }
+  const digest =
+    lines.findLast((line) => line.type === "head" || line.type === "accept")
+      ?.chunksDigest ?? null;
   const runs = lines.filter((line) => line.k !== undefined);
   const written = new Set(runs.map((line) => `${line.k}#${line.a}`));
   const presses = readLines(pressFile);
@@ -372,7 +386,46 @@ function openViewportFiles(options, viewport, head, accepted) {
     else if (!line.r?.includes("error")) entry.resends++;
     history.set(line.k, entry);
   }
-  return { summaryFile, pressFile, history };
+  return { summaryFile, pressFile, history, digest, begun: false };
+}
+
+/**
+ * そのファイルで回を測り始める前に、まだ無いファイルには頭の行を書く。ファイルのチャンクがいま測る版のチャンク
+ * （`head.chunksDigest`）と違えば、`fingerprint.jsonl` の、ファイルのチャンクの行より後の PM の決定ごとに `accept`
+ * の行を書く。どの呼び出しで受け入れたかによらず、受け入れたあとに初めて回を足すファイルにだけ入る。決定の記録で
+ * いまのチャンクまでたどれなければ、記録とチャンクの合わない回を足さないよう止まる。
+ */
+function beginViewportFile(target, head, fingerprints) {
+  if (target.begun) return;
+  target.begun = true;
+  if (target.digest === null) {
+    appendLine(target.summaryFile, head);
+    target.digest = head.chunksDigest;
+    return;
+  }
+  if (target.digest === head.chunksDigest) return;
+  const from = fingerprints.findLastIndex(
+    (line) => line.chunksDigest === target.digest,
+  );
+  const steps = from === -1 ? [] : fingerprints.slice(from + 1);
+  if (
+    steps.length === 0 ||
+    steps.some((line) => !line.decision) ||
+    steps.at(-1).chunksDigest !== head.chunksDigest
+  ) {
+    throw new FatalError(
+      `${target.summaryFile} was measured with chunks ${target.digest}, and fingerprint.jsonl has no PM decision that leads from them to ${head.chunksDigest}`,
+    );
+  }
+  for (const step of steps) {
+    appendLine(target.summaryFile, {
+      type: "accept",
+      chunksDigest: step.chunksDigest,
+      decision: step.decision,
+      at: step.at,
+    });
+  }
+  target.digest = head.chunksDigest;
 }
 
 // ---------------------------------------------------------------------------
@@ -1147,6 +1200,8 @@ function summarizeLanding(landing, frames) {
     s0: plan.base,
     span: [Math.round(plan.span.min), Math.round(plan.span.max)],
     range: [span.min, span.max],
+    // 打ち切る前の範囲（見せる範囲の高さから決まる）が、同じ ceil・floor で空か。
+    heightEmpty: Math.ceil(plan.span.min) > Math.floor(plan.span.max),
     point: point ? [Math.round(point.x), Math.round(point.y)] : null,
     underAtS0: underAt(plan.base),
     clearOfFirst,
@@ -1258,6 +1313,28 @@ function pressRecord(state, index, extra) {
   record.nameLow =
     (resultFrame && resultFrame.name.bottom > resultFrame.innerHeight - GAP) ||
     undefined;
+  // 結果への切り替わりの着地のあとの最初のフレームの、結果のボックスの上端と結果の名前の下端（t5a-design.md
+  // 6章 条件7 の「結果の名前が見えること」）。範囲が空で基準の送り s0 にした回は、結果への切り替わりの着地の
+  // 記録（そのフレームの1つ前のフレーム、無ければ押しの頭より後で、そのフレームより前の最後の着地）の打ち切った
+  // 範囲が空であることで分かる。空になった訳を、打ち切る前の範囲が高さで空だった（t5a-design.md 4-9 が受け入れた
+  // 回）1と、ページの送れる範囲で打ち切って空になった2で分ける（空でなければ0）。そうした着地の記録が無ければ
+  // （着地の関数を持たない版など）書かない。
+  if (resultFrame) {
+    record.resultView = [resultFrame.boxTop ?? null, resultFrame.name.bottom];
+    const previous = pressFrames[pressFrames.indexOf(resultFrame) - 1];
+    const before = pressLandings.findLastIndex(
+      (landing) =>
+        landing.t < resultFrame.t && (!previous || landing.t > previous.t),
+    );
+    const landing = before === -1 ? null : landings[before];
+    record.resultSpan = !landing
+      ? undefined
+      : landing.range[0] <= landing.range[1]
+        ? 0
+        : landing.heightEmpty
+          ? 1
+          : 2;
+  }
   // 「もう一度挑戦する」のあとに、開始の画面の h1 が丸ごと画面の上端より上にある（外れた見出し）。
   record.h1Above =
     pressFrames.some(
@@ -1331,15 +1408,18 @@ function compactPress(record) {
 }
 
 /**
- * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。答えの2打目が次の問の
- * 選択肢に落ちた押し（診断の答え。知識クイズの答えのあとには次の問が出ない）は、条件7 が数だけを求めるので
- * 置かない（要約の `c` に数える）。語の選択の対（select）は、語が選ばれなかった押しを置く。
+ * 押しごとの記録を置くか（plan-t5a7.md 3 の「記録の形と上限」）。置くなら理由を返す。判断（plan-t5a7.md 5）が
+ * 押しごとに読むのは変更後の版の件だけなので、着地の関数を持たない版（基準の版）では置かない（その版の数は
+ * 要約から出す）。答えの2打目が次の問の選択肢に落ちた押し（診断の答え。知識クイズの答えのあとには次の問が
+ * 出ない）は、条件7 が数だけを求めるので置かない（要約の `c` に数える）。語の選択の対（select）は、語が
+ * 選ばれなかった押しを置く。
  */
-function keepReasons(op, record) {
+function keepReasons(options, record) {
   const reasons = [];
+  if (!options.landing) return reasons;
   if (FIRST_GROUP.has(record.group)) reasons.push("first");
   if (record.group === "next" && record.kind !== "answer") reasons.push("next");
-  if (op === "select") {
+  if (options.op === "select") {
     if (!record.selection) reasons.push("no-selection");
   } else if (record.selection) reasons.push("selection");
   if (record.nameLow) reasons.push("name-low");
@@ -1820,6 +1900,15 @@ function summaryLine(op, run, outcome, records) {
         }
       }
     }
+    // 走査は最後の答え（知識クイズは最後の「次へ」）で結果に切り替わる。
+    const toResult = records.findLast((record) => record.resultView);
+    // 2打目で離れた押しの帯の番号と種類。結果に切り替えた押し（最後の答え。知識クイズは最後の「次へ」）は
+    // last-answer・last-next にする。
+    const left = outcome?.leave
+      ? records.find((record) => record.i === outcome.leave.at)
+      : undefined;
+    const switches =
+      left?.last && left.kind === (KNOWLEDGE.has(run.slug) ? "next" : "answer");
     Object.assign(line, {
       np: records.length,
       c: counts,
@@ -1828,6 +1917,12 @@ function summaryLine(op, run, outcome, records) {
       dm: detail || undefined,
       w: selections || undefined,
       cut: cuts || undefined,
+      lo: toResult?.nameLow ? 1 : undefined,
+      vp: left
+        ? [left.band, switches ? `last-${left.kind}` : left.kind]
+        : undefined,
+      rv: toResult?.resultView,
+      re: toResult?.resultSpan,
       n: near.length ? near : undefined,
       ck: outcome?.check
         ? [
@@ -1854,6 +1949,8 @@ function summaryLine(op, run, outcome, records) {
         hu: landing ? landing.unmatched : undefined,
         cut: record.cut ? 1 : undefined,
         lo: record.nameLow ? 1 : undefined,
+        rv: record.resultView,
+        re: record.resultSpan,
         ins: record.insertInView ? 1 : undefined,
         h1a: record.h1Above ? 1 : undefined,
         at: op === "retry" && !record.reached ? 0 : undefined,
@@ -1899,13 +1996,19 @@ async function main() {
     throw new FatalError("fingerprint.json is inconsistent");
   }
   options.landing = landingExpected(options.version);
+  // 見分けが外れると、着地の記録と押しごとの記録が誤りにならずに欠けるので、測る者が渡した期待と食い違えば止まる。
+  if (options.landing !== options.expectLanding) {
+    throw new FatalError(
+      `--landing ${options.expectLanding ? "on" : "off"} but the version ${options.landing ? "has" : "lacks"} export function chooseLanding in src/lib/reveal.ts; check the version, or update landingExpected and LANDING_PATTERN for the landing code`,
+    );
+  }
   const answerPlans = new Map();
   if (options.answers) {
     for (const entry of readLines(options.answers)) {
       answerPlans.set(entry.slug, entry);
     }
   }
-  const { digest, accepted } = checkFingerprint(options, fingerprint);
+  const { digest, fingerprints } = checkFingerprint(options, fingerprint);
   const browser = await chromium.launch({
     executablePath: CHROMIUM,
     args: ["--disable-smooth-scrolling"],
@@ -1933,10 +2036,7 @@ async function main() {
   const files = new Map();
   const filesOf = (viewport) => {
     if (!files.has(viewport.file)) {
-      files.set(
-        viewport.file,
-        openViewportFiles(options, viewport, head, accepted),
-      );
+      files.set(viewport.file, openViewportFiles(options, viewport));
     }
     return files.get(viewport.file);
   };
@@ -1955,6 +2055,7 @@ async function main() {
       target.history.set(key, entry);
       if (entry.final) continue;
       if (done >= options.limit) break;
+      beginViewportFile(target, head, fingerprints);
       let errors = 0;
       for (;;) {
         const started = Date.now();
@@ -1991,11 +2092,11 @@ async function main() {
           ms: Date.now() - started,
           ...summaryLine(options.op, run, outcome, records),
         };
-        // 押しごとの記録は、判断に要る押しと、誤りで終わった回の押しを置く。
+        // 押しごとの記録は、判断に要る押し（変更後の版だけ）と、誤りで終わった回の押し（どちらの版も）を置く。
         const kept = records
           .map((record) => ({
             record,
-            why: error ? ["error"] : keepReasons(options.op, record),
+            why: error ? ["error"] : keepReasons(options, record),
           }))
           .filter(({ why }) => why.length > 0);
         if (error && kept.length === 0) {
