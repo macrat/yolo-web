@@ -1895,6 +1895,13 @@ function summaryLine(op, run, outcome, records) {
     }
     // 走査は最後の答え（知識クイズは最後の「次へ」）で結果に切り替わる。
     const toResult = records.findLast((record) => record.resultView);
+    // 2打目で離れた押しの帯の番号と種類。結果に切り替えた押し（最後の答え。知識クイズは最後の「次へ」）は
+    // last-answer・last-next にする。
+    const left = outcome?.leave
+      ? records.find((record) => record.i === outcome.leave.at)
+      : undefined;
+    const switches =
+      left?.last && left.kind === (KNOWLEDGE.has(run.slug) ? "next" : "answer");
     Object.assign(line, {
       np: records.length,
       c: counts,
@@ -1904,6 +1911,9 @@ function summaryLine(op, run, outcome, records) {
       w: selections || undefined,
       cut: cuts || undefined,
       lo: toResult?.nameLow ? 1 : undefined,
+      vp: left
+        ? [left.band, switches ? `last-${left.kind}` : left.kind]
+        : undefined,
       rv: toResult?.resultView,
       re: emptyOut(toResult?.resultSpanEmpty),
       n: near.length ? near : undefined,

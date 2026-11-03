@@ -48,8 +48,8 @@
 //   （insert）・開始の画面の h1 が外れた（h1Above）・語が選ばれた回（selected。マウスで2打目の detail が 2 の回）・
 //   「もう一度挑戦する」の中心が決めた高さに着かなかった回（notReached）・2打目で離れた回（left）。
 // - resultView（t5a-design.md 6章 条件7 の「結果の名前が見えること」）: 束はファイルごとなので、値は画面ごとに出る。
-//   - expected・missing: 結果に切り替わるはずの回（last のどの回と、2打目で離れなかった走査）の数と、そのうち rv の
-//     無い回の数。条件7 は結果への切り替わりのすべての回で値を求めるので、missing は 0 のはずである。
+//   - expected・missing: 結果に切り替わるはずの回（last のどの回と、2打目で離れなかった走査と、結果に切り替えた
+//     押しの2打目で離れた走査。離れた押しは要約の vp）の数と、そのうち rv の無い回の数。条件7 は結果への切り替わりのすべての回で値を求めるので、missing は 0 のはずである。
 //   - runs・boxTop・nameBottom: rv のある回の数と、結果のボックスの上端と結果の名前の下端の [最小, 中央, 最大]
 //     （画面の上端からの px）。
 //   - spanRecorded・spanEmpty・emptyRuns: 結果への着地の範囲が分かった回（re のある回。着地の関数を持つ版だけ）の
@@ -330,9 +330,12 @@ function main() {
         flag("notReached", line.at === 0);
       }
       flag("left", !!line.v);
-      // 結果に切り替わるはずの回: last のどの回と、2打目で離れなかった走査。
+      // 結果に切り替わるはずの回: last のどの回と、2打目で離れなかった走査と、結果に切り替えた押しで離れた走査。
       const view = bundle.resultView;
-      if (head.op === "last" || (head.op === "answers" && !line.v)) {
+      const switched =
+        head.op === "answers" &&
+        (!line.v || String(line.vp?.[1]).startsWith("last-"));
+      if (head.op === "last" || switched) {
         view.expected++;
         if (!line.rv) view.missing++;
       }
