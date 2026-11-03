@@ -57,6 +57,9 @@
 //     数と、そのうち打ち切る前の範囲が高さで空で基準の送り s0 にした回（re が 1。関数と同じ ceil・floor で丸めて
 //     整数の送りが無い回で、1px より狭い範囲も入る。t5a-design.md 4-9 が受け入れた回）の数と、その回ごとの
 //     [回の名, ボックスの上端, 名前の下端]（条件7 の「その旨と値」）。
+//   - spanMissing: 着地の関数を持つ版（頭の行の landing が true）の束で、rv があって re の無い回の数。結果への
+//     着地の記録が取れなかった回で、範囲が空で s0 にした回でもどこにも出ずに消えるので、0 のはずで、0 でなければ
+//     PM に報告する。着地の関数を持たない版の束では出さない。
 //   - clampEmptyRuns: 打ち切る前の範囲は空でないのに、ページの送れる範囲で打ち切って空になり s0 にした回（re が
 //     2）ごとの [回の名, ボックスの上端, 名前の下端]。4-9 は範囲が空になるのを高さで空のときだけとしているので、
 //     設計の前提が崩れた回として判断（plan-t5a7.md 5）に渡す。
@@ -229,6 +232,7 @@ function main() {
           boxTop: [],
           nameBottom: [],
           spanRecorded: 0,
+          spanMissing: 0,
           spanEmpty: 0,
           emptyRuns: [],
           clampEmptyRuns: [],
@@ -350,6 +354,7 @@ function main() {
         if (line.rv[0] !== null) view.boxTop.push(line.rv[0]);
         view.nameBottom.push(line.rv[1]);
         if (line.re !== undefined) view.spanRecorded++;
+        else if (head.landing) view.spanMissing++;
         if (line.re === 1) {
           view.spanEmpty++;
           view.emptyRuns.push([line.k, line.rv[0], line.rv[1]]);
@@ -376,6 +381,9 @@ function main() {
                   boxTop: spread(resultView.boxTop),
                   nameBottom: spread(resultView.nameBottom),
                   spanRecorded: resultView.spanRecorded,
+                  spanMissing: head.landing
+                    ? resultView.spanMissing
+                    : undefined,
                   spanEmpty: resultView.spanEmpty,
                   emptyRuns: resultView.emptyRuns,
                   clampEmptyRuns: resultView.clampEmptyRuns,
