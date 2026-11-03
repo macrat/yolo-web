@@ -80,7 +80,7 @@ T5a-7 の残りも次のサイクルが行う。着地の作りを直し T5a-8 �
 | knowledge の直しと範囲の決め直し | 10   | A（§8）は第7回・第8回で承認し、軽の直しのあと取り込んだ。B（範囲の決め直しの記録）は第5〜9回とも改善指示で planner と PM が直し、第10回で承認された（軽4件は PM が直した） | [review-knowledge.md](./review-knowledge.md)〜[-10](./review-knowledge-10.md)                 |
 | T5a-4 の左端の揃いの記録         | 5    | 第1〜4回は改善指示で、測りの担当が測る面と範囲の理由を広げ、第5回で承認された                                                                                              | [review-t5a-4-alignment.md](./review-t5a-4-alignment.md)〜[-5](./review-t5a-4-alignment-5.md) |
 | アンチパターン集の更新           | 8    | 点検第1回の分は第2回で承認された。点検第2回の分は第3〜7回の改善指示で builder が直し、候補の書き方を全体でそろえて第8回で承認された                                        | [review-anti-patterns.md](./review-anti-patterns.md)〜[-8](./review-anti-patterns-8.md)       |
-| 全体                             | 9    | 第3回で承認されたあと、道具とアンチパターン集と左端の記録の直しが入り、第4〜9回は改善指示で担当と PM が直した                                                              | [review-final.md](./review-final.md)〜[-9](./review-final-9.md)                               |
+| 全体                             | 10   | 第3回で承認されたあと、道具とアンチパターン集と左端の記録の直しが入り、第4〜10回は改善指示で担当と PM が直した                                                             | [review-final.md](./review-final.md)〜[-10](./review-final-10.md)                             |
 | 完了の点検（手順5）              | 7    | 第1〜7回とも該当ありで、手順を外れたことを [deviations.md](./deviations.md) に書き、関わる作業をやり直した                                                                 | [review-ap-check.md](./review-ap-check.md)〜[-7](./review-ap-check-7.md)                      |
 
 回ごとの指摘と PM の判断の要約は [review-log.md](./review-log.md) にある。
