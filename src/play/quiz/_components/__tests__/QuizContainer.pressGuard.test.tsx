@@ -13,11 +13,14 @@
  * 事象は、ブラウザが送る順と値で組む。pointerdown の detail はいつも 0 で、マウスの連続の数は mousedown と click の
  * detail だけが持つ。互換のマウスの事象（mousedown）は、マウスと hover を持つペン（W3C Pointer Events の互換の
  * マウスの事象の対応付け）では pointerdown のすぐあとに、タッチでは離したあとにまとめて出る。hover を持たないペン
- * （iPad のペンの見込み）はタッチの順で組む。事象の時刻（timeStamp）は、押しごとに決めた値に差し替える。
+ * （iPad のペンの見込み）はタッチの順で組む。指の速い二度押しでは、2打目の pointerdown が1打目の mousedown と
+ * click より先に届く。事象の時刻（timeStamp）は、押しごとに決めた値に差し替える。
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
+import { revealLanding } from "@/lib/reveal";
+import { COMPAT_EVENTS_WAIT_MS } from "@/play/quiz/pressGuard";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
 import { questionPhrases } from "../../questionPhrases";
 import type {
@@ -30,6 +33,7 @@ import type {
 const gtagSpy = vi.fn();
 beforeEach(() => {
   gtagSpy.mockClear();
+  vi.mocked(revealLanding).mockClear();
   (window as unknown as { gtag: typeof gtagSpy }).gtag = gtagSpy;
   vi.useFakeTimers();
   vi.stubGlobal("scrollBy", vi.fn());
@@ -37,6 +41,12 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
+});
+
+// 着地に渡す押した点を見るため、着地の送りを、もとの働きのまま呼ばれたかを覚える形にする。
+vi.mock("@/lib/reveal", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/reveal")>();
+  return { ...actual, revealLanding: vi.fn(actual.revealLanding) };
 });
 
 // 結果の画面は、ほかのページへのリンクと「もう一度挑戦する」だけを描く軽い形にする。
@@ -805,6 +815,213 @@ describe("答えを見せる間に押し下げ、切り替わったあとに離�
       });
     },
   );
+});
+
+describe("1打目の click より先に2打目を押し下げる指の速い二度押し", () => {
+  /** 指（押しごとに pointerId を分ける）。座標の既定は (100, 500)。 */
+  interface Finger {
+    pointerId: number;
+    x?: number;
+    y?: number;
+  }
+
+  async function fingerEvent(
+    target: Element,
+    type: "pointerdown" | "pointerup" | "pointercancel",
+    finger: Finger,
+    time: number,
+  ): Promise<void> {
+    await act(async () => {
+      target.dispatchEvent(
+        at(
+          new PointerEvent(type, {
+            ...pointerOf({ ...finger, pointerType: "touch" }),
+            pointerId: finger.pointerId,
+          }),
+          time,
+        ),
+      );
+    });
+  }
+
+  /**
+   * 離したあとに出る互換の mousedown・mouseup と click。clickCarriesPointerId なら click を、押しの pointerId を
+   * 持つ PointerEvent で送る（Chromium の形）。持たない MouseEvent は、番号を持たない click を出すブラウザの形。
+   */
+  async function compatEvents(
+    target: Element,
+    finger: Finger,
+    time: number,
+    detail: number,
+    clickCarriesPointerId = false,
+  ): Promise<{ mouseDownPrevented: boolean; clickPrevented: boolean }> {
+    const coordinates = { ...coordinatesOf(finger), detail };
+    const mouseDown = at(new MouseEvent("mousedown", coordinates), time);
+    const click = at(
+      clickCarriesPointerId
+        ? new PointerEvent("click", {
+            ...coordinates,
+            pointerId: finger.pointerId,
+            pointerType: "touch",
+          })
+        : new MouseEvent("click", coordinates),
+      time,
+    );
+    await act(async () => {
+      target.dispatchEvent(mouseDown);
+      target.dispatchEvent(at(new MouseEvent("mouseup", coordinates), time));
+      target.dispatchEvent(click);
+    });
+    return {
+      mouseDownPrevented: mouseDown.defaultPrevented,
+      clickPrevented: click.defaultPrevented,
+    };
+  }
+
+  /** 1打目は (100, 500)、2打目は 1打目から 60px 下（100px の中）。 */
+  const first: Finger = { pointerId: 2 };
+  const second: Finger = { pointerId: 3, y: 560 };
+
+  /** いちばん新しい着地に渡した押した点。 */
+  function lastLandingPoint(): unknown {
+    return vi.mocked(revealLanding).mock.lastCall?.[1];
+  }
+
+  test("「はじめる」: 2打目は1問目に答えを入れず、起点と着地の点は1打目のもの", async () => {
+    renderQuiz(makeQuiz("personality", 2));
+    const start = button("はじめる");
+    await fingerEvent(start, "pointerdown", first, 1000);
+    await fingerEvent(start, "pointerup", first, 1000);
+    await fingerEvent(start, "pointerdown", second, 1000);
+    await compatEvents(start, first, 1000, 1);
+    expect(questionHeading()).toHaveTextContent("問1");
+    expect(lastLandingPoint()).toEqual({ x: 100, y: 500 });
+
+    const choice = button("選択1");
+    await fingerEvent(choice, "pointerup", second, 1200);
+    expect(await compatEvents(choice, second, 1200, 2)).toEqual({
+      mouseDownPrevented: true,
+      clickPrevented: true,
+    });
+    await advance(ANSWER_SHOWN_MS);
+    expect(isUnanswered()).toBe(true);
+
+    // 起点は1打目。1打目から 140px（2打目からは 80px）の、窓の中の押しは受ける。
+    const third = await press(button("選択1"), {
+      down: 1500,
+      y: 640,
+      pointerType: "touch",
+    });
+    expect(third.clickPrevented).toBe(false);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
+  });
+
+  test("診断の答え: 2打目は次の問に答えを入れず、起点と着地の点は1打目のもの", async () => {
+    renderQuiz(makeQuiz("personality", 3));
+    await pressWithKeyboard(button("はじめる"));
+    const answered = button("選択1");
+    await fingerEvent(answered, "pointerdown", first, 1000);
+    await fingerEvent(answered, "pointerup", first, 1000);
+    await fingerEvent(answered, "pointerdown", second, 1000);
+    await compatEvents(answered, first, 1000, 1);
+    expect(questionHeading()).toHaveTextContent("問1");
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
+    expect(lastLandingPoint()).toEqual({ x: 100, y: 500 });
+
+    const choice = button("選択1");
+    await fingerEvent(choice, "pointerup", second, 1200);
+    expect(await compatEvents(choice, second, 1200, 2)).toEqual({
+      mouseDownPrevented: true,
+      clickPrevented: true,
+    });
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
+    expect(isUnanswered()).toBe(true);
+
+    // 起点は1打目。2打目の離しから 100ms の連続の押しでも、1打目から 140px（2打目からは 80px）なら受ける。
+    const third = await press(button("選択1"), {
+      down: 1300,
+      y: 640,
+      pointerType: "touch",
+    });
+    expect(third.clickPrevented).toBe(false);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問3");
+  });
+
+  /** 3問の診断をキーボードで始め、before の押しを送ってから、1打目の指で1問目に答えて（離しは answerAt）次の問を出す。 */
+  async function answerAfter(
+    before: () => Promise<void>,
+    answerAt: number,
+    clickCarriesPointerId = false,
+  ): Promise<void> {
+    renderQuiz(makeQuiz("personality", 3));
+    await pressWithKeyboard(button("はじめる"));
+    await before();
+    const choice = button("選択1");
+    await fingerEvent(choice, "pointerdown", first, answerAt - 50);
+    await fingerEvent(choice, "pointerup", first, answerAt);
+    await compatEvents(choice, first, answerAt, 1, clickCarriesPointerId);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
+  }
+
+  /** 1打目の離しから 100ms の、1打目と同じ点の指の押しが止まるか（起点が1打目なら止まる）。 */
+  async function samePointPressBlocked(answerAt: number): Promise<boolean> {
+    const outcome = await press(button("選択1"), {
+      down: answerAt + 100,
+      pointerType: "touch",
+    });
+    return outcome.clickPrevented;
+  }
+
+  /** 1打目から 200px 上の、click を受けない指の押し。 */
+  const elsewhere: Finger = { pointerId: 4, y: 300 };
+
+  test("tap と取られずに click を受けなかった指の押しのあとも、click の pointerId で1打目と結ぶ", async () => {
+    await answerAfter(
+      async () => {
+        await fingerEvent(questionHeading(), "pointerdown", elsewhere, 1000);
+        await fingerEvent(questionHeading(), "pointerup", elsewhere, 1050);
+      },
+      1250,
+      true,
+    );
+    expect(await samePointPressBlocked(1250)).toBe(true);
+  });
+
+  test("click が pointerId を持たなくても、離してから 1 秒（COMPAT_EVENTS_WAIT_MS）click を受けなかった指の押しとは結ばない", async () => {
+    const answerAt = 1050 + COMPAT_EVENTS_WAIT_MS + 50;
+    await answerAfter(async () => {
+      await fingerEvent(questionHeading(), "pointerdown", elsewhere, 1000);
+      await fingerEvent(questionHeading(), "pointerup", elsewhere, 1050);
+    }, answerAt);
+    expect(await samePointPressBlocked(answerAt)).toBe(true);
+  });
+
+  test("引いて送りになった指の押しは、あとの押しの click と結ばない", async () => {
+    await answerAfter(async () => {
+      await fingerEvent(questionHeading(), "pointerdown", elsewhere, 1000);
+      await fingerEvent(questionHeading(), "pointercancel", elsewhere, 1020);
+    }, 1150);
+    expect(await samePointPressBlocked(1150)).toBe(true);
+  });
+
+  test("click を受けなかったマウスの押し（押し下げた的が DOM から外れた押し）は、次の押しの click と結ばない", async () => {
+    await answerAfter(async () => {
+      const heading = questionHeading();
+      const point = { y: 300, detail: 1 };
+      await pressDown(heading, { ...point, down: 1000 });
+      await act(async () => {
+        heading.dispatchEvent(
+          at(new PointerEvent("pointerup", pointerOf(point)), 1050),
+        );
+      });
+    }, 1150);
+    expect(await samePointPressBlocked(1150)).toBe(true);
+  });
 });
 
 describe("主のボタンでない押しと、主でない指の押し", () => {

@@ -3,14 +3,15 @@ import { closestPressable, type ScreenPoint } from "@/lib/reveal";
 
 /**
  * 回答の画面の押しの受け手（docs/cycles/cycle-316/t5a-design.md 4-9）。`window` の捕捉の段階で `pointerdown`・
- * `pointerup`・`mousedown`・`click` を受け、React の `onClick`・素の `a[href]` の移動・`summary` の開閉・Next の
- * `Link` の移動のどれより先に走る。受け持つのは次の3つである。
+ * `pointerup`・`pointercancel`・`mousedown`・`click` を受け、React の `onClick`・素の `a[href]` の移動・`summary` の
+ * 開閉・Next の `Link` の移動のどれより先に走る。受け持つのは次の3つである。
  *
  * - **押した点を覚える**: 切り替わったあとの着地は、同じ点に落ちる2打目を見て選ぶ。
  * - **二度押しの2打目を受けない**: 押した点の下が入れ替わる操作のあと、新しく出た画面を読む前の、1打目の点の
  *   近くへの押しは、1打目と一続きの二度押しの2打目である。その押しの `mousedown` と `click` を止める。受けるかは
  *   押し下げの時刻と座標で決め、守りが開いたあとの押し下げは押し下げの時に、守りが開く前に押し下げてまだ `click`
- *   まで届いていない押し（診断の答えを見せる間に触れ、切り替わったあとに離す指）は守りが開いた時に決める。
+ *   まで届いていない押し（1打目の click より先に押し下げた指の速い二度押しの2打目と、診断の答えを見せる間に触れ、
+ *   切り替わったあとに離す指）は守りが開いた時に決める。
  * - **2打目で語を選ばない**: 受けた連続の押しのうち、1打目が画面を切り替えたものの2打目からは、語の選択を止める。
  */
 
@@ -31,6 +32,13 @@ export const TOUCH_CONSECUTIVE_MS = 300;
 
 /** 受けなかった押しのあと、同じ押せるものの押し直しを数える長さの上限（ms）。 */
 export const RETRY_WINDOW_MS = 3000;
+
+/**
+ * 離してから互換の `mousedown` と `click` を待つ長さの上限（ms）。タッチの互換の事象は離しのすぐあとに出るので、
+ * これを過ぎても `click` を受けない押し（2本の指で触れた押しなど、ブラウザが tap と取らなかった押し）は、もう
+ * `click` を受けない。
+ */
+export const COMPAT_EVENTS_WAIT_MS = 1000;
 
 /**
  * ポインタの1つの押し。時刻と座標は押し下げ（`pointerdown`）で取る。覚えるのは、主のポインタ（`isPrimary` が真）の
@@ -142,13 +150,53 @@ function followsWithinTouchInterval(
   );
 }
 
+/**
+ * 互換の事象を待つ押しのうち、click と対の押しの位置（無ければ -1）。click がポインタの番号を持てば（Chromium の
+ * click は `PointerEvent` で、その押しの `pointerId` を持つ）その番号のいちばん古い押し、持たなければいちばん古い
+ * 押しである。番号で結べば、tap と取られずに click を受けなかった押しが並びに残っていても、次の押しの click を
+ * それに結ばない。
+ */
+function clickPairIndex(
+  waiting: readonly PointerPress[],
+  event: MouseEvent,
+): number {
+  const pointerId =
+    "pointerId" in event ? (event as PointerEvent).pointerId : -1;
+  if (pointerId < 0) return waiting.length > 0 ? 0 : -1;
+  return waiting.findIndex((candidate) => candidate.pointerId === pointerId);
+}
+
+/**
+ * 互換の事象をもう受けない押しか（nextDownTime は次の押し下げの時刻）。マウスの click は離しと同じ task で出るので、
+ * 次の押し下げまでに click を受けていないマウスの押し（押し下げた的が離すまでに DOM から外れた押し）はもう受けない。
+ * タッチとペンは、離してから `COMPAT_EVENTS_WAIT_MS` を過ぎた押しである。
+ */
+function hasStoppedWaiting(
+  waiting: PointerPress,
+  nextDownTime: number,
+): boolean {
+  if (waiting.upTime === null) return false;
+  return (
+    waiting.pointerType === "mouse" ||
+    nextDownTime - waiting.upTime >= COMPAT_EVENTS_WAIT_MS
+  );
+}
+
 export function createPressGuard(
   initialTransition: number,
   options: PressGuardOptions,
 ): PressGuard {
   let transitionShown = initialTransition;
-  /** いちばん新しい押し。対の mousedown と click をこれに結ぶ。 */
-  let press: PointerPress | null = null;
+  /**
+   * 互換の mousedown と click を待つ押し（まだ click を受けていない押し）の、押し下げの順の並び。ブラウザは互換の
+   * 事象を押しの順に出すが、タッチでは離したあとにまとめて出すので、速い二度押しでは2打目の pointerdown が1打目の
+   * mousedown と click より先に届く。そこで mousedown は mousedown をまだ受けていないいちばん古い押しに、click は
+   * いちばん古い押し（clickPairIndex）に結ぶ。並びに残るのは、押し下げているか、離して互換の事象を待つ押しだけで
+   * ある（click を受けた押しと、それより前の押し・引いて送りになった押し・hasStoppedWaiting の押しは外す）。
+   */
+  let waiting: PointerPress[] = [];
+  /** いちばん新しく click を受けた押し。 */
+  let lastClickedPress: PointerPress | null = null;
   let guard: Guard | null = null;
   let lastClick: AcceptedClick | null = null;
   let pendingRetry: PendingRetry | null = null;
@@ -236,14 +284,27 @@ export function createPressGuard(
       mouseDownDetail: null,
       clicked: false,
     };
-    press = next;
+    waiting = waiting.filter(
+      (candidate) => !hasStoppedWaiting(candidate, next.downTime),
+    );
+    waiting.push(next);
     if (guard) judge(guard, next);
   };
 
   const handlePointerUp = (event: PointerEvent): void => {
-    if (press && press.pointerId === event.pointerId && press.upTime === null) {
-      press.upTime = event.timeStamp;
-    }
+    const released = waiting.find(
+      (candidate) =>
+        candidate.pointerId === event.pointerId && candidate.upTime === null,
+    );
+    if (released) released.upTime = event.timeStamp;
+  };
+
+  /** 引いて送りになった押しは、mousedown も click も受けない。 */
+  const handlePointerCancel = (event: PointerEvent): void => {
+    waiting = waiting.filter(
+      (candidate) =>
+        candidate.pointerId !== event.pointerId || candidate.upTime !== null,
+    );
   };
 
   const handleMouseDown = (event: MouseEvent): void => {
@@ -252,7 +313,9 @@ export function createPressGuard(
     // 連続の押しの1打目は、受けない押しでも連続の始まりとして覚える。止めた1打目は何も切り替えないので、その
     // 連続の2打目からの語の選択は止めない。
     if (event.detail === 1) sequenceStart = transitionShown;
-    const paired = press && press.mouseDownDetail === null ? press : null;
+    const paired = waiting.find(
+      (candidate) => candidate.mouseDownDetail === null,
+    );
     if (paired) {
       paired.mouseDownDetail = event.detail;
       if (paired.mouseCandidateOf === guard && guard && event.detail >= 2) {
@@ -287,8 +350,14 @@ export function createPressGuard(
       };
       return;
     }
-    const paired = press && !press.clicked ? press : null;
-    if (paired) paired.clicked = true;
+    const index = clickPairIndex(waiting, event);
+    const paired = index >= 0 ? waiting[index] : null;
+    if (paired) {
+      paired.clicked = true;
+      lastClickedPress = paired;
+      // 互換の事象は押しの順に出るので、対の押しより前の押しも、もう click を受けない。
+      waiting = waiting.slice(index + 1);
+    }
     if (paired?.blockedBy) {
       event.preventDefault();
       event.stopPropagation();
@@ -307,11 +376,13 @@ export function createPressGuard(
     attach() {
       window.addEventListener("pointerdown", handlePointerDown, true);
       window.addEventListener("pointerup", handlePointerUp, true);
+      window.addEventListener("pointercancel", handlePointerCancel, true);
       window.addEventListener("mousedown", handleMouseDown, true);
       window.addEventListener("click", handleClick, true);
       return () => {
         window.removeEventListener("pointerdown", handlePointerDown, true);
         window.removeEventListener("pointerup", handlePointerUp, true);
+        window.removeEventListener("pointercancel", handlePointerCancel, true);
         window.removeEventListener("mousedown", handleMouseDown, true);
         window.removeEventListener("click", handleClick, true);
       };
@@ -327,13 +398,19 @@ export function createPressGuard(
     },
     open(transition, origin) {
       guard = { transition, origin, chainPress: origin, reported: false };
+      // 起点のあとの押しも、押し下げの順に、押し下げの時刻と座標で、いま掛ける守りに当てる。当てるのは、起点のあとに
+      // click を受けた押し（いちばん新しく受けたもの）と、まだ click を受けていない押しである。
+      // click の処理の中で切り替わる操作（「はじめる」「次へ」）では、指の速い二度押しの2打目が、1打目の click より
+      // 先に押し下げて、まだ click を受けていない押しとして並びに残っている。
       // 診断の答えと最後の答えは、見せる間（ANSWER_SHOWN_MS）のあとのタイマーで切り替わる。見せる間に触れた指は、
-      // 切り替わったあとに離すと、mousedown と click が新しい画面のものに届く（落ちる要素は離した時の組みで決まる）。
-      // そこで、起点のあとのいちばん新しい押しも、押し下げの時刻と座標で、いま掛ける守りに当てる。マウスは
-      // mousedown が押し下げと続けて見せる間に届き、その的が切り替わりで DOM から外れると Chromium は click を
-      // 出さないが、click を出すブラウザでも同じ決まりで止まるよう、mousedown の detail で同じく当てる。
-      // click の処理の中で切り替わる操作（「はじめる」「次へ」）では、いちばん新しい押しは起点そのものである。
-      if (press && press !== origin) judge(guard, press);
+      // 切り替わったあとに離すと、click が新しい画面のものに届き、離したあとに mousedown を出す機器では mousedown も
+      // 届く（落ちる要素は離した時の組みで決まる）。マウスは mousedown が押し下げと続けて見せる間に届くので、その
+      // detail で当てる。マウスの押しの的が切り替わりで DOM から外れると Chromium は click を出さないが、click を
+      // 出すブラウザでも同じ決まりで止まる。
+      if (lastClickedPress && lastClickedPress !== origin) {
+        judge(guard, lastClickedPress);
+      }
+      for (const pending of waiting) judge(guard, pending);
     },
     close() {
       guard = null;
