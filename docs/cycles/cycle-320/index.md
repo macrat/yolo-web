@@ -97,6 +97,8 @@ T5a-7 の残りは次のサイクルが行う。着地の作りを直し T5a-8 �
 
 再発防止の手順の直し（[review-prevention.md](./review-prevention.md)〜[-3](./review-prevention-3.md)）は3回とも改善指示で、第1回の6件と第2回の1件は builder が直した。来訪者に届くものを変えない直しのレビューの3回目にあたるので、第3回の指摘1（3回目の指摘を直すか積むか）は直さずに B-795 に積んだ。第3回の指摘2（このサイクルの「実施する作業」から一度載った項目が消えていた）は、手順の外のこのサイクルの計画の欠けで、外れた件の判断・T5a-8・B-623 の行を一度載った範囲に戻した。PM が直して閉じた記録の指摘: 第2回の指摘2（description と冒頭の段落）。
 
+守りと着地のコード（758725fc ほか）は、[review-code.md](./review-code.md) で見せる間のタッチのすり抜け（重）と主でない押しの扱いが見つかって builder が直し、[review-code-2.md](./review-code-2.md) の押し直しの的と試験の2件も builder が直している。害の線（plan-t5a7.md 2b）は [review-harm-lines.md](./review-harm-lines.md)〜[-4](./review-harm-lines-4.md) の4回とも改善指示で PM が直し、次は道具とあわせて試しの走りの記録で確かめる。
+
 回ごとの指摘と PM の判断の要約は [review-log.md](./review-log.md) にある。
 
 ## キャリーオーバー
