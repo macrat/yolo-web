@@ -93,6 +93,8 @@ T5a-7 の残りは次のサイクルが行う。着地の作りを直し T5a-8 �
 | 全体                             | 13   | 第3回で承認されたあと、道具とアンチパターン集と左端の記録の直しが入り、第4〜12回は改善指示で担当と PM が直し、第13回で承認された                                           | [review-final.md](./review-final.md)〜[-13](./review-final-13.md)                             |
 | 完了の点検（手順5）              | 11   | 第1〜10回は該当ありで、手順を外れたことを [deviations.md](./deviations.md) に書き、関わる作業をやり直した。第11回は該当なし                                                | [review-ap-check.md](./review-ap-check.md)〜[-11](./review-ap-check-11.md)                    |
 
+着地の作りの決定（[decision-landing.md](./decision-landing.md)。材料は [landing-options.md](./landing-options.md)）は、[review-decision-landing.md](./review-decision-landing.md)〜[-8](./review-decision-landing-8.md) の第1〜7回が改善指示で PM が直し、第8回で承認された。決定を設計と測りの文書に写した直しは、[review-design-docs.md](./review-design-docs.md)〜[-6](./review-design-docs-6.md) の第1〜5回が改善指示で、PM の決めごとの追記と builder・PM の直しを経て第6回で承認された（第6回の PM が直して閉じるもの2件のうち、t5a-measure.md 0章の参照は PM が直し、knowledge §3 の例はコードの直しの builder が直す）。
+
 再発防止の手順の直し（[review-prevention.md](./review-prevention.md)〜[-3](./review-prevention-3.md)）は3回とも改善指示で、第1回の6件と第2回の1件は builder が直した。来訪者に届くものを変えない直しのレビューの3回目にあたるので、第3回の指摘1（3回目の指摘を直すか積むか）は直さずに B-795 に積んだ。第3回の指摘2（このサイクルの「実施する作業」から一度載った項目が消えていた）は、手順の外のこのサイクルの計画の欠けで、外れた件の判断・T5a-8・B-623 の行を一度載った範囲に戻した。PM が直して閉じた記録の指摘: 第2回の指摘2（description と冒頭の段落）。
 
 回ごとの指摘と PM の判断の要約は [review-log.md](./review-log.md) にある。
