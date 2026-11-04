@@ -221,8 +221,8 @@ function numberedPairOf(
  * 「いちばん新しく押し下げた押し」や「いちばん新しく離した押し」には結べない。ただ、離しても互換の事象を出さない押し
  * （2本の指で触れた押し・iOS の Safari の押せない字へのタップ）が並びに残ると、順だけでは次の押しの事象をそれに
  * 結んでしまう。その押しが別の点にあれば点で外れる。同じ点に残れば点でも見分けられないので、受ける押しを先に選び、
- * 来訪者の押しを誤って止めない側に倒す。そのとき守りの起点がその押しへ前にずれないよう、起点は `clickOriginOf` で
- * 別に選ぶ。
+ * 来訪者の押しを誤って止めない側に倒す。そのとき守りの起点と押し直しの経過の元がその押しへ前にずれないよう、起点は
+ * `clickOriginOf`、止めた側の経過の元は `stoppedPressOf` で別に選ぶ。
  */
 function compatPairOf(
   candidates: readonly PointerPress[],
@@ -260,6 +260,38 @@ function clickOriginOf(
       (latest === null || candidate.upTime >= (latest.upTime ?? -Infinity))
     ) {
       latest = candidate;
+    }
+  }
+  return latest ?? paired;
+}
+
+/**
+ * 止めた事象（`mousedown` か `click`）を出した押し（押し直しの経過を数える元にする押し）。paired は `compatPairOf` で
+ * 結んだ受けない押しである。番号で結べた `click` ではその押し。番号で結べない事象では、事象の点から
+ * `COMPAT_POINT_REACH_PX` の中の受けない押しのうち、`mousedown` ならいちばん新しく押し下げた押し、`click` なら
+ * いちばん新しく離した押し（中に無ければ paired）。
+ *
+ * 同じ点に互換の事象を出さない押しが残ると、画面を切り替えた押しは `click` を受けないまま並びに残り、守りを開く時に
+ * 受けない押しになる。そのあとの二度押しの2打目の事象は、順で結ぶとその押しに結ばれるので、結んだ押しを元にすると、
+ * 経過が止めた押しより前から数えられ、長いほうへずれる。いちばん新しく押し下げた（離した）押しを元にすれば、元は
+ * 前にずれない。速い連打の事象が遅れて届き、事象の時に次の打まで押し下げているときは、元が次の打へずれるが、
+ * 押し直しを待つ元は止めた事象ごとに置き直すので、最後に止めた事象を出した押しに落ち着く。
+ */
+function stoppedPressOf(
+  candidates: readonly PointerPress[],
+  event: MouseEvent,
+  paired: PointerPress,
+): PointerPress {
+  if (numberedPairOf(candidates, event)) return paired;
+  const timeOf = (press: PointerPress): number | null =>
+    event.type === "click" ? press.upTime : press.downTime;
+  let latest: PointerPress | null = null;
+  let latestTime = -Infinity;
+  for (const candidate of nearCompatPoint(candidates, event)) {
+    const time = timeOf(candidate);
+    if (candidate.blockedBy !== null && time !== null && time >= latestTime) {
+      latest = candidate;
+      latestTime = time;
     }
   }
   return latest ?? paired;
@@ -310,7 +342,8 @@ export function createPressGuard(
   /**
    * 受けない押しを止めたことを数え、押し直しを待つ。押し直しの元は、止めた事象（`mousedown` か `click`）の的の
    * 押せるものである。見せる間に押し下げて切り替わったあとに離す押しでは、押し下げの的は答えた問の行で、何も
-   * 起きなかったのは止めた事象が落ちた新しい画面のものだからである。経過は押し下げの時刻から数える。
+   * 起きなかったのは止めた事象が落ちた新しい画面のものだからである。経過は、止めた事象を出した押し（stopped。
+   * 選び方は `stoppedPressOf`）の押し下げの時刻から数える。
    */
   const noteStopped = (
     stopped: PointerPress,
@@ -429,10 +462,10 @@ export function createPressGuard(
     // 連続の押しの1打目は、受けない押しでも連続の始まりとして覚える。止めた1打目は何も切り替えないので、その
     // 連続の2打目からの語の選択は止めない。
     if (event.detail === 1) sequenceStart = transitionShown;
-    const paired = compatPairOf(
-      waiting.filter((candidate) => candidate.mouseDownDetail === null),
-      event,
+    const candidates = waiting.filter(
+      (candidate) => candidate.mouseDownDetail === null,
     );
+    const paired = compatPairOf(candidates, event);
     if (paired) {
       paired.mouseDownDetail = event.detail;
       paired.mouseDownBeforeUp = paired.upTime === null;
@@ -442,7 +475,11 @@ export function createPressGuard(
       if (paired.blockedBy) {
         // フォーカスが押したものへ移らず、置いたフォーカスと語の選択を保つ。
         event.preventDefault();
-        noteStopped(paired, paired.blockedBy, event.target);
+        noteStopped(
+          stoppedPressOf(candidates, event, paired),
+          paired.blockedBy,
+          event.target,
+        );
         return;
       }
     }
@@ -468,8 +505,9 @@ export function createPressGuard(
       };
       return;
     }
-    const paired = compatPairOf(waiting, event);
-    const origin = clickOriginOf(waiting, event, paired);
+    const candidates = waiting;
+    const paired = compatPairOf(candidates, event);
+    const origin = clickOriginOf(candidates, event, paired);
     if (paired) {
       paired.clicked = true;
       lastClickedPress = paired;
@@ -479,7 +517,11 @@ export function createPressGuard(
     if (paired?.blockedBy) {
       event.preventDefault();
       event.stopPropagation();
-      noteStopped(paired, paired.blockedBy, event.target);
+      noteStopped(
+        stoppedPressOf(candidates, event, paired),
+        paired.blockedBy,
+        event.target,
+      );
       return;
     }
     if (origin) noteAccepted(origin, event.target);

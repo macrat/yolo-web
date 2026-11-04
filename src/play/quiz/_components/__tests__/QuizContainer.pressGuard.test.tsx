@@ -1593,6 +1593,28 @@ describe.each(CLICK_FORMS)("click が $name", ({ form }) => {
       expect(retryElapsed()).toEqual([700]);
     });
 
+    test("同じ点に残ったタップのあとに押した「はじめる」の2打目を止めたら、「はじめる」でなく止めた押しから数える", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      await tapWithoutCompatEvents(screen.getByRole("heading", { level: 1 }), {
+        down: 100,
+        up: 150,
+      });
+      await press(button("はじめる"), { down: 1000, pointerType: "touch" });
+      const second = await press(button("選択1"), {
+        down: 1250,
+        y: 520,
+        pointerType: "touch",
+      });
+      expect(second.clickPrevented).toBe(true);
+      const retry = await press(button("選択1"), {
+        down: 2000,
+        y: 520,
+        pointerType: "touch",
+      });
+      expect(retry.clickPrevented).toBe(false);
+      expect(retryElapsed()).toEqual([750]);
+    });
+
     test("離してから 1 秒（COMPAT_EVENTS_WAIT_MS）を過ぎた同じ点のタップがあっても、止めた押しから数える", async () => {
       renderQuiz(makeQuiz("personality", 2));
       await tapWithoutCompatEvents(screen.getByRole("heading", { level: 1 }), {
