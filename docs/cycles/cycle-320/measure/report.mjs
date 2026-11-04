@@ -428,7 +428,8 @@ const KEYBOARD_VARIANTS = ["start", "next", "last"];
 
 /**
  * 出すと決めた合否の行（decision-landing.md の「測りの合否」の行 × 守りを掛けた切り替わり × 入力。D5 と hold は
- * タッチだけ）。押しが1つも来なかった行も、`status: "not-run"` で出す。
+ * タッチだけで、hold は見せる間がある診断の答え→次の問と診断の最後の答え→結果だけ）。押しが1つも来なかった行も、
+ * `status: "not-run"` で出す。
  */
 const EXPECTED_ROWS = [
   ...["window", "pair"].flatMap((verdict) =>
@@ -439,11 +440,8 @@ const EXPECTED_ROWS = [
   ["consecutive-mouse", "answer", "mouse"],
   ["touch-block", "answer", "touch"],
   ["touch-accept", "answer", "touch"],
-  ...["answer", ...WINDOW_TRANSITIONS].map((transition) => [
-    "hold",
-    transition,
-    "touch",
-  ]),
+  ["hold", "answer", "touch"],
+  ["hold", "result", "touch"],
   ...["d5-inner", "d5-outer"].flatMap((verdict) =>
     WINDOW_TRANSITIONS.map((transition) => [verdict, transition, "touch"]),
   ),
@@ -673,19 +671,22 @@ function verdictsOf(directory, names) {
             if (worked) fail(row, where);
           }
         }
-        // 押し下げを切り替わりの前に置く、守りが受けない側の2打目（同じ点の hold と、狙った hold-aim）。押し下げが
-        // 本当に切り替わりの前に来て、click が切り替わったあとの画面の押せるものに届いた押しを試した回にし、働けば
-        // 外れ。押し下げが切り替わりのあとに来た押し（downAfter）は hold の型を試していないので、別に数え、押し下げの
-        // 的が押せるものの上で働いた押しを downAfterFailed に数える（どちらも fails に入る）。守りが受ける側の
-        // hold-out は合否に入れない（compare.mjs の害の線 5）。
+        // 押し下げを切り替わりの前に置く、守りが受けない側の2打目（同じ点の hold と、狙った hold-aim）。hold の行は、
+        // 見せる間がある切り替わり（診断の答え→次の問と、診断の最後の答え→結果）だけで数える（decision-landing.md の
+        // 「下限」。「はじめる」と知識クイズの「次へ」・最後の「次へ」は click の中で切り替わり、押し下げが切り替わりの
+        // 前に来るのは1打目の互換の事象より先に押し下げる速い二度押しだけで、それは窓の守りの行の 0ms の同じ点の押しと
+        // 単体の試験が受け持つ）。押し下げが本当に切り替わりの前に来て、click が切り替わったあとの画面の押せるものに
+        // 届いた押しを試した回にし、働けば外れ。押し下げが切り替わりのあとに来た押し（downAfter）は hold の型を試して
+        // いないので、別に数え、押し下げの的が押せるものの上で働いた押しを downAfterFailed に数える（どちらも fails に
+        // 入る）。守りが受ける側の hold-out は合否に入れない（compare.mjs の害の線 5）。
         if (mode?.startsWith("hold")) {
           if (
             mode !== "hold-out" &&
-            (kind === "answer" || WINDOW_KINDS.has(kind))
+            (kind === "answer" || kind === "last-answer")
           ) {
             const row = seePair(
               "hold",
-              kind === "answer" ? "answer" : transitionOf(kind),
+              kind === "answer" ? "answer" : "result",
               input,
               { downAfter: 0, downAfterFailed: 0, byMode: {} },
             );
