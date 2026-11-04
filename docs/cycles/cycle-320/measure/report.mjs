@@ -71,6 +71,18 @@
 import fs from "node:fs";
 import path from "node:path";
 import { KNOWLEDGE } from "./knowledge.mjs";
+import {
+  ALL_SLUGS,
+  BLOCK_BELOW_MS,
+  BORDER_UNTIL_MS,
+  GUARD_REACH_PX,
+  TOUCH_ACCEPT_BELOW_MS,
+  TOUCH_ACCEPT_FROM_MS,
+  TOUCH_ADJUST_REACH_PX,
+  TOUCH_BLOCK_BELOW_MS,
+  WINDOW_KINDS,
+  readPress,
+} from "./records.mjs";
 
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 const PRESSABLE = new Set([...FIRST, "next", "choice", "start"]);
@@ -323,7 +335,7 @@ function main() {
         flag("nameLow", !!line.lo);
         flag("selected", line.w);
         flag("detailMarked", line.dm);
-        flag("checkFailed", line.ck && !line.ck[3]);
+        flag("checkFailed", line.ck && !line.ck[4]);
       } else {
         const group = line.s ?? "none";
         bundle.groups[group] = (bundle.groups[group] ?? 0) + 1;
@@ -395,6 +407,297 @@ function main() {
       );
     }
   }
+  for (const verdict of verdictsOf(directory, names)) {
+    console.log(JSON.stringify(verdict));
+  }
+}
+
+const DIAGNOSIS_SLUGS = ALL_SLUGS.filter((slug) => !KNOWLEDGE.has(slug));
+
+/** 押しの種類から、窓の守りの切り替わりの名（start・next・result）。 */
+const transitionOf = (kind) =>
+  kind === "start" ? "start" : kind === "next" ? "next" : "result";
+
+/**
+ * 条件7・D5 の合否の行（README の「合否の行」）。置き場のすべての数える行の q を読み、行ごとに、試した回（tried）・
+ * 外れた回（failed と、その一覧 fails）・試さなかった回（untried）・境目の回（border）を数え、下限（lowerOk。切り
+ * 替わりごと・入力ごとに試した回が1回以上、タッチの連続の押しの守りは診断12本のそれぞれに1回以上）と合格（pass。
+ * 外れ 0 で下限を満たす）を出す。1行が1つの行と切り替わりと入力。
+ */
+function verdictsOf(directory, names) {
+  const rows = new Map();
+  const rowOf = (verdict, transition, input, extra = {}) => {
+    const id = `${verdict}|${transition}|${input}`;
+    if (!rows.has(id)) {
+      rows.set(id, {
+        verdict,
+        transition,
+        input,
+        tried: 0,
+        failed: 0,
+        untried: 0,
+        border: 0,
+        fails: [],
+        slugs: new Map(),
+        ...extra,
+      });
+    }
+    return rows.get(id);
+  };
+  const fail = (row, where) => {
+    row.failed++;
+    if (row.fails.length < 50) row.fails.push(where);
+  };
+  const tried = (row, slug) => {
+    row.tried++;
+    row.slugs.set(slug, (row.slugs.get(slug) ?? 0) + 1);
+  };
+  const isFirst = (group) => FIRST.has(group);
+  let firstBlocked = 0;
+  const mismatches = {};
+  for (const name of names) {
+    const lines = readLines(path.join(directory, name));
+    const head = lines[0];
+    const d5 = /-d5-/.test(name);
+    for (const line of lines) {
+      if (line.k === undefined || !line.f) continue;
+      const [slug, input, interval, offset, , mode] = line.k.split("|");
+      const [dx, dy] = offset.split(":").map(Number);
+      const shift = Math.hypot(dx, dy);
+      if (head.op === "keyboard") {
+        const row = rowOf("keyboard", line.k.split("|")[4], input);
+        const [switched, , worked] = line.kb ?? [0, null, null];
+        tried(row, slug);
+        if (!switched || !worked) fail(row, [name, line.k, line.kb]);
+        continue;
+      }
+      // 走査の n の押し（タッチ）を押しの番号で引けるようにする（守りを掛けない切り替わりの 16px 未満の件）。
+      const nearOf = new Map(
+        head.op === "answers"
+          ? (line.n ?? []).map((entry) => [entry[0], entry])
+          : [],
+      );
+      for (const entry of line.q ?? []) {
+        const press = readPress(entry);
+        const where = [name, line.k, press.i, press.worked];
+        const kind = press.kind;
+        const worked = press.worked;
+        if (press.firstTook === 0) firstBlocked++;
+        if (
+          press.targetMismatch &&
+          (!head.guard ||
+            ["knowledge-answer", "retry", "heading"].includes(kind))
+        ) {
+          mismatches[kind] = (mismatches[kind] ?? 0) + 1;
+        }
+        if (worked === null) continue;
+        const sent = press.downGap !== null;
+        // D9: 知識クイズの「次へ」のあとの、1打目から 100px 以下で窓の中の2打目が働いた件。
+        if (
+          (kind === "next" || kind === "last-next") &&
+          sent &&
+          press.downGap < BLOCK_BELOW_MS &&
+          press.downDistance <= GUARD_REACH_PX
+        ) {
+          const row = rowOf("d9", "next", input);
+          tried(row, slug);
+          if (worked) fail(row, where);
+        }
+        if (mode?.startsWith("hold")) {
+          if (mode === "hold") {
+            const row = rowOf(
+              "hold",
+              kind === "answer" ? "answer" : transitionOf(kind),
+              input,
+            );
+            if (kind === "answer" || WINDOW_KINDS.has(kind)) {
+              tried(row, slug);
+              if (worked) fail(row, [...where, press.click]);
+            }
+          }
+          continue;
+        }
+        if (d5) {
+          if (
+            WINDOW_KINDS.has(kind) &&
+            Number(interval) === 300 &&
+            shift >= 80
+          ) {
+            const outer = shift >= 120;
+            const row = rowOf(
+              outer ? "d5-outer" : "d5-inner",
+              transitionOf(kind),
+              input,
+            );
+            if (!(press.pressable && press.shown)) row.untried++;
+            else if (press.downGap >= BORDER_UNTIL_MS) continue;
+            else if (press.downGap >= BLOCK_BELOW_MS) row.border++;
+            else {
+              tried(row, slug);
+              if (outer ? !worked : worked) fail(row, where);
+            }
+          } else if (WINDOW_KINDS.has(kind) && Number(interval) === 900) {
+            const row = rowOf("d5-after", transitionOf(kind), input, {
+              runs: 0,
+              near: [],
+            });
+            row.runs++;
+            const near2 =
+              line.q.length === 1 ? line.n2 : nearOf.get(press.i)?.[4];
+            const reach = (index) =>
+              near2?.[index]
+                ? Math.max(near2[index][0], near2[index][1])
+                : null;
+            const landed = isFirst(press.group) || press.group === "next";
+            if (
+              landed ||
+              [0, 1].some(
+                (index) =>
+                  reach(index) !== null && reach(index) < TOUCH_ADJUST_REACH_PX,
+              )
+            ) {
+              row.near.push([line.k, press.i, press.group, reach(0), reach(1)]);
+            }
+          } else if (kind === "answer") {
+            const row = rowOf("d5-answer", `${interval}|${offset}`, input, {
+              runs: 0,
+              next: 0,
+            });
+            row.runs++;
+            if (press.group === "next") row.next++;
+          } else if (kind === "knowledge-answer") {
+            const row = rowOf("d5-knowledge-answer", "answered", input);
+            tried(row, slug);
+            if (isFirst(press.group)) fail(row, where);
+          }
+          continue;
+        }
+        if (WINDOW_KINDS.has(kind)) {
+          const row = rowOf("window", transitionOf(kind), input, {
+            noTarget: [],
+            byMode: {},
+          });
+          if (!sent) {
+            if (mode === "aim")
+              row.noTarget.push([name, line.k, press.aim?.[1] ?? null]);
+            continue;
+          }
+          row.byMode[mode] = (row.byMode[mode] ?? 0) + 1;
+          if (!(press.pressable && press.shown)) row.untried++;
+          else if (press.downGap >= BORDER_UNTIL_MS) {
+            // 窓のあとの押しは合否に入れない。
+          } else if (press.downGap >= BLOCK_BELOW_MS) row.border++;
+          else {
+            tried(row, slug);
+            if (worked || press.focusOff) fail(row, where);
+            // 空振りでないことの対（2打目が働かなかった試した回）。
+            const pair = rowOf("pair", transitionOf(kind), input);
+            if (!press.pair || worked) {
+              // 対を送らなかった回（離れた・2打目が働いた）は数えない。
+            } else if (!press.pair[1] || press.pair[0] < BORDER_UNTIL_MS) {
+              pair.untried++;
+            } else {
+              tried(pair, slug);
+              if (!press.pair[3]) fail(pair, [...where, press.pair]);
+            }
+          }
+          continue;
+        }
+        if (kind === "answer") {
+          const next = press.group === "next";
+          if (input === "mouse") {
+            const row = rowOf("consecutive-mouse", "answer", input, {
+              detail1Next: {},
+            });
+            if (press.detail === 1) {
+              if (next) {
+                const counts = (row.detail1Next[interval] ??= {
+                  next: 0,
+                  worked: 0,
+                });
+                counts.next++;
+                if (worked) counts.worked++;
+              }
+            } else if (press.detail >= 2 && press.downGap < BLOCK_BELOW_MS) {
+              if (!next) row.untried++;
+              else {
+                tried(row, slug);
+                if (worked) fail(row, where);
+              }
+            } else if (press.detail >= 2 && press.downGap < BORDER_UNTIL_MS)
+              row.border++;
+          } else {
+            const gap = press.releaseGap;
+            if (gap < TOUCH_BLOCK_BELOW_MS) {
+              const row = rowOf("touch-block", "answer", input);
+              if (!next) row.untried++;
+              else {
+                tried(row, slug);
+                if (worked) fail(row, where);
+              }
+            } else if (gap < TOUCH_ACCEPT_FROM_MS) {
+              const row = rowOf("touch-border", "answer", input, { worked: 0 });
+              if (next) {
+                row.border++;
+                if (worked) row.worked++;
+              }
+            } else if (gap < TOUCH_ACCEPT_BELOW_MS) {
+              const row = rowOf("touch-accept", "answer", input);
+              if (!next || press.downDistance > GUARD_REACH_PX) row.untried++;
+              else {
+                tried(row, slug);
+                if (!worked.includes("s")) fail(row, where);
+              }
+            }
+          }
+          continue;
+        }
+        // 守りを掛けない切り替わり: 2打目が実際に第1の組に落ちた件（「もう一度挑戦する」のあとは「はじめる」を除く）。
+        if (kind === "knowledge-answer" || kind === "retry") {
+          const row = rowOf("unguarded", kind, input, { near16: [] });
+          tried(row, slug);
+          if (isFirst(press.group)) fail(row, where);
+          else if (input === "touch") {
+            const near =
+              line.q.length === 1 ? line.n : nearOf.get(press.i)?.[3];
+            const reach = near?.[0] ? Math.max(near[0][0], near[0][1]) : null;
+            if (
+              !PRESSABLE.has(press.group) &&
+              reach !== null &&
+              reach > 0 &&
+              reach < TOUCH_ADJUST_REACH_PX
+            ) {
+              row.near16.push([line.k, press.i, reach]);
+            }
+          }
+        }
+      }
+    }
+  }
+  const verdicts = [];
+  for (const row of rows.values()) {
+    const { slugs, ...rest } = row;
+    const perSlug =
+      row.verdict === "touch-block" || row.verdict === "touch-accept";
+    const missingSlugs = perSlug
+      ? DIAGNOSIS_SLUGS.filter((slug) => !slugs.get(slug))
+      : undefined;
+    const counted = !["d5-after", "d5-answer", "touch-border"].includes(
+      row.verdict,
+    );
+    const lowerOk = counted
+      ? row.tried > 0 && (!perSlug || missingSlugs.length === 0)
+      : undefined;
+    verdicts.push({
+      ...rest,
+      missingSlugs,
+      lowerOk,
+      pass: counted ? row.failed === 0 && lowerOk : undefined,
+    });
+  }
+  verdicts.push({ verdict: "first-blocked", count: firstBlocked });
+  verdicts.push({ verdict: "target-mismatch", byKind: mismatches });
+  return verdicts;
 }
 
 main();
