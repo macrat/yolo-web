@@ -155,13 +155,21 @@ export function createPressGuard(
   /** 2打目で語を選ばない守りの、連続の押しの1打目（detail が 1 の mousedown）のときの切り替わりの番号。 */
   let sequenceStart: number | null = null;
 
-  /** 受けない押しを止めたことを数え、押し直しを待つ。 */
-  const noteStopped = (stopped: PointerPress, by: Guard): void => {
+  /**
+   * 受けない押しを止めたことを数え、押し直しを待つ。押し直しの元は、止めた事象（`mousedown` か `click`）の的の
+   * 押せるものである。見せる間に押し下げて切り替わったあとに離す押しでは、押し下げの的は答えた問の行で、何も
+   * 起きなかったのは止めた事象が落ちた新しい画面のものだからである。経過は押し下げの時刻から数える。
+   */
+  const noteStopped = (
+    stopped: PointerPress,
+    by: Guard,
+    stoppedEventTarget: EventTarget | null,
+  ): void => {
     if (!by.reported) {
       by.reported = true;
       options.onGuarded(by.transition);
     }
-    const pressable = closestPressable(stopped.target);
+    const pressable = closestPressable(stoppedEventTarget);
     if (pressable) {
       pendingRetry = {
         transition: by.transition,
@@ -250,7 +258,7 @@ export function createPressGuard(
       if (paired.blockedBy) {
         // フォーカスが押したものへ移らず、置いたフォーカスと語の選択を保つ。
         event.preventDefault();
-        noteStopped(paired, paired.blockedBy);
+        noteStopped(paired, paired.blockedBy, event.target);
         return;
       }
     }
@@ -285,7 +293,7 @@ export function createPressGuard(
     if (paired?.blockedBy) {
       event.preventDefault();
       event.stopPropagation();
-      noteStopped(paired, paired.blockedBy);
+      noteStopped(paired, paired.blockedBy, event.target);
       return;
     }
     if (paired) noteAccepted(paired);
