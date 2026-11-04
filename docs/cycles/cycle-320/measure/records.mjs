@@ -1,5 +1,6 @@
-// 押しの短い記録（回の要約の `q`）の欄の並びと、合否の物差し（t5a-design.md 6章 条件7 の「合否」）。measure.mjs が
-// 書くときと、report.mjs・compare.mjs が読むときに同じものを使う。欄の意味は README の「押しの短い記録 q」にある。
+// 押しの短い記録（回の要約の `q`）の欄の並びと落ちた先の読み方、合否の物差し（t5a-design.md 6章 条件7 の「合否」）、
+// D5 のずれの組。measure.mjs が書くときと、report.mjs・compare.mjs が読むときに同じものを使う。欄の意味は README の
+// 「押しの短い記録 q」にある。
 
 export const Q_COLUMNS = [
   "i", // 走査の中の押しの番号
@@ -21,12 +22,14 @@ export const Q_COLUMNS = [
   "aim", // 狙った2打目の [的, 1打目の点からいちばん近い押せるものまでの直線の距離]（的が無ければ的は null）
   "pair", // 空振りでないことの対の押しの [1打目からの差, 押せるものの上か, 組, 働いたことの字]
   "click", // 2打目の click の [組, 帯の番号, 段階, 的が押せるものの上か]（click が無ければ null）
-  "targetMismatch", // 2打目の pointerdown・click（タッチは touchstart も）の的が合わない（1・0）
+  "targetMismatch", // 2打目の pointerdown と click の時の画面が同じ押しで、pointerdown・click（タッチは touchstart も）の的が合わない（1・0。画面が替わった押しと click の無い押しは null）
   "landing", // 2打目が受けた画面の着地の [s0, 打ち切った範囲の上, 下, 選んだ着地, 着地に使った点の x, y]（点が無ければ x・y は null）
   "selected", // 記録の時点に語が選ばれていたか（マウスだけ。1・0）
   "marks", // 読む所の印の字（c: cut、l: lo、i: ins、h: h1a、a: at 0）。無ければ空の字
   "point", // 1打目を送った点 [x, y]（着地に使った点と比べ、どちらの click を着地に使ったかを読む）
   "previous", // 1打目の、直前の切り替わりの起点からの [時刻の差, 起点の点からの直線の距離, 直前の離しからの差, 1打目の mousedown の detail, 起点の押しの種類]（前の二度押しが無ければ null）
+  "clickShown", // 2打目の click の時に切り替わったあとの画面が出ていたか（1・0。切り替わらない押しと click の無い押しは null）
+  "clickMoved", // 2打目の pointerdown と click のあいだに画面（段階・帯の番号・答えの有無）が替わったか（1・0。click が無ければ null）
 ];
 
 /** q の1つの押しを、欄の名で読める形にする。 */
@@ -34,6 +37,22 @@ export function readPress(entry) {
   return Object.fromEntries(
     Q_COLUMNS.map((name, index) => [name, entry[index] ?? null]),
   );
+}
+
+/**
+ * 2打目がどこに落ちたか（decision-landing.md の「試した回」）。押し下げの時に切り替わったあとの画面が出ていた押し
+ * （と、切り替わらない押し）は pointerdown の的で、押し下げが切り替わりの前で click が切り替わったあとの画面に
+ * 届いた押しは、押し方によらず click の的で決める（タッチの click の的は離した時の組みで決まる）。返すのは
+ * `{ group, pressable, by }`（by は down か click）で、押し下げも click も切り替わる前の画面のものだった押しと、
+ * 2打目の無い押しは null（守りが無くても働かないので、試した回に数えない）。
+ */
+export function landedOf(press) {
+  if (press.shown === 0) {
+    if (press.clickShown !== 1 || !press.click) return null;
+    return { group: press.click[0], pressable: press.click[3], by: "click" };
+  }
+  if (press.group === null) return null;
+  return { group: press.group, pressable: press.pressable, by: "down" };
 }
 
 /** 測る15本（診断12本と、knowledge.mjs の知識クイズ3本）。 */
@@ -68,6 +87,13 @@ export const TOUCH_ACCEPT_BELOW_MS = 700;
 export const GUARD_REACH_PX = 100;
 /** タッチの調整がどの触れ方でも寄せない隔たり（max(dx, dy)）。 */
 export const TOUCH_ADJUST_REACH_PX = 16;
+
+/** D5 のずれ（cycle-318/device-triage.md D5 の基本と、窓の中の 80px・120px のずれ。`dx:dy`）。 */
+export const D5_BASIC = ["0:-20", "0:-10", "0:10", "0:20", "-10:0", "10:0"];
+export const D5_INNER = ["0:80", "0:-80", "-80:0"];
+export const D5_OUTER = ["0:120", "0:-120", "-120:0"];
+/** D5 で、守りを掛けない知識クイズの答え→答えたあとの合否に入れる間隔（基本のずれだけ）。 */
+export const D5_KNOWLEDGE_ANSWER_INTERVALS = [90, 300];
 
 /** 窓の守りを掛けた切り替わりの押しの種類。 */
 export const WINDOW_KINDS = new Set([
