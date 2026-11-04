@@ -8,7 +8,9 @@ import { closestPressable, type ScreenPoint } from "@/lib/reveal";
  *
  * - **押した点を覚える**: 切り替わったあとの着地は、同じ点に落ちる2打目を見て選ぶ。
  * - **二度押しの2打目を受けない**: 押した点の下が入れ替わる操作のあと、新しく出た画面を読む前の、1打目の点の
- *   近くへの押しは、1打目と一続きの二度押しの2打目である。その押しの `mousedown` と `click` を止める。
+ *   近くへの押しは、1打目と一続きの二度押しの2打目である。その押しの `mousedown` と `click` を止める。受けるかは
+ *   押し下げの時刻と座標で決め、守りが開いたあとの押し下げは押し下げの時に、守りが開く前に押し下げてまだ `click`
+ *   まで届いていない押し（診断の答えを見せる間に触れ、切り替わったあとに離す指）は守りが開いた時に決める。
  * - **2打目で語を選ばない**: 受けた連続の押しのうち、1打目が画面を切り替えたものの2打目からは、語の選択を止める。
  */
 
@@ -30,7 +32,11 @@ export const TOUCH_CONSECUTIVE_MS = 300;
 /** 受けなかった押しのあと、同じ押せるものの押し直しを数える長さの上限（ms）。 */
 export const RETRY_WINDOW_MS = 3000;
 
-/** ポインタの1つの押し。時刻と座標は押し下げ（`pointerdown`）で取る。 */
+/**
+ * ポインタの1つの押し。時刻と座標は押し下げ（`pointerdown`）で取る。覚えるのは、主のポインタ（`isPrimary` が真）の
+ * 主のボタン（`button === 0`。指とペンでは触れること）の押しだけである。右や中のボタンの押しと、2本目からの指の
+ * 押しは、二度押しの2打目にならず、覚えると1本目の指の `mousedown` と `click` を別の押しに結んでしまう。
+ */
 export interface PointerPress {
   /** 押し下げの `event.timeStamp`。 */
   readonly downTime: number;
@@ -47,8 +53,8 @@ export interface PointerPress {
   blockedBy: Guard | null;
   /** マウスの押しが連続の押しの守りの範囲にあったときの、その守り（連続かは `mousedown` の `detail` で決める）。 */
   mouseCandidateOf: Guard | null;
-  /** 対の `mousedown` を受けたか。 */
-  mouseDownSeen: boolean;
+  /** 対の `mousedown` の `detail`（マウスの連続の数）。`mousedown` を受けるまでは null。 */
+  mouseDownDetail: number | null;
   /** 対の `click` を受けたか。 */
   clicked: boolean;
 }
@@ -68,7 +74,10 @@ interface Guard {
   readonly transition: QuizGuardedTransition;
   /** 切り替えた押し。 */
   readonly origin: PointerPress;
-  /** タッチとペンの連続の押しで、次の押しを数える元の押し（起点の押しか、受けなかった押し）。 */
+  /**
+   * タッチとペンの連続の押しで、次の押しを数える元の押し（起点の押しか、受けなかった押しか、答えを見せる間に答えた
+   * 問の押せない行の上で離した押し）。
+   */
   chainPress: PointerPress;
   /** この守りで受けなかった押しを数えたか。 */
   reported: boolean;
@@ -102,7 +111,8 @@ export interface PressGuard {
   lastAcceptedClick(): AcceptedClick | null;
   /**
    * 切り替わりのあとの守りを掛ける。origin は切り替えた押し。`"answer"`（診断の答え→次の問）は連続の押しの守り、
-   * ほかは窓の守りになる。前の守りは外れる。
+   * ほかは窓の守りになる。前の守りは外れる。origin のあとに押し下げてまだ `click` まで届いていない押しも、この守りで
+   * 受けるかを決める。
    */
   open(transition: QuizGuardedTransition, origin: PointerPress): void;
   /** 守りを外す（守りを掛けない切り替わりと、キーボードで切り替えたとき）。 */
@@ -161,6 +171,34 @@ export function createPressGuard(
     }
   };
 
+  /**
+   * pressed を守り g の範囲で見て、受けない押しなら g を `blockedBy` に入れる。タッチとペンの連続の押しは、連鎖の元を
+   * pressed に進める。すでに `click` まで届いた押し（診断の答えを見せる間に、答えた問の押せない行の上で離した押し）は
+   * 何も起こしていないので止めずに、連鎖の元にだけする。マウスの連続は `mousedown` の `detail` で決め、`mousedown` が
+   * まだなら `mousedown` の時に決める。
+   */
+  const judge = (g: Guard, pressed: PointerPress): void => {
+    if (!isWithinReach(g.origin, pressed)) return;
+    const block = (): void => {
+      if (!pressed.clicked) pressed.blockedBy = g;
+    };
+    if (g.transition !== "answer") {
+      block();
+      return;
+    }
+    // 連続の押しの守り。タッチとペンは、iOS の Safari がタップの detail を数えないとする資料があるので、守りが
+    // 離しからの長さで数え、受けなかった押しから連鎖させる。マウスはブラウザの数え方（mousedown の detail）に任せる。
+    if (isTouchLike(pressed)) {
+      if (followsWithinTouchInterval(g.chainPress, pressed)) {
+        block();
+        g.chainPress = pressed;
+      }
+      return;
+    }
+    if (pressed.mouseDownDetail === null) pressed.mouseCandidateOf = g;
+    else if (pressed.mouseDownDetail >= 2) block();
+  };
+
   /** 受けた押しが、受けなかった押しの押し直しなら数える。 */
   const noteAccepted = (accepted: PointerPress): void => {
     const retry = pendingRetry;
@@ -176,6 +214,7 @@ export function createPressGuard(
   };
 
   const handlePointerDown = (event: PointerEvent): void => {
+    if (!event.isPrimary || event.button !== 0) return;
     const next: PointerPress = {
       downTime: event.timeStamp,
       x: event.clientX,
@@ -186,25 +225,11 @@ export function createPressGuard(
       upTime: null,
       blockedBy: null,
       mouseCandidateOf: null,
-      mouseDownSeen: false,
+      mouseDownDetail: null,
       clicked: false,
     };
     press = next;
-    if (!guard || !isWithinReach(guard.origin, next)) return;
-    if (guard.transition !== "answer") {
-      next.blockedBy = guard;
-      return;
-    }
-    // 連続の押しの守り。タッチとペンは、iOS の Safari がタップの detail を数えないとする資料があるので、守りが
-    // 離しからの長さで数え、受けなかった押しから連鎖させる。マウスはブラウザの数え方（mousedown の detail）に任せる。
-    if (isTouchLike(next)) {
-      if (followsWithinTouchInterval(guard.chainPress, next)) {
-        next.blockedBy = guard;
-        guard.chainPress = next;
-      }
-      return;
-    }
-    next.mouseCandidateOf = guard;
+    if (guard) judge(guard, next);
   };
 
   const handlePointerUp = (event: PointerEvent): void => {
@@ -214,9 +239,11 @@ export function createPressGuard(
   };
 
   const handleMouseDown = (event: MouseEvent): void => {
-    const paired = press && !press.mouseDownSeen ? press : null;
+    // 右や中のボタンの mousedown は、覚えた押し（主のボタンの押しだけ）とも、語の選択の連続とも結ばない。
+    if (event.button !== 0) return;
+    const paired = press && press.mouseDownDetail === null ? press : null;
     if (paired) {
-      paired.mouseDownSeen = true;
+      paired.mouseDownDetail = event.detail;
       if (paired.mouseCandidateOf === guard && guard && event.detail >= 2) {
         paired.blockedBy = guard;
       }
@@ -292,18 +319,14 @@ export function createPressGuard(
       return lastClick;
     },
     open(transition, origin) {
-      // 診断の答えは、見せる間（ANSWER_SHOWN_MS）のあとのタイマーで切り替わる。見せる間に起点から続けて押した
-      // タッチとペンの押しは、受けなかった押しと同じく連鎖の元にする（どれにも働かない、答えた問の上の押し）。
-      const chainPress =
-        transition === "answer" &&
-        press &&
-        press !== origin &&
-        isTouchLike(press) &&
-        isWithinReach(origin, press) &&
-        followsWithinTouchInterval(origin, press)
-          ? press
-          : origin;
-      guard = { transition, origin, chainPress, reported: false };
+      guard = { transition, origin, chainPress: origin, reported: false };
+      // 診断の答えと最後の答えは、見せる間（ANSWER_SHOWN_MS）のあとのタイマーで切り替わる。見せる間に触れた指は、
+      // 切り替わったあとに離すと、mousedown と click が新しい画面のものに届く（落ちる要素は離した時の組みで決まる）。
+      // そこで、起点のあとのいちばん新しい押しも、押し下げの時刻と座標で、いま掛ける守りに当てる。マウスは
+      // mousedown が押し下げと続けて見せる間に届き、その的が切り替わりで DOM から外れると Chromium は click を
+      // 出さないが、click を出すブラウザでも同じ決まりで止まるよう、mousedown の detail で同じく当てる。
+      // click の処理の中で切り替わる操作（「はじめる」「次へ」）では、いちばん新しい押しは起点そのものである。
+      if (press && press !== origin) judge(guard, press);
     },
     close() {
       guard = null;
