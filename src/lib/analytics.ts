@@ -308,6 +308,54 @@ export function trackTileFirstInteraction({
   });
 }
 
+// ── Quiz second-press guard ──────────────────────────────────────────────────
+//
+// After a press swaps what is under the pointer (start, next, the last answer,
+// a diagnosis answer), the quiz screen does not accept the second press of a
+// double press near the first point. These events count how often that guard
+// actually stops a press, and how often a visitor presses the same control
+// again soon after, which is the sign that the stopped press was intended.
+
+/**
+ * The swap after which a press was not accepted.
+ * - `"start"`  — 「はじめる」 → the first question.
+ * - `"next"`   — the knowledge quiz's 「次へ」 → the next question.
+ * - `"result"` — the last answer (diagnosis) or the last 「次へ」 (knowledge quiz) → the result.
+ * - `"answer"` — a diagnosis answer → the next question.
+ */
+export type QuizGuardedTransition = "start" | "next" | "result" | "answer";
+
+/**
+ * Send a quiz_press_guarded event when the guard stops a press (its
+ * `mousedown` or `click`). The caller sends it once per guard.
+ */
+export function trackQuizPressGuarded(
+  contentId: string,
+  transition: QuizGuardedTransition,
+): void {
+  sendGaEvent("quiz_press_guarded", {
+    transition,
+    content_id: contentId,
+  });
+}
+
+/**
+ * Send a quiz_press_guarded_retry event when, within 3 seconds of a press the
+ * guard stopped, the visitor presses the same control again and the press is
+ * accepted. `elapsedMs` is the time from the stopped press to this press.
+ */
+export function trackQuizPressGuardedRetry(
+  contentId: string,
+  transition: QuizGuardedTransition,
+  elapsedMs: number,
+): void {
+  sendGaEvent("quiz_press_guarded_retry", {
+    transition,
+    content_id: contentId,
+    elapsed_ms: elapsedMs,
+  });
+}
+
 // ── Blog table of contents ───────────────────────────────────────────────────
 //
 // Both events identify the post with content_type "blog" and content_id = the

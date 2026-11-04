@@ -7,17 +7,24 @@ import {
   useMemo,
   useReducer,
   useRef,
+  useState,
   type ReactNode,
 } from "react";
-import { trackContentStart, trackContentEnd } from "@/lib/analytics";
+import {
+  trackContentStart,
+  trackContentEnd,
+  trackQuizPressGuarded,
+  trackQuizPressGuardedRetry,
+  type QuizGuardedTransition,
+} from "@/lib/analytics";
 import {
   measureGroupPlan,
   measureHeadedBoxPlan,
   measurePageTopPlan,
   revealGroup,
   revealLanding,
-  type ScreenPoint,
 } from "@/lib/reveal";
+import { createPressGuard, type AcceptedClick } from "@/play/quiz/pressGuard";
 import Link from "next/link";
 import type { QuizDefinition, QuizResult } from "@/play/quiz/types";
 import type { QuestionPhrases } from "@/play/quiz/questionPhrases";
@@ -149,12 +156,16 @@ export default function QuizContainer({
 
   /** いま出ている画面。切り替わりの前の画面を知るためと、字の読み込みのあとに送り直す範囲を選ぶために持つ。 */
   const screenRef = useRef({ phase, answered, isPersonality });
-  /** 最新の切り替わりの番号。window の受け手が、React の click の処理より先に読む。 */
-  const transitionRef = useRef(progress.transition);
-  /** 1打目を押した点（click の座標）。キーボードで押したとき（click の detail が 0）は null。 */
-  const pressPointRef = useRef<ScreenPoint | null>(null);
-  /** 連続の押しの1打目（detail が 1 の mousedown）のときの切り替わりの番号。 */
-  const pressSequenceStartRef = useRef<number | null>(null);
+  /** 押した点を覚え、二度押しの2打目と、2打目の語の選択を受けない window の受け手（pressGuard.ts）。 */
+  const [pressGuard] = useState(() =>
+    createPressGuard(progress.transition, {
+      onGuarded: (transition) => trackQuizPressGuarded(contentId, transition),
+      onRetry: (transition, elapsedMs) =>
+        trackQuizPressGuardedRetry(contentId, transition, elapsedMs),
+    }),
+  );
+  /** 診断で答えを入れた click。答えを見せたあとのタイマーで切り替わるときの、守りの起点と押した点になる。 */
+  const answerClickRef = useRef<AcceptedClick | null>(null);
   /** いまの問か答えたあとの形を見せてから、来訪者が自分で画面を送ったか。 */
   const visitorScrolledRef = useRef(false);
   /** 1回解くあいだに描いた問の区画のいちばん高いものと、それを測ったときの区画の幅と文字の大きさ。 */
@@ -199,21 +210,39 @@ export default function QuizContainer({
   // 切り替わりのあとの送りとフォーカス。来訪者の操作（始める・答える・進む・やり直す）で画面が切り替わったら、塗る前に、
   // 画面ごとに決めた範囲を見せる着地へ送り（DESIGN.md §8）、そのあとフォーカスを送らずに移す。送りを先にするので、
   // フォーカスの置き場が画面の外にあってもブラウザが勝手に送らず、フォーカスが body にある画面も、送る前の位置の
-  // 画面も塗られない。着地は、見せる範囲の中に、二度押しの2打目が落ちる所（1打目の点）の真下に避けるものが来ない
-  // 送りがあればそれを選ぶ（避けるものは画面ごとに下で決める。無いときの着き方は chooseLanding）。
+  // 画面も塗られない。着地は、見せる範囲の中で、二度押しの2打目が落ちる所（1打目の点）から避けるものを離す送りを
+  // 選ぶ（避けるものは画面ごとに下で決める。選び方は chooseTouchClearLanding）。
+  // 切り替えた押しがポインタの押しなら、切り替わりごとの守りを掛ける。キーボードと読み上げの起動で切り替えたときと、
+  // 守りを掛けない切り替わりでは、守りを外す。
   // 切り替わりの番号がマウントのときから変わっていなければ（開いた直後・作り直されたとき）何もせず、ページの途中への
   // リンクや戻る操作で着いた位置と読み上げの位置を壊さない。
   const mountTransitionRef = useRef(progress.transition);
   useLayoutEffect(() => {
-    transitionRef.current = progress.transition;
+    const previousTransition = pressGuard.shownTransition();
+    pressGuard.showTransition(progress.transition);
     const previous = screenRef.current;
     screenRef.current = { phase, answered, isPersonality };
     if (progress.transition === mountTransitionRef.current) return;
-    const point = pressPointRef.current;
+
+    // 切り替えた click。診断の答えのあとはタイマーで切り替わるので、答えを入れた click を使う。ほかは、いま出ていた
+    // 画面で受けた click が切り替えた（click の処理の中で更新を受け付けた）。
+    const lastClick = pressGuard.lastAcceptedClick();
+    const cause =
+      previous.answered && previous.isPersonality
+        ? answerClickRef.current
+        : lastClick?.transitionAtClick === previousTransition
+          ? lastClick
+          : null;
+    const point = cause?.point ?? null;
+    const guardAfter = (transition: QuizGuardedTransition | null): void => {
+      if (transition && cause?.press) pressGuard.open(transition, cause.press);
+      else pressGuard.close();
+    };
 
     if (phase === "intro") {
-      // やり直したあと。開始の画面をページの頭から見せ、「はじめる」は避けない（2打目が押しても、もう一度解く
-      // という来訪者のしようとしたことのとおりに始まる）。
+      // やり直したあと。守りを掛けず、開始の画面をページの頭から見せ、「はじめる」は避けない（2打目が押しても、
+      // もう一度解くという来訪者のしようとしたことのとおりに始まる）。
+      guardAfter(null);
       const facts = introFactsRef.current;
       const start = startButtonRef.current;
       if (!facts || !start) return;
@@ -225,6 +254,7 @@ export default function QuizContainer({
     }
 
     if (phase === "result") {
+      guardAfter("result");
       const box = resultBoxRef.current;
       if (!box) return;
       revealLanding(measureHeadedBoxPlan(box, resultNameOf(box)), point);
@@ -241,10 +271,17 @@ export default function QuizContainer({
     if (!answered) {
       // 次の問が出た。「はじめる」と知識クイズの「次へ」のあとは、まだ読んでいない問に答えを入れないよう、次の問の
       // 選択肢も避ける。診断の答えのあとは、点の真下に次の問の選択肢が来るのがほぼ毎問なので、避けると問ごとに
-      // 選択肢の位置が動く。そこで避けない。
+      // 選択肢の位置が動く。そこで避けない。診断の答えのあとの守りは、1回解くあいだに何度も通る所なので、速く
+      // 答える来訪者の答えを捨てないよう、連続の押しだけを受けない。
+      const fromDiagnosisAnswer = previous.phase === "playing" && isPersonality;
+      guardAfter(
+        previous.phase !== "playing"
+          ? "start"
+          : fromDiagnosisAnswer
+            ? "answer"
+            : "next",
+      );
       if (stage && choices) {
-        const fromDiagnosisAnswer =
-          previous.phase === "playing" && isPersonality;
         revealLanding(
           measureGroupPlan(stage, choices),
           point,
@@ -255,9 +292,13 @@ export default function QuizContainer({
       return;
     }
 
-    // 答えた。知識クイズでは正誤の字から「次へ」までを見せ、「次へ」も避ける（2打目が解説を読ませずに次の問へ進めない）。
-    // 診断で押した行を見せるあいだは送らない。
-    if (!isPersonality) {
+    // 答えた。画面は切り替わらず、押した点は押した行（押せない字）の上に残るので、守りを掛けない。診断では、答えを
+    // 見せたあとの切り替わりの守りの起点にする click を覚える。知識クイズでは正誤の字から「次へ」までを見せ、
+    // 「次へ」も避ける（2打目が解説を読ませずに次の問へ進めない）。診断で押した行を見せるあいだは送らない。
+    guardAfter(null);
+    if (isPersonality) {
+      answerClickRef.current = cause;
+    } else {
       const upperRow = upperAnsweredRow();
       const next = nextButtonRef.current;
       if (upperRow && next) {
@@ -270,36 +311,16 @@ export default function QuizContainer({
     phase,
     answered,
     isPersonality,
+    pressGuard,
     holdStageHeight,
     upperAnsweredRow,
   ]);
 
-  // ページの上の入力と、字の読み込みと画面の大きさの変わりの受け手。押した点と2打目の受け手は捕捉の段階で受け、
-  // React の click の処理より先に走る。
+  // 押しの受け手（押した点・二度押しの2打目・2打目の語の選択）は、捕捉の段階で受け、React の click の処理より先に走る。
+  useEffect(() => pressGuard.attach(), [pressGuard]);
+
+  // ページの送りの入力と、字の読み込みと画面の大きさの変わりの受け手。
   useEffect(() => {
-    // 押した点を覚える。切り替わったあとの着地は、同じ点に落ちる2打目を見て選ぶ。
-    const rememberPressPoint = (event: MouseEvent): void => {
-      pressPointRef.current =
-        event.detail === 0 ? null : { x: event.clientX, y: event.clientY };
-    };
-    // 2打目で語を選ばない。連続の押しの1打目が画面を切り替えたら（番号が増えていたら）、2打目からの既定の動き
-    // （語の選択）を止める。入れ替わった先の字（答えたあとの行・解説・次の問の見出し・結果・開始の画面）に黒い地の
-    // 選択が残らない。字の上で始めたダブルクリックと引いて選ぶことは、1打目が何も切り替えないので止めない。
-    // 2打目の click はそのまま届く。
-    const guardSecondPress = (event: MouseEvent): void => {
-      if (event.detail === 1) {
-        pressSequenceStartRef.current = transitionRef.current;
-        return;
-      }
-      const sequenceStart = pressSequenceStartRef.current;
-      if (
-        event.detail >= 2 &&
-        sequenceStart !== null &&
-        transitionRef.current > sequenceStart
-      ) {
-        event.preventDefault();
-      }
-    };
     // 来訪者の送りは、送りを起こす入力で知る。scroll の知らせは、こちらの送りや字の組み替えに伴うブラウザの送りでも
     // 届き、来訪者の送りと見分けられない。
     const noteVisitorScroll = (): void => {
@@ -324,16 +345,12 @@ export default function QuizContainer({
     };
     const fonts = document.fonts as FontFaceSet | undefined;
 
-    window.addEventListener("click", rememberPressPoint, true);
-    window.addEventListener("mousedown", guardSecondPress, true);
     window.addEventListener("wheel", noteVisitorScroll, { passive: true });
     window.addEventListener("touchmove", noteVisitorScroll, { passive: true });
     window.addEventListener("keydown", noteVisitorScroll, true);
     window.addEventListener("resize", holdStageHeight);
     fonts?.addEventListener("loadingdone", revealAfterFontLoad);
     return () => {
-      window.removeEventListener("click", rememberPressPoint, true);
-      window.removeEventListener("mousedown", guardSecondPress, true);
       window.removeEventListener("wheel", noteVisitorScroll);
       window.removeEventListener("touchmove", noteVisitorScroll);
       window.removeEventListener("keydown", noteVisitorScroll, true);

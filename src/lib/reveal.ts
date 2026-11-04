@@ -233,7 +233,30 @@ export function planHeadedBox(
  */
 const DOUBLE_TAP_REACH = 100;
 
-/** 送ったあとの、押した点からいちばん近い矩形までの距離。点が矩形の上なら 0、DOUBLE_TAP_REACH で頭打ち。 */
+/**
+ * タッチの調整が2打目を押せるものへ寄せる隔たりの上限（px）。調整は、触れた面（点を中心にした矩形で、半辺は
+ * Android の端末で 10〜16px）と交わる押せるものへ点を寄せるので、横か縦のどちらかで 16px 以上離れた押せるものには
+ * どの触れ方でも寄らない。
+ */
+const TOUCH_ADJUST_REACH = 16;
+
+/** 送ったあとの、押した点から矩形までの横と縦の隔たり。点がその向きで矩形の中なら 0。 */
+function gapsTo(
+  point: ScreenPoint,
+  rect: TargetRect,
+  scroll: number,
+): { dx: number; dy: number } {
+  return {
+    dx: Math.max(rect.left - point.x, 0, point.x - rect.right),
+    dy: Math.max(
+      rect.top - scroll - point.y,
+      0,
+      point.y - (rect.bottom - scroll),
+    ),
+  };
+}
+
+/** 送ったあとの、押した点からいちばん近い矩形までの直線の距離。点が矩形の上なら 0、DOUBLE_TAP_REACH で頭打ち。 */
 function distanceToNearest(
   point: ScreenPoint,
   rects: readonly TargetRect[],
@@ -241,13 +264,26 @@ function distanceToNearest(
 ): number {
   let nearest = DOUBLE_TAP_REACH;
   for (const rect of rects) {
-    const dx = Math.max(rect.left - point.x, 0, point.x - rect.right);
-    const dy = Math.max(
-      rect.top - scroll - point.y,
-      0,
-      point.y - (rect.bottom - scroll),
-    );
+    const { dx, dy } = gapsTo(point, rect, scroll);
     nearest = Math.min(nearest, Math.hypot(dx, dy));
+  }
+  return nearest;
+}
+
+/**
+ * 送ったあとの、押した点からいちばん近い矩形までの、横と縦の隔たりの大きいほう（max(dx, dy)）。タッチの調整は横と
+ * 縦のそれぞれで面の半辺の中にあるものへ寄せるので、寄るかどうかはこの隔たりで決まる。点が矩形の上なら 0、
+ * DOUBLE_TAP_REACH で頭打ち。
+ */
+function reachToNearest(
+  point: ScreenPoint,
+  rects: readonly TargetRect[],
+  scroll: number,
+): number {
+  let nearest = DOUBLE_TAP_REACH;
+  for (const rect of rects) {
+    const { dx, dy } = gapsTo(point, rect, scroll);
+    nearest = Math.min(nearest, Math.max(dx, dy));
   }
   return nearest;
 }
@@ -277,17 +313,66 @@ export interface LandingChoice {
   plan: LandingPlan;
   /** 1打目を押した点。キーボードで押したときは null。 */
   point: ScreenPoint | null;
-  /** 先に避けるもの（ほかのページへ移るもの・開閉するもの・ボタン）。 */
+  /** 先に避けるもの（ほかのページへ移るもの・開閉するもの・ボタン）。選択肢は行の矩形で持つ。 */
   avoidFirst: readonly TargetRect[];
-  /** その次に避けるもの（次の問の選択肢）。 */
+  /** その次に避けるもの（次の問の選択肢）。選択肢は行の矩形で持つ。 */
   avoidNext: readonly TargetRect[];
   /** ページが送れる範囲。 */
   scrollable: ScrollSpan;
 }
 
 /**
- * 押した点の下が入れ替わる操作のあとの送りを選ぶ。二度押しの2打目が、入れ替わった先の押せるものに落ちない
- * 送りを、見せる範囲（ページが送れる範囲で打ち切る）の中から選ぶ。範囲が空か、押した点が無ければ基準のまま。
+ * 押した点を避けるものから 16px 以上離せるかを見て着地を選ぶための材料。避けるものを、chooseLanding に渡す
+ * 矩形に加えて、罫線を除いた押せる範囲の矩形でも持つ。
+ */
+export interface TouchClearLandingChoice extends LandingChoice {
+  /** avoidFirst と同じものの、罫線を除いた押せる範囲の矩形。 */
+  avoidFirstHitAreas: readonly TargetRect[];
+  /** avoidNext と同じものの、罫線を除いた押せる範囲の矩形。 */
+  avoidNextHitAreas: readonly TargetRect[];
+}
+
+/** 見せる範囲を、ページが送れる範囲で打ち切り、8px の空きが欠けない向きに丸めて、整数の基準と同じ 1px の刻みにする。 */
+function landingSpan(plan: LandingPlan, scrollable: ScrollSpan): ScrollSpan {
+  return {
+    min: Math.ceil(Math.max(plan.span.min, scrollable.min)),
+    max: Math.floor(Math.min(plan.span.max, scrollable.max)),
+  };
+}
+
+/**
+ * steps（基準に近い順）のうち、scoreOf の並びを頭から比べていちばん大きい送りを返す。同じ点の送りのうち、
+ * 先に出たもの（基準に近いもの）が残る。
+ */
+function bestScoring(
+  steps: readonly number[],
+  scoreOf: (scroll: number) => readonly number[],
+): number {
+  const isBetter = (
+    score: readonly number[],
+    than: readonly number[],
+  ): boolean => {
+    for (let index = 0; index < score.length; index++) {
+      if (score[index] !== than[index]) return score[index] > than[index];
+    }
+    return false;
+  };
+  let best = steps[0];
+  let bestScore = scoreOf(best);
+  for (const scroll of steps.slice(1)) {
+    const score = scoreOf(scroll);
+    if (isBetter(score, bestScore)) {
+      best = scroll;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+
+/**
+ * 押した点の下が入れ替わる操作のあとの送りを、点から避けるものまでの直線の距離で選ぶ。二度押しの2打目が、
+ * 入れ替わった先の押せるものに落ちない送りを、見せる範囲（ページが送れる範囲で打ち切る）の中から選ぶ。範囲が
+ * 空か、押した点が無ければ基準のまま。範囲の中に 16px 以上離せる送りが無いときに chooseTouchClearLanding が使う。
  *
  * - 基準が送らない（0 の）ときは、来訪者が動かないまとまりを見ているので、ずらせばそれだけで余計な動きになる。
  *   基準で点の真下に何も来なければ送らない。来るときだけ、真下に先に避けるものが来ない送り、そのなかで次に
@@ -302,11 +387,7 @@ export interface LandingChoice {
  */
 export function chooseLanding(choice: LandingChoice): number {
   const { plan, point, avoidFirst, avoidNext, scrollable } = choice;
-  // 範囲の端は 8px の空きが欠けない向きに丸め、整数の基準と同じ 1px の刻みの上で選ぶ。
-  const span = {
-    min: Math.ceil(Math.max(plan.span.min, scrollable.min)),
-    max: Math.floor(Math.min(plan.span.max, scrollable.max)),
-  };
+  const span = landingSpan(plan, scrollable);
   if (!point || span.min > span.max) return plan.base;
 
   const isUnder = (rects: readonly TargetRect[], scroll: number): boolean =>
@@ -323,33 +404,70 @@ export function chooseLanding(choice: LandingChoice): number {
     );
   }
 
-  const scoreOf = (scroll: number): number[] => {
+  return bestScoring(steps, (scroll) => {
     const toFirst = distanceToNearest(point, avoidFirst, scroll);
     const toNext = distanceToNearest(point, avoidNext, scroll);
     return [toFirst > 0 ? 1 : 0, toNext > 0 ? 1 : 0, toFirst, toNext];
-  };
-  const isBetter = (score: number[], than: number[]): boolean => {
-    for (let index = 0; index < score.length; index++) {
-      if (score[index] !== than[index]) return score[index] > than[index];
-    }
-    return false;
-  };
-  // steps は基準に近い順なので、同じ点の送りのうち、先に出たもの（基準に近いもの）が残る。
-  let best = steps[0];
-  let bestScore = scoreOf(best);
-  for (const scroll of steps.slice(1)) {
-    const score = scoreOf(scroll);
-    if (isBetter(score, bestScore)) {
-      best = scroll;
-      bestScore = score;
-    }
-  }
-  return best;
+  });
+}
+
+/**
+ * 押した点の下が入れ替わる操作のあとの送りを選ぶ。見せる範囲の中に、点から先に避けるものと次に避けるものの
+ * どちらも 16px 以上離れる送りがあれば、タッチの調整で2打目が寄らない送りを、点から避けるものの押せる範囲
+ * （罫線を除いた矩形）までの横と縦の隔たりの大きいほう（max(dx, dy)）で選ぶ。直線の距離で測ると、縦にも横にも
+ * 16px より近い斜めの点を 16px 以上と数え、2打目が寄る点を残すからである。範囲が空か、押した点が無ければ基準のまま。
+ *
+ * - 基準が送らない（0 の）ときは、基準でどちらも 16px 以上離れていれば送らない。そうでなければ、どちらも 16px 以上
+ *   離れる送りのうち、基準にいちばん近いものを選ぶ。それより遠ざけるためには動かさない。
+ * - 基準が送るときは、次の順で比べていちばん良い送りを選ぶ。
+ *   1. 先に避けるものが点から 16px 以上
+ *   2. 次に避けるものが点から 16px 以上
+ *   3. 先に避けるものが点から遠い
+ *   4. 次に避けるものが点から遠い
+ *   5. 基準に近い
+ *
+ * 16px 以上離せる送りが範囲に無いときは、chooseLanding でそのまま選ぶ。離せない所で隔たりを 1px 足すために
+ * 大きく送る動きを足さない。
+ */
+export function chooseTouchClearLanding(
+  choice: TouchClearLandingChoice,
+): number {
+  const { plan, point, avoidFirstHitAreas, avoidNextHitAreas, scrollable } =
+    choice;
+  const span = landingSpan(plan, scrollable);
+  if (!point || span.min > span.max) return plan.base;
+
+  const reaches = (scroll: number): [number, number] => [
+    reachToNearest(point, avoidFirstHitAreas, scroll),
+    reachToNearest(point, avoidNextHitAreas, scroll),
+  ];
+  const isClear = (scroll: number): boolean =>
+    reaches(scroll).every((reach) => reach >= TOUCH_ADJUST_REACH);
+  const steps = stepsNearBase(plan.base, span);
+  const nearestClear = steps.find(isClear);
+  if (nearestClear === undefined) return chooseLanding(choice);
+
+  if (plan.base === 0) return isClear(0) ? 0 : nearestClear;
+
+  return bestScoring(steps, (scroll) => {
+    const [toFirst, toNext] = reaches(scroll);
+    return [
+      toFirst >= TOUCH_ADJUST_REACH ? 1 : 0,
+      toNext >= TOUCH_ADJUST_REACH ? 1 : 0,
+      toFirst,
+      toNext,
+    ];
+  });
 }
 
 /** 二度押しの2打目が落ちうる、押せるもの。 */
 const PRESSABLE_SELECTOR =
   'a[href], button, summary, input, select, textarea, label, [role="button"], [role="link"]';
+
+/** 出来事の的を中に持つ押せるもの（着地で避けるものと同じ集め方）。押せるものの上でなければ null。 */
+export function closestPressable(target: EventTarget | null): Element | null {
+  return target instanceof Element ? target.closest(PRESSABLE_SELECTOR) : null;
+}
 
 /** 着地で避けるものの分け方。 */
 export interface LandingTargets {
@@ -359,23 +477,43 @@ export interface LandingTargets {
   avoidNext?: Element | null;
 }
 
+/** 押せるものの矩形の2通りの取り方。 */
+interface PressableRects {
+  /** 行の矩形。`data-hit-area="after"` のものは、区切りの罫線を含む行の全体。 */
+  row: TargetRect;
+  /** 罫線を除いた押せる範囲の矩形。`data-hit-area="after"` のものは、行の罫線の内側（`::after` の箱）。 */
+  hitArea: TargetRect;
+}
+
 /**
- * 押せるものの、押せる範囲の矩形。`data-hit-area="after"` を持つ要素は、押せる範囲を `::after` で、位置を決めた
- * 祖先（一覧と問の選択肢の行）の全体に広げている（DESIGN.md §6）ので、その祖先の矩形で数える。要素の箱で数えると、
- * 行の区切りの罫線や名前の右の空きを「押せるものが無い」と取り違える。
+ * 押せるものの矩形。`data-hit-area="after"` を持つ要素は、押せる範囲を `::after` で、位置を決めた祖先（一覧と問の
+ * 選択肢の行）の罫線の内側の全体に広げている（DESIGN.md §6）ので、その祖先の矩形で数える。要素の箱で数えると、
+ * 名前の右の空きを「押せるものが無い」と取り違える。そうでない要素は、どちらも要素の箱で数える。
  */
-function pressableRectOf(element: Element): DOMRect {
-  const hitArea =
+function pressableRectsOf(element: Element): PressableRects {
+  const row =
     element instanceof HTMLElement &&
     element.dataset.hitArea === "after" &&
     element.offsetParent
       ? element.offsetParent
       : element;
-  return hitArea.getBoundingClientRect();
+  const rect = row.getBoundingClientRect();
+  if (row === element) return { row: rect, hitArea: rect };
+  const style = getComputedStyle(row);
+  const border = (width: string): number => parseFloat(width) || 0;
+  return {
+    row: rect,
+    hitArea: {
+      top: rect.top + border(style.borderTopWidth),
+      bottom: rect.bottom - border(style.borderBottomWidth),
+      left: rect.left + border(style.borderLeftWidth),
+      right: rect.right - border(style.borderRightWidth),
+    },
+  };
 }
 
 /**
- * 押した点の下が入れ替わる操作のあと、切り替わった画面の押せるものの押せる範囲を集め、chooseLanding で選んだ
+ * 押した点の下が入れ替わる操作のあと、切り替わった画面の押せるものの矩形を集め、chooseTouchClearLanding で選んだ
  * 所へ送る。切り替わったあとの組みで、塗る前に呼ぶ。
  */
 export function revealLanding(
@@ -385,20 +523,30 @@ export function revealLanding(
 ): void {
   const avoidFirst: TargetRect[] = [];
   const avoidNext: TargetRect[] = [];
+  const avoidFirstHitAreas: TargetRect[] = [];
+  const avoidNextHitAreas: TargetRect[] = [];
   for (const element of document.querySelectorAll(PRESSABLE_SELECTOR)) {
     if (targets.exclude?.contains(element)) continue;
-    const rect = pressableRectOf(element);
+    const { row, hitArea } = pressableRectsOf(element);
     // 大きさの無いもの（隠れた入力など）は押せない。
-    if (rect.width === 0 || rect.height === 0) continue;
-    (targets.avoidNext?.contains(element) ? avoidNext : avoidFirst).push(rect);
+    if (row.bottom === row.top || row.right === row.left) continue;
+    if (targets.avoidNext?.contains(element)) {
+      avoidNext.push(row);
+      avoidNextHitAreas.push(hitArea);
+    } else {
+      avoidFirst.push(row);
+      avoidFirstHitAreas.push(hitArea);
+    }
   }
   const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
   scrollInstantly(
-    chooseLanding({
+    chooseTouchClearLanding({
       plan,
       point,
       avoidFirst,
       avoidNext,
+      avoidFirstHitAreas,
+      avoidNextHitAreas,
       scrollable: { min: -window.scrollY, max: maxScrollY - window.scrollY },
     }),
   );
