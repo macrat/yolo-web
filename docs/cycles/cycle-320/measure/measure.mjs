@@ -45,6 +45,7 @@ import path from "node:path";
 import { chromium } from "playwright";
 import { KNOWLEDGE } from "./knowledge.mjs";
 import {
+  AIM_REACH_PX,
   ALL_SLUGS,
   BLOCK_BELOW_MS,
   D5_BASIC,
@@ -100,11 +101,10 @@ const TOUCH_DIAGNOSIS_INTERVAL = 220;
 const KEYBOARD_VARIANTS = ["start", "next", "last"];
 
 /**
- * 狙った2打目（窓の守りの回）。新しい画面が出ている間隔で、1打目の点から矩形までの直線の距離が AIM_REACH 以下の
- * 押せるもののうち、いちばん近いものを的にする（100px の境目から、タッチの調整で寄る 16px より離す）。
+ * 狙った2打目（窓の守りの回）。新しい画面が出ている間隔で、1打目の点から矩形までの直線の距離が AIM_REACH_PX 以下の
+ * 押せるもののうち、いちばん近いものを的にする（records.mjs）。
  */
 const AIM_INTERVALS = new Set([150, 300, 500]);
-const AIM_REACH = 80;
 /** 窓の守りを掛ける操作。answers は知識クイズの「次へ」だけが窓の守りに当たる。 */
 const WINDOW_OPS = new Set(["start", "last", "answers"]);
 
@@ -121,18 +121,21 @@ const GUARD_CLEAR_MS = 750;
 /** 2打目を送ってから記録するまでの、少なくともの待ち（2打目の働きが状態に出るまで）。 */
 const SETTLE_MS = 100;
 /**
- * 押し下げを切り替わりの前に置き、離しを切り替わりのあとに置くタッチの2打目（hold）の、触れてから離すまでの長さ。
- * 押し下げの間隔は、診断の答え（答えを見せる 150ms のあとに切り替わる）と診断の最後の答えでは 0・90ms、すぐに
- * 切り替わる「はじめる」・知識クイズの「次へ」・最後の「次へ」では 0ms（1打目の click より先に押し下げが届く間隔）。
+ * 押し下げを切り替わりの前に置き、離しを切り替わりのあとに置くタッチの2打目（hold・hold-aim・hold-out）の、触れて
+ * から離すまでの長さ。押し下げの間隔は、診断の答え（答えを見せる 150ms のあとに切り替わる）と診断の最後の答えでは
+ * 0・90ms、すぐに切り替わる「はじめる」・知識クイズの「次へ」・最後の「次へ」では 0ms（1打目の click より先に
+ * 押し下げが届く間隔）。
  */
 const HOLD_MS = 200;
+/** 離す点を下見の文脈で決める hold の押し方（scoutHold）。 */
+const SCOUTED_MODES = new Set(["hold-aim", "hold-out"]);
 /** マウスの2打目を clickCount 1（detail 1）で送る押し方。ほかの押し方の2打目は clickCount 2。 */
 const SINGLE_CLICK_MODES = new Set(["d1", "read"]);
 /** 読んでから答える押し（read）の、答えの1打目から2打目までの間隔（答えの離しから 1 秒以上）。 */
 const READ_INTERVAL_MS = 1100;
 /**
  * 守りが受ける側の hold-out の2打目を置く、1打目の点からの少なくともの直線の距離（守りの 100px の外で、境目の帯の
- * 116px より外）。点は、同じ回の下見の文脈で読んだ、離す時の新しい画面の押せるものの中から選ぶ（scoutHoldOut）。
+ * 116px より外）。点は、同じ回の下見の文脈で読んだ、離す時の新しい画面の押せるものの中から選ぶ（scoutHold）。
  */
 const HOLD_OUT_PX = 120;
 const HOLD_INTERVALS_DIAGNOSIS = [0, 90];
@@ -301,9 +304,12 @@ function timingsOf(options, slug, input) {
       add(READ_INTERVAL_MS, ["0:0"], "read");
     }
     // 押し下げが切り替わりの前で、離しが切り替わりのあとのタッチの2打目。hold は同じ点の2打目（守りが受けない側。
-    // 診断の答え→次の問と、窓の守りの3つの切り替わり）。守りが受ける側の hold-out（離す時の新しい画面で、起点の点
-    // から HOLD_OUT_PX 以上離れた押せるものの上の2打目）は、見せる間がある診断の答え→次の問と診断の最後の答え→結果
-    // だけで測る（「はじめる」と「次へ」は click の中で切り替わるので、受ける側の押しを作れない）。マウスは、押し
+    // 診断の答え→次の問と、窓の守りの3つの切り替わり）。hold-aim は守りが受けない側の狙った hold で、離す時の新しい
+    // 画面で起点の点から AIM_REACH_PX 以下のいちばん近い押せるものの上の2打目（着地が点を押せるものから離すので、
+    // 同じ点の hold は試した回にならないことが多いため。decision-landing.md の「下限」）。守りが受ける側の hold-out
+    // （離す時の新しい画面で、起点の点から HOLD_OUT_PX 以上離れた押せるものの上の2打目）は害の確かめの組で、--modes
+    // で渡したときだけ測る。hold-aim と hold-out は、見せる間がある診断の答え→次の問と診断の最後の答え→結果だけで
+    // 測る（「はじめる」と「次へ」は click の中で切り替わるので、押し下げを切り替わりの前に置けない）。マウスは、押し
     // 下げてから離すまでに画面が替わると、どちらの版でも click が出ないので測らない。
     if (
       input === "touch" &&
@@ -316,6 +322,7 @@ function timingsOf(options, slug, input) {
           : HOLD_INTERVALS_DIAGNOSIS;
       const modes = [
         "hold",
+        ...(diagnosisShown ? ["hold-aim"] : []),
         ...(diagnosisShown && wanted("hold-out") ? ["hold-out"] : []),
       ];
       for (const interval of holds) {
@@ -395,7 +402,7 @@ function enumerateRuns(options, answerPlans) {
   return runs;
 }
 
-/** 回の名（ファイルの中で一意）。操作と画面はファイルの名にある。2打目の押し方は最後の欄（same・aim）。 */
+/** 回の名（ファイルの中で一意）。操作と画面はファイルの名にある。2打目の押し方は最後の欄（same・aim・hold など）。 */
 function runKey(run) {
   return [
     run.slug,
@@ -860,17 +867,15 @@ function pageProbe() {
     }
     return best;
   };
-  // 狙った2打目の的（t5a-measure.md 0章「狙った2打目」）: いまの組みで、点から押せる範囲（画面の中の部分）までの
-  // 直線の距離がいちばん近い押せるもの。reach 以下なら、その範囲の中で点にいちばん近い点（縁に当たるときは縁から
-  // 1px 内側）を2打目の点にし、__yolosPoints の2打目をその点に替える。無ければ、いちばん近い押せるものまでの距離を返す。
-  window.__yolosAim = (point, reach) => {
+  // いまの組みで、点から押せる範囲（画面の中の部分）までの直線の距離がいちばん近い押せるもの（best。画面に押せる
+  // ものが無ければ null）と、画面の外のものも含めたいちばん近い押せるものまでの距離（nearestAll）。
+  const nearestPressable = (point) => {
     const distanceTo = (rect) =>
       Math.hypot(
         Math.max(rect.left - point.x, 0, point.x - rect.right),
         Math.max(rect.top - point.y, 0, point.y - rect.bottom),
       );
     let best = null;
-    // いちばん近い押せるものまでの距離は、画面の外のものも含めて数える。
     let nearestAll = null;
     for (const element of document.querySelectorAll(PRESSABLE)) {
       const box = hitRect(element);
@@ -887,6 +892,13 @@ function pageProbe() {
       const distance = distanceTo(rect);
       if (!best || distance < best.distance) best = { element, rect, distance };
     }
+    return { best, nearestAll };
+  };
+  // 狙った2打目の的（t5a-measure.md 0章「狙った2打目」）: nearestPressable の best が reach 以下なら、その範囲の中で
+  // 点にいちばん近い点（縁に当たるときは縁から 1px 内側）を2打目の点にし、__yolosPoints の2打目をその点に替える。
+  // 無ければ、いちばん近い押せるもの（画面の外のものを含む）までの距離を返す。
+  window.__yolosAim = (point, reach) => {
+    const { best, nearestAll } = nearestPressable(point);
     const nearest =
       nearestAll === null ? null : Math.round(nearestAll * 10) / 10;
     if (!best || best.distance > reach) return { target: null, nearest };
@@ -1004,24 +1016,28 @@ function pageProbe() {
       }) ?? null
     );
   };
-  // タッチの隔たりは、2打目の pointerdown を受けた時の組みで取る。Chromium は受け手のあるページで、pointerdown を
-  // 出す前の組みで点を寄せる（docs/knowledge/input-events-and-guards.md §8）。この受け手はページの読み込みの前に
-  // window の捕捉の段階に置くので、寄せたすぐあと、ページの受け手が組みを変える前に走る。道具が押す前に置く
-  // __yolosPoints（1打目と2打目の点。D5 では2打目だけずれる）と、押しの数 __yolosDowns を読む。
+  // タッチの隔たりと、1打目の点から画面の中の押せるものまでのいちばん近い直線の距離（守る的があるか。どの入力でも）は、
+  // 2打目の pointerdown を受けた時の組みで取る。Chromium は受け手のあるページで、pointerdown を出す前の組みで点を
+  // 寄せる（docs/knowledge/input-events-and-guards.md §8）。この受け手はページの読み込みの前に window の捕捉の段階に
+  // 置くので、寄せたすぐあと、ページの受け手が組みを変える前に走る。道具が押す前に置く __yolosPoints（1打目と2打目の
+  // 点。D5 では2打目だけずれる）と、押しの数 __yolosDowns を読む。
   window.addEventListener(
     "pointerdown",
     (event) => {
       const points = window.__yolosPoints;
-      if (event.pointerType !== "touch" || !points) return;
+      if (!points) return;
       window.__yolosDowns = (window.__yolosDowns ?? 0) + 1;
       if (window.__yolosDowns !== 2) return;
+      const touch = event.pointerType === "touch";
       const shifted =
         points[1].x !== points[0].x || points[1].y !== points[0].y;
+      const { best } = nearestPressable(points[0]);
       send({
         ev: "near",
         t: performance.timeOrigin + event.timeStamp,
-        near: nearFrom(points[0]),
-        near2: shifted ? nearFrom(points[1]) : undefined,
+        near: touch ? nearFrom(points[0]) : undefined,
+        near2: touch && shifted ? nearFrom(points[1]) : undefined,
+        nearest: best ? Math.round(best.distance * 10) / 10 : null,
       });
     },
     true,
@@ -1075,6 +1091,7 @@ function pageProbe() {
     const box = resultBox();
     const start = startButton();
     const focus = document.activeElement;
+    const points = window.__yolosPoints;
     send({
       ev: "frame",
       t: performance.timeOrigin + performance.now(),
@@ -1097,10 +1114,13 @@ function pageProbe() {
         : null,
       selection: String(getSelection() ?? ""),
       innerHeight: window.innerHeight,
-      // 着地のあとの組みでの、1打目の点からの隔たり（どの入力でも。押しの要約の q の第1の組と問の選択肢までの値）。
-      near: window.__yolosPoints
-        ? nearFrom(window.__yolosPoints[0])
-        : undefined,
+      // 着地のあとの組みでの、1打目の点からの隔たり（どの入力でも。押しの要約の q の第1の組と問の選択肢までの値）と、
+      // 2打目の点が1打目と違えば2打目の点からの隔たり（2打目が働いて切り替えた画面の着地は2打目の点から決まる）。
+      near: points ? nearFrom(points[0]) : undefined,
+      near2:
+        points && (points[1].x !== points[0].x || points[1].y !== points[0].y)
+          ? nearFrom(points[1])
+          : undefined,
     });
   };
   const observer = new MutationObserver((mutations) => {
@@ -1574,17 +1594,20 @@ async function waitGuardClear(state) {
  * 2打目を送る。待ちは、1打目から fromFirst（2打目からは少なくとも SETTLE_MS）か、2打目から afterSecond のどちらか。
  * mode はこの押しの2打目の押し方（回の押し方の run.mode。走査では押しの種類で替わる。measureAnswers）。狙った
  * 2打目（aim）は、2打目を送る時の組みで的を決め、的が無ければ2打目を送らない。押し下げを切り替わりの前に置く
- * 2打目（hold）は、触れてから HOLD_MS 待って離す。守りが受ける側の hold-out は、下見の文脈で選んだ点（holdOut。
- * scoutHoldOut の返す `{ point, target, distance }`）で同じように押し、点が無ければ2打目を送らない。d1 はマウスの
- * 2打目を clickCount 1 で送る。押しの前と記録の時点の状態を state.before・state.after に置く。
+ * 2打目（hold）は、触れてから HOLD_MS 待って離す。離す点を下見の文脈で決める hold-aim と hold-out は、下見で選んだ点
+ * （scouted。scoutHold の返す `{ point, target, distance }`）で同じように押し、点が無ければ2打目を送らない。d1 は
+ * マウスの2打目を clickCount 1 で送る。押しの前と記録の時点の状態を state.before・state.after に置く。
+ *
+ * 診断で、記録の時点に答えを見せている押し（2打目が次の問に答えた X・S と、守りに止められた1打目のあとに2打目が
+ * 1打目の問に答えた押し）は、見せる 150ms のあとの切り替わりの着地とフレームがこの押しの記録に入るよう、切り替わり
+ * のあとの最初のフレームが来るまで待ってから返す（waitShownSwitch）。記録の時点の状態は待つ前に読んだものである。
  */
-async function doublePress(context, run, point, waits, mode, holdOut) {
+async function doublePress(context, run, point, waits, mode, scouted) {
   const { session, state, page } = context;
   await waitGuardClear(state);
-  let second =
-    mode === "hold-out"
-      ? (holdOut?.point ?? point)
-      : { x: point.x + run.offset.dx, y: point.y + run.offset.dy };
+  let second = SCOUTED_MODES.has(mode)
+    ? (scouted?.point ?? point)
+    : { x: point.x + run.offset.dx, y: point.y + run.offset.dy };
   await placePoints(page, point, second);
   state.press++;
   const index = state.press;
@@ -1598,7 +1621,7 @@ async function doublePress(context, run, point, waits, mode, holdOut) {
     aim = await page
       .evaluate(
         ([from, reach]) => window.__yolosAim(from, reach),
-        [point, AIM_REACH],
+        [point, AIM_REACH_PX],
       )
       .catch(() => ({ target: null, nearest: null }));
     if (aim.point) second = aim.point;
@@ -1609,14 +1632,14 @@ async function doublePress(context, run, point, waits, mode, holdOut) {
       .catch(() => null);
     if (nearest) second = nearest;
   }
-  if (mode === "hold-out") {
+  if (SCOUTED_MODES.has(mode)) {
     aim = {
-      target: holdOut?.target ?? null,
-      nearest: holdOut?.distance ?? null,
-      point: holdOut?.point,
+      target: scouted?.target ?? null,
+      nearest: scouted?.distance ?? null,
+      point: scouted?.point,
     };
   }
-  if ((mode !== "aim" && mode !== "hold-out") || aim.point) {
+  if ((mode !== "aim" && !SCOUTED_MODES.has(mode)) || aim.point) {
     await sendPress(
       session,
       run.input,
@@ -1635,7 +1658,38 @@ async function doublePress(context, run, point, waits, mode, holdOut) {
     .evaluate(() => String(getSelection() ?? ""))
     .catch(() => null);
   state.after[index] = await readState(page);
+  const shown = state.after[index];
+  if (
+    !KNOWLEDGE.has(run.slug) &&
+    shown?.phase === "playing" &&
+    shown.answered
+  ) {
+    await waitShownSwitch(context, index, shown);
+  }
   return { index, sentAt, second, aim };
+}
+
+/**
+ * 診断で答えを見せている画面（from。__yolosState）が次の問か結果に切り替わり、切り替わったあとの最初のフレームが
+ * 押しの番号 index の記録に入るまで、上限つきで待つ。着地の記録（console に書く止め所の記録）がフレームより遅れて
+ * 届いても入るよう、フレームのあと SETTLE_MS 待つ。
+ */
+async function waitShownSwitch(context, index, from) {
+  const { page, state } = context;
+  const { ok } = await waitScreen(
+    page,
+    (now) => now.phase !== "playing" || now.band !== from.band || !now.answered,
+    3000,
+  );
+  if (!ok) return;
+  const switched = (event) => {
+    if (event.press !== index || event.ev !== "frame") return false;
+    const screen = screenOfSignature(event.sig);
+    return screen.phase !== "playing" || screen.band !== from.band;
+  };
+  const until = Date.now() + 1000;
+  while (Date.now() < until && !state.events.some(switched)) await sleep(25);
+  await sleep(SETTLE_MS);
 }
 
 /** 1度だけの押し（最後の問までの進め方）。前の押しの守りが受けないよう、GUARD_CLEAR_MS 空けて送る。 */
@@ -1802,14 +1856,40 @@ function expectedAfterFirst(kind, before) {
   }
 }
 
-/** フレームの記録の字（`道|段階|帯の番号|答えの有無|「次へ」の有無`）を、段階・帯の番号・答えの有無に直す。 */
+/** フレームの記録の字（`道|段階|帯の番号|答えの有無|「次へ」の有無`）を、道・段階・帯の番号・答えの有無に直す。 */
 function screenOfSignature(signature) {
-  const [, phase, band, answered] = signature.split("|");
+  const [path, phase, band, answered] = signature.split("|");
   return {
+    path,
     phase,
     band: band === "" ? null : Number(band),
     answered: answered === "true",
   };
+}
+
+const QUIZ_PHASES = new Set(["intro", "playing", "result"]);
+
+/**
+ * 押しのフレームのうち、2打目が働いて画面を切り替えた（1打目だけの画面 expected から先へ進んだ）最初のフレームの
+ * 番号（無ければ -1）。1打目だけの画面（段階と、遊んでいるあいだの帯の番号）のフレームが出たあとで、同じ道のまま
+ * 段階か帯の番号が替わったフレームである（X・S の次の問か結果、結果の画面の「もう一度挑戦する」からの開始の画面、
+ * 「はじめる」のあとの2問目など）。1打目だけの画面のフレームが無い押し（1打目が働かなかった押しなど）は -1。
+ */
+function followStartOf(expected, frames) {
+  if (!expected || !QUIZ_PHASES.has(expected.phase)) return -1;
+  const screens = frames.map((frame) => screenOfSignature(frame.sig));
+  const matches = (screen) =>
+    screen.phase === expected.phase &&
+    (screen.phase !== "playing" || screen.band === expected.band);
+  const reached = screens.findIndex(matches);
+  if (reached === -1) return -1;
+  return screens.findIndex(
+    (screen, at) =>
+      at > reached &&
+      screen.path === screens[reached].path &&
+      QUIZ_PHASES.has(screen.phase) &&
+      !matches(screen),
+  );
 }
 
 /**
@@ -1897,8 +1977,30 @@ function pressRecord(state, index, extra) {
   const [down1, down2] = pointerdowns;
   const frames = state.events.filter((event) => event.ev === "frame");
   const pressFrames = frames.filter((frame) => frame.press === index);
-  const pressLandings = state.landings.filter(
+  const before = state.before[index];
+  const after = state.after[index];
+  const expected = before ? expectedAfterFirst(extra.expectKind, before) : null;
+  // 押しのフレームを、1打目の働きまでの画面（ownFrames）と、2打目が働いて切り替えた画面（followFrames。
+  // followStartOf）に分ける。着地の記録も、切り替わりのフレームの1つ前のフレームより後の最後の着地を、2打目が切り
+  // 替えた画面の着地（followLanding）として分ける。
+  const followAt = followStartOf(expected, pressFrames);
+  const ownFrames =
+    followAt === -1 ? pressFrames : pressFrames.slice(0, followAt);
+  const followFrames = followAt === -1 ? [] : pressFrames.slice(followAt);
+  const allLandings = state.landings.filter(
     (landing) => landing.press === index,
+  );
+  const followLanding = followFrames.length
+    ? allLandings.findLast(
+        (landing) =>
+          landing.t < followFrames[0].t &&
+          (!ownFrames.length || landing.t > ownFrames.at(-1).t),
+      )
+    : undefined;
+  const pressLandings = allLandings.filter(
+    (landing) =>
+      landing !== followLanding &&
+      (!followFrames.length || landing.t < followFrames[0].t),
   );
   const landings = pressLandings.map((landing) =>
     summarizeLanding(landing, frames),
@@ -1910,7 +2012,8 @@ function pressRecord(state, index, extra) {
   const secondDown = downs[1]?.t;
   const until = (list) =>
     list.filter((item) => secondDown !== undefined && item.t <= secondDown);
-  // タッチの距離は、2打目の pointerdown を受けた時の組みで取ったもの。
+  // タッチの距離と、守る的があるか（1打目の点から画面の中の押せるものまでの距離）は、2打目の pointerdown を受けた
+  // 時の組みで取ったもの。
   const near = events.find((event) => event.ev === "near");
   const landingIndex = landings.length
     ? Math.max(until(pressLandings).length - 1, 0)
@@ -2041,9 +2144,6 @@ function pressRecord(state, index, extra) {
   // フレーム・pointerdown と click の時・記録の時点）の状態に一度でも出たか（firstEffectSeen）で決める。2打目が結果の
   // 画面を「もう一度挑戦する」やリンクで離れた押しでも、1打目の働きはその前のフレームに出る。2打目は、1打目が働いた
   // なら1打目だけの画面と、働かなかったなら押しの前の画面と比べる。
-  const before = state.before[index];
-  const after = state.after[index];
-  const expected = before ? expectedAfterFirst(extra.expectKind, before) : null;
   if (before && after) {
     const seen = [
       ...pressFrames.map((frame) => screenOfSignature(frame.sig)),
@@ -2080,50 +2180,89 @@ function pressRecord(state, index, extra) {
   // 着地のあとの組みでの、1打目の点から第1の組と問の選択肢までの max(dx, dy)（100 で頭打ち）。どちらの版でも、
   // 切り替わったあとの画面の最初のフレームで取る。
   const landedFrame = expected
-    ? pressFrames.find((frame) =>
+    ? ownFrames.find((frame) =>
         sameScreen(expected, screenOfSignature(frame.sig)),
       )
     : undefined;
   record.reaches = landedFrame?.near
     ? [cappedReach(landedFrame.near[0]), cappedReach(landedFrame.near[1])]
     : null;
+  record.nearest = near ? near.nearest : null;
   const landing = landings[landingIndex];
   record.sent =
     landing && landing.chosen !== null ? landing.chosen - landing.s0 : null;
-  const resultFrame = pressFrames.find((frame) => frame.name);
-  record.cut =
-    pressFrames.some(
+  const cutIn = (list) =>
+    list.some(
       (frame) => frame.h1?.cut || frame.heading?.cut || frame.name?.cut,
-    ) || undefined;
-  // 結果の名前の下端が、画面の下端から 8px 上より下にあった（t5a-design.md 4-9 の見せる範囲の欠け）。
-  record.nameLow =
-    (resultFrame && resultFrame.name.bottom > resultFrame.innerHeight - GAP) ||
-    undefined;
+    );
+  record.cut = cutIn(ownFrames) || undefined;
   // 結果への切り替わりの着地のあとの最初のフレームの、結果のボックスの上端と結果の名前の下端（t5a-design.md
-  // 6章 条件7 の「結果の名前が見えること」）。範囲が空で基準の送り s0 にした回は、結果への切り替わりの着地の
-  // 記録（そのフレームの1つ前のフレーム、無ければ押しの頭より後で、そのフレームより前の最後の着地）の打ち切った
-  // 範囲が空であることで分かる。空になった訳を、打ち切る前の範囲が高さで空だった（t5a-design.md 4-9 が受け入れた
-  // 回）1と、ページの送れる範囲で打ち切って空になった2で分ける（空でなければ0）。そうした着地の記録が無ければ
-  // （着地の関数を持たない版など）書かない。
+  // 6章 条件7 の「結果の名前が見えること」）。結果への切り替わりは、1打目の働き（最後の答え）か、2打目の働き（S）の
+  // どちらかである。範囲が空で基準の送り s0 にした回は、結果への切り替わりの着地の記録（そのフレームの1つ前の
+  // フレーム、無ければ押しの頭より後で、そのフレームより前の最後の着地）の打ち切った範囲が空であることで分かる。
+  // 空になった訳を、打ち切る前の範囲が高さで空だった（t5a-design.md 4-9 が受け入れた回）1と、ページの送れる範囲で
+  // 打ち切って空になった2で分ける（空でなければ0）。そうした着地の記録が無ければ（着地の関数を持たない版など）
+  // 書かない。結果の名前の下端が画面の下端から 8px 上より下にあった（t5a-design.md 4-9 の見せる範囲の欠け）ことを
+  // resultLow に持ち、読む所の印は、その切り替わりの側（nameLow か follow）に付ける。
+  const resultFrame = pressFrames.find((frame) => frame.name);
+  let resultInFollow = false;
   if (resultFrame) {
     record.resultView = [resultFrame.boxTop ?? null, resultFrame.name.bottom];
+    record.resultLow =
+      resultFrame.name.bottom > resultFrame.innerHeight - GAP || undefined;
+    resultInFollow = followFrames.includes(resultFrame);
     const previous = pressFrames[pressFrames.indexOf(resultFrame) - 1];
-    const before = pressLandings.findLastIndex(
+    const resultLanding = allLandings.findLast(
       (landing) =>
         landing.t < resultFrame.t && (!previous || landing.t > previous.t),
     );
-    const landing = before === -1 ? null : landings[before];
-    record.resultSpan = !landing
+    const span = resultLanding ? summarizeLanding(resultLanding, frames) : null;
+    record.resultSpan = !span
       ? undefined
-      : landing.range[0] <= landing.range[1]
+      : span.range[0] <= span.range[1]
         ? 0
-        : landing.heightEmpty
+        : span.heightEmpty
           ? 1
           : 2;
   }
+  record.nameLow = (!resultInFollow && record.resultLow) || undefined;
+  // 2打目が働いて切り替えた画面の [行き先, 送り, 着地, 着地のあとの組みでの隔たり, 印]（q の follow）。着地は q の
+  // landing と同じ形で、隔たりは着地のあとの最初のフレームで、2打目の点（着地はこの切り替わりを起こした2打目の
+  // click の点から決まる）から [第1の組, 問の選択肢] までの max(dx, dy)（100 で頭打ち）。
+  if (followFrames.length) {
+    const first = followFrames[0];
+    const destination = screenOfSignature(first.sig).phase;
+    const summary = followLanding
+      ? summarizeLanding(followLanding, frames)
+      : null;
+    const reach = first.near2 ?? first.near;
+    record.follow = {
+      to:
+        destination === "result"
+          ? "result"
+          : destination === "intro"
+            ? "intro"
+            : "question",
+      sent:
+        summary && summary.chosen !== null ? summary.chosen - summary.s0 : null,
+      landing: summary
+        ? [
+            summary.s0,
+            ...summary.range,
+            summary.chosen,
+            ...(summary.point ?? [null, null]),
+          ]
+        : null,
+      reaches: reach ? [cappedReach(reach[0]), cappedReach(reach[1])] : null,
+      marks: [
+        cutIn(followFrames) ? "c" : "",
+        resultInFollow && record.resultLow ? "l" : "",
+      ].join(""),
+    };
+  }
   // 「もう一度挑戦する」のあとに、開始の画面の h1 が丸ごと画面の上端より上にある（外れた見出し）。
   record.h1Above =
-    pressFrames.some(
+    ownFrames.some(
       (frame) =>
         frame.sig.includes("|intro|") && frame.h1 && frame.h1.bottom < 0,
     ) || undefined;
@@ -2186,7 +2325,7 @@ function compactPress(record) {
     near: record.near ?? undefined,
     near2: record.near2,
     cut: record.cut,
-    lo: record.nameLow,
+    lo: record.resultLow,
     h1a: record.h1Above,
     ins: record.insertInView,
     at: record.reached === false ? 0 : undefined,
@@ -2247,7 +2386,7 @@ function keepReasons(options, run, record) {
   if (options.op === "select") {
     if (!record.selection) reasons.push("no-selection");
   } else if (record.selection) reasons.push("selection");
-  if (record.nameLow) reasons.push("name-low");
+  if (record.resultLow) reasons.push("name-low");
   if (record.insertInView) reasons.push("insert");
   return reasons;
 }
@@ -2265,10 +2404,10 @@ function guardMisses(run, record) {
   // 落ちた先は records.mjs の landedOf で決める（押し下げが切り替わりの前で click が切り替わったあとの画面に届いた
   // 押しは click の的）。押し下げも click も切り替わる前の画面のものだった押しは、守りが無くても働かないので数えない。
   const landed = landedOfRecord(record);
-  // 押し下げを切り替わりの前に置いた2打目。同じ点のタッチ（hold）は働かないのが合格で、守りが受ける側
-  // （hold-out）は合否に入れず、害の確かめの比べ（compare.mjs）で数える。
+  // 押し下げを切り替わりの前に置いた2打目。守りが受けない側（同じ点の hold と狙った hold-aim）は働かないのが合格で、
+  // 守りが受ける側（hold-out）は合否に入れず、害の確かめの比べ（compare.mjs）で数える。
   if (record.mode?.startsWith("hold")) {
-    if (record.mode === "hold" && landed?.pressable && worked) {
+    if (record.mode !== "hold-out" && landed?.pressable && worked) {
       misses.push("hold-miss");
     }
     return misses;
@@ -2412,6 +2551,17 @@ function qEntry(record) {
         : record.clickMoved
           ? 1
           : 0,
+    mode: record.mode,
+    nearest: record.nearest,
+    follow: record.follow
+      ? [
+          record.follow.to,
+          record.follow.sent,
+          record.follow.landing,
+          record.follow.reaches,
+          record.follow.marks,
+        ]
+      : null,
   };
   return Q_COLUMNS.map((name) => values[name] ?? null);
 }
@@ -2510,8 +2660,8 @@ function recordPress(context, run, index, extra) {
 }
 
 /**
- * 二度押しを送って記録する。2打目の押し方は extra.mode（省けば回の押し方 run.mode）。hold-out の2打目の点は
- * extra.holdOut（下見の文脈で選んだもの）。窓の守りを掛けた切り替わりの、条件7 の same・aim の回（D5 を除く）で、
+ * 二度押しを送って記録する。2打目の押し方は extra.mode（省けば回の押し方 run.mode）。hold-aim と hold-out の2打目の
+ * 点は extra.scouted（下見の文脈で選んだもの）。窓の守りを掛けた切り替わりの、条件7 の same・aim の回（D5 を除く）で、
  * 2打目が切り替わったあとの画面の押せるものの上に落ちた回（試した回。落ちた先は records.mjs の landedOf）は、離れて
  * いなければ、続けて空振りでないことの対の押しを送る（2打目と同じ点を、1打目から PAIR_FROM_ORIGIN_MS のあとに1度）。
  */
@@ -2531,7 +2681,7 @@ async function pressAndRecord(
     point,
     waits,
     mode,
-    extra.holdOut,
+    extra.scouted,
   );
   if (beforeRecord) await beforeRecord();
   const record = recordPress(context, run, sent.index, {
@@ -2558,16 +2708,20 @@ async function pressAndRecord(
 }
 
 /**
- * 守りが受ける側の hold-out の2打目の点を、同じ回の下見の文脈（同じ版・同じ種。scout）で決める。hold の押し下げは
- * 切り替わる前の画面に落ち、離す時の新しい画面の組みは押す前に分からないので、下見の文脈を本番と同じ所（同じ帯の
- * 答えていない問で、同じ並びと同じ送り）まで進め、本番と同じ点に1打目だけを送り、切り替わったあとの画面が出たらすぐ
- * （本番の離しは切り替わりの 50〜140ms あと）、点から HOLD_OUT_PX 以上離れた押せるものの中のいちばん近い点を読む
- * （__yolosHoldOutTarget）。返すのは `{ point, target, distance }`。そうした点が無ければ point と target が null で、
- * distance は画面の中の押せるものの点のうちいちばん遠いものまでの距離（押せるものが画面に無ければ 0）。下見の画面が本番と違う（押す点が違う）か、
- * 切り替わらなければ null。点が無いとき本番はその押しの2打目を送らず、試さなかった押しとして q の aim に
- * `[null, distance]`（下見が合わなかったときは `[null, null]`）が残る。
+ * 離す点を下見で決める hold（hold-aim・hold-out）の2打目の点を、同じ回の下見の文脈（同じ版・同じ種。scout）で決める。
+ * hold の押し下げは切り替わる前の画面に落ち、離す時の新しい画面の組みは押す前に分からないので、下見の文脈を本番と
+ * 同じ所（同じ帯の答えていない問で、同じ並びと同じ送り）まで進め、本番と同じ点に1打目だけを送り、切り替わったあとの
+ * 画面が出たらすぐ（本番の離しは切り替わりの 50〜140ms あと）点を読む。返すのは `{ point, target, distance }`。
+ * - hold-aim（守りが受けない側）: 狙った2打目と同じ選び方（__yolosAim）で、点から AIM_REACH_PX 以下のいちばん近い
+ *   押せるものの中で点にいちばん近い点。distance は、いちばん近い押せるもの（画面の外のものを含む）までの距離で、
+ *   的が無ければ point と target が null（守る的が無い組）。
+ * - hold-out（守りが受ける側）: 点から HOLD_OUT_PX 以上離れた押せるものの中のいちばん近い点（__yolosHoldOutTarget）。
+ *   distance は点から選んだ点までの距離で、そうした点が無ければ point と target が null で、distance は画面の中の
+ *   押せるものの点のうちいちばん遠いものまでの距離（押せるものが画面に無ければ 0）。
+ * 下見の画面が本番と違う（押す点が違う）か、切り替わらなければ null。点が無いとき本番はその押しの2打目を送らず、
+ * 試さなかった押しとして q の aim に `[null, distance]`（下見が合わなかったときは `[null, null]`）が残る。
  */
-async function scoutHoldOut(scout, run, pick, point, expectKind, band) {
+async function scoutHold(scout, run, mode, pick, point, expectKind, band) {
   const { page, session } = scout;
   const { ok } = await waitScreen(
     page,
@@ -2592,6 +2746,20 @@ async function scoutHoldOut(scout, run, pick, point, expectKind, band) {
         (now.band > band && !now.answered && now.choices.length > 0),
   );
   if (!switched.ok) return null;
+  if (mode === "hold-aim") {
+    const aimed = await page
+      .evaluate(
+        ([from, reach]) => window.__yolosAim(from, reach),
+        [point, AIM_REACH_PX],
+      )
+      .catch(() => null);
+    if (!aimed) return null;
+    return {
+      point: aimed.point ?? null,
+      target: aimed.target,
+      distance: aimed.nearest,
+    };
+  }
   const found = await page
     .evaluate(
       ([from, least]) => window.__yolosHoldOutTarget(from, least),
@@ -2605,7 +2773,8 @@ async function scoutHoldOut(scout, run, pick, point, expectKind, band) {
 }
 
 /**
- * 本番の hold-out の2打目が働いた（次の問に答えた）とき、下見の文脈でも同じ点を1度押して、本番と同じ所へ進める。
+ * 本番の hold-aim・hold-out の2打目が働いた（次の問に答えた）とき、下見の文脈でも同じ点を1度押して、本番と同じ所へ
+ * 進める。
  * 着地は画面を切り替えた押しの点から決まるので、同じ点で押せば次の画面の送りも本番と同じになる。
  */
 async function scoutFollow(scout, run, point) {
@@ -2645,8 +2814,8 @@ async function measureStart(context, run, options) {
 }
 
 /**
- * 全問を最初の行か最後の行で解き切る走査（t5a-measure.md 5-2・0章「走査の次の1打目」）。診断の hold-out の走査は、
- * 下見の文脈を本番と並べて同じ所まで進め、答えの押しごとに2打目の点を下見で決める（scoutHoldOut・scoutFollow）。
+ * 全問を最初の行か最後の行で解き切る走査（t5a-measure.md 5-2・0章「走査の次の1打目」）。診断の hold-aim と hold-out の
+ * 走査は、下見の文脈を本番と並べて同じ所まで進め、答えの押しごとに2打目の点を下見で決める（scoutHold・scoutFollow）。
  */
 async function measureAnswers(context, run, options) {
   const { page } = context;
@@ -2654,7 +2823,9 @@ async function measureAnswers(context, run, options) {
   const { total } = await startByElementClick(page);
   const knowledge = KNOWLEDGE.has(run.slug);
   const scout =
-    run.mode === "hold-out" && !knowledge ? await context.openScout() : null;
+    SCOUTED_MODES.has(run.mode) && !knowledge
+      ? await context.openScout()
+      : null;
   try {
     if (scout) {
       await openQuiz(scout, run.slug, options);
@@ -2718,8 +2889,16 @@ async function scanAnswers(
             ? "last-answer"
             : "answer";
     const point = center(placed.rect);
-    const holdOut = scout
-      ? await scoutHoldOut(scout, run, pick, point, expectKind, current.band)
+    const scouted = scout
+      ? await scoutHold(
+          scout,
+          run,
+          run.mode,
+          pick,
+          point,
+          expectKind,
+          current.band,
+        )
       : undefined;
     const record = await pressAndRecord(
       context,
@@ -2734,12 +2913,12 @@ async function scanAnswers(
         scrolled: placed.scrolled,
         // 知識クイズの走査の狙った2打目と hold の2打目は、窓の守りを掛けた「次へ」だけに当てる（答えは同じ点）。
         mode: knowledge && kind !== "next" ? "same" : run.mode,
-        holdOut,
+        scouted,
       },
     );
     record.last = last || undefined;
-    if (holdOut?.point && record.worked?.includes("s")) {
-      await scoutFollow(scout, run, holdOut.point);
+    if (scouted?.point && record.worked?.includes("s")) {
+      await scoutFollow(scout, run, scouted.point);
     }
     leave = leaveOf(record) ?? leaveOfPair(record);
     if (leave) {
@@ -2882,8 +3061,8 @@ async function advanceToLast(context, run) {
 }
 
 /**
- * 最後の答え・最後の「次へ」→結果（5-3 で決めた進め方）。hold-out の回は、2打目の点を、別の下見の文脈で同じ所まで
- * 進めて決める（scoutHoldOut）。
+ * 最後の答え・最後の「次へ」→結果（5-3 で決めた進め方）。hold-aim と hold-out の回は、2打目の点を、別の下見の文脈で
+ * 同じ所まで進めて決める（scoutHold）。
  */
 async function measureLast(context, run, options) {
   const { page, state } = context;
@@ -2892,15 +3071,16 @@ async function measureLast(context, run, options) {
   const { pick, placed, steps } = await advanceToLast(context, run);
   const kind = knowledge ? "last-next" : "last-answer";
   const point = center(placed.rect);
-  let holdOut;
-  if (run.mode === "hold-out") {
+  let scouted;
+  if (SCOUTED_MODES.has(run.mode)) {
     const scout = await context.openScout();
     try {
       await openQuiz(scout, run.slug, options);
       await advanceToLast(scout, run);
-      holdOut = await scoutHoldOut(
+      scouted = await scoutHold(
         scout,
         run,
+        run.mode,
         pick,
         point,
         kind,
@@ -2921,7 +3101,7 @@ async function measureLast(context, run, options) {
       expectKind: kind,
       band: placed.screen.band,
       scrolled: placed.scrolled,
-      holdOut,
+      scouted,
     },
     async () => {
       if (!EXTRA_SLUGS.has(run.slug)) return;
@@ -3189,7 +3369,7 @@ async function measureKeyboard(context, run, options) {
 /**
  * キーボードで切り替えたあとのポインタの押し（decision-landing.md の「空振りでないことの対」。キーボードで切り
  * 替えたあとは窓を開かないので、切り替える前にポインタで押していた点の近くの押しも働くのが決め）。切り替わってから
- * run.interval のあと、切り替える前に押した点（quiet）から矩形までの直線の距離が AIM_REACH 以下の、新しい画面の
+ * run.interval のあと、切り替える前に押した点（quiet）から矩形までの直線の距離が AIM_REACH_PX 以下の、新しい画面の
  * 押せるもののうちいちばん近いもの（狙った2打目と同じ選び方）を1度押し、働いたかを押しのあとの状態で決める。
  * 返すのは要約の kb の `[切り替わったか, 的, 働いたことの字, 切り替える前の押しの pointerdown からの差, 押しの
  * pointerdown の的が押せるものの上か, 切り替える前の押しの点からの直線の距離]`。的が無ければ的と字は null で、
@@ -3203,7 +3383,7 @@ async function pointerAfterKeyboard(context, run, switched, quiet, quietIndex) {
   const aim = await page
     .evaluate(
       ([from, reach]) => window.__yolosAim(from, reach),
-      [quiet, AIM_REACH],
+      [quiet, AIM_REACH_PX],
     )
     .catch(() => ({ target: null, nearest: null }));
   if (!aim.point) return [took, null, null, null, null, aim.nearest];
@@ -3287,7 +3467,7 @@ function summaryLine(op, run, outcome, records) {
       if (record.crossed) crossed++;
       if (record.detailMark) detail++;
       if (record.selection && !record.detailMark) selections++;
-      if (record.cut) cuts++;
+      if (record.cut || record.follow?.marks.includes("c")) cuts++;
       if (record.near) {
         const values = [
           ...record.near.slice(0, 2),
@@ -3329,7 +3509,7 @@ function summaryLine(op, run, outcome, records) {
       dm: detail || undefined,
       w: selections || undefined,
       cut: cuts || undefined,
-      lo: toResult?.nameLow ? 1 : undefined,
+      lo: toResult?.resultLow ? 1 : undefined,
       vp: left
         ? [left.band, switches ? `last-${left.kind}` : left.kind]
         : undefined,
@@ -3360,8 +3540,8 @@ function summaryLine(op, run, outcome, records) {
         n2: record.near2 ? nearOut(record.near2) : undefined,
         l: landingOut(record) ?? undefined,
         hu: landing ? landing.unmatched : undefined,
-        cut: record.cut ? 1 : undefined,
-        lo: record.nameLow ? 1 : undefined,
+        cut: record.cut || record.follow?.marks.includes("c") ? 1 : undefined,
+        lo: record.resultLow ? 1 : undefined,
         rv: record.resultView,
         re: record.resultSpan,
         ins: record.insertInView ? 1 : undefined,
@@ -3482,7 +3662,7 @@ async function main() {
       for (;;) {
         const started = Date.now();
         const context = await prepare(browser, run, options, profileRoot);
-        // hold-out の2打目の点を決める下見の文脈（同じ回・同じ種。scoutHoldOut）。開いた側が閉じる。
+        // hold-aim・hold-out の2打目の点を決める下見の文脈（同じ回・同じ種。scoutHold）。開いた側が閉じる。
         context.openScout = () => prepare(browser, run, options, profileRoot);
         let outcome;
         let error;

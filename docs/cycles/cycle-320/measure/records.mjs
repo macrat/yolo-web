@@ -30,7 +30,17 @@ export const Q_COLUMNS = [
   "previous", // 1打目の、直前の切り替わりの起点からの [時刻の差, 起点の点からの直線の距離, 直前の離しからの差, 1打目の mousedown の detail, 起点の押しの種類]（前の二度押しが無ければ null）
   "clickShown", // 2打目の click の時に切り替わったあとの画面が出ていたか（1・0。切り替わらない押しと click の無い押しは null）
   "clickMoved", // 2打目の pointerdown と click のあいだに画面（段階・帯の番号・答えの有無）が替わったか（1・0。click が無ければ null）
+  "mode", // この押しの2打目の押し方（same・aim・hold・hold-aim・hold-out・d1・read。走査では押しの種類で回の押し方と替わる）
+  "nearest", // 2打目の pointerdown の時の組みで、1打目の点から画面の中の押せるものまでのいちばん近い直線の距離（押せるものが画面に無ければ null）
+  "follow", // 2打目が働いて画面を切り替えたときの、その切り替わりの [行き先, 送り, 着地, 着地のあとの隔たり, 印]（無ければ null）
 ];
+
+/** follow の1つを、欄の名で読める形にする（無ければ null）。 */
+export function readFollow(follow) {
+  if (!follow) return null;
+  const [to, sent, landing, reaches, marks] = follow;
+  return { to, sent, landing, reaches, marks };
+}
 
 /** q の1つの押しを、欄の名で読める形にする。 */
 export function readPress(entry) {
@@ -87,6 +97,12 @@ export const TOUCH_ACCEPT_BELOW_MS = 700;
 export const GUARD_REACH_PX = 100;
 /** タッチの調整がどの触れ方でも寄せない隔たり（max(dx, dy)）。 */
 export const TOUCH_ADJUST_REACH_PX = 16;
+/**
+ * 守る的の距離（1打目の点からの直線の距離。以下）。狙った2打目は、この距離の中のいちばん近い押せるものを的にする
+ * （守りの 100px の境目から、タッチの調整で寄る 16px より離す）。この距離の中に押せるものが1つも無い組は、守る的が
+ * 無い組である（decision-landing.md の「下限」）。
+ */
+export const AIM_REACH_PX = 80;
 
 /** D5 のずれ（cycle-318/device-triage.md D5 の基本と、窓の中の 80px・120px のずれ。`dx:dy`）。 */
 export const D5_BASIC = ["0:-20", "0:-10", "0:10", "0:20", "-10:0", "10:0"];

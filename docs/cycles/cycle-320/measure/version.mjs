@@ -3,22 +3,24 @@
 //   node docs/cycles/cycle-320/measure/version.mjs build --label <名> --commit <コミット> [--overlay <コミット>:<パス>]... [--replace]
 //   node docs/cycles/cycle-320/measure/version.mjs compare <指紋> <指紋>
 //
-// build は、リポジトリの中で動かす。コミットを `git archive` で `tmp/measure-builds/<名>` に書き出し、重ねる
-// ファイルを `git show` で上書きし、リポジトリの `node_modules` をハードリンクで写して `npm run build` を走らせ、
-// `tmp/measure-builds/<名>/fingerprint.json` に指紋を書く。その場所がもうあれば止まり、`--replace` を渡せば
-// 消してから作り直す。
+// build は、主の木か担当の木の中で動かす。書き出す場所は、どちらで動かしても主の木の根（`git rev-parse
+// --git-common-dir` の親）の `tmp/measure-builds/<名>` である。担当の木の `tmp/` は木を消すと一緒に消え、続きの
+// 測りとレビューが同じ版を読めなくなるからである（`.claude/rules/worktrees.md` の 4）。コミットを `git archive` で
+// その場所に書き出し、重ねるファイルを `git show` で上書きし、主の木の `node_modules` をハードリンクで写して
+// `npm run build` を走らせ、`tmp/measure-builds/<名>/fingerprint.json` に指紋を書く。その場所がもうあれば止まり、
+// `--replace` を渡せば消してから作り直す。
 //
-// `node_modules` はリポジトリのものを写すので、版のコミットの package-lock.json がリポジトリの package-lock.json と
+// `node_modules` は主の木のものを写すので、版のコミットの package-lock.json が主の木の package-lock.json と
 // 違えば、版のコミットと違う依存でビルドすることになる。そこで、2つの package-lock.json の blob が違えば止まる。
 //
-// 書き出す場所は名で決める。書き出した版はリポジトリの下にあり、Next.js はリポジトリの根の package-lock.json を
+// 書き出す場所は名で決める。書き出した版は主の木の下にあり、Next.js は主の木の根の package-lock.json を
 // 見て、そこを Turbopack の根にする。チャンクには根からの道（`/ROOT/tmp/measure-builds/<名>/…`）が入り、その
 // 道でチャンクの名前（中身のハッシュ）も変わる。同じ名で作り直せば、同じ道になる。
 //
 // 指紋は、もとのソースの木のハッシュ・package-lock.json の blob・ビルドに使った Node と npm の版・書き出した場所・
 // `.next/static/chunks` のファイルの名前と大きさの一覧（とその SHA-256）である。ファイルを重ねた版の木は、
 // `tmp/measure-builds/<名>.index` に置いた別の索引（GIT_INDEX_FILE）にもとのコミットを読み込み、重ねるファイルを
-// 足してから `git write-tree` で出す。主の木の索引は触らない。
+// 足してから `git write-tree` で出す。どの木の索引も触らない。
 //
 // ビルドの前の `generate:release-id` は、`VERCEL_GIT_COMMIT_SHA` が無ければ `git rev-parse HEAD` を読む。
 // 書き出した版は主の木の下にあるので、その時の主の木の HEAD を拾い、版の中身（GA の release の字）が主の木の
@@ -111,9 +113,16 @@ export function chunksDigest(chunks) {
     .slice(0, 16);
 }
 
+/** 主の木の根（担当の木で動かしても、すべての木が分け合う git の置き場の親）。 */
+function mainRoot() {
+  return path.dirname(
+    git(["rev-parse", "--path-format=absolute", "--git-common-dir"]),
+  );
+}
+
 function build(argv) {
   const { commit, overlays, label, replace } = parseBuildArguments(argv);
-  const repository = git(["rev-parse", "--show-toplevel"]);
+  const repository = mainRoot();
   const buildPath = `tmp/measure-builds/${label}`;
   const directory = path.join(repository, buildPath);
   const fullCommit = git(["rev-parse", `${commit}^{commit}`]);
