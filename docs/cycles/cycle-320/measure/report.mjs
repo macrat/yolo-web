@@ -72,11 +72,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { KNOWLEDGE } from "./knowledge.mjs";
 import {
-  AIM_REACH_PX,
   ALL_SLUGS,
   BLOCK_BELOW_MS,
   BORDER_UNTIL_MS,
   D5_BASIC,
+  D5_INNER,
   D5_KNOWLEDGE_ANSWER_INTERVALS,
   GUARD_REACH_PX,
   TOUCH_ACCEPT_BELOW_MS,
@@ -87,6 +87,11 @@ import {
   landedOf,
   readPress,
 } from "./records.mjs";
+import {
+  createTargetEvidence,
+  keyboardPairKeyOf,
+  pairKeyOf,
+} from "./targets.mjs";
 
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 const PRESSABLE = new Set([...FIRST, "next", "choice", "start"]);
@@ -418,6 +423,9 @@ function main() {
 
 const DIAGNOSIS_SLUGS = ALL_SLUGS.filter((slug) => !KNOWLEDGE.has(slug));
 
+/** D5 の 80px のずれの直線の距離（d5-inner の byShift の鍵）。 */
+const D5_INNER_SHIFT = Math.hypot(...D5_INNER[0].split(":").map(Number));
+
 /** 押しの種類から、窓の守りの切り替わりの名（start・next・result）。 */
 const transitionOf = (kind) =>
   kind === "start" ? "start" : kind === "next" ? "next" : "result";
@@ -456,44 +464,17 @@ const EXPECTED_ROWS = [
   ),
 ];
 
-/** ファイルの名から画面の字（`375x550`・`375x550-200`）。 */
-const viewportOf = (name) => name.match(/-(\d+x\d+(?:-200)?)\.jsonl$/)[1];
-
-/**
- * 守る的があるかの証し（decision-landing.md の「下限」）。狙った2打目と狙った hold（aim・hold-aim）は、2打目を
- * 送る時（hold-aim は下見で離す時）の新しい画面で的を選んだかで、ほかの押しは、2打目の pointerdown が切り替わった
- * あとの画面に来た押しの、1打目の点から画面の中の押せるものまでのいちばん近い直線の距離（q の nearest）が
- * AIM_REACH_PX 以下かで決める。返すのは `{ target, nearest }`（target が false なら守る的が無く、nearest はいちばん
- * 近い押せるものまでの距離）か、証しにならない押しなら null。
- */
-function targetEvidenceOf(press) {
-  if (press.mode === "aim" || press.mode === "hold-aim") {
-    if (!press.aim) return null;
-    if (press.aim[0] !== null) return { target: true, nearest: press.aim[1] };
-    if (press.aim[1] === null) return null;
-    return { target: false, nearest: press.aim[1] };
-  }
-  if (press.shown !== 1 || press.group === null) return null;
-  return {
-    target: press.nearest !== null && press.nearest <= AIM_REACH_PX,
-    nearest: press.nearest,
-  };
-}
-
 /**
  * 条件7・D5 の合否の行（README の「合否の行」）。置き場のすべての数える行の q を読み、行ごとに、その行の組の押しの
  * 数（seen）・試した回（tried）・外れた回（failed と、その一覧 fails）・試さなかった回（untried）・境目の回（border）
  * を数え、下限（lowerOk。切り替わりごと・入力ごとに試した回が1回以上、タッチの連続の押しの守りは診断12本のそれぞれに
- * 1回以上）と合格（pass。外れ 0 で、下限を満たすか、守る的が無い組だけの行）と、行の様子（status。押しが来なかった
- * not-run、試した回が無く行の組がどれも守る的が無い組の no-target、ほかの試した回の無い no-qualifying、試した回の
- * ある tried）を出す。1行が1つの行と切り替わりと入力。落ちた先と試したかは records.mjs の landedOf で決める（押し
- * 下げが切り替わりの前で click が切り替わったあとの画面に届いた押しは click の的）。
- *
- * 組は、操作（D5 も同じ操作）・画面・本・入力・行か結果か切り替わりの名（回の名の5つ目の欄）・切り替わり・帯の番号で
- * 決める。同じ組は、間隔・ずれ・押し方によらず、切り替わったあとの画面（1打目の点から決まる着地）が同じなので、守る
- * 的があるかの証し（targetEvidenceOf）は、置き場のどの押しのものも組ごとに合わせる。1つでも的のある証しがあれば
- * 的のある組、的の無い証しだけがあれば守る的が無い組（noTarget に `[組, いちばん近い押せるものまでの距離]`）で、
- * 証しの無い組はどちらでもない。
+ * 1回以上、d5-inner は 80px のずれの試した回が1回以上）と合格（pass。外れ 0 で、下限を満たすか、守る的が無い組だけの
+ * 行）と、行の様子（status。押しが来なかった not-run、試した回が無く行の組がどれも守る的が無い組の no-target、ほかの
+ * 試した回の無い no-qualifying、試した回のある tried）を出す。1行が1つの行と切り替わりと入力。落ちた先と試したかは
+ * records.mjs の landedOf で決める（押し下げが切り替わりの前で click が切り替わったあとの画面に届いた押しは click の
+ * 的）。守る的が無い組は targets.mjs で見分け、行に来た押しの組のうち守る的が無い組を noTarget（`[組, いちばん近い
+ * 押せるものまでの距離]`）に出す。状態が読めなかった押し（q の worked が null）は、どの行にも数えず、数と回を
+ * worked-unread の行に出す。
  */
 function verdictsOf(directory, names) {
   const rows = new Map();
@@ -517,56 +498,12 @@ function verdictsOf(directory, names) {
     }
     return rows.get(id);
   };
-  // 組ごとの守る的があるかの証し（組 → { target, nearest }）。
-  const evidence = new Map();
-  const addEvidence = (pair, found) => {
-    if (!found) return;
-    const known = evidence.get(pair);
-    if (!known) evidence.set(pair, { ...found });
-    else if (found.target) known.target = true;
-    else if (
-      !known.target &&
-      found.nearest !== null &&
-      (known.nearest === null || found.nearest < known.nearest)
-    ) {
-      known.nearest = found.nearest;
-    }
-  };
-  const pairKey = (head, name, line, press) => {
-    const [slug, input, , , variant] = line.k.split("|");
-    const transition =
-      press.kind === "answer" ? "answer" : transitionOf(press.kind);
-    return [
-      head.op,
-      viewportOf(name),
-      slug,
-      input,
-      variant,
-      transition,
-      press.band,
-    ].join("|");
-  };
+  const evidence = createTargetEvidence();
   for (const name of names) {
     const lines = readLines(path.join(directory, name));
     const head = lines[0];
     for (const line of lines) {
-      if (line.k === undefined || !line.f) continue;
-      if (head.op === "keyboard") {
-        const [slug, input, , , variant] = line.k.split("|");
-        const [, target, , , , distance] = line.kb ?? [];
-        if (target !== undefined && (target !== null || distance !== null)) {
-          addEvidence(
-            ["keyboard", viewportOf(name), slug, input, variant].join("|"),
-            { target: target !== null, nearest: distance ?? null },
-          );
-        }
-        continue;
-      }
-      for (const entry of line.q ?? []) {
-        const press = readPress(entry);
-        if (press.kind !== "answer" && !WINDOW_KINDS.has(press.kind)) continue;
-        addEvidence(pairKey(head, name, line, press), targetEvidenceOf(press));
-      }
+      if (line.k !== undefined && line.f) evidence.addLine(head, name, line);
     }
   }
   // 行の組の押しが来たことを数えて、行を返す。
@@ -585,6 +522,7 @@ function verdictsOf(directory, names) {
   };
   const isFirst = (group) => FIRST.has(group);
   let firstBlocked = 0;
+  const unread = { count: 0, presses: [] };
   const mismatches = {};
   const moved = {};
   for (const name of names) {
@@ -609,9 +547,7 @@ function verdictsOf(directory, names) {
         // キーボードで切り替えたあとの、切り替える前の点の近くのポインタの押し。押しの pointerdown の的が新しい画面の
         // 押せるものの上で、切り替える前の押しから 650ms 未満（誤って開いた窓の中）だった回を試した回にする。
         const row = see("keyboard-pointer", variant, input);
-        row.pairs.add(
-          ["keyboard", viewportOf(name), slug, input, variant].join("|"),
-        );
+        row.pairs.add(keyboardPairKeyOf(name, line));
         if (!switched) fail(row, [name, line.k, line.kb]);
         else if (
           !target ||
@@ -640,7 +576,7 @@ function verdictsOf(directory, names) {
         // 押しごとの2打目の押し方（知識クイズの走査の答えは、回の押し方によらず同じ点の same）。
         const mode = press.mode;
         // 守る的の組の行に、この押しの組を足す（`see` で来たことを数えた行）。
-        const pairId = pairKey(head, name, line, press);
+        const pairId = pairKeyOf(head, name, line, press);
         const seePair = (...rest) => {
           const row = see(...rest);
           row.pairs.add(pairId);
@@ -656,7 +592,11 @@ function verdictsOf(directory, names) {
           }
           if (press.clickMoved === 1) moved[kind] = (moved[kind] ?? 0) + 1;
         }
-        if (worked === null) continue;
+        if (worked === null) {
+          unread.count++;
+          if (unread.presses.length < 50) unread.presses.push(where);
+          continue;
+        }
         const sent = press.downGap !== null;
         const landed = landedOf(press);
         // D9: 知識クイズの「次へ」のあとの、1打目から 100px 以下で窓の中の2打目が働いた件。
@@ -896,15 +836,18 @@ function verdictsOf(directory, names) {
     const counted = !["d5-after", "d5-answer", "touch-border"].includes(
       row.verdict,
     );
+    // d5-inner の下限は 80px のずれの試した回で数える（decision-landing.md の「D5 の2打目をずらす走査」。80px の
+    // ずれは、境目から 16px 以上離した所で守りが受けないことを確かめる押しなので、基本のずれの試した回では満たさない）。
+    const triedForLower =
+      row.verdict === "d5-inner"
+        ? (row.byShift?.[D5_INNER_SHIFT] ?? 0)
+        : row.tried;
     const lowerOk = counted
-      ? row.tried > 0 && (!perSlug || missingSlugs.length === 0)
+      ? triedForLower > 0 && (!perSlug || missingSlugs.length === 0)
       : undefined;
     // 守る的が無い組（組の数と、いちばん近い押せるものまでの距離）。行の組がどれも守る的が無い組なら、試した回が
     // 無くても下限に届かないことが合格を妨げない（decision-landing.md の「下限」）。
-    const noTarget = [...pairs]
-      .filter((pair) => evidence.get(pair)?.target === false)
-      .map((pair) => [pair, evidence.get(pair).nearest]);
-    const onlyNoTarget = pairs.size > 0 && noTarget.length === pairs.size;
+    const { noTarget, only: onlyNoTarget } = evidence.noTargetOf(pairs);
     const status = !counted
       ? undefined
       : row.seen === 0
@@ -927,6 +870,7 @@ function verdictsOf(directory, names) {
     });
   }
   verdicts.push({ verdict: "first-blocked", count: firstBlocked });
+  verdicts.push({ verdict: "worked-unread", ...unread });
   verdicts.push({
     verdict: "target-mismatch",
     byKind: mismatches,

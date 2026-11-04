@@ -9,10 +9,12 @@
 //
 // 押しは、同じファイル（組と画面）の数える行の q を、k・帯の番号・押しの種類（q の kind）と、その組の中の何番目か
 // で突き合わせる。直した版では守りが2打目を止めるので、押しの番号では突き合わせない。2打目が働いて画面を切り替えた
-// 押し（X・S など。q の follow）は、その切り替わりを、押しの id に行き先を足した id（`<id>><行き先>`）と、種類
-// `<押しの種類>><行き先>`（`answer>question`・`answer>result` など）の別の押しとして、着地の線（2・3・4・8）と
-// 分布に入れる。直した版だけで決まる線（3・5・8）は、組にならなかった直した版の押しにも当てる。組にならなかった
-// 押しは、前の版が要る線（1・2・4・7）を読めなかった押しとして unmatched に出す。次の押しは比べから外し、別に出す。
+// 押し（X・S など。q の follow）は、もとの押しをほかの押しと同じくどの線にも入れたうえで、その切り替わりを、押しの
+// id に行き先を足した id（`<id>><行き先>`）と、種類 `<押しの種類>><行き先>`（`answer>question`・`answer>result`
+// など）の別の押し（切り替わりの写し。印は synthetic）として、着地の線（2・3・4・8）と分布に入れる。直した版だけで
+// 決まる線（3・5・8）は、組にならなかった直した版の押しにも当てる。組にならなかった押しは、前の版が要る線（1・2・
+// 4・7）を読めなかった押しとして unmatched に出し、直した版の押しには落ちた先と働いたことと外れた回か（線 1 と
+// 同じ外れ）を添え、外れた回を unmatchedOut に別に出す。次の押しは比べから外し、別に出す。
 // - firstBlocked: 道具の1打目が守りに止められた押し（q の firstTook が 0）。q の previous（直前の切り替わりの起点から
 //   の差・隔たり・離しからの差・detail・起点の押しの種類）を records.mjs の guardBand で分け、block なら決めどおり
 //   （byDesign）、border なら境目の帯、accept か守りの無い起点なら害の線 5 の件にも数える。どの線にも数えない。
@@ -51,13 +53,20 @@
 //    見せる間に押し下げる受ける側 hold-out、空振りでないことの対の押し）のうち、試した押し（triedAccept）が
 //    働かなかった押しと、害に分けた道具の1打目。試した押しと試さなかった押しの数と下限（組ごと・切り替わりごと・
 //    入力ごとに試した押しが1回以上）は guardChecked に `<組>|<切り替わり>|<入力>` で出す（組は acceptSetOf。出すと
-//    決めた組は、押しが来なかったものも status で出す）。
+//    決めた組は、押しが来なかったものも status で出す）。組に来た押しの組（targets.mjs）のうち守る的が無い組を
+//    noTarget に出し、試した押しが無く、来た押しの組がどれも守る的が無い組なら status を no-target にする（下限に
+//    届かなくても合格を妨げない。report.mjs の合否の行と同じ）。
 // 7. selection: 語の選択の対（select）で前は選ばれ後は選ばれなかった回（lost）と、select でない押しで前は選ばれず
 //    後は選ばれた押し（gained）。
 // 8. newMarks: 読む所の印（q の marks。2打目が切り替えた画面は follow の印）が前の版で出ず、直した版で出た押し。件に
 //    は、両方の版の着地と印（before・after）と、着地に使った点が版で違う押しの印（landingPointDiffers）を添える。組に
 //    ならなかった押しは、直した版で出た印を unmatched: true を付けて件に入れ、3 と同じ sameInputBefore を添える。
 // 6（受けなかった押しの形）は像で見るので、この道具は出さない。
+//
+// 出力は1つの JSON で、--out に書いて 1MB を越えるときは、操作（start・answers・last・retry・select・keyboard と
+// D5 の各操作）ごとの `<出力の名>-<操作>.json` に件の一覧と分布を分けて書き、--out には、版と種と guardChecked と
+// emptySpanSame と、操作ごとのファイルの名（parts）を書く（carryover.md の「着地の直しの害の確かめ」）。分けても
+// 1MB を越えるファイルがあれば知らせる。
 
 import fs from "node:fs";
 import path from "node:path";
@@ -72,6 +81,7 @@ import {
   readFollow,
   readPress,
 } from "./records.mjs";
+import { createTargetEvidence, pairKeyOf } from "./targets.mjs";
 
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 /** 4 の large の線（landing-options.md 2-1 で A″ が直した回の増えの最大）。 */
@@ -139,7 +149,8 @@ const summaryFiles = (directory) =>
 
 /**
  * 回の押しを、帯の番号と種類の組の中の何番目かを付けて並べる。2打目が働いて画面を切り替えた押しは、そのすぐあとに、
- * 切り替わりを別の押し（follow: true。着地の欄 sent・landing・reaches・marks を持つ）として並べる。
+ * 切り替わりを別の押し（切り替わりの写し。synthetic: true で、着地の欄 sent・landing・reaches・marks を持つ）として
+ * 並べる。もとの押しも q の follow の欄を持つので、写しかどうかは synthetic で見分ける。
  */
 function pressesOf(line) {
   const seen = new Map();
@@ -157,7 +168,7 @@ function pressesOf(line) {
         id: `${id}>${follow.to}`,
         press: {
           ...follow,
-          follow: true,
+          synthetic: true,
           i: press.i,
           band: press.band,
           kind: `${press.kind}>${follow.to}`,
@@ -211,7 +222,7 @@ function repeatDifferences(first, second, side, out) {
       for (const [id, press] of run.presses) {
         const repeat = again?.presses.get(id);
         const where = { file: name, k, band: press.band, kind: press.kind };
-        if (repeat && !press.follow) {
+        if (repeat && !press.synthetic) {
           const outcome = [outcomeOf(press), outcomeOf(repeat)];
           if (JSON.stringify(outcome[0]) !== JSON.stringify(outcome[1])) {
             timing.set(pressKey(side, name, k, id), outcome);
@@ -265,10 +276,10 @@ function landingInputIndex(files) {
 /**
  * 1度の押しで終わる操作のタッチの回は要約の n（2打目の pointerdown の時の組み）で、ほかは q の reaches（着地のあとの
  * 最初のフレーム）で、[第1の組, 第2の組] までの max(dx, dy)（100 で頭打ち）。2打目が切り替えた画面は、その切り替わりの
- * 着地のあとの最初のフレームの値（follow の reaches）。
+ * 着地のあとの最初のフレームの値（切り替わりの写しの reaches）。
  */
 function reachesOf(op, line, press) {
-  if (!press.follow && op !== "answers" && Array.isArray(line.n)) {
+  if (!press.synthetic && op !== "answers" && Array.isArray(line.n)) {
     const reach = (entry) =>
       entry
         ? Math.min(FAR_REACH_PX, Math.max(entry[0], entry[1]))
@@ -407,7 +418,7 @@ const offsetOf = (press) =>
  * 画面は、どちらの版もその切り替わりを起こした2打目の click から点を取るので、点そのもので比べる。
  */
 function landingPointDiffers(p, a) {
-  if (a.follow) {
+  if (a.synthetic) {
     return (
       !!p.landing &&
       !!a.landing &&
@@ -436,6 +447,7 @@ function main() {
     },
     distributions: {},
     unmatched: [],
+    unmatchedOut: [],
     unstable: [],
     timingUnstable: [],
     firstBlocked: [],
@@ -483,14 +495,36 @@ function main() {
     if (!values.has(id)) values.set(id, []);
     values.get(id).push(value);
   };
-  const check = (id) =>
-    (out.guardChecked[id] ??= {
+  // 害の線 5 の組ごとの数と、組に来た押しの組（守る的が無い組を見分けるため。証しは直した版の置き場から集める）。
+  const pairsOfSet = new Map();
+  const check = (id, pair) => {
+    if (!pairsOfSet.has(id)) pairsOfSet.set(id, new Set());
+    if (pair !== undefined) pairsOfSet.get(id).add(pair);
+    return (out.guardChecked[id] ??= {
       covered: 0,
       tried: 0,
       untried: 0,
       stopped: 0,
     });
+  };
   for (const id of EXPECTED_SETS) check(id);
+  const evidence = createTargetEvidence();
+  for (const [name, file] of after) {
+    for (const run of file.runs.values()) {
+      evidence.addLine(file.head, name, run.line);
+    }
+  }
+  // 時間で揺れる押しの、版ごとの2回の結果（揺れなければ undefined）。
+  const timingOf = (name, k, id) => {
+    const sides = ["before", "after"].filter((side) =>
+      timing.has(pressKey(side, name, k, id)),
+    );
+    return sides.length
+      ? Object.fromEntries(
+          sides.map((side) => [side, timing.get(pressKey(side, name, k, id))]),
+        )
+      : undefined;
+  };
   // 道具の1打目が守りに止められた押しを、決めどおりか害かに分ける。
   const blockedFirst = (where, side, press, input) => {
     const [gap, distance, release, detail, originKind] = press.previous ?? [
@@ -519,7 +553,7 @@ function main() {
   };
 
   for (const [name, afterFile] of after) {
-    const group = name.replace(/-\d+x\d+(-200)?\.jsonl$/, "");
+    const group = operationOf(name);
     const beforeFile = before.get(name);
     if (!beforeFile)
       out.unmatched.push({ file: name, side: "after", all: true });
@@ -541,8 +575,8 @@ function main() {
         if (pointDiffers) {
           out.landingPointDiffers.push({
             ...where,
-            offsets: a.follow ? undefined : [offsetOf(p), offsetOf(a)],
-            points: a.follow
+            offsets: a.synthetic ? undefined : [offsetOf(p), offsetOf(a)],
+            points: a.synthetic
               ? [p.landing.slice(4, 6), a.landing.slice(4, 6)]
               : undefined,
           });
@@ -601,7 +635,7 @@ function main() {
         if (!p) return;
         // ここからは前の版が要る線（2・4）と分布。
         const operation = `${group}/${p.kind}`;
-        const shown = a.follow || (p.shown !== 0 && a.shown !== 0);
+        const shown = a.synthetic || (p.shown !== 0 && a.shown !== 0);
         const rb = reachesOf(beforeFile.head.op, beforeRun.line, p);
         const ra = reachesOf(afterFile.head.op, afterRun.line, a);
         collect(operation, "before", "sent", p.sent);
@@ -675,11 +709,12 @@ function main() {
         const p = beforeRun?.presses.get(id);
         if (p) matchedBefore.add(id);
         const where = { file: name, k, band: a.band, kind: a.kind };
-        if (a.follow) {
+        if (a.synthetic) {
           if (!p) out.unmatched.push({ ...where, side: "after" });
           landingLines(id, where, a, p);
           continue;
         }
+        const pair = pairKeyOf(afterFile.head, name, afterRun.line, a);
         for (const set of coveredSets(
           group,
           a,
@@ -687,7 +722,7 @@ function main() {
           shift,
           Number(interval),
         )) {
-          check(set).covered++;
+          check(set, pair).covered++;
         }
         if (a.firstTook === 0 || p?.firstTook === 0) {
           if (p?.firstTook === 0) blockedFirst(where, "before", p, input);
@@ -707,7 +742,21 @@ function main() {
           continue;
         }
         if (!p) {
-          out.unmatched.push({ ...where, side: "after" });
+          // 前の版が無いので線 1 に入らない。外れた回（線 1 と同じ外れ）かを添え、外れた回は別の一覧にも出す。
+          const item = {
+            ...where,
+            side: "after",
+            group: landedOf(a)?.group ?? null,
+            worked: a.worked,
+            out: !isAddedSet(group, a, shift) && isOut(a),
+          };
+          out.unmatched.push(item);
+          if (item.out) {
+            out.unmatchedOut.push({
+              ...item,
+              timingUnstable: timingOf(name, k, id),
+            });
+          }
         }
         landingLines(id, where, a, p);
 
@@ -715,6 +764,7 @@ function main() {
         if (bandAfter === "accept") {
           const stat = check(
             `${acceptSetOf(a, input)}|${transitionOf(a.kind)}|${input}`,
+            pair,
           );
           if (!triedAccept(a)) stat.untried++;
           else {
@@ -731,7 +781,10 @@ function main() {
           }
         }
         if (a.pair && a.worked === "") {
-          const stat = check(`window-late|${transitionOf(a.kind)}|${input}`);
+          const stat = check(
+            `window-late|${transitionOf(a.kind)}|${input}`,
+            pair,
+          );
           if (!a.pair[1] || a.pair[0] < BORDER_UNTIL_MS) stat.untried++;
           else {
             stat.tried++;
@@ -745,21 +798,11 @@ function main() {
         if (!p) continue;
         // 1. 新しく外れた押し（足した組の押しは数えない）。時間で揺れる押しは、件から外さず2回の結果を添える。
         if (!isAddedSet(group, a, shift) && !isOut(p) && isOut(a)) {
-          const sides = ["before", "after"].filter((side) =>
-            timing.has(pressKey(side, name, k, id)),
-          );
           out.lines.newOut.push({
             ...where,
             group: landedOf(a)?.group ?? null,
             worked: a.worked,
-            timingUnstable: sides.length
-              ? Object.fromEntries(
-                  sides.map((side) => [
-                    side,
-                    timing.get(pressKey(side, name, k, id)),
-                  ]),
-                )
-              : undefined,
+            timingUnstable: timingOf(name, k, id),
           });
         }
         // 7. 語の選択。
@@ -789,14 +832,20 @@ function main() {
       out.unmatched.push({ file: name, side: "before", all: true });
     }
   }
-  for (const stat of Object.values(out.guardChecked)) {
+  for (const [id, stat] of Object.entries(out.guardChecked)) {
+    const pairs = pairsOfSet.get(id);
+    const { noTarget, only } = evidence.noTargetOf(pairs);
+    stat.pairs = pairs.size || undefined;
+    stat.noTarget = pairs.size ? noTarget : undefined;
     stat.lowerOk = stat.tried > 0;
     stat.status =
       stat.covered === 0 && stat.tried + stat.untried === 0
         ? "not-run"
-        : stat.tried === 0
-          ? "no-qualifying"
-          : "tried";
+        : stat.tried > 0
+          ? "tried"
+          : only
+            ? "no-target"
+            : "no-qualifying";
   }
   for (const [id, list] of values) {
     const [operation, side, field] = id.split("|");
@@ -804,13 +853,90 @@ function main() {
     out.distributions[operation][side] ??= {};
     out.distributions[operation][side][field] = spread(list);
   }
-  const text = `${JSON.stringify(out, null, 2)}\n`;
-  if (options.out) {
-    fs.writeFileSync(options.out, text);
-    if (Buffer.byteLength(text) > FILE_LIMIT) {
-      console.error(`${options.out} is over 1MB; report to the PM`);
+  writeOut(
+    out,
+    options.out,
+    new Set([...before.keys(), ...after.keys()].map(operationOf)),
+  );
+}
+
+/** ファイルの名から操作の名（`start`・`answers-d5` など）。 */
+const operationOf = (name) => name.replace(/-\d+x\d+(-200)?\.jsonl$/, "");
+
+/** 件の一覧（件ごとに file を持つ）の名。lines の一覧は lines.<名> で引く。 */
+const ITEM_LISTS = [
+  "unmatched",
+  "unmatchedOut",
+  "unstable",
+  "timingUnstable",
+  "firstBlocked",
+  "border",
+  "landingPointDiffers",
+  "outsideSpanSame",
+];
+
+/** 比べの出力のうち、1つの操作の件の一覧と分布。 */
+function partOf(out, operation) {
+  const mine = (list) =>
+    list.filter((item) => operationOf(item.file) === operation);
+  return {
+    before: out.before,
+    after: out.after,
+    beforeRepeat: out.beforeRepeat,
+    afterRepeat: out.afterRepeat,
+    seed: out.seed,
+    operation,
+    distributions: Object.fromEntries(
+      Object.entries(out.distributions).filter(
+        ([id]) => id.split("/")[0] === operation,
+      ),
+    ),
+    ...Object.fromEntries(ITEM_LISTS.map((name) => [name, mine(out[name])])),
+    lines: Object.fromEntries(
+      Object.entries(out.lines).map(([name, list]) => [name, mine(list)]),
+    ),
+  };
+}
+
+/**
+ * 比べの出力を書く。--out が無ければ標準出力に書く。1MB を越えるときは、2つの版の置き場にあった操作（operations）
+ * ごとのファイルに件の一覧と分布を分け（件の無い操作も書く）、--out には操作によらない欄と、操作ごとのファイルの名
+ * （parts）を書く。分けても 1MB を越えるファイルは知らせる。
+ */
+function writeOut(out, file, operations) {
+  const textOf = (value) => `${JSON.stringify(value, null, 2)}\n`;
+  const text = textOf(out);
+  if (!file) {
+    process.stdout.write(text);
+    return;
+  }
+  if (Buffer.byteLength(text) <= FILE_LIMIT) {
+    fs.writeFileSync(file, text);
+    return;
+  }
+  const parts = {};
+  for (const operation of [...operations].sort()) {
+    const partFile = file.replace(/(\.json)?$/, `-${operation}.json`);
+    const partText = textOf(partOf(out, operation));
+    fs.writeFileSync(partFile, partText);
+    parts[operation] = path.basename(partFile);
+    if (Buffer.byteLength(partText) > FILE_LIMIT) {
+      console.error(`${partFile} is over 1MB; report to the PM`);
     }
-  } else process.stdout.write(text);
+  }
+  fs.writeFileSync(
+    file,
+    textOf({
+      before: out.before,
+      after: out.after,
+      beforeRepeat: out.beforeRepeat,
+      afterRepeat: out.afterRepeat,
+      seed: out.seed,
+      emptySpanSame: out.emptySpanSame,
+      guardChecked: out.guardChecked,
+      parts,
+    }),
+  );
 }
 
 main();
