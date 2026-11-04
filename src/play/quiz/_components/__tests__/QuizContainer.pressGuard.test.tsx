@@ -6,7 +6,9 @@
  *    700ms 未満で、起点の点から直線で 100px 以下のポインタの押し。
  *  - 連続の押しの守り（診断の答え→次の問）: 同じ範囲のうち、連続の押し。マウスは mousedown の detail >= 2、タッチと
  *    ペンは直前の押し（起点か、受けなかった押し）の離しから 300ms 未満の押し下げ。
- * 時刻と座標は pointerdown で取り、受けないと決めた押しは mousedown と click の両方を止める。
+ * 時刻と座標は pointerdown で取り、受けないと決めた押しは mousedown と click の両方を止める。診断の答えを見せる間に
+ * 押し下げ、切り替わったあとに離す押しも、押し下げの時刻と座標で同じく決める。主のボタンでない押しと主でない指の
+ * 押しは、守りに掛けない。
  *
  * 事象は、ブラウザが送る順と値で組む。pointerdown の detail はいつも 0 で、マウスの連続の数は mousedown と click の
  * detail だけが持つ。事象の時刻（timeStamp）は、押しごとに決めた値に差し替える。
@@ -132,16 +134,21 @@ function at<T extends Event>(event: T, time: number): T {
   return event;
 }
 
-interface PressOptions {
+type PointerKind = "mouse" | "touch" | "pen";
+
+interface PressPoint {
+  x?: number;
+  y?: number;
+  pointerType?: PointerKind;
+  /** mousedown と click の detail（マウスの連続の数）。既定は 1。 */
+  detail?: number;
+}
+
+interface PressOptions extends PressPoint {
   /** 押し下げの時刻。 */
   down: number;
   /** 離しの時刻。既定は押し下げの 50ms あと。 */
   up?: number;
-  x?: number;
-  y?: number;
-  pointerType?: "mouse" | "touch" | "pen";
-  /** mousedown と click の detail（マウスの連続の数）。既定は 1。 */
-  detail?: number;
 }
 
 interface PressOutcome {
@@ -151,65 +158,105 @@ interface PressOutcome {
   clickReachedDocument: boolean;
 }
 
-/**
- * ポインタの1つの押しを、ブラウザの順で送る。マウスは pointerdown → mousedown → pointerup → mouseup → click、
- * タッチとペンは pointerdown → pointerup → mousedown → mouseup → click。
- */
-async function press(
-  target: Element,
-  options: PressOptions,
-): Promise<PressOutcome> {
-  const {
-    down,
-    up = down + 50,
-    x = 100,
-    y = 500,
-    pointerType = "mouse",
-    detail = 1,
-  } = options;
-  const coordinates = {
-    bubbles: true,
-    cancelable: true,
-    clientX: x,
-    clientY: y,
-  };
-  const pointer = {
-    ...coordinates,
-    pointerType,
+function coordinatesOf({ x = 100, y = 500 }: PressPoint): MouseEventInit {
+  return { bubbles: true, cancelable: true, clientX: x, clientY: y };
+}
+
+function pointerOf(point: PressPoint): PointerEventInit {
+  return {
+    ...coordinatesOf(point),
+    pointerType: point.pointerType ?? "mouse",
     pointerId: 1,
     isPrimary: true,
+    detail: 0,
   };
-  const mouseTime = pointerType === "mouse" ? down : up;
+}
+
+/**
+ * 押しの前半（押し下げ）を送る。マウスは pointerdown → mousedown、タッチとペンは pointerdown だけ。マウスの
+ * mousedown が止められたかを返す（タッチとペンでは null）。
+ */
+async function pressDown(
+  target: Element,
+  point: PressPoint & { down: number },
+): Promise<boolean | null> {
+  const mouseDown =
+    (point.pointerType ?? "mouse") === "mouse"
+      ? at(
+          new MouseEvent("mousedown", {
+            ...coordinatesOf(point),
+            detail: point.detail ?? 1,
+          }),
+          point.down,
+        )
+      : null;
+  await act(async () => {
+    target.dispatchEvent(
+      at(new PointerEvent("pointerdown", pointerOf(point)), point.down),
+    );
+    if (mouseDown) target.dispatchEvent(mouseDown);
+  });
+  return mouseDown?.defaultPrevented ?? null;
+}
+
+/**
+ * 押しの後半（離し）を送る。マウスは pointerup → mouseup → click、タッチとペンは pointerup → mousedown →
+ * mouseup → click。タッチとペンの mousedown が止められたかと、click が止められたかを返す。
+ */
+async function release(
+  target: Element,
+  point: PressPoint & { up: number },
+): Promise<{
+  mouseDownPrevented: boolean | null;
+  clickPrevented: boolean;
+  clickReachedDocument: boolean;
+}> {
+  const coordinates = coordinatesOf(point);
+  const detail = point.detail ?? 1;
+  const mouseDown =
+    (point.pointerType ?? "mouse") === "mouse"
+      ? null
+      : at(new MouseEvent("mousedown", { ...coordinates, detail }), point.up);
+  const click = at(
+    new MouseEvent("click", { ...coordinates, detail }),
+    point.up,
+  );
   let clickReachedDocument = false;
   const noteClick = (): void => {
     clickReachedDocument = true;
   };
   document.addEventListener("click", noteClick);
-  let mouseDownPrevented = false;
-  let clickPrevented = false;
   await act(async () => {
     target.dispatchEvent(
-      at(new PointerEvent("pointerdown", { ...pointer, detail: 0 }), down),
+      at(new PointerEvent("pointerup", pointerOf(point)), point.up),
     );
-    const mouseDown = at(
-      new MouseEvent("mousedown", { ...coordinates, detail }),
-      mouseTime,
-    );
-    if (pointerType === "mouse") target.dispatchEvent(mouseDown);
+    if (mouseDown) target.dispatchEvent(mouseDown);
     target.dispatchEvent(
-      at(new PointerEvent("pointerup", { ...pointer, detail: 0 }), up),
+      at(new MouseEvent("mouseup", { ...coordinates, detail }), point.up),
     );
-    if (pointerType !== "mouse") target.dispatchEvent(mouseDown);
-    target.dispatchEvent(
-      at(new MouseEvent("mouseup", { ...coordinates, detail }), up),
-    );
-    const click = at(new MouseEvent("click", { ...coordinates, detail }), up);
     target.dispatchEvent(click);
-    mouseDownPrevented = mouseDown.defaultPrevented;
-    clickPrevented = click.defaultPrevented;
   });
   document.removeEventListener("click", noteClick);
-  return { mouseDownPrevented, clickPrevented, clickReachedDocument };
+  return {
+    mouseDownPrevented: mouseDown?.defaultPrevented ?? null,
+    clickPrevented: click.defaultPrevented,
+    clickReachedDocument,
+  };
+}
+
+/** ポインタの1つの押しを、同じ的の上で、ブラウザの順で送る（pressDown と release）。 */
+async function press(
+  target: Element,
+  options: PressOptions,
+): Promise<PressOutcome> {
+  const { down, up = down + 50, ...point } = options;
+  const mouseDownAtDown = await pressDown(target, { ...point, down });
+  const released = await release(target, { ...point, up });
+  return {
+    mouseDownPrevented: mouseDownAtDown ?? released.mouseDownPrevented ?? false,
+    clickPrevented: released.clickPrevented,
+    clickReachedDocument: released.clickReachedDocument,
+  };
 }
 
 /** キーボードの起動（対の押し下げを持たない、detail が 0 の click）。 */
@@ -530,6 +577,210 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
       expect(third.clickPrevented).toBe(true);
       expect(await answeredSecond()).toBe(false);
     });
+  });
+});
+
+describe("答えを見せる間に押し下げ、切り替わったあとに離す押し", () => {
+  /** 答えた問の、押した行の字（答えたあとは押せない行の上）。 */
+  function answeredRow(): HTMLElement {
+    return screen.getAllByText("選択1")[0];
+  }
+
+  /** 診断を始め、1問目に (100, 500) で、時刻 1000 に押し下げ 1050 に離して答える（まだ見せる間）。 */
+  async function answerFirstOf(
+    questionCount: number,
+    pointerType: PointerKind,
+  ): Promise<void> {
+    renderQuiz(makeQuiz("personality", questionCount));
+    await pressWithKeyboard(button("はじめる"));
+    await press(button("選択1"), { down: 1000, up: 1050, pointerType });
+    expect(questionHeading()).toHaveTextContent("問1");
+  }
+
+  async function answeredSecond(): Promise<boolean> {
+    await advance(ANSWER_SHOWN_MS);
+    return questionHeading().textContent === "問3";
+  }
+
+  describe.each(["touch", "pen"] as const)(
+    "%s（連続の押しの守り）",
+    (pointerType) => {
+      test("次の問の選択肢で離す押しは、答えを入れず、mousedown と click を止め、quiz_press_guarded を送る", async () => {
+        await answerFirstOf(3, pointerType);
+        await pressDown(answeredRow(), { down: 1150, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        expect(questionHeading()).toHaveTextContent("問2");
+        const outcome = await release(button("選択1"), {
+          up: 1250,
+          pointerType,
+        });
+        expect(outcome).toEqual({
+          mouseDownPrevented: true,
+          clickPrevented: true,
+          clickReachedDocument: false,
+        });
+        expect(await answeredSecond()).toBe(false);
+        expect(guardedEvents().map((call) => call[2])).toEqual([
+          { transition: "answer", content_id: "quiz-character-personality" },
+        ]);
+      });
+
+      test("100px の外で押し下げた押しは、次の問に答えを入れる", async () => {
+        await answerFirstOf(3, pointerType);
+        await pressDown(answeredRow(), { down: 1150, y: 610, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        const outcome = await release(button("選択1"), {
+          up: 1250,
+          y: 610,
+          pointerType,
+        });
+        expect(outcome.clickPrevented).toBe(false);
+        expect(await answeredSecond()).toBe(true);
+      });
+
+      test("見せる間に押して離した2打目は連続の元になり、その離しから 300ms 未満の3打目（起点の離しからは 300ms 以上）は答えを入れない", async () => {
+        await answerFirstOf(3, pointerType);
+        await press(answeredRow(), { down: 1120, up: 1160, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        expect(questionHeading()).toHaveTextContent("問2");
+        // 起点の離し（1050）からは 310ms、2打目の離し（1160）からは 200ms。
+        const third = await press(button("選択1"), {
+          down: 1360,
+          pointerType,
+        });
+        expect(third.clickPrevented).toBe(true);
+        expect(await answeredSecond()).toBe(false);
+      });
+
+      test("切り替わったあとに離した2打目も連続の元になり、その離しから 300ms 未満の3打目は答えを入れない", async () => {
+        await answerFirstOf(3, pointerType);
+        await pressDown(answeredRow(), { down: 1150, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        await release(button("選択1"), { up: 1250, pointerType });
+        // 起点の離し（1050）からは 400ms、2打目の離し（1250）からは 200ms。
+        const third = await press(button("選択1"), {
+          down: 1450,
+          pointerType,
+        });
+        expect(third.clickPrevented).toBe(true);
+        expect(await answeredSecond()).toBe(false);
+      });
+    },
+  );
+
+  test("マウスの detail 2 の押しは、click が次の問の選択肢に届いても、その click を止める", async () => {
+    await answerFirstOf(3, "mouse");
+    await pressDown(answeredRow(), { down: 1150, detail: 2 });
+    await advance(ANSWER_SHOWN_MS);
+    const outcome = await release(button("選択1"), { up: 1250, detail: 2 });
+    expect(outcome.clickPrevented).toBe(true);
+    expect(outcome.clickReachedDocument).toBe(false);
+    expect(await answeredSecond()).toBe(false);
+  });
+
+  describe.each(["touch", "pen"] as const)(
+    "%s（最後の答えのあとの窓の守り）",
+    (pointerType) => {
+      test("結果の画面のリンクで離す押しは、移動を止める", async () => {
+        await answerFirstOf(1, pointerType);
+        await pressDown(answeredRow(), { down: 1150, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        const outcome = await release(
+          screen.getByRole("link", { name: "次の遊び" }),
+          { up: 1250, pointerType },
+        );
+        expect(outcome).toEqual({
+          mouseDownPrevented: true,
+          clickPrevented: true,
+          clickReachedDocument: false,
+        });
+        expect(guardedEvents().map((call) => call[2])).toEqual([
+          { transition: "result", content_id: "quiz-character-personality" },
+        ]);
+      });
+
+      test("100px の外で押し下げた押しは、結果の画面のボタンを押す", async () => {
+        await answerFirstOf(1, pointerType);
+        await pressDown(answeredRow(), { down: 1150, y: 610, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        const outcome = await release(button("もう一度挑戦する"), {
+          up: 1250,
+          y: 610,
+          pointerType,
+        });
+        expect(outcome.clickPrevented).toBe(false);
+        expect(button("はじめる")).toBeInTheDocument();
+      });
+    },
+  );
+});
+
+describe("主のボタンでない押しと、主でない指の押し", () => {
+  /** 診断を開き、マウスで (100, 500) の「はじめる」を時刻 1000 に押す。 */
+  async function startWithMouse(): Promise<void> {
+    renderQuiz(makeQuiz("personality", 2));
+    await press(button("はじめる"), { down: 1000 });
+    expect(questionHeading()).toHaveTextContent("問1");
+  }
+
+  test("窓の中・100px の中の右ボタンの押しは、止めず、quiz_press_guarded を送らない", async () => {
+    await startWithMouse();
+    const choice = button("選択1");
+    const coordinates = coordinatesOf({});
+    const mouseDown = at(
+      new MouseEvent("mousedown", { ...coordinates, button: 2, detail: 1 }),
+      1200,
+    );
+    const contextMenu = new MouseEvent("contextmenu", {
+      ...coordinates,
+      button: 2,
+    });
+    await act(async () => {
+      choice.dispatchEvent(
+        at(
+          new PointerEvent("pointerdown", { ...pointerOf({}), button: 2 }),
+          1200,
+        ),
+      );
+      choice.dispatchEvent(mouseDown);
+      choice.dispatchEvent(
+        at(
+          new PointerEvent("pointerup", { ...pointerOf({}), button: 2 }),
+          1250,
+        ),
+      );
+      choice.dispatchEvent(
+        at(new MouseEvent("mouseup", { ...coordinates, button: 2 }), 1250),
+      );
+      choice.dispatchEvent(contextMenu);
+    });
+    expect(mouseDown.defaultPrevented).toBe(false);
+    expect(contextMenu.defaultPrevented).toBe(false);
+    expect(guardedEvents()).toEqual([]);
+  });
+
+  test("2本目の指の押し下げは押しを覚えず、1本目の指の 100px の外の押しはそのまま答えを入れる", async () => {
+    await startWithMouse();
+    const finger = { pointerType: "touch" as const, y: 650 };
+    await pressDown(button("選択1"), { ...finger, down: 1300 });
+    // 2本目の指は、守りの起点の点（100, 500）で、窓の中に触れる。
+    await act(async () => {
+      button("選択2").dispatchEvent(
+        at(
+          new PointerEvent("pointerdown", {
+            ...pointerOf({ pointerType: "touch" }),
+            pointerId: 2,
+            isPrimary: false,
+          }),
+          1320,
+        ),
+      );
+    });
+    const outcome = await release(button("選択1"), { ...finger, up: 1400 });
+    expect(outcome.clickPrevented).toBe(false);
+    expect(guardedEvents()).toEqual([]);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
   });
 });
 
