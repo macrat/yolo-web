@@ -51,7 +51,8 @@ export const COMPAT_POINT_REACH_PX = 32;
 /**
  * ポインタの1つの押し。時刻と座標は押し下げ（`pointerdown`）で取る。覚えるのは、主のポインタ（`isPrimary` が真）の
  * 主のボタン（`button === 0`。指とペンでは触れること）の押しだけである。右や中のボタンの押しと、2本目からの指の
- * 押しは、二度押しの2打目にならず、覚えると1本目の指の `mousedown` と `click` を別の押しに結んでしまう。
+ * 押しは、二度押しの2打目にならず、`click` も出さない（Chromium は2本の指の押しに互換の事象を出さない）。覚えると、
+ * その点の近くの次の押しの `mousedown` と `click` をそれに結んでしまう。
  */
 export interface PointerPress {
   /** 押し下げの `event.timeStamp`。 */
@@ -73,6 +74,8 @@ export interface PointerPress {
   mouseCandidateOf: Guard | null;
   /** 対の `mousedown` の `detail`（マウスの連続の数）。`mousedown` を受けるまでは null。 */
   mouseDownDetail: number | null;
+  /** 対の `mousedown` を離しより前に受けたか（マウスと hover を持つペンの順）。 */
+  mouseDownBeforeUp: boolean;
   /** 対の `click` を受けたか。 */
   clicked: boolean;
 }
@@ -213,9 +216,12 @@ function compatPairOf(
 }
 
 /**
- * 互換の事象をもう受けない押しか（nextDownTime は次の押し下げの時刻）。マウスの click は離しと同じ task で出るので、
- * 次の押し下げまでに click を受けていないマウスの押し（押し下げた的が離すまでに DOM から外れた押し）はもう受けない。
- * タッチとペンは、離してから `COMPAT_EVENTS_WAIT_MS` を過ぎた押しである。
+ * 互換の事象をもう受けない押しか（nextDownTime は次の押し下げの時刻）。互換の `mousedown` を離しより前に受けた押し
+ * （マウスと hover を持つペンの順）は、離しに続けて `click` まで出し終えるので、次の押し下げまでに `click` を受けて
+ * いなければ（押し下げた的が離すまでに DOM から外れた押し）もう受けない。Chromium のペンは押しを分けても
+ * `pointerId` が変わらないので、残すと次の押しの `click` が番号でそれに結ばれる。離したあとに `mousedown` を出す
+ * 押し（タッチと hover を持たないペン）は、速い二度押しで2打目の押し下げが1打目の互換の事象より先に届くので、離して
+ * から `COMPAT_EVENTS_WAIT_MS` を過ぎるまで待つ。
  */
 function hasStoppedWaiting(
   waiting: PointerPress,
@@ -223,7 +229,7 @@ function hasStoppedWaiting(
 ): boolean {
   if (waiting.upTime === null) return false;
   return (
-    waiting.pointerType === "mouse" ||
+    waiting.mouseDownBeforeUp ||
     nextDownTime - waiting.upTime >= COMPAT_EVENTS_WAIT_MS
   );
 }
@@ -329,6 +335,7 @@ export function createPressGuard(
       blockedBy: null,
       mouseCandidateOf: null,
       mouseDownDetail: null,
+      mouseDownBeforeUp: false,
       clicked: false,
     };
     waiting = waiting.filter(
@@ -369,6 +376,7 @@ export function createPressGuard(
     );
     if (paired) {
       paired.mouseDownDetail = event.detail;
+      paired.mouseDownBeforeUp = paired.upTime === null;
       if (paired.mouseCandidateOf === guard && guard && event.detail >= 2) {
         paired.blockedBy = guard;
       }
@@ -452,11 +460,11 @@ export function createPressGuard(
       // click を受けた押し（いちばん新しく受けたもの）と、まだ click を受けていない押しである。
       // click の処理の中で切り替わる操作（「はじめる」「次へ」）では、指の速い二度押しの2打目が、1打目の click より
       // 先に押し下げて、まだ click を受けていない押しとして並びに残っている。
-      // 診断の答えと最後の答えは、見せる間（ANSWER_SHOWN_MS）のあとのタイマーで切り替わる。見せる間に触れた指は、
-      // 切り替わったあとに離すと、click が新しい画面のものに届き、離したあとに mousedown を出す機器では mousedown も
-      // 届く（落ちる要素は離した時の組みで決まる）。マウスは mousedown が押し下げと続けて見せる間に届くので、その
-      // detail で当てる。マウスの押しの的が切り替わりで DOM から外れると Chromium は click を出さないが、click を
-      // 出すブラウザでも同じ決まりで止まる。
+      // 診断の答えと最後の答えは、見せる間（ANSWER_SHOWN_MS）のあとのタイマーで切り替わる。見せる間に触れ、切り替わった
+      // あとに離す押しは、機器で事象の順が違う。タッチと hover を持たないペンは、離したあとに mousedown と click を
+      // 出し、どちらも新しい画面のものに届く（落ちる要素は離した時の組みで決まる）。マウスと hover を持つペンは、
+      // mousedown が押し下げと続けて見せる間に届き（マウスはその detail で当てる）、押し下げた的が切り替わりで DOM から
+      // 外れるので、Chromium は click を出さない。click を出すブラウザでも同じ決まりで止まる。
       if (lastClickedPress && lastClickedPress !== origin) {
         judge(guard, lastClickedPress);
       }
