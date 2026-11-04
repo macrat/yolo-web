@@ -625,6 +625,29 @@ describe("答えを見せる間に押し下げ、切り替わったあとに離�
         ]);
       });
 
+      test("次の問の選択肢で離して止めた押しのあと、3 秒以内に同じ選択肢を押し直して受けたら、押し下げから数えた quiz_press_guarded_retry を1回送る", async () => {
+        await answerFirstOf(3, pointerType);
+        await pressDown(answeredRow(), { down: 1150, pointerType });
+        await advance(ANSWER_SHOWN_MS);
+        await release(button("選択1"), { up: 1250, pointerType });
+        const retry = await press(button("選択1"), {
+          down: 3150,
+          pointerType,
+        });
+        expect(retry.clickPrevented).toBe(false);
+        expect(retryEvents()).toEqual([
+          [
+            "event",
+            "quiz_press_guarded_retry",
+            {
+              transition: "answer",
+              content_id: "quiz-character-personality",
+              elapsed_ms: 2000,
+            },
+          ],
+        ]);
+      });
+
       test("100px の外で押し下げた押しは、次の問に答えを入れる", async () => {
         await answerFirstOf(3, pointerType);
         await pressDown(answeredRow(), { down: 1150, y: 610, pointerType });
@@ -803,34 +826,24 @@ describe("数えるイベント", () => {
     ]);
   });
 
-  test("押し下げのあと引いて送りになった押し（mousedown も click も来ない）は数えない", async () => {
+  test("押し下げのあと引いて送りになった押し（mousedown も click も来ない）は数えず、そのあとの窓の中の押しを止めたときに1回だけ数える", async () => {
     await startWithMouse();
     const choice = button("選択1");
+    const finger = pointerOf({ pointerType: "touch" });
     await act(async () => {
-      choice.dispatchEvent(
-        at(
-          new PointerEvent("pointerdown", {
-            bubbles: true,
-            clientX: 100,
-            clientY: 500,
-            pointerType: "touch",
-            pointerId: 2,
-          }),
-          1200,
-        ),
-      );
-      choice.dispatchEvent(
-        at(
-          new PointerEvent("pointercancel", {
-            bubbles: true,
-            pointerType: "touch",
-            pointerId: 2,
-          }),
-          1250,
-        ),
-      );
+      choice.dispatchEvent(at(new PointerEvent("pointerdown", finger), 1200));
+      choice.dispatchEvent(at(new PointerEvent("pointercancel", finger), 1250));
     });
     expect(guardedEvents()).toEqual([]);
+    const outcome = await press(choice, { down: 1400 });
+    expect(outcome.clickPrevented).toBe(true);
+    expect(guardedEvents()).toEqual([
+      [
+        "event",
+        "quiz_press_guarded",
+        { transition: "start", content_id: "quiz-character-personality" },
+      ],
+    ]);
   });
 
   test("受けない押しを止めなかった守り（窓の中の押しが無い）は数えない", async () => {
