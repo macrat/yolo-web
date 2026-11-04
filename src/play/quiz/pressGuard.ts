@@ -55,6 +55,8 @@ export const COMPAT_POINT_REACH_PX = 32;
  * その点の近くの次の押しの `mousedown` と `click` をそれに結んでしまう。
  */
 export interface PointerPress {
+  /** 押し下げの順の番号（覚えた押しごとに 1 ずつ増える）。 */
+  readonly order: number;
   /** 押し下げの `event.timeStamp`。 */
   readonly downTime: number;
   /** 押し下げの画面の座標。 */
@@ -62,8 +64,6 @@ export interface PointerPress {
   readonly y: number;
   readonly pointerType: string;
   readonly pointerId: number;
-  /** 押し下げの的。 */
-  readonly target: EventTarget | null;
   /** 離し（`pointerup`）の `event.timeStamp`。離すまでは null。 */
   upTime: number | null;
   /** 離しの画面の座標。離すまでは null。 */
@@ -80,10 +80,13 @@ export interface PointerPress {
   clicked: boolean;
 }
 
-/** 受けた click。押しの点は着地の選び方に、押しは守りの起点に使う。 */
+/** 受けた click。click の点は着地の選び方に、起点の押しは守りに使う。 */
 export interface AcceptedClick {
-  /** 対の押し。キーボードと読み上げの起動（`detail === 0`）と、対の押し下げを持たない click では null。 */
-  readonly press: PointerPress | null;
+  /**
+   * click を出した押し。守りの起点にする（選び方は `clickOriginOf`）。キーボードと読み上げの起動（`detail === 0`）と、
+   * 対の押し下げを持たない click では null。
+   */
+  readonly origin: PointerPress | null;
   /** click の座標。キーボードと読み上げの起動では null。 */
   readonly point: ScreenPoint | null;
   /** click を受けたときの切り替わりの番号。 */
@@ -173,46 +176,93 @@ function compatPointGap(press: PointerPress, event: MouseEvent): number {
     : downGap;
 }
 
+/** candidates のうち、互換の事象の点から `COMPAT_POINT_REACH_PX` の中にある押し。 */
+function nearCompatPoint(
+  candidates: readonly PointerPress[],
+  event: MouseEvent,
+): PointerPress[] {
+  return candidates.filter(
+    (candidate) => compatPointGap(candidate, event) <= COMPAT_POINT_REACH_PX,
+  );
+}
+
+/**
+ * `click` が番号で結べる押し（無ければ null）。Chromium の `click` は押しの番号を持つ `PointerEvent` なので、押しと
+ * 同じ `pointerType` でその押しの `pointerId` を持つ `click` は、その押しに結ぶ。WebKit はタッチの `click` を
+ * `pointerType` が `"mouse"` の `PointerEvent` で出すことがあり（WebKit Bug 282988）、その番号は押しと合うとは限らない
+ * ので、型の合わない番号は使わない。キーボードと `element.click()` の番号（-1）も使わない。
+ */
+function numberedPairOf(
+  candidates: readonly PointerPress[],
+  event: MouseEvent,
+): PointerPress | null {
+  if (!("pointerId" in event)) return null;
+  const { pointerId, pointerType } = event as PointerEvent;
+  if (pointerId < 0) return null;
+  return (
+    candidates.find(
+      (candidate) =>
+        candidate.pointerId === pointerId &&
+        candidate.pointerType === pointerType,
+    ) ?? null
+  );
+}
+
 /**
  * 互換の事象（`mousedown` か `click`）と対の押し（無ければ null）。candidates は、その事象をまだ受けていない押しの、
  * 押し下げの順の並びである。
  *
- * 1. `click` が、押しと同じ `pointerType` でその押しの `pointerId` を持てば、その押しに結ぶ（Chromium の `click` は
- *    押しの番号を持つ `PointerEvent`）。WebKit はタッチの `click` を `pointerType` が `"mouse"` の `PointerEvent` で
- *    出すことがあり（WebKit Bug 282988）、その番号は押しと合うとは限らないので、型の合わない番号は使わない。
+ * 1. `click` が番号で結べれば、その押しに結ぶ（`numberedPairOf`）。
  * 2. そうでなければ、事象の点から `COMPAT_POINT_REACH_PX` の中にある押しから選ぶ。中に無ければ、すべての押しから選ぶ。
  * 3. 選ぶのは、受ける押し（`blockedBy` が null）のうちいちばん古いものである。受ける押しが無ければ、いちばん古い押し。
  *
- * 互換の事象は押しの順に出るので、順だけなら待っている押しのいちばん古いものに結べばよい。ただ、離しても互換の事象を
- * 出さない押し（2本の指で触れた押し・iOS の Safari の押せない字へのタップ）が並びに残ると、順だけでは次の押しの事象を
- * それに結んでしまう。その押しが別の点にあれば点で外れる。同じ点に残れば点でも見分けられないので、受ける
- * 押しを先に選び、来訪者の押しを誤って止めない側に倒す。互換の事象を待つ押しが同じ点に並ぶもう1つの場合は指の速い
- * 二度押しで、1打目の事象が届く時はまだ守りが開いておらず（守りは1打目の `click` の処理で開く）どの打も受ける押しで
- * あり、守りの中の速い二度押しではどの打も受けない押しなので、どちらでも、いちばん古い押しに結ぶ順のままになる。
+ * 互換の事象は押しの順に出るので、待っている押しのいちばん古いものに結ぶ。タッチの速い連打では、1打目の互換の事象が
+ * 届く前に、2打目の押し下げが届き、2打目の離しまで届くこともある（knowledge の input-events-and-guards.md §9）ので、
+ * 「いちばん新しく押し下げた押し」や「いちばん新しく離した押し」には結べない。ただ、離しても互換の事象を出さない押し
+ * （2本の指で触れた押し・iOS の Safari の押せない字へのタップ）が並びに残ると、順だけでは次の押しの事象をそれに
+ * 結んでしまう。その押しが別の点にあれば点で外れる。同じ点に残れば点でも見分けられないので、受ける押しを先に選び、
+ * 来訪者の押しを誤って止めない側に倒す。そのとき守りの起点がその押しへ前にずれないよう、起点は `clickOriginOf` で
+ * 別に選ぶ。
  */
 function compatPairOf(
   candidates: readonly PointerPress[],
   event: MouseEvent,
 ): PointerPress | null {
-  if ("pointerId" in event) {
-    const { pointerId, pointerType } = event as PointerEvent;
-    const sameNumber =
-      pointerId >= 0
-        ? candidates.find(
-            (candidate) =>
-              candidate.pointerId === pointerId &&
-              candidate.pointerType === pointerType,
-          )
-        : undefined;
-    if (sameNumber) return sameNumber;
-  }
-  const near = candidates.filter(
-    (candidate) => compatPointGap(candidate, event) <= COMPAT_POINT_REACH_PX,
-  );
+  const numbered = numberedPairOf(candidates, event);
+  if (numbered) return numbered;
+  const near = nearCompatPoint(candidates, event);
   const pool = near.length > 0 ? near : candidates;
   return (
     pool.find((candidate) => candidate.blockedBy === null) ?? pool[0] ?? null
   );
+}
+
+/**
+ * `click` を出した押し（守りの起点にする押し）。paired は `compatPairOf` で結んだ押しである。番号で結べた `click` では
+ * その押し。番号で結べない `click` では、click の点から `COMPAT_POINT_REACH_PX` の中で、いちばん新しく離した押し
+ * （中に離した押しが無ければ paired）。
+ *
+ * 番号で結べない `click` を順で結ぶと、同じ点に残った互換の事象を出さない押しに結ぶことがある。それを起点にすると、
+ * 起点が来訪者の押しより前にずれ、守りの窓が早く閉じて、そのあとの二度押しの2打目を受けてしまう。いちばん新しく離した
+ * 押しを起点にすれば、起点は前にずれない。速い連打の事象が遅れて届き、`click` の時に2打目まで離し終えているときは、
+ * 起点が1打目より後の押しになり、窓が少し後ろへ延びる側にだけずれる。
+ */
+function clickOriginOf(
+  candidates: readonly PointerPress[],
+  event: MouseEvent,
+  paired: PointerPress | null,
+): PointerPress | null {
+  if (numberedPairOf(candidates, event)) return paired;
+  let latest: PointerPress | null = null;
+  for (const candidate of nearCompatPoint(candidates, event)) {
+    if (
+      candidate.upTime !== null &&
+      (latest === null || candidate.upTime >= (latest.upTime ?? -Infinity))
+    ) {
+      latest = candidate;
+    }
+  }
+  return latest ?? paired;
 }
 
 /**
@@ -241,12 +291,14 @@ export function createPressGuard(
   let transitionShown = initialTransition;
   /**
    * 互換の mousedown と click を待つ押し（まだ click を受けていない押し）の、押し下げの順の並び。ブラウザは互換の
-   * 事象を押しの順に出すが、タッチでは離したあとにまとめて出すので、速い二度押しでは2打目の pointerdown が1打目の
-   * mousedown と click より先に届く。そこで mousedown は mousedown をまだ受けていない押しから、click は並びの押し
-   * から、compatPairOf で順と点で選んで結ぶ。並びに残るのは、押し下げているか、離して互換の事象を待つ押しだけで
-   * ある（click を受けた押しと、それより前の押し・引いて送りになった押し・hasStoppedWaiting の押しは外す）。
+   * 事象を押しの順に出すが、タッチでは離したあとにまとめて出すので、速い連打では2打目の pointerdown（と pointerup）
+   * が1打目の mousedown と click より先に届く。そこで mousedown は mousedown をまだ受けていない押しから、click は
+   * 並びの押しから、compatPairOf で順と点で選んで結ぶ。並びに残るのは、押し下げているか、離して互換の事象を待つ押し
+   * だけである（click を結んだ押しと、それより前の押し・引いて送りになった押し・hasStoppedWaiting の押しは外す）。
    */
   let waiting: PointerPress[] = [];
+  /** 覚えた押しの数（押しの `order`）。 */
+  let pressCount = 0;
   /** いちばん新しく click を受けた押し。 */
   let lastClickedPress: PointerPress | null = null;
   let guard: Guard | null = null;
@@ -307,8 +359,14 @@ export function createPressGuard(
     else if (pressed.mouseDownDetail >= 2) block();
   };
 
-  /** 受けた押しが、受けなかった押しの押し直しなら数える。 */
-  const noteAccepted = (accepted: PointerPress): void => {
+  /**
+   * 受けた click が、受けなかった押しの押し直しなら数える。押せるものは、止めた側と同じく click の的から取る（タッチの
+   * 調整で、押し下げの的と click の的は違うことがある）。経過は、click を出した押しの押し下げの時刻から数える。
+   */
+  const noteAccepted = (
+    accepted: PointerPress,
+    clickTarget: EventTarget | null,
+  ): void => {
     const retry = pendingRetry;
     if (!retry) return;
     const elapsed = accepted.downTime - retry.downTime;
@@ -316,20 +374,21 @@ export function createPressGuard(
       pendingRetry = null;
       return;
     }
-    if (closestPressable(accepted.target) !== retry.pressable) return;
+    if (closestPressable(clickTarget) !== retry.pressable) return;
     pendingRetry = null;
     options.onRetry(retry.transition, Math.round(elapsed));
   };
 
   const handlePointerDown = (event: PointerEvent): void => {
     if (!event.isPrimary || event.button !== 0) return;
+    pressCount += 1;
     const next: PointerPress = {
+      order: pressCount,
       downTime: event.timeStamp,
       x: event.clientX,
       y: event.clientY,
       pointerType: event.pointerType,
       pointerId: event.pointerId,
-      target: event.target,
       upTime: null,
       upPoint: null,
       blockedBy: null,
@@ -403,13 +462,14 @@ export function createPressGuard(
     if (event.detail === 0) {
       // キーボードと読み上げの起動は対の押し下げを持たず、守りの中でも通す。押した点も持たない。
       lastClick = {
-        press: null,
+        origin: null,
         point: null,
         transitionAtClick: transitionShown,
       };
       return;
     }
     const paired = compatPairOf(waiting, event);
+    const origin = clickOriginOf(waiting, event, paired);
     if (paired) {
       paired.clicked = true;
       lastClickedPress = paired;
@@ -422,9 +482,9 @@ export function createPressGuard(
       noteStopped(paired, paired.blockedBy, event.target);
       return;
     }
-    if (paired) noteAccepted(paired);
+    if (origin) noteAccepted(origin, event.target);
     lastClick = {
-      press: paired,
+      origin,
       point: { x: event.clientX, y: event.clientY },
       transitionAtClick: transitionShown,
     };
@@ -456,8 +516,8 @@ export function createPressGuard(
     },
     open(transition, origin) {
       guard = { transition, origin, chainPress: origin, reported: false };
-      // 起点のあとの押しも、押し下げの順に、押し下げの時刻と座標で、いま掛ける守りに当てる。当てるのは、起点のあとに
-      // click を受けた押し（いちばん新しく受けたもの）と、まだ click を受けていない押しである。
+      // 起点のあとに押し下げた押しも、押し下げの順に、押し下げの時刻と座標で、いま掛ける守りに当てる。当てるのは、
+      // 起点のあとに click を受けた押し（いちばん新しく受けたもの）と、まだ click を受けていない押しである。
       // click の処理の中で切り替わる操作（「はじめる」「次へ」）では、指の速い二度押しの2打目が、1打目の click より
       // 先に押し下げて、まだ click を受けていない押しとして並びに残っている。
       // 診断の答えと最後の答えは、見せる間（ANSWER_SHOWN_MS）のあとのタイマーで切り替わる。見せる間に触れ、切り替わった
@@ -465,10 +525,16 @@ export function createPressGuard(
       // 出し、どちらも新しい画面のものに届く（落ちる要素は離した時の組みで決まる）。マウスと hover を持つペンは、
       // mousedown が押し下げと続けて見せる間に届き（マウスはその detail で当てる）、押し下げた的が切り替わりで DOM から
       // 外れるので、Chromium は click を出さない。click を出すブラウザでも同じ決まりで止まる。
-      if (lastClickedPress && lastClickedPress !== origin) {
+      // 起点より前に押し下げた押しは、範囲にも連続にも当てない（当てると、連続の元が起点より前へ戻る）。ただ、並びに
+      // 残る起点とそれより前の押しは、切り替えた click を順で結んだ押しより後の、まだ click を受けていない押しで、
+      // 互換の事象を出さないまま残った押しか、事象が遅れて届く速い連打の2打目からである。そこで受けない押しにする。
+      if (lastClickedPress && lastClickedPress.order > origin.order) {
         judge(guard, lastClickedPress);
       }
-      for (const pending of waiting) judge(guard, pending);
+      for (const pending of waiting) {
+        if (pending.order > origin.order) judge(guard, pending);
+        else pending.blockedBy = guard;
+      }
     },
     close() {
       guard = null;

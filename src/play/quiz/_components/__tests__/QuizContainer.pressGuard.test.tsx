@@ -13,8 +13,8 @@
  * 事象は、ブラウザが送る順と値で組む。pointerdown の detail はいつも 0 で、マウスの連続の数は mousedown と click の
  * detail だけが持つ。互換のマウスの事象（mousedown）は、マウスと hover を持つペン（W3C Pointer Events の互換の
  * マウスの事象の対応付け）では pointerdown のすぐあとに、タッチでは離したあとにまとめて出る。hover を持たないペン
- * （iPad のペンの見込み）はタッチの順で組む。指の速い二度押しでは、2打目の pointerdown が1打目の mousedown と
- * click より先に届く。マウスと hover を持つペンは、押し下げた的が離すまでに DOM から外れると click を出さない。
+ * （iPad のペンの見込み）はタッチの順で組む。指の速い二度押しでは、2打目の pointerdown が、2打目がすぐ離れると
+ * 2打目の pointerup まで、1打目の mousedown と click より先に届く。マウスと hover を持つペンは、押し下げた的が離すまでに DOM から外れると click を出さない。
  * 番号は Chromium の値で、マウスはいつも 1、ペンは押しを分けてもいつも 2、タッチは押しごとに 3 から増える。2本の指で
  * 触れた押しは pointerdown と pointerup だけを出す。互換の事象の点は、タッチの調整で押せるものへ寄せた点で、押しの
  * 点から縦と横のそれぞれで 16px までずれる。mousedown は番号を持たない MouseEvent で、click の形はブラウザで違う
@@ -24,7 +24,7 @@
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-import { revealLanding } from "@/lib/reveal";
+import { closestPressable, revealLanding } from "@/lib/reveal";
 import { COMPAT_EVENTS_WAIT_MS } from "@/play/quiz/pressGuard";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
 import { questionPhrases } from "../../questionPhrases";
@@ -1145,6 +1145,35 @@ describe.each(CLICK_FORMS)("click が $name", ({ form }) => {
       expect(questionHeading()).toHaveTextContent("問2");
     });
 
+    test("「はじめる」: 2打目の離しまで1打目の互換の事象より先に届いても、2打目は1問目に答えを入れず、起点と着地の点は1打目のもの", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      const start = button("はじめる");
+      await fingerEvent(start, "pointerdown", first, 1000);
+      await fingerEvent(start, "pointerup", first, 1000);
+      await fingerEvent(start, "pointerdown", second, 1030);
+      await fingerEvent(start, "pointerup", second, 1030);
+      await compatEvents(start, first, 1030, 1);
+      expect(questionHeading()).toHaveTextContent("問1");
+      expect(lastLandingPoint()).toEqual({ x: 100, y: 500 });
+
+      expect(await compatEvents(button("選択1"), second, 1030, 2)).toEqual({
+        mouseDownPrevented: true,
+        clickPrevented: true,
+      });
+      await advance(ANSWER_SHOWN_MS);
+      expect(isUnanswered()).toBe(true);
+
+      // 起点は1打目。1打目から 140px（2打目からは 80px）の、窓の中の押しは受ける。
+      const third = await press(button("選択1"), {
+        down: 1500,
+        y: 640,
+        pointerType: "touch",
+      });
+      expect(third.clickPrevented).toBe(false);
+      await advance(ANSWER_SHOWN_MS);
+      expect(questionHeading()).toHaveTextContent("問2");
+    });
+
     test("「はじめる」を同じ点で 0ms の二度押し: 2打目は1問目に答えを入れない", async () => {
       renderQuiz(makeQuiz("personality", 2));
       const sameFinger: Finger = { pointerId: newPointerId("touch") };
@@ -1162,6 +1191,75 @@ describe.each(CLICK_FORMS)("click が $name", ({ form }) => {
         clickPrevented: true,
       });
       await advance(ANSWER_SHOWN_MS);
+      expect(isUnanswered()).toBe(true);
+    });
+
+    test("「はじめる」を同じ点で 0ms の二度押し: 2打目の離しまで1打目の互換の事象より先に届いても、2打目は1問目に答えを入れない", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      const sameFinger: Finger = { pointerId: newPointerId("touch") };
+      const start = button("はじめる");
+      await fingerEvent(start, "pointerdown", first, 1000);
+      await fingerEvent(start, "pointerup", first, 1000);
+      await fingerEvent(start, "pointerdown", sameFinger, 1030);
+      await fingerEvent(start, "pointerup", sameFinger, 1030);
+      await compatEvents(start, first, 1030, 1);
+      expect(questionHeading()).toHaveTextContent("問1");
+      expect(lastLandingPoint()).toEqual({ x: 100, y: 500 });
+
+      expect(await compatEvents(button("選択1"), sameFinger, 1030, 2)).toEqual({
+        mouseDownPrevented: true,
+        clickPrevented: true,
+      });
+      await advance(ANSWER_SHOWN_MS);
+      expect(isUnanswered()).toBe(true);
+    });
+
+    test("「はじめる」を同じ点で 0ms の三度押し: 3打の離しが互換の事象より先に届いても、2打目と3打目は1問目に答えを入れない", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      const fingers: Finger[] = [
+        first,
+        { pointerId: newPointerId("touch") },
+        { pointerId: newPointerId("touch") },
+      ];
+      const start = button("はじめる");
+      for (const [index, finger] of fingers.entries()) {
+        await fingerEvent(start, "pointerdown", finger, 1000 + index * 30);
+        await fingerEvent(start, "pointerup", finger, 1000 + index * 30);
+      }
+      await compatEvents(start, fingers[0], 1060, 1);
+      expect(questionHeading()).toHaveTextContent("問1");
+
+      for (const [index, finger] of fingers.slice(1).entries()) {
+        expect(
+          await compatEvents(button("選択1"), finger, 1060, index + 2),
+        ).toEqual({
+          mouseDownPrevented: true,
+          clickPrevented: true,
+        });
+      }
+      await advance(ANSWER_SHOWN_MS);
+      expect(isUnanswered()).toBe(true);
+    });
+
+    test("診断の答えを同じ点で 0ms の二度押し: 2打目の離しまで1打目の互換の事象より先に届いても、2打目は次の問に答えを入れない", async () => {
+      renderQuiz(makeQuiz("personality", 3));
+      await pressWithKeyboard(button("はじめる"));
+      const sameFinger: Finger = { pointerId: newPointerId("touch") };
+      const answered = button("選択1");
+      await fingerEvent(answered, "pointerdown", first, 1000);
+      await fingerEvent(answered, "pointerup", first, 1000);
+      await fingerEvent(answered, "pointerdown", sameFinger, 1030);
+      await fingerEvent(answered, "pointerup", sameFinger, 1030);
+      await compatEvents(answered, first, 1030, 1);
+      await advance(ANSWER_SHOWN_MS);
+      expect(questionHeading()).toHaveTextContent("問2");
+
+      expect(await compatEvents(button("選択1"), sameFinger, 1030, 2)).toEqual({
+        mouseDownPrevented: true,
+        clickPrevented: true,
+      });
+      await advance(ANSWER_SHOWN_MS);
+      expect(questionHeading()).toHaveTextContent("問2");
       expect(isUnanswered()).toBe(true);
     });
 
@@ -1364,6 +1462,56 @@ describe.each(CLICK_FORMS)("click が $name", ({ form }) => {
       expect(guardedEvents()).toEqual([]);
     });
 
+    test("同じ点に残ったタップの 900ms あとに押した「はじめる」の、250ms あとの2打目は1問目に答えを入れない", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      await tapWithoutCompatEvents(screen.getByRole("heading", { level: 1 }), {
+        down: 100,
+        up: 150,
+      });
+      await press(button("はじめる"), { down: 1000, pointerType: "touch" });
+      expect(questionHeading()).toHaveTextContent("問1");
+      const outcome = await press(button("選択1"), {
+        down: 1250,
+        y: 520,
+        pointerType: "touch",
+      });
+      expect(outcome.mouseDownPrevented).toBe(true);
+      expect(outcome.clickPrevented).toBe(true);
+      await advance(ANSWER_SHOWN_MS);
+      expect(isUnanswered()).toBe(true);
+    });
+
+    test.each([
+      { name: "1つ", taps: [1000] },
+      { name: "2つ", taps: [1000, 1100] },
+    ])(
+      "同じ点に残ったタップ $name のあとに答えた押しの、離しから 300ms 未満の連続の押しは、次の問に答えを入れない",
+      async ({ taps }) => {
+        renderQuiz(makeQuiz("personality", 3));
+        await pressWithKeyboard(button("はじめる"));
+        for (const down of taps) {
+          await tapWithoutCompatEvents(questionHeading(), { down });
+        }
+        await press(button("選択1"), {
+          down: 1700,
+          up: 1750,
+          pointerType: "touch",
+        });
+        await advance(ANSWER_SHOWN_MS);
+        expect(questionHeading()).toHaveTextContent("問2");
+        // 答えた押しの離しから 200ms（残ったタップの離しからは 300ms 以上）。
+        const outcome = await press(button("選択1"), {
+          down: 1950,
+          pointerType: "touch",
+        });
+        expect(outcome.mouseDownPrevented).toBe(true);
+        expect(outcome.clickPrevented).toBe(true);
+        await advance(ANSWER_SHOWN_MS);
+        expect(questionHeading()).toHaveTextContent("問2");
+        expect(isUnanswered()).toBe(true);
+      },
+    );
+
     test("「はじめる」より前の、起点から 100px の外のタップは、その点の近くの窓の中の押しの click を取らない", async () => {
       renderQuiz(makeQuiz("personality", 2));
       await tapWithoutCompatEvents(screen.getByRole("heading", { level: 1 }), {
@@ -1412,6 +1560,85 @@ describe.each(CLICK_FORMS)("click が $name", ({ form }) => {
       await advance(ANSWER_SHOWN_MS);
       expect(questionHeading()).toHaveTextContent("問3");
       expect(guardedEvents()).toEqual([]);
+    });
+  });
+
+  describe("押し直しの経過（受けなかった押しの押し下げから、受けた押しの押し下げまで）", () => {
+    /** 押し直しの経過。 */
+    function retryElapsed(): unknown[] {
+      return retryEvents().map(
+        (call) => (call[2] as { elapsed_ms: number }).elapsed_ms,
+      );
+    }
+
+    test("「はじめる」より前の、起点から 100px の外のタップがあっても、止めた押しから数える", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      await tapWithoutCompatEvents(screen.getByRole("heading", { level: 1 }), {
+        down: 800,
+        up: 850,
+        y: 620,
+      });
+      await press(button("はじめる"), { down: 1000, pointerType: "touch" });
+      // 起点から 95px、タップから 25px。
+      await press(button("選択1"), {
+        down: 1300,
+        y: 595,
+        pointerType: "touch",
+      });
+      await press(button("選択1"), {
+        down: 2000,
+        y: 595,
+        pointerType: "touch",
+      });
+      expect(retryElapsed()).toEqual([700]);
+    });
+
+    test("離してから 1 秒（COMPAT_EVENTS_WAIT_MS）を過ぎた同じ点のタップがあっても、止めた押しから数える", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      await tapWithoutCompatEvents(screen.getByRole("heading", { level: 1 }), {
+        down: 0,
+        up: 50,
+      });
+      await press(button("はじめる"), {
+        down: 50 + COMPAT_EVENTS_WAIT_MS,
+        pointerType: "touch",
+      });
+      await press(button("選択1"), {
+        down: 1250,
+        y: 520,
+        pointerType: "touch",
+      });
+      await press(button("選択1"), {
+        down: 2250,
+        y: 520,
+        pointerType: "touch",
+      });
+      expect(retryElapsed()).toEqual([1000]);
+    });
+
+    test("窓の中で引いて送りになった押しがあっても、止めた押しから数える", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      await press(button("はじめる"), { down: 1000 });
+      const choice = button("選択1");
+      const finger = pointerOf({ pointerType: "touch" }, newPointerId("touch"));
+      await act(async () => {
+        choice.dispatchEvent(at(new PointerEvent("pointerdown", finger), 1200));
+        choice.dispatchEvent(
+          at(new PointerEvent("pointercancel", finger), 1250),
+        );
+      });
+      await press(choice, { down: 1400 });
+      await press(choice, { down: 2000 });
+      expect(retryElapsed()).toEqual([600]);
+    });
+
+    test("止めた押しのあとに同じ点のタップが残っても、受けた押しまで数える", async () => {
+      renderQuiz(makeQuiz("personality", 2));
+      await press(button("はじめる"), { down: 1000 });
+      await press(button("選択1"), { down: 1200 });
+      await tapWithoutCompatEvents(questionHeading(), { down: 1800 });
+      await press(button("選択1"), { down: 2700, pointerType: "touch" });
+      expect(retryElapsed()).toEqual([1500]);
     });
   });
 
@@ -1500,6 +1727,70 @@ describe.each(CLICK_FORMS)("click が $name", ({ form }) => {
   });
 });
 
+describe("番号で結べる click（Chromium）", () => {
+  /** 同じ点の指の押しの、押し下げと離しを送る。 */
+  async function touchDownUp(
+    target: Element,
+    pointerId: number,
+    time: number,
+  ): Promise<void> {
+    const finger = pointerOf({ pointerType: "touch" }, pointerId);
+    await act(async () => {
+      target.dispatchEvent(at(new PointerEvent("pointerdown", finger), time));
+      target.dispatchEvent(at(new PointerEvent("pointerup", finger), time));
+    });
+  }
+
+  /** 同じ点の指の押しの、互換の mousedown と click を送り、click が止められたかを返す。 */
+  async function touchCompat(
+    target: Element,
+    pointerId: number,
+    time: number,
+    detail: number,
+  ): Promise<boolean> {
+    const coordinates = { ...coordinatesOf({}), detail };
+    const click = at(clickOf(coordinates, "touch", pointerId), time);
+    await act(async () => {
+      target.dispatchEvent(at(new MouseEvent("mousedown", coordinates), time));
+      target.dispatchEvent(click);
+    });
+    return click.defaultPrevented;
+  }
+
+  test("2打目の離しまで1打目の互換の事象より先に届いた二度押しでも、窓は番号で結んだ1打目から数える", async () => {
+    renderQuiz(makeQuiz("personality", 2));
+    const start = button("はじめる");
+    const fingers = [newPointerId("touch"), newPointerId("touch")];
+    await touchDownUp(start, fingers[0], 1000);
+    await touchDownUp(start, fingers[1], 1030);
+    await touchCompat(start, fingers[0], 1030, 1);
+    expect(await touchCompat(button("選択1"), fingers[1], 1030, 2)).toBe(true);
+    // 1打目から 700ms（2打目からは 670ms）。
+    const third = await press(button("選択1"), {
+      down: 1700,
+      pointerType: "touch",
+    });
+    expect(third.clickPrevented).toBe(false);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
+  });
+
+  test("窓の中で止めた押しの前に同じ点のタップが残っても、押し直しの経過は番号で結んだ止めた押しから数える", async () => {
+    renderQuiz(makeQuiz("personality", 2));
+    await press(button("はじめる"), { down: 1000 });
+    await tapWithoutCompatEvents(questionHeading(), { down: 1100 });
+    await press(button("選択1"), { down: 1300, pointerType: "touch" });
+    await press(button("選択1"), { down: 2000, pointerType: "touch" });
+    expect(retryEvents().map((call) => call[2])).toEqual([
+      {
+        transition: "start",
+        content_id: "quiz-character-personality",
+        elapsed_ms: 700,
+      },
+    ]);
+  });
+});
+
 describe("数えるイベント", () => {
   async function startWithMouse(): Promise<void> {
     renderQuiz(makeQuiz("personality", 2));
@@ -1562,6 +1853,34 @@ describe("数えるイベント", () => {
           elapsed_ms: 250,
         },
       ],
+    ]);
+  });
+
+  test("押し下げの的が押せるものの外でも、タッチの調整で click が同じ押せるものに届いた押し直しは、quiz_press_guarded_retry を送る", async () => {
+    await startWithMouse();
+    const choice = button("選択1");
+    await press(choice, { down: 1200 });
+    const row = choice.parentElement;
+    expect(row).not.toBeNull();
+    expect(closestPressable(row)).toBeNull();
+    await pressDown(row as Element, {
+      down: 1500,
+      y: 660,
+      pointerType: "touch",
+    });
+    const retried = await release(choice, {
+      up: 1550,
+      y: 660,
+      pointerType: "touch",
+      compatPoint: { x: 100, y: 648 },
+    });
+    expect(retried.clickPrevented).toBe(false);
+    expect(retryEvents().map((call) => call[2])).toEqual([
+      {
+        transition: "start",
+        content_id: "quiz-character-personality",
+        elapsed_ms: 300,
+      },
     ]);
   });
 

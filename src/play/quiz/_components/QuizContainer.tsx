@@ -235,7 +235,8 @@ export default function QuizContainer({
           : null;
     const point = cause?.point ?? null;
     const guardAfter = (transition: QuizGuardedTransition | null): void => {
-      if (transition && cause?.press) pressGuard.open(transition, cause.press);
+      if (transition && cause?.origin)
+        pressGuard.open(transition, cause.origin);
       else pressGuard.close();
     };
 
