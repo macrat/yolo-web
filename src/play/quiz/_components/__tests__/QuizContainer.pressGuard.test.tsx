@@ -11,7 +11,9 @@
  * 押しは、守りに掛けない。
  *
  * 事象は、ブラウザが送る順と値で組む。pointerdown の detail はいつも 0 で、マウスの連続の数は mousedown と click の
- * detail だけが持つ。事象の時刻（timeStamp）は、押しごとに決めた値に差し替える。
+ * detail だけが持つ。互換のマウスの事象（mousedown）は、マウスと hover を持つペン（W3C Pointer Events の互換の
+ * マウスの事象の対応付け）では pointerdown のすぐあとに、タッチでは離したあとにまとめて出る。hover を持たないペン
+ * （iPad のペンの見込み）はタッチの順で組む。事象の時刻（timeStamp）は、押しごとに決めた値に差し替える。
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
@@ -136,12 +138,43 @@ function at<T extends Event>(event: T, time: number): T {
 
 type PointerKind = "mouse" | "touch" | "pen";
 
-interface PressPoint {
+/** 押しの機器。 */
+interface PressInput {
+  pointerType?: PointerKind;
+  /**
+   * 互換の mousedown を出す時。"down" は pointerdown のすぐあと、"up" は pointerup のあと。既定は、マウスが
+   * "down"、タッチとペンが "up"。hover を持つペンは "down" を指定する。
+   */
+  mouseDownAt?: "down" | "up";
+}
+
+interface PressPoint extends PressInput {
   x?: number;
   y?: number;
-  pointerType?: PointerKind;
   /** mousedown と click の detail（マウスの連続の数）。既定は 1。 */
   detail?: number;
+}
+
+/** タッチと2つの順のペン。守りはどれも同じ決まり（離しからの連続）で数える。 */
+const TOUCH_LIKE_INPUTS = [
+  { name: "touch", input: { pointerType: "touch" } },
+  { name: "pen（離したあとに mousedown）", input: { pointerType: "pen" } },
+  {
+    name: "pen（押し下げのすぐあとに mousedown）",
+    input: { pointerType: "pen", mouseDownAt: "down" },
+  },
+] as const satisfies readonly { name: string; input: PressInput }[];
+
+/** TOUCH_LIKE_INPUTS のうち、離したあとに mousedown を出す機器。 */
+const MOUSE_DOWN_AT_RELEASE_INPUTS = TOUCH_LIKE_INPUTS.filter(
+  ({ input }) => mouseDownAtOf(input) === "up",
+);
+
+function mouseDownAtOf(input: PressInput): "down" | "up" {
+  return (
+    input.mouseDownAt ??
+    ((input.pointerType ?? "mouse") === "mouse" ? "down" : "up")
+  );
 }
 
 interface PressOptions extends PressPoint {
@@ -173,15 +206,16 @@ function pointerOf(point: PressPoint): PointerEventInit {
 }
 
 /**
- * 押しの前半（押し下げ）を送る。マウスは pointerdown → mousedown、タッチとペンは pointerdown だけ。マウスの
- * mousedown が止められたかを返す（タッチとペンでは null）。
+ * 押しの前半（押し下げ）を送る。mousedown を押し下げのすぐあとに出す機器（マウスと hover を持つペン）は
+ * pointerdown → mousedown、ほかは pointerdown だけ。ここで送った mousedown が止められたかを返す（送らなければ
+ * null）。
  */
 async function pressDown(
   target: Element,
   point: PressPoint & { down: number },
 ): Promise<boolean | null> {
   const mouseDown =
-    (point.pointerType ?? "mouse") === "mouse"
+    mouseDownAtOf(point) === "down"
       ? at(
           new MouseEvent("mousedown", {
             ...coordinatesOf(point),
@@ -200,8 +234,9 @@ async function pressDown(
 }
 
 /**
- * 押しの後半（離し）を送る。マウスは pointerup → mouseup → click、タッチとペンは pointerup → mousedown →
- * mouseup → click。タッチとペンの mousedown が止められたかと、click が止められたかを返す。
+ * 押しの後半（離し）を送る。mousedown を押し下げのすぐあとに出す機器は pointerup → mouseup → click、離したあとに
+ * 出す機器（タッチと hover を持たないペン）は pointerup → mousedown → mouseup → click。ここで送った mousedown が
+ * 止められたか（送らなければ null）と、click が止められたかを返す。
  */
 async function release(
   target: Element,
@@ -214,9 +249,9 @@ async function release(
   const coordinates = coordinatesOf(point);
   const detail = point.detail ?? 1;
   const mouseDown =
-    (point.pointerType ?? "mouse") === "mouse"
-      ? null
-      : at(new MouseEvent("mousedown", { ...coordinates, detail }), point.up);
+    mouseDownAtOf(point) === "up"
+      ? at(new MouseEvent("mousedown", { ...coordinates, detail }), point.up)
+      : null;
   const click = at(
     new MouseEvent("click", { ...coordinates, detail }),
     point.up,
@@ -376,6 +411,27 @@ describe("窓の守り（「はじめる」→1問目）", () => {
     expect(questionHeading()).toHaveTextContent("問2");
   });
 
+  test("窓の中で止めた detail 1 の押しは連続の1打目になり、その連続の窓のあとの detail 2 の押しは mousedown も止めずに答えを入れる", async () => {
+    await startWithMouse();
+    expect(
+      await press(button("選択1"), { down: 1300, y: 530, detail: 1 }),
+    ).toEqual({
+      mouseDownPrevented: true,
+      clickPrevented: true,
+      clickReachedDocument: false,
+    });
+    // 起点から 750ms（窓のあと）。止めた押しを1打目とする連続の2打目なので、語の選択とフォーカスの移りも止めない。
+    expect(
+      await press(button("選択1"), { down: 1750, y: 530, detail: 2 }),
+    ).toEqual({
+      mouseDownPrevented: false,
+      clickPrevented: false,
+      clickReachedDocument: true,
+    });
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionHeading()).toHaveTextContent("問2");
+  });
+
   test("窓の中でも、detail が 0 の click（キーボードと読み上げの起動）は答えを入れる", async () => {
     await startWithMouse();
     expect(await pressWithKeyboard(button("選択1"))).toBe(false);
@@ -473,12 +529,10 @@ describe("窓の守り（知識クイズの「次へ」と、結果への切り�
 
 describe("連続の押しの守り（診断の答え→次の問）", () => {
   /** 3問の診断をキーボードで始め、1問目に (100, 500) で答えて、次の問を出す。 */
-  async function answerFirst(
-    pointerType: "mouse" | "touch" | "pen",
-  ): Promise<void> {
+  async function answerFirst(input: PressInput): Promise<void> {
     renderQuiz(makeQuiz("personality", 3));
     await pressWithKeyboard(button("はじめる"));
-    await press(button("選択1"), { down: 1000, up: 1050, pointerType });
+    await press(button("選択1"), { down: 1000, up: 1050, ...input });
     await advance(ANSWER_SHOWN_MS);
     expect(questionHeading()).toHaveTextContent("問2");
   }
@@ -491,7 +545,7 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
 
   describe("マウス", () => {
     test("mousedown と click の detail が 2 の、700ms 未満・100px の中の押しは答えを入れず、語の選択も始めない", async () => {
-      await answerFirst("mouse");
+      await answerFirst({ pointerType: "mouse" });
       const outcome = await press(button("選択1"), { down: 1300, detail: 2 });
       expect(outcome.mouseDownPrevented).toBe(true);
       expect(outcome.clickPrevented).toBe(true);
@@ -499,7 +553,7 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
     });
 
     test("detail が 1 の押しは、窓の中・100px の中でも答えを入れる", async () => {
-      await answerFirst("mouse");
+      await answerFirst({ pointerType: "mouse" });
       expect(
         (await press(button("選択1"), { down: 1300, detail: 1 }))
           .clickPrevented,
@@ -508,7 +562,7 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
     });
 
     test("100px の外の detail 2 の押しは答えを入れる", async () => {
-      await answerFirst("mouse");
+      await answerFirst({ pointerType: "mouse" });
       expect(
         (await press(button("選択1"), { down: 1300, y: 610, detail: 2 }))
           .clickPrevented,
@@ -517,7 +571,7 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
     });
 
     test("700ms 以上の detail 2 の押しは答えを入れる", async () => {
-      await answerFirst("mouse");
+      await answerFirst({ pointerType: "mouse" });
       expect(
         (await press(button("選択1"), { down: 1700, detail: 2 }))
           .clickPrevented,
@@ -526,12 +580,12 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
     });
   });
 
-  describe.each(["touch", "pen"] as const)("%s", (pointerType) => {
+  describe.each(TOUCH_LIKE_INPUTS)("$name", ({ input }) => {
     test("detail が 1 のまま、答えた押しの離しから 300ms 未満・100px の中の押し下げは答えを入れない", async () => {
-      await answerFirst(pointerType);
+      await answerFirst(input);
       const outcome = await press(button("選択1"), {
         down: 1050 + 299,
-        pointerType,
+        ...input,
       });
       expect(outcome.mouseDownPrevented).toBe(true);
       expect(outcome.clickPrevented).toBe(true);
@@ -539,22 +593,25 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
     });
 
     test("離しから 300ms の押し下げは答えを入れる", async () => {
-      await answerFirst(pointerType);
+      await answerFirst(input);
       expect(
-        (await press(button("選択1"), { down: 1050 + 300, pointerType }))
-          .clickPrevented,
-      ).toBe(false);
+        await press(button("選択1"), { down: 1050 + 300, ...input }),
+      ).toEqual({
+        mouseDownPrevented: false,
+        clickPrevented: false,
+        clickReachedDocument: true,
+      });
       expect(await answeredSecond()).toBe(true);
     });
 
     test("100px の外の押しは、離しから 300ms 未満でも答えを入れる", async () => {
-      await answerFirst(pointerType);
+      await answerFirst(input);
       expect(
         (
           await press(button("選択1"), {
             down: 1050 + 200,
             y: 610,
-            pointerType,
+            ...input,
           })
         ).clickPrevented,
       ).toBe(false);
@@ -562,17 +619,17 @@ describe("連続の押しの守り（診断の答え→次の問）", () => {
     });
 
     test("離しから 150ms・300ms の三度押しの3打目は、2打目の離しから数えて連続とし、答えを入れない", async () => {
-      await answerFirst(pointerType);
+      await answerFirst(input);
       const second = await press(button("選択1"), {
         down: 1050 + 150,
         up: 1050 + 190,
-        pointerType,
+        ...input,
       });
       expect(second.clickPrevented).toBe(true);
       // 起点の離しからは 300ms、2打目の離しからは 110ms。
       const third = await press(button("選択1"), {
         down: 1050 + 300,
-        pointerType,
+        ...input,
       });
       expect(third.clickPrevented).toBe(true);
       expect(await answeredSecond()).toBe(false);
@@ -589,11 +646,11 @@ describe("答えを見せる間に押し下げ、切り替わったあとに離�
   /** 診断を始め、1問目に (100, 500) で、時刻 1000 に押し下げ 1050 に離して答える（まだ見せる間）。 */
   async function answerFirstOf(
     questionCount: number,
-    pointerType: PointerKind,
+    input: PressInput,
   ): Promise<void> {
     renderQuiz(makeQuiz("personality", questionCount));
     await pressWithKeyboard(button("はじめる"));
-    await press(button("選択1"), { down: 1000, up: 1050, pointerType });
+    await press(button("選択1"), { down: 1000, up: 1050, ...input });
     expect(questionHeading()).toHaveTextContent("問1");
   }
 
@@ -602,97 +659,112 @@ describe("答えを見せる間に押し下げ、切り替わったあとに離�
     return questionHeading().textContent === "問3";
   }
 
-  describe.each(["touch", "pen"] as const)(
-    "%s（連続の押しの守り）",
-    (pointerType) => {
-      test("次の問の選択肢で離す押しは、答えを入れず、mousedown と click を止め、quiz_press_guarded を送る", async () => {
-        await answerFirstOf(3, pointerType);
-        await pressDown(answeredRow(), { down: 1150, pointerType });
+  describe.each(TOUCH_LIKE_INPUTS)("$name（連続の押しの守り）", ({ input }) => {
+    test("次の問の選択肢で離す押しは、答えを入れず、click を止め、quiz_press_guarded を送る", async () => {
+      await answerFirstOf(3, input);
+      await pressDown(answeredRow(), { down: 1150, ...input });
+      await advance(ANSWER_SHOWN_MS);
+      expect(questionHeading()).toHaveTextContent("問2");
+      const outcome = await release(button("選択1"), { up: 1250, ...input });
+      expect(outcome.clickPrevented).toBe(true);
+      expect(outcome.clickReachedDocument).toBe(false);
+      expect(await answeredSecond()).toBe(false);
+      expect(guardedEvents().map((call) => call[2])).toEqual([
+        { transition: "answer", content_id: "quiz-character-personality" },
+      ]);
+    });
+
+    test("次の問の選択肢で離して止めた押しのあと、3 秒以内に同じ選択肢を押し直して受けたら、押し下げから数えた quiz_press_guarded_retry を1回送る", async () => {
+      await answerFirstOf(3, input);
+      await pressDown(answeredRow(), { down: 1150, ...input });
+      await advance(ANSWER_SHOWN_MS);
+      await release(button("選択1"), { up: 1250, ...input });
+      const retry = await press(button("選択1"), {
+        down: 3150,
+        ...input,
+      });
+      expect(retry.clickPrevented).toBe(false);
+      expect(retryEvents()).toEqual([
+        [
+          "event",
+          "quiz_press_guarded_retry",
+          {
+            transition: "answer",
+            content_id: "quiz-character-personality",
+            elapsed_ms: 2000,
+          },
+        ],
+      ]);
+    });
+
+    test("100px の外で押し下げた押しは、次の問に答えを入れる", async () => {
+      await answerFirstOf(3, input);
+      await pressDown(answeredRow(), { down: 1150, y: 610, ...input });
+      await advance(ANSWER_SHOWN_MS);
+      const outcome = await release(button("選択1"), {
+        up: 1250,
+        y: 610,
+        ...input,
+      });
+      expect(outcome.clickPrevented).toBe(false);
+      expect(await answeredSecond()).toBe(true);
+    });
+
+    test("見せる間に押して離した2打目は連続の元になり、その離しから 300ms 未満の3打目（起点の離しからは 300ms 以上）は答えを入れない", async () => {
+      await answerFirstOf(3, input);
+      await press(answeredRow(), { down: 1120, up: 1160, ...input });
+      await advance(ANSWER_SHOWN_MS);
+      expect(questionHeading()).toHaveTextContent("問2");
+      // 起点の離し（1050）からは 310ms、2打目の離し（1160）からは 200ms。
+      const third = await press(button("選択1"), {
+        down: 1360,
+        ...input,
+      });
+      expect(third.clickPrevented).toBe(true);
+      expect(await answeredSecond()).toBe(false);
+    });
+
+    test("切り替わったあとに離した2打目も連続の元になり、その離しから 300ms 未満の3打目は答えを入れない", async () => {
+      await answerFirstOf(3, input);
+      await pressDown(answeredRow(), { down: 1150, ...input });
+      await advance(ANSWER_SHOWN_MS);
+      await release(button("選択1"), { up: 1250, ...input });
+      // 起点の離し（1050）からは 400ms、2打目の離し（1250）からは 200ms。
+      const third = await press(button("選択1"), {
+        down: 1450,
+        ...input,
+      });
+      expect(third.clickPrevented).toBe(true);
+      expect(await answeredSecond()).toBe(false);
+    });
+  });
+
+  describe.each(MOUSE_DOWN_AT_RELEASE_INPUTS)(
+    "$name（離したあとに出る mousedown）",
+    ({ input }) => {
+      test("次の問の選択肢に落ちる mousedown も止める", async () => {
+        await answerFirstOf(3, input);
+        await pressDown(answeredRow(), { down: 1150, ...input });
         await advance(ANSWER_SHOWN_MS);
-        expect(questionHeading()).toHaveTextContent("問2");
-        const outcome = await release(button("選択1"), {
-          up: 1250,
-          pointerType,
-        });
-        expect(outcome).toEqual({
-          mouseDownPrevented: true,
-          clickPrevented: true,
-          clickReachedDocument: false,
-        });
-        expect(await answeredSecond()).toBe(false);
-        expect(guardedEvents().map((call) => call[2])).toEqual([
-          { transition: "answer", content_id: "quiz-character-personality" },
-        ]);
+        const outcome = await release(button("選択1"), { up: 1250, ...input });
+        expect(outcome.mouseDownPrevented).toBe(true);
       });
 
-      test("次の問の選択肢で離して止めた押しのあと、3 秒以内に同じ選択肢を押し直して受けたら、押し下げから数えた quiz_press_guarded_retry を1回送る", async () => {
-        await answerFirstOf(3, pointerType);
-        await pressDown(answeredRow(), { down: 1150, pointerType });
+      test("結果の画面のリンクに落ちる mousedown も止める", async () => {
+        await answerFirstOf(1, input);
+        await pressDown(answeredRow(), { down: 1150, ...input });
         await advance(ANSWER_SHOWN_MS);
-        await release(button("選択1"), { up: 1250, pointerType });
-        const retry = await press(button("選択1"), {
-          down: 3150,
-          pointerType,
-        });
-        expect(retry.clickPrevented).toBe(false);
-        expect(retryEvents()).toEqual([
-          [
-            "event",
-            "quiz_press_guarded_retry",
-            {
-              transition: "answer",
-              content_id: "quiz-character-personality",
-              elapsed_ms: 2000,
-            },
-          ],
-        ]);
-      });
-
-      test("100px の外で押し下げた押しは、次の問に答えを入れる", async () => {
-        await answerFirstOf(3, pointerType);
-        await pressDown(answeredRow(), { down: 1150, y: 610, pointerType });
-        await advance(ANSWER_SHOWN_MS);
-        const outcome = await release(button("選択1"), {
-          up: 1250,
-          y: 610,
-          pointerType,
-        });
-        expect(outcome.clickPrevented).toBe(false);
-        expect(await answeredSecond()).toBe(true);
-      });
-
-      test("見せる間に押して離した2打目は連続の元になり、その離しから 300ms 未満の3打目（起点の離しからは 300ms 以上）は答えを入れない", async () => {
-        await answerFirstOf(3, pointerType);
-        await press(answeredRow(), { down: 1120, up: 1160, pointerType });
-        await advance(ANSWER_SHOWN_MS);
-        expect(questionHeading()).toHaveTextContent("問2");
-        // 起点の離し（1050）からは 310ms、2打目の離し（1160）からは 200ms。
-        const third = await press(button("選択1"), {
-          down: 1360,
-          pointerType,
-        });
-        expect(third.clickPrevented).toBe(true);
-        expect(await answeredSecond()).toBe(false);
-      });
-
-      test("切り替わったあとに離した2打目も連続の元になり、その離しから 300ms 未満の3打目は答えを入れない", async () => {
-        await answerFirstOf(3, pointerType);
-        await pressDown(answeredRow(), { down: 1150, pointerType });
-        await advance(ANSWER_SHOWN_MS);
-        await release(button("選択1"), { up: 1250, pointerType });
-        // 起点の離し（1050）からは 400ms、2打目の離し（1250）からは 200ms。
-        const third = await press(button("選択1"), {
-          down: 1450,
-          pointerType,
-        });
-        expect(third.clickPrevented).toBe(true);
-        expect(await answeredSecond()).toBe(false);
+        const outcome = await release(
+          screen.getByRole("link", { name: "次の遊び" }),
+          { up: 1250, ...input },
+        );
+        expect(outcome.mouseDownPrevented).toBe(true);
       });
     },
   );
 
   test("マウスの detail 2 の押しは、click が次の問の選択肢に届いても、その click を止める", async () => {
-    await answerFirstOf(3, "mouse");
+    await answerFirstOf(3, { pointerType: "mouse" });
     await pressDown(answeredRow(), { down: 1150, detail: 2 });
     await advance(ANSWER_SHOWN_MS);
     const outcome = await release(button("選択1"), { up: 1250, detail: 2 });
@@ -701,35 +773,32 @@ describe("答えを見せる間に押し下げ、切り替わったあとに離�
     expect(await answeredSecond()).toBe(false);
   });
 
-  describe.each(["touch", "pen"] as const)(
-    "%s（最後の答えのあとの窓の守り）",
-    (pointerType) => {
+  describe.each(TOUCH_LIKE_INPUTS)(
+    "$name（最後の答えのあとの窓の守り）",
+    ({ input }) => {
       test("結果の画面のリンクで離す押しは、移動を止める", async () => {
-        await answerFirstOf(1, pointerType);
-        await pressDown(answeredRow(), { down: 1150, pointerType });
+        await answerFirstOf(1, input);
+        await pressDown(answeredRow(), { down: 1150, ...input });
         await advance(ANSWER_SHOWN_MS);
         const outcome = await release(
           screen.getByRole("link", { name: "次の遊び" }),
-          { up: 1250, pointerType },
+          { up: 1250, ...input },
         );
-        expect(outcome).toEqual({
-          mouseDownPrevented: true,
-          clickPrevented: true,
-          clickReachedDocument: false,
-        });
+        expect(outcome.clickPrevented).toBe(true);
+        expect(outcome.clickReachedDocument).toBe(false);
         expect(guardedEvents().map((call) => call[2])).toEqual([
           { transition: "result", content_id: "quiz-character-personality" },
         ]);
       });
 
       test("100px の外で押し下げた押しは、結果の画面のボタンを押す", async () => {
-        await answerFirstOf(1, pointerType);
-        await pressDown(answeredRow(), { down: 1150, y: 610, pointerType });
+        await answerFirstOf(1, input);
+        await pressDown(answeredRow(), { down: 1150, y: 610, ...input });
         await advance(ANSWER_SHOWN_MS);
         const outcome = await release(button("もう一度挑戦する"), {
           up: 1250,
           y: 610,
-          pointerType,
+          ...input,
         });
         expect(outcome.clickPrevented).toBe(false);
         expect(button("はじめる")).toBeInTheDocument();

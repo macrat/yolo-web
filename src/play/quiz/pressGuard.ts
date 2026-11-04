@@ -249,6 +249,9 @@ export function createPressGuard(
   const handleMouseDown = (event: MouseEvent): void => {
     // 右や中のボタンの mousedown は、覚えた押し（主のボタンの押しだけ）とも、語の選択の連続とも結ばない。
     if (event.button !== 0) return;
+    // 連続の押しの1打目は、受けない押しでも連続の始まりとして覚える。止めた1打目は何も切り替えないので、その
+    // 連続の2打目からの語の選択は止めない。
+    if (event.detail === 1) sequenceStart = transitionShown;
     const paired = press && press.mouseDownDetail === null ? press : null;
     if (paired) {
       paired.mouseDownDetail = event.detail;
@@ -265,10 +268,6 @@ export function createPressGuard(
     // 2打目で語を選ばない。受けた連続の押しの1打目が画面を切り替えたら（番号が増えていたら）、2打目からの既定の
     // 動き（語の選択）を止める。入れ替わった先の字に黒い地の選択が残らない。字の上で始めたダブルクリックと引いて
     // 選ぶことは、1打目が何も切り替えないので止めない。2打目の click はそのまま届く。
-    if (event.detail === 1) {
-      sequenceStart = transitionShown;
-      return;
-    }
     if (
       event.detail >= 2 &&
       sequenceStart !== null &&
