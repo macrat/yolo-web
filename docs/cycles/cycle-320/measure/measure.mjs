@@ -1600,7 +1600,9 @@ async function waitGuardClear(state) {
  *
  * 診断で、記録の時点に答えを見せている押し（2打目が次の問に答えた X・S と、守りに止められた1打目のあとに2打目が
  * 1打目の問に答えた押し）は、見せる 150ms のあとの切り替わりの着地とフレームがこの押しの記録に入るよう、切り替わり
- * のあとの最初のフレームが来るまで待ってから返す（waitShownSwitch）。記録の時点の状態は待つ前に読んだものである。
+ * のあとの最初のフレームが来るまで待ってから返す（waitShownSwitch）。ほかの押しは、記録の時点の画面が押しの前から
+ * 替わっていれば、その画面のフレームがこの押しの記録に入るまで待ってから返す（waitScreenFrame。2打目が次の問に答えた
+ * 切り替わりが、記録の時点にもう済んでいた押しを含む）。記録の時点の状態は待つ前に読んだものである。
  */
 async function doublePress(context, run, point, waits, mode, scouted) {
   const { session, state, page } = context;
@@ -1665,14 +1667,34 @@ async function doublePress(context, run, point, waits, mode, scouted) {
     shown.answered
   ) {
     await waitShownSwitch(context, index, shown);
+  } else {
+    await waitScreenFrame(context, index, state.before[index], shown);
   }
   return { index, sentAt, second, aim };
 }
 
 /**
+ * フレームの記録（ev が frame）が、押しの番号 index の押しのもので、その画面（段階と、遊んでいるあいだの帯の番号）が
+ * matches を満たすか。
+ */
+const frameOf = (index, matches) => (event) =>
+  event.press === index &&
+  event.ev === "frame" &&
+  matches(screenOfSignature(event.sig));
+
+/**
+ * フレームの記録が来るまで、上限つきで待つ。着地の記録（console に書く止め所の記録）がフレームより遅れて届いても
+ * 入るよう、フレームのあと SETTLE_MS 待つ。
+ */
+async function waitFrame(state, framed) {
+  const until = Date.now() + 1000;
+  while (Date.now() < until && !state.events.some(framed)) await sleep(25);
+  await sleep(SETTLE_MS);
+}
+
+/**
  * 診断で答えを見せている画面（from。__yolosState）が次の問か結果に切り替わり、切り替わったあとの最初のフレームが
- * 押しの番号 index の記録に入るまで、上限つきで待つ。着地の記録（console に書く止め所の記録）がフレームより遅れて
- * 届いても入るよう、フレームのあと SETTLE_MS 待つ。
+ * 押しの番号 index の記録に入るまで、上限つきで待つ。
  */
 async function waitShownSwitch(context, index, from) {
   const { page, state } = context;
@@ -1682,14 +1704,31 @@ async function waitShownSwitch(context, index, from) {
     3000,
   );
   if (!ok) return;
-  const switched = (event) => {
-    if (event.press !== index || event.ev !== "frame") return false;
-    const screen = screenOfSignature(event.sig);
-    return screen.phase !== "playing" || screen.band !== from.band;
-  };
-  const until = Date.now() + 1000;
-  while (Date.now() < until && !state.events.some(switched)) await sleep(25);
-  await sleep(SETTLE_MS);
+  await waitFrame(
+    state,
+    frameOf(
+      index,
+      (screen) => screen.phase !== "playing" || screen.band !== from.band,
+    ),
+  );
+}
+
+/**
+ * 記録の時点の画面（at。__yolosState）が、同じ道のまま押しの前の画面（before）から段階か帯の番号が替わっていれば、
+ * その画面のフレームが押しの番号 index の記録に入るまで、上限つきで待つ（もう入っていれば待たない）。2打目が次の問に
+ * 答えて画面を切り替え、記録の時点の状態がもう切り替わったあとの画面でも、切り替わったあとの最初のフレーム（q の
+ * follow）が記録に入る。
+ */
+async function waitScreenFrame(context, index, before, at) {
+  if (!before || !at || at.href !== before.href) return;
+  if (!QUIZ_PHASES.has(at.phase)) return;
+  const sameAs = (screen) =>
+    screen.phase === at.phase &&
+    (screen.phase !== "playing" || screen.band === at.band);
+  if (sameAs(before)) return;
+  const framed = frameOf(index, sameAs);
+  if (context.state.events.some(framed)) return;
+  await waitFrame(context.state, framed);
 }
 
 /** 1度だけの押し（最後の問までの進め方）。前の押しの守りが受けないよう、GUARD_CLEAR_MS 空けて送る。 */

@@ -465,16 +465,32 @@ const EXPECTED_ROWS = [
 ];
 
 /**
+ * 守る的が無い組の扱い（decision-landing.md の「下限」）を当てる行: 2打目を受けないことを確かめる行（窓の守りの
+ * 「受けない」・連続の押しの守りの受けない側・D5 の 80px 以下・hold・キーボードのあとのポインタの押し）。2打目を
+ * 受けることを確かめる行（pair・d5-outer・touch-accept）は、80px の中に押せるものが無くても 120px の所にはありうる
+ * ので当てず、試した回が無ければ no-qualifying にする。
+ */
+const TARGET_ROWS = new Set([
+  "window",
+  "consecutive-mouse",
+  "touch-block",
+  "d5-inner",
+  "hold",
+  "keyboard-pointer",
+]);
+
+/**
  * 条件7・D5 の合否の行（README の「合否の行」）。置き場のすべての数える行の q を読み、行ごとに、その行の組の押しの
  * 数（seen）・試した回（tried）・外れた回（failed と、その一覧 fails）・試さなかった回（untried）・境目の回（border）
  * を数え、下限（lowerOk。切り替わりごと・入力ごとに試した回が1回以上、タッチの連続の押しの守りは診断12本のそれぞれに
- * 1回以上、d5-inner は 80px のずれの試した回が1回以上）と合格（pass。外れ 0 で、下限を満たすか、守る的が無い組だけの
- * 行）と、行の様子（status。押しが来なかった not-run、試した回が無く行の組がどれも守る的が無い組の no-target、ほかの
- * 試した回の無い no-qualifying、試した回のある tried）を出す。1行が1つの行と切り替わりと入力。落ちた先と試したかは
- * records.mjs の landedOf で決める（押し下げが切り替わりの前で click が切り替わったあとの画面に届いた押しは click の
- * 的）。守る的が無い組は targets.mjs で見分け、行に来た押しの組のうち守る的が無い組を noTarget（`[組, いちばん近い
- * 押せるものまでの距離]`）に出す。状態が読めなかった押し（q の worked が null）は、どの行にも数えず、数と回を
- * worked-unread の行に出す。
+ * 1回以上、d5-inner は 80px のずれの試した回が1回以上）と合格（pass。外れ 0 で、下限を満たすか status が
+ * no-target）と、行の様子（status。押しが来なかった not-run、2打目を受けないことを確かめる行（TARGET_ROWS）で試した回が
+ * 無く行の組がどれも守る的が無い組の no-target、ほかの試した回の無い no-qualifying、試した回のある tried）を出す。1行が
+ * 1つの行と切り替わりと入力。落ちた先と試したかは records.mjs の landedOf で決める（押し下げが切り替わりの前で click
+ * が切り替わったあとの画面に届いた押しは click の的）。守る的が無い組は targets.mjs で見分け、TARGET_ROWS の行に来た
+ * 押しの組のうち守る的が無い組を noTarget（`[組, いちばん近い押せるものまでの距離]`）に出す。状態が読めなかった押し
+ * （q の worked が null）は、どの行にも数えず、数と回を worked-unread の行に出す。2打目が次の問に答えて画面を切り
+ * 替えた押しの数と、そのうち切り替わりの記録（q の follow）の無い押しの数と回を follow-missing の行に出す。
  */
 function verdictsOf(directory, names) {
   const rows = new Map();
@@ -523,6 +539,7 @@ function verdictsOf(directory, names) {
   const isFirst = (group) => FIRST.has(group);
   let firstBlocked = 0;
   const unread = { count: 0, presses: [] };
+  const followCheck = { expected: 0, missing: 0, presses: [] };
   const mismatches = {};
   const moved = {};
   for (const name of names) {
@@ -575,7 +592,8 @@ function verdictsOf(directory, names) {
         const worked = press.worked;
         // 押しごとの2打目の押し方（知識クイズの走査の答えは、回の押し方によらず同じ点の same）。
         const mode = press.mode;
-        // 守る的の組の行に、この押しの組を足す（`see` で来たことを数えた行）。
+        // 2打目を受けないことを確かめる行（TARGET_ROWS）に、この押しの組を足す（`see` で来たことを数えた行）。2打目を
+        // 受けることを確かめる行は `see` で数え、組を持たない。
         const pairId = pairKeyOf(head, name, line, press);
         const seePair = (...rest) => {
           const row = see(...rest);
@@ -596,6 +614,23 @@ function verdictsOf(directory, names) {
           unread.count++;
           if (unread.presses.length < 50) unread.presses.push(where);
           continue;
+        }
+        // 2打目が次の問に答えて画面を切り替えた押し（診断の答えと「はじめる」で、1打目が働き、2打目が同じ道のまま
+        // 画面を替えた押し）は、その切り替わりの記録（q の follow）を持つはずである。
+        if (
+          !KNOWLEDGE.has(slug) &&
+          (kind === "answer" || kind === "start") &&
+          press.firstTook === 1 &&
+          worked.includes("s") &&
+          !worked.includes("u")
+        ) {
+          followCheck.expected++;
+          if (!press.follow) {
+            followCheck.missing++;
+            if (followCheck.presses.length < 50) {
+              followCheck.presses.push(where);
+            }
+          }
         }
         const sent = press.downGap !== null;
         const landed = landedOf(press);
@@ -652,7 +687,7 @@ function verdictsOf(directory, names) {
           // 受けない側（d5-inner。decision-landing.md の「80px 以下」）。試した回はずれの直線の距離ごとに byShift に数える。
           if (WINDOW_KINDS.has(kind) && Number(interval) === 300) {
             const outer = shift >= 120;
-            const row = seePair(
+            const row = (outer ? see : seePair)(
               outer ? "d5-outer" : "d5-inner",
               transitionOf(kind),
               input,
@@ -722,7 +757,7 @@ function verdictsOf(directory, names) {
           const row = seePair("window", transitionOf(kind), input, {
             byMode: {},
           });
-          const pair = seePair("pair", transitionOf(kind), input);
+          const pair = see("pair", transitionOf(kind), input);
           // 的が無く2打目を送らなかった狙った2打目は、来たことと組の守る的の証しだけに入る。
           if (!sent) continue;
           row.byMode[mode] = (row.byMode[mode] ?? 0) + 1;
@@ -770,7 +805,7 @@ function verdictsOf(directory, names) {
           } else {
             const block = seePair("touch-block", "answer", input);
             const border = see("touch-border", "answer", input, { worked: 0 });
-            const accept = seePair("touch-accept", "answer", input);
+            const accept = see("touch-accept", "answer", input);
             const gap = press.releaseGap;
             if (gap === null) {
               // 2打目の無い押し。
@@ -845,8 +880,9 @@ function verdictsOf(directory, names) {
     const lowerOk = counted
       ? triedForLower > 0 && (!perSlug || missingSlugs.length === 0)
       : undefined;
-    // 守る的が無い組（組の数と、いちばん近い押せるものまでの距離）。行の組がどれも守る的が無い組なら、試した回が
-    // 無くても下限に届かないことが合格を妨げない（decision-landing.md の「下限」）。
+    // 守る的が無い組（組の数と、いちばん近い押せるものまでの距離）。2打目を受けないことを確かめる行（TARGET_ROWS）
+    // だけで見分け、行の組がどれも守る的が無い組なら、試した回が無くても下限に届かないことが合格を妨げない
+    // （decision-landing.md の「下限」）。
     const { noTarget, only: onlyNoTarget } = evidence.noTargetOf(pairs);
     const status = !counted
       ? undefined
@@ -854,7 +890,7 @@ function verdictsOf(directory, names) {
         ? "not-run"
         : row.tried > 0
           ? "tried"
-          : onlyNoTarget
+          : TARGET_ROWS.has(row.verdict) && onlyNoTarget
             ? "no-target"
             : "no-qualifying";
     verdicts.push({
@@ -871,6 +907,7 @@ function verdictsOf(directory, names) {
   }
   verdicts.push({ verdict: "first-blocked", count: firstBlocked });
   verdicts.push({ verdict: "worked-unread", ...unread });
+  verdicts.push({ verdict: "follow-missing", ...followCheck });
   verdicts.push({
     verdict: "target-mismatch",
     byKind: mismatches,

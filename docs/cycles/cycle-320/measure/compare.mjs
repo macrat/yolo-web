@@ -11,10 +11,12 @@
 // で突き合わせる。直した版では守りが2打目を止めるので、押しの番号では突き合わせない。2打目が働いて画面を切り替えた
 // 押し（X・S など。q の follow）は、もとの押しをほかの押しと同じくどの線にも入れたうえで、その切り替わりを、押しの
 // id に行き先を足した id（`<id>><行き先>`）と、種類 `<押しの種類>><行き先>`（`answer>question`・`answer>result`
-// など）の別の押し（切り替わりの写し。印は synthetic）として、着地の線（2・3・4・8）と分布に入れる。直した版だけで
-// 決まる線（3・5・8）は、組にならなかった直した版の押しにも当てる。組にならなかった押しは、前の版が要る線（1・2・
-// 4・7）を読めなかった押しとして unmatched に出し、直した版の押しには落ちた先と働いたことと外れた回か（線 1 と
-// 同じ外れ）を添え、外れた回を unmatchedOut に別に出す。次の押しは比べから外し、別に出す。
+// など）の別の押し（切り替わりの写し。印は synthetic）として、着地の線（2・3・4・8）と分布に入れる。写しは、もとの
+// 押しが下の firstBlocked か border でも着地の線に入れる（着地の線が見るのは A″ のふるまいで、守りの帯と関わらない）。
+// 直した版だけで決まる線（3・5・8）は、組にならなかった直した版の押しにも当てる。組にならなかった押しは、前の版が
+// 要る線（1・2・4・7）を読めなかった押しとして unmatched に出し、直した版の押しには落ちた先と働いたことと外れた回か
+// （線 1 と同じ外れ）を添え、外れた回を unmatchedOut に別に出す。次の押しは比べから外して別に出し、unmatched に
+// 入れない（片方の版にしか無い押しは、件に unmatched: true を持つ）。
 // - firstBlocked: 道具の1打目が守りに止められた押し（q の firstTook が 0）。q の previous（直前の切り替わりの起点から
 //   の差・隔たり・離しからの差・detail・起点の押しの種類）を records.mjs の guardBand で分け、block なら決めどおり
 //   （byDesign）、border なら境目の帯、accept か守りの無い起点なら害の線 5 の件にも数える。どの線にも数えない。
@@ -24,7 +26,7 @@
 // - landingPointDiffers: 2つの版で着地に使った点が違う押し（5ea1ab89 はいちばん新しい click から、直した版は画面を
 //   切り替えた click から取る）。2・4 の比べから外す。
 // - unstable: 同じ版を同じ種で2回走らせて（--before-repeat・--after-repeat）、送り（sent と着地の [s0, 範囲, 選んだ
-//   着地]）が違った押しと、2回目に無かった押し。2・4・8 の比べから外す。
+//   着地]）が違った押しと、どちらかの回にしか無い押し（missing）。1回目の押しを 2・4・8 の比べから外す。
 // - timingUnstable: 同じ版を同じ種で2回走らせて、落ちた先（landedOf の組）か働いたこと（q の worked）が変わった押し
 //   （時間で揺れる押し。間隔の揺れで、見せる 150ms の内か外か・1打目の互換の事象より先か後かが替わる）。どの線からも
 //   外さず、線 1 の件には、その押しの2回の結果を添える（timingUnstable）。
@@ -53,9 +55,9 @@
 //    見せる間に押し下げる受ける側 hold-out、空振りでないことの対の押し）のうち、試した押し（triedAccept）が
 //    働かなかった押しと、害に分けた道具の1打目。試した押しと試さなかった押しの数と下限（組ごと・切り替わりごと・
 //    入力ごとに試した押しが1回以上）は guardChecked に `<組>|<切り替わり>|<入力>` で出す（組は acceptSetOf。出すと
-//    決めた組は、押しが来なかったものも status で出す）。組に来た押しの組（targets.mjs）のうち守る的が無い組を
-//    noTarget に出し、試した押しが無く、来た押しの組がどれも守る的が無い組なら status を no-target にする（下限に
-//    届かなくても合格を妨げない。report.mjs の合否の行と同じ）。
+//    決めた組は、押しが来なかったものも status で出す）。どの組も守りが受けるべき押しなので、守る的が無い組の扱い
+//    （decision-landing.md の「下限」）を当てず、試した押しが無ければ status を no-qualifying にする（PM に報告する）。
+//    組にならなかった直した版の押しの件は unmatched: true を持つ。
 // 7. selection: 語の選択の対（select）で前は選ばれ後は選ばれなかった回（lost）と、select でない押しで前は選ばれず
 //    後は選ばれた押し（gained）。
 // 8. newMarks: 読む所の印（q の marks。2打目が切り替えた画面は follow の印）が前の版で出ず、直した版で出た押し。件に
@@ -81,7 +83,6 @@ import {
   readFollow,
   readPress,
 } from "./records.mjs";
-import { createTargetEvidence, pairKeyOf } from "./targets.mjs";
 
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 /** 4 の large の線（landing-options.md 2-1 で A″ が直した回の増えの最大）。 */
@@ -204,9 +205,10 @@ const pressKey = (side, file, k, id) => `${side}|${file}|${k}|${id}`;
 const outcomeOf = (press) => [landedOf(press)?.group ?? null, press.worked];
 
 /**
- * 同じ版を同じ種で2回走らせた置き場の比べ。送りが違った押しと2回目に無かった押しを out.unstable に、落ちた先か
- * 働いたことが違った押しを out.timingUnstable に出し、前者の鍵の集まり（landing）と、後者の鍵から2回の結果への
- * 対応（timing）を返す。
+ * 同じ版を同じ種で2回走らせた置き場の比べ。送りが違った押しと、どちらかの回にしか無い押し（missing が、無かった
+ * 回の second か first）を out.unstable に、落ちた先か働いたことが違った押しを out.timingUnstable に出し、1回目の
+ * 押しのうち送りが違ったか2回目に無かった押しの鍵の集まり（landing）と、落ちた先か働いたことが違った押しの鍵から
+ * 2回の結果への対応（timing）を返す。
  */
 function repeatDifferences(first, second, side, out) {
   const landing = new Set();
@@ -236,7 +238,26 @@ function repeatDifferences(first, second, side, out) {
           side,
           sent: [press.sent, repeat ? repeat.sent : null],
           landing: [press.landing, repeat ? repeat.landing : null],
-          missing: repeat ? undefined : true,
+          missing: repeat ? undefined : "second",
+        });
+      }
+    }
+  }
+  // 2回目にしか無い押し（1回目の置き場では比べの線に入っていないので、鍵の集まりには足さない）。
+  for (const [name, file] of second) {
+    for (const [k, run] of file.runs) {
+      const once = first.get(name)?.runs.get(k);
+      for (const [id, repeat] of run.presses) {
+        if (once?.presses.has(id)) continue;
+        out.unstable.push({
+          file: name,
+          k,
+          band: repeat.band,
+          kind: repeat.kind,
+          side,
+          sent: [null, repeat.sent],
+          landing: [null, repeat.landing],
+          missing: "first",
         });
       }
     }
@@ -495,25 +516,15 @@ function main() {
     if (!values.has(id)) values.set(id, []);
     values.get(id).push(value);
   };
-  // 害の線 5 の組ごとの数と、組に来た押しの組（守る的が無い組を見分けるため。証しは直した版の置き場から集める）。
-  const pairsOfSet = new Map();
-  const check = (id, pair) => {
-    if (!pairsOfSet.has(id)) pairsOfSet.set(id, new Set());
-    if (pair !== undefined) pairsOfSet.get(id).add(pair);
-    return (out.guardChecked[id] ??= {
+  // 害の線 5 の組ごとの数。
+  const check = (id) =>
+    (out.guardChecked[id] ??= {
       covered: 0,
       tried: 0,
       untried: 0,
       stopped: 0,
     });
-  };
   for (const id of EXPECTED_SETS) check(id);
-  const evidence = createTargetEvidence();
-  for (const [name, file] of after) {
-    for (const run of file.runs.values()) {
-      evidence.addLine(file.head, name, run.line);
-    }
-  }
   // 時間で揺れる押しの、版ごとの2回の結果（揺れなければ undefined）。
   const timingOf = (name, k, id) => {
     const sides = ["before", "after"].filter((side) =>
@@ -714,7 +725,6 @@ function main() {
           landingLines(id, where, a, p);
           continue;
         }
-        const pair = pairKeyOf(afterFile.head, name, afterRun.line, a);
         for (const set of coveredSets(
           group,
           a,
@@ -722,11 +732,15 @@ function main() {
           shift,
           Number(interval),
         )) {
-          check(set, pair).covered++;
+          check(set).covered++;
         }
+        // 直した版にしか無い押しの件の印（線 1・2・4・7 を読めない押し）。
+        const onlyAfter = p ? {} : { unmatched: true };
         if (a.firstTook === 0 || p?.firstTook === 0) {
           if (p?.firstTook === 0) blockedFirst(where, "before", p, input);
-          if (a.firstTook === 0) blockedFirst(where, "after", a, input);
+          if (a.firstTook === 0) {
+            blockedFirst({ ...where, ...onlyAfter }, "after", a, input);
+          }
           continue;
         }
         const bandAfter = bandOf(a, input);
@@ -738,6 +752,7 @@ function main() {
             releaseGap: [p?.releaseGap ?? null, a.releaseGap],
             downDistance: [p?.downDistance ?? null, a.downDistance],
             worked: [p?.worked ?? null, a.worked],
+            ...onlyAfter,
           });
           continue;
         }
@@ -764,7 +779,6 @@ function main() {
         if (bandAfter === "accept") {
           const stat = check(
             `${acceptSetOf(a, input)}|${transitionOf(a.kind)}|${input}`,
-            pair,
           );
           if (!triedAccept(a)) stat.untried++;
           else {
@@ -776,21 +790,23 @@ function main() {
                 worked: [p?.worked ?? null, a.worked],
                 downGap: a.downGap,
                 downDistance: a.downDistance,
+                ...onlyAfter,
               });
             }
           }
         }
         if (a.pair && a.worked === "") {
-          const stat = check(
-            `window-late|${transitionOf(a.kind)}|${input}`,
-            pair,
-          );
+          const stat = check(`window-late|${transitionOf(a.kind)}|${input}`);
           if (!a.pair[1] || a.pair[0] < BORDER_UNTIL_MS) stat.untried++;
           else {
             stat.tried++;
             if (a.pair[3] === "") {
               stat.stopped++;
-              out.lines.guardStopped.push({ ...where, pair: a.pair });
+              out.lines.guardStopped.push({
+                ...where,
+                pair: a.pair,
+                ...onlyAfter,
+              });
             }
           }
         }
@@ -818,7 +834,9 @@ function main() {
         if (matchedBefore.has(id)) continue;
         const where = { file: name, k, band: p.band, kind: p.kind };
         out.unmatched.push({ ...where, side: "before" });
-        if (p.firstTook === 0) blockedFirst(where, "before", p, input);
+        if (p.firstTook === 0) {
+          blockedFirst({ ...where, unmatched: true }, "before", p, input);
+        }
       }
     }
     for (const k of beforeFile?.runs.keys() ?? []) {
@@ -832,20 +850,16 @@ function main() {
       out.unmatched.push({ file: name, side: "before", all: true });
     }
   }
-  for (const [id, stat] of Object.entries(out.guardChecked)) {
-    const pairs = pairsOfSet.get(id);
-    const { noTarget, only } = evidence.noTargetOf(pairs);
-    stat.pairs = pairs.size || undefined;
-    stat.noTarget = pairs.size ? noTarget : undefined;
+  // 線 5 の組はどれも守りが受けるべき押しなので、守る的が無い組の扱い（decision-landing.md の「下限」）を当てず、
+  // 試した押しが無ければ no-qualifying にする（plan-t5a7.md 2b の 5）。
+  for (const stat of Object.values(out.guardChecked)) {
     stat.lowerOk = stat.tried > 0;
     stat.status =
       stat.covered === 0 && stat.tried + stat.untried === 0
         ? "not-run"
         : stat.tried > 0
           ? "tried"
-          : only
-            ? "no-target"
-            : "no-qualifying";
+          : "no-qualifying";
   }
   for (const [id, list] of values) {
     const [operation, side, field] = id.split("|");
