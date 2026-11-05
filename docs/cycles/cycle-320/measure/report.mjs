@@ -3,7 +3,7 @@
 //   node docs/cycles/cycle-320/measure/report.mjs <記録の置き場>
 //
 // 1行に1つの束（ファイル・入力・間隔・ずれ・2打目の押し方）を JSON で出す。押し方（mode）は回の名の最後の欄
-// （same・aim・hold・hold-aim・hold-out・d1・read）で、条件7 の表に写す数は same の束から読み、ほかの押し方の数は
+// （same・aim・hold・hold-aim・hold-out・d1・read）で、条件7 の表に写す落ちた先の数は same の束から読み、ほかの押し方の数は
 // その押し方の束に出る。数えるのは数える行（f のある行）で、送り直した行・誤りで終わった行・数える行の無い回
 // （誤りで終わったまま残った回）の数も出す。
 //
@@ -19,40 +19,26 @@
 //   実際の間隔が 150ms の側を越えた押し（q の downGap で見分ける）を groups から外して marked に数える。
 //   markedDiffers（走査だけ）は、その見分けの数が要約の x（道具が押し下げの事象の間隔で数えた数）と違う行の数で、
 //   0 のはずで、0 でなければ PM に報告する。
-// - B-620 の材料（t5a-measure.md 0章の「判断での使い方」の、守りのあとの押し）: mayFall16・avoidable・at16 に入れる
-//   のは、同じ点の押し（q の mode が same）のうち、守りが受けると決めた押し（records.mjs の guardBand が accept。
-//   窓の守りは起点から 750ms 以上か 116px 以上、連続の押しの守りは離しから 320ms 以上などで、t5a-design.md 4-9 の
-//   窓のあとの押しと連続と数えられない押し）だけである。狙った2打目・hold・d1・read などの押し方と、守りが受けない
-//   押しと帯の押しと、守りを掛けない切り替わりの押しは入らない。
-// - タッチの調整（plan-t5a7.md 3 の「タッチの調整の距離」）。診断のページは受け手のあるページで、道具の押しは
-//   半辺 10px の面で寄せられ、Android の面の半辺は 10〜16px（docs/knowledge/input-events-and-guards.md §8）。
-//   隔たりは要約の n（D5 は 2打目の点からの n2）の、点から押せる範囲までの max(dx, dy) で、組は第1の組（first）と
-//   次の問の選択肢（next）。隔たりは2打目の pointerdown の時の組みで取るので、押し下げが切り替わる前の画面に来た押し
-//   （q の shown が 0）は数えない。タッチの回（走査は押し）について:
-//   - mayFall16: B-620 の材料の押しで、2打目が押せるものに落ちなかったが、その組までが 16px より近い（Android の
-//     大きい触れ方で寄りうる）。
-//   - fellFar10: 同じ点の押しで、2打目がその組に、点の真下でなく寄せで落ち、その組までが 10px 以上。寄せの面は
-//     半辺 10px なので、隔たりを寄せに使われた組みで取っていれば 0 になり、0 でなければ PM に報告する。的に押した
-//     押し方（aim など）は1打目の点から離れたものに落ちるので数えない。
-//   - noDown: 2打目の押し下げが無く、落ちた先が分からない押し（mayFall16 に入れない）。
-// - 着地の関数の記録（l）と組み合わせた数（変更後の版。入力によらない）。B-620 の材料の押しだけを数える。plan-t5a7.md 3
-//   は「避けられた」を、範囲の中に1打目の点からその組までの max(dx, dy) が 16px 以上になる送りがあった件（l の最も
-//   離せたときの値。first は farFirst、next は farBoth）と決める。点の真下を外すだけの送り（行の罫線の上に点を置く
-//   など）は数えない。
-//   - avoidable: 2打目がその組に落ちた回（押し）の数（cases）と、そのうち範囲の中でその組を 10px 以上離せた数
-//     （far10。道具の面と Android のいちばん小さい面の半辺）と 16px 以上離せた数（far16。避けられた件）。
-//   - at16: 2打目がその組に落ちたか、落ちなかったがその組までが 16px より近い回（押し）の、同じ3つの数。
-//     どちらも条件7 の合否には使わず、守りのあとの押しが押せるものの近くに落ちた件の数と隔たりを B-620 の材料として
-//     記録するのに使う（t5a-measure.md 0章）。
-//   走査の押しは、落ちた押しを押しごとの記録（着地の記録 land と隔たり near）で、落ちなかった押しを要約の n
-//   （max(dx, dy) が 0 より大きく 20 以下の押しの隔たりと着地の記録）で数え、どちらも落ちた先は q の同じ番号の押しで
-//   決める。答えの2打目が次の問の選択肢に落ちた押しは、押しごとの記録に置かないので avoidable と at16 に入らない
-//   （条件7 はこの件を数だけで見る）。D5 の束（ずれのある束）は出さない。着地の記録は1打目の点から数えた値で、
-//   ずらした2打目の点が避けられたかを表さないからである（D5 の合否は第1の組に落ちた件が 0 か）。
+// - material（B-620 の材料。t5a-measure.md 0章の「B-620 の材料と写す数」）: 診断の答え→次の問の2打目のうち、連続と
+//   数えられない押し（タッチは1打目の離しからの差 releaseGap が 300ms 以上で、pressGuard.ts の
+//   TOUCH_CONSECUTIVE_MS と同じ。マウスは2打目の mousedown の detail が 1）で、次の問の選択肢に落ちた押し（落ちた先は
+//   landedOf）の数 cases と、そのうち次の問に答えを入れた押し（働いたことの字に s がある）の数 answered と、その押しの
+//   ある回の名 runs。守りはこの押しを連続の押しと数えずに受けるので、守りで塞げない二度押しの2打目が次の問に落ちた件
+//   である（t5a-design.md 4-9 の「守りのあとの押し」）。数えるのは二度押しの2打目として送る押し方（same・d1）だけで、
+//   道具が守りの受ける側を試すために組んだ押し（読んでから答える read と、離す点を 120px 以上離す hold-out）は入らない。
+//   窓の守りの空振りでないことの対の押し（q の pair）も、道具が1打目から 900ms のあとに送る1度の押しで、二度押しの
+//   2打目ではないので入らない。
+// - fellFar10: タッチの同じ点の押しで、2打目が第1の組（first）か次の問の選択肢（next）に、点の真下でなく寄せで落ち、
+//   その組までの隔たりが 10px 以上だった押し（走査は押し、ほかは回）の数。隔たりは要約の n（D5 は2打目の点からの n2）
+//   の、点から押せる範囲までの max(dx, dy) で、2打目の pointerdown の時の組みで取るので、押し下げが切り替わる前の画面
+//   に来た押し（q の shown が 0）と2打目の押し下げが無い押しは数えない。診断のページは受け手のあるページで、道具の
+//   押しは半辺 10px の面で寄せられる（docs/knowledge/input-events-and-guards.md §8）ので、隔たりを寄せに使われた組み
+//   で取っていれば 0 になり、0 でなければ PM に報告する。的に押した押し方（aim など）は1打目の点から離れたものに
+//   落ちるので数えない。
 // - hitUnmatched: 着地の記録で、`data-hit-area="after"` の祖先の箱のうち関数の矩形と一致せず、押せる範囲に置き換え
 //   られなかった箱（外れ）の数の和を、押しの種類ごとに出す（0 の種類は出さない）。走査は押しごとの記録に
-//   置いた押しの land と、そこに無い要約の n の押しの記録から、1度の押しで終わる操作は要約の hu から数えるので、
-//   avoidable と at16 に入る押しはどれも数に入る。種類は押しごとの記録（n の押しは n の記録）の kind（答えは診断の
+//   置いた押しの land と、そこに無い要約の n の押しの記録から、1度の押しで終わる操作は要約の hu から数える。
+//   種類は押しごとの記録（n の押しは n の記録）の kind（答えは診断の
 //   diagnosis-answer と知識クイズの knowledge-answer に分ける）か、操作から決めたもの（start・last-answer・
 //   last-next・retry・heading）。診断の答えのあとの呼び出しは問のまとまりを避けないもの（exclude）に渡すので、
 //   その問の選択肢の行は一致しないのが正しく、diagnosis-answer は一致しなかった箱のうち問の選択肢の行でないもの
@@ -104,8 +90,6 @@ import {
   TOUCH_ADJUST_REACH_PX,
   TOUCH_BLOCK_BELOW_MS,
   WINDOW_KINDS,
-  guardAfter,
-  guardBand,
   landedOf,
   readPress,
 } from "./records.mjs";
@@ -118,9 +102,9 @@ import {
 const FIRST = new Set(["link", "summary", "button", "pressable"]);
 const PRESSABLE = new Set([...FIRST, "next", "choice", "start"]);
 const SLOTS = [
-  // [組, 落ちたか, 要約の n の位置, 着地の記録 l の最も離せたときの値の位置]
-  ["first", (landed) => FIRST.has(landed), 0, 2],
-  ["next", (landed) => landed === "next", 1, 3],
+  // [組, 落ちたか, 要約の n の位置]
+  ["first", (landed) => FIRST.has(landed), 0],
+  ["next", (landed) => landed === "next", 1],
 ];
 
 function readLines(file) {
@@ -170,85 +154,51 @@ function landingLabelOf(press) {
   return press.group === null ? "noDown" : "before";
 }
 
+/** タッチの連続の押しの守りが連続と数える、1打目の離しからの差の上限（ms。未満。pressGuard.ts の TOUCH_CONSECUTIVE_MS）。 */
+const TOUCH_CONSECUTIVE_MS = 300;
+
+/** 二度押しの2打目として送る押し方（B-620 の材料に入れる押し方）。 */
+const DOUBLE_PRESS_MODES = new Set(["same", "d1"]);
+
 /**
- * B-620 の材料（守りのあとの押し。t5a-measure.md 0章の「判断での使い方」）に入れる押しか。同じ点の押し（mode が
- * same）のうち、守りが受けると決めた押し（records.mjs の guardBand が accept）に限る。帯は押しの起点からの差・離し
- * からの差・距離・detail で決まるので、守りを持たない版でも同じ押しの組を数える。守りを掛けない切り替わりの押し
- * （知識クイズの答え・「もう一度挑戦する」・語の選択の対）は guardBand が null で入らない（合否の行の unguarded が見る）。
+ * B-620 の材料（t5a-measure.md 0章の「B-620 の材料と写す数」）に入れる押しか。診断の答え→次の問の2打目（q の kind が
+ * answer）を二度押しの2打目として送った押し方の押しで、連続と数えられず（タッチは離しから 300ms 以上、マウスは
+ * detail 1）、次の問の選択肢に落ちた押しに限る。
  */
 function isMaterial(press, input) {
-  if (press.mode !== "same") return false;
-  return (
-    guardBand(guardAfter(press.kind), input, {
-      gap: press.downGap,
-      release: press.releaseGap,
-      distance: press.downDistance,
-      detail: press.detail,
-    }) === "accept"
-  );
+  if (press.kind !== "answer" || !DOUBLE_PRESS_MODES.has(press.mode)) {
+    return false;
+  }
+  const unchained =
+    input === "touch"
+      ? press.releaseGap !== null && press.releaseGap >= TOUCH_CONSECUTIVE_MS
+      : input === "mouse" && press.detail === 1;
+  return unchained && landedOf(press)?.group === "next";
 }
 
-/** 組ごとの、着地の記録と組み合わせた数の入れ物。 */
-const landingCounts = () => ({
-  first: { cases: 0, far10: 0, far16: 0 },
-  next: { cases: 0, far10: 0, far16: 0 },
-});
+/** B-620 の材料の押しを、束の数と回の名に足す。 */
+function countMaterial(bundle, press, input, key) {
+  if (!isMaterial(press, input)) return;
+  const { material } = bundle;
+  material.cases++;
+  if (press.worked?.includes("s")) material.answered++;
+  if (material.runs.at(-1) !== key) material.runs.push(key);
+}
 
 /**
- * タッチの1つの押しの調整の数え直し。press は q の押し、label はその落ちた先の字、near は2打目の pointerdown の時の
- * [第1の組, 選択肢] の隔たり。押し下げが切り替わる前の画面に来た押し（shown が 0）は、隔たりが落ちた先の画面のもの
- * でないので数えない。fellFar10 は同じ点の押しだけで、mayFall16 は B-620 の材料の押し（isMaterial）だけで数える。
+ * タッチの1つの押しの fellFar10 の数え。press は q の押し、label はその落ちた先の字、near は2打目の pointerdown の時の
+ * [第1の組, 選択肢] の隔たり。同じ点の押しだけを数え、2打目の押し下げが無い押しと、押し下げが切り替わる前の画面に
+ * 来た押し（shown が 0。隔たりが落ちた先の画面のものでない）は数えない。
  */
-function countTouch(bundle, press, label, near, input) {
-  if (press.group === null) {
-    bundle.noDown++;
+function countFellFar10(bundle, press, label, near) {
+  if (press.mode !== "same" || press.group === null || press.shown === 0) {
     return;
   }
-  if (press.shown === 0) return;
-  const material = isMaterial(press, input);
   for (const [key, fell, slot] of SLOTS) {
     const distance = reachOf(near?.[slot]);
-    if (fell(label)) {
-      if (press.mode === "same" && distance >= 10 && distance !== Infinity) {
-        bundle.fellFar10[key]++;
-      }
-    } else if (
-      material &&
-      !PRESSABLE.has(label) &&
-      distance > 0 &&
-      distance < 16
-    ) {
-      bundle.mayFall16[key]++;
+    if (fell(label) && distance >= 10 && distance !== Infinity) {
+      bundle.fellFar10[key]++;
     }
-  }
-}
-
-/**
- * 着地の記録と組み合わせた数（B-620 の材料の押しだけを渡す）。which が fallen なら落ちた組だけを、near なら落ちなかった
- * 組だけを、all なら両方を数える（走査は落ちた押しを押しごとの記録から、落ちなかった押しを要約の n から数えるので、
- * 二度数えないよう分ける）。landing は要約の l と同じ4つ。落ちなかった組の隔たりは、押し下げが落ちた先の画面に来た
- * 押しだけで読む。
- */
-function countLanding(bundle, press, label, near, landing, which) {
-  if (!landing || press.group === null) return;
-  const add = (counts, far) => {
-    counts.cases++;
-    if (far !== null && far >= 10) counts.far10++;
-    if (far !== null && far >= 16) counts.far16++;
-  };
-  for (const [key, fell, slot, farAt] of SLOTS) {
-    const fallen = fell(label);
-    if (which === "fallen" && !fallen) continue;
-    if (which === "near" && fallen) continue;
-    const distance = reachOf(near?.[slot]);
-    const nearby =
-      press.shown !== 0 &&
-      !PRESSABLE.has(label) &&
-      distance > 0 &&
-      distance < 16;
-    if (!fallen && !nearby) continue;
-    if (fallen) add(bundle.avoidable[key], landing[farAt]);
-    add(bundle.at16[key], landing[farAt]);
   }
 }
 
@@ -317,11 +267,8 @@ function main() {
         groups: {},
         marked: {},
         markedDiffers: head.op === "answers" ? 0 : undefined,
-        mayFall16: { first: 0, next: 0 },
+        material: { cases: 0, answered: 0, runs: [] },
         fellFar10: { first: 0, next: 0 },
-        noDown: 0,
-        avoidable: shifted ? undefined : landingCounts(),
-        at16: shifted ? undefined : landingCounts(),
         hitUnmatched: {},
         hitUnrecorded: 0,
         flags: {},
@@ -398,6 +345,7 @@ function main() {
           const counts = over ? bundle.marked : bundle.groups;
           const label = landingLabelOf(press);
           counts[label] = (counts[label] ?? 0) + 1;
+          countMaterial(bundle, press, input, line.k);
         }
         if (crossed !== (line.x ?? 0)) bundle.markedDiffers++;
         // 置き換えの外れは、押しごとの記録に置いた押しの land と、そこに無い n の押しの記録から数える（同じ押しを
@@ -409,16 +357,6 @@ function main() {
             kept.add(record.i);
             unmatched(record.kind, landing[11], landing[12]);
           }
-          const press = pressOf.get(record.i);
-          if (shifted || !press || !isMaterial(press, input)) continue;
-          countLanding(
-            bundle,
-            press,
-            landingLabelOf(press),
-            record.near,
-            landing ? landing.slice(6, 10) : null,
-            "fallen",
-          );
         }
         // n の押し: [押しの番号, 帯の番号, 押し下げの的の組, 1打目の点からの隔たり, 2打目の点からの隔たり, 着地の
         // 記録, 押しの種類, 一致しなかった祖先の数, そのうちの問の選択肢の行の数]。落ちた先は q の同じ番号の押しで読む。
@@ -426,11 +364,12 @@ function main() {
           const [index, , , near, near2, landing, kind, count, rows] = entry;
           const press = pressOf.get(index);
           if (press) {
-            const label = landingLabelOf(press);
-            countTouch(bundle, press, label, shifted ? near2 : near, input);
-            if (!shifted && isMaterial(press, input)) {
-              countLanding(bundle, press, label, near, landing, "near");
-            }
+            countFellFar10(
+              bundle,
+              press,
+              landingLabelOf(press),
+              shifted ? near2 : near,
+            );
           }
           if (landing && !kept.has(index)) unmatched(kind, count, rows);
         }
@@ -446,11 +385,9 @@ function main() {
           const label = landingLabelOf(press);
           bundle.groups[label] = (bundle.groups[label] ?? 0) + 1;
           if (input === "touch") {
-            countTouch(bundle, press, label, shifted ? line.n2 : line.n, input);
+            countFellFar10(bundle, press, label, shifted ? line.n2 : line.n);
           }
-          if (!shifted && isMaterial(press, input)) {
-            countLanding(bundle, press, label, line.n, line.l, "all");
-          }
+          countMaterial(bundle, press, input, line.k);
         }
         if (line.g !== null && line.g !== undefined) bundle.gaps.push(line.g);
         if (line.l) unmatched(null, line.hu, null);
@@ -897,7 +834,7 @@ function verdictsOf(directory, names) {
               detail1Next: {},
             });
             if (press.detail === 1) {
-              // B-620 の材料。押し方（d1・read など）と間隔ごとに分ける。
+              // 押し方（d1・read など）と間隔ごとに分ける。d1 の数は、d1 の束の B-620 の材料（material）と同じ押しである。
               if (next) {
                 const byMode = (row.detail1Next[mode] ??= {});
                 const counts = (byMode[interval] ??= { next: 0, worked: 0 });
