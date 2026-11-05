@@ -484,8 +484,9 @@ const TARGET_ROWS = new Set([
  * 数（seen）・試した回（tried）・外れた回（failed と、その一覧 fails）・試さなかった回（untried）・境目の回（border）
  * を数え、下限（lowerOk。切り替わりごと・入力ごとに試した回が1回以上、タッチの連続の押しの守りは診断12本のそれぞれに
  * 1回以上、d5-inner は 80px のずれの試した回が1回以上）と合格（pass。外れ 0 で、下限を満たすか status が
- * no-target）と、行の様子（status。押しが来なかった not-run、2打目を受けないことを確かめる行（TARGET_ROWS）で試した回が
- * 無く行の組がどれも守る的が無い組の no-target、ほかの試した回の無い no-qualifying、試した回のある tried）を出す。1行が
+ * no-target）と、行の様子（status。押しが来なかった not-run、2打目を受けないことを確かめる行（TARGET_ROWS）で下限に
+ * 数える試した回が無く行の組（d5-inner は 80px のずれの押しの組）がどれも守る的が無い組の no-target、ほかの下限に数える
+ * 試した回の無い no-qualifying、下限に数える試した回のある tried）を出す。1行が
  * 1つの行と切り替わりと入力。落ちた先と試したかは records.mjs の landedOf で決める（押し下げが切り替わりの前で click
  * が切り替わったあとの画面に届いた押しは click の的）。守る的が無い組は targets.mjs で見分け、TARGET_ROWS の行に来た
  * 押しの組のうち守る的が無い組を noTarget（`[組, いちばん近い押せるものまでの距離]`）に出す。状態が読めなかった押し
@@ -685,9 +686,11 @@ function verdictsOf(directory, names) {
         if (d5) {
           // 窓の中（300ms）の2打目。120px のずれは受ける側（d5-outer）、基本のずれ（10・20px）と 80px のずれは
           // 受けない側（d5-inner。decision-landing.md の「80px 以下」）。試した回はずれの直線の距離ごとに byShift に数える。
+          // d5-inner の下限は 80px のずれの試した回で満たすので、守る的が無い組の見分けも 80px のずれの押しの組で行う
+          // （行の組に足すのは 80px のずれの押しだけ）。
           if (WINDOW_KINDS.has(kind) && Number(interval) === 300) {
             const outer = shift >= 120;
-            const row = (outer ? see : seePair)(
+            const row = (outer || shift !== D5_INNER_SHIFT ? see : seePair)(
               outer ? "d5-outer" : "d5-inner",
               transitionOf(kind),
               input,
@@ -758,7 +761,19 @@ function verdictsOf(directory, names) {
             byMode: {},
           });
           const pair = see("pair", transitionOf(kind), input);
-          // 的が無く2打目を送らなかった狙った2打目は、来たことと組の守る的の証しだけに入る。
+          // 空振りでないことの対の押しは、的が押せるものの上で、1打目からの差が 750ms 以上の回を試した回にし、働かな
+          // ければ外れ。
+          const countPair = () => {
+            if (!press.pair[1] || press.pair[0] < BORDER_UNTIL_MS) {
+              pair.untried++;
+            } else {
+              tried(pair, slug);
+              if (!press.pair[3]) fail(pair, [...where, press.pair]);
+            }
+          };
+          // 的が無く2打目を送らなかった狙った2打目は、window の行には来たことと組の守る的の証しだけに入り、1打目の点に
+          // いちばん近い押せるものの中心を押した対（nearest）を pair の行に数える。
+          if (press.pair?.[4] === "nearest") countPair();
           if (!sent) continue;
           row.byMode[mode] = (row.byMode[mode] ?? 0) + 1;
           if (!landed?.pressable) row.untried++;
@@ -768,15 +783,9 @@ function verdictsOf(directory, names) {
           else {
             tried(row, slug);
             if (worked || press.focusOff) fail(row, where);
-            // 空振りでないことの対（2打目が働かなかった試した回）。
-            if (!press.pair || worked) {
-              // 対を送らなかった回（離れた・2打目が働いた）は数えない。
-            } else if (!press.pair[1] || press.pair[0] < BORDER_UNTIL_MS) {
-              pair.untried++;
-            } else {
-              tried(pair, slug);
-              if (!press.pair[3]) fail(pair, [...where, press.pair]);
-            }
+            // 空振りでないことの対（2打目が働かなかった試した回。対を送らなかった回（離れた）と2打目が働いた回は
+            // 数えない）。
+            if (press.pair && !worked) countPair();
           }
           continue;
         }
@@ -881,14 +890,14 @@ function verdictsOf(directory, names) {
       ? triedForLower > 0 && (!perSlug || missingSlugs.length === 0)
       : undefined;
     // 守る的が無い組（組の数と、いちばん近い押せるものまでの距離）。2打目を受けないことを確かめる行（TARGET_ROWS）
-    // だけで見分け、行の組がどれも守る的が無い組なら、試した回が無くても下限に届かないことが合格を妨げない
-    // （decision-landing.md の「下限」）。
+    // だけで見分け、下限に数える試した回が無く、行の組がどれも守る的が無い組なら、下限に届かないことが合格を妨げない
+    // （decision-landing.md の「下限」）。d5-inner の組は 80px のずれの押しの組である。
     const { noTarget, only: onlyNoTarget } = evidence.noTargetOf(pairs);
     const status = !counted
       ? undefined
       : row.seen === 0
         ? "not-run"
-        : row.tried > 0
+        : triedForLower > 0
           ? "tried"
           : TARGET_ROWS.has(row.verdict) && onlyNoTarget
             ? "no-target"

@@ -926,6 +926,16 @@ function pageProbe() {
       point: aimed,
     };
   };
+  // 守る的が無い狙った2打目の空振りでないことの対の点: いまの組みで、点から直線の距離がいちばん近い押せるもの
+  // （nearestPressable の best）の押せる範囲の画面の中の部分の中心（画面の座標の整数）。画面に押せるものが無ければ null。
+  window.__yolosNearestCenter = (point) => {
+    const { best } = nearestPressable(point);
+    if (!best) return null;
+    return {
+      x: Math.round((best.rect.left + best.rect.right) / 2),
+      y: Math.round((best.rect.top + best.rect.bottom) / 2),
+    };
+  };
   // 読んでから答える押し（read）の点: いま出ている問の選択肢のうち、点から押せる範囲までの max(dx, dy) が
   // いちばん小さいものの、押せる範囲の中心（画面の座標の整数）。__yolosPoints の2打目をその点に替える。
   window.__yolosNearestChoice = (point) => {
@@ -1743,13 +1753,22 @@ async function singlePress(context, run, point) {
 }
 
 /**
- * 空振りでないことの対の押し: 2打目と同じ点を、1打目を送ってから PAIR_FROM_ORIGIN_MS のあとに1度押し、
- * WAIT_AFTER_SECOND_MS 待つ。押しの前と記録の時点の状態を置く。
+ * 空振りでないことの対の押し: 1打目を送ってから PAIR_FROM_ORIGIN_MS のあとに1度押し、WAIT_AFTER_SECOND_MS 待つ。
+ * 押す点は、how が same なら from（2打目の点）、nearest なら、そのときの組みで from（1打目の点）にいちばん近い押せる
+ * ものの中心（__yolosNearestCenter）。押しの前と記録の時点の状態を置き、押しの番号を返す。nearest で画面に押せるもの
+ * が無ければ押さずに null を返す。
  */
-async function pairPress(context, run, sentAt, point) {
+async function pairPress(context, run, sentAt, from, how) {
   const { session, state, page } = context;
   const wait = sentAt + PAIR_FROM_ORIGIN_MS - Date.now();
   if (wait > 0) await sleep(wait);
+  const point =
+    how === "same"
+      ? from
+      : await page
+          .evaluate((origin) => window.__yolosNearestCenter(origin), from)
+          .catch(() => null);
+  if (!point) return null;
   await placePoints(page, point, point);
   state.press++;
   const index = state.press;
@@ -2500,8 +2519,14 @@ function leaveOf(record) {
   return null;
 }
 
-/** 空振りでないことの対の押しの記録。origin は対にした二度押しの記録。 */
-function pairRecord(state, index, origin) {
+/**
+ * 空振りでないことの対の押しの記録。origin は対にした二度押しの記録、how は押した点の選び方（pairPress）。押さなかった
+ * 対（index が null）は、押せるものの上でない対とする。
+ */
+function pairRecord(state, index, origin, how) {
+  if (index === null) {
+    return { gap: null, pressable: 0, group: null, worked: null, how };
+  }
   const down = state.events.find(
     (event) => event.press === index && event.ev === "pointerdown",
   );
@@ -2519,6 +2544,7 @@ function pairRecord(state, index, origin) {
       state.downloads.some((download) => download.press === index),
       null,
     ),
+    how,
   };
 }
 
@@ -2549,6 +2575,7 @@ function qEntry(record) {
           record.pair.pressable,
           record.pair.group,
           record.pair.worked,
+          record.pair.how,
         ]
       : null,
     click: record.second
@@ -2701,8 +2728,10 @@ function recordPress(context, run, index, extra) {
 /**
  * 二度押しを送って記録する。2打目の押し方は extra.mode（省けば回の押し方 run.mode）。hold-aim と hold-out の2打目の
  * 点は extra.scouted（下見の文脈で選んだもの）。窓の守りを掛けた切り替わりの、条件7 の same・aim の回（D5 を除く）で、
- * 2打目が切り替わったあとの画面の押せるものの上に落ちた回（試した回。落ちた先は records.mjs の landedOf）は、離れて
- * いなければ、続けて空振りでないことの対の押しを送る（2打目と同じ点を、1打目から PAIR_FROM_ORIGIN_MS のあとに1度）。
+ * 離れていなければ、続けて空振りでないことの対の押しを、1打目から PAIR_FROM_ORIGIN_MS のあとに1度送る。2打目が
+ * 切り替わったあとの画面の押せるものの上に落ちた回（試した回。落ちた先は records.mjs の landedOf）は2打目と同じ点を
+ * 押し（same）、狙った2打目で 80px の中に的が無く2打目を送らなかった回（守る的が無い組の押し。decision-landing.md の
+ * 「空振りでないことの対」）は、そのときの新しい画面で1打目の点にいちばん近い押せるものの中心を押す（nearest）。
  */
 async function pressAndRecord(
   context,
@@ -2730,19 +2759,32 @@ async function pressAndRecord(
   });
   record.aim = sent.aim;
   if (
-    !options.isD5 &&
-    (mode === "same" || mode === "aim") &&
-    WINDOW_KINDS.has(extra.expectKind) &&
-    landedOfRecord(record)?.pressable &&
-    !leaveOf(record)
+    options.isD5 ||
+    (mode !== "same" && mode !== "aim") ||
+    !WINDOW_KINDS.has(extra.expectKind) ||
+    leaveOf(record)
   ) {
-    const index = await pairPress(context, run, sent.sentAt, sent.second);
-    record.pair = pairRecord(context.state, index, record);
-    record.pairAfter = context.state.after[index];
-    record.pairBand = context.state.events.find(
-      (event) => event.press === index && event.ev === "pointerdown",
-    )?.band;
+    return record;
   }
+  const how = landedOfRecord(record)?.pressable
+    ? "same"
+    : mode === "aim" && sent.aim.target === null && sent.aim.nearest !== null
+      ? "nearest"
+      : null;
+  if (!how) return record;
+  const index = await pairPress(
+    context,
+    run,
+    sent.sentAt,
+    how === "same" ? sent.second : point,
+    how,
+  );
+  record.pair = pairRecord(context.state, index, record, how);
+  if (index === null) return record;
+  record.pairAfter = context.state.after[index];
+  record.pairBand = context.state.events.find(
+    (event) => event.press === index && event.ev === "pointerdown",
+  )?.band;
   return record;
 }
 
