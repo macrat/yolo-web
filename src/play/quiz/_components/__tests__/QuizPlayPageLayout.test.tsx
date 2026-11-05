@@ -3,7 +3,6 @@ import { render, screen, within } from "@testing-library/react";
 import QuizPlayPageLayout from "../QuizPlayPageLayout";
 import type { QuizDefinition } from "../../types";
 import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
-import styles from "@/app/play/[slug]/page.module.css";
 
 // Server Componentの依存コンポーネントをモックする。
 vi.mock("@/components/Breadcrumb", () => ({
@@ -28,14 +27,12 @@ vi.mock("@/play/quiz/_components/QuizContainer", () => ({
     head,
     quiz,
     referrerTypeId,
-    questionPhrases,
     resultHeadings,
     readingHeadings,
   }: {
     head: React.ReactNode;
     quiz: QuizDefinition;
     referrerTypeId?: string;
-    questionPhrases: Record<string, unknown>;
     resultHeadings: Record<string, { phrases: string[] }>;
     readingHeadings: Record<string, string[]>;
   }) => (
@@ -43,7 +40,6 @@ vi.mock("@/play/quiz/_components/QuizContainer", () => ({
       data-testid="quiz-container"
       data-quiz-slug={quiz.meta.slug}
       data-referrer={referrerTypeId}
-      data-question-phrases={JSON.stringify(questionPhrases)}
       data-result-headings={JSON.stringify(resultHeadings)}
       data-reading-headings={JSON.stringify(readingHeadings)}
     >
@@ -342,69 +338,6 @@ test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", asyn
   }
 });
 
-/** ページが並べるものを包む箱。根の要素の touch-action は、この箱のあるページにだけ掛かる（page.module.css）。 */
-function pageBoxOf(container: HTMLElement): HTMLElement {
-  const boxes = container.querySelectorAll<HTMLElement>(":scope > div");
-  expect(boxes).toHaveLength(1);
-  return boxes[0];
-}
-
-test("並べるもの（クイズ本体からおすすめまで）を、ページの箱のクラスを持つ1つの箱で包む", async () => {
-  const { container } = render(
-    await QuizPlayPageLayout({
-      quiz: {
-        ...mockQuiz,
-        meta: { ...mockQuiz.meta, faq: [{ question: "Q", answer: "A" }] },
-      },
-      slug: "test-quiz",
-    }),
-  );
-  const box = pageBoxOf(container);
-  expect(box).toHaveClass(styles.quizPage);
-  expect(
-    Array.from(container.children).filter((child) => child !== box),
-  ).toEqual([container.querySelector('script[type="application/ld+json"]')]);
-  for (const testId of [
-    "quiz-container",
-    "faq-section",
-    "share-buttons",
-    "related-quizzes",
-    "recommended-content",
-  ]) {
-    expect(box).toContainElement(screen.getByTestId(testId));
-  }
-  expect(box.lastElementChild).toBe(screen.getByTestId("recommended-content"));
-});
-
-test("問の見出しと選択肢の面の文節の区切りを、サーバーで全問ぶん作って渡す", async () => {
-  const component = await QuizPlayPageLayout({
-    quiz: {
-      ...mockQuiz,
-      questions: [
-        {
-          id: "q1",
-          text: "休みの日の朝、最初にすることは？",
-          choices: [{ id: "a", text: "思い返してから二度寝する" }],
-        },
-      ],
-    },
-    slug: "test-quiz",
-  });
-  render(component);
-
-  const phrases = JSON.parse(
-    screen
-      .getByTestId("quiz-container")
-      .getAttribute("data-question-phrases") ?? "{}",
-  );
-  expect(phrases.q1.heading.phrases).toEqual(
-    splitIntoPhrases("休みの日の朝、最初にすることは？"),
-  );
-  expect(phrases.q1.choices.a).toEqual(
-    splitIntoPhrases("思い返してから二度寝する"),
-  );
-});
-
 test("ページは、QuizContainer が描くクイズ本体のセクション（頭にパンくずと h1）・よくある質問・ページの共有の順のセクションで組む（DESIGN.md §5）", async () => {
   const { container } = render(
     await QuizPlayPageLayout({
@@ -415,9 +348,7 @@ test("ページは、QuizContainer が描くクイズ本体のセクション（
       slug: "test-quiz",
     }),
   );
-  const sections = Array.from(
-    pageBoxOf(container).querySelectorAll(":scope > section"),
-  );
+  const sections = Array.from(container.querySelectorAll(":scope > section"));
   expect(sections).toHaveLength(3);
   expect(
     within(sections[0] as HTMLElement).getByRole("navigation", {
@@ -443,9 +374,7 @@ test("よくある質問を持たないクイズは、空のセクションを�
   const { container } = render(
     await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }),
   );
-  expect(
-    pageBoxOf(container).querySelectorAll(":scope > section"),
-  ).toHaveLength(2);
+  expect(container.querySelectorAll(":scope > section")).toHaveLength(2);
   expect(screen.queryByTestId("faq-section")).not.toBeInTheDocument();
 });
 

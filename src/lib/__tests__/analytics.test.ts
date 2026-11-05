@@ -6,8 +6,6 @@ import {
   trackShare,
   trackSave,
   trackTileFirstInteraction,
-  trackQuizPressGuarded,
-  trackQuizPressGuardedRetry,
   trackTocOpen,
   trackTocJump,
 } from "@/lib/analytics";
@@ -379,35 +377,6 @@ describe("analytics", () => {
 
       const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
       expect("variant" in params).toBe(false);
-    });
-  });
-
-  describe("trackQuizPressGuarded", () => {
-    it("sends quiz_press_guarded with the transition and content_id", () => {
-      trackQuizPressGuarded("quiz-character-personality", "start");
-
-      expect(mockGtag).toHaveBeenCalledTimes(1);
-      expect(mockGtag).toHaveBeenCalledWith("event", "quiz_press_guarded", {
-        transition: "start",
-        content_id: "quiz-character-personality",
-      });
-    });
-  });
-
-  describe("trackQuizPressGuardedRetry", () => {
-    it("sends quiz_press_guarded_retry with the transition, content_id and elapsed_ms", () => {
-      trackQuizPressGuardedRetry("quiz-kanji-level", "next", 420);
-
-      expect(mockGtag).toHaveBeenCalledTimes(1);
-      expect(mockGtag).toHaveBeenCalledWith(
-        "event",
-        "quiz_press_guarded_retry",
-        {
-          transition: "next",
-          content_id: "quiz-kanji-level",
-          elapsed_ms: 420,
-        },
-      );
     });
   });
 

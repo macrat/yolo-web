@@ -14,7 +14,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
-import { questionPhrases } from "../../questionPhrases";
 import type { ItemListItem } from "@/components/ItemList";
 import type {
   QuizDefinition,
@@ -55,17 +54,15 @@ vi.mock("@/components/Button", () => ({
   buttonUnderlineClassName: "underline",
   default: ({
     children,
-    phrases,
     onClick,
     ref,
   }: {
-    children?: React.ReactNode;
-    phrases?: readonly string[];
+    children: React.ReactNode;
     onClick: () => void;
     ref?: React.Ref<HTMLButtonElement>;
   }) => (
     <button type="button" onClick={onClick} ref={ref}>
-      {phrases ? phrases.join("") : children}
+      {children}
     </button>
   ),
 }));
@@ -194,7 +191,6 @@ function renderQuiz(
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
-      questionPhrases={questionPhrases(quiz)}
       resultHeadings={resultHeadings}
       readingHeadings={{}}
       recommendedContents={recommendedContents}
@@ -478,15 +474,14 @@ describe("QuizContainer — 押した点の真下を避ける着地", () => {
     });
   }
 
-  test("「はじめる」の点の真下に1問目の選択肢が来るときは、選択肢から 16px 離す（まだ読んでいない問に答えを入れない）", async () => {
+  test("「はじめる」の点の真下に1問目の選択肢が来るときは、選択肢の外へずらす（まだ読んでいない問に答えを入れない）", async () => {
     renderQuiz(makePersonalityQuiz(2));
     stubQuestionUnderPoint();
     await pressAt(screen.getByRole("button", { name: "はじめる" }), 500);
-    // 基準は送らない（まとまりは画面に入っている）。見せる範囲（上へ 32〜下へ 292）の中で、点 500 が選択肢
-    // （480〜569）から 16 離れる、いちばん近い送り（最後の選択肢の下端が 484 に来る）。
+    // 基準は送らない（まとまりは画面に入っている）。点 500 が選択肢の上端 480 より上に出る、いちばん近い送り。
     expect(scrollBySpy).toHaveBeenCalledTimes(1);
     expect(scrollBySpy).toHaveBeenCalledWith({
-      top: 85,
+      top: -21,
       behavior: "instant",
     });
   });
@@ -503,7 +498,7 @@ describe("QuizContainer — 押した点の真下を避ける着地", () => {
     expect(scrollBySpy).not.toHaveBeenCalled();
   });
 
-  test("知識クイズの「次へ」の点の真下に次の問の選択肢が来るときは、選択肢から 16px 離す（まだ読んでいない問に答えを入れない）", async () => {
+  test("知識クイズの「次へ」の点の真下に次の問の選択肢が来るときは、選択肢の外へずらす（まだ読んでいない問に答えを入れない）", async () => {
     renderQuiz(makeKnowledgeQuiz(2));
     await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
     await pressWithKeyboard(choiceButton("正解"));
@@ -527,10 +522,10 @@ describe("QuizContainer — 押した点の真下を避ける着地", () => {
     expect(document.activeElement).toBe(
       screen.getByRole("heading", { level: 2, name: "問2" }),
     );
-    // 基準は送らない。点 500 が選択肢（480〜569）から 16 離れる、いちばん近い送り。
+    // 基準は送らない。点 500 が選択肢の上端 480 より上に出る、いちばん近い送り。
     expect(scrollBySpy).toHaveBeenCalledTimes(1);
     expect(scrollBySpy).toHaveBeenCalledWith({
-      top: 85,
+      top: -21,
       behavior: "instant",
     });
   });

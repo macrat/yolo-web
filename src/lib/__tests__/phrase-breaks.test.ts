@@ -9,7 +9,6 @@ import {
   parenDepthAfter,
   splitIntoPhrases,
 } from "@/lib/phrase-breaks";
-import { wordsOf } from "@/lib/word-starts";
 import { quizBySlug } from "@/play/quiz/registry";
 import { toolsBySlug } from "@/tools/registry";
 
@@ -33,7 +32,6 @@ const headings = new Set([
   "Markdownが思い通りに表示されない：改行・表・エスケープを仕組みから直す",
   "締切3分前に5手先を読む炎の策士",
   "晴れの日に傘を7本持って山に登る備えの王",
-  "すごく嬉しいことがあった！　最初のリアクションは？",
 ]);
 
 const NO_LINE_START =
@@ -66,18 +64,16 @@ function parenDepth(text: string): number {
   return depth;
 }
 
-/** offset（UTF-16 の位置）が、漢字か片仮名を含む語（辞書の補いの語を含む wordsOf の語）の中か。 */
+const segmenter = new Intl.Segmenter("ja", { granularity: "word" });
+
+/** offset が、漢字か片仮名を含む Intl.Segmenter の語の中か。 */
 function isInsideKanjiOrKatakanaWord(text: string, offset: number): boolean {
-  let index = 0;
-  return wordsOf(text).some(({ text: word }) => {
-    const start = index;
-    index += word.length;
-    return (
-      start < offset &&
-      offset < index &&
-      /[\p{Script=Han}\p{Script=Katakana}]/u.test(word)
-    );
-  });
+  return [...segmenter.segment(text)].some(
+    ({ segment, index }) =>
+      index < offset &&
+      offset < index + segment.length &&
+      /[\p{Script=Han}\p{Script=Katakana}]/u.test(segment),
+  );
 }
 
 describe("splitIntoPhrases", () => {
@@ -145,7 +141,7 @@ describe("splitIntoPhrases", () => {
     }
   });
 
-  test("BudouX の境目を外すのは、禁則・ダッシュの前・全角の空白の前・開き括弧・数・丸括弧の中・最後の1字・漢字か片仮名を含む語の中・中点で並べた平仮名の語の中・閉じ括弧の後ろの短い続きの所だけ", () => {
+  test("BudouX の境目を外すのは、禁則・ダッシュの前・開き括弧・数・丸括弧の中・最後の1字・漢字か片仮名を含む語の中・中点で並べた平仮名の語の中・閉じ括弧の後ろの短い続きの所だけ", () => {
     for (const text of headings) {
       const kept = new Set(boundaryOffsets(splitIntoPhrases(text)));
       for (const offset of boundaryOffsets(budoux.parse(text))) {
@@ -159,7 +155,6 @@ describe("splitIntoPhrases", () => {
           parenDepth(before) > 0 ||
           [...after].length === 1 ||
           /^\s*(?:[—―─]|--)/u.test(after) ||
-          /^　/u.test(after) ||
           isInsideKanjiOrKatakanaWord(text, offset) ||
           /\p{Script=Hiragana}$/u.test(before) ||
           /[」』）)][^」』）)]{1,2}$/u.test(before);
@@ -182,86 +177,14 @@ describe("splitIntoPhrases", () => {
   });
 
   test("最初の文節は、字の種類が変わって語が始まる所でも区切る", () => {
-    expect(splitIntoPhrases("メモリ管理術")).toEqual(["メモリ", "管理術"]);
+    expect(splitIntoPhrases("チューリング型思考者")).toEqual([
+      "チューリング",
+      "型思考者",
+    ]);
     expect(splitIntoPhrases("ことわざビギナー")).toEqual([
       "ことわざ",
       "ビギナー",
     ]);
-  });
-
-  test("最初の文節の字の種類の変わり目でも、漢字か片仮名を含む語（辞書の補いの語を含む）の中では区切らない", () => {
-    expect(splitIntoPhrases("基本省エネだけど、")).toEqual([
-      "基本省エネだけど、",
-    ]);
-    expect(splitIntoPhrases("チューリング型思考者")).toEqual([
-      "チューリング型",
-      "思考者",
-    ]);
-  });
-
-  test("辞書の補いの語が漢字で終わり、次の語が漢字で始まる所は、語の頭として分ける", () => {
-    expect(splitIntoPhrases("ダーウィン型思考者")).toEqual([
-      "ダーウィン型",
-      "思考者",
-    ]);
-    expect(splitIntoPhrases("サイト内検索を使う")).toEqual([
-      "サイト内",
-      "検索を",
-      "使う",
-    ]);
-    expect(splitIntoPhrases("バイト数計算、")).toEqual(["バイト数", "計算、"]);
-  });
-
-  test("辞書が補いの語より長い語を採る所には、補いの語の終わりを作らない", () => {
-    expect(splitIntoPhrases("サイト内容")).toEqual(["サイト", "内容"]);
-    expect(splitIntoPhrases("アスペクト比率")).toEqual(["アスペクト", "比率"]);
-    for (const [text, word] of [
-      ["サイト内容を確認する", "内容"],
-      ["アスペクト比率を変える", "比率"],
-    ]) {
-      const start = text.indexOf(word);
-      for (const options of [{}, { countedName: true }]) {
-        for (const offset of boundaryOffsets(splitIntoPhrases(text, options))) {
-          expect(
-            offset <= start || offset >= start + word.length,
-            `${text} ${offset}`,
-          ).toBe(true);
-        }
-      }
-    }
-  });
-
-  test("BudouX の境目も足す折り所も、辞書の補いの語の中には置かない", () => {
-    expect(
-      splitIntoPhrases(
-        "「もう少しだけ」と布団の中で、今日一日をぼんやり頭の中で思い描く",
-      ),
-    ).toContain("今日一日を");
-    expect(splitIntoPhrases("もし1つだけ超能力が使えるなら？")).toContain(
-      "超能力が",
-    );
-    expect(splitIntoPhrases("土壌のpH値や日照時間をデータ管理する")).toContain(
-      "pH値や",
-    );
-    expect(splitIntoPhrases("ダ・ヴィンチ型思考者")).toEqual([
-      "ダ・ヴィンチ型",
-      "思考者",
-    ]);
-    expect(
-      splitIntoPhrases(
-        "Cron式 早見表 — フィールド・特殊文字・実用パターン一覧",
-      )[0],
-    ).toMatch(/^Cron式/u);
-  });
-
-  test("全角の空白は、前の文節の終わりに付け、文節の頭に置かない", () => {
-    const phrases = splitIntoPhrases(
-      "すごく嬉しいことがあった！　最初のリアクションは？",
-    );
-    expect(phrases).toContain("あった！　");
-    for (const phrase of phrases) {
-      expect(phrase).not.toMatch(/^　/u);
-    }
   });
 
   test("中点で並べた語の後ろで区切り、中点で並べた平仮名の語の中では区切らない", () => {
@@ -538,24 +461,6 @@ describe("splitIntoPhrases の名前に括弧で数を添えたもの（countedN
     expect(splitIntoPhrases("小学1年", counted)).toEqual(["小学1年"]);
   });
 
-  test("辞書の補いの語が漢字で終わり、次の語が漢字で始まる所は、語の頭として区切る", () => {
-    expect(splitIntoPhrases("チューリング型思考者（3）", counted)).toEqual([
-      "チューリング型",
-      "思考者",
-      "（3）",
-    ]);
-    expect(splitIntoPhrases("サイト内検索（5）", counted)).toEqual([
-      "サイト内",
-      "検索",
-      "（5）",
-    ]);
-    expect(splitIntoPhrases("サイト内容（2）", counted)).toEqual([
-      "サイト",
-      "内容",
-      "（2）",
-    ]);
-  });
-
   test("見出しの狭い行に収まる片仮名の続きは、語の辞書が刻んでも1語として区切らない", () => {
     expect(splitIntoPhrases("ワークフロー連載", counted)).toEqual([
       "ワークフロー",
@@ -613,17 +518,6 @@ describe("followsPhraseRules", () => {
     expect(followsPhraseRules(["藍色（あい", "いろ）"])).toBe(false);
     expect(followsPhraseRules(["座右の", "銘と", "し", "て"])).toBe(false);
     expect(followsPhraseRules(["この", ""])).toBe(false);
-  });
-
-  test("漢字か片仮名を含む語（辞書の補いの語を含む）の中の区切りを見つけ、平仮名だけの語の中の区切りは通す", () => {
-    expect(followsPhraseRules(["お問い", "合わせ"])).toBe(false);
-    expect(followsPhraseRules(["コピー", "済み"])).toBe(false);
-    expect(followsPhraseRules(["メール", "アドレス"])).toBe(false);
-    expect(followsPhraseRules(["問題に", "当たる"])).toBe(false);
-    expect(followsPhraseRules(["お問い合わせ"])).toBe(true);
-    expect(followsPhraseRules(["コピー済み"])).toBe(true);
-    expect(followsPhraseRules(["この", "サイトに", "ついて"])).toBe(true);
-    expect(followsPhraseRules(["Cookieに", "ついて"])).toBe(true);
   });
 });
 

@@ -171,13 +171,13 @@ describe("CopyButton", () => {
     ]);
   });
 
-  test("押したあとの面の字は1つの文節で、中に折り所を持たない", async () => {
+  test("押したあとの面の字は、「コピー」と「済み」「失敗」のあいだにだけ折り所を持つ", async () => {
     render(<CopyButton text="#ee827c" target="HEX" />);
     const button = screen.getByRole("button", { name: "HEXをコピー" });
 
     await press(button);
 
-    expect(face(button).innerHTML).toBe("コピー済み");
+    expect(face(button).innerHTML).toBe("コピー<wbr>済み");
   });
 
   test("面の字も見えない箱も PhrasedText で組み、何を写すかの文節と「を」の後ろにだけ折り所を持つ", () => {
@@ -198,8 +198,8 @@ describe("CopyButton", () => {
     ];
     expect(reserved.map((element) => element.innerHTML)).toEqual([
       "メール<wbr>全文を<wbr>コピー",
-      "コピー済み",
-      "コピー失敗",
+      "コピー<wbr>済み",
+      "コピー<wbr>失敗",
     ]);
     for (const element of reserved) {
       expect(element).toHaveClass(phrasedStyles.phrased);

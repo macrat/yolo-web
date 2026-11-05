@@ -13,7 +13,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
-import { questionPhrases } from "../../questionPhrases";
 import type {
   QuizDefinition,
   QuizMeta,
@@ -121,7 +120,6 @@ function renderQuiz(quiz: QuizDefinition) {
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
-      questionPhrases={questionPhrases(quiz)}
       resultHeadings={{}}
       readingHeadings={{}}
     />,

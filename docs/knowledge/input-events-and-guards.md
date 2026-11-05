@@ -1,8 +1,8 @@
 # 入力イベントと二重発火ガードの知見
 
-画面が入れ替わる UI で、指の二度打ちなどの「2打目」がどう届き、どこに落ち、どんなガードがどこまで効くかについての知見。cycle-301（B-620: 診断の二重発火で設問が飛び結果が変わる欠陥）と cycle-320（診断の二度押しの測り）で得たもの。各節の末尾の根拠に、得たサイクルと、実測・確認・推論の別を書く。cycle-301 で得た節の実測の既定の条件は、本番ビルドを実ブラウザ（Chromium）で動かしたこと（cycle-301 のレビューの記録で確かめた）。ビューポートと入力の種類は測定ごとに違うので、節の根拠に書き、cycle-301 の記録に残っていないものは「記録に無い」と書く。
+画面が入れ替わる UI で、指の二度打ちなどの「2打目」がどう届き、どんなガードがどこまで効くかについての知見。すべて cycle-301（B-620: 診断の二重発火で設問が飛び結果が変わる欠陥）で得たもの。各節の末尾に、実測・確認・推論の別を書く。実測の既定の条件は、本番ビルドを実ブラウザ（Chromium）で動かしたこと（cycle-301 のレビューの記録で確かめた）。ビューポートと入力の種類は測定ごとに違うので、節の根拠に書き、cycle-301 の記録に残っていないものは「記録に無い」と書く。
 
-診断・クイズでは、§1 の2層のうち (a) を `src/play/quiz/quizProgress.ts` の reducer が受け持ち、「1つの問に答えは1つ」「進むのは名指した問から1問だけ」という不変条件を更新そのものに持たせて、どの経路から何回届いても進みが壊れないようにしている。(b) は `src/play/quiz/_components/QuizContainer.tsx` が受け持ち、押しの受け手を `src/play/quiz/pressGuard.ts` の `createPressGuard` で作って付ける。画面が切り替わったあとは、`src/lib/reveal.ts` の `revealLanding` が、`chooseTouchClearLanding` で、見せる範囲の中から、2打目の落ちる所（1打目を押した点）の近くに押せるものが来ない着地を選んで送る。範囲の中に、点から押せるもの（選択肢は行から罫線を除いた押せる範囲）までの隔たりを横と縦の隔たりの大きいほうで測って 16px（タッチの調整が寄せる、触れた面の半辺の上限。§8）以上離せる着地があれば、それを先に選ぶ。基準が送らないときは、押せるものがどれも点から 16px 以上離れていれば送らず、近いときだけ 16px 以上離れるいちばん近い送りへずらし、基準が送るときは、16px 以上離したうえで、同じ隔たりで点から遠い送りに着く。16px 以上離せる着地が無ければ、`chooseLanding` に任せ、隔たりを選択肢の行の矩形までの直線の距離で測り、基準が送らないときは、点の真下に押せるものが来るときだけ、真下から外せるいちばん近い送り（外せるのが先に避けるものだけならその送り）へずらし、基準が送るときは、真下から外したうえで押せるものが点から遠い送りに着く。そのとき2打目は押せるものに寄りうる。避けるものは画面ごとに決め、診断で答えたあとの次の問の選択肢は避けず、診断で答えて押した行を見せるあいだは送らない。受け手は `window` の捕捉の段階に置き、着地に使う押した点を覚え、連続の押しの1打目が画面を切り替えたときは、2打目の既定の動き（語の選択）を止める。そのうえで同じ受け手が、二度押しの2打目そのものを受けない守りを持ち、`QuizContainer` が切り替わりごとにそれを開く。起点は、ポインタの click（`detail >= 1`）で画面を切り替えた押しで、時刻と座標はその click を出した押し（選び方は §9）の `pointerdown` の `event.timeStamp` と `clientX`・`clientY` から取る。「はじめる」→1問目・知識クイズの「次へ」→次の問・最後の答えか最後の「次へ」→結果では、起点から押し下げまでが 700ms 未満で、画面の座標が直線の距離で 100px 以下のポインタの押しを受けない（窓の守り）。診断の答え→次の問では、同じ範囲のうち連続の押しだけを受けない（連続の押しの守り）。連続は、タッチとペンでは守りが自分で数え（直前の押しの `pointerup` から次の押し下げまでが 300ms 未満なら連続とし、押しごとに連鎖する）、マウスでは `mousedown` の `detail >= 2` で決める。押しの `mousedown` と `click` は、押しを押し下げの順に並べて覚え、まだ受けていない押しに結ぶ。タッチの速い二度押しでは、2打目の `pointerdown` が1打目の `mousedown` と `click` より先に届くからである（§9）。`click` が押しと同じ `pointerType` でその押しの `pointerId` を持てばその押しに結び、ほかの事象は、事象の点から 32px（`max(dx, dy)`）の中に押し下げか離しの点がある押しのうち、受ける押しのいちばん古いものに結ぶ（受ける押しが無ければいちばん古いもの。32px の中に押しが無ければ、すべての押しから同じく選ぶ）。番号を型の合うときだけ使うのは WebKit の `click` の型が押しと合わないことがあるから、点で絞るのは離しても互換の事象を出さない押しに次の押しの事象を結ばないため、受ける押しを先に選ぶのは、同じ点に残ったその押しと見分けられないときに来訪者の押しを誤って止めないためである（§9）。受けるかは押し下げの時刻と座標で決め、守りが開く前に押し下げてまだ `click` まで届いていない押しにも、守りを開く時に同じ決まりを当てる。1打目の `click` より先に押し下げた指の2打目（「はじめる」と「次へ」は1打目の `click` の処理の中で守りが開く）と、診断の答えを見せる 150ms のあいだに触れ、切り替わったあとに離す指がこれに当たる。後者は、タッチの落ちる要素が離した時の組みで決まるので（§8）、その押しの `click`（タッチと hover を持たないペンでは `mousedown` も）が新しい画面のもの（次の問の選択肢・結果の画面のリンク）に届く。受けない押しは、`mousedown` を `preventDefault`、`click` を `preventDefault` と `stopPropagation` で止め、形も動きも足さない。主のポインタでない押し（`isPrimary` が偽。2本目からの指）と主のボタンでない押し（`button !== 0`。右や中のボタン）は二度押しの2打目にならないので、守りに掛けず、押しとしても覚えない。対の `pointerdown` を持たない click（キーボードと読み上げの起動。`detail === 0`）は窓の中でも通し、キーボードで切り替えたときは起点を作らない。`pointer-events` の窓は使わない。この守りが §5 の3つの軸にどう当たるかは §5 の終わりにある。守りで塞げない2打目のうち、診断の答え→次の問の連続と数えられない2打目の扱いは B-620 で判断する。
+診断・クイズでは、§1 の2層のうち (a) を `src/play/quiz/quizProgress.ts` の reducer が受け持ち、「1つの問に答えは1つ」「進むのは名指した問から1問だけ」という不変条件を更新そのものに持たせて、どの経路から何回届いても進みが壊れないようにしている。(b) は `src/play/quiz/_components/QuizContainer.tsx` が受け持つ。画面が切り替わったあとは、見せる範囲の中に2打目の落ちる所（1打目を押した点）の真下へ押せるものが来ない着地があれば、それを `src/lib/reveal.ts` の `revealLanding` で選んで送る。無ければ、基準が送らないときは基準のまま（先に避けるものだけを外せるならその送り）、基準が送るときは押せるものが点から遠い送りに着き、2打目は押せるものに落ちうる。避けるものは画面ごとに決め、診断で答えたあとの次の問の選択肢は避けず、診断で答えて押した行を見せるあいだは送らない。連続の押しの1打目が画面を切り替えたときは、2打目の既定の動き（語の選択）を止める。時間ガードと `pointer-events` の窓は使っておらず、二重発火の扱いは B-620 で判断する。
 
 ## 1. 実タップの2打目は「別の task」で届く。マウント単位の ref では原理的に止められない
 
@@ -13,7 +13,7 @@
 
 「二重タップを塞いだ」と言うには、(a) 状態更新そのものを冪等にする（どの経路から何回呼ばれても壊れない不変条件を持たせる）、(b) それでも塞げない「別 task の2打目が次の画面の要素に落ちる」経路に別の手当てをする、の2層が要る。
 
-根拠: 実測（cycle-301。幅 375px。高さと入力の種類は記録に無い。修正後には iPhone 12 の UA・touch 有効で、touch とマウスの両方について 0〜510ms の間隔でも測っている）。同一座標を2回タップすると、マウント単位の ref だけを入れた状態では **0/20/40/60/80/120/175/250/350/500ms のすべての間隔で**設問が1問飛んだ。「短い間隔なら吸収される窓がある」という直感は誤り。
+根拠: 実測（幅 375px。高さと入力の種類は記録に無い。修正後には iPhone 12 の UA・touch 有効で、touch とマウスの両方について 0〜510ms の間隔でも測っている）。同一座標を2回タップすると、マウント単位の ref だけを入れた状態では **0/20/40/60/80/120/175/250/350/500ms のすべての間隔で**設問が1問飛んだ。「短い間隔なら吸収される窓がある」という直感は誤り。
 
 ## 2. jsdom で「発見」はできないが、機序が分かれば「回帰テスト」は書ける
 
@@ -27,7 +27,7 @@
 
 **検査が空振りでないことを示す対**を必ず用意する。たとえば「0〜500ms で飛ばないこと」だけを測ると、機能そのものが壊れていても合格する。「**600ms 以上では正常に +2 進むこと**」を同じ表に並べて初めて、その検査が差を検出できると言える。
 
-根拠: 実測（cycle-301）。3経路の回帰テストを jsdom で書いて通し、窓の CSS 規則を2つ削除しても typecheck・lint・quiz のテスト 1570件がすべて通ることを確かめた。
+根拠: 実測。3経路の回帰テストを jsdom で書いて通し、窓の CSS 規則を2つ削除しても typecheck・lint・quiz のテスト 1570件がすべて通ることを確かめた。
 
 ## 3. `pointer-events: none` はヒットテストを経る入力だけを止める
 
@@ -36,17 +36,17 @@
 
 「誤タップから来訪者を守る短い窓」を `pointer-events` で作っても、**キーボードの利用者を締め出さない**。逆に言えば、キーボード経路を止めたい場合はこの手段では止まらない。
 
-根拠: 実測（cycle-301。ビューポートは記録に無い）。`pointer-events: none` の窓の最中でも、Tab によるフォーカス移動・Enter によるリンク遷移・プログラム的 click による「もう一度挑戦する」の作動がいずれも通った。`body` に掛けた状態で実タッチのスワイプを CDP（`Input.dispatchTouchEvent`）から送っても、通常時と同じだけスクロールした（通常時 263px・`body` に掛けた状態 262px）。ヒットテストは `body` を素通りして `html`（＝ビューポートのスクローラ）に落ちる（`document.elementFromPoint` が `HTML` を返す）。レビューでも、`body` に掛けた状態で実タッチのスワイプが妨げられないこと（通常時 548px・掛けた状態 559px）と Tab・Enter が通ることを独立に確かめた。
+根拠: 実測（ビューポートは記録に無い）。`pointer-events: none` の窓の最中でも、Tab によるフォーカス移動・Enter によるリンク遷移・プログラム的 click による「もう一度挑戦する」の作動がいずれも通った。`body` に掛けた状態で実タッチのスワイプを CDP（`Input.dispatchTouchEvent`）から送っても、通常時と同じだけスクロールした（通常時 263px・`body` に掛けた状態 262px）。ヒットテストは `body` を素通りして `html`（＝ビューポートのスクローラ）に落ちる（`document.elementFromPoint` が `HTML` を返す）。レビューでも、`body` に掛けた状態で実タッチのスワイプが妨げられないこと（通常時 548px・掛けた状態 559px）と Tab・Enter が通ることを独立に確かめた。
 
 **スクリーンリーダの起動（TalkBack / VoiceOver のダブルタップ）は推論にとどまる。** HTML の activation behavior からは `element.click()` と同じ合成 click として届くはずだが、両者を実行できる環境が無く実測していない。推論が外れて支援技術の起動がヒットテストを経る入力として届く場合、この窓は支援技術の利用者も止めてしまう。倒れる向きが「保護を失う」ではなく「摩擦が残る」側であることを確認したうえで採る。
 
 ### 窓を「どこに」掛けるかは、2打目が落ちる先を測って決める
 
-`pointer-events: none` は掛けた要素より外には効かない。落ちる先は構造からは推測できず（同じ経路でも共通フッタのときも、コンポーネント内の関連リンクのときもあった）、**実測**して初めて確定する。測るときは、2打目がどこに落ちたかを2打目の `pointerdown` の capture phase のリスナの記録（的の要素と、そのときの画面）で決め、2打目が効いたか（答えが入る・URL が変わる・新しいタブが開く・ダウンロードが始まる・`details` の開閉が変わる・段階が変わる・押した要素にフォーカスが移る、のどれかが起きたか）を押しのあとの状態（画面の番号と段階・答えの数・URL・開いたタブ・ダウンロード・`details` の開閉・フォーカスの置き場）で決める。ページ自身が同じ capture phase で click を止める守りを持つとき、ページより先に置いた道具の click のリスナ（`addInitScript` など）は止められた click も記録するので、click の記録からは効いたかが分からない。`pointerdown` で読むのは、タッチの受け手のあるページでは Chromium がタッチの調整を `pointerdown` を出す前に掛け（§8）、その的が寄せたあとの点のものになるからである。`click` の的とタッチの回の `touchstart` の的も記録し、守りを掛けない回で `pointerdown` の的と合うかを突き合わせる。
+`pointer-events: none` は掛けた要素より外には効かない。落ちる先は構造からは推測できず（同じ経路でも共通フッタのときも、コンポーネント内の関連リンクのときもあった）、**capture phase の click リスナで実測**して初めて確定する。
 
 ただし「どこに掛けるか」を考える前に、「そもそも掛ける必要があるか」を疑うこと——次節。
 
-根拠: 実測（cycle-301。クイズによって2打目が共通フッタのナビにも intro の関連リンクにも落ちた。フッタに落ちた測定はビューポートが記録に無い。関連リンクに落ちた測定は 375×667・マウス）。道具の click のリスナが止められた click も記録することは、同じ所に置いた受け手が置いた順に走ること（§8 の根拠の実測）からの推論で、`pointerdown` の的が寄せたあとの点のものになることは §8 の根拠のソース（`pointer_event_manager.cc` の `AdjustPointerEvent`）からの推論である（どちらも cycle-320）。
+根拠: 実測（クイズによって2打目が共通フッタのナビにも intro の関連リンクにも落ちた。フッタに落ちた測定はビューポートが記録に無い。関連リンクに落ちた測定は 375×667・マウス）。
 
 ## 4. 「2打目が変な所に落ちる」の前に、**1打目の後に来訪者が何を見ているか**を測る
 
@@ -82,7 +82,7 @@
 - **数値そのものは harness 依存なので信用しすぎない。** タップ座標の決め方・スクロール位置の作り方・2打目までの実時間のわずかな違いで着弾先が変わる。受け取ってよいのは、リビールで主要操作とフォーカスが直ることと、リビールを入れても 1打目の位置によっては離脱が再現することである。
 - **脆弱帯（2打目が操作要素に落ちる retry ボタンの y 座標）はビューポートごとに違う。** 375×667・3本では、上端が独立した2つの測定で **y≈145–190**（190 で 3/3 離脱・205 で消失）と **y≈145–215** に分かれ、原因は特定できていない。**y≈120–140 では2打目が「はじめる」を叩き、意図しないプレイ開始が起きる**。390×844 の character-personality では概ね y 560–640 と y 740–790 に帯がある。測り直すときは、ビューポートごとに画面の上端から下端まで掃く。
 
-根拠: 実測（cycle-301。上表の下2行は 375×667。入力の種類は、12/30 の測定がマウスで、ほかは記録に無い。上3行はビューポートと入力の種類が記録に無い。1280×800・390×844 での再現は本番サイトで行い、出典は `docs/cycles/cycle-301/observation-impact.md` §2）。掃いたのは3本だけで、ほかの12本も intro に関連リンクを持ち、FAQ や共有のボタンを持つ本では同じことが起きるというのは推論である。
+根拠: 実測（上表の下2行は 375×667。入力の種類は、12/30 の測定がマウスで、ほかは記録に無い。上3行はビューポートと入力の種類が記録に無い。1280×800・390×844 での再現は本番サイトで行い、出典は `docs/cycles/cycle-301/observation-impact.md` §2）。掃いたのは3本だけで、ほかの12本も intro に関連リンクを持ち、FAQ や共有のボタンを持つ本では同じことが起きるというのは推論である。
 
 ### スクロールの見え方（smooth / 即時）は距離と目的で決める
 
@@ -91,7 +91,7 @@
 - **下に現れた続きへ注意を誘導する短い移動** → smooth（`prefers-reduced-motion: reduce` で即時に落とす）
 - **別の画面へ置き換わる長い移動**（戻る・やり直す） → 即時。ページ遷移と同じ扱いにする
 
-根拠: 実測（cycle-301。ビューポートの幅と入力の種類は記録に無い。2,922px が 4.4 画面ぶんなので高さは約 667px）。`requestAnimationFrame` で毎フレーム `scrollY` を記録し、**起点は click**（`scrollIntoView` を呼んだハンドラの入口ではなく、来訪者が押した瞬間）として、値が動き始めてから静止するまでを取った。2,922px＝ビューポート 4.4 画面ぶんの移動で、click から **90ms〜890ms**（別ハーネスでは 23ms〜820ms）。**どちらも「動いている時間 約 800ms」で一致する**——開始の遅れ（rAF の初回コールバックまで）はハーネスで揺れるので、受け取るのは差のほう。離脱は、即時なら 15本×8間隔で 0/120 だったのが、smooth では 3本×4間隔の探索のうち 90ms/200ms の 3 試行で再発した（別の測定では 9/42）。
+根拠: 実測（ビューポートの幅と入力の種類は記録に無い。2,922px が 4.4 画面ぶんなので高さは約 667px）。`requestAnimationFrame` で毎フレーム `scrollY` を記録し、**起点は click**（`scrollIntoView` を呼んだハンドラの入口ではなく、来訪者が押した瞬間）として、値が動き始めてから静止するまでを取った。2,922px＝ビューポート 4.4 画面ぶんの移動で、click から **90ms〜890ms**（別ハーネスでは 23ms〜820ms）。**どちらも「動いている時間 約 800ms」で一致する**——開始の遅れ（rAF の初回コールバックまで）はハーネスで揺れるので、受け取るのは差のほう。離脱は、即時なら 15本×8間隔で 0/120 だったのが、smooth では 3本×4間隔の探索のうち 90ms/200ms の 3 試行で再発した（別の測定では 9/42）。
 
 ## 5. 時間ベースのガードは3つの軸で適用対象を絞る
 
@@ -101,39 +101,25 @@
 
 経路（どの action か）ではなく**遷移の前後の結果の差**（表示中の画面が実際に変わったか）で判定する。画面が変わらない遷移では2打目が落ちる先も変わらないので守るものが無い。経路で判定すると、経路が増えるたびに手当てが要り、守るものが無い経路にも摩擦が乗る。
 
-根拠: 実測（cycle-301。iPhone 12 の UA・touch 有効）。画面が変わらない「回答→次へ」にも基準時刻を更新していたため、79/170/321/469/559ms の「次へ」が無視され 660ms で初めて通った。
+根拠: 実測（iPhone 12 の UA・touch 有効）。画面が変わらない「回答→次へ」にも基準時刻を更新していたため、79/170/321/469/559ms の「次へ」が無視され 660ms で初めて通った。
 
 ### 軸2: ガードを**受け取る**入力の種類
 
 キーボードには「1つのジェスチャが2回届く」経路が存在しない——`Enter` は keydown で click を1回発火し、遷移後にフォーカスが click ハンドラを持たない要素へ移るならオートリピートも何も叩かない。**守るものがゼロなのに摩擦だけが残る。**
 
-根拠: 実測（cycle-301。ビューポートは記録に無い）。キーボードのみ（Tab→Enter）で、一律の 600ms ガードでは 50/150/300/500ms の高速回答が**すべて拒否**された。
+根拠: 実測（ビューポートは記録に無い）。キーボードのみ（Tab→Enter）で、一律の 600ms ガードでは 50/150/300/500ms の高速回答が**すべて拒否**された。
 
 ### 軸3: ガードを **arm する**（＝その遷移を起こした）入力の種類
 
 軸2 を絞っても残る。**非ポインタが起こした遷移の後には「1つのジェスチャの2打目」が原理的に存在しない**——次に届くポインタ入力は必ず別のジェスチャの1打目である。それを弾くのは正当な入力を捨てるだけで、守るものはゼロ。同じ理屈で `pointer-events` の窓も、非ポインタが起こした入れ替わりでは開けてはならない。
 
-根拠: 実測（cycle-301。ビューポートは記録に無い）。キーボードで回答 → 指でタップの順では、140/300/550ms が**無言で拒否**され、700ms で受理された（＝拒否はガードによるもので空振りではない）。キーボードだけで完走した直後の結果領域が 600ms 不活性になることも観測した。
+根拠: 実測（ビューポートは記録に無い）。キーボードで回答 → 指でタップの順では、140/300/550ms が**無言で拒否**され、700ms で受理された（＝拒否はガードによるもので空振りではない）。キーボードだけで完走した直後の結果領域が 600ms 不活性になることも観測した。
 
 ### 入力の種類の見分け方
 
 キーボード起因の click は `MouseEvent.detail === 0`／`PointerEvent.pointerType === ""` になる。採用する際は一次資料に当たって確かめる。ブラウザのバージョン番号に結びつけて記録すると、次に読む人がその番号では再現できない事実になるので、代わりに取得方法（`click` の capture リスナで `detail` / `pointerType` を記録し、タッチ・マウス・Tab+Enter で比べる）を残す。
 
-根拠: 確認と実測（cycle-301）。仕様の記述を読んで確認し、実ブラウザで「同一ページ・同一の 600ms 窓の中でマウスの2打目は拒否・キーボード起動は受理」を再現した（マウスとキーボードで比べた。ビューポートは記録に無い）。
-
-### 診断・クイズの二度押しの守りでの当て方
-
-冒頭に書いた `pressGuard.ts` の守りは、3つの軸で次のように絞っている。
-
-- **軸1**: 起点を作るのは、画面が実際に切り替わる押しだけである。知識クイズで答えて答えたあとの形を見せる押しは画面を切り替えず、押した点は押した行（押せない字）の上に残るので、起点を作らない。切り替わる押しのなかでも、守るものの重さで掛け方を分ける。「もう一度挑戦する」→開始の画面には掛けない。2打目が「はじめる」を押すのは、もう一度解くという来訪者のしようとしたことのとおりだからである。診断の答え→次の問は、1回解くあいだに 10 回前後通るので、窓を掛けると速く答える人の答えを捨てる cycle-301 の害の型に近づく。そこで窓を掛けず、連続の押しだけを受けない。
-- **軸2**: 受けないのはポインタの押しだけである。対の `pointerdown` を持たない click（キーボードと読み上げの起動。`detail === 0`）は、窓の中でもそのまま通す。
-- **軸3**: 起点を作るのは、ポインタの click（`detail >= 1`）で画面を切り替えた押しだけである。キーボードで切り替えたときは起点を作らないので、そのあとの指の押しは窓に掛からない。
-
-軸のほかに、1打目の点からの直線の距離 100px（Android が二度押しとみなす距離 `DOUBLE_TAP_SLOP`）で絞る。窓の中でも、100px の外（ヘッダ・別の選択肢・結果の画面の下のリンクなど）を意図して押した1打は受ける。§4 の「領域だけの窓」は押せるものの置き場で絞ったので、1打目の座標に来た窓の外のものが無防備で残ったが、この守りは2打目の落ちる点そのもので絞る。タッチとペンの連続を守りが自分で数えるのは、iOS の Safari がタップの `detail` を数えず 1 のまま届けるとする資料があるからである（Leaflet の `DomEvent.DoubleTap.js`、Apple の開発者フォーラムの iOS 13 の報告。どれも古く、いまの版では確かめていない）。
-
-絞っても残る害は2つある。窓の中で 100px の中を意図して押したときと、診断の答え→次の問で、ダブルクリックを遅く設定した人が答えてから 700ms 未満に同じ行を意図して押し、ブラウザがそれを連続と数えたときである。どちらも押し下げの hover と active の線は出るが何も起きず、来訪者は押し直す。
-
-根拠: 推論（cycle-320 の設計の決定。値の出どころと理由は `docs/cycles/cycle-320/decision-landing.md`）。
+根拠: 確認と実測。仕様の記述を読んで確認し、実ブラウザで「同一ページ・同一の 600ms 窓の中でマウスの2打目は拒否・キーボード起動は受理」を再現した（マウスとキーボードで比べた。ビューポートは記録に無い）。
 
 ## 6. `Date.now()` は単調でない
 
@@ -141,7 +127,7 @@
 
 `performance.now()` は単調だが、テストで時計を制御する設計（React の scheduler も `performance.now` を見るため干渉する）とは衝突しうる。どちらを採るかは、テスト容易性とのトレードオフで決める。
 
-根拠: 推論（cycle-301。`Date.now()` の仕様からの演繹。端末時刻を戻す実測はしていない）。
+根拠: 推論（`Date.now()` の仕様からの演繹。端末時刻を戻す実測はしていない）。
 
 ## 7. 画面が入れ替わる瞬間の誤タップは、座標が動くことが原因ではない
 
@@ -149,85 +135,7 @@
 
 §4 の smooth スクロールの話と矛盾しない。ここで測ったのは「下に現れた結果へ向かう短い移動」で、移動の有無は結果を変えなかった。§4 が問題にしているのは「数画面ぶんの長い移動」で、そこでは**動いている時間そのもの（約 800ms）**が不安定な窓になる。効くのは「動くかどうか」ではなく「**入れ替わった先の画面が、来訪者が次に触るまでに静止して視界に入っているか**」である。
 
-根拠: 実測（cycle-301。ビューポートと入力の種類は記録に無い）。`prefers-reduced-motion: reduce`（＝`scrollIntoView` が即時になり座標が動かない）で対照を取ると、離脱は **4/4** と通常の 3/4 より**むしろ多かった**。
-
-## 8. Chromium はタップの点を近くの押せるものへ寄せる。寄る範囲は触れた面の大きさで決まり、面の作り方はページにタッチの受け手があるかで変わる
-
-Chromium は、タップの点の真下の要素をそのまま当たりにせず、点を中心にした触れた面と交わる押せるものを探し、いちばん点数の良いものへ点を寄せる（touch adjustment）。
-
-- **押せるもの**: click かマウスの動きに応える要素、マウスでフォーカスできる要素（iframe を除く）、`:hover`・`:active` で見た目が変わる要素（自分か子や兄弟の見た目が変わるもの）。`tabindex="-1"` の見出しや、`:hover` の線を持つだけの箱も入る。
-- **面**: 面は押した点を中心にした矩形で、Blink が辺を 20〜32 dip に収め、端末の倍率を掛けて画面のつまみの拡大の倍率で割り、ページの座標に直す。面は2つある。
-  - **tap の面**: ブラウザの gesture の組み立てが、受け手の有無にかかわらず tap ごとに作る。触れた面の半径（`radiusX`・`radiusY`）の大きいほうの2倍を一辺にした正方形を、端末の種類ごとの幅に収める。Android は 20〜32 dip に収める。Linux のデスクトップは Aura の設定を使い、25 dip より小さければ 25 dip に広げ、上は収めない。
-  - **`pointerdown` の面**: 横 2×radiusX・縦 2×radiusY の矩形で、`radiusX` と `radiusY` を違えて渡せば横と縦で幅が違う。
-- **どちらの面で寄せるか**: ページにタッチの受け手があるかで決まる。
-  - **受け手があるページ**: `touchstart` は描画の側の主の処理まで届き、Blink は `pointerdown` を出す前に、`pointerdown` の面で点を寄せて覚える。続く tap は、覚えた点が tap の面の中にあれば、覚えた点をそのまま当たりにする。tap の面はどの半径でも `pointerdown` の面を含むので、覚えた点はいつも中に入り、寄せは `pointerdown` の面で決まる。受け手があるとみなされるのは、ページのどこかに `touchstart`・`touchmove` の passive の受け手か、`pointerdown` などの pointer の受け手か、`touchend`・`touchcancel` の受け手があるとき（受け手の要素の外を押しても同じ）と、passive でない `touchstart`・`touchmove` の受け手の要素の上を押したときである。`click`・`mousedown` の受け手は数えない。
-  - **受け手が無いページ**: `touchstart` は描画の側の合成の段で捨てられ、`pointerdown` での寄せは起きない。寄せるのは tap の面である。
-- **届く範囲**: 要素の押せる範囲の矩形が面と交われば候補になる。点から矩形までの横の隔たり dx と縦の隔たり dy が、それぞれ面の横と縦の半辺（辺の半分。つまみで拡大していなければ CSS px で 10〜16）より小さければ届き、正方形の面なら斜めには点からの直線の距離で半辺の約 1.41 倍まで届く。直線の距離を半辺と比べると、横にも縦にも 9px 離れたもの（直線で約 12.7px）を、半辺 10px の面でも届くのに届かないと数え誤る。
-- **選び方**: 点から矩形のいちばん近い所までの距離の2乗を、面の半分の対角線の2乗で割った値と、1 から「面と重なる面積 ÷ 重なりうる最大の面積」を引いた値を足し、いちばん小さいものを選ぶ。点の真下の押せるものは、ふつう両方が 0 になって選ばれる。点は、選んだ要素の矩形の中にあればそのまま、外にあれば矩形と面の交わりの中心へ寄せる。
-
-二度押しを Chromium で測るときは、次のことに気をつける。
-
-- **隔たりは押せる範囲の箱で測る**: 当たりを取るのは、ヒットテストで当たる箱である。`::after` を `position: absolute; inset: 0` で広げて押せる範囲を行に広げた選択肢（`data-hit-area="after"`）では、押せる範囲は位置を決めた行（`li`）の内側の箱（padding box）で、行の `getBoundingClientRect()` の矩形とは違う。行の下の罫線 1px は押せる範囲に入らず、行の矩形で測ると、点が行の下にあるときの dy が 1px 小さく出る。dx・dy は、行の矩形から罫線の幅（`getComputedStyle` の `border-*-width`）を引いた箱で測る。
-- **寄せる先の候補は、道具が集める押せるものより広いことがある**: 測りの道具が `a[href]`・`button`・入力などの選び方で押せるものを集めると、`tabindex="-1"` の見出しや結果の箱、`:hover` で見た目が変わる箱のような、Chromium の候補（上の「押せるもの」）に入るものが漏れる。それが点により近ければ、Chromium はそちらへ寄せうるのに、道具の記録では「最も近い押せるもの」が別のものになる。道具の候補を Chromium の候補と違えるときは、どこが狭いかを記録の読み方に書く。
-- **このコンテナの道具の押しの面**: このコンテナ（Linux）の Chromium で CDP の `Input.dispatchTouchEvent` の押し（`radiusX`・`radiusY` を渡さなければ既定は 1）と Playwright の `touchscreen.tap`（`x`・`y` だけを渡す）を使うと、面はページに受け手があるかで変わる。
-  - 受け手があるページでは、辺は 2×radiusX と 2×radiusY を 20〜32 dip に収めたもので、半径を渡さない押しと Playwright の tap は一辺 20 dip（半辺 10px）、`radiusX/Y` 12 では半辺 12px、16 では半辺 16px になる。
-  - 受け手が無いページでは、一辺は 2×max(radiusX, radiusY) を 25〜32 dip に収めたもので、半径を渡さない押しと Playwright の tap は一辺 25 dip（半辺 12.5px）になる。
-  - 測りの道具が自分でページに受け手を置くと、受け手の無いページも受け手のあるページに変わり、測る面が変わる。受け手の無いページの面を測りたいときは、道具の側で受け手を置かない。このサイトの診断のページは、React DOM がルートに `touchstart`（passive）と `pointerdown` の受け手を置くので、道具が受け手を置いても置かなくても受け手のあるページである。
-- **Android の端末との比べ**: Android の Chrome は指の触れた面の大きさを渡すので、面は一辺 20〜32 dip（半辺 10〜16px）になる。受け手があるページでは、半径を渡さない道具の押しは、Android の端末のいちばん小さい面（半辺 10px）と同じ幅で寄せられる。そのため、押せるものに寄るかどうかで見ると、道具の押しの結果は Android の端末と一つの向きにしか外れない。道具で寄った押しは、点から押せるものまでの max(dx, dy) が 10px より小さく、Android のどの触れ方でも押せるもののどれかに届いて寄る（面が大きいと候補が増え、重なりの割合も変わるので、寄る先は面で変わりうる）。「道具では寄ったが 10px 以上」の件はつくりの上で起きず、確かめるのは「道具では寄らなかったが 16px より小さい」件（Android の大きい触れ方では寄りうる）だけである。受け手が無いページを測るときは、道具の面が半辺 12.5px になり、10〜12.5px の件が逆の向きに外れる。
-- **寄せと落ち先が決まる時と、隔たりを取る時**: 寄せと落ち先がどの時の組みで決まるかは、受け手の有無で違う。
-  - 受け手があるページでは、点を寄せるのは2打目の `pointerdown` を出す前（指が触れた時）の組みで、落ちる要素は、指を離した時（tap の時）の組みで、寄せた点の真下で決まる。触れてから離すまでに押せるものが寄せた点の下から動けば、押せるものの近くを押していても落ちない。
-  - 受け手が無いページでは、寄せも落ちる要素も、指を離した時の組みで決まる。
-  - 実際の指は触れてから離すまでに時間がかかり、出の動き（`translateY` で寄ってくる `fadeIn` など）や字の読み込みでの組み直しの最中なら、そのあいだに組みが動きうる。道具の押しは触れと離しを続けて送るので、2つの時はほぼ同じになる。
-  - マウスと hover を持つペンは、`mousedown` が押し下げの時に届き、押し下げた的が離すまでに DOM から外れると、Chromium は `click` を出さない。指の押しのように、押し下げのあとに入れ替わった新しい画面のものへ `click` が落ちることは無い。
-  - dx・dy は、2打目の `pointerdown` の `window` の捕捉の段階の受け手で、その時の組みから取る。同じ所に置いた受け手は置いた順に走るので、道具がこの受け手をページの読み込みの前に置けば（Playwright の `addInitScript` など）、寄せたすぐあとに最初に走る受け手になり、ページの受け手が組みを変える前の、寄せに使われた組みが取れる（この受け手を置くと、ページは受け手のあるページになる）。画面の切り替えのあとの最初のフレームで取ると、出の動きや組み直しのぶん寄せに使われた隔たりとずれ、10px を超える記録で寄った押しが出る。
-- **Android の端末での落ち先の見積もり**: 形は2つある。(a) どの押しでも、点から押せるものまでの dx と dy を記録し、道具の面で落ちた先を、Android の最小の面（半辺 10px）と最大の面（半辺 16px）の届く範囲と突き合わせる。測りの量は増えない。(b) `radiusX`・`radiusY` に 16 を渡した押しを並べ、最大の面での落ち先をじかに見る。測りの量が倍になる。(a) で判断が決まるときは (a) を使い、(b) は (a) で届く範囲の境目にある件を確かめるときに使う。
-- **点をずらした押し**: 指のずれを模して点をずらした押しの落ち先は、ずれに、道具の面での寄せを重ねた結果である。ずれだけの効果を見たいときは、ずらした点から押せるものまでの dx と dy も記録する。
-- iOS の Safari は WebKit の別の調整を持ち、このコンテナでは測れない。
-
-根拠: 確認と実測（cycle-320）。ソースは Chromium のタグ `153.0.8010.12` で確かめた。
-
-- 道具の押しが gesture になるまで: `content/browser/devtools/protocol/input_handler.cc` は `radiusX`・`radiusY` を `GetRadiusX(1.0f)`・`GetRadiusY(1.0f)` で読み、押しを `TouchEmulator`（`kInjectingTouchEvents`・`GestureProviderConfigType::CURRENT_PLATFORM`）に渡す。`content/browser/renderer_host/input/touch_emulator_impl.cc` の `HandleEmulatedTouchEvent` は、受け手の有無にかかわらず、押しを自分の gesture の組み立てに通して gesture を作り、押しそのものは `ForwardEmulatedTouchEvent` で描画の側へ送る。
-- 受け手の有無で `touchstart` が主の処理に届くか: ブラウザの側の `components/input/passthrough_touch_event_queue.cc` は、`SkipTouchEventFilter`（`third_party/blink/renderer/platform/runtime_enabled_features.json5` で `stable`）が有効なので、受け手が無くても `touchstart` を描画の側へ送る。描画の側の `third_party/blink/renderer/platform/widget/input/input_handler_proxy.cc` の `HitTestTouchEvent` は、点が受け手の領域に無く、ページの `kTouchStartOrMove` の受け手の性質が `kNone`・`kBlocking` なら `DROP_EVENT` で捨て、`kPassive`・`kBlockingAndPassive` なら主の処理へ送る（合成の段でも捨てずに送る形 `browser_and_renderer` は、既定の設定では選ばれない）。同じファイルの `HandleTouchStart` は、`HitTestTouchEvent` が `DROP_EVENT` を返しても、ページの `kTouchEndOrCancel` の受け手の性質が `kNone` でなければ `DID_NOT_HANDLE_NON_BLOCKING` にして主の処理へ送る。`third_party/blink/renderer/core/frame/event_handler_registry.cc` は、`touchstart`・`touchmove` を `kTouchStartOrMove` に、`touchend`・`touchcancel` を `kTouchEndOrCancel` に分け、pointer の受け手を `kTouchStartOrMove` の passive に数える。`mousedown`・`click` はどちらにも入らない。
-- `pointerdown` での寄せ: `third_party/blink/renderer/core/input/pointer_event_manager.cc` の `ShouldAdjustPointerEvent`（タッチの primary の `pointerdown`）と `AdjustPointerEvent`（`pointer_event.width`・`height` を `GetHitTestRectForAdjustment` に渡し、`BestNodeForHitTestResult` で寄せ、`CacheTouchAdjustmentResult` で覚える）。`third_party/blink/common/input/web_pointer_event.cc` は、タッチの点の `width` を `radius_x * 2`、`height` を `radius_y * 2` にする。`third_party/blink/renderer/core/input/event_handler.cc` の `HitTestResultForGestureEvent` は、`GestureCorrespondsToAdjustedTouch`（`GestureTapDown` の `unique_touch_event_id` が覚えた押しの id と同じで、覚えた点が tap の面の中にあること）が真なら覚えた点で点の当たりを取り、偽なら tap の面で矩形の当たりを取る。
-- tap の gesture の面: `content/browser/renderer_host/input/motion_event_web.cc` の `GetTouchMajor` は `2 * max(radius_x, radius_y)`。`ui/events/gesture_detection/gesture_provider.cc` の `GetBoundingBox` は、tap では押し始めの点（`tap_down_point_`）を中心に、一辺 `max_diameter_before_show_press_`（touch major の最大）の正方形を作り、指（`FINGER`・`UNKNOWN`）の押しでは `ClampBoundingBox` が `min_gesture_bounds_length`・`max_gesture_bounds_length` で横と縦を同じく収める。`ui/events/BUILD.gn` は Android で `gesture_configuration_android.cc`（`kMinGestureBoundsLengthDips = 20.f`・`kMaxGestureBoundsLengthDips = 32.f`）、Aura で `gesture_configuration_aura.cc`（`set_min_gesture_bounds_length(default_radius())`）を使い、`gesture_configuration.h` は `default_radius_ = 25`・`max_gesture_bounds_length_ = 0`（収めない）。`ui/events/blink/blink_event_util.cc` は、その正方形の幅と高さを `data.tap.width`・`data.tap.height` に入れて Blink に渡す。
-- Blink の側の収め方・候補・選び方: `third_party/blink/renderer/core/page/touch_adjustment.cc`（`kMaxAdjustmentSizeDip(32)`・`kMinAdjustmentSizeDip(20)`、`GetHitTestRectForAdjustment` の `ShrunkTo`・`ExpandedTo`、`NodeRespondsToTapGesture`（`WillRespondToMouseClickEvents`・`WillRespondToMouseMoveEvents`・`IsMouseFocusable`、`ChildrenOrSiblingsAffectedByActive`・`ChildrenOrSiblingsAffectedByHover`、`AffectedByActive`・`AffectedByHover`）、`HybridDistanceFunction`、`SnapTo` の `bounds.Intersects(touch_area)` と交わりの中心）と、`event_handler.cc`・`pointer_event_manager.cc`（点から大きさの半分を引いた所を左上にした `hit_rect_size` の矩形で当たりを取ること）で確認した。
-- React DOM がルートに受け手を置くことは、Next.js に同梱の `react-dom` の `listenToAllSupportedEvents`（`touchstart`・`pointerdown` を含む全てのイベントをルートの入れ物で受け、`touchstart` は passive にする）で確認した。
-- CDP の `radiusX`・`radiusY` の既定の 1 は `third_party/blink/public/devtools_protocol/domains/Input.pdl` の定義、Playwright が面の大きさを渡さないことは `playwright-core` 1.61.1 の `Input.dispatchTouchEvent` の呼び出しで確認した。
-- 小さなページでの届く境は実測（Chrome for Testing 153.0.8010.12（`/opt/pw-browsers/chromium`、`chromium-1243`）の headless、800×600、`hasTouch: true`。`setContent` で置いた左上 (300, 100)・100×40 のボタンの縁から離した点を CDP の `Input.dispatchTouchEvent` で押し、`click` の的と座標を取った。Playwright の `touchscreen.tap` は、受け手を置かないページと `document` に `pointerdown` を置いたページで測った）。
-  - 受け手が無いページ（`document` に `click` か `mousedown` の受け手だけを置いたページ、ボタンから離れた 50×50 の箱に passive でない `touchstart` か `touchmove` の受け手を置いたページも同じ）: 半径を渡さない押しと Playwright の tap は dy 12 まで寄り、12.5 で寄らなかった。`radiusX/Y` 12 も dy 12 まで寄り 12.5 で寄らず、16 は dy 15.5 まで寄り 16 で寄らなかった。`radiusX` 16・`radiusY` 1 は dy 15.5 まで寄り、`radiusX` 1・`radiusY` 16 は dx 10.5 でも寄った（どちらも正方形の面）。斜め（渡さない押し）は dx = dy = 12 で寄り、13 で寄らなかった。
-  - 受け手があるページ（`window` に passive の `touchstart`、`document` に `pointerdown`・passive の `touchmove`・passive でない `touchend`、ボタンから離れた 50×50 の箱に `pointerdown` か `touchcancel`、ボタンを包む要素に passive でない `touchstart` か `touchmove` の、どれでも同じ）: 半径を渡さない押しと Playwright の tap は dy 9.5 まで寄り、10 か 10.5 で寄らなかった。`radiusX/Y` 12 は dy 11.5 まで寄り 12 で寄らず、16 は dy 15.5 まで寄り 16 で寄らなかった。`radiusX` 16・`radiusY` 1 は縦に dy 9.5 まで寄って 10.5 で寄らず、横に dx 15.5 まで寄って 16 で寄らなかった。`radiusX` 1・`radiusY` 16 は横に dx 9.5 まで寄り 10.5 で寄らなかった（横と縦の半辺が 2×radiusX と 2×radiusY で別に決まる）。斜め（渡さない押し）は dx = dy = 9.5 で寄り、10.5 で寄らなかった。
-  - 寄せた座標は、どちらのページでも面とボタンの交わりの中心と合った（例: 受け手のあるページの dy 9.5 の点 149.5 は、半辺 10px の面 [139.5, 159.5] とボタン [100, 140] の交わりの中心 139.75 の 139 に寄った）。
-- 診断のページでの届く境も実測（cycle-320 のレビュー review-t5a-7a-1-2.md。同じブラウザの headless で、本番ビルドの science-thinking を 375×550・`hasTouch: true` で開き、1問目の最後の選択肢の行の下端から離した点を CDP の `Input.dispatchTouchEvent` で押した）。押せる範囲（行の下の罫線 1px を除いた箱）の下端から、半径を渡さない押しは 9.05px で寄り 10.05px で寄らず、`radiusX/Y` 16 は 15.05px で寄り 16.05px で寄らなかった。寄せた y は半辺 10px の面と押せる範囲の交わりの中心と合い、半辺 12.5px の面とは合わなかった。`document.elementFromPoint` は、行の下端から 0.5px 上で `LI`、1.5px 上で `BUTTON` を返した。
-- 寄せと落ち先が決まる時は実測（同じブラウザ・同じボタンのページで、`touchStart` を送ってから `touchEnd` を送るまでのあいだにボタンの `top` を変えた）。
-  - 受け手が無いページ: dy 14（触れた時の組みでは届かない）の点は、動かさなければ `BODY` に落ち、離す前にボタンを 5px 下げると `BUTTON` に寄った（y 143）。dy 9.5 の点は、動かさなければ `BUTTON` に寄り、離す前にボタンを 3px 上げると `BODY` に落ちた。
-  - 受け手があるページ（`document` に `pointerdown`）: dy 9.5 の点は y 139 に寄せられ、離す前にボタンを 3px 上げると、y 139 のまま `BODY` に落ちた。dy 14 の点は、離す前にボタンを 5px 下げて届く所に来ても `BODY` に落ちた（y 154）。dy 5 の点は y 137 に寄せられ、ボタンを 3px 下げても 137 がボタンの中に残るので `BUTTON` に落ちた。
-- 押し下げと離しのあいだに画面が入れ替わったときの落ち先も実測（同じブラウザの headless で、本番ビルドの character-personality を 375×800 で開いた）。`hasTouch: true` で、答えのタップ（CDP の `touchStart`・`touchEnd`）の 60ms あとに同じ点に触れ、200ms 触れたまま離すと、答えを見せる 150ms のあとに次の問が出てから離した2打目の `click` は、次の問の選択肢のボタンに届いた。マウス（`hasTouch: false`、Playwright の `mouse.down`・`mouse.up`）で同じ間合いにすると、`window` の捕捉の段階の受け手に `click` は1つも届かなかった（押し下げた的は答えた問の行で、次の問が出て DOM から外れた）。
-- 受け手の走る順も実測（同じブラウザ・同じボタンのページで、ボタンの中を押した）。道具の `window` の捕捉の段階の `pointerdown` と `touchstart` の受け手を `addInitScript` で読み込みの前に置き（ページは `page.route` で返して開いた）、ページがボタンを 10px 下げる `pointerdown` の受け手を置くと、`document` に置いたときも `window` の捕捉の段階に置いたときも、道具の `pointerdown` は動かす前の top 100 を、`touchstart` は動かしたあとの top 110 を読んだ。ページを `setContent` で開き、道具の受け手を読み込みのあとにページの `window` の捕捉の段階の受け手より遅れて置くと、道具の `pointerdown` も 110 を読んだ。
-- 最初のフレームで取った隔たりが寄せとずれることも実測（cycle-320 のレビュー review-t5a-7a-1-2.md。問のカードに `fadeIn 0.3s`（`translateY(8px)` から 0）がある版で、最初のフレームの記録の隔たりが 10px を超えるのに次の問の選択肢に寄った押しが 15 あった）。
-- Android の Chrome が指の面の大きさを渡して実機で半辺 10〜16px の範囲で寄ることは、上のソースからの推論で、実機では測っていない。
-
-## 9. 互換のマウスの事象は押しの順に出るが、タッチでは次の押しの `pointerdown` より遅れて届きうる
-
-押しの `mousedown`・`mouseup`・`click`（互換のマウスの事象）を、その押しの `pointerdown` と結ぶときの事実。
-
-- **出る時**: マウスと hover を持つペンは、`mousedown` が `pointerdown` のすぐあとに、`mouseup` と `click` が `pointerup` のすぐあとに出る。タッチは、離した（tap と取られた）あとに `mousedown`・`mouseup`・`click` をまとめて出す。
-- **タッチの速い二度押し**: 1打目を離したすぐあとに2打目が触れると、2打目の `pointerdown` が1打目の `mousedown` と `click` より先に届く。2打目がすぐ離れると、2打目の `pointerup` まで先に届く。「いちばん新しい `pointerdown` の押しに、次の `mousedown` と `click` を結ぶ」と、1打目の `click` を2打目の押しに結んでしまう。「`click` の時に離し終えている押しのいちばん新しいものに結ぶ」も、2打目の離しまで先に届いた二度押しで同じく誤る。
-- **順は崩れない**: 互換の事象は押しの順に出る（1打目の組が出てから2打目の組が出る）。まだ `click` を受けていない押しを押し下げの順に並べて覚え、いちばん古い押しに結べば、速い二度押しは正しく結べる。ただし、下の「`click` を受けない押し」が並びに残ると、順だけでは次の押しの事象をそれに結ぶ。
-- **Chromium の `click` は押しの番号を持つ**: Chromium の `click` は `PointerEvent` で、その押しの `pointerType` と `pointerId` を持つ。番号は型をまたいで重ならない。マウスはいつも 1、ペンは初めて使った時に付いた番号を押しを分けても使い続け、タッチは押しごとに新しい番号になる。そのため、ペンでは `click` を受けずに残った押しと次の押しが同じ番号を持ち、番号だけで結ぶと次の押しの `click` を残った押しに結ぶ。キーボードと `element.click()` の `click` は `pointerId` が -1 で、`detail` が 0。`mousedown` は `MouseEvent` で番号を持たない。
-- **互換の事象の点は押しの点の近くにある**: Chromium のタッチの `mousedown` と `click` の座標は、タッチの調整で寄せた点（§8）で、寄せは縦と横のそれぞれで触れた面の半辺（10〜16px）の中に収まる。真下に押せるものがある押しでは、`pointerdown`・`pointerup` の点と 1px 未満で重なった。番号で結べない事象は、押し下げか離しの点の近い押しに結べば、別の点に残った押しを外せる。
-- **WebKit の `click` の型と番号は押しと合うとは限らない**: Safari は 18.2 から `click` を `PointerEvent` で出すが、タッチのタップの `click` の `pointerType` が `"mouse"` になる不具合が報告されている（[WebKit Bug 282988](https://bugs.webkit.org/show_bug.cgi?id=282988)。仕様は元の押しと同じ `pointerId` と `pointerType` を求める）。直し（288873@main）は退行で戻され、2026-01-16 の更新の時点でも REOPENED のままである。`pointerId` も押しの番号と違うかは、報告に書かれていない。番号で結ぶのは `pointerType` が押しと合う `click` だけにし、ほかは点と順で結ぶ。
-- **`click` を受けない押し**: 引いて送りになった押しは `pointercancel` で終わり、互換の事象を出さない。2本の指で触れた押しは、1本目（主のポインタ）の `pointerup` のあとも互換の事象を出さず、`pointercancel` も出さない。触れたまま 1 秒置いてから離した押しは、`mousedown` と `click` を出した。マウスと hover を持つペンは、押しの的が離すまでに DOM から外れると、`pointerup` と `mouseup` は届くが `click` を出さない（§8）。この2つは離しに続けて `click` まで出し終えるので、次の押し下げまでに `click` を受けていない押しは、もう `click` を受けない。タッチは離したあとに互換の事象を出し、速い二度押しでは次の押し下げのほうが先に届くので、次の押し下げでは見分けられない。iOS の Safari は、押せない要素（click の受け手も `cursor: pointer` も持たない字）へのタップに `mousedown` と `click` を出さないことが古くから知られているが、いまの版では確かめていない。並びで覚えるときは、こうした押しを外さないと、次の押しの `click` を結び損なう。点で絞っても、同じ点に残った押しとは見分けられない。そうした押しに結んだ `click` の押しを、その `click` が切り替えた画面の守りの起点にすると、起点が来訪者の押しより前にずれ、時間の窓が早く閉じる。同じ点に残った押しは来訪者の押しより前に離しているので、起点には `click` の点の近くでいちばん新しく離した押しを使えば前にずれない（2打目の離しまで先に届いた二度押しでは2打目になり、窓は後ろへ延びる側にずれる）。
-- **iOS の Safari の互換の事象の出し方は確かめていない**: このコンテナには WebKit が無く、iOS の Safari の `click` の型と番号、押せない字へのタップに互換の事象を出すか、タッチの調整の幅は、どれも測っていない。一次資料は上の WebKit Bug 282988 だけである。
-- **hover を持たないペンの番号と事象の順は確かめられない**: CDP でペンを送れるのは `Input.dispatchMouseEvent` の `pointerType: "pen"` だけで、これはマウスと同じ経路を通る hover を持つペンになる（`Input.dispatchTouchEvent` は `pointerType` を持たない）。hover を持たないペン（iPad の Apple Pencil・hover を持たない Android のペン）が押しを分けて番号を変えるか、互換の `mousedown` を離しの前に出すか後に出すかは、このコンテナでは測れない。
-
-根拠: 実測（cycle-320。Chrome for Testing 153.0.8010.12（`/opt/pw-browsers/chromium`、`chromium-1243`）の headless、375×550、`hasTouch: true`・`isMobile: true`。`setContent` で置いたボタンを CDP の `Input.dispatchTouchEvent` で押し、`window` の捕捉の段階で事象の並びを記録した）。
-
-- 0ms の二度押し（1打目の `touchStart`・`touchEnd` の返事を待たずに2打目の `touchStart` を送り、200ms 触れたまま離した）: `pointerdown`(1)・`pointerup`(1)・`pointerdown`(2)・`mousedown`(detail 1)・`mouseup`・`click`(pointerId 1打目)・…・`pointerup`(2)・`mousedown`(detail 2)・`mouseup`・`click`(pointerId 2打目)の順に届いた。3打を続けて送ると、3つの `pointerdown`・`pointerup` のあとに、3つの押しの組が押しの順に届いた。返事を待たずに、1打目の `touchStart` から 30ms で `touchEnd`、すぐに2打目の `touchStart` と `touchEnd` を送ると、`pointerdown`(1)・`pointerup`(1)・`pointerdown`(2)・`pointerup`(2)・`mousedown`(detail 1)・`click`(1打目)・`mousedown`(detail 2)・`click`(2打目)の順に届いた（3回中3回）。1打目の離しから 100ms・150ms 空けて2打目に触れ、50〜80ms 触れて離した押しは、1打目の `pointerup` の受け手で主の糸を 300ms・500ms 塞いでも、1打目の組が2打目の `pointerdown` より先に届いた。
-- 2本の指（1本目に触れ、2本目に触れ、2本目・1本目の順に離した）: 2つの `pointerdown`・`pointerup` だけが届き、`mousedown`・`click`・`pointercancel` は届かなかった。100px 動かした押しは `pointerdown` と `pointercancel` だけが届いた。触れてから 100ms・600ms・1000ms 置いて離した押しは、どれも `pointerdown`・`pointerup`・`mousedown`・`click` の順に届いた（375×550・`isMobile: true` の `setContent` のボタン）。
-- 本番ビルドの character-personality（375×800）の「はじめる」の 0ms の二度押しで、`pointerdown`・`pointerup` は (65.2, 349.5)、互換の `mousedown`・`click` は (65, 350) に届いた。
-- `element.click()` の `click` は `PointerEvent` で、`pointerId` が -1、`detail` が 0 だった。CDP の `Input.dispatchMouseEvent` に `pointerType: "pen"` を渡した押しは、`pointerdown` と `mousedown` が同じ時刻に、`pointerup`・`mouseup`・`click` が離した時刻に届いた。押しのあいだに押し下げた的を DOM から外すと、`pointerup`・`mouseup` は届き、`click` は届かなかった。
-- 375×800・`hasTouch: true` の `setContent` のボタンに、マウス・ペン・タッチ3回・ペン・タッチの順で押すと、`pointerId` はマウス 1、ペン 2・2、タッチ 3・4・5・6 だった。タッチ・ペン・タッチ・ペンの順では、タッチ 2、ペン 3、タッチ 4、ペン 3 だった。触れた面の半径 12px のタップをボタンの下端の 10px 下（(100, 160)、ボタンは y 100〜150）に送ると、`pointerdown`・`pointerup` は (100, 160)、`mousedown`・`click` は (100, 149) に届いた。
-- 本番ビルドの character-personality を同じ条件で開き、0ms の二度押しを「はじめる」と答えに送った。いちばん新しい押しだけを覚えて結ぶ守りでは、2打目が「はじめる」で 5 回中 3 回、答えで 35 回中 8 回、次の問に答えを入れた。押しを並びで覚えて古い順に結ぶ守り（`pressGuard.ts`）では、どちらも 0 回だった（同じ押しを 900ms 空けて送ると、どちらでも2打目が答えを入れた）。
+根拠: 実測（ビューポートと入力の種類は記録に無い）。`prefers-reduced-motion: reduce`（＝`scrollIntoView` が即時になり座標が動かない）で対照を取ると、離脱は **4/4** と通常の 3/4 より**むしろ多かった**。
 
 ---
 

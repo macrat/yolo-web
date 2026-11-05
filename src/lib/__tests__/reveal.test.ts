@@ -1,8 +1,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   chooseLanding,
-  chooseTouchClearLanding,
-  closestPressable,
   groupRevealDistance,
   measureGroupPlan,
   measureHeadedBoxPlan,
@@ -19,7 +17,6 @@ import {
   visibleRange,
   type LandingChoice,
   type TargetRect,
-  type TouchClearLandingChoice,
 } from "../reveal";
 
 function box(top: number, bottom: number): Element {
@@ -568,192 +565,6 @@ describe("chooseLanding", () => {
   });
 });
 
-describe("chooseTouchClearLanding", () => {
-  const point = { x: 100, y: 500 };
-  const wide = { min: -5000, max: 5000 };
-
-  /**
-   * 避けるものの押せる範囲（罫線を除いた矩形）を first・next で渡す。行の矩形（firstRows・nextRows）は、渡さなければ
-   * 押せる範囲と同じにする。
-   */
-  function choose(
-    choice: Pick<TouchClearLandingChoice, "plan"> & {
-      point?: TouchClearLandingChoice["point"];
-      first?: TargetRect[];
-      next?: TargetRect[];
-      firstRows?: TargetRect[];
-      nextRows?: TargetRect[];
-      scrollable?: TouchClearLandingChoice["scrollable"];
-    },
-  ): number {
-    const first = choice.first ?? [];
-    const next = choice.next ?? [];
-    return chooseTouchClearLanding({
-      plan: choice.plan,
-      point: choice.point === undefined ? point : choice.point,
-      avoidFirst: choice.firstRows ?? first,
-      avoidNext: choice.nextRows ?? next,
-      avoidFirstHitAreas: first,
-      avoidNextHitAreas: next,
-      scrollable: choice.scrollable ?? wide,
-    });
-  }
-
-  describe("範囲の中に、点から 16px 以上離せる送りがあるとき", () => {
-    describe("基準が送らないとき", () => {
-      const plan = { base: 0, span: { min: -200, max: 200 } };
-
-      test("基準で押せるものがどれも点から 16px 以上離れていれば送らない", () => {
-        expect(choose({ plan, first: [rect(516, 600)] })).toBe(0);
-      });
-
-      test("横と縦の隔たりがどちらも 16px より小さい斜めの押せるものは、直線の距離が 16px 以上でも離す", () => {
-        // 点 (100, 500) から、押せるものの左上の角 (112, 512) までは横 12・縦 12（直線の距離は約 17）。
-        const diagonal = { top: 512, bottom: 600, left: 112, right: 300 };
-        expect(chooseLanding({ ...landing(plan, [diagonal]) })).toBe(0);
-        // 上へ 4 送ると、縦の隔たりが 16 になる。
-        expect(choose({ plan, first: [diagonal] })).toBe(-4);
-      });
-
-      test("点から 16px 以上離れる送りのうち、基準にいちばん近いものを選び、それより遠ざけない", () => {
-        // 上へ 26 送ると上端が、下へ 36 送ると下端が、点から 16 離れる。
-        expect(choose({ plan, first: [rect(490, 520)] })).toBe(-26);
-      });
-
-      test("ほかの押せるものと次の問の選択肢の、どちらからも 16px 以上離れる送りを選ぶ", () => {
-        // 下へ 4 送ると、上のボタンの下端と下の選択肢の上端が、どちらも点から 16 離れる。
-        expect(
-          choose({
-            plan,
-            first: [rect(470, 488)],
-            next: [rect(520, 560)],
-          }),
-        ).toBe(4);
-      });
-
-      test("16px 以上かは、罫線を除いた押せる範囲で測る", () => {
-        // 行は 480〜545 で、下の罫線 1px を除いた押せる範囲は 480〜544。点は罫線の上（544.5）。
-        expect(
-          choose({
-            plan,
-            point: { x: 100, y: 544.5 },
-            first: [rect(480, 544)],
-            firstRows: [rect(480, 545)],
-          }),
-        ).toBe(16);
-      });
-    });
-
-    describe("基準が送るとき", () => {
-      test("先に避けるものから遠いことを、次の問の選択肢から遠いことより先にする", () => {
-        expect(
-          choose({
-            plan: { base: 50, span: { min: 0, max: 100 } },
-            first: [rect(380, 470)],
-            next: [rect(620, 700)],
-          }),
-        ).toBe(70);
-      });
-
-      test("次の問の選択肢から遠いことを、基準に近いことより先にし、隔たりは 100 で頭打ちにする", () => {
-        expect(
-          choose({
-            plan: { base: 50, span: { min: 0, max: 100 } },
-            next: [rect(620, 700)],
-          }),
-        ).toBe(20);
-      });
-
-      test("どれも同じなら基準のまま", () => {
-        expect(
-          choose({
-            plan: { base: 50, span: { min: 0, max: 100 } },
-            first: [rect(2000, 2100)],
-          }),
-        ).toBe(50);
-      });
-
-      test("遠さも、横と縦の隔たりの大きいほうで比べる", () => {
-        // 押せるものは点の左に 60 離れ、上に 30 + 送り だけ離れる。縦の隔たりが 100 に届くのは 70 送ったとき
-        // （直線の距離なら 50 で 100 に届く）。
-        expect(
-          choose({
-            plan: { base: 50, span: { min: 0, max: 100 } },
-            first: [{ top: 380, bottom: 470, left: 0, right: 40 }],
-          }),
-        ).toBe(70);
-      });
-    });
-  });
-
-  describe("範囲の中に、点から 16px 以上離せる送りが無いとき", () => {
-    test("chooseLanding の選び方をそのまま使い、選択肢は行の矩形で数える", () => {
-      // 押せる範囲 490〜520 も行 480〜530 も、±25 の中では点から 16 離せない。行の上端が点の下に出る送り（上へ
-      // 21）を選ぶ（押せる範囲で数えれば上へ 11 になる）。
-      const plan = { base: 0, span: { min: -25, max: 25 } };
-      expect(
-        choose({
-          plan,
-          first: [rect(490, 520)],
-          firstRows: [rect(480, 530)],
-        }),
-      ).toBe(-21);
-      expect(chooseLanding(landing(plan, [rect(480, 530)]))).toBe(-21);
-    });
-  });
-
-  test("キーボードで押して点が無ければ、基準のまま", () => {
-    expect(
-      choose({
-        plan: { base: 0, span: { min: -200, max: 200 } },
-        point: null,
-        first: [rect(490, 520)],
-      }),
-    ).toBe(0);
-  });
-
-  test("ページが送れる範囲で打ち切って範囲が空になれば、基準のまま", () => {
-    expect(
-      choose({
-        plan: { base: 100, span: { min: 50, max: 300 } },
-        first: [rect(560, 640)],
-        scrollable: { min: -1000, max: 30 },
-      }),
-    ).toBe(100);
-  });
-
-  /** chooseLanding に渡す、点 (100, 500) と先に避けるものだけの材料。 */
-  function landing(
-    plan: LandingChoice["plan"],
-    avoidFirst: TargetRect[],
-  ): LandingChoice {
-    return { plan, point, avoidFirst, avoidNext: [], scrollable: wide };
-  }
-});
-
-describe("closestPressable", () => {
-  afterEach(() => {
-    document.body.replaceChildren();
-  });
-
-  test("ボタンの中の字の上の的は、そのボタンにする", () => {
-    const button = document.createElement("button");
-    const face = document.createElement("span");
-    button.appendChild(face);
-    document.body.appendChild(button);
-    expect(closestPressable(face)).toBe(button);
-    expect(closestPressable(button)).toBe(button);
-  });
-
-  test("押せるものの上でない的と、要素でない的は null", () => {
-    const text = document.createElement("p");
-    document.body.appendChild(text);
-    expect(closestPressable(text)).toBeNull();
-    expect(closestPressable(window)).toBeNull();
-    expect(closestPressable(null)).toBeNull();
-  });
-});
-
 describe("revealLanding", () => {
   const plan = { base: 0, span: { min: -200, max: 200 } };
   const point = { x: 100, y: 500 };
@@ -796,16 +607,15 @@ describe("revealLanding", () => {
     expect(window.scrollBy).not.toHaveBeenCalled();
   });
 
-  test("切り替わった画面の押せるものを集め、点から 16px 以上離れる所へ送る", () => {
+  test("切り替わった画面の押せるものを集め、真下から外れる所へ送る", () => {
     const stage = place(document.createElement("div"), 300, 600);
     place(document.createElement("button"), 490, 520, stage);
     const link = document.createElement("a");
     link.href = "/faq";
     place(link, 2000, 2040);
     revealLanding(plan, point, { avoidNext: stage });
-    // 上へ 26 送ると、ボタンの上端が点から 16 離れる。
     expect(window.scrollBy).toHaveBeenCalledWith({
-      top: -26,
+      top: -11,
       behavior: "instant",
     });
   });
@@ -818,14 +628,10 @@ describe("revealLanding", () => {
     expect(window.scrollBy).not.toHaveBeenCalled();
   });
 
-  describe('押せる範囲を行へ広げた要素（data-hit-area="after"）は、行で避ける', () => {
-    /**
-     * 行（480〜545・幅 300。下に 1px の区切りの罫線を持ち、罫線の内側の押せる範囲は 480〜544）と、その中の面の箱
-     * （490〜520・左 8〜右 120）の選択肢。
-     */
+  describe('押せる範囲を行へ広げた要素（data-hit-area="after"）は、行の矩形で避ける', () => {
+    /** 行（480〜545・幅 300）と、その中の面の箱（490〜520・左 8〜右 120）の選択肢。 */
     function placeChoiceRow(hitArea: boolean): HTMLElement {
       const row = place(document.createElement("li"), 480, 545);
-      row.style.borderBottom = "1px solid";
       const face = document.createElement("button");
       face.getBoundingClientRect = () =>
         ({
@@ -843,34 +649,20 @@ describe("revealLanding", () => {
       return face;
     }
 
-    test("16px 以上離せるときは、罫線の内側の押せる範囲から 16px 離す", () => {
+    test("面の箱の下の、行の区切りの罫線の上の点は、真下にあると数えて外へ送る", () => {
       placeChoiceRow(true);
-      // 点は罫線の上（544.5）。押せる範囲の下端 544 から 16 離れるのは、下へ 16 送ったとき。
       revealLanding(plan, { x: 100, y: 544.5 });
       expect(window.scrollBy).toHaveBeenCalledWith({
-        top: 16,
+        top: 1,
         behavior: "instant",
       });
     });
 
-    test("短い名前の右の空きの点も、行の範囲にあると数えて離す", () => {
+    test("短い名前の右の空きの点も、真下にあると数えて外へ送る", () => {
       placeChoiceRow(true);
       revealLanding(plan, { x: 250, y: 500 });
       expect(window.scrollBy).toHaveBeenCalledWith({
-        top: -36,
-        behavior: "instant",
-      });
-    });
-
-    test("16px 以上離せないときは、罫線を含む行の矩形で、点の真下から外す", () => {
-      placeChoiceRow(true);
-      // ±10 の中では押せる範囲から 16 離せない。罫線の上の点を行の真下から外すのは、下へ 1 送ったとき。
-      revealLanding(
-        { base: 0, span: { min: -10, max: 10 } },
-        { x: 100, y: 544.5 },
-      );
-      expect(window.scrollBy).toHaveBeenCalledWith({
-        top: 1,
+        top: -21,
         behavior: "instant",
       });
     });
@@ -886,9 +678,8 @@ describe("revealLanding", () => {
     vi.stubGlobal("scrollY", 0);
     place(document.createElement("button"), 490, 520);
     revealLanding(plan, point);
-    // 上へ 26 送ればボタンの上端が点から 16 離れるが、ページの頭より上なので、下へ 36 送って下端を離す。
     expect(window.scrollBy).toHaveBeenCalledWith({
-      top: 36,
+      top: 21,
       behavior: "instant",
     });
   });

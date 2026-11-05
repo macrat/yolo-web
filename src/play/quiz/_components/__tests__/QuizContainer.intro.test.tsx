@@ -10,7 +10,6 @@
 import { test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
-import { questionPhrases } from "../../questionPhrases";
 import type { QuizDefinition, QuizMeta } from "../../types";
 
 // analytics.ts は window.gtag を直接呼ぶのでスタブを差し込む。送りの関数（window.scrollBy）を観察する。
@@ -89,7 +88,6 @@ function renderQuiz() {
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
-      questionPhrases={questionPhrases(quiz)}
       resultHeadings={{}}
       readingHeadings={{}}
     />,

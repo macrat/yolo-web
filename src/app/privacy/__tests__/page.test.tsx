@@ -111,7 +111,7 @@ test("見出しは書き手が分けた文節の切れ目でだけ折れる（DE
     ["情報の", "管理と", "安全管理措置"],
     ["個人情報の", "開示・", "訂正・", "削除"],
     ["プライバシー", "ポリシーの", "変更"],
-    ["お問い合わせ"],
+    ["お問い", "合わせ"],
   ];
   for (const phrases of headings) {
     expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
