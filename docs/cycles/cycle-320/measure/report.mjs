@@ -26,8 +26,8 @@
 //   ある回の名 runs。守りはこの押しを連続の押しと数えずに受けるので、守りで塞げない二度押しの2打目が次の問に落ちた件
 //   である（t5a-design.md 4-9 の「守りのあとの押し」）。数えるのは二度押しの2打目として送る押し方（same・d1）だけで、
 //   道具が守りの受ける側を試すために組んだ押し（読んでから答える read と、離す点を 120px 以上離す hold-out）は入らない。
-//   窓の守りの空振りでないことの対の押し（q の pair）も、道具が1打目から 900ms のあとに送る1度の押しで、二度押しの
-//   2打目ではないので入らない。
+//   窓の守りの空振りでないことの対の押し（q の pair）も入らない。t5a-design.md 8章の5 は窓のあとの数を D5 の 900ms の
+//   回から写すと決めており、対は2打目が働かなかった回にだけ送るので、その数は来訪者の頻度を表さないからである。
 // - fellFar10: タッチの同じ点の押しで、2打目が第1の組（first）か次の問の選択肢（next）に、点の真下でなく寄せで落ち、
 //   その組までの隔たりが 10px 以上だった押し（走査は押し、ほかは回）の数。隔たりは要約の n（D5 は2打目の点からの n2）
 //   の、点から押せる範囲までの max(dx, dy) で、2打目の pointerdown の時の組みで取るので、押し下げが切り替わる前の画面
@@ -722,6 +722,17 @@ function verdictsOf(directory, names) {
           continue;
         }
         if (d5) {
+          // 知識クイズの最後でない「次へ」の2打目が次の問に落ちた数（B-620 の材料。合否に入れない）。間隔とずれごとに、
+          // 診断の答えの d5-answer と同じ形で数える。300ms と 900ms の押しは、下で窓の守りの行（d5-inner・d5-outer・
+          // d5-after）にも数える。
+          if (kind === "next") {
+            const row = rowOf("d5-next", `${interval}|${offset}`, input, {
+              runs: 0,
+              next: 0,
+            });
+            row.runs++;
+            if (landed?.group === "next") row.next++;
+          }
           // 窓の中（300ms）の2打目。120px のずれは受ける側（d5-outer）、基本のずれ（10・20px）と 80px のずれは
           // 受けない側（d5-inner。decision-landing.md の「80px 以下」）。試した回はずれの直線の距離ごとに byShift に数える。
           // d5-inner の下限は 80px のずれの試した回で満たすので、守る的が無い組の見分けも 80px のずれの押しの組で行う
@@ -915,9 +926,12 @@ function verdictsOf(directory, names) {
     const missingSlugs = perSlug
       ? DIAGNOSIS_SLUGS.filter((slug) => !slugs.get(slug))
       : undefined;
-    const counted = !["d5-after", "d5-answer", "touch-border"].includes(
-      row.verdict,
-    );
+    const counted = ![
+      "d5-after",
+      "d5-answer",
+      "d5-next",
+      "touch-border",
+    ].includes(row.verdict);
     // d5-inner の下限は 80px のずれの試した回で数える（decision-landing.md の「D5 の2打目をずらす走査」。80px の
     // ずれは、境目から 16px 以上離した所で守りが受けないことを確かめる押しなので、基本のずれの試した回では満たさない）。
     const triedForLower =

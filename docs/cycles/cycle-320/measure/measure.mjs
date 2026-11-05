@@ -284,20 +284,20 @@ function timingsOf(options, slug, input) {
       options.op === "start" ||
       options.op === "last" ||
       (options.op === "answers" && knowledge);
-    // 害の確かめの組（plan-t5a7.md 2b の線 5。--modes で渡したときだけ測る）は、診断の答え→次の問（answers）と、
-    // 見せる間に押し下げる組は診断の最後の答え→結果（last）にも当てる。
     const diagnosisAnswers = options.op === "answers" && !knowledge;
     const diagnosisShown =
       !knowledge && (options.op === "answers" || options.op === "last");
-    const wanted = (mode) => !!options.modes?.includes(mode);
     for (const interval of intervals) {
       add(interval, ["0:0"]);
       if (aims && AIM_INTERVALS.has(interval)) add(interval, ["0:0"], "aim");
-      // マウスの2打目を detail 1（clickCount 1）で送る。
-      if (input === "mouse" && diagnosisAnswers && wanted("d1")) {
-        add(interval, ["0:0"], "d1");
-      }
+      // 診断の答え→次の問のマウスは、同じ間隔で2打目を detail 1（clickCount 1）でも送る（d1）。連続の押しの守りが
+      // 受ける2打目が次の問に落ちた数（B-620 の材料。t5a-measure.md 0章の「B-620 の材料と写す数」）を、条件7 の
+      // 範囲で出すためである。
+      if (input === "mouse" && diagnosisAnswers) add(interval, ["0:0"], "d1");
     }
+    // 害の確かめの組（plan-t5a7.md 2b の線 5。--modes で渡したときだけ測る）は、診断の答え→次の問（answers）と、
+    // 見せる間に押し下げる組は診断の最後の答え→結果（last）にも当てる。
+    const wanted = (mode) => !!options.modes?.includes(mode);
     // 読んでから答える押し: 答えの離しから READ_INTERVAL_MS のあとに、次の問の選択肢のうち点にいちばん近いものの
     // 中心を押す（タッチとマウス）。
     if (diagnosisAnswers && wanted("read")) {
