@@ -21,7 +21,7 @@ T5a-7 の残りは次のサイクルが行う。着地の作りを直し T5a-8 �
 - [x] knowledge の直し: Chromium の版の記述を確かめ方の形にし、タッチの調整の知見を、一次資料と実測に合う形で足す（T5a-7a-1 のレビュー第1回の指摘1・12、第2回の指摘1・2・9）
 - [x] 事故報告と再発防止: 終わっていないサイクルを範囲の決め直しで完了にしたことと、レビューを内部記録の正確さに使い続けたことを [incident-1.md](./incident-1.md) に書き、手順を直す
 - [x] 着地の作りの決め直し: 「はじめる」の2打目が選択肢に落ちる2つの型と、知識クイズの最後の「次へ」が結果の画面のリンクに寄せられる型を、t5a-design.md 8章の選択肢と余白を取る形から比べて決め、設計の文とコードを直してレビューに通す
-- [ ] 測りの道具に、決め直した作り（[decision-landing.md](./decision-landing.md)）に合わせる要件（窓の中の2打目が何も起こさないことの数え方・2つの版を回の名で突き合わせる比べ）を足してレビューに通す
+- [x] 測りの道具に、決め直した作り（[decision-landing.md](./decision-landing.md)）に合わせる要件（窓の中の2打目が何も起こさないことの数え方・2つの版を回の名で突き合わせる比べ）を足してレビューに通す
 - [ ] 着地の直しの害の確かめ: 直す前と後の版で試しの走りの全体を走らせ、ほかの操作に害が出ていないこと（診断の答え→次の問の、連続と数えられない速い押しと読んでから答える押しが前と同じに答えを入れる・守りを掛けた切り替わりで窓のあとと 100px の外の押しが働く・着地の送りが決めた所の外で変わらない・新しく出た画面の見出しと結果の名前が前と同じに読める・受けなかった押しが答えの入ったような形を残さない・語の選択が前と同じにできる。線は [plan-t5a7.md](./plan-t5a7.md) 2b）を確かめる
 - [ ] 測りの分け方と、記録が上限に収まるかの見積もりを、直した版（plan-t5a7.md 2a）の走りから決めてレビューに通す
 - [ ] T5a-7a-2: 6章 条件7（二度打ち）と device-triage.md D5 を基準の版と変更後の版で測り、t5a-measure.md に写してレビューに通す
@@ -97,7 +97,7 @@ T5a-7 の残りは次のサイクルが行う。着地の作りを直し T5a-8 �
 
 再発防止の手順の直し（[review-prevention.md](./review-prevention.md)〜[-3](./review-prevention-3.md)）は3回とも改善指示で、第1回の6件と第2回の1件は builder が直した。来訪者に届くものを変えない直しのレビューの3回目にあたるので、第3回の指摘1（3回目の指摘を直すか積むか）は直さずに B-795 に積んだ。第3回の指摘2（このサイクルの「実施する作業」から一度載った項目が消えていた）は、手順の外のこのサイクルの計画の欠けで、外れた件の判断・T5a-8・B-623 の行を一度載った範囲に戻した。PM が直して閉じた記録の指摘: 第2回の指摘2（description と冒頭の段落）。
 
-守りと着地のコード（758725fc ほか）は、[review-code.md](./review-code.md) で見せる間のタッチのすり抜け（重）と主でない押しの扱いが見つかって builder が直し、[review-code-2.md](./review-code-2.md) の押し直しの的と試験の2件、[review-code-3.md](./review-code-3.md) の語の選択の連続とペンの順の2件、道具の試しの走りで見つかった速い二度押しの click の取り違えも builder が直した。[review-code-4.md](./review-code-4.md)〜[-7](./review-code-7.md) の結び方（WebKit の click の番号・互換の事象を出さないタップ・Chromium のペン・残ったタップでずれる起点と経過）も builder が直し、[review-code-8.md](./review-code-8.md) で承認された（コードは dac2972e）。測りの道具は [review-measure.md](./review-measure.md) の指摘1〜14 を builder が直し、PM が要件の文を直した。害の線（plan-t5a7.md 2b）は [review-harm-lines.md](./review-harm-lines.md)〜[-4](./review-harm-lines-4.md) の4回とも改善指示で PM が直し、次は道具とあわせて試しの走りの記録で確かめる。
+守りと着地のコード（758725fc ほか）は、[review-code.md](./review-code.md) で見せる間のタッチのすり抜け（重）と主でない押しの扱いが見つかって builder が直し、[review-code-2.md](./review-code-2.md) の押し直しの的と試験の2件、[review-code-3.md](./review-code-3.md) の語の選択の連続とペンの順の2件、道具の試しの走りで見つかった速い二度押しの click の取り違えも builder が直した。[review-code-4.md](./review-code-4.md)〜[-7](./review-code-7.md) の結び方（WebKit の click の番号・互換の事象を出さないタップ・Chromium のペン・残ったタップでずれる起点と経過）も builder が直し、[review-code-8.md](./review-code-8.md) で承認された（コードは dac2972e）。測りの道具は [review-measure.md](./review-measure.md)〜[-8](./review-measure-8.md) の指摘を builder が直し、PM が要件の文（試した回・守る的が無い組・hold の範囲・境目の帯・B-620 の材料・条件7 の d1 ほか）を直して、[review-measure-9.md](./review-measure-9.md) で承認された（軽い3件は PM が直した）。害の線（plan-t5a7.md 2b）は [review-harm-lines.md](./review-harm-lines.md)〜[-4](./review-harm-lines-4.md) の4回とも改善指示で PM が直し、次は道具とあわせて試しの走りの記録で確かめる。
 
 回ごとの指摘と PM の判断の要約は [review-log.md](./review-log.md) にある。
 
