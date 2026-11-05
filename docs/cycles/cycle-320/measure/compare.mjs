@@ -12,21 +12,30 @@
 // 押し（X・S など。q の follow）は、もとの押しをほかの押しと同じくどの線にも入れたうえで、その切り替わりを、押しの
 // id に行き先を足した id（`<id>><行き先>`）と、種類 `<押しの種類>><行き先>`（`answer>question`・`answer>result`
 // など）の別の押し（切り替わりの写し。印は synthetic）として、着地の線（2・3・4・8）と分布に入れる。写しは、もとの
-// 押しが下の firstBlocked か border でも着地の線に入れる（着地の線が見るのは A″ のふるまいで、守りの帯と関わらない）。
+// 押しが下の firstBlocked でも着地の線に入れる（着地の線が見るのは A″ のふるまいで、守りの帯と関わらない）。
 // 直した版だけで決まる線（3・5・8）は、組にならなかった直した版の押しにも当てる。組にならなかった押しは、前の版が
 // 要る線（1・2・4・7）を読めなかった押しとして unmatched に出し、直した版の押しには落ちた先と働いたことと外れた回か
-// （線 1 と同じ外れ）を添え、外れた回を unmatchedOut に別に出す。次の押しは比べから外して別に出し、unmatched に
-// 入れない（片方の版にしか無い押しは、件に unmatched: true を持つ）。
+// （線 1 と同じ外れ）を添え、外れた回を unmatchedOut に別に出す。次の押しは、決めた線から外して別に出す（片方の版に
+// しか無い押しは、件に unmatched: true を持つ）。
 // - firstBlocked: 道具の1打目が守りに止められた押し（q の firstTook が 0）。q の previous（直前の切り替わりの起点から
 //   の差・隔たり・離しからの差・detail・起点の押しの種類）を records.mjs の guardBand で分け、block なら決めどおり
-//   （byDesign）、border なら境目の帯、accept か守りの無い起点なら害の線 5 の件にも数える。どの線にも数えない。
+//   （byDesign）、border なら境目の帯、accept か守りの無い起点なら害の線 5 の件にも数える。どの線にも数えず、
+//   unmatched にも入れない。
 // - border: 境目の帯の押し（guardBand が border。窓の守りは 650〜750ms か 84〜116px、タッチの連続の押しは離しから
 //   280〜320ms か起点から 650〜750ms か 84〜116px、マウスの連続の押しは detail 2 以上で 650〜750ms）。帯は押しの
-//   単位で当て、同じ回のほかの押しは線に入れる。どの線にも数えない。
+//   単位で当て、外すのは守りの判定で決まる線（1・5・7）だけで、着地の線（2・3・4・8）には入れる（着地は1打目が
+//   起こすもので、2打目が帯に入るかと関わらない）。2つの版を比べる線（1・7）は、どちらかの版で帯なら帯とし、直した
+//   版だけで決まる線 5 は、直した版の押しが帯かで決める。件には2つの版の帯（guard）を添える。直した版にしか無い帯の
+//   押しは unmatched に入れず、この件に unmatched: true を付ける。
 // - landingPointDiffers: 2つの版で着地に使った点が違う押し（5ea1ab89 はいちばん新しい click から、直した版は画面を
 //   切り替えた click から取る）。2・4 の比べから外す。
 // - unstable: 同じ版を同じ種で2回走らせて（--before-repeat・--after-repeat）、送り（sent と着地の [s0, 範囲, 選んだ
-//   着地]）が違った押しと、どちらかの回にしか無い押し（missing）。1回目の押しを 2・4・8 の比べから外す。
+//   着地]）が違った押しと、どちらかの回にしか無い押し（missing）。両方の回にあって送りが違った押しだけを 2・4・8 の
+//   比べから外す。2回目に無い押しは、着地が揺れた証しではない（走査の道が時間で分かれただけ）ので線に残し、着地の
+//   線の件に、2回目に無かった版（repeatMissing）を添える。
+// - reachMissing: 着地のあとの隔たり（reaches）がどちらかの版に無く、線 2 と reachFirst・reachNext の分布と、線 4 の
+//   still・far・farEdge を読めなかった押し（2打目が、1打目の着地のあとの最初のフレームより先に画面を替えた押し）の
+//   数。件は reachMissingPresses に出す。
 // - timingUnstable: 同じ版を同じ種で2回走らせて、落ちた先（landedOf の組）か働いたこと（q の worked）が変わった押し
 //   （時間で揺れる押し。間隔の揺れで、見せる 150ms の内か外か・1打目の互換の事象より先か後かが替わる）。どの線からも
 //   外さず、線 1 の件には、その押しの2回の結果を添える（timingUnstable）。
@@ -69,7 +78,7 @@
 //
 // 出力は1つの JSON で、--out に書いて 1MB を越えるときは、操作（start・answers・last・retry・select・keyboard と
 // D5 の各操作）ごとの `<出力の名>-<操作>.json` に件の一覧と分布を分けて書き、--out には、版と種と guardChecked と
-// emptySpanSame と、操作ごとのファイルの名（parts）を書く（carryover.md の「着地の直しの害の確かめ」）。分けても
+// emptySpanSame と reachMissing と、操作ごとのファイルの名（parts）を書く（carryover.md の「着地の直しの害の確かめ」）。分けても
 // 1MB を越えるファイルがあれば知らせる。
 
 import fs from "node:fs";
@@ -208,14 +217,16 @@ const outcomeOf = (press) => [landedOf(press)?.group ?? null, press.worked];
 
 /**
  * 同じ版を同じ種で2回走らせた置き場の比べ。送りが違った押しと、どちらかの回にしか無い押し（missing が、無かった
- * 回の second か first）を out.unstable に、落ちた先か働いたことが違った押しを out.timingUnstable に出し、1回目の
- * 押しのうち送りが違ったか2回目に無かった押しの鍵の集まり（landing）と、落ちた先か働いたことが違った押しの鍵から
- * 2回の結果への対応（timing）を返す。
+ * 回の second か first）を out.unstable に、落ちた先か働いたことが違った押しを out.timingUnstable に出す。返すのは、
+ * 1回目の押しのうち、両方の回にあって送りが違った押しの鍵の集まり（landing。2・4・8 から外す）と、2回目に無かった
+ * 押しの鍵の集まり（missing。線に残して印を添える）と、落ちた先か働いたことが違った押しの鍵から2回の結果への対応
+ * （timing）である。
  */
 function repeatDifferences(first, second, side, out) {
   const landing = new Set();
+  const missing = new Set();
   const timing = new Map();
-  if (!second) return { landing, timing };
+  if (!second) return { landing, missing, timing };
   const sameLanding = (a, b) =>
     a.sent === b.sent &&
     JSON.stringify(a.landing?.slice(0, 4) ?? null) ===
@@ -234,7 +245,7 @@ function repeatDifferences(first, second, side, out) {
           }
         }
         if (repeat && sameLanding(press, repeat)) continue;
-        landing.add(pressKey(side, name, k, id));
+        (repeat ? landing : missing).add(pressKey(side, name, k, id));
         out.unstable.push({
           ...where,
           side,
@@ -264,7 +275,7 @@ function repeatDifferences(first, second, side, out) {
       }
     }
   }
-  return { landing, timing };
+  return { landing, missing, timing };
 }
 
 /** 着地の入力（s0・打ち切った範囲・着地に使った点）の字。着地の記録が無ければ null。 */
@@ -478,6 +489,8 @@ function main() {
     landingPointDiffers: [],
     outsideSpanSame: [],
     emptySpanSame: 0,
+    reachMissing: 0,
+    reachMissingPresses: [],
     guardChecked: {},
     lines: {
       newOut: [],
@@ -504,6 +517,7 @@ function main() {
     ),
   ];
   const unstable = new Set(repeats.flatMap(({ landing }) => [...landing]));
+  const repeatMissing = new Set(repeats.flatMap(({ missing }) => [...missing]));
   const timing = new Map(repeats.flatMap(({ timing }) => [...timing]));
   const beforeInputs = landingInputIndex(before);
   // 組にならなかった押しの件に添える、前の版の同じファイルで着地の入力が同じ押し（無ければ undefined）。
@@ -579,11 +593,21 @@ function main() {
       const shift = Math.hypot(...offset.split(":").map(Number));
       const matchedBefore = new Set();
 
-      // 着地の線（3・8。前の版があれば 2・4 と分布も）。2打目の押しと、2打目が切り替えた画面の両方に当てる。
-      const landingLines = (id, where, a, p) => {
+      // 着地の線（3・8。前の版があれば 2・4 と分布も）。2打目の押しと、2打目が切り替えた画面の両方に当て、件には
+      // 同じ版の2回目に無かった版（repeatMissing）を添える。
+      const landingLines = (id, place, a, p) => {
         const unstableHere =
           unstable.has(pressKey("after", name, k, id)) ||
           (!!p && unstable.has(pressKey("before", name, k, id)));
+        const missingSides = ["before", "after"].filter(
+          (side) =>
+            (side === "after" || !!p) &&
+            repeatMissing.has(pressKey(side, name, k, id)),
+        );
+        const where = {
+          ...place,
+          repeatMissing: missingSides.length ? missingSides : undefined,
+        };
         const pointDiffers = !!p && landingPointDiffers(p, a);
         if (pointDiffers) {
           out.landingPointDiffers.push({
@@ -658,6 +682,14 @@ function main() {
           collect(operation, "before", "reachNext", rb[1]);
           collect(operation, "after", "reachFirst", ra[0]);
           collect(operation, "after", "reachNext", ra[1]);
+        } else if (shown && (a.synthetic || a.shown !== null)) {
+          // 隔たりの無い版がある押し（2打目が1打目の着地のあとの最初のフレームより先に画面を替えた押し）。切り替わらない
+          // 押し（語の選択の対。shown が null）は着地を持たないので数えない。
+          out.reachMissing++;
+          out.reachMissingPresses.push({
+            ...where,
+            sides: [!rb && "before", !ra && "after"].filter(Boolean),
+          });
         }
         const comparable = !pointDiffers && !unstableHere;
         // 2. 離れが 16px を割った押し。
@@ -745,20 +777,22 @@ function main() {
           }
           continue;
         }
+        // 境目の帯（守りの判定で決まる線 1・5・7 から外す。着地の線には入れる）。2つの版を比べる線 1・7 は、どちらかの
+        // 版で帯なら帯、直した版だけで決まる線 5 は、直した版の帯で決める。
         const bandAfter = bandOf(a, input);
         const bandBefore = p ? bandOf(p, input) : null;
-        if (bandBefore === "border" || bandAfter === "border") {
+        const borderEither = bandBefore === "border" || bandAfter === "border";
+        if (borderEither) {
           out.border.push({
             ...where,
+            guard: [bandBefore, bandAfter],
             downGap: [p?.downGap ?? null, a.downGap],
             releaseGap: [p?.releaseGap ?? null, a.releaseGap],
             downDistance: [p?.downDistance ?? null, a.downDistance],
             worked: [p?.worked ?? null, a.worked],
             ...onlyAfter,
           });
-          continue;
-        }
-        if (!p) {
+        } else if (!p) {
           // 前の版が無いので線 1 に入らない。外れた回（線 1 と同じ外れ）かを添え、外れた回は別の一覧にも出す。
           const item = {
             ...where,
@@ -777,7 +811,8 @@ function main() {
         }
         landingLines(id, where, a, p);
 
-        // 5. 守りが受けると決めた押しを止めた押し（直した版だけで決まる。試した押しだけ）。
+        // 5. 守りが受けると決めた押しを止めた押し（直した版だけで決まる。試した押しだけ。直した版で帯の押しは accept で
+        // ないので入らない）。
         if (bandAfter === "accept") {
           const stat = check(
             `${acceptSetOf(a, input)}|${transitionOf(a.kind)}|${input}`,
@@ -798,7 +833,8 @@ function main() {
           }
         }
         // 空振りでないことの対の押し（2打目が働かなかった押しの対。2打目と同じ点か、守る的が無い狙った2打目の、1打目の
-        // 点にいちばん近い押せるものの中心）。
+        // 点にいちばん近い押せるものの中心）。帯は押しの単位で当てるので、対の押しは自分の1打目からの差で読み、2打目の
+        // 帯によらない。
         if (a.pair && a.worked === "") {
           const stat = check(`window-late|${transitionOf(a.kind)}|${input}`);
           if (!a.pair[1] || a.pair[0] < BORDER_UNTIL_MS) stat.untried++;
@@ -815,7 +851,7 @@ function main() {
           }
         }
 
-        if (!p) continue;
+        if (!p || borderEither) continue;
         // 1. 新しく外れた押し（足した組の押しは数えない）。時間で揺れる押しは、件から外さず2回の結果を添える。
         if (!isAddedSet(group, a, shift) && !isOut(p) && isOut(a)) {
           out.lines.newOut.push({
@@ -891,6 +927,7 @@ const ITEM_LISTS = [
   "border",
   "landingPointDiffers",
   "outsideSpanSame",
+  "reachMissingPresses",
 ];
 
 /** 比べの出力のうち、1つの操作の件の一覧と分布。 */
@@ -951,6 +988,7 @@ function writeOut(out, file, operations) {
       afterRepeat: out.afterRepeat,
       seed: out.seed,
       emptySpanSame: out.emptySpanSame,
+      reachMissing: out.reachMissing,
       guardChecked: out.guardChecked,
       parts,
     }),
