@@ -1,34 +1,54 @@
-// 記録の置き場の回の要約を、操作・画面・入力・間隔・ずれごとに数え上げる（t5a-measure.md の表の出どころ）。
+// 記録の置き場の回の要約を、操作・画面・入力・間隔・ずれ・押し方ごとに数え上げる（t5a-measure.md の表の出どころ）。
 //
 //   node docs/cycles/cycle-320/measure/report.mjs <記録の置き場>
 //
-// 1行に1つの束（ファイル・入力・間隔・ずれ）を JSON で出す。数えるのは数える行（f のある行）で、送り直した行・
-// 誤りで終わった行・数える行の無い回（誤りで終わったまま残った回）の数も出す。
+// 1行に1つの束（ファイル・入力・間隔・ずれ・2打目の押し方）を JSON で出す。押し方（mode）は回の名の最後の欄
+// （same・aim・hold・hold-aim・hold-out・d1・read）で、条件7 の表に写す数は same の束から読み、ほかの押し方の数は
+// その押し方の束に出る。数えるのは数える行（f のある行）で、送り直した行・誤りで終わった行・数える行の無い回
+// （誤りで終わったまま残った回）の数も出す。
+//
+// どの数も、2打目の落ちた先を q の押しから records.mjs の landedOf で決める（押し下げが切り替わりの前で click が
+// 切り替わったあとの画面に届いた押しは click の的。decision-landing.md の「試した回」）。要約の s・c と n の3つ目・
+// 押しごとの記録の grp は2打目の pointerdown の的の記録なので、落ちた先には使わない。
 //
 // - runs: 数える回の数。resent: 送り直した行。exhausted: 送り直しの上限まで越えたまま数えた回（理由ごと）。
 //   errors: 誤りで終わった行。unresolved: 数える行の無い回。
-// - groups: 2打目の落ちた先の組ごとの数（1度の押しで終わる操作は回の数、走査は押しの数）。走査では、実際の
-//   間隔が 150ms の側を越えた押しを groups から外して marked に数える。
+// - groups: 2打目の落ちた先の組ごとの数（1度の押しで終わる操作は回の数、走査は押しの数。キーボードの回は数えない）。
+//   組の字は要約の s と同じで、ほかに、押し下げも click も切り替わる前の画面のものだった押し（守りが無くても働かない）
+//   の before と、2打目の押し下げが無い押し（狙った2打目で的が無く送らなかった押しを含む）の noDown がある。走査では、
+//   実際の間隔が 150ms の側を越えた押し（q の downGap で見分ける）を groups から外して marked に数える。
+//   markedDiffers（走査だけ）は、その見分けの数が要約の x（道具が押し下げの事象の間隔で数えた数）と違う行の数で、
+//   0 のはずで、0 でなければ PM に報告する。
+// - B-620 の材料（t5a-measure.md 0章の「判断での使い方」の、守りのあとの押し）: mayFall16・avoidable・at16 に入れる
+//   のは、同じ点の押し（q の mode が same）のうち、守りが受けると決めた押し（records.mjs の guardBand が accept。
+//   窓の守りは起点から 750ms 以上か 116px 以上、連続の押しの守りは離しから 320ms 以上などで、t5a-design.md 4-9 の
+//   窓のあとの押しと連続と数えられない押し）だけである。狙った2打目・hold・d1・read などの押し方と、守りが受けない
+//   押しと帯の押しと、守りを掛けない切り替わりの押しは入らない。
 // - タッチの調整（plan-t5a7.md 3 の「タッチの調整の距離」）。診断のページは受け手のあるページで、道具の押しは
 //   半辺 10px の面で寄せられ、Android の面の半辺は 10〜16px（docs/knowledge/input-events-and-guards.md §8）。
 //   隔たりは要約の n（D5 は 2打目の点からの n2）の、点から押せる範囲までの max(dx, dy) で、組は第1の組（first）と
-//   次の問の選択肢（next）。タッチの回（走査は押し）について:
-//   - mayFall16: 2打目が押せるものに落ちなかったが、その組までが 16px より近い（Android の大きい触れ方で寄りうる）。
-//   - fellFar10: 2打目がその組に、点の真下でなく寄せで落ち、その組までが 10px 以上。寄せの面は半辺 10px なので、
-//     隔たりを寄せに使われた組みで取っていれば 0 になる。
-//   - noClick: 2打目の click が無く、落ちた先が分からない回（mayFall16 に入れない）。
-// - 着地の関数の記録（l）と組み合わせた数（変更後の版。入力によらない）。plan-t5a7.md 3 は「避けられた」を、範囲の
-//   中に1打目の点からその組までの max(dx, dy) が 16px 以上になる送りがあった件（l の最も離せたときの値。first は
-//   farFirst、next は farBoth）と決める。点の真下を外すだけの送り（行の罫線の上に点を置くなど）は数えない。
+//   次の問の選択肢（next）。隔たりは2打目の pointerdown の時の組みで取るので、押し下げが切り替わる前の画面に来た押し
+//   （q の shown が 0）は数えない。タッチの回（走査は押し）について:
+//   - mayFall16: B-620 の材料の押しで、2打目が押せるものに落ちなかったが、その組までが 16px より近い（Android の
+//     大きい触れ方で寄りうる）。
+//   - fellFar10: 同じ点の押しで、2打目がその組に、点の真下でなく寄せで落ち、その組までが 10px 以上。寄せの面は
+//     半辺 10px なので、隔たりを寄せに使われた組みで取っていれば 0 になり、0 でなければ PM に報告する。的に押した
+//     押し方（aim など）は1打目の点から離れたものに落ちるので数えない。
+//   - noDown: 2打目の押し下げが無く、落ちた先が分からない押し（mayFall16 に入れない）。
+// - 着地の関数の記録（l）と組み合わせた数（変更後の版。入力によらない）。B-620 の材料の押しだけを数える。plan-t5a7.md 3
+//   は「避けられた」を、範囲の中に1打目の点からその組までの max(dx, dy) が 16px 以上になる送りがあった件（l の最も
+//   離せたときの値。first は farFirst、next は farBoth）と決める。点の真下を外すだけの送り（行の罫線の上に点を置く
+//   など）は数えない。
 //   - avoidable: 2打目がその組に落ちた回（押し）の数（cases）と、そのうち範囲の中でその組を 10px 以上離せた数
 //     （far10。道具の面と Android のいちばん小さい面の半辺）と 16px 以上離せた数（far16。避けられた件）。
 //   - at16: 2打目がその組に落ちたか、落ちなかったがその組までが 16px より近い回（押し）の、同じ3つの数。
-//     plan-t5a7.md 3 の「避けられたのに落ちた件」の合否は、この落ちうる件の far16 で判定する。
-//   走査の押しは、落ちた押しを押しごとの記録（落ちた先 grp と着地の記録 land）で、落ちなかった押しを要約の n
-//   （max(dx, dy) が 0 より大きく 20 以下の押しの、落ちた先と着地の記録）で数える。答えの2打目が次の問の選択肢に
-//   落ちた押しは、押しごとの記録に置かないので avoidable と at16 に入らない（条件7 はこの件を数だけで見る）。
-//   D5 の束（ずれのある束）は出さない。着地の記録は1打目の点から数えた値で、ずらした2打目の点が避けられたかを
-//   表さないからである（D5 の合否は第1の組に落ちた件が 0 か）。
+//     どちらも条件7 の合否には使わず、守りのあとの押しが押せるものの近くに落ちた件の数と隔たりを B-620 の材料として
+//     記録するのに使う（t5a-measure.md 0章）。
+//   走査の押しは、落ちた押しを押しごとの記録（着地の記録 land と隔たり near）で、落ちなかった押しを要約の n
+//   （max(dx, dy) が 0 より大きく 20 以下の押しの隔たりと着地の記録）で数え、どちらも落ちた先は q の同じ番号の押しで
+//   決める。答えの2打目が次の問の選択肢に落ちた押しは、押しごとの記録に置かないので avoidable と at16 に入らない
+//   （条件7 はこの件を数だけで見る）。D5 の束（ずれのある束）は出さない。着地の記録は1打目の点から数えた値で、
+//   ずらした2打目の点が避けられたかを表さないからである（D5 の合否は第1の組に落ちた件が 0 か）。
 // - hitUnmatched: 着地の記録で、`data-hit-area="after"` の祖先の箱のうち関数の矩形と一致せず、押せる範囲に置き換え
 //   られなかった箱（外れ）の数の和を、押しの種類ごとに出す（0 の種類は出さない）。走査は押しごとの記録に
 //   置いた押しの land と、そこに無い要約の n の押しの記録から、1度の押しで終わる操作は要約の hu から数えるので、
@@ -84,6 +104,8 @@ import {
   TOUCH_ADJUST_REACH_PX,
   TOUCH_BLOCK_BELOW_MS,
   WINDOW_KINDS,
+  guardAfter,
+  guardBand,
   landedOf,
   readPress,
 } from "./records.mjs";
@@ -130,46 +152,100 @@ function spread(values) {
 
 const reachOf = (entry) => (entry ? Math.max(entry[0], entry[1]) : Infinity);
 
+/** 見せる 150ms の内と外を試す間隔と、その境（measure.mjs の crossesShown と同じ。走査の cm の押しを q から見分ける）。 */
+const SHOWN_MS = 150;
+const BOUNDARY_INTERVALS = new Set([90, 300]);
+const crossesShown = (interval, gap) =>
+  BOUNDARY_INTERVALS.has(interval) &&
+  gap !== null &&
+  (interval < SHOWN_MS ? gap >= SHOWN_MS : gap < SHOWN_MS);
+
+/**
+ * 束の落ちた先の字。records.mjs の landedOf の組で、押し下げも click も切り替わる前の画面のものだった押しは before、
+ * 2打目の押し下げが無い押し（狙った2打目で的が無く送らなかった押しを含む）は noDown。
+ */
+function landingLabelOf(press) {
+  const landed = landedOf(press);
+  if (landed) return landed.group;
+  return press.group === null ? "noDown" : "before";
+}
+
+/**
+ * B-620 の材料（守りのあとの押し。t5a-measure.md 0章の「判断での使い方」）に入れる押しか。同じ点の押し（mode が
+ * same）のうち、守りが受けると決めた押し（records.mjs の guardBand が accept）に限る。帯は押しの起点からの差・離し
+ * からの差・距離・detail で決まるので、守りを持たない版でも同じ押しの組を数える。守りを掛けない切り替わりの押し
+ * （知識クイズの答え・「もう一度挑戦する」・語の選択の対）は guardBand が null で入らない（合否の行の unguarded が見る）。
+ */
+function isMaterial(press, input) {
+  if (press.mode !== "same") return false;
+  return (
+    guardBand(guardAfter(press.kind), input, {
+      gap: press.downGap,
+      release: press.releaseGap,
+      distance: press.downDistance,
+      detail: press.detail,
+    }) === "accept"
+  );
+}
+
 /** 組ごとの、着地の記録と組み合わせた数の入れ物。 */
 const landingCounts = () => ({
   first: { cases: 0, far10: 0, far16: 0 },
   next: { cases: 0, far10: 0, far16: 0 },
 });
 
-/** タッチの1つの押しの調整の数え直し。landed は2打目の組、near は [第1の組, 選択肢] の隔たり。 */
-function countTouch(bundle, landed, near) {
-  if (landed === null || landed === undefined) {
-    bundle.noClick++;
+/**
+ * タッチの1つの押しの調整の数え直し。press は q の押し、label はその落ちた先の字、near は2打目の pointerdown の時の
+ * [第1の組, 選択肢] の隔たり。押し下げが切り替わる前の画面に来た押し（shown が 0）は、隔たりが落ちた先の画面のもの
+ * でないので数えない。fellFar10 は同じ点の押しだけで、mayFall16 は B-620 の材料の押し（isMaterial）だけで数える。
+ */
+function countTouch(bundle, press, label, near, input) {
+  if (press.group === null) {
+    bundle.noDown++;
     return;
   }
+  if (press.shown === 0) return;
+  const material = isMaterial(press, input);
   for (const [key, fell, slot] of SLOTS) {
     const distance = reachOf(near?.[slot]);
-    if (fell(landed)) {
-      if (distance >= 10 && distance !== Infinity) bundle.fellFar10[key]++;
-    } else if (!PRESSABLE.has(landed) && distance > 0 && distance < 16) {
+    if (fell(label)) {
+      if (press.mode === "same" && distance >= 10 && distance !== Infinity) {
+        bundle.fellFar10[key]++;
+      }
+    } else if (
+      material &&
+      !PRESSABLE.has(label) &&
+      distance > 0 &&
+      distance < 16
+    ) {
       bundle.mayFall16[key]++;
     }
   }
 }
 
 /**
- * 着地の記録と組み合わせた数。which が fallen なら落ちた組だけを、near なら落ちなかった組だけを、all なら両方を
- * 数える（走査は落ちた押しを押しごとの記録から、落ちなかった押しを要約の n から数えるので、二度数えないよう分ける）。
- * landing は要約の l と同じ4つ。
+ * 着地の記録と組み合わせた数（B-620 の材料の押しだけを渡す）。which が fallen なら落ちた組だけを、near なら落ちなかった
+ * 組だけを、all なら両方を数える（走査は落ちた押しを押しごとの記録から、落ちなかった押しを要約の n から数えるので、
+ * 二度数えないよう分ける）。landing は要約の l と同じ4つ。落ちなかった組の隔たりは、押し下げが落ちた先の画面に来た
+ * 押しだけで読む。
  */
-function countLanding(bundle, landed, near, landing, which) {
-  if (!landing || landed === null || landed === undefined) return;
+function countLanding(bundle, press, label, near, landing, which) {
+  if (!landing || press.group === null) return;
   const add = (counts, far) => {
     counts.cases++;
     if (far !== null && far >= 10) counts.far10++;
     if (far !== null && far >= 16) counts.far16++;
   };
   for (const [key, fell, slot, farAt] of SLOTS) {
-    const fallen = fell(landed);
+    const fallen = fell(label);
     if (which === "fallen" && !fallen) continue;
     if (which === "near" && fallen) continue;
     const distance = reachOf(near?.[slot]);
-    const nearby = !PRESSABLE.has(landed) && distance > 0 && distance < 16;
+    const nearby =
+      press.shown !== 0 &&
+      !PRESSABLE.has(label) &&
+      distance > 0 &&
+      distance < 16;
     if (!fallen && !nearby) continue;
     if (fallen) add(bundle.avoidable[key], landing[farAt]);
     add(bundle.at16[key], landing[farAt]);
@@ -222,15 +298,17 @@ function main() {
     }
     for (const line of lines) {
       if (line.k === undefined) continue;
-      const [slug, input, interval, offset] = line.k.split("|");
+      const [slug, input, interval, offset, , mode = "same"] =
+        line.k.split("|");
       const shifted = offset !== "0:0";
-      const id = `${input}|${interval}|${offset}`;
+      const id = `${input}|${interval}|${offset}|${mode}`;
       const bundle = bundles.get(id) ?? {
         file: name,
         op: head.op,
         input,
         interval: Number(interval),
         offset,
+        mode,
         runs: 0,
         resent: 0,
         exhausted: {},
@@ -238,9 +316,10 @@ function main() {
         unresolved: 0,
         groups: {},
         marked: {},
+        markedDiffers: head.op === "answers" ? 0 : undefined,
         mayFall16: { first: 0, next: 0 },
         fellFar10: { first: 0, next: 0 },
-        noClick: 0,
+        noDown: 0,
         avoidable: shifted ? undefined : landingCounts(),
         at16: shifted ? undefined : landingCounts(),
         hitUnmatched: {},
@@ -307,37 +386,52 @@ function main() {
         }
       };
       if (head.op === "answers") {
-        for (const [group, count] of Object.entries(line.c ?? {})) {
-          bundle.groups[group] = (bundle.groups[group] ?? 0) + count;
+        // 落ちた先は q の押しごとに landedOf で決める。実際の間隔が 150ms の側を越えた押しは marked に数え、その数が
+        // 要約の x（道具が押し下げの事象で数えた数）と違う行を markedDiffers に数える。
+        const pressOf = new Map();
+        let crossed = 0;
+        for (const entry of line.q ?? []) {
+          const press = readPress(entry);
+          pressOf.set(press.i, press);
+          const over = crossesShown(Number(interval), press.downGap);
+          if (over) crossed++;
+          const counts = over ? bundle.marked : bundle.groups;
+          const label = landingLabelOf(press);
+          counts[label] = (counts[label] ?? 0) + 1;
         }
-        for (const [group, count] of Object.entries(line.cm ?? {})) {
-          bundle.marked[group] = (bundle.marked[group] ?? 0) + count;
-        }
+        if (crossed !== (line.x ?? 0)) bundle.markedDiffers++;
         // 置き換えの外れは、押しごとの記録に置いた押しの land と、そこに無い n の押しの記録から数える（同じ押しを
         // 二度数えない）。
         const kept = new Set();
-        for (const press of pressesOf.get(`${line.k}#${line.a}`) ?? []) {
-          const landing = press.land?.[press.li];
+        for (const record of pressesOf.get(`${line.k}#${line.a}`) ?? []) {
+          const landing = record.land?.[record.li];
           if (landing) {
-            kept.add(press.i);
-            unmatched(press.kind, landing[11], landing[12]);
+            kept.add(record.i);
+            unmatched(record.kind, landing[11], landing[12]);
           }
-          if (shifted) continue;
+          const press = pressOf.get(record.i);
+          if (shifted || !press || !isMaterial(press, input)) continue;
           countLanding(
             bundle,
-            press.grp,
-            press.near,
+            press,
+            landingLabelOf(press),
+            record.near,
             landing ? landing.slice(6, 10) : null,
             "fallen",
           );
         }
-        // n の押し: [押しの番号, 帯の番号, 落ちた先, 1打目の点からの隔たり, 2打目の点からの隔たり, 着地の記録,
-        // 押しの種類, 一致しなかった祖先の数, そのうちの問の選択肢の行の数]。
+        // n の押し: [押しの番号, 帯の番号, 押し下げの的の組, 1打目の点からの隔たり, 2打目の点からの隔たり, 着地の
+        // 記録, 押しの種類, 一致しなかった祖先の数, そのうちの問の選択肢の行の数]。落ちた先は q の同じ番号の押しで読む。
         for (const entry of line.n ?? []) {
-          const [index, , landed, near, near2, landing, kind, count, rows] =
-            entry;
-          countTouch(bundle, landed, shifted ? near2 : near);
-          if (!shifted) countLanding(bundle, landed, near, landing, "near");
+          const [index, , , near, near2, landing, kind, count, rows] = entry;
+          const press = pressOf.get(index);
+          if (press) {
+            const label = landingLabelOf(press);
+            countTouch(bundle, press, label, shifted ? near2 : near, input);
+            if (!shifted && isMaterial(press, input)) {
+              countLanding(bundle, press, label, near, landing, "near");
+            }
+          }
           if (landing && !kept.has(index)) unmatched(kind, count, rows);
         }
         flag("cut", line.cut);
@@ -346,12 +440,19 @@ function main() {
         flag("detailMarked", line.dm);
         flag("checkFailed", line.ck && !line.ck[4]);
       } else {
-        const group = line.s ?? "none";
-        bundle.groups[group] = (bundle.groups[group] ?? 0) + 1;
+        // キーボードの回は q を持たず、落ちた先を数えない（合否の行の kb で見る）。
+        const press = line.q?.[0] ? readPress(line.q[0]) : null;
+        if (press) {
+          const label = landingLabelOf(press);
+          bundle.groups[label] = (bundle.groups[label] ?? 0) + 1;
+          if (input === "touch") {
+            countTouch(bundle, press, label, shifted ? line.n2 : line.n, input);
+          }
+          if (!shifted && isMaterial(press, input)) {
+            countLanding(bundle, press, label, line.n, line.l, "all");
+          }
+        }
         if (line.g !== null && line.g !== undefined) bundle.gaps.push(line.g);
-        const reach = shifted ? line.n2 : line.n;
-        if (input === "touch") countTouch(bundle, line.s, reach);
-        if (!shifted) countLanding(bundle, line.s, line.n, line.l, "all");
         if (line.l) unmatched(null, line.hu, null);
         flag("cut", !!line.cut);
         flag("nameLow", !!line.lo);
