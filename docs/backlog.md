@@ -97,7 +97,6 @@
 | B-799 | 実機に頼る確かめの振り分け | P3 | 着手: B-754の出荷のあと。T9の残り: 実機の確かめを1つずつ、端末に頼らない作り・近似・受け入れてGAで見張る(線はADR009)に振り分け、レビューのあと進める。B-621の確かめも。詳細cycle-316/carryover-tasks.mdのT9の行 |
 | B-800 | T11の残り | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、T3レビュー中止時にbuilderが直したDESIGN.mdの文言を確かめ、[data-thick-frame]のhoverを§6に書く。design-rollout-wipはB-793後に消す。詳細cycle-316/carryover-tasks.md |
 | B-801 | ADR009の基線を取る | P1 | 着手: B-754の出荷後2週以内。出荷の直前28日のSCのカテゴリ別とGAの基線をADR009に保存し撤退基準を確定(次回確認の2・3)。出荷日から変わる計測(ブログ目次のtoc_open・toc_jump、410のGA等)もADR009へ。SCのCWV実地値はB-758へ。SCは約16か月・GAはBigQueryに残り後で取れる |
-| B-790 | tmp外へのsed -i・perl -iを止めるhookを組む | P2 | 着手: B-754の出荷のあと、mainで。コミットするファイルをシェルで書く型がcycle-316・318・319で再発。本体でなくhookで止める。止めすぎと取りこぼしを比べて範囲を決める。詳細cycle-318/review-ap-check.md |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | 着手: B-754の出荷のあと、mainで。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
 | B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | 着手: B-754の出荷のあと、mainで。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
@@ -171,8 +170,9 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-790 | tmp外へのsed -i・perl -iを止めるhookを組む | 320 | 【中止】根拠にした.claude/rules/file-editing.mdは既存のルールに反していたので消した(cycle-320/incident-3.md)。この案も無効 |
 | B-784 | サイクルの文書の大きさをコミット前に検査する | 317 | index・decisions・carryoverを50,000Bで止め40,000Bで注意するhookを足し、cycle-316の3本を40,000B以下に分けた。詳細cycle-317/b784-design.md |
-| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | 317 | 書く担当は専用の作業ツリーで動かし、主の木のコミットとpushはPMに限った。詳細cycle-317/b786-design.md |
+| B-786 | 並行するサブエージェントが1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | 317 | サブエージェントを専用のworktreeで動かす形にしたが、既存のルールに反していたのでcycle-320で取り消した(cycle-320/incident-3.md) |
 | B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | 316 | design-rolloutのT2で実装(共有の入力欄を16px以上に)。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | 316 | design-rolloutのT1(組版)で実装。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-577 | theme-color付与+410ダーク追従 | 316 | design-rolloutのT1で実装。manifestは扱わない(理由cycle-316/options.md)。出荷はB-754のmainへのマージで |
