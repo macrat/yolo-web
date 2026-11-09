@@ -21,7 +21,7 @@
 
 ## 出荷と本番での確かめ（サイクルの完了の処理の中で行う）
 
-1〜4 を終えたら、`cycle-completion` の手順7の「その変更の最後のサイクル」のとおりに出荷する。
+1〜4 を終えたら、次のとおりに出荷する。
 
 - 完了のコミットで、`deploy.yml` の `on.push.branches` と `docs/backlog.md` から統合ブランチの名前を外し、B-754 を Done にする。origin/main をマージしてから、main へ push して出荷する。
 - 出荷の CI と Vercel のデプロイが済んだら、本番で、表示・theme-color・Web フォントの配信・代表のページの `og:image` と、GA に `page_view`・`level_start`・`level_end`・`share`・`save` の数が届いていることを確かめる。確かめ終えるまで、main にほかの push をしない（Instant Rollback で戻れるのは、すぐ前の本番のデプロイだけだからである）。
