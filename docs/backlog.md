@@ -172,7 +172,7 @@
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
 | B-784 | サイクルの文書の大きさをコミット前に検査する | 317 | index・decisions・carryoverを50,000Bで止め40,000Bで注意するhookを足し、cycle-316の3本を40,000B以下に分けた。詳細cycle-317/b784-design.md |
-| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | 317 | 書く担当は専用の作業ツリーで動かし、主の木のコミットとpushはPMに限った(.claude/rules/delegation.md)。詳細cycle-317/b786-design.md |
+| B-786 | 並行する担当が1つの作業ツリーとコンテナを共有して起きる衝突を作業の分け方で無くす | 317 | 書く担当は専用の作業ツリーで動かし、主の木のコミットとpushはPMに限った。詳細cycle-317/b786-design.md |
 | B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | 316 | design-rolloutのT2で実装(共有の入力欄を16px以上に)。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | 316 | design-rolloutのT1(組版)で実装。出荷はB-754のmainへのマージで。詳細cycle-316/index.md |
 | B-577 | theme-color付与+410ダーク追従 | 316 | design-rolloutのT1で実装。manifestは扱わない(理由cycle-316/options.md)。出荷はB-754のmainへのマージで |

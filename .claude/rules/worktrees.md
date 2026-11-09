@@ -5,7 +5,7 @@ paths:
 
 # 担当の木での作業
 
-この規則は、担当の木（`.claude/worktrees/agent-<id>`、枝 `worktree-agent-<id>`）で書いてコミットする担当（builder・blog-writer など）に向けたものである。主の木から担当の木のファイルを読むだけの PM と reviewer には当たらない（PM の決まりは `.claude/rules/delegation.md`）。
+この規則は、担当の木（`.claude/worktrees/agent-<id>`、枝 `worktree-agent-<id>`）で書いてコミットする担当（builder・blog-writer など）に向けたものである。主の木から担当の木のファイルを読むだけの PM と reviewer には当たらない。
 
 担当の木で書く担当は、次の順で作業する。主の木とほかの担当の木には触らない。
 
