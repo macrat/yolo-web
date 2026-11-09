@@ -7,7 +7,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで進める(cycle-kickoff手順1)。出荷までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。出荷までのタスクはdocs/cycles/cycle-320/rollout-plan.md。出荷し本番で確かめたらDone。出荷のあとはB-793〜B-800 |
+| B-754 | サイトデザインの刷新 | P1 | 統合ブランチdesign-rolloutで進める(cycle-kickoff手順1)。出荷まで他の項目のサイクルは立てない(本番の急ぎの不具合だけmainで)。出荷までのタスクはcycle-320/rollout-plan.md。出荷し本番で確かめ、ADR009の基線を取ったら(計画のタスク6)Done。出荷のあとはB-793〜B-800 |
 | B-756 | 診断・ゲームの刷新 | P2 | site-conceptの「人が運営する場所でも作られたか」で1面ずつ判定し、伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
 | B-672 | ソースコードのコメントの整理 | P4 | 経緯の堆積・旧コンセプトの語・存在しない§番号への参照が残っている。コンセプトを作り直し、引き直す先が決まった。詳細cycle-312 |
 | B-746 | about ページの作り直し | P1 | サイトの自己紹介が、cycle-315で作り直したコンセプトと別のことを名乗っている。`docs/site-concept.md`の「来訪者への約束」から書き直す。文言を固定しているテストも対象。詳細cycle-315/index.md |
@@ -83,9 +83,9 @@
 | B-781 | 動的ルートの値が % を含む URL（/blog/%25 など）が 404 でなく 500 になる | P3 | Next.js の「failed to decode param」。ページの前で起きる。cycle-316 review-t5-22b-1.md |
 | B-782 | 解き終えた画面の招待のボタンの多く（character-personality・music ほか）が contentId を渡さず、GA に share（invite）が送られない | P2 | cycle-316 review-t5-5b-13.md |
 | B-783 | docs/content-quality-requirements.md のチートシート・ToolLayout・CheatsheetLayout・道具の valueProposition の節が今のコードと合わない。今の形に書き直す | P2 | cycle-316 T5-3c の builder の報告 |
-| B-790 | tmp外へのsed -i・perl -iを止めるhookを組む | P2 | B-754の統合のブランチの上で扱う。コミットに入るファイルをシェルで書く型がcycle-316・318・319で再発(AP-WF54候補N=3)。本体に置かずhookへ移すと決めた。止めすぎる害と取りこぼす害を比べて範囲を決める。詳細cycle-318/review-ap-check.md |
-| B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | B-754の統合のブランチの上で扱う。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
-| B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | B-754の統合のブランチの上で扱う。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
+| B-790 | tmp外へのsed -i・perl -iを止めるhookを組む | P2 | B-754の出荷までは統合ブランチ、出荷のあとはmainで扱う。コミットするファイルをシェルで書く型がcycle-316・318・319で再発(AP-WF54候補)。本体でなくhookで止める。止めすぎと取りこぼしを比べて範囲を決める。詳細cycle-318/review-ap-check.md |
+| B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | B-754の出荷までは統合ブランチ、出荷のあとはmainで扱う。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
+| B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | B-754の出荷までは統合ブランチ、出荷のあとはmainで扱う。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 
 ## Deferred (すぐに着手できない)
 
@@ -98,7 +98,7 @@
 | B-797 | 来訪者が読む文言の見直し | P3 | 着手: B-754の出荷のあと、B-796のT6-6のあと。T7のうち、ゲームの判定を色で説明する記事(B-754で直す。cycle-320/rollout-plan.md 2)のほかのもの。B-649も扱う。詳細cycle-316/carryover-tasks.mdのT7の行 |
 | B-798 | テストと機械の検査の作り直し | P3 | 着手: B-754の出荷のあと。T8: デザイン値を固定したテストをDESIGN.mdの規定の検査へ作り直し、quizのdataのテストをまとめ直し、機械の検査を全ページと操作で現れる状態に掛ける。詳細cycle-316/carryover-tasks.mdのT8の行・completion-criteria.md |
 | B-799 | 実機に頼る確かめの振り分け | P3 | 着手: B-754の出荷のあと。T9の残り: 実機の確かめを1つずつ、端末に頼らない作り・近似・受け入れてGAで見張る(線はADR009)に振り分け、レビューのあと進める。B-621の確かめも。詳細cycle-316/carryover-tasks.mdのT9の行 |
-| B-800 | T11の残りの片付け | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、[data-thick-frame]のhoverをDESIGN.md §6に書く。design-rollout-wipはB-793のあと消す。詳細cycle-316/carryover-tasks.mdのT11の行・split-plan.md 4 |
+| B-800 | T11の残り | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、T3レビュー中止時にbuilderが直したDESIGN.mdの文言を確かめ、[data-thick-frame]のhoverを§6に書く。design-rollout-wipはB-793後に消す。詳細cycle-316/carryover-tasks.md |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
 | B-787 | 漢字カナールの結果の2表で送る表だけ見出しの右端が1.35字ずれる | P4 | 着手: 遊んだ日が1000日に届く前。320・200%・成績4桁で成績の表だけ送る表になり内側の余白分ずれる。送る表の余白を見込んでそろえる規則を設計に足す。詳細cycle-317/review-t5-8b.md |
 | B-614 | 診断の回答フェーズの摩擦低減 | P3 | 着手: B-754の出荷のあと、B-795で。直し(T5a-5・T5a-6)はB-754で出荷し、B-795のT5a-7の測りで確かめてDoneへ。本番では375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
