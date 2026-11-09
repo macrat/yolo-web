@@ -97,6 +97,7 @@
 | B-799 | 実機に頼る確かめの振り分け | P3 | 着手: B-754の出荷のあと。T9の残り: 実機の確かめを1つずつ、端末に頼らない作り・近似・受け入れてGAで見張る(線はADR009)に振り分け、レビューのあと進める。B-621の確かめも。詳細cycle-316/carryover-tasks.mdのT9の行 |
 | B-800 | T11の残り | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、T3レビュー中止時にbuilderが直したDESIGN.mdの文言を確かめ、[data-thick-frame]のhoverを§6に書く。design-rollout-wipはB-793後に消す。詳細cycle-316/carryover-tasks.md |
 | B-801 | ADR009の基線を取る | P1 | 着手: B-754の出荷後2週以内。出荷の直前28日のSCのカテゴリ別とGAの基線をADR009に保存し撤退基準を確定(次回確認の2・3)。出荷日から変わる計測(ブログ目次のtoc_open・toc_jump、410のGA等)もADR009へ。SCのCWV実地値はB-758へ。SCは約16か月・GAはBigQueryに残り後で取れる |
+| B-802 | 日本語として正しくない用語の利用を是正する | P3 | 着手: B-754の出荷のあと。DESIGN.md・スキル・knowledge・コードのコメントとテスト名の「着地」「道具」「測り」「送り」「面」など。過去のサイクル文書は記録なので直さない。経緯cycle-320/incident-3.md |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | 着手: B-754の出荷のあと、mainで。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
 | B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | 着手: B-754の出荷のあと、mainで。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
