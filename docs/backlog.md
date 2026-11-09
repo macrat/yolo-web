@@ -7,10 +7,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで複数のサイクルに分けて進行中。design-rolloutに移って続ける(cycle-kickoff手順1)。完成までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。分け方はそのブランチのcycle-316/split-plan.md。完成後mainへマージして出荷 |
-| B-614 | 診断の回答フェーズの摩擦低減 | P3 | B-754のT5aで直す(独立のサイクルなし)。design-rolloutにT5a-5・T5a-6で入り、T5a-7の測りで確かめてDoneへ。本番では375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
-| B-624 | 知識クイズで回答したあとのフォーカスが見えず、読み上げが正誤と解説を飛ばす | P3 | B-754のT5a。design-rolloutにT5a-5・T5a-6(t5a-design.md 4-6・4-7)で入り、T5a-7の条件5で確かめてDoneへ。本番では「次へ」へ送らずにフォーカスが移り、「次へ」が画面の下にあると見えない(同1-2) |
-| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | B-754のT5aで直す(独立のサイクルは立てない。t5a-design.md 4-5・4-9)。T5a-7の二度打ちの測りで0を確かめてDoneへ。iOSの確かめはcycle-318/device-triage.md D9 |
+| B-754 | サイトデザインの刷新 | P1 | 統合のブランチdesign-rolloutで進める(cycle-kickoff手順1)。出荷までほかの項目のサイクルは立てない(本番の急ぎの不具合だけmainで直す)。出荷までのタスクはdocs/cycles/cycle-320/rollout-plan.md。出荷し本番で確かめたらDone。出荷のあとはB-793〜B-800 |
 | B-756 | 診断・ゲームの刷新 | P2 | site-conceptの「人が運営する場所でも作られたか」で1面ずつ判定し、伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
 | B-672 | ソースコードのコメントの整理 | P4 | 経緯の堆積・旧コンセプトの語・存在しない§番号への参照が残っている。コンセプトを作り直し、引き直す先が決まった。詳細cycle-312 |
 | B-746 | about ページの作り直し | P1 | サイトの自己紹介が、cycle-315で作り直したコンセプトと別のことを名乗っている。`docs/site-concept.md`の「来訪者への約束」から書き直す。文言を固定しているテストも対象。詳細cycle-315/index.md |
@@ -94,19 +91,30 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: design-rolloutのT5-18のサイクル(B-754)。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
+| B-793 | 残りの面への新しいデザインの適用 | P2 | 着手: B-754の出荷のあと。T5-6・T5-10・T5-11・T5-13・T5-16・T5-18・T5-20b・T5-20e・T5-20f・T5-24・T5-30・T5-31。T5-6・T5-13の途中の作業はdesign-rollout-wip。詳細cycle-316/carryover-tasks.mdのT5の行 |
+| B-794 | 新しいデザインの仕上げと片付け | P3 | 着手: B-754の出荷のあと。T5-25b(計測のvariant)・T5-27(約物)・T5-25c(古いトークンを消す)・T5-26(T5の完了の判定)。T5-25cはB-795、T5-27はT5-18のあと、T5-26は最後。詳細cycle-316/t5-design.md 10-2 |
+| B-795 | 診断の回答画面の残り | P2 | 着手: B-754の出荷のあと。T5a-4(選択肢の区切りと根のtouch-action)・T5a-7(測りと完了のレビュー)。B-614・B-623・B-624・B-788・B-789を閉じる。詳細cycle-316/carryover-tasks.mdのT5aの行・t5a-design.md 6〜8章・t5a-measure.md |
+| B-796 | サイトの外に出る画像の残り | P2 | 着手: B-754の出荷のあと。T6-4〜T6-8・T6-10〜T6-12(結果・伝統色・保存・一覧・辞典・favicon・片付け・判定)。B-644・B-650も扱う。T6-4はT5-6、T6-6はB-795のあと。詳細cycle-316/carryover-tasks.mdのT6の行・t6-design.md 4章 |
+| B-797 | 来訪者が読む文言の見直し | P3 | 着手: B-754の出荷のあと、B-796のT6-6のあと。T7のうち、ゲームの判定を色で説明する記事(B-754で直す。cycle-320/rollout-plan.md 2)のほかのもの。B-649も扱う。詳細cycle-316/carryover-tasks.mdのT7の行 |
+| B-798 | テストと機械の検査の作り直し | P3 | 着手: B-754の出荷のあと。T8: デザイン値を固定したテストをDESIGN.mdの規定の検査へ作り直し、quizのdataのテストをまとめ直し、機械の検査を全ページと操作で現れる状態に掛ける。詳細cycle-316/carryover-tasks.mdのT8の行・completion-criteria.md |
+| B-799 | 実機に頼る確かめの振り分け | P3 | 着手: B-754の出荷のあと。T9の残り: 実機の確かめを1つずつ、端末に頼らない作り・近似・受け入れてGAで見張る(線はADR009)に振り分け、レビューのあと進める。B-621の確かめも。詳細cycle-316/carryover-tasks.mdのT9の行 |
+| B-800 | T11の残りの片付け | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、[data-thick-frame]のhoverをDESIGN.md §6に書く。design-rollout-wipはB-793のあと消す。詳細cycle-316/carryover-tasks.mdのT11の行・split-plan.md 4 |
+| B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
 | B-787 | 漢字カナールの結果の2表で送る表だけ見出しの右端が1.35字ずれる | P4 | 着手: 遊んだ日が1000日に届く前。320・200%・成績4桁で成績の表だけ送る表になり内側の余白分ずれる。送る表の余白を見込んでそろえる規則を設計に足す。詳細cycle-317/review-t5-8b.md |
-| B-788 | ゲームの2打目が拡大にならないよう根にtouch-actionを掛ける | P3 | 着手: design-rolloutのT5a-4が診断のページに入れたあと(B-754。同じ形を写す)。irodori・kanji-kanaru・yoji-kimeru・nakamawakeの決定・推測。詳細cycle-318/device-triage.md D1 |
-| B-789 | サイト全体のhoverの線を(hover: hover)に限るか決める | P4 | 着手: design-rolloutのT5a-7のあと(B-754)。指で押したあと入れ替わった行に線が残り、選ばれたと読み違える。詳細cycle-318/device-triage.md D2 |
-| B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | 着手: design-rolloutのT7のサイクル(B-754)。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
-| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: design-rolloutのT6のサイクル(B-754)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
-| B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 着手: design-rolloutのT6-7のサイクル(B-754)。開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md |
-| B-755 | 道具箱の作りの撤去 | P2 | 着手: design-rolloutのT5-18・T5-25bのサイクル(B-754)。同居を前提にした作りとコメントが残る。詳細cycle-315/index.md |
-| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | 着手: design-rolloutのT5の各面のサイクル(B-754)。ゲーム4本はT4で済んだ。確かめはT9。詳細cycle-301/review-log.md |
+| B-614 | 診断の回答フェーズの摩擦低減 | P3 | 着手: B-754の出荷のあと、B-795で。直し(T5a-5・T5a-6)はB-754で出荷し、B-795のT5a-7の測りで確かめてDoneへ。本番では375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。設計cycle-316/t5a-design.md |
+| B-624 | 知識クイズで回答したあとのフォーカスが見えず、読み上げが正誤と解説を飛ばす | P3 | 着手: B-754の出荷のあと、B-795で。直し(T5a-5・T5a-6。t5a-design.md 4-6・4-7)はB-754で出荷し、B-795のT5a-7の条件5で確かめてDoneへ。本番では「次へ」へ送らずにフォーカスが移り、「次へ」が画面の下にあると見えない(同1-2) |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | 着手: B-754の出荷のあと、B-795で。直しはt5a-design.md 4-5・4-9。B-795のT5a-7の二度打ちの測りで0を確かめてDoneへ。iOSの確かめはcycle-318/device-triage.md D9 |
+| B-788 | ゲームの2打目が拡大にならないよう根にtouch-actionを掛ける | P3 | 着手: B-795のT5a-4が診断のページに入れたあと(同じ形を写す)。irodori・kanji-kanaru・yoji-kimeru・nakamawakeの決定・推測。詳細cycle-318/device-triage.md D1 |
+| B-789 | サイト全体のhoverの線を(hover: hover)に限るか決める | P4 | 着手: B-795のT5a-7のあと。指で押したあと入れ替わった行に線が残り、選ばれたと読み違える。詳細cycle-318/device-triage.md D2 |
+| B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | 着手: B-754の出荷のあと、B-797で。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
+| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 着手: B-754の出荷のあと、B-796のT6-7・T6-8で。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md |
+| B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 着手: B-754の出荷のあと、B-796のT6-7で。開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md |
+| B-755 | 道具箱の作りの撤去 | P2 | 着手: B-754の出荷のあと、B-793のT5-18とB-794のT5-25bで。同居を前提にした作りとコメントが残る。詳細cycle-315/index.md |
+| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | 着手: B-754の出荷のあと。B-793の各面で直し、B-799で確かめる。ゲーム4本はT4で済んだ。詳細cycle-301/review-log.md |
 | B-758 | 計測した5ページすべてで実験室のLCPが2.5秒を超えている(2026-09の計測) | P2 | 着手: B-754の出荷後、新しいデザインで測り直してから。診断のプレイ面3.8秒ほか。LCP要素は全て文字。実測cycle-316/facts-speed-before.md。一覧の操作も測る(cycle-316/review-t3-7-fix.md) |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: B-754の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
-| B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: B-754の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
-| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: B-754の出荷後。T5a-7の二度打ちの測りとB-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md。材料はt5a-design.md 8章の5・cycle-318/device-triage.md D5 |
+| B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: B-796のT6-10(favicon)の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
+| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: B-795のT5a-7の二度打ちの測りとB-613の出荷のあと、それらで判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md。材料はt5a-design.md 8章の5・cycle-318/device-triage.md D5 |
 | B-740 | cycle-314の失敗をブログ化するか判断する | P4 | 着手: 事故分析(incident-1・incident-2)がレビュー済みになってから。題材=隔離された成果物をその自己申告で信じた機構と、チェック項目は当てる先を選べる件。詳細cycle-314/ |
 | B-565 | 診断完走率の低下の決着 | P2 | ADR001の観測は+2週で止まり同ADRは失効した。設問途中の離脱までは判明しており、残る問いはどこで落ちるか。ADR009が未決として引き継ぐ。B-612・B-613・B-614と同じ塊。詳細cycle-305/observation |
 | B-615 | 375px CLSのレイアウトシフト点検・あればバグ修正 | P4 | **ADRの賭けではなく通常のバグ(cycle-305でオーナー是正)**。デザイン移行が安定した面で375px CLSを点検し、シフトがあれば修正。計装(field計測)の新設は不要。着手: デザイン移行(B-754)の完了後 |
