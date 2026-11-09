@@ -12,7 +12,7 @@ completed_at: 2026-11-09T00:37:42+0000
 B-754（サイトデザインの刷新）を統合のブランチ `design-rollout` で続ける4つ目のサイクル。[cycle-316/split-plan.md](../cycle-316/split-plan.md) 7 の表の2行目（診断の回答 T5a）のうち、区切りとページの根の `touch-action`（T5a-4）を組む。計画では、測りと完了のレビュー（T5a-7）のうち、コードを直す見込みの大きい二度打ちの測り（6章 条件7・[cycle-318/device-triage.md](../cycle-318/device-triage.md) D5）を先に行い、避けられない件を [t5a-design.md](../cycle-316/t5a-design.md) 8章のとおり件ごとに決めて直すとした。測りの道具を組み直した試しの走り（T5a-7a-1）で着地の作りの欠けが見つかったので（補足事項）、このサイクルで着地の作りを決め直し、道具に要件を足し、そのあとで条件7・D5 を測り、外れた件を判断して直す（T5a-8）。設計は [cycle-316/t5a-design.md](../cycle-316/t5a-design.md)、振り分けが各タスクに渡すものは device-triage.md 7章、前のサイクルの申し送りは [cycle-319/index.md](../cycle-319/index.md) のキャリーオーバー。
 
 2026-11-02 に一度完了の処理をしたが、二度打ちの測り・判断・直しを終えないまま、範囲の決め直しで完了にしていた。キックオフで立てた作業が終わっていないので進行中に戻した（[incident-1.md](./incident-1.md)）。
-このサイクルはオーナーが失敗と認定した（[incident-2.md](./incident-2.md)）。T5a-7 とその残りは行わず、出荷のあとの B-795 に移した。次のサイクルは、刷新を出荷する [rollout-plan.md](./rollout-plan.md) のタスクだけを行う。
+このサイクルはオーナーが失敗と認定した（[incident-2.md](./incident-2.md)）。閉じたあとに見つかった、許可のない規則と手順の作り変えと main への push は [incident-3.md](./incident-3.md) にある。T5a-7 とその残りは行わず、出荷のあとの B-795 に移した。次のサイクルは、刷新を出荷する [rollout-plan.md](./rollout-plan.md) のタスクだけを行う。
 
 ## 実施する作業
 
