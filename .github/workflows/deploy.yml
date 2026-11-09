@@ -4,7 +4,7 @@ permissions:
 
 on:
   push:
-    branches: [main, design-rollout]
+    branches: [main]
   pull_request:
     branches: [main]
 
