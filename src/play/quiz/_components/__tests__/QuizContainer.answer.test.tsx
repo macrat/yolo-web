@@ -364,14 +364,15 @@ describe("QuizContainer — 「はじめる」の直後の1問目の押し", () 
     expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
   });
 
-  test("2問目からは、切り替わりの直後の指やマウスの押しも答えになる", async () => {
+  test("2問目からは、500ms より前の指やマウスの押しも答えになる", async () => {
     renderQuiz();
     await pressWithPointer("はじめる");
-    await advance(START_PRESS_GUARD_MS);
-    await pressWithPointer("選択1A");
+    screen.getByRole("button", { name: "選択1A" }).focus();
+    await pressEnter();
     await advance(ANSWER_SHOWN_MS);
     expect(questionNumber()).toBe("2");
 
+    // 「はじめる」から 150ms で、1問目なら押しを受け付けないあいだにいる。
     await pressWithPointer("選択2B");
     expect(faceOf("選択2B")).toHaveClass(buttonUnderlineClassName);
     await advance(ANSWER_SHOWN_MS);
