@@ -69,7 +69,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
-  // Retrieve title and icon for each type from quiz results
+  // Retrieve the title of each type from quiz results
   const results = characterPersonalityQuiz.results;
   const myTypeResult = results.find((r) => r.id === typeA);
   const friendTypeResult = results.find((r) => r.id === typeB);
@@ -80,11 +80,9 @@ export async function GET(request: Request): Promise<NextResponse> {
       description: compatibility.description,
       myType: {
         title: myTypeResult?.title ?? typeA,
-        icon: myTypeResult?.icon ?? "",
       },
       friendType: {
         title: friendTypeResult?.title ?? typeB,
-        icon: friendTypeResult?.icon ?? "",
       },
     },
     {

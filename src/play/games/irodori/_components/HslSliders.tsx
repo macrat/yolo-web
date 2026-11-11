@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import type { Ref } from "react";
+import Slider, { type SliderItem, type TrackStop } from "@/components/Slider";
 import styles from "./HslSliders.module.css";
 
 interface Props {
@@ -10,11 +11,22 @@ interface Props {
   onHChange: (value: number) => void;
   onSChange: (value: number) => void;
   onLChange: (value: number) => void;
-  disabled?: boolean;
+  /** 色相のスライダー。次の問へ進んだとき、フォーカスをここへ移す */
+  firstSliderRef?: Ref<HTMLInputElement>;
+}
+
+/** 色相の止まりの間隔。HSL の色は色相 60 ごとの区間で RGB の上を線形に動くので、この間隔の止まりで正確に描ける。 */
+const HUE_STOP_INTERVAL = 60;
+const HUE_MAX = 360;
+
+function hsl(h: number, s: number, l: number): string {
+  return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
 /**
- * HSL sliders with gradient backgrounds and a live preview patch.
+ * 色相・彩度・明度のスライダー。どの溝も、そこへつまみを動かしたときに作られる色で塗り、ほかの2つの成分は
+ * いまの値のままにする（DESIGN.md §6 の色を作るスライダー）。いま作っている色から、どちらへ動かせばお題に
+ * 近づくかが溝の上に見える。彩度が 0 なら色相の溝は一様な灰になり、色相を動かしても色が変わらないことも見える。
  */
 export default function HslSliders({
   h,
@@ -23,90 +35,56 @@ export default function HslSliders({
   onHChange,
   onSChange,
   onLChange,
-  disabled = false,
+  firstSliderRef,
 }: Props) {
-  // Hue slider: rainbow gradient (always the same)
-  const hueGradient =
-    "linear-gradient(to right, hsl(0,100%,50%), hsl(60,100%,50%), hsl(120,100%,50%), hsl(180,100%,50%), hsl(240,100%,50%), hsl(300,100%,50%), hsl(360,100%,50%))";
-
-  // Saturation slider: gradient from gray to full saturation at current H and L
-  const satGradient = useMemo(
-    () => `linear-gradient(to right, hsl(${h},0%,${l}%), hsl(${h},100%,${l}%))`,
-    [h, l],
-  );
-
-  // Lightness slider: gradient from black through mid to white at current H and S
-  const lightGradient = useMemo(
-    () =>
-      `linear-gradient(to right, hsl(${h},${s}%,0%), hsl(${h},${s}%,50%), hsl(${h},${s}%,100%))`,
-    [h, s],
-  );
-
-  const previewColor = `hsl(${h}, ${s}%, ${l}%)`;
+  const hueStops: TrackStop[] = [];
+  for (let hue = 0; hue <= HUE_MAX; hue += HUE_STOP_INTERVAL) {
+    hueStops.push({ value: hue, color: hsl(hue, s, l) });
+  }
+  const items: SliderItem[] = [
+    {
+      label: "色相",
+      value: h,
+      min: 0,
+      max: HUE_MAX,
+      onChange: onHChange,
+      decreaseLabel: "色相を1減らす",
+      increaseLabel: "色相を1増やす",
+      trackStops: hueStops,
+      inputRef: firstSliderRef,
+    },
+    {
+      label: "彩度",
+      value: s,
+      min: 0,
+      max: 100,
+      onChange: onSChange,
+      decreaseLabel: "彩度を1減らす",
+      increaseLabel: "彩度を1増やす",
+      trackStops: [
+        { value: 0, color: hsl(h, 0, l) },
+        { value: 100, color: hsl(h, 100, l) },
+      ],
+    },
+    {
+      label: "明度",
+      value: l,
+      min: 0,
+      max: 100,
+      onChange: onLChange,
+      decreaseLabel: "明度を1減らす",
+      increaseLabel: "明度を1増やす",
+      trackStops: [
+        { value: 0, color: hsl(h, s, 0) },
+        { value: 50, color: hsl(h, s, 50) },
+        { value: 100, color: hsl(h, s, 100) },
+      ],
+    },
+  ];
 
   return (
-    <div className={styles.slidersArea}>
-      <div className={styles.sliders}>
-        <div className={styles.sliderRow}>
-          <span className={styles.sliderLabel}>H</span>
-          <input
-            type="range"
-            min={0}
-            max={360}
-            value={h}
-            onChange={(e) => onHChange(Number(e.target.value))}
-            className={styles.slider}
-            style={{ background: hueGradient }}
-            aria-label={"\u8272\u76F8"}
-            aria-valuenow={h}
-            disabled={disabled}
-          />
-          <span className={styles.sliderValue}>{h}</span>
-        </div>
-        <div className={styles.sliderRow}>
-          <span className={styles.sliderLabel}>S</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={s}
-            onChange={(e) => onSChange(Number(e.target.value))}
-            className={styles.slider}
-            style={{ background: satGradient }}
-            aria-label={"\u5F69\u5EA6"}
-            aria-valuenow={s}
-            disabled={disabled}
-          />
-          <span className={styles.sliderValue}>{s}</span>
-        </div>
-        <div className={styles.sliderRow}>
-          <span className={styles.sliderLabel}>L</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={l}
-            onChange={(e) => onLChange(Number(e.target.value))}
-            className={styles.slider}
-            style={{ background: lightGradient }}
-            aria-label={"\u660E\u5EA6"}
-            aria-valuenow={l}
-            disabled={disabled}
-          />
-          <span className={styles.sliderValue}>{l}</span>
-        </div>
-      </div>
-      <div className={styles.previewArea}>
-        <span className={styles.previewLabel}>
-          {"\u3042\u306A\u305F\u306E\u8272"}
-        </span>
-        <div
-          className={styles.previewPatch}
-          style={{ backgroundColor: previewColor }}
-          role="img"
-          aria-label={"\u3042\u306A\u305F\u306E\u56DE\u7B54\u8272"}
-        />
-      </div>
+    <div className={styles.sliders}>
+      <Slider items={items} />
     </div>
   );
 }

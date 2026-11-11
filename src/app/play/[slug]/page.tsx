@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { quizBySlug, getAllQuizSlugs } from "@/play/quiz/registry";
 import { generatePlayMetadata } from "@/play/seo";
 import { playContentBySlug } from "@/play/registry";
+import { playShareImageContent } from "@/play/share-image-content";
+import { shareOpenGraphImage } from "@/lib/share-image";
 import QuizPlayPageLayout from "@/play/quiz/_components/QuizPlayPageLayout";
 
 type Props = {
@@ -25,8 +27,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const meta = playContentBySlug.get(slug);
-  if (!meta) return {};
-  return generatePlayMetadata(meta);
+  if (!meta) notFound();
+  return generatePlayMetadata(
+    meta,
+    shareOpenGraphImage(`/play/${slug}`, playShareImageContent(meta)),
+  );
 }
 
 export default async function PlayQuizPage({ params, searchParams }: Props) {
@@ -35,7 +40,7 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
   if (!quiz) notFound();
 
   // クイズの相性機能: 友達のタイプIDをクエリパラメータ ref から取得する
-  // バリデーションはクライアントサイドの ResultExtraLoader が担うため、ここでは渡すだけ
+  // 有効なタイプかを確かめるのは ref を受け取って相性を出す各部品なので、ここでは渡すだけ
   const resolvedSearchParams = await searchParams;
   const refParam =
     typeof resolvedSearchParams.ref === "string"

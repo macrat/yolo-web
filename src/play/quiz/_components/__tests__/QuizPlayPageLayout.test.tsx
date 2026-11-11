@@ -1,10 +1,10 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import QuizPlayPageLayout from "../QuizPlayPageLayout";
 import type { QuizDefinition } from "../../types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 // Server Componentの依存コンポーネントをモックする。
-// 新デザイン体系では @/components/* の新版を使う（@/components/common/* ではない）。
 vi.mock("@/components/Breadcrumb", () => ({
   default: ({ items }: { items: Array<{ label: string; href?: string }> }) => (
     <nav aria-label="パンくずリスト">
@@ -21,19 +21,33 @@ vi.mock("@/components/Panel", () => ({
   ),
 }));
 
+// QuizContainer は、受け取ったページの頭を最初のセクションに置く形だけを描く。
 vi.mock("@/play/quiz/_components/QuizContainer", () => ({
   default: ({
+    head,
     quiz,
     referrerTypeId,
+    choicePhrases,
+    resultHeadings,
+    readingHeadings,
   }: {
+    head: React.ReactNode;
     quiz: QuizDefinition;
     referrerTypeId?: string;
+    choicePhrases: Record<string, string[]>;
+    resultHeadings: Record<string, { phrases: string[] }>;
+    readingHeadings: Record<string, string[]>;
   }) => (
-    <div
+    <section
       data-testid="quiz-container"
       data-quiz-slug={quiz.meta.slug}
       data-referrer={referrerTypeId}
-    />
+      data-choice-phrases={JSON.stringify(choicePhrases)}
+      data-result-headings={JSON.stringify(resultHeadings)}
+      data-reading-headings={JSON.stringify(readingHeadings)}
+    >
+      {head}
+    </section>
   ),
 }));
 
@@ -42,8 +56,20 @@ vi.mock("@/components/FaqSection", () => ({
 }));
 
 vi.mock("@/components/ShareButtons", () => ({
-  default: ({ url, title }: { url: string; title: string }) => (
-    <div data-testid="share-buttons" data-url={url} data-title={title} />
+  default: (props: {
+    url: string;
+    title: string;
+    text?: string;
+    contentType?: string;
+    contentId?: string;
+    surface?: string;
+  }) => (
+    <div
+      data-testid="share-buttons"
+      data-url={props.url}
+      data-title={props.title}
+      data-props={JSON.stringify(props)}
+    />
   ),
 }));
 
@@ -67,11 +93,9 @@ vi.mock("@/play/registry", () => ({
         slug: "test-quiz",
         title: "テストクイズ",
         shortDescription: "テスト用の短い説明",
-        icon: "🧪",
         category: "personality",
         contentType: "quiz",
         description: "テスト用のクイズです",
-        accentColor: "#ff5733",
         keywords: ["テスト"],
         publishedAt: "2026-01-01T00:00:00+09:00",
       },
@@ -107,8 +131,6 @@ const mockQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 5,
-    icon: "🧪",
-    accentColor: "#ff5733",
     keywords: ["テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
   },
@@ -126,19 +148,8 @@ test("QuizPlayPageLayout renders breadcrumb with correct items", async () => {
   const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
   expect(breadcrumb).toBeInTheDocument();
   expect(breadcrumb).toHaveTextContent("ホーム");
-  expect(breadcrumb).toHaveTextContent("遊ぶ");
+  expect(within(breadcrumb).getByText("遊び")).toBeInTheDocument();
   expect(breadcrumb).toHaveTextContent("テストクイズ");
-});
-
-test("QuizPlayPageLayout does not render TrustLevelBadge (撤去済み・cycle-253)", async () => {
-  const component = await QuizPlayPageLayout({
-    quiz: mockQuiz,
-    slug: "test-quiz",
-  });
-  render(component);
-
-  // 新デザイン体系では TrustLevelBadge を撤去している（trustLevel フィールド自体も cycle-279 C1 で型・データごと完全削除）
-  expect(screen.queryByTestId("trust-level-badge")).not.toBeInTheDocument();
 });
 
 test("QuizPlayPageLayout renders QuizContainer with quiz and referrerTypeId", async () => {
@@ -157,7 +168,10 @@ test("QuizPlayPageLayout renders QuizContainer with quiz and referrerTypeId", as
 
 test("QuizPlayPageLayout renders FaqSection", async () => {
   const component = await QuizPlayPageLayout({
-    quiz: mockQuiz,
+    quiz: {
+      ...mockQuiz,
+      meta: { ...mockQuiz.meta, faq: [{ question: "Q", answer: "A" }] },
+    },
     slug: "test-quiz",
   });
   render(component);
@@ -202,12 +216,202 @@ test("QuizPlayPageLayout renders RecommendedContent with current slug", async ()
   expect(recommendedContent).toHaveAttribute("data-slug", "test-quiz");
 });
 
-test("QuizPlayPageLayout renders share section heading", async () => {
+test("診断のページの末尾に、何を共有するかを言う「この診断を勧める」の見出しのページの共有がある", async () => {
   const component = await QuizPlayPageLayout({
     quiz: mockQuiz,
     slug: "test-quiz",
   });
   render(component);
 
-  expect(screen.getByText("この診断が楽しかったらシェア")).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { level: 2, name: "この診断を勧める" }),
+  ).toBeInTheDocument();
+});
+
+test("知識クイズのページの共有の見出しは「このクイズを勧める」", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: { ...mockQuiz, meta: { ...mockQuiz.meta, type: "knowledge" } },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  expect(
+    screen.getByRole("heading", { level: 2, name: "このクイズを勧める" }),
+  ).toBeInTheDocument();
+});
+
+test("ページの共有は、ページの URL を、quiz の contentType と接頭辞の無い slug で数え、surface を送らない", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: mockQuiz,
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const props = JSON.parse(
+    screen.getByTestId("share-buttons").getAttribute("data-props") ?? "{}",
+  );
+  expect(props).toEqual({
+    url: "/play/test-quiz",
+    title: "テストクイズ",
+    sns: ["x", "line", "hatena", "copy"],
+    contentType: "quiz",
+    contentId: "test-quiz",
+  });
+});
+
+test("結果の見出し（タイプ名）の文節の区切りを、サーバーで全タイプぶん作って渡す", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: {
+      ...mockQuiz,
+      results: [
+        {
+          id: "poet",
+          title: "締切3分前に本気出す炎の司令塔",
+          description: "説明",
+        },
+      ],
+    },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const headings = JSON.parse(
+    screen.getByTestId("quiz-container").getAttribute("data-result-headings") ??
+      "{}",
+  );
+  expect(headings.poet.phrases.join("")).toBe("締切3分前に本気出す炎の司令塔");
+  expect(headings.poet.phrases.length).toBeGreaterThan(1);
+});
+
+test("名前と読みを持つタイプの見出しの区切りは、名前だけで作る", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: {
+      ...mockQuiz,
+      results: [
+        {
+          id: "ai-iro",
+          title: "藍色(あいいろ)",
+          nameParts: { name: "藍色", reading: "あいいろ" },
+          description: "説明",
+        },
+      ],
+    },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const headings = JSON.parse(
+    screen.getByTestId("quiz-container").getAttribute("data-result-headings") ??
+      "{}",
+  );
+  expect(headings["ai-iro"].phrases.join("")).toBe("藍色");
+});
+
+test("選択肢の文節の区切りを、サーバーで作って渡す", async () => {
+  const text = "場の本音と建前を読み取って、みんなとは違う角度から会話に入る";
+  const component = await QuizPlayPageLayout({
+    quiz: {
+      ...mockQuiz,
+      questions: [
+        {
+          id: "q1",
+          text: "問",
+          choices: [
+            { id: "q1-a", text },
+            { id: "q1-b", text: "はい" },
+          ],
+        },
+      ],
+    },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const choicePhrases = JSON.parse(
+    screen.getByTestId("quiz-container").getAttribute("data-choice-phrases") ??
+      "{}",
+  );
+  expect(Object.keys(choicePhrases)).toEqual(["q1-a", "q1-b"]);
+  expect(choicePhrases["q1-a"]).toEqual(splitIntoPhrases(text));
+  expect(choicePhrases["q1-a"].length).toBeGreaterThan(1);
+  expect(choicePhrases["q1-b"]).toEqual(["はい"]);
+});
+
+test("解き終えた画面の読みものの小見出しの区切りを、サーバーで作って渡す", async () => {
+  const component = await QuizPlayPageLayout({
+    quiz: mockQuiz,
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const readingHeadings = JSON.parse(
+    screen
+      .getByTestId("quiz-container")
+      .getAttribute("data-reading-headings") ?? "{}",
+  );
+  expect(Object.keys(readingHeadings)).toEqual([
+    "このタイプの特徴",
+    "このタイプのあるある",
+    "このタイプの人へのアドバイス",
+  ]);
+  expect(readingHeadings["このタイプの特徴"].join("")).toBe("このタイプの特徴");
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", async () => {
+  render(await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }));
+  const title = screen.getByRole("heading", { level: 1 });
+  expect(title.innerHTML).toBe(
+    splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+  );
+  const headings: string[][] = [["この", "診断を", "勧める"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
+});
+
+test("ページは、QuizContainer が描くクイズ本体のセクション（頭にパンくずと h1）・よくある質問・ページの共有の順のセクションで組む（DESIGN.md §5）", async () => {
+  const { container } = render(
+    await QuizPlayPageLayout({
+      quiz: {
+        ...mockQuiz,
+        meta: { ...mockQuiz.meta, faq: [{ question: "Q", answer: "A" }] },
+      },
+      slug: "test-quiz",
+    }),
+  );
+  const sections = Array.from(container.querySelectorAll(":scope > section"));
+  expect(sections).toHaveLength(3);
+  expect(
+    within(sections[0] as HTMLElement).getByRole("navigation", {
+      name: "パンくずリスト",
+    }),
+  ).toBeInTheDocument();
+  expect(
+    within(sections[0] as HTMLElement).getByRole("heading", { level: 1 }),
+  ).toBeInTheDocument();
+  expect(sections[0]).toBe(screen.getByTestId("quiz-container"));
+  expect(
+    within(sections[1] as HTMLElement).getByTestId("faq-section"),
+  ).toBeInTheDocument();
+  expect(
+    within(sections[2] as HTMLElement).getByRole("heading", {
+      level: 2,
+      name: "この診断を勧める",
+    }),
+  ).toBeInTheDocument();
+});
+
+test("よくある質問を持たないクイズは、空のセクションを置かない", async () => {
+  const { container } = render(
+    await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }),
+  );
+  expect(container.querySelectorAll(":scope > section")).toHaveLength(2);
+  expect(screen.queryByTestId("faq-section")).not.toBeInTheDocument();
+});
+
+test("h1 の下に説明を置かない（説明は開始の画面が「はじめる」の下に置く）", async () => {
+  render(await QuizPlayPageLayout({ quiz: mockQuiz, slug: "test-quiz" }));
+  expect(screen.queryByText("テスト用のクイズです")).not.toBeInTheDocument();
 });

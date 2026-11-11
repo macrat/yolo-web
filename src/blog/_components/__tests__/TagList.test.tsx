@@ -58,42 +58,14 @@ describe("TagList", () => {
     render(<TagList tags={["Next.js"]} />);
     expect(screen.getByRole("list", { name: "タグ" })).toBeInTheDocument();
   });
-
-  test("className を渡すと根 ul に付与される（既存クラスと併存）", () => {
-    // BlogList が stretched-link より前面へタグを出すため z-index クラスを渡す用途（cycle-281）。
-    render(<TagList tags={["Next.js"]} className="custom-class" />);
-    const ul = screen.getByRole("list", { name: "タグ" });
-    expect(ul).toHaveClass("custom-class");
-    // 既存の styles.tags クラスも保持されていること（"tags undefined" のような破損もない）
-    expect(ul.className).not.toContain("undefined");
-    expect(ul.className.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2);
-  });
-
-  test("className 未指定時は根 ul に追加クラスが付かない（後方互換）", () => {
-    render(<TagList tags={["Next.js"]} />);
-    const ul = screen.getByRole("list", { name: "タグ" });
-    // 単一クラス（styles.tags）のみ・"undefined" 文字列の混入もないこと
-    expect(ul.className).not.toContain("undefined");
-    expect(ul.className.trim().split(/\s+/).length).toBe(1);
-  });
 });
 
-describe("TagList.module.css — 新デザイントークン確認（DESIGN.md フェーズ R）", () => {
-  test("旧トークン（--color-* / --fg / --bg / --border / --r-*）が残っていないこと", () => {
+describe("TagList.module.css", () => {
+  test("タグは枠で囲まず、下線を消さない（§6 リンクは下線で示す）", () => {
     const cssPath = path.resolve(__dirname, "../TagList.module.css");
     const css = fs.readFileSync(cssPath, "utf-8");
-    expect(css).not.toContain("var(--color-");
-    expect(css).not.toMatch(/var\(--fg\b/);
-    expect(css).not.toMatch(/var\(--bg\b/);
-    expect(css).not.toMatch(/var\(--border\b/);
-    expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
-  });
-
-  test("新トークン（--ink-2 / --rule / --accent 等）が使われていること", () => {
-    const cssPath = path.resolve(__dirname, "../TagList.module.css");
-    const css = fs.readFileSync(cssPath, "utf-8");
-    // 新デザイントークンが使われていること（文字色・罫・ホバー色）
-    expect(css).toMatch(/var\(--(ink|rule|accent)/);
+    expect(css).not.toMatch(/\bborder\s*:/);
+    expect(css).not.toMatch(/text-decoration\s*:\s*none/);
   });
 });
 

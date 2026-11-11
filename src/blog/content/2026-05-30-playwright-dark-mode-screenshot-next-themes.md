@@ -49,12 +49,12 @@ next-themes がどのテーマを選ぶかの判断順序を知ると、なぜ s
 
 ```mermaid
 flowchart TD
-    A["emulateMedia colorScheme=dark を設定"] --> B{"localStorage に theme 保存あり?"}
-    B -->|あり| C["保存値が優先される<br/>emulateMedia は無視され得る"]
+    A["emulateMedia<br/>colorScheme=dark を設定"] --> B{"localStorage に<br/>theme 保存あり?"}
+    B -->|あり| C["保存値が優先される<br/>emulateMedia は<br/>無視され得る"]
     B -->|なし| D{"defaultTheme は system?"}
     D -->|はい| E["prefers-color-scheme を参照<br/>dark になり得る"]
     D -->|いいえ| F["defaultTheme が優先<br/>多くは light のまま"]
-    E --> G{"撮影時に .dark クラス付与済み?"}
+    E --> G{"撮影時に .dark クラス<br/>付与済み?"}
     G -->|まだ| H["ライトのまま撮影<br/>silent-light"]
     G -->|済み| I["ダークで撮影 成功"]
     C --> H

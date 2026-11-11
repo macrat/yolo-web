@@ -1,124 +1,31 @@
 /*
- * ToolPageLayout.module.css — 実務の器（DESIGN.md フェーズ R・店構えへ変換）。
- *
- * ツール詳細の共有レイアウト。確定提示方式（タイル＝主役・ファーストビュー）を実装。
- * ツールは§7実務側の典型——正確さ・使いやすさが価値、器は静か。新トークンのみ使用。
- * DESIGN.md §4: 操作面の最大幅 --max-width(960px) / 読む面 --measure(42rem) / 影なし・角丸0基調。
+ * ToolPageLayout.module.css — 道具のページの組み方。ページの割り方と、セクションのあいだの全幅の罫線と余白は
+ * Section が持つ（DESIGN.md §5）。見出しの大きさは h1・h2 の既定（§4 の主見出し・セクションの見出し）に従う。
  */
 
-/* ページ全体のラッパー。操作面の最大幅 --max-width(960px) でセンタリング（§4）。 */
-.layout {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-24) var(--space-16);
+/* パンくずと h1 を、その下の道具の本体と同じ間隔で積む（§5 の間隔）。 */
+.head {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
 }
 
-/* === ゾーン1: 文脈確認（パンくず・h1・短説明）=== */
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
+}
 
-/* コンパクトな h1 + shortDescription のまとまり。
- * ファーストビューを占有しないよう margin を絞る */
-.header {
+/* このツールについての文は本文として、本文の幅で折り返し、段落のあいだを 16px あける（§4・§5）。 */
+.about {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-}
-
-/* h1: ツール名は明朝見出し（§3）。SEO 用に保持しつつ視覚的にはコンパクトに。
- * ウェイトは明朝 600 一本（globals.css の h1-h6 基層と同じ・上書きしない）。 */
-.title {
-  font-family: var(--font-mincho);
-  font-size: 1.5625rem; /* 25px（1.25 倍スケール帯） */
-  color: var(--ink);
-  margin: 0;
-  line-height: 1.4;
-  font-feature-settings: "palt";
-}
-
-/* shortDescription: 1〜2文のコンパクトな短説明。文章として読ませるため 16px/1.9（§3）。 */
-.shortDescription {
-  font-family: var(--font-gothic);
-  font-size: 1rem;
-  color: var(--ink-2);
-  line-height: 1.9;
-  margin: 0;
-  /* 読む面は --measure に絞る（§4） */
+  gap: var(--space-16);
   max-width: var(--measure);
 }
 
-/* === ゾーン2: ツール本体（主役・ファーストビュー）=== */
-
-/* children（ツール本体）: 操作面をフルに使えるよう制限しない */
-.content {
-  width: 100%;
-}
-
-/* === ゾーン3: 補助情報（本体より下に二次配置）=== */
-
-/* howItWorks セクション: 区切りは罫（--rule）が主役（§4）。 */
-.howItWorksSection {
-  max-width: var(--measure);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
-}
-
-.howItWorksHeading {
-  font-family: var(--font-mincho);
-  font-size: 1.09375rem; /* 見出し階層の最小段（17.5px 目安） */
-  color: var(--ink);
-  margin: 0 0 var(--space-8);
-  line-height: 1.4;
-  font-feature-settings: "palt";
-}
-
-.howItWorksText {
-  font-family: var(--font-gothic);
-  font-size: 1rem;
-  color: var(--ink-2);
-  line-height: 1.9;
-  margin: 0;
-}
-
-/* プライバシーノート: 区画は --paper-2 + 罫（色ベタの通知バーにしない）。 */
+/* プライバシーの注記は補助情報の文字で置く（§4）。 */
 .privacyNote {
-  max-width: var(--measure);
-  background-color: var(--paper-2);
-  border: 1px solid var(--rule);
   color: var(--ink-2);
-  font-size: 0.8125rem;
-  border-radius: var(--radius);
-  padding: var(--space-8) var(--space-16);
-  text-align: center;
-  margin: 0;
-}
-
-/* シェアセクション */
-.shareSection {
-  max-width: var(--measure);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
-}
-
-.shareSectionTitle {
-  font-family: var(--font-mincho);
-  font-size: 1.09375rem;
-  text-align: center;
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  line-height: 1.4;
-  font-feature-settings: "palt";
-}
-
-/* モバイル対応（375px 先行・§10） */
-@media (max-width: 768px) {
-  .layout {
-    padding: var(--space-16) var(--space-16);
-    gap: var(--space-16);
-  }
-
-  .title {
-    font-size: 1.25rem;
-  }
+  font-size: var(--text-small);
 }

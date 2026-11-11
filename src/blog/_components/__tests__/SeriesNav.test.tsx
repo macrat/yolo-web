@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import type { BlogPostMeta } from "@/blog/_lib/blog";
+import { joinDashes } from "@/lib/phrase-dashes";
 
 /** Helper to create a minimal BlogPostMeta for testing. */
 function makeMeta(
@@ -32,8 +33,7 @@ const mockPosts: BlogPostMeta[] = [
 ];
 
 describe("SeriesNav", () => {
-  test("displays the series name from SERIES_LABELS", () => {
-    // "ai-agent-ops" maps to "AIエージェント運用記" in SERIES_LABELS
+  test("the toggle names the series from SERIES_LABELS and its number of parts", () => {
     render(
       <SeriesNav
         seriesId="ai-agent-ops"
@@ -41,7 +41,9 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.getByText("AIエージェント運用記")).toBeInTheDocument();
+    expect(
+      screen.getByText("連載「AIエージェント運用記」（全3回）"),
+    ).toBeInTheDocument();
   });
 
   test("falls back to seriesId when not in SERIES_LABELS", () => {
@@ -52,7 +54,10 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.getByText("unknown-series")).toBeInTheDocument();
+    // ラベルは PhrasedText で組むので、名前の中のハイフンは joinDashes が組む形（後ろに語結合子）で出る。
+    expect(
+      screen.getByText(joinDashes("連載「unknown-series」（全3回）")),
+    ).toBeInTheDocument();
   });
 
   test("displays all posts in the list", () => {
@@ -70,7 +75,7 @@ describe("SeriesNav", () => {
     expect(screen.getAllByText("Third Post").length).toBeGreaterThanOrEqual(1);
   });
 
-  test("highlights the current post with aria-current and '(この記事)' badge", () => {
+  test("marks the current post as the current page", () => {
     render(
       <SeriesNav
         seriesId="ai-agent-ops"
@@ -78,22 +83,9 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    const currentEl = screen.getByText("Second Post");
-    expect(currentEl.closest("[aria-current='page']")).toBeInTheDocument();
-    expect(screen.getByText("(この記事)")).toBeInTheDocument();
-  });
-
-  test("current post is not a link", () => {
-    render(
-      <SeriesNav
-        seriesId="ai-agent-ops"
-        currentSlug="post-2"
-        seriesPosts={mockPosts}
-      />,
-    );
-    // "Second Post" should not be wrapped in an <a> tag
-    const currentEl = screen.getByText("Second Post");
-    expect(currentEl.closest("a")).toBeNull();
+    const currentLink = screen.getByRole("link", { current: "page" });
+    expect(currentLink).toHaveAccessibleName("Second Post");
+    expect(currentLink).toHaveAttribute("href", "/blog/post-2");
   });
 
   test("other posts are links", () => {
@@ -104,8 +96,6 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    // Titles may appear in both the list and quick nav, so find them
-    // in the ordered list specifically.
     const listItems = screen.getByRole("list").querySelectorAll("a");
     const hrefs = Array.from(listItems).map((a) => a.getAttribute("href"));
     expect(hrefs).toContain("/blog/post-1");
@@ -120,9 +110,8 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    // ラベルは「シリーズ内の前の記事」「シリーズ内の次の記事」
-    expect(screen.getByText("シリーズ内の前の記事")).toBeInTheDocument();
-    expect(screen.getByText("シリーズ内の次の記事")).toBeInTheDocument();
+    expect(screen.getByText("連載の前の回")).toBeInTheDocument();
+    expect(screen.getByText("連載の次の回")).toBeInTheDocument();
 
     // Verify quick nav links point to the correct posts
     const allPost1Links = screen.getAllByText("First Post");
@@ -146,8 +135,8 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.queryByText("シリーズ内の前の記事")).toBeNull();
-    expect(screen.getByText("シリーズ内の次の記事")).toBeInTheDocument();
+    expect(screen.queryByText("連載の前の回")).toBeNull();
+    expect(screen.getByText("連載の次の回")).toBeInTheDocument();
   });
 
   test("last post has no 'next' link", () => {
@@ -158,8 +147,8 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.getByText("シリーズ内の前の記事")).toBeInTheDocument();
-    expect(screen.queryByText("シリーズ内の次の記事")).toBeNull();
+    expect(screen.getByText("連載の前の回")).toBeInTheDocument();
+    expect(screen.queryByText("連載の次の回")).toBeNull();
   });
 
   test("returns null when seriesPosts has 0 posts", () => {
@@ -173,7 +162,7 @@ describe("SeriesNav", () => {
     expect(container.innerHTML).toBe("");
   });
 
-  test("returns null when seriesPosts has only 1 post (R1)", () => {
+  test("returns null when seriesPosts has only 1 post (a series of one has nothing to navigate)", () => {
     const singlePost = [mockPosts[0]];
     const { container } = render(
       <SeriesNav
@@ -196,6 +185,38 @@ describe("SeriesNav", () => {
     expect(container.innerHTML).toBe("");
   });
 
+  test("開閉のラベルは連載の名前と回の数、いまの回を、どちらも文節の切れ目にだけ折り所を持つ字で組む", () => {
+    const { container } = render(
+      <SeriesNav
+        seriesId="ai-agent-ops"
+        currentSlug="post-2"
+        seriesPosts={mockPosts}
+      />,
+    );
+    const summary = container.querySelector("summary");
+    expect(summary).not.toBeNull();
+    const phrases = (element: Element) =>
+      Array.from(element.childNodes)
+        .reduce<string[]>(
+          (parts, node) => {
+            if (node.nodeName === "WBR") return [...parts, ""];
+            parts[parts.length - 1] += node.textContent ?? "";
+            return parts;
+          },
+          [""],
+        )
+        .filter((part) => part !== "");
+    const [series, position] = Array.from(
+      summary!.querySelectorAll("span"),
+    ).filter((span) => span.querySelector(":scope > wbr"));
+    expect(phrases(series).join("")).toBe(
+      "連載「AIエージェント運用記」（全3回）",
+    );
+    expect(phrases(series).length).toBeGreaterThan(1);
+    expect(phrases(position).join("")).toBe("この記事は第2回");
+    expect(phrases(position).length).toBeGreaterThan(1);
+  });
+
   test("displays position label correctly", () => {
     render(
       <SeriesNav
@@ -204,7 +225,7 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.getByText("3記事中2番目")).toBeInTheDocument();
+    expect(screen.getByText("この記事は第2回")).toBeInTheDocument();
   });
 
   test("has aria-label for accessibility", () => {
@@ -216,12 +237,12 @@ describe("SeriesNav", () => {
       />,
     );
     const nav = screen.getByRole("navigation", {
-      name: "シリーズナビゲーション",
+      name: "連載",
     });
     expect(nav).toBeInTheDocument();
   });
 
-  test("prev/next quick nav labels contain 'シリーズ内' to distinguish from chronological nav", () => {
+  test("the list is ordered, named by the toggle, and each link is named by the title only", () => {
     render(
       <SeriesNav
         seriesId="ai-agent-ops"
@@ -229,12 +250,13 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    // SeriesNav の前後ラベルは「シリーズ内の前の記事」「シリーズ内の次の記事」であること
-    expect(
-      screen.getByText(/シリーズ内.*前|前.*シリーズ内/),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/シリーズ内.*次|次.*シリーズ内/),
-    ).toBeInTheDocument();
+    const list = screen.getByRole("list", {
+      name: "連載「AIエージェント運用記」（全3回）",
+    });
+    expect(list.tagName).toBe("OL");
+    const names = Array.from(list.querySelectorAll("a")).map((a) =>
+      a.textContent?.trim(),
+    );
+    expect(names).toEqual(["First Post", "Second Post", "Third Post"]);
   });
 });

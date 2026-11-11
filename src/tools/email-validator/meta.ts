@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "email 検証",
     "メールアドレス 正規表現",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: ["regex-tester", "url-encode", "password-generator"],
   publishedAt: "2026-02-14T13:22:32+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

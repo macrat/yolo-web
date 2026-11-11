@@ -1,28 +1,38 @@
-import { chromium } from "playwright";
+import { chromium, type Browser } from "playwright";
 import sharp from "sharp";
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 
 const url = process.argv[2];
 if (!url) {
   console.error(
-    "Usage: npx tsx take.ts <URL> [--selector <CSS selector>] [--dark]",
+    "Usage: npx tsx take.ts <URL> [--selector <CSS selector>] [--dark] [--out <dir>]",
   );
   process.exit(1);
 }
 
-const selectorIndex = process.argv.indexOf("--selector");
-const selector = selectorIndex !== -1 ? process.argv[selectorIndex + 1] : null;
-if (selectorIndex !== -1 && !selector) {
-  console.error("--selector requires a CSS selector argument");
-  process.exit(1);
+// 値を取るオプションの値を返す。オプションが無ければ null。値が無いか `--` で始まる
+// （すぐ後ろに別のフラグを書いた）ときは、そのフラグを値と取り違えないようにエラーで止める。
+function optionValue(name: string, valueName: string): string | null {
+  const index = process.argv.indexOf(name);
+  if (index === -1) return null;
+  const value = process.argv[index + 1];
+  if (!value || value.startsWith("--")) {
+    console.error(`${name} requires a ${valueName} argument`);
+    process.exit(1);
+  }
+  return value;
 }
 
-// --dark フラグ: 指定時はダークテーマで撮影する
-// next-themes は attribute="class" で <html class="dark"> を管理するため、
-// emulateMedia だけでは silent-light になる場合がある。
-// addInitScript で localStorage に theme='dark' を事前注入し、
-// next-themes に dark を選ばせる方式を採用する。
+const selector = optionValue("--selector", "CSS selector");
+
+// --out: 画像の書き出し先。既定は cwd の tmp/screenshots。並行して撮る作業者は自分専用のディレクトリを渡す。
+const outDir =
+  optionValue("--out", "directory") ?? path.join("tmp", "screenshots");
+
+// --dark フラグ: 指定時はダークテーマで撮影する。
+// サイトは端末の設定（prefers-color-scheme）に従うので、ブラウザの設定を dark にして撮る。
 const darkMode = process.argv.includes("--dark");
 
 const widths = [1920, 1536, 1280, 720, 440, 360];
@@ -40,11 +50,48 @@ function sanitizeUrl(rawUrl: string): string {
     .replace(/^-|-$/g, "");
 }
 
+// ブラウザの置き場（PLAYWRIGHT_BROWSERS_PATH、無ければ Playwright の既定の置き場）に入っている
+// Chromium の本体のうち、版がいちばん新しいものを返す。
+function findInstalledChromium(): string | null {
+  const browsersDir =
+    process.env.PLAYWRIGHT_BROWSERS_PATH ||
+    path.join(os.homedir(), ".cache", "ms-playwright");
+  if (!fs.existsSync(browsersDir)) return null;
+
+  const candidates = fs
+    .readdirSync(browsersDir)
+    .map((name) => ({ name, revision: /^chromium-(\d+)$/.exec(name)?.[1] }))
+    .filter((entry) => entry.revision !== undefined)
+    .sort((a, b) => Number(b.revision) - Number(a.revision))
+    .flatMap(({ name }) =>
+      ["chrome-linux64", "chrome-linux"].map((sub) =>
+        path.join(browsersDir, name, sub, "chrome"),
+      ),
+    );
+  return candidates.find((candidate) => fs.existsSync(candidate)) ?? null;
+}
+
+// リポジトリの playwright が求める版のブラウザで起動する。その版が入っていないとき
+// （ブラウザを足さない環境で、入っている版が違うとき）は、入っている Chromium で起動する。
+async function launchBrowser(): Promise<Browser> {
+  try {
+    return await chromium.launch();
+  } catch (err) {
+    const missingExecutable =
+      err instanceof Error && err.message.includes("Executable doesn't exist");
+    const installed = missingExecutable ? findInstalledChromium() : null;
+    if (!installed) throw err;
+    console.log(
+      `playwright が求める版のブラウザが無いので、入っている Chromium で撮ります: ${installed}`,
+    );
+    return chromium.launch({ executablePath: installed });
+  }
+}
+
 async function main() {
-  const outDir = path.join("tmp", "screenshots");
   fs.mkdirSync(outDir, { recursive: true });
 
-  const browser = await chromium.launch();
+  const browser = await launchBrowser();
   const timestamp = getTimestamp();
   const sanitized = sanitizeUrl(url);
 
@@ -52,23 +99,10 @@ async function main() {
   const darkFailedWidths: number[] = [];
 
   for (const width of widths) {
-    const context = await browser.newContext();
-
-    if (darkMode) {
-      // ページ遷移前に localStorage へ dark を注入する。
-      // next-themes はハイドレーション時に localStorage['theme'] を読んで
-      // <html class="dark"> を付与するため、この順序が必須。
-      await context.addInitScript(() => {
-        localStorage.setItem("theme", "dark");
-      });
-    }
-
+    const context = await browser.newContext({
+      colorScheme: darkMode ? "dark" : "light",
+    });
     const page = await context.newPage();
-
-    if (darkMode) {
-      // 保険として OS レベルのカラースキームも dark にする（page.goto 前に設定）
-      await page.emulateMedia({ colorScheme: "dark" });
-    }
 
     await page.setViewportSize({ width, height: 900 });
     await page.goto(url, { waitUntil: "networkidle" });
@@ -76,20 +110,18 @@ async function main() {
     // dark 適用の成否を判定する
     let darkApplied = false;
     if (darkMode) {
-      // next-themes がハイドレーション後に <html class="dark"> を付与するまで待つ。
-      // タイムアウト 5 秒以内に dark クラスが付かない場合は失敗とみなす。
-      darkApplied = await page
-        .waitForFunction(
-          () => document.documentElement.classList.contains("dark"),
-          { timeout: 5000 },
-        )
-        .then(() => true)
-        .catch(() => false);
+      // 撮る前に、dark の値が実際に当たったことを確かめる。
+      // テーマの値を上書きする仕組みが紛れ込んでも、light のまま dark の名前で保存しないため。
+      darkApplied = await page.evaluate(
+        () =>
+          window.matchMedia("(prefers-color-scheme: dark)").matches &&
+          getComputedStyle(document.documentElement).colorScheme === "dark",
+      );
 
       if (!darkApplied) {
         // ファイル名と終了コードの両方で失敗を通知する（ログ見落としを防ぐ二重化）
         console.error(
-          `[ERROR] w${width}: <html class="dark"> が 5 秒以内に付与されませんでした。` +
+          `[ERROR] w${width}: dark の値が当たっていません。` +
             ` ファイル名を _dark-FAILED に変更して保存します。`,
         );
         darkFailedWidths.push(width);

@@ -1,17 +1,14 @@
 /**
  * TextDiffTile — text-diff 単一正典タイル 回帰テスト
  *
- * cycle-228 T-23 で TextDiffPage.tsx を Panel ルートのタイルへ移植。
- * 旧 TextDiffPage.test.tsx の振る舞いを全移植し以下を拡張:
- *   - variant 別テスト（full / line / word / char）
- *   - 複数インスタンス同居時の DOM id 一意性確認
+ * テスト観点:
+ *   - 差分の振る舞いと variant 別の表示（full / line / word / char）
+ *   - 複数インスタンス同居時の DOM id 一意性
  *   - CSS トークン検証（TextDiffTile.module.css）
- *   - A-1: ルートが Panel（section タグ）であること
- *
- * 個別論点:
- *   ①-2: 件数・ラベル一致（line/word/char モード別に適切なカウント表示）
- *   ①-12: 空入力「差分なし」誤表示解消（両方空のときは入力待ち状態）
- *   ②-15: コピーボタンは存在しない（知る対象）
+ *   - ルートが Panel（section タグ）であること
+ *   - 件数とラベルが mode ごとの単位（行/単語/文字）で一致すること
+ *   - 両入力とも空のときは「差分なし」を出さず、入力待ちの状態にすること
+ *   - コピーのボタンを持たないこと
  */
 
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -25,9 +22,9 @@ afterEach(() => {
 });
 
 // ===========================================================
-// A-1: タイルルートが Panel（section タグ）
+// タイルルートが Panel（section タグ）
 // ===========================================================
-describe("A-1: タイルルートが Panel", () => {
+describe("タイルルートが Panel", () => {
   it("ルート要素が section タグ（Panel デフォルト）である", () => {
     const { container } = render(<TextDiffTile />);
     const root = container.firstChild as HTMLElement;
@@ -42,58 +39,58 @@ describe("A-1: タイルルートが Panel", () => {
 });
 
 // ===========================================================
-// E-1: 基本レンダリング
+// 基本レンダリング
 // ===========================================================
-describe("E-1: 基本レンダリング", () => {
+describe("基本レンダリング", () => {
   it("コンポーネントが正常にレンダリングされる（variant=full）", () => {
     render(<TextDiffTile />);
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
     expect(screen.getByLabelText("変更後テキスト")).toBeInTheDocument();
   });
 
-  it("比較モードの SegmentedControl（radiogroup）が存在する（variant=full）", () => {
+  it("比較モードの ラジオボタンの組が存在する（variant=full）", () => {
     render(<TextDiffTile />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toBeInTheDocument();
   });
 
-  it("比較モードの初期選択が「行単位」になっている（C-5: value が options 内に存在）", () => {
+  it("比較モードの初期選択が「行単位」になっている（value が options 内に存在）", () => {
     render(<TextDiffTile />);
     const lineOption = screen.getByRole("radio", { name: "行単位" });
     expect(lineOption).toBeChecked();
   });
 
-  it("コピーボタンが存在しない（②-15: 知る対象）", () => {
+  it("コピーボタンが存在しない（知る対象）", () => {
     render(<TextDiffTile />);
     expect(screen.queryByRole("button")).toBeNull();
   });
 });
 
 // ===========================================================
-// variant 別テスト（A-5: variant prop の設定差）
+// variant 別テスト（variant prop の設定差）
 // ===========================================================
 describe("variant 別テスト", () => {
-  it("variant=full: SegmentedControl が表示される", () => {
+  it("variant=full: ラジオボタンの組が表示される", () => {
     render(<TextDiffTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
-  it("variant=line: SegmentedControl が非表示・モードが行単位に固定される", () => {
+  it("variant=line: ラジオボタンの組が非表示・モードが行単位に固定される", () => {
     render(<TextDiffTile variant="line" />);
-    // SegmentedControl は非表示
+    // ラジオボタンの組は非表示
     expect(screen.queryByRole("radiogroup")).toBeNull();
     // 入力エリアは存在する
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
     expect(screen.getByLabelText("変更後テキスト")).toBeInTheDocument();
   });
 
-  it("variant=word: SegmentedControl が非表示・モードが単語単位に固定される", () => {
+  it("variant=word: ラジオボタンの組が非表示・モードが単語単位に固定される", () => {
     render(<TextDiffTile variant="word" />);
     expect(screen.queryByRole("radiogroup")).toBeNull();
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
   });
 
-  it("variant=char: SegmentedControl が非表示・モードが文字単位に固定される", () => {
+  it("variant=char: ラジオボタンの組が非表示・モードが文字単位に固定される", () => {
     render(<TextDiffTile variant="char" />);
     expect(screen.queryByRole("radiogroup")).toBeNull();
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
@@ -169,9 +166,9 @@ describe("複数インスタンス同居: DOM id 一意性", () => {
 });
 
 // ===========================================================
-// E-2: 入力→結果更新
+// 入力→結果更新
 // ===========================================================
-describe("E-2: 入力→結果更新", () => {
+describe("入力→結果更新", () => {
   it("2つのテキストエリアに異なるテキストを入力すると差分結果が表示される", () => {
     render(<TextDiffTile />);
 
@@ -187,7 +184,7 @@ describe("E-2: 入力→結果更新", () => {
     expect(region.textContent?.length).toBeGreaterThan(0);
   });
 
-  it("モードを変更すると比較モードが切り替わる（SegmentedControl のクリック）", () => {
+  it("モードを変更すると比較モードが切り替わる（ラジオボタンの組のクリック）", () => {
     render(<TextDiffTile />);
 
     const wordOption = screen.getByRole("radio", { name: "単語単位" });
@@ -196,7 +193,7 @@ describe("E-2: 入力→結果更新", () => {
     expect(wordOption).toBeChecked();
   });
 
-  it("モード切替後に古い結果が残らない（G-1 要件）", () => {
+  it("モード切替後に古い結果が残らない", () => {
     render(<TextDiffTile />);
 
     // line モードで差分入力
@@ -219,9 +216,9 @@ describe("E-2: 入力→結果更新", () => {
 });
 
 // ===========================================================
-// E-3: 空入力（①-12: 空入力「差分なし」誤表示解消）
+// 空入力（空入力「差分なし」誤表示解消）
 // ===========================================================
-describe("E-3: 空入力（①-12 個別論点）", () => {
+describe("空入力", () => {
   it("両方空（初期状態）のとき「差分なし」を誤表示しない", () => {
     render(<TextDiffTile />);
     expect(screen.queryByText(/差分なし/)).toBeNull();
@@ -262,9 +259,9 @@ describe("E-3: 空入力（①-12 個別論点）", () => {
 });
 
 // ===========================================================
-// E-4: 変換ロジックの正確性（①-2: 件数・ラベル一致）
+// 変換ロジックの正確性（件数・ラベル一致）
 // ===========================================================
-describe("E-4: 変換ロジックの正確性（①-2 個別論点）", () => {
+describe("変換ロジックの正確性", () => {
   it("line モードで複数行の差分を正しくカウントする", () => {
     render(<TextDiffTile />);
     fireEvent.change(screen.getByLabelText("変更前テキスト"), {
@@ -345,9 +342,9 @@ describe("E-4: 変換ロジックの正確性（①-2 個別論点）", () => {
 });
 
 // ===========================================================
-// E-5: ARIA（C-3: ライブリージョンに実テキストノードのサマリ）
+// ARIA（ライブリージョンに実テキストノードのサマリ）
 // ===========================================================
-describe("E-5: ARIA", () => {
+describe("ARIA", () => {
   it("サマリ欄に role=status + aria-live=polite が付与されている", () => {
     render(<TextDiffTile />);
     const statusEl = screen.getByRole("status");
@@ -355,7 +352,7 @@ describe("E-5: ARIA", () => {
     expect(statusEl).toHaveAttribute("aria-live", "polite");
   });
 
-  it("差分あり時のサマリ status 欄に実テキストノードが存在する（C-3 要件）", () => {
+  it("差分あり時のサマリ status 欄に実テキストノードが存在する", () => {
     render(<TextDiffTile />);
     fireEvent.change(screen.getByLabelText("変更前テキスト"), {
       target: { value: "old" },
@@ -381,7 +378,7 @@ describe("E-5: ARIA", () => {
     expect(region).toHaveAttribute("aria-label", "差分結果");
   });
 
-  it("SegmentedControl に aria-label または aria-labelledby が設定されている（C-2 要件）", () => {
+  it("ラジオボタンの組に aria-label または aria-labelledby が設定されている", () => {
     render(<TextDiffTile />);
     const radiogroup = screen.getByRole("radiogroup");
     const hasAriaLabel =
@@ -392,9 +389,9 @@ describe("E-5: ARIA", () => {
 });
 
 // ===========================================================
-// B-593: 本体見出しレベル是正（h1→h3 飛び是正の回帰防止）
+// 本体見出しレベル（h1 の次が h2）
 // ===========================================================
-describe("B-593: 差分結果見出しのレベル（h1→h3 飛び是正の回帰防止）", () => {
+describe("差分結果見出しのレベル", () => {
   it("「差分結果」見出しが見出しレベル2（h2）である", () => {
     render(<TextDiffTile />);
 
@@ -406,14 +403,14 @@ describe("B-593: 差分結果見出しのレベル（h1→h3 飛び是正の回�
       target: { value: "orange" },
     });
 
-    // B-593: h1→h3 飛び是正の回帰防止 — レベル2で取得できることを保証
+    // レベル2で取得できることを保証
     const heading = screen.getByRole("heading", { level: 2, name: "差分結果" });
     expect(heading).toBeInTheDocument();
   });
 });
 
 // ===========================================================
-// reviewer 指摘: 「+」「−」記号を差分本文に付与（meta.ts との整合）
+// 「+」「−」記号を差分本文に付与（meta.ts の説明と一致させる）
 // ===========================================================
 describe("+/− 記号が差分本文に付与されている", () => {
   it("追加部分に「+」記号が表示される（line モード）", () => {
@@ -455,9 +452,9 @@ describe("+/− 記号が差分本文に付与されている", () => {
 });
 
 // ===========================================================
-// U-7 是正: 末尾改行アーティファクト修正
+// 末尾改行の有無だけの差
 // ===========================================================
-describe("U-7 是正: line モードの末尾改行アーティファクト解消", () => {
+describe("line モードの末尾改行の扱い", () => {
   it("末尾改行の有無だけが異なるテキストは差分なしとして扱われる", () => {
     render(<TextDiffTile />);
     fireEvent.change(screen.getByLabelText("変更前テキスト"), {
@@ -497,15 +494,15 @@ describe("U-7 是正: line モードの末尾改行アーティファクト解�
 });
 
 // ===========================================================
-// E-12: CSS トークン検証（readFileSync）
+// CSS トークン検証（readFileSync）
 // ===========================================================
-describe("E-12: CSSトークン検証（TextDiffTile.module.css）", () => {
+describe("CSSトークン検証（TextDiffTile.module.css）", () => {
   const cssPath = join(
     process.cwd(),
     "src/tools/text-diff/TextDiffTile.module.css",
   );
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
@@ -521,7 +518,7 @@ describe("E-12: CSSトークン検証（TextDiffTile.module.css）", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("box-shadow プロパティが存在しない（B-6/A-7: Panel 以外に box-shadow なし）", () => {
+  it("box-shadow プロパティが存在しない（Panel 以外に box-shadow なし）", () => {
     const css = readFileSync(cssPath, "utf-8");
     // コメント行を除いた CSS からチェック（コメントに文言が含まれることは許容）
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");

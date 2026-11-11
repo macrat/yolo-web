@@ -1,9 +1,6 @@
 import type { ToolMeta } from "@/tools/types";
 
-/** 正規表現テスターのサンプル入力。
- * タイル UI と詳細ページの両方から参照する単一 SSoT として定義（T-2 論点 15 案 D-改 1）。
- * cycle-215 で 6 種定義。
- */
+/** 正規表現テスターのサンプル入力の1件。 */
 export interface RegexSampleInput {
   /** ドロップダウンに表示するラベル */
   label: string;
@@ -16,8 +13,7 @@ export interface RegexSampleInput {
 }
 
 /**
- * 正規表現テスターのサンプル入力 6 種（論点 15 案 D-改 1 採択 / cycle-215 T-2）。
- * タイル `<select>` 6 種 + 詳細ページドロップダウン 6 種で同一定数を参照する。
+ * 正規表現テスターのサンプル入力。タイルのサンプルの選択肢に、この順で並ぶ。
  */
 export const REGEX_SAMPLE_INPUTS: RegexSampleInput[] = [
   {
@@ -72,7 +68,7 @@ export const meta: ToolMeta = {
     "正規表現チェック",
     "パターンマッチ",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: ["json-formatter", "text-diff", "email-validator"],
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

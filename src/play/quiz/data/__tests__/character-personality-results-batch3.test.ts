@@ -29,42 +29,10 @@ describe("character-personality-results-batch3", () => {
     }
   });
 
-  it("each character has a valid hex color", () => {
-    for (const char of resultsBatch3) {
-      expect(char.color).toMatch(/^#[0-9a-f]{6}$/i);
-    }
-  });
-
-  it("each character has a non-empty icon (emoji)", () => {
-    for (const char of resultsBatch3) {
-      expect(char.icon.length).toBeGreaterThan(0);
-    }
-  });
-
   it("all IDs are unique within the batch", () => {
     const ids = resultsBatch3.map((r) => r.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
-  });
-
-  it("all colors are unique within the batch", () => {
-    const colors = resultsBatch3.map((r) => r.color.toLowerCase());
-    const uniqueColors = new Set(colors);
-    expect(uniqueColors.size).toBe(colors.length);
-  });
-
-  it("ultimate-artist has artist-dominant color (purple range)", () => {
-    const char = resultsBatch3.find((r) => r.id === "ultimate-artist");
-    expect(char).toBeDefined();
-    // artist color is #7c3aed (purple), same-type should be purely artist
-    expect(char!.color).toBe("#7c3aed");
-  });
-
-  it("data-fortress (guardian+professor) has a blended blue-green color", () => {
-    const char = resultsBatch3.find((r) => r.id === "data-fortress");
-    expect(char).toBeDefined();
-    // guardian=#059669, professor=#2563eb — blended color should exist
-    expect(char!.color).toBeTruthy();
   });
 
   it("descriptions use second-person or character-voice addressing style", () => {

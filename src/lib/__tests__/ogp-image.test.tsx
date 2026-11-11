@@ -1,4 +1,5 @@
 import { expect, test, describe, vi, beforeEach } from "vitest";
+import { PAPER, INK } from "../token-hex";
 
 // Track calls to ImageResponse for assertions
 let imageResponseCalls: Array<{ element: unknown; options: unknown }> = [];
@@ -30,10 +31,6 @@ function makeTtfBuffer(extraBytes = 4): ArrayBuffer {
   view[3] = 0x00;
   return buf;
 }
-
-/** 器の色（utsuwaHex の SSoT と一致させる）。新デザインの契約検証に使う。 */
-const PAPER = "#f8f7f2";
-const ACCENT = "#af3622";
 
 /** JSX 風ツリーから文字列の子（テキストノード）をすべて集める。 */
 function collectText(node: unknown, out: string[] = []): string[] {
@@ -115,40 +112,35 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     });
   });
 
-  test("地は常に紙（PAPER）で全面ベタ塗りの accentColor は無い", async () => {
+  test("地は常に紙（PAPER）で、全面のベタ塗りは無い", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
     const jsx = element as { props: { style: { backgroundColor: string } } };
-    // ルートの地は常に紙。旧デザインの青ベタ（#2563eb）等は生成されない。
+    // ルートの地は常に紙。青のベタ塗り（#2563eb）等は生成されない。
     expect(jsx.props.style.backgroundColor).toBe(PAPER);
   });
 
-  test("朱（ACCENT）は identity マーク（素の朱 y）にだけ現れ、地ベタにも塗りタイルにもしない", async () => {
+  test("墨（INK）は文字の色としてだけ現れ、地ベタにも塗りタイルにもしない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
-    // 地（ルート）の背景は常に紙。旧デザインの青ベタや朱の全面ベタ地は作らない。
     const rootBg = (
       element as { props: { style: { backgroundColor: string } } }
     ).props.style.backgroundColor;
     expect(rootBg).toBe(PAPER);
-    expect(rootBg).not.toBe(ACCENT);
-    // OGP マークは容器なしの素の朱 y で、塗りタイルを持たない。よって朱は
-    // 塗りの背景（地ベタも識別マークの塗りタイルも）として現れない。
-    // ミューテーション観点: マークを塗りタイルに戻すと backgroundColor に ACCENT が現れ落ちる。
+    // ミューテーション観点: マークを塗りタイルに戻すと backgroundColor に INK が現れ落ちる。
     const bgColors = collectStyleValues(element, "backgroundColor");
-    expect(bgColors).not.toContain(ACCENT);
-    // 朱は識別マークの頭字 y の文字色としてだけ現れる。
+    expect(bgColors).not.toContain(INK);
     const textColors = collectStyleValues(element, "color");
-    expect(textColors).toContain(ACCENT);
+    expect(textColors).toContain(INK);
   });
 
-  test("identity マーク: 容器なしの素の朱（ACCENT）の明朝 y（塗りタイルは持たない）", async () => {
+  test("identity マーク: 容器なしの墨の y（塗りタイルは持たない）", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -160,18 +152,17 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(texts).toContain("y");
     expect(texts).not.toContain("試");
 
-    // 頭字 y の文字色は朱（ACCENT）。OGP マークは容器なしの素の朱 y で、塗りタイルは持たない。
-    // ミューテーション観点: y の色を PAPER 等に戻すと ACCENT が color から消え落ちる。
+    // 頭字 y の文字色は墨。OGP マークは容器なしの y で、塗りタイルは持たない。
     const textColors = collectStyleValues(element, "color");
-    expect(textColors).toContain(ACCENT);
+    expect(textColors).toContain(INK);
 
-    // 塗りタイル（旧デザインの角丸 hanko・borderRadius 22）は持たない。
+    // 角丸の塗りタイル（borderRadius 22）は持たない。
     // ミューテーション観点: 塗りタイルを復活させると borderRadius 22 が現れ落ちる。
     const radii = collectStyleValues(element, "borderRadius");
     expect(radii).not.toContain(22);
   });
 
-  test("絵文字（§8-6 禁止）を看板に持ち込まない", async () => {
+  test("絵文字（§5）を看板に持ち込まない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     // 呼び出し側が誤って絵文字を title に混ぜても、看板は絵文字用の面を持たない。
@@ -206,6 +197,26 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(texts).toContain("Only Title");
     // 副題ノードは条件付きレンダリングで null になる。
     expect(texts).not.toContain("Sub Title");
+  });
+
+  test("読みを渡すと品名のすぐ後ろに添え、省略時は描かない", async () => {
+    const { createOgpImageResponse } = await getModule();
+
+    await createOgpImageResponse({
+      title: "花鳥風月タイプ",
+      reading: "かちょうふうげつ",
+      subtitle: "あなたの言葉センス診断",
+    });
+    const texts = collectText(imageResponseCalls[0].element);
+    expect(texts.indexOf("かちょうふうげつ")).toBe(
+      texts.indexOf("花鳥風月タイプ") + 1,
+    );
+
+    imageResponseCalls = [];
+    await createOgpImageResponse({ title: "花鳥風月タイプ" });
+    expect(collectText(imageResponseCalls[0].element)).not.toContain(
+      "かちょうふうげつ",
+    );
   });
 
   test("短い品名は大きく、長い品名は小さく組む（書記素数で段階選択）", async () => {
@@ -293,28 +304,27 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(typeof ogpImageModule.createOgpImageResponse).toBe("function");
   });
 
-  test("OgpImageConfig は title/subtitle のみ（accentColor/icon は型から削除済み）", async () => {
+  test("OgpImageConfig は title/reading/subtitle のみ（色や絵文字を受け取らない）", async () => {
     const { createOgpImageResponse } = await getModule();
     // 型レベルの契約: 余剰プロパティは TypeScript が弾く。ここでは実行時に title だけ・
-    // subtitle 付きの両ケースが成立することを確認する（旧 accentColor/icon は不要）。
+    // subtitle 付きの両ケースが成立することを確認する。
     await expect(
       createOgpImageResponse({ title: "T", subtitle: "S" }),
     ).resolves.toBeDefined();
   });
 
-  test("旧 API の余剰プロパティ（icon/accentColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
+  test("余剰プロパティ（icon/backgroundColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
     const { createOgpImageResponse } = await getModule();
-    // コンパイル時契約: OgpImageConfig の余剰プロパティ検査が効くことを @ts-expect-error で
-    // 恒久固定する。将来 icon/accentColor を型に復活させると @ts-expect-error が未使用となり
-    // tsc（noUnusedLocals 相当の未使用ディレクティブ検査）が fail する——旧 API の静かな復活を
-    // 型レベルで検知する。実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
+    // コンパイル時契約: OgpImageConfig の余剰プロパティ検査が効くことを @ts-expect-error で固定する。
+    // 型がこれらを受け取るようになると @ts-expect-error が未使用となり tsc が fail する。
+    // 実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
     await expect(
-      // @ts-expect-error icon は型から削除済み（§8-6・図像は店の印のみ）
+      // @ts-expect-error icon は型に無い（絵文字を持たない・§5）
       createOgpImageResponse({ title: "T", icon: "🧪" }),
     ).resolves.toBeDefined();
     await expect(
-      // @ts-expect-error accentColor は型から削除済み（§2・地は常に紙）
-      createOgpImageResponse({ title: "T", accentColor: "#e74c3c" }),
+      // @ts-expect-error backgroundColor は型に無い（地は常に紙・§10）
+      createOgpImageResponse({ title: "T", backgroundColor: "#e74c3c" }),
     ).resolves.toBeDefined();
   });
 });

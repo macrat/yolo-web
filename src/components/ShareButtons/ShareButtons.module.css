@@ -1,10 +1,4 @@
-/*
- * ShareButtons — 共有ボタン群（DESIGN.md §4「札」/§8 準拠の店構え版）。
- * 「文字＋罫の線画ボタン」: 地は紙・--rule の一本罫囲み・文字は墨。
- * §8 厳守——ブランド色ベタ塗り・ブランドロゴ・絵文字・ピル・box-shadow なし。
- * hover は朱枠＋朱文字（下線はリンク専有のためボタンでは使わない・§3）。
- * 角丸は 0px 基調（--radius）。タップターゲット 44px・focus 可視・全トークン経由。
- */
+/* 共有のボタンの並び。ボタンの見え方は Button が持ち、ここは並べ方と知らせの文字だけを持つ。 */
 
 .wrapper {
   display: flex;
@@ -12,56 +6,24 @@
   gap: var(--space-8);
 }
 
+/* ボタンは縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。間隔を箱の余白と同じ幅にすると、
+ * 前へ張り出す箱どうしが接する。折り返した行どうしは、押せる範囲のあいだを 8px あける。 */
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  column-gap: var(--text-box-pad);
+  row-gap: var(--space-8);
 }
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 0 var(--space-16);
-  font-family: var(--font-gothic);
-  font-size: 0.9375rem; /* 15px・操作面の UI ラベル（§3 補助帯） */
-  line-height: 1.4;
-  white-space: nowrap;
+/* 知らせの行（コピーと、同じ区画のほかの操作の知らせ）。出たり消えたりしても下の要素が動かないよう、1行分の
+ * 高さをいつも取る。 */
+.notice {
+  min-height: 1lh;
+  font-size: var(--text-small);
   color: var(--ink);
-  background: var(--paper);
-  /* §4: 構造の主役は罫。一律角丸を避け 0px 基調（帳面の直角）。 */
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
 }
 
-/* hover: 朱枠＋朱文字（色ベタにしない・§2 アクセントは朱の1色）。 */
-.button:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.button:active {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* コピー完了メッセージ: 控えめな朱文字（色ベタの帯にしない・§6 静かなフィードバック）。
- * min-height で表示時のレイアウトシフトを防ぐ。 */
-.copiedMessage {
-  min-height: 1.4em;
-  font-family: var(--font-gothic);
-  font-size: 0.8125rem; /* 13px 補助情報 */
-  line-height: 1.4;
-  color: var(--accent);
+/* 2つの文からなる知らせは、1行に収まらないとき句点のあとで折り、文の中の語を割らない。 */
+.sentence {
+  display: inline-block;
 }

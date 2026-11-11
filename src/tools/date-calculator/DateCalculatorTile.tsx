@@ -3,15 +3,13 @@
 /**
  * DateCalculatorTile — 日付計算の単一正典タイル
  *
- * cycle-228 T-21: DateCalculatorPage.tsx を Panel ルートのタイルへ作り直し。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
  * - **1ツール n タイル = variant**: full / diff / add / wareki は同一コンポーネントの
  *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（8個超の hardcoded id を移行）。
+ *   同居しても id 重複・label 誤結合が起きない。
  * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: dateDiff/addDays/toWareki/fromWareki が唯一のロジック源。
  *
@@ -25,14 +23,11 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <DateCalculatorTile variant="full" />
- * <DateCalculatorTile variant="diff" />
- * <DateCalculatorTile variant="add" />
- * <DateCalculatorTile variant="wareki" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 各計算結果に role="status" aria-live="polite" のライブリージョン＋実テキストのサマリ
  * - すべての入力フォームは useId ベースの id で label に関連付け
@@ -83,8 +78,8 @@ export default function DateCalculatorTile({
   className,
 }: DateCalculatorTileProps = {}) {
   // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  // 旧実装の hardcoded id（date1/date2/base-date/days-to-add/wareki-date/
-  // era-select/era-year/era-month/era-day）をすべて useId ベースに移行。
+  // date1/date2/base-date/days-to-add/wareki-date/era-select/era-year/era-month/era-day の
+  // すべての id を useId ベースで作る。
   const uid = useId();
   const date1Id = `${uid}-date1`;
   const date2Id = `${uid}-date2`;
@@ -235,10 +230,10 @@ export default function DateCalculatorTile({
             </Button>
           </div>
 
-          {/* A-4: ErrorMessage 共通部品・日本語メッセージ */}
+          {/* ErrorMessage 共通部品・日本語メッセージ */}
           {diffError && <ErrorMessage message={diffError} />}
 
-          {/* C-3: live region — 実テキストノードのサマリ */}
+          {/* live region — 実テキストノードのサマリ */}
           <div
             role="status"
             aria-live="polite"
@@ -321,7 +316,7 @@ export default function DateCalculatorTile({
             <Button onClick={() => handleAdd(-1)}>減算</Button>
           </div>
 
-          {/* C-3: live region */}
+          {/* live region */}
           <div
             role="status"
             aria-live="polite"
@@ -372,7 +367,7 @@ export default function DateCalculatorTile({
               </Button>
             </div>
 
-            {/* C-3: live region */}
+            {/* live region */}
             <div
               role="status"
               aria-live="polite"
@@ -480,10 +475,10 @@ export default function DateCalculatorTile({
               </Button>
             </div>
 
-            {/* A-4: ErrorMessage 共通部品・日本語メッセージ */}
+            {/* ErrorMessage 共通部品・日本語メッセージ */}
             {fromWarekiError && <ErrorMessage message={fromWarekiError} />}
 
-            {/* C-3: live region */}
+            {/* live region */}
             <div
               role="status"
               aria-live="polite"

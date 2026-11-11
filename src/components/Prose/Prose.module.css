@@ -1,0 +1,102 @@
+/*
+ * 記事の本文（DESIGN.md §4・§5）。文（段落・箇条書き・引用・注記・本文の区切り・見出し）は本文の幅に
+ * 絞り、表とコードのボックスは置かれる幅いっぱいに、記事の図（mermaid）は置かれる幅を超えない大きさで出す。
+ * 表・コードのボックス・本文の中のコード片・本文の区切りの形は globals.css の要素の既定が持つ。ここでは
+ * 本文の中の間隔と、本文にだけ出るもの（注記・引用・表の折り方と横に送る表の枠・コードの注釈）を足す。
+ */
+.prose {
+  color: var(--ink);
+}
+
+.prose > :not(:global(.table-scroll), pre, :global(.mermaid)) {
+  max-width: var(--measure);
+}
+
+/* 見出しの書体・ウェイト・行間・大きさは globals.css の見出しの規則が与える。 */
+.prose h2 {
+  margin-top: var(--space-32);
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
+}
+
+.prose h3 {
+  margin-top: var(--space-24);
+  margin-bottom: var(--space-8);
+}
+
+.prose p {
+  margin: 0 0 var(--space-16);
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 var(--space-16);
+  padding-left: var(--space-24);
+}
+
+.prose li {
+  margin-bottom: var(--space-8);
+}
+
+/* 引用。引いた文は中身なので、字は本文と同じ --ink。 */
+.prose blockquote {
+  margin: 0 0 var(--space-16);
+  padding-left: var(--space-16);
+  border-left: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 注記（src/lib/markdown-extensions.ts）。本文の幅いっぱいのボックスで、1行目に種類の語を太字で置く。 */
+.prose :global(.markdown-alert) {
+  margin: 0 0 var(--space-16);
+  padding: var(--box-padding);
+  border: var(--rule-w) solid var(--rule);
+}
+
+.prose :global(.markdown-alert-title) {
+  margin-bottom: var(--space-8);
+  font-weight: 700;
+}
+
+.prose :global(.markdown-alert) > :last-child {
+  margin-bottom: 0;
+}
+
+.prose pre {
+  margin: 0 0 var(--space-16);
+}
+
+/* コードの注釈（src/lib/highlight.ts）。ほかの字は --ink のまま。 */
+.prose :global(.code-comment) {
+  color: var(--ink-2);
+}
+
+/*
+ * 表を包む枠（src/lib/markdown-extensions.ts）。表はコンテンツ幅いっぱいに組む。列の幅と、横に送るか
+ * （data-scrolls）は src/lib/scroll-frame.ts が描く前に決める。
+ */
+.prose :global(.table-scroll) {
+  margin: 0 0 var(--space-16);
+  overflow-x: auto;
+}
+
+.prose table {
+  width: 100%;
+}
+
+/* 記事の表のセルは、サーバーが置いた文節の切れ目（<wbr>）でだけ折る。細くした列（data-narrowed）だけは、
+ * 列に入らない文節をその中で折る。区切りを持たない表（書いた Markdown のプレビュー）は通常の禁則で折る。 */
+.prose :global(.table-phrased) :is(th, td) {
+  word-break: keep-all;
+}
+
+.prose :global(.table-phrased) :is(th, td)[data-narrowed] {
+  overflow-wrap: anywhere;
+}
+
+/* 横に送る表のボックス。ほかのボックスと同じ太い線と内側の余白を持ち、表はその内側に組む。フォーカスの
+ * リングは globals.css の既定のまま、太い線の外に密着して出る（§6）。 */
+.prose :global(.table-scroll[data-scrolls]) {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+}

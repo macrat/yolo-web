@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "Markdown変換",
     "Markdownエディタ",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: [
     "json-formatter",
     "html-entity",

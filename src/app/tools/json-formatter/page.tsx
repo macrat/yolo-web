@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <JsonFormatterTile variant="full" />
+        <JsonFormatterTile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

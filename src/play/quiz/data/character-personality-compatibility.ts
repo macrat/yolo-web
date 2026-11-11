@@ -102,7 +102,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "star-chaser--star-chaser": {
     label: "夢と自己ツッコミの無限往復",
     description:
-      "「いつか絶対やる」「でもそれ普通じゃないよね」「やるよ?」「でもさ…」と二人で夢と逆張りを往復する。結論は出ないが、夜中の3時に同じキーワードを検索しているのは二人とも一緒。",
+      "「いつか絶対やる」「でもそれ普通じゃないよね」「やるよ？」「でもさ…」と二人で夢と逆張りを往復する。結論は出ないが、夜中の3時に同じキーワードを検索しているのは二人とも一緒。",
   },
 
   // #11 tender-dreamer × tender-dreamer
@@ -129,7 +129,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "clever-guardian--clever-guardian": {
     label: "穴を見つけ合うセキュリティ競技",
     description:
-      "一人が「ここ悪用できる」と穴を見つけると、もう一人がすでに塞いでいる。「そこも対策済みっしょ」「じゃあここは?」と延々続き、システムは鉄壁になるが本来の作業が3日止まる。",
+      "一人が「ここ悪用できる」と穴を見つけると、もう一人がすでに塞いでいる。「そこも対策済みっしょ」「じゃあここは？」と延々続き、システムは鉄壁になるが本来の作業が3日止まる。",
   },
 
   // #14 creative-disruptor × creative-disruptor
@@ -138,7 +138,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "creative-disruptor--creative-disruptor": {
     label: "王道を外した先で鉢合わせる二人",
     description:
-      "「なんで王道でいくの?」と二人同時に言い、それぞれ別の方向に外す。どちらも「刺さった」瞬間にしか満足しないため、刺さり具合を比較する謎のサブ競技が始まる。",
+      "「なんで王道でいくの？」と二人同時に言い、それぞれ別の方向に外す。どちらも「刺さった」瞬間にしか満足しないため、刺さり具合を比較する謎のサブ競技が始まる。",
   },
 
   // #15 gentle-fortress × gentle-fortress
@@ -147,7 +147,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "gentle-fortress--gentle-fortress": {
     label: "互いの疲れに先に気づくコンビ",
     description:
-      "お互いの顔色の0.5ミリの曇りをすぐ感知して「大丈夫?」と先に言い合う。二人とも一番しんどいのに一番しんどそうに見せない。「どっちが先にしんどいか競争」を無意識にやっている。",
+      "お互いの顔色の0.5ミリの曇りをすぐ感知して「大丈夫？」と先に言い合う。二人とも一番しんどいのに一番しんどそうに見せない。「どっちが先にしんどいか競争」を無意識にやっている。",
   },
 
   // #16 ultimate-commander × ultimate-commander
@@ -183,7 +183,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "ultimate-trickster--ultimate-trickster": {
     label: "裏の読み合いが次元を超えた日",
     description:
-      "「その発言の真意は?」「それを聞いてくること自体が罠っしょ」と無限ループに入る。3時間かけて解読した結論が「腹減った」だった経験が二人とも年に5回ある。それでも楽しい。",
+      "「その発言の真意は？」「それを聞いてくること自体が罠っしょ」と無限ループに入る。3時間かけて解読した結論が「腹減った」だった経験が二人とも年に5回ある。それでも楽しい。",
   },
 
   // #20 ultimate-guardian × ultimate-guardian
@@ -192,7 +192,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "ultimate-guardian--ultimate-guardian": {
     label: "持ち物リストが合体する準備",
     description:
-      "「念のため」が口癖の二人が合流すると、持ち物リストが瞬時に12ページになる。晴れ予報の日に傘を計14本携行し、「これで大丈夫かな?」と互いに確認し合って出発が30分遅れる。",
+      "「念のため」が口癖の二人が合流すると、持ち物リストが瞬時に12ページになる。晴れ予報の日に傘を計14本携行し、「これで大丈夫かな？」と互いに確認し合って出発が30分遅れる。",
   },
 
   // #21 ultimate-artist × ultimate-artist
@@ -219,7 +219,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "vibe-rebel--vibe-rebel": {
     label: "端っこで偶然出会う一匹狼二人",
     description:
-      "それぞれ直感の方向に走ったら、同じ端っこで鉢合わせる。「なんでここにいるの?」「なんとなく?」「わかる」。説明しなくても通じる唯一の相手かもしれないが、二人とも群れるのが苦手なので集まり続けるかどうかは謎。",
+      "それぞれ直感の方向に走ったら、同じ端っこで鉢合わせる。「なんでここにいるの？」「なんとなく？」「わかる」。説明しなくても通じる唯一の相手かもしれないが、二人とも群れるのが苦手なので集まり続けるかどうかは謎。",
   },
 
   // #24 guardian-charger × guardian-charger
@@ -228,7 +228,7 @@ const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   "guardian-charger--guardian-charger": {
     label: "必要な瞬間に二人同時に前に出る",
     description:
-      "普段は後方でお互いの顔色を確認し合っている。いざという時、0秒で二人が同時に前に出る。終わった後まず「あなた大丈夫?」と互いに確認して、自分の心拍数を落ち着かせるのは最後の最後。",
+      "普段は後方でお互いの顔色を確認し合っている。いざという時、0秒で二人が同時に前に出る。終わった後まず「あなた大丈夫？」と互いに確認して、自分の心拍数を落ち着かせるのは最後の最後。",
   },
 };
 

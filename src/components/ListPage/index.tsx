@@ -1,0 +1,49 @@
+import type { ReactNode } from "react";
+import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
+import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
+import styles from "./ListPage.module.css";
+
+interface ListPageProps {
+  /** パンくず。ホームから、いま開いているページまで。 */
+  trail: BreadcrumbItem[];
+  /** 主見出し。 */
+  heading: string;
+  /** 見出しの下の導入の文。 */
+  description?: string;
+  /** 見出しの下に積むもの（一覧の上の索引と一覧）。 */
+  children: ReactNode;
+}
+
+/**
+ * 一覧のページ（DESIGN.md §7）の頭と積み方。1つのセクションに、パンくず・主見出しと導入の文・索引・一覧を
+ * 上から同じ間隔で積む。どの一覧のページも、頭の位置と間隔がこの1か所で決まる（§12 位置の一定）。
+ */
+export default function ListPage({
+  trail,
+  heading,
+  description,
+  children,
+}: ListPageProps) {
+  return (
+    <Section>
+      <div className={styles.view}>
+        <Breadcrumb items={trail} />
+        <div>
+          <PhrasedText
+            as="h1"
+            className={styles.title}
+            phrases={splitIntoPhrases(heading)}
+            {...headingFontAttr(heading)}
+          />
+          {description ? (
+            <p className={styles.description}>{description}</p>
+          ) : null}
+        </div>
+        {children}
+      </div>
+    </Section>
+  );
+}

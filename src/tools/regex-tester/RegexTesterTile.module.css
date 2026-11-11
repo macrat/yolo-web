@@ -1,16 +1,5 @@
-/*
- * RegexTesterTile スタイル（DESIGN.md 準拠）
- *
- * cycle-228 T-29: RegexTesterPage → RegexTesterTile 正典化
- *
- * DESIGN.md（店構え）準拠:
- * - 色は紙・墨・朱トークン経由（--paper / --ink / --accent 系）
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - font-weight: 最大 600（DESIGN.md §3）
- * - 角丸は var(--radius)（0）/ 入力欄相当のみ var(--radius-sm)（2px）
- * - フォーム境界線: --rule-strong
- * - box-shadow は使わない（§4）
- */
+/* 正規表現テスターのタイル。パターンの欄は共通の入力欄の形（globals.css の [data-field]）で組み、
+ * フラグのチェックボックスは共通の部品に任せる。 */
 
 /* タイル内コンテンツの縦スタック */
 .content {
@@ -19,55 +8,50 @@
   gap: 1rem;
 }
 
-/* 正規表現パターン入力行 */
+/* パターンの欄。前後の「/」とフラグを欄の中に並べるため、枠は入力そのものではなくこの行が持つ。
+ * 枠・文字の大きさ・中身の位置は [data-field] に従う（§8）。 */
 .patternRow {
   display: flex;
   align-items: center;
-  gap: 0;
-  border: 1px solid var(--rule-strong);
-  /* この行そのものが入力欄の枠（内側 input は border:none）なので入力欄相当の 2px */
-  border-radius: var(--radius-sm);
-  padding: 0.5rem 0.75rem;
-  background-color: var(--paper);
-  transition: border-color 0.15s;
 }
 
-.patternRow:focus-within {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* 入力が受けたフォーカスを、枠を持つ行に二重リングで出す。リングは入力欄と同じく枠の外に出す（§6）。 */
+.patternRow:has(.patternInput:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
 }
 
 .slash {
   font-family: var(--font-mono);
-  font-size: 1rem;
   color: var(--ink-2);
   flex-shrink: 0;
 }
 
 .patternInput {
   flex: 1;
+  min-width: 0;
   border: none;
+  padding: 0 0.25em;
   font-family: var(--font-mono);
-  font-size: 0.95rem;
   color: var(--ink);
   background-color: transparent;
-  padding: 0 0.25rem;
-  /* フォーカスは patternRow の :focus-within で管理 */
+}
+
+.patternInput:focus-visible {
   outline: none;
-  /* C-1 準拠: min-height 2.25rem (36px) 以上 */
-  min-height: 2.25rem;
+  box-shadow: none;
 }
 
 .flagsDisplay {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
   color: var(--ink-2);
   font-weight: 500;
   min-width: 2rem;
   flex-shrink: 0;
 }
 
-/* フラグ fieldset（UX是正(c): 常時表示の説明テキストを含む） */
+/* フラグ fieldset（常時表示の説明テキストを含む） */
 .flagsFieldset {
   border: none;
   padding: 0;
@@ -82,52 +66,21 @@
   padding: 0;
 }
 
-/* フラグチェックボックス群 */
+/* フラグのチェックボックスの横並び。間隔を押せる範囲の余白と同じ幅にして、押せる範囲どうしを接する（§5）。 */
 .flagsRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.25rem;
-}
-
-/* 各フラグラベル: チェックボックス + コード + 説明テキストを縦並び */
-.flagLabel {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  column-gap: 0.4rem;
-  row-gap: 0.15rem;
-  align-items: center;
-  cursor: pointer;
-}
-
-.flagLabel input[type="checkbox"] {
-  grid-row: 1;
-  grid-column: 1;
-  accent-color: var(--accent);
-  cursor: pointer;
-  width: 1rem;
-  height: 1rem;
-  margin: 0;
+  column-gap: var(--text-box-pad);
 }
 
 /* フラグ文字（g / i / m / s） */
 .flagCode {
-  grid-row: 1;
-  grid-column: 2;
   font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1;
 }
 
 /* 常時表示の説明テキスト（タッチ端末で title ツールチップが使えない問題を解消） */
 .flagDesc {
-  grid-row: 2;
-  grid-column: 2;
-  font-size: 0.75rem;
   color: var(--ink-2);
-  line-height: 1.3;
 }
 
 /* フォームフィールド共通 */
@@ -162,7 +115,6 @@
 
 .matchHeading {
   font-size: 0.95rem;
-  font-weight: 500;
   margin-bottom: 0.75rem;
   color: var(--ink);
 }
@@ -227,36 +179,17 @@
   color: var(--ink-2);
 }
 
-/* 置換セクション */
+/* 置換セクション。開閉の行（アコーディオン）で出し入れし、上を細い線で区切る。 */
 .replaceSection {
+  padding-top: 0.5rem;
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.replaceBody {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-/* 置換切替ボタン */
-.toggleButton {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background-color: var(--paper);
-  color: var(--ink);
-  font-size: 0.875rem;
-  cursor: pointer;
-  width: fit-content;
-  transition: border-color 0.15s;
-  min-height: 2.75rem;
-}
-
-.toggleButton:hover {
-  border-color: var(--accent);
-}
-
-.toggleButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  margin-top: 0.75rem;
 }
 
 /* スクリーンリーダー専用非表示（視覚的には非表示・SR には読み上げられる）*/

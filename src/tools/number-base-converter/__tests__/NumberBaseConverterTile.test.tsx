@@ -1,9 +1,8 @@
 /**
  * NumberBaseConverterTile — 回帰テスト
- * 旧 NumberBaseConverterPage.test.tsx の振る舞いを Tile 向けに移植・拡張。
  *
  * テスト群:
- * - T-full-*: variant="full" の振る舞い（旧 E-1〜E-12 相当）
+ * - T-full-*: variant="full" の振る舞い
  * - T-bin-hex-*: variant="bin-hex" の振る舞い（2進→16進固定）
  * - T-multi-*: 複数インスタンス同居時の DOM id 一意性
  * - T-css-*: CSS トークン検証
@@ -37,7 +36,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     render(<NumberBaseConverterTile variant="full" />);
     // 入力欄が表示されること
     expect(screen.getByLabelText("変換する数値")).toBeInTheDocument();
-    // SegmentedControl (入力基数選択) が表示されること
+    // ラジオボタンの組(入力基数選択) が表示されること
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
@@ -119,11 +118,12 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     expect(screen.getByRole("alert")).toBeInTheDocument();
   });
 
-  // T-full-8: ARIA - radiogroup に aria-label が付いている
-  test("T-full-8: radiogroup has aria-label", () => {
+  // T-full-8: ARIA - radiogroup は見出しを名前として持つ
+  test("T-full-8: radiogroup is named by its legend", () => {
     render(<NumberBaseConverterTile variant="full" />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label");
+    expect(
+      screen.getByRole("radiogroup", { name: "入力する進数" }),
+    ).toBeInTheDocument();
   });
 
   // T-full-9: ARIA - role=status aria-live=polite のライブリージョン
@@ -133,21 +133,19 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     expect(statusRegion).toHaveAttribute("aria-live", "polite");
   });
 
-  // T-full-10: コピーボタン - クリック後に「コピーしました」
-  test("T-full-10: copy button shows COPIED_LABEL after click", async () => {
+  // T-full-10: コピーボタン - クリック後に「コピー済み」
+  test("T-full-10: copy button shows コピー済み after click", async () => {
     render(<NumberBaseConverterTile variant="full" />);
 
     const input = screen.getByLabelText("変換する数値");
     fireEvent.change(input, { target: { value: "255" } });
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     expect(copyButtons.length).toBeGreaterThan(0);
     fireEvent.click(copyButtons[0]);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "コピーしました" }),
-      ).toBeInTheDocument();
+      expect(copyButtons[0]).toHaveTextContent("コピー済み");
     });
   });
 
@@ -155,7 +153,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
   test("T-full-11: copy buttons are disabled when input is empty", () => {
     render(<NumberBaseConverterTile variant="full" />);
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     copyButtons.forEach((btn) => {
       expect(btn).toBeDisabled();
     });
@@ -168,7 +166,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     const input = screen.getByLabelText("変換する数値");
     fireEvent.change(input, { target: { value: "10" } });
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     copyButtons.forEach((btn) => {
       expect(btn).not.toBeDisabled();
     });
@@ -187,7 +185,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     const input = screen.getByLabelText("変換する数値");
     fireEvent.change(input, { target: { value: "10" } });
 
-    const copyButtons = screen.getAllByRole("button", { name: "コピー" });
+    const copyButtons = screen.getAllByRole("button", { name: /をコピー$/ });
     expect(() => fireEvent.click(copyButtons[0])).not.toThrow();
 
     Object.defineProperty(globalThis, "navigator", {
@@ -209,7 +207,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     );
   });
 
-  // T-full-15: 基数切替後に古い結果が残らない（G-1 要件）
+  // T-full-15: 基数切替後に古い結果が残らない
   test("T-full-15: clears input when base is changed", () => {
     render(<NumberBaseConverterTile variant="full" />);
 
@@ -245,8 +243,8 @@ describe("NumberBaseConverterTile (variant=bin-hex)", () => {
     expect(screen.getByLabelText("変換する数値（2進数）")).toBeInTheDocument();
   });
 
-  // T-bin-hex-2: SegmentedControl が表示されない（固定 variant）
-  test("T-bin-hex-2: SegmentedControl is not shown (fixed variant)", () => {
+  // T-bin-hex-2: ラジオボタンの組が表示されない（固定 variant）
+  test("T-bin-hex-2: ラジオボタンの組is not shown (fixed variant)", () => {
     render(<NumberBaseConverterTile variant="bin-hex" />);
     // 基数選択の radiogroup が非表示
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -286,7 +284,7 @@ describe("NumberBaseConverterTile (variant=bin-hex)", () => {
     const input = screen.getByLabelText("変換する数値（2進数）");
     fireEvent.change(input, { target: { value: "11111111" } });
 
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: /をコピー$/ });
     expect(copyButton).not.toBeDisabled();
   });
 
@@ -344,8 +342,8 @@ describe("NumberBaseConverterTile (複数インスタンス同居)", () => {
 });
 
 describe("NumberBaseConverterTile (CSS トークン検証)", () => {
-  // T-css-1: 旧 --color-* トークン不使用・--accent 直塗り禁止・font-weight 700 禁止
-  test("T-css-1: CSS does not use deprecated --color-* tokens or forbidden styles", () => {
+  // T-css-1: --color-* トークン不使用・--accent 直塗り禁止・font-weight 700 禁止
+  test("T-css-1: CSS does not reference --color-* tokens or use forbidden styles", () => {
     const css = readFileSync(
       join(__dirname, "..", "NumberBaseConverterTile.module.css"),
       "utf-8",

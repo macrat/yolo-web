@@ -1,7 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 import ErrorMessage from "@/components/ErrorMessage";
 
 describe("ErrorMessage", () => {
@@ -73,35 +71,8 @@ describe("ErrorMessage", () => {
     expect(alert).not.toHaveAttribute("aria-live");
   });
 
-  // --- CSS 規約検証 (readFileSync パターン) ---
-
-  it("CSS が --paper-2 を背景色として使用している（DESIGN.md §2: エラーは色ベタでなく墨/朱+文字で示す）", () => {
-    const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--paper-2");
-  });
-
-  it("CSS が --rule を中立のボーダー色として使用している（色付き片罫にしない）", () => {
-    const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--rule");
-  });
-
-  it("CSS が --accent を文字色として使用している（DESIGN.md §2: 朱+文字でエラーを示す）", () => {
-    const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("color: var(--accent)");
-  });
-
-  it("CSS が --radius を使用している（DESIGN.md §4: インタラクティブ要素・値札のいずれでもないため 0px 基調）", () => {
-    const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--radius)");
-  });
-
-  it("CSS に font-weight: 700 が存在しない（DESIGN.md §3 制約）", () => {
-    const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight\s*:\s*700/);
+  it("id を渡すと、入力欄の aria-describedby から指せる", () => {
+    render(<ErrorMessage id="age-error" message="数字で入力してください。" />);
+    expect(screen.getByRole("alert")).toHaveAttribute("id", "age-error");
   });
 });

@@ -1,22 +1,20 @@
 /**
- * ブランド標章 F2「朱の印・白抜き y」の favicon 資産一式を、再現可能に生成する。
- *
- * B-576（cycle-306）で PM が実レンダーを見て確定した方向を、手でバイナリを置かず
- * スクリプトから作り直すためのもの。生成物:
+ * favicon の資産一式（墨の角丸の印に、紙の色で白抜きした小文字「y」）を生成する。
+ * 手でバイナリを置かず、実行するたびに同じものができるようにする。生成物:
  *   - public/favicon.ico        16/32/48px を内包するマルチサイズ ICO（PNG 埋め込み）。
- *   - public/icon.svg           モダンブラウザ用のスケーラブルな F2。
- *   - public/apple-touch-icon.png  180×180・朱を全面ブリード＋白抜き y。
+ *   - public/icon.svg           モダンブラウザ用のスケーラブルな印。
+ *   - public/apple-touch-icon.png  180×180・墨を全面ブリード＋白抜き y。
  *
- * ## 設計（F2）
- * - favicon: 地＝紙(PAPER)、中央に朱(ACCENT)の角丸正方形の印（タイル比 印≈80%・角丸半径は
+ * ## 形
+ * - favicon: 地＝紙(PAPER)、中央に墨(INK)の角丸正方形の印（タイル比 印≈80%・角丸半径は
  *   正方形の約22%）、その中に紙色(PAPER)で白抜きした小文字「y」（Noto Serif JP・明朝・太字）。
- * - apple-touch: iOS が全面に角丸マスクをかけるため、朱を全面ブリードし、紙色の白抜き y を
+ * - apple-touch: iOS が全面に角丸マスクをかけるため、墨を全面ブリードし、紙色の白抜き y を
  *   大きく置く（紙の縁を作らず二重角丸を避ける）。
  *
- * ## 色は SSoT を厳守
- * PAPER / ACCENT は {@link file://../src/lib/utsuwaHex.ts} から import する（直書きしない）。
+ * ## 色
+ * PAPER / INK は {@link file://../src/lib/token-hex.ts} から import し、サイトの色と一致させる。
  *
- * ## 字形（y）の取り方 — 再現性
+ * ## 字形（y）の取り方
  * SVG favicon は環境に Noto Serif JP が無いと字形が崩れるため、`<text>` ではなく **glyph を
  * ベクタ path として埋め込む**。フォントは Google Fonts から wght@900 の TTF を取得し
  * （レガシー UA で css2 に問い合わせると woff2 でなく TTF を返す）、opentype.js で「y」の
@@ -31,12 +29,12 @@ import opentype from "opentype.js";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import { PAPER, ACCENT } from "../src/lib/utsuwaHex";
+import { PAPER, INK } from "../src/lib/token-hex";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.resolve(HERE, "../public");
 
-// --- F2 の幾何（favicon タイル基準 100×100） ---
+// --- 幾何（favicon タイル基準 100×100） ---
 const TILE = 100;
 const SEAL_RATIO = 0.8; // 印は紙地に少し余白を残す（タイル比 印≈80%）
 const SEAL = TILE * SEAL_RATIO; // 80
@@ -81,19 +79,19 @@ function centeredGlyphPathData(
   return placed.toPathData(3);
 }
 
-/** favicon 用 SVG（紙地＋朱の角丸印＋白抜き y）。 */
+/** favicon 用 SVG（紙地＋墨の角丸印＋白抜き y）。 */
 function faviconSvg(font: opentype.Font): string {
   const d = centeredGlyphPathData(font, FAVICON_GLYPH_PX, TILE / 2, TILE / 2);
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${TILE}" height="${TILE}" viewBox="0 0 ${TILE} ${TILE}">`,
     `<rect width="${TILE}" height="${TILE}" fill="${PAPER}"/>`,
-    `<rect x="${SEAL_PAD}" y="${SEAL_PAD}" width="${SEAL}" height="${SEAL}" rx="${SEAL_RADIUS}" ry="${SEAL_RADIUS}" fill="${ACCENT}"/>`,
+    `<rect x="${SEAL_PAD}" y="${SEAL_PAD}" width="${SEAL}" height="${SEAL}" rx="${SEAL_RADIUS}" ry="${SEAL_RADIUS}" fill="${INK}"/>`,
     `<path d="${d}" fill="${PAPER}"/>`,
     `</svg>`,
   ].join("");
 }
 
-/** apple-touch 用 SVG（朱を全面ブリード＋白抜き y）。 */
+/** apple-touch 用 SVG（墨を全面ブリード＋白抜き y）。 */
 function appleSvg(font: opentype.Font): string {
   const d = centeredGlyphPathData(
     font,
@@ -103,7 +101,7 @@ function appleSvg(font: opentype.Font): string {
   );
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${APPLE_TILE}" height="${APPLE_TILE}" viewBox="0 0 ${APPLE_TILE} ${APPLE_TILE}">`,
-    `<rect width="${APPLE_TILE}" height="${APPLE_TILE}" fill="${ACCENT}"/>`,
+    `<rect width="${APPLE_TILE}" height="${APPLE_TILE}" fill="${INK}"/>`,
     `<path d="${d}" fill="${PAPER}"/>`,
     `</svg>`,
   ].join("");
@@ -149,7 +147,7 @@ async function main(): Promise<void> {
   const favSvg = faviconSvg(font);
   const appSvg = appleSvg(font);
 
-  // 1) icon.svg（モダンブラウザ用のスケーラブル F2）
+  // 1) icon.svg（モダンブラウザ用のスケーラブルな印）
   await fs.writeFile(path.join(PUBLIC, "icon.svg"), favSvg, "utf8");
 
   // 2) favicon.ico（16/32/48 を内包）

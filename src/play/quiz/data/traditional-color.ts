@@ -1,9 +1,20 @@
-import type { QuizDefinition } from "../types";
+import type { QuizDefinition, QuizResult } from "../types";
+
+/**
+ * タイプの title は色名の後ろに読みを添えた形で、結果の見出し・シェアの文・ページの題に使う。
+ * すべてのタイプの一覧では、色名と読みを分けて見せる。
+ */
+function colorTypeName(
+  name: string,
+  reading: string,
+): Pick<QuizResult, "title" | "nameParts"> {
+  return { title: `${name}(${reading})`, nameParts: { name, reading } };
+}
 
 const traditionalColorQuiz: QuizDefinition = {
   meta: {
     slug: "traditional-color",
-    title: "あなたを日本の伝統色に例えると?",
+    title: "あなたを日本の伝統色に例えると？",
     // タイトルが16文字と長いためカード表示用の短縮タイトルを設定
     shortTitle: "日本の伝統色診断",
     description:
@@ -12,8 +23,6 @@ const traditionalColorQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 8,
-    icon: "\u{1F3A8}",
-    accentColor: "#0d5661",
     keywords: [
       "伝統色",
       "日本の色",
@@ -31,8 +40,7 @@ const traditionalColorQuiz: QuizDefinition = {
     faq: [
       {
         question: "何問の質問に答えますか？",
-        answer:
-          "8問の質問に答えると結果が表示されます。所要時間は1〜2分程度です。",
+        answer: "8問の質問に答えると結果が表示されます。所要時間は約1分です。",
       },
       {
         question: "結果は何種類ありますか？",
@@ -59,7 +67,7 @@ const traditionalColorQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "休日の過ごし方は?",
+      text: "休日の過ごし方は？",
       choices: [
         {
           id: "q1-a",
@@ -85,7 +93,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "好きな季節は?",
+      text: "好きな季節は？",
       choices: [
         {
           id: "q2-a",
@@ -111,7 +119,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q3",
-      text: "大切にしていることは?",
+      text: "大切にしていることは？",
       choices: [
         {
           id: "q3-a",
@@ -137,7 +145,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q4",
-      text: "友人からどう思われている?",
+      text: "友人からどう思われている？",
       choices: [
         {
           id: "q4-a",
@@ -147,9 +155,9 @@ const traditionalColorQuiz: QuizDefinition = {
         {
           id: "q4-b",
           text: "明るい",
-          // 若草色の像（新緑の快活さ・明るさ）を独立 primary で表現。これにより
+          // 若草色の像（新緑の快活さ・明るさ）を独立 primary で表現する。これにより
           // 若草色を最大化する正直回答者が q4-a(桜色 primary)から分岐でき、
-          // 桜色の影に永久敗北する dead type を解消する（cycle-297）。
+          // 若草色が桜色の影に隠れて誰にも出ないタイプにならない。
           points: { yamabuki: 2, wakakusa: 2, shu: 1 },
         },
         {
@@ -166,7 +174,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "好きな時間帯は?",
+      text: "好きな時間帯は？",
       choices: [
         {
           id: "q5-a",
@@ -192,7 +200,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "旅行するなら?",
+      text: "旅行するなら？",
       choices: [
         {
           id: "q6-a",
@@ -218,7 +226,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q7",
-      text: "もらって嬉しいプレゼントは?",
+      text: "もらって嬉しいプレゼントは？",
       choices: [
         {
           id: "q7-a",
@@ -244,7 +252,7 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "q8",
-      text: "座右の銘に近いのは?",
+      text: "座右の銘に近いのは？",
       choices: [
         {
           id: "q8-a",
@@ -272,11 +280,10 @@ const traditionalColorQuiz: QuizDefinition = {
   results: [
     {
       id: "ai",
-      title: "藍色(あいいろ)",
+      ...colorTypeName("藍色", "あいいろ"),
       description:
         "知的で深みのあるあなたは、藍色のように奥深い魅力を持っています。探究心が強く、物事の本質を見抜く力があります。静かな知性で周りの人を導く存在です。",
       color: "#0d5661",
-      icon: "\u{1F30A}",
       recommendation: "藍色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/ai",
       detailedContent: {
@@ -298,11 +305,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "shu",
-      title: "朱色(しゅいろ)",
+      ...colorTypeName("朱色", "しゅいろ"),
       description:
         "情熱的でエネルギッシュなあなたは、朱色のように力強い輝きを放っています。行動力があり、周りの人にも元気を与える太陽のような存在です。",
       color: "#ab3b3a",
-      icon: "\u{1F525}",
       recommendation: "朱色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors",
       detailedContent: {
@@ -324,11 +330,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "wakakusa",
-      title: "若草色(わかくさいろ)",
+      ...colorTypeName("若草色", "わかくさいろ"),
       description:
         "爽やかで生命力にあふれるあなたは、若草色のようにフレッシュな魅力があります。前向きで成長し続ける姿勢が、周りの人に希望を与えます。",
       color: "#C3D825",
-      icon: "\u{1F331}",
       recommendation: "日本の伝統色を探索する",
       recommendationLink: "/dictionary/colors",
       detailedContent: {
@@ -350,11 +355,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "fuji",
-      title: "藤色(ふじいろ)",
+      ...colorTypeName("藤色", "ふじいろ"),
       description:
         "繊細で優雅なあなたは、藤色のように美しく上品な雰囲気を持っています。感受性が豊かで、芸術的なセンスに恵まれた人です。",
       color: "#8b81c3",
-      icon: "\u{1F33A}",
       recommendation: "藤色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/fuji",
       detailedContent: {
@@ -376,11 +380,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "yamabuki",
-      title: "山吹色(やまぶきいろ)",
+      ...colorTypeName("山吹色", "やまぶきいろ"),
       description:
         "明るく社交的なあなたは、山吹色のように温かい輝きで周りを照らします。コミュニケーション上手で、人を笑顔にする天性の才能があります。",
       color: "#ffb11b",
-      icon: "\u2728",
       recommendation: "山吹色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/yamabuki",
       detailedContent: {
@@ -402,11 +405,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "kon",
-      title: "紺色(こんいろ)",
+      ...colorTypeName("紺色", "こんいろ"),
       description:
         "落ち着きのあるあなたは、紺色のように深い信頼感を与えます。責任感が強く、周りの人から頼られるしっかり者です。",
       color: "#0f2540",
-      icon: "\u{1F319}",
       recommendation: "紺色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/kon",
       detailedContent: {
@@ -428,11 +430,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "sakura",
-      title: "桜色(さくらいろ)",
+      ...colorTypeName("桜色", "さくらいろ"),
       description:
         "温かく包容力のあるあなたは、桜色のように優しい安らぎを与えます。思いやりがあり、誰からも愛される人柄の持ち主です。",
       color: "#fedfe1",
-      icon: "\u{1F338}",
       recommendation: "桜色の詳しい解説を見る",
       recommendationLink: "/dictionary/colors/sakura",
       detailedContent: {
@@ -454,11 +455,10 @@ const traditionalColorQuiz: QuizDefinition = {
     },
     {
       id: "hisui",
-      title: "翡翠色(ひすいいろ)",
+      ...colorTypeName("翡翠色", "ひすいいろ"),
       description:
         "独創的で自由な精神の持ち主であるあなたは、翡翠色のように神秘的な魅力があります。型にはまらない発想力で、新しい道を切り拓く開拓者です。",
       color: "#38B48B",
-      icon: "\u{1F48E}",
       recommendation: "日本の伝統色を探索する",
       recommendationLink: "/dictionary/colors",
       detailedContent: {

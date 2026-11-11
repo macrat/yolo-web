@@ -1,6 +1,9 @@
 import Link from "next/link";
-import ChevronDown from "@/components/icons/ChevronDown";
+import Accordion from "@/components/Accordion";
+import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import styles from "./SeriesNav.module.css";
 
 interface SeriesNavProps {
@@ -9,12 +12,17 @@ interface SeriesNavProps {
   seriesPosts: BlogPostMeta[];
 }
 
+const LIST_LABEL_ID = "series-list-label";
+
 /**
- * Displays a collapsible series navigation UI with:
- * - A numbered list of all posts in the series (inside a details/summary)
- * - Previous/next quick navigation links (always visible)
+ * 連載の記事の上に置く、連載の案内。開閉の行が連載の名前と回数を言い、開くと全回の題名が順に並ぶ。
+ * 閉じておくのは、全回の一覧で本文を画面の外へ押し出さないため。その下の前後の回へのリンクは、
+ * 順に読む来訪者がいつも1回の操作で次へ進めるよう、開閉の外に置く。
  *
- * Returns null if the series has 1 or fewer posts (R1).
+ * 開閉の行はアコーディオンのラベルなので、文節で折る（DESIGN.md §4）。連載の名前はデータから来るので、
+ * ここ（サーバー）で区切る。
+ *
+ * 連載の記事が1本以下のときと、いまの記事が連載に無いときは何も描かない。
  */
 export default function SeriesNav({
   seriesId,
@@ -26,68 +34,67 @@ export default function SeriesNav({
   const currentIndex = seriesPosts.findIndex((p) => p.slug === currentSlug);
   if (currentIndex === -1) return null;
 
-  // Defensive fallback: use seriesId as-is if not found in SERIES_LABELS
   const seriesLabel = SERIES_LABELS[seriesId] ?? seriesId;
-  const positionLabel = `${seriesPosts.length}記事中${currentIndex + 1}番目`;
-
-  // prev = older post (currentIndex - 1), next = newer post (currentIndex + 1) (R3)
   const prevPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null;
   const nextPost =
     currentIndex < seriesPosts.length - 1
       ? seriesPosts[currentIndex + 1]
       : null;
+  const seriesPhrases = splitIntoPhrases(
+    `連載「${seriesLabel}」（全${seriesPosts.length}回）`,
+  );
+  const positionPhrases = splitIntoPhrases(`この記事は第${currentIndex + 1}回`);
 
   return (
-    <nav className={styles.seriesNav} aria-label="シリーズナビゲーション">
-      <details className={styles.details}>
-        <summary className={styles.summary}>
-          <span className={styles.seriesLabel}>{seriesLabel}</span>
-          <span className={styles.position}>{positionLabel}</span>
-          {/* details[open] で CSS が 180° 回転（JS 不要） */}
-          <ChevronDown className={styles.chevron} />
-        </summary>
-        <ol className={styles.list}>
-          {seriesPosts.map((post) => (
-            <li
-              key={post.slug}
-              className={
-                post.slug === currentSlug ? styles.currentItem : styles.listItem
-              }
-            >
-              {post.slug === currentSlug ? (
-                <span aria-current="page" className={styles.currentLink}>
-                  {post.title}
-                  <span className={styles.currentBadge}>(この記事)</span>
-                </span>
-              ) : (
-                <Link href={`/blog/${post.slug}`} className={styles.link}>
-                  {post.title}
-                </Link>
-              )}
-            </li>
-          ))}
-        </ol>
-      </details>
+    <nav className={styles.seriesNav} aria-label="連載">
+      <Accordion
+        summary={
+          <>
+            <PhrasedText
+              as="span"
+              id={LIST_LABEL_ID}
+              className={styles.seriesLabel}
+              phrases={seriesPhrases}
+            />{" "}
+            <PhrasedText
+              as="span"
+              className={styles.position}
+              phrases={positionPhrases}
+            />
+          </>
+        }
+      >
+        <ItemList
+          labelledBy={LIST_LABEL_ID}
+          ordered
+          boxed={false}
+          currentHref={`/blog/${currentSlug}`}
+          items={seriesPosts.map((post) => ({
+            name: post.title,
+            href: `/blog/${post.slug}`,
+          }))}
+        />
+      </Accordion>
 
       {(prevPost || nextPost) && (
-        <div
-          className={
-            prevPost && nextPost
-              ? styles.quickNav
-              : nextPost
-                ? styles.quickNavNextOnly
-                : styles.quickNavPrevOnly
-          }
-        >
+        <div className={styles.quickNav}>
           {prevPost && (
-            <Link href={`/blog/${prevPost.slug}`} className={styles.prevLink}>
-              <span className={styles.quickNavLabel}>シリーズ内の前の記事</span>
+            <Link
+              href={`/blog/${prevPost.slug}`}
+              className={styles.quickNavLink}
+              data-text-box="inline"
+            >
+              <span className={styles.quickNavLabel}>連載の前の回</span>
               <span className={styles.quickNavTitle}>{prevPost.title}</span>
             </Link>
           )}
           {nextPost && (
-            <Link href={`/blog/${nextPost.slug}`} className={styles.nextLink}>
-              <span className={styles.quickNavLabel}>シリーズ内の次の記事</span>
+            <Link
+              href={`/blog/${nextPost.slug}`}
+              className={styles.quickNavLink}
+              data-text-box="inline"
+            >
+              <span className={styles.quickNavLabel}>連載の次の回</span>
               <span className={styles.quickNavTitle}>{nextPost.title}</span>
             </Link>
           )}

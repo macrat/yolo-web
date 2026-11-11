@@ -1,134 +1,105 @@
 import { describe, test, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import type { ItemListItem } from "@/components/ItemList";
 import ResultNextContent from "../ResultNextContent";
-import type { ResultNextContentItem } from "../ResultNextContent";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-// テスト用コンテンツデータ（事前計算済みの ResultNextContentItem 形式）。
-// 新デザイン体系では絵文字アイコンを表示しないため icon フィールドは持たない。
-const mockItems: ResultNextContentItem[] = [
+const mockItems: ItemListItem[] = [
   {
-    slug: "animal-personality",
-    title: "動物性格診断",
-    shortTitle: "動物診断",
-    category: "personality",
-    contentPath: "/play/animal-personality",
-    metaText: "全12問",
-    categoryLabel: "診断",
+    name: "動物診断",
+    href: "/play/animal-personality",
+    description: "固有種12タイプで自分を知る",
+    kind: "診断",
+    facts: [{ text: "全12問" }],
   },
   {
-    slug: "kanji-level",
-    title: "漢字レベル診断",
-    category: "knowledge",
-    contentPath: "/play/kanji-level",
-    metaText: "全10問",
-    categoryLabel: "知識テスト",
+    name: "漢字レベル診断",
+    href: "/play/kanji-level",
+    description: "あなたの漢字力を測定",
+    kind: "クイズ",
+    facts: [{ text: "全10問" }],
   },
   {
-    slug: "kanji-kanaru",
-    title: "漢字カナール",
-    category: "game",
-    contentPath: "/play/kanji-kanaru",
-    metaText: "毎日更新",
-    categoryLabel: "パズル",
+    name: "漢字カナール",
+    href: "/play/kanji-kanaru",
+    description: "毎日の漢字パズル",
+    kind: "パズル",
+    facts: [{ text: "毎日更新" }],
   },
 ];
 
-describe("ResultNextContent — 基本レンダリング", () => {
-  test("2件のコンテンツで正しくレンダリングされること（section, h3, リンク）", () => {
-    render(<ResultNextContent contents={mockItems.slice(0, 2)} />);
+function renderNext(items: ItemListItem[] = mockItems) {
+  return render(
+    <ResultNextContent items={items}>
+      <button type="button">もう一度挑戦する</button>
+    </ResultNextContent>,
+  );
+}
 
-    // section 要素が存在する
-    const section = screen.getByRole("region", { name: "次のおすすめ" });
-    expect(section).toBeInTheDocument();
+describe("ResultNextContent", () => {
+  test("1つのセクションで、見出し「次はこれを試してみよう」（セクションの見出しの段の h2）のすぐ下に操作を置き、その下に次の遊びの一覧を置く", () => {
+    const { container } = renderNext();
 
-    // h3 が表示される
-    expect(screen.getByText("次はこれを試してみよう")).toBeInTheDocument();
-
-    // リンクが2件表示される
-    const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(2);
+    const sections = container.querySelectorAll(":scope > section");
+    expect(sections).toHaveLength(1);
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "次はこれを試してみよう",
+    });
+    const retry = screen.getByRole("button", { name: "もう一度挑戦する" });
+    const list = screen.getByRole("list", { name: "次はこれを試してみよう" });
+    const all = Array.from(container.querySelectorAll("*"));
+    const positions = [heading, retry, list].map((element) =>
+      all.indexOf(element),
+    );
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    expect(sections[0]).toHaveAccessibleName("次はこれを試してみよう");
   });
 
-  test("3件のコンテンツで正しくレンダリングされること", () => {
-    render(<ResultNextContent contents={mockItems} />);
+  test("行を渡された順に並べ、リンクの読み上げの名前が行の名前だけであること", () => {
+    renderNext();
 
-    const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(3);
+    const list = screen.getByRole("list", { name: "次はこれを試してみよう" });
+    const links = within(list).getAllByRole("link");
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/play/animal-personality",
+      "/play/kanji-level",
+      "/play/kanji-kanaru",
+    ]);
+    expect(links.map((link) => link.textContent)).toEqual([
+      "動物診断",
+      "漢字レベル診断",
+      "漢字カナール",
+    ]);
   });
 
-  test("空配列の場合にnullが返ること", () => {
-    const { container } = render(<ResultNextContent contents={[]} />);
-    expect(container.firstChild).toBeNull();
-  });
-});
+  test("説明・種別・補助情報を行に出すこと", () => {
+    renderNext();
 
-describe("ResultNextContent — カード内容", () => {
-  test("shortTitleがある場合はshortTitleが表示されること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    // animal-personality は shortTitle: "動物診断" があるのでそちらが表示される
-    expect(screen.getByText("動物診断")).toBeInTheDocument();
-    expect(screen.queryByText("動物性格診断")).not.toBeInTheDocument();
-  });
-
-  test("shortTitleがない場合はtitleが表示されること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    // kanji-level は shortTitle なし
-    expect(screen.getByText("漢字レベル診断")).toBeInTheDocument();
-  });
-
-  test("metaTextが正しく表示されること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    // 事前計算されたmetaTextをそのまま表示する
-    expect(screen.getByText("全12問")).toBeInTheDocument();
-    expect(screen.getByText("全10問")).toBeInTheDocument();
-    expect(screen.getByText("毎日更新")).toBeInTheDocument();
-  });
-
-  test("カテゴリバッジが表示されること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    // 事前計算されたcategoryLabelをそのまま表示する
+    expect(screen.getByText("固有種12タイプで自分を知る")).toBeInTheDocument();
     expect(screen.getByText("診断")).toBeInTheDocument();
-    expect(screen.getByText("知識テスト")).toBeInTheDocument();
-    expect(screen.getByText("パズル")).toBeInTheDocument();
-  });
-});
-
-describe("ResultNextContent — リンクとアクセシビリティ", () => {
-  test("リンク先がcontentPathと一致すること", () => {
-    render(<ResultNextContent contents={mockItems.slice(0, 2)} />);
-
-    const links = screen.getAllByRole("link");
-    expect(links[0]).toHaveAttribute("href", "/play/animal-personality");
-    expect(links[1]).toHaveAttribute("href", "/play/kanji-level");
-  });
-
-  test("aria-labelが設定されていること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    const section = screen.getByRole("region", { name: "次のおすすめ" });
-    expect(section).toHaveAttribute("aria-label", "次のおすすめ");
-  });
-});
-
-describe("ResultNextContent — fortuneコンテンツ", () => {
-  test("fortune（占い）コンテンツが正しく表示されること", () => {
-    const fortuneItem: ResultNextContentItem = {
-      slug: "daily",
-      title: "今日のユーモア運勢",
-      category: "fortune",
-      contentPath: "/play/daily",
-      metaText: "毎日更新",
-      categoryLabel: "運勢",
-    };
-
-    render(<ResultNextContent contents={[fortuneItem]} />);
-
-    expect(screen.getByText("今日のユーモア運勢")).toBeInTheDocument();
+    expect(screen.getByText("全12問")).toBeInTheDocument();
     expect(screen.getByText("毎日更新")).toBeInTheDocument();
-    expect(screen.getByText("運勢")).toBeInTheDocument();
+  });
+
+  test("並べる行が無いときも、見出しと操作は置き、空の一覧を置かないこと", () => {
+    renderNext([]);
+    expect(
+      screen.getByRole("heading", { name: "次はこれを試してみよう" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "もう一度挑戦する" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
+  });
+
+  test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    renderNext();
+    const headings: string[][] = [["次は", "これを", "試して", "みよう"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

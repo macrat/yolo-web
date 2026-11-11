@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "SQL 改行",
     "SQL インデント",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: ["json-formatter", "yaml-formatter", "csv-converter"],
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

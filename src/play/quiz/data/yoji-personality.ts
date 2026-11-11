@@ -16,16 +16,14 @@ import type { QuizDefinition } from "../types";
 const yojiPersonalityQuiz: QuizDefinition = {
   meta: {
     slug: "yoji-personality",
-    title: "あなたを四字熟語に例えると?",
+    title: "あなたを四字熟語に例えると？",
     shortTitle: "四字熟語で性格診断",
     description:
-      "8つの質問に答えて、あなたの性格に一致する四字熟語を判定します。努力家?自由人?リーダー?8タイプの中から1つが決まります。",
+      "8つの質問に答えて、あなたの性格に一致する四字熟語を判定します。努力家？　自由人？　リーダー？　8タイプの中から1つが決まります。",
     shortDescription: "8問の性格診断で、あなたの四字熟語を判定",
     type: "personality",
     category: "personality",
     questionCount: 8,
-    icon: "\u{1F52E}",
-    accentColor: "#b91c1c",
     keywords: [
       "四字熟語",
       "性格診断",
@@ -39,7 +37,8 @@ const yojiPersonalityQuiz: QuizDefinition = {
       { label: "四字熟語辞典で詳しく見る", href: "/dictionary/yoji" },
       { label: "四字キメルで遊ぶ", href: "/play/yoji-kimeru" },
     ],
-    seoTitle: "あなたを四字熟語に例えると? 無料・心理テスト | 四字熟語性格診断",
+    seoTitle:
+      "あなたを四字熟語に例えると？　無料・心理テスト | 四字熟語性格診断",
     faq: [
       {
         question: "診断結果の四字熟語は何種類ありますか？",
@@ -66,7 +65,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "困難に直面したとき、あなたはどうする?",
+      text: "困難に直面したとき、あなたはどうする？",
       choices: [
         {
           id: "q1-a",
@@ -92,7 +91,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "あなたが最も大切にしている価値観は?",
+      text: "あなたが最も大切にしている価値観は？",
       choices: [
         {
           id: "q2-a",
@@ -118,7 +117,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q3",
-      text: "友人からどう思われていると感じる?",
+      text: "友人からどう思われていると感じる？",
       choices: [
         {
           id: "q3-a",
@@ -144,7 +143,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q4",
-      text: "理想の休日の過ごし方は?",
+      text: "理想の休日の過ごし方は？",
       choices: [
         {
           id: "q4-a",
@@ -170,7 +169,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "チームで活動するとき、あなたの役割は?",
+      text: "チームで活動するとき、あなたの役割は？",
       choices: [
         {
           id: "q5-a",
@@ -196,7 +195,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "座右の銘に近いのは?",
+      text: "座右の銘に近いのは？",
       choices: [
         {
           id: "q6-a",
@@ -222,7 +221,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q7",
-      text: "ストレスを感じたとき、どうリフレッシュする?",
+      text: "ストレスを感じたとき、どうリフレッシュする？",
       choices: [
         {
           id: "q7-a",
@@ -248,7 +247,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
     },
     {
       id: "q8",
-      text: "10年後の自分に最も期待することは?",
+      text: "10年後の自分に最も期待することは？",
       choices: [
         {
           id: "q8-a",
@@ -279,8 +278,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "初志貫徹",
       description:
         "最初の志を最後まで貫くこと。あなたは一度決めたことをぶれずにやり遂げる強い意志の持ち主です。その揺るぎない信念が、周りの人にも勇気を与えています。",
-      color: "#1e40af",
-      icon: "\u{1F3AF}",
       recommendation: "四字熟語辞典で「初志貫徹」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/初志貫徹",
       detailedContent: {
@@ -294,7 +291,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
           "「初志」と「貫徹」がそれぞれ独立した表現として古くから存在し、組み合わさって一つの四字熟語になったとされる。古典的な明確な出典は特定されておらず、日本で広まった合成語型の表現と考えられている。",
         behaviors: [
           "手帳や日記に目標を書いて、定期的に見返して進捗を確認している。",
-          "友達に「もうやめたら?」と言われるたびに、なぜか逆に燃えてくる自分に気づく。",
+          "友達に「もうやめたら？」と言われるたびに、なぜか逆に燃えてくる自分に気づく。",
           "三日坊主で終わったことを数年後まで覚えていて、ふとしたときに悔しくなる。",
           "「継続は力なり」という言葉を、深く頷きながら読んだことがある。",
         ],
@@ -307,8 +304,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "天真爛漫",
       description:
         "飾り気がなく無邪気なこと。あなたは純粋で自由な心の持ち主で、周りの人を自然と笑顔にする力があります。その天真爛漫な魅力をいつまでも大切にしてください。",
-      color: "#f59e0b",
-      icon: "\u{2600}\u{FE0F}",
       recommendation: "四字熟語辞典で「天真爛漫」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/天真爛漫",
       detailedContent: {
@@ -321,9 +316,9 @@ const yojiPersonalityQuiz: QuizDefinition = {
         origin:
           "陶宗儀『南村輟耕録』や宋の蘇軾の詩句に関連するとされるが、出典は確定していない（諸説あり）。日本では「飾らない自然体の魅力」を表す言葉として広く定着し、親しまれている。",
         behaviors: [
-          "初対面の人の前でも、気がついたらしゃべり続けていて「え、もうこんな時間?」となる。",
+          "初対面の人の前でも、気がついたらしゃべり続けていて「え、もうこんな時間？」となる。",
           "面白そうなイベントを見つけたら、誰かを誘う前に自分が先にノリノリになっている。",
-          "真顔で「なんで?」と聞くだけで場が和む、という体験を何度もしている。",
+          "真顔で「なんで？」と聞くだけで場が和む、という体験を何度もしている。",
           "会話に詰まったとき、なぜか自分がとっさに何かを言って、笑いに変えてしまう。",
         ],
         motto:
@@ -335,8 +330,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "切磋琢磨",
       description:
         "互いに競い合い高め合うこと。あなたは仲間と共に成長することに喜びを感じる努力家です。その向上心とチームワークが、あなたとあなたの周りを輝かせています。",
-      color: "#059669",
-      icon: "\u{1F4AA}",
       recommendation: "四字熟語辞典で「切磋琢磨」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/切磋琢磨",
       detailedContent: {
@@ -364,8 +357,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "一期一会",
       description:
         "一生に一度の出会いを大切にすること。あなたは人との出会いや一瞬一瞬を大切にする繊細な感性の持ち主です。その温かいまなざしが、かけがえのない縁を結んでいます。",
-      color: "#db2777",
-      icon: "\u{1F338}",
       recommendation: "四字熟語辞典で「一期一会」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/一期一会",
       detailedContent: {
@@ -395,8 +386,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "臨機応変",
       description:
         "その場に応じて適切に対応すること。あなたは柔軟な発想と高い適応力を持ち、どんな状況でも最善の一手を見つけられる人です。その機転の良さが多くの人を助けています。",
-      color: "#7c3aed",
-      icon: "\u{1F3AD}",
       recommendation: "四字熟語辞典で「臨機応変」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/臨機応変",
       detailedContent: {
@@ -425,8 +414,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "明鏡止水",
       description:
         "静かで澄み切った心。あなたは穏やかで冷静な心の持ち主で、周りの人に安心感を与える存在です。その澄んだ心が、物事の本質を見抜く力の源になっています。",
-      color: "#0891b2",
-      icon: "\u{1FAB7}",
       recommendation: "四字熟語辞典で「明鏡止水」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/明鏡止水",
       detailedContent: {
@@ -441,10 +428,10 @@ const yojiPersonalityQuiz: QuizDefinition = {
         origin:
           "『荘子』徳充符篇に「止水」、天道篇に「明鏡」の比喩がそれぞれ登場する。この二つを後世に組み合わせて「明鏡止水」という四字熟語が成立した。原文にセットで存在するわけではない合成語。",
         behaviors: [
-          "周囲が動揺しているとき、自分だけがいつものトーンで話していて「なんで落ち着いてるの?」と言われる。",
+          "周囲が動揺しているとき、自分だけがいつものトーンで話していて「なんで落ち着いてるの？」と言われる。",
           "怒りを感じても、すぐには言葉にせず一晩置いてから伝えるかどうかを考える。",
           "悩んでいる友人の話を最後まで黙って聞いてから、一言だけ返すスタイルが染み付いている。",
-          "誰かがパニックになっている場面で、まず「今何ができる?」と整理してしまう。",
+          "誰かがパニックになっている場面で、まず「今何ができる？」と整理してしまう。",
         ],
         motto:
           "明鏡止水——揺れない心が、本当に大切なものを映し出す。その静けさを、誇りにしよう。",
@@ -455,8 +442,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "以心伝心",
       description:
         "言葉なしに心が通じ合うこと。あなたは周囲の気持ちを敏感に察する共感力に優れた人です。その思いやりと温かさが、深い信頼関係を築く力になっています。",
-      color: "#e11d48",
-      icon: "\u{1F495}",
       recommendation: "四字熟語辞典で「以心伝心」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/以心伝心",
       detailedContent: {
@@ -473,7 +458,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
         behaviors: [
           "友達がLINEの返信を遅らせているとき、「忙しいのかな、疲れてるのかな」と想像してから待つ。",
           "グループの中で誰かが浮いていると感じたら、自然にその人の隣に座っていることがある。",
-          "「なんかあった?」と聞いたら「なんでわかったの?」と驚かれる経験が何度もある。",
+          "「なんかあった？」と聞いたら「なんでわかったの？」と驚かれる経験が何度もある。",
           "相手が言葉に詰まっていると、続きを先回りして言いたくなる衝動を抑えるのが大変。",
         ],
         motto:
@@ -485,8 +470,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       title: "勇往邁進",
       description:
         "恐れず勇ましく前に進むこと。あなたは困難を恐れず果敢に挑戦するリーダー気質の持ち主です。その行動力と勇気が、周りの人にも前に進む力を与えています。",
-      color: "#ea580c",
-      icon: "\u{1F525}",
       recommendation: "四字熟語辞典で「勇往邁進」の詳しい解説を見る",
       recommendationLink: "/dictionary/yoji/勇往邁進",
       detailedContent: {
@@ -504,7 +487,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
           "「向いてないかも」と思っても、やってみてから判断するので実は経験値がすごい。",
           "友達が悩んでいるとき、背中を押す言葉を自然に言えて「ありがとう」と言われることが多い。",
           "やりたいことリストを作ると、気づいたら半分以上に実行済みのチェックが入っている。",
-          "「それ難しいんじゃない?」と言われると、なぜかやる気が上がる体質。",
+          "「それ難しいんじゃない？」と言われると、なぜかやる気が上がる体質。",
         ],
         motto:
           "勇往邁進——前に進み続ける姿が、周りの勇気に火をつける。その歩みを止めないでいよう。",

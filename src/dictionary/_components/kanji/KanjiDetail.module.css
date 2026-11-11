@@ -1,10 +1,8 @@
 /*
- * 漢字詳細（1 字）— DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側）。
- * 見出しは対象の漢字を明朝で大字。情報は罫で組んだ定義リスト。数値は tabular 数字書体。
- * 器は静か（紙墨朱・罫・組版のみ）。色付きカード・影・ピル・角丸装飾なし・全トークン経由（§10）。
+ * 漢字の詳細（1字）。対象の漢字を見出しの書体の大字で見せ、情報は罫で区切った定義リストで組む。
  */
 
-/* 読む面に絞る（§3 --measure）。左揃え基調（§4）。 */
+/* 読む面に絞り、左揃えにする（§5）。 */
 .detail {
   max-width: var(--measure);
   margin: 0 auto;
@@ -17,11 +15,10 @@
   margin-bottom: var(--space-32);
 }
 
-/* 大字: 対象の漢字を明朝で大きく（見出しの主役・§7 見出しの大字）。 */
+/* 大字: 対象の漢字を見出しの書体で大きく組む。 */
 .character {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 6rem;
-  font-weight: 600;
   line-height: 1;
   color: var(--ink);
   flex-shrink: 0;
@@ -32,14 +29,14 @@
   min-width: 0;
 }
 
-/* h1（語ラベル）: 基層見出し（明朝）に委ね、ここは大きさと余白だけを整える。 */
+/* h1（語ラベル）: 書体は globals.css の見出しの規則に委ね、ここは大きさと余白だけを整える。 */
 .headerInfo h1 {
   font-size: 1.5625rem; /* 25px */
   margin-bottom: var(--space-8);
   color: var(--ink);
 }
 
-/* 読み: 補助情報（墨の補・§2/§3）。 */
+/* 読み: 補助情報（--ink-2）。 */
 .readings {
   margin-bottom: 0.25rem;
   font-size: 1rem;
@@ -51,7 +48,7 @@
   color: var(--ink);
 }
 
-/* 意味: 読ませる本文（16px・§3）。 */
+/* 意味: 読ませる本文（16px）。 */
 .meanings {
   font-size: 1rem;
   line-height: 1.9;
@@ -63,7 +60,7 @@
   margin-bottom: var(--space-32);
 }
 
-/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4）。 */
+/* 小見出し: 見出しの書体・墨・一本罫で仕切る。 */
 .section h2 {
   font-size: 1.25rem; /* 20px */
   margin-bottom: var(--space-16);
@@ -72,7 +69,7 @@
   color: var(--ink);
 }
 
-/* 基本情報: 罫で区切った定義リスト（値札＝ラベル・値）。 */
+/* 基本情報: 罫で区切った定義リスト（ラベルと値）。 */
 .infoList {
   margin: 0;
   border-top: 1px solid var(--rule);
@@ -86,7 +83,7 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/* ラベル（値札の文言相当）: 墨の補・固定幅で値の頭を揃える。 */
+/* ラベル: 前に出ない文字（--ink-2）で、固定幅にして値の頭を揃える。 */
 .infoTerm {
   flex: 0 0 6rem;
   margin: 0;
@@ -103,62 +100,29 @@
   line-height: 1.7;
 }
 
-/* 数値（画数・部首番号）: 桁が映える tabular 数字書体（§3）。 */
+/* 数値（画数・部首番号）: 本文の書体で組む。数字は IBM Plex Sans が組み、既定で桁が揃う。 */
 .number {
-  font-family: var(--font-number);
-  font-feature-settings: "tnum";
+  font-family: var(--font-body);
 }
 
-/* 使用例: 読点で組んだ自然な一文（§4/§6）。 */
+/* 使用例: 読点で組んだ自然な一文。 */
 .examples {
   font-size: 1rem;
   line-height: 1.9;
   color: var(--ink);
 }
 
-/* 同じ部首の漢字: 単字リンクの索引（升目・§4）。カード/ピルではない。 */
-.relatedList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-8);
-}
-
-/* 索引リンク: 明朝・墨、静止時は下線なし、hover で朱＋下線。タップ面 44px（§10）。 */
-.relatedLink {
+/* 関連ゲームへ進むリンク。縁の見えないコントロールとして置き、下線と訪問済みの色は globals.css の a の
+ * 既定に従う（§6）。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
+.crossLink {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 44px;
   min-height: 44px;
-  padding: 0 var(--space-8);
-  font-family: var(--font-mincho);
-  font-size: 1.375rem; /* 22px */
-  line-height: 1.2;
-  color: var(--ink);
-  text-decoration: none;
-}
-
-.relatedLink:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
-/* 関連ゲームへの導線: 朱のリンク（下線はリンクの専有・§3）。 */
-.crossLink {
-  display: inline-block;
   margin-top: var(--space-8);
   font-size: 1rem;
-  color: var(--accent);
-  text-decoration: none;
 }
 
-.crossLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
-/* モバイル先行（375）: 大字を縦積みにして読みやすさを保つ。中央寄せはしない（左揃え基調・§4）。 */
+/* 幅 640px 以下の画面では、大字と、その横の見出し・読み・意味の列とのあいだを詰め、大字を小さくする。 */
 @media (max-width: 640px) {
   .header {
     gap: var(--space-16);

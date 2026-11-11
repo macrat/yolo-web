@@ -1,28 +1,29 @@
 "use client";
 
 /**
- * FudaActions — 「札（結果画像）」の保存/共有アクション（DESIGN.md §4「札」/§7「見せたくなる結果」）。
+ * 結果の札の画像を保存・共有するボタン。解き終えた画面の「この結果を共有」の区画に、文の共有のボタンと並べて置く。
+ * 札の画像の固定 URL を持つのが character-personality だけなので、この診断に限って置く。知らせの文は自分では
+ * 出さず、onNoticeChange で区画に渡し、区画の知らせの行（ShareButtons）に1つにまとめて出す。
  *
- * character-personality の結果面（本人向け ResultCard の勲章=Tsutsumi 直下）に置く、
- * 「完走した本人が自分の札を持ち帰る」ための主アクション（cycle-280 設計 §3 / PM判断5）。
- * 適用は character-personality に限定する（他 personality 診断への展開は効果測定後）。
+ * 画像は固定 URL の Route Handler から取る:
+ *   GET /play/character-personality/result/<resultId>/fuda-image → image/png（ビルド時に描く）
+ * 結果のページの og:image と保存する画像は、同じ描き方の同じ画像である。
  *
- * 画像は固定 URL の Route Handler（タスクB）から取得する：
- *   GET /play/character-personality/result/<resultId>/fuda-image → image/png（SSGプリレンダ）
- * メタプレビュー（og:image）と保存画像は同一レンダラ＝単一の真実。
- *
- * 計測（B-551）: 実際に完了したアクションだけを計上する。
- * - 共有: canShare({files}) 対応なら navigator.share({files}) 成功時に trackShare("web_share",…,"fuda")。
- *   非対応/未定義なら URL を clipboard コピーし、成功時 trackShare("clipboard",…,"fuda")。
- *   共有シートのキャンセル/失敗では計上しない。
- * - 保存: 既定は Blob→createObjectURL→アンカー download で保存し trackSave(…,"download","fuda")。
- *   アンカー download 非対応環境（iOS Safari 等）は navigator.share({files}) 経由の保存に寄せ、
- *   成功時 trackSave(…,"web_share_files","fuda")（ADR002 に指標解釈の注記あり）。
+ * 計測: 来訪者が終えた操作だけを数える。
+ * - 共有: canShare({files}) が真なら navigator.share({files}) を終えたときに trackShare("web_share",…,"fuda")。
+ *   できない端末では URL をコピーし、写せたときに trackShare("clipboard",…,"fuda")。
+ *   共有シートを閉じただけのときと失敗したときは数えない。
+ * - 保存: アンカーの download 属性を持つブラウザ（iOS の Safari は 13 から持つ）では、Blob を createObjectURL
+ *   にしてダウンロードし trackSave(…,"download","fuda")。持たないブラウザでは navigator.share({files}) で
+ *   共有シートの保存へ進み、終えたときに trackSave(…,"web_share_files","fuda")（数の読み方は ADR002）。
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { trackSave, trackShare } from "@/lib/analytics";
+import { copyText } from "@/lib/clipboard";
+import { SHARE_LABELS } from "@/lib/share-labels";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
+import Button from "@/components/Button";
 import styles from "./FudaActions.module.css";
 
 interface FudaActionsProps {
@@ -30,22 +31,18 @@ interface FudaActionsProps {
   resultId: string;
   /** 結果タイプ名（共有テキストに使う）。 */
   resultTitle: string;
-  /** 診断のタイトル（共有タイトル/テキストに使う）。 */
-  quizTitle: string;
+  /** 診断の名前（短い名前があればそれ）。共有シートの題と共有の文で言う。 */
+  quizName: string;
   /** 診断の slug（content_id と共有 URL の生成に使う。character-personality を想定）。 */
   quizSlug: string;
+  /** 知らせの文（文ごとに分けたもの）が変わったときに呼ぶ。知らせが無いときは空の並びを渡す。 */
+  onNoticeChange: (sentences: string[]) => void;
 }
 
-/** 札画像を共有/保存の対象とする診断の contentType（GA4）。 */
+/** 札の画像を保存・共有する診断の contentType（GA4）。 */
 const CONTENT_TYPE = "diagnosis";
 
-/** 見出し（この結果を札として持ち帰る）の id。ボタン群が aria-describedby で参照する。 */
-const LABEL_ID = "fuda-actions-label";
-
-/**
- * アンカーの download 属性が使えるか（＝Blob をファイルとして保存できるか）。
- * iOS Safari 等の非対応環境は false になり、navigator.share({files}) 経由へ寄せる。
- */
+/** アンカーの download 属性で、Blob をファイルとして保存できるか。 */
 function isAnchorDownloadSupported(): boolean {
   if (typeof document === "undefined") return false;
   return "download" in document.createElement("a");
@@ -54,13 +51,18 @@ function isAnchorDownloadSupported(): boolean {
 export default function FudaActions({
   resultId,
   resultTitle,
-  quizTitle,
+  quizName,
   quizSlug,
+  onNoticeChange,
 }: FudaActionsProps) {
-  // busy: 取得〜アクション完了までの間ボタンを無効化して多重押下を防ぐ。
+  // 画像を用意しているあいだ。二度押しで画像を2回取らないよう、押したボタンの処理を先に進めない。ボタンは
+  // 無効にしない。無効のボタンはフォーカスを受けないので、キーボードで押したときにフォーカスがページの頭に落ちる。
+  const busyRef = useRef(false);
   const [busy, setBusy] = useState(false);
-  // status: aria-live で読み上げる一時メッセージ（コピー完了/エラー）。
-  const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
+  // 知らせの文（コピーした・写せなかった・画像を用意できなかった）。
+  const [status, setStatus] = useState<
+    "idle" | "copied" | "copyFailed" | "error"
+  >("idle");
 
   const contentId = contentIdForQuiz(quizSlug);
 
@@ -68,16 +70,13 @@ export default function FudaActions({
     typeof window !== "undefined"
       ? `${window.location.origin}/play/${quizSlug}/result/${resultId}`
       : `/play/${quizSlug}/result/${resultId}`;
-  const shareText = `${quizTitle}の結果は「${resultTitle}」でした!`;
+  const shareText = `${quizName}の結果は「${resultTitle}」でした！`;
 
   /**
-   * 固定 URL から札 PNG を取得して File 化する。
-   * 取得失敗（!res.ok / ネットワーク）は例外を投げ、呼び出し側でエラー表示にする
-   * （握りつぶさない・UI は壊さない）。
+   * 固定 URL から札の PNG を取って File にする。取れなかったとき（!res.ok・通信の失敗）は例外を投げ、
+   * 呼び出し側が知らせの文で伝える。
    */
   const fetchFudaFile = useCallback(async (): Promise<File> => {
-    // 画像は character-personality 固有の Route Handler にのみ存在する（本コンポーネントは
-    // character-personality 限定）。slug ではなく固定パスで取得する。
     const res = await fetch(
       `/play/character-personality/result/${resultId}/fuda-image`,
     );
@@ -90,134 +89,125 @@ export default function FudaActions({
     });
   }, [resultId]);
 
-  const handleSave = useCallback(async () => {
-    if (busy) return;
-    setBusy(true);
-    setStatus("idle");
-    try {
-      const file = await fetchFudaFile();
-
-      if (isAnchorDownloadSupported()) {
-        // 既定：Blob をアンカー download で保存（irodori downloadImage と同型）。
-        const objectUrl = URL.createObjectURL(file);
-        try {
-          const a = document.createElement("a");
-          a.href = objectUrl;
-          a.download = file.name;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        } finally {
-          URL.revokeObjectURL(objectUrl);
-        }
-        trackSave(contentId, CONTENT_TYPE, "download", "fuda");
-        return;
-      }
-
-      // download 非対応（iOS Safari 等）：共有シート経由の保存に寄せる。
-      if (navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: quizTitle,
-            text: shareText,
-            url: shareUrl,
-          });
-          // 成功（キャンセルは reject）時のみ計上する。
-          trackSave(contentId, CONTENT_TYPE, "web_share_files", "fuda");
-        } catch {
-          // ユーザーがキャンセル/失敗：計上しない。
-        }
-        return;
-      }
-
-      // 保存手段が無い環境：正直にエラー表示（握りつぶさない）。
-      setStatus("error");
-    } catch {
-      setStatus("error");
-    } finally {
-      setBusy(false);
-    }
-  }, [busy, fetchFudaFile, contentId, quizTitle, shareText, shareUrl]);
-
-  const handleShare = useCallback(async () => {
-    if (busy) return;
-    setBusy(true);
-    setStatus("idle");
-    try {
-      const file = await fetchFudaFile();
-
-      if (navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: quizTitle,
-            text: shareText,
-            url: shareUrl,
-          });
-          // 成功（キャンセルは reject）時のみ計上する。
-          trackShare("web_share", CONTENT_TYPE, contentId, "fuda");
-        } catch {
-          // ユーザーがキャンセル/失敗：計上しない。
-        }
-        return;
-      }
-
-      // ファイル共有 非対応/未定義：URL を clipboard にコピーしてフォールバック。
+  /** 画像を用意するあいだを busy にして action を走らせる。用意しているあいだに押されたら何もしない。 */
+  const runExclusively = useCallback(
+    async (action: () => Promise<void>): Promise<void> => {
+      if (busyRef.current) return;
+      busyRef.current = true;
+      setBusy(true);
+      setStatus("idle");
       try {
-        await navigator.clipboard.writeText(shareUrl);
-        setStatus("copied");
-        trackShare("clipboard", CONTENT_TYPE, contentId, "fuda");
+        await action();
       } catch {
-        // コピーも失敗：計上しない。UI は壊さずエラー表示に留める。
         setStatus("error");
+      } finally {
+        busyRef.current = false;
+        setBusy(false);
       }
-    } catch {
-      setStatus("error");
-    } finally {
-      setBusy(false);
-    }
-  }, [busy, fetchFudaFile, contentId, quizTitle, shareText, shareUrl]);
+    },
+    [],
+  );
 
-  const statusMessage =
-    status === "copied"
-      ? "リンクをコピーしました!"
-      : status === "error"
-        ? "画像を用意できませんでした。時間をおいて再度お試しください。"
-        : "";
+  const handleSave = useCallback(
+    () =>
+      runExclusively(async () => {
+        const file = await fetchFudaFile();
+
+        if (isAnchorDownloadSupported()) {
+          const objectUrl = URL.createObjectURL(file);
+          try {
+            const a = document.createElement("a");
+            a.href = objectUrl;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          } finally {
+            URL.revokeObjectURL(objectUrl);
+          }
+          trackSave(contentId, CONTENT_TYPE, "download", "fuda");
+          return;
+        }
+
+        // アンカーの download 属性を持たないブラウザは、共有シートの保存へ進む。
+        if (navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: quizName,
+              text: shareText,
+              url: shareUrl,
+            });
+            trackSave(contentId, CONTENT_TYPE, "web_share_files", "fuda");
+          } catch {
+            // 共有シートを閉じただけのときは数えない。
+          }
+          return;
+        }
+
+        setStatus("error");
+      }),
+    [runExclusively, fetchFudaFile, contentId, quizName, shareText, shareUrl],
+  );
+
+  const handleShare = useCallback(
+    () =>
+      runExclusively(async () => {
+        const file = await fetchFudaFile();
+
+        if (navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: quizName,
+              text: shareText,
+              url: shareUrl,
+            });
+            trackShare("web_share", CONTENT_TYPE, contentId, "fuda");
+          } catch {
+            // 共有シートを閉じただけのときは数えない。
+          }
+          return;
+        }
+
+        // 画像を共有できない端末では、結果のページの URL をコピーする。
+        if (await copyText(shareUrl)) {
+          setStatus("copied");
+          trackShare("clipboard", CONTENT_TYPE, contentId, "fuda");
+        } else {
+          setStatus("copyFailed");
+        }
+      }),
+    [runExclusively, fetchFudaFile, contentId, quizName, shareText, shareUrl],
+  );
+
+  // 知らせの文。1行に収まらないとき文のあいだで折るよう、文ごとに分けて持つ。
+  const noticeKey = busy ? "busy" : status;
+  useEffect(() => {
+    const sentences: Record<typeof noticeKey, string[]> = {
+      busy: ["画像を用意しています。"],
+      idle: [],
+      copied: ["リンクをコピーしました"],
+      copyFailed: [
+        "リンクをコピーできませんでした。",
+        "ほかの共有先をお使いください",
+      ],
+      error: [
+        "画像を用意できませんでした。",
+        "時間をおいて再度お試しください。",
+      ],
+    };
+    onNoticeChange(sentences[noticeKey]);
+  }, [noticeKey, onNoticeChange]);
 
   return (
-    <div className={styles.wrapper}>
-      {/* 見出しをボタン群と aria-describedby で結びつけ、支援技術で「何をする札か」を伝える。 */}
-      <p id={LABEL_ID} className={styles.label}>
-        この結果を札として持ち帰る
-      </p>
-      <div className={styles.buttons}>
-        <button
-          type="button"
-          className={styles.saveButton}
-          onClick={handleSave}
-          disabled={busy}
-          aria-busy={busy}
-          aria-describedby={LABEL_ID}
-        >
-          保存
-        </button>
-        <button
-          type="button"
-          className={styles.shareButton}
-          onClick={handleShare}
-          disabled={busy}
-          aria-busy={busy}
-          aria-describedby={LABEL_ID}
-        >
-          共有
-        </button>
-      </div>
-      {/* role="status" は暗黙で aria-live="polite" を持つため冗長指定はしない（ライブ領域は残す）。 */}
-      <div className={styles.status} role="status">
-        {statusMessage}
-      </div>
+    <div className={styles.buttons}>
+      <Button
+        variant="primary"
+        onClick={handleSave}
+        phrases={SHARE_LABELS.saveImage.phrases}
+      />
+      <Button onClick={handleShare} phrases={SHARE_LABELS.shareImage.phrases} />
     </div>
   );
 }

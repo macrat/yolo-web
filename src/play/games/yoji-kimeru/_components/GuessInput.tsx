@@ -1,50 +1,46 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, type RefObject } from "react";
+import Button from "@/components/Button";
+import ErrorMessage from "@/components/ErrorMessage";
+import Field from "@/components/Field";
+import Input from "@/components/Input";
+import PhrasedText from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
+import {
+  EVALUATE_UNAVAILABLE_MESSAGE,
+  type GuessSubmitResult,
+} from "@/play/games/shared/_lib/guessSubmit";
 import styles from "./styles/YojiKimeru.module.css";
 
-/** Duration of the shake animation in ms. Must match CSS .shaking animation duration. */
-const SHAKE_DURATION_MS = 400;
-
 interface GuessInputProps {
-  onSubmit: (input: string) => Promise<string | null>;
-  disabled: boolean;
-  submitting?: boolean;
+  /**
+   * 欄の上に置くラベル。いまの難易度と残りの回数を言う（「中級の四字熟語を入力（あと6回）」）。文節で分けた区切りの
+   * 並びで渡し、そのあいだで折る（PhrasedName）。
+   */
+  label: PhrasedName;
+  onSubmit: (input: string) => Promise<GuessSubmitResult>;
+  submitting: boolean;
+  /** 欄の要素。推測のあと、画面の外に出た欄を画面に入れるために、呼び出し側が測る。 */
+  fieldRef?: RefObject<HTMLInputElement | null>;
 }
 
 /**
- * Text input field for 4-character kanji input with submit button.
- * Handles IME composition events to prevent premature submission.
- * Returns an error message from onSubmit if validation fails.
- * Supports async onSubmit for server-side evaluation.
+ * 四字熟語を書く欄と送信のボタン。変換の途中の Enter では送らない。
+ * 入力の誤りは欄に結んで欄の直下で言い、答え合わせができなかったことは、入力は正しいので欄の外で言う。
  */
 export default function GuessInput({
+  label,
   onSubmit,
-  disabled,
-  submitting = false,
+  submitting,
+  fieldRef,
 }: GuessInputProps) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [shaking, setShaking] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
   const composingRef = useRef(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Clear the shake timer on unmount to prevent state updates after cleanup.
-  useEffect(() => {
-    return () => {
-      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
-    };
-  }, []);
-
-  const triggerShake = useCallback(() => {
-    setShaking(true);
-    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
-    shakeTimerRef.current = setTimeout(
-      () => setShaking(false),
-      SHAKE_DURATION_MS,
-    );
-  }, []);
+  const ownRef = useRef<HTMLInputElement>(null);
+  const inputRef = fieldRef ?? ownRef;
 
   const handleSubmit = useCallback(async () => {
     if (composingRef.current) return;
@@ -52,20 +48,23 @@ export default function GuessInput({
     const trimmed = value.trim();
     if (!trimmed) {
       setError("四字熟語を入力してください");
-      triggerShake();
       return;
     }
 
-    const errorMsg = await onSubmit(trimmed);
-    if (errorMsg) {
-      setError(errorMsg);
-      triggerShake();
+    setUnavailable(false);
+    const result = await onSubmit(trimmed);
+    if (result.kind === "invalid") {
+      setError(result.message);
+    } else if (result.kind === "unavailable") {
+      setError(null);
+      setUnavailable(true);
     } else {
       setError(null);
       setValue("");
     }
-    inputRef.current?.focus();
-  }, [value, onSubmit, triggerShake, submitting]);
+    // 欄が画面の外にあれば、送り方は呼び出し側が決める（DESIGN.md §8）。
+    inputRef.current?.focus({ preventScroll: true });
+  }, [value, onSubmit, submitting, inputRef]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -78,43 +77,57 @@ export default function GuessInput({
   );
 
   return (
-    <div className={styles.inputArea}>
-      <div className={`${styles.inputRow} ${shaking ? styles.shaking : ""}`}>
-        <input
-          ref={inputRef}
-          className={styles.inputField}
-          type="text"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setError(null);
-          }}
-          onKeyDown={handleKeyDown}
-          onCompositionStart={() => {
-            composingRef.current = true;
-          }}
-          onCompositionEnd={() => {
-            composingRef.current = false;
-          }}
-          disabled={disabled || submitting}
-          placeholder={submitting ? "送信中..." : "四字熟語を入力"}
-          aria-label="四字熟語を入力"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-        />
-        <button
-          className={styles.submitButton}
-          onClick={() => void handleSubmit()}
-          disabled={disabled || submitting}
-          type="button"
-        >
-          {submitting ? "送信中..." : "送信"}
-        </button>
-      </div>
-      <div className={styles.errorMessage} role={error ? "alert" : undefined}>
-        {error}
-      </div>
+    <div className={styles.guess}>
+      <Field label={label} error={error ?? undefined}>
+        {(control) => (
+          <div className={styles.inputRow}>
+            <Input
+              {...control}
+              ref={inputRef}
+              // 送っているあいだも欄は無効にせず、書き換えだけを止める。無効にするとフォーカスが欄から外れ、
+              // 次の推測を入れる所を来訪者が探し直すことになる。
+              readOnly={submitting}
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setError(null);
+                setUnavailable(false);
+              }}
+              onKeyDown={handleKeyDown}
+              onCompositionStart={() => {
+                composingRef.current = true;
+              }}
+              onCompositionEnd={() => {
+                composingRef.current = false;
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+            />
+            <Button
+              variant="primary"
+              onClick={() => void handleSubmit()}
+              disabled={submitting}
+            >
+              {/* 面の字は2つとも同じ場所に重ねて描き、広いほうの幅をいつも取っておく。送っているあいだに
+                  ボタンが広がって欄が縮むことがない。見えていない面は読み上げでも読まない。 */}
+              <span className={styles.submitFaces}>
+                <PhrasedText
+                  as="span"
+                  phrases={["送信"]}
+                  hidden={submitting || undefined}
+                />
+                <PhrasedText
+                  as="span"
+                  phrases={["送信中……"]}
+                  hidden={!submitting || undefined}
+                />
+              </span>
+            </Button>
+          </div>
+        )}
+      </Field>
+      {unavailable && <ErrorMessage message={EVALUATE_UNAVAILABLE_MESSAGE} />}
     </div>
   );
 }

@@ -56,12 +56,15 @@ describe("sanitize", () => {
 
   test("preserves GFM Alert classes including title paragraph", () => {
     const html =
-      '<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 8z"></path></svg>Note</p><p>Content</p></div>';
+      '<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title">補足</p><p>Content</p></div>';
     const result = sanitize(html);
-    expect(result).toContain("markdown-alert-note");
-    expect(result).toContain("markdown-alert-title");
-    expect(result).toContain("<svg");
-    expect(result).toContain("<path");
+    expect(result).toBe(html);
+  });
+
+  test("removes svg (markdown output does not produce icons)", () => {
+    const html =
+      '<p><svg viewBox="0 0 16 16"><path d="M0 8z"></path></svg>x</p>';
+    expect(sanitize(html)).toBe("<p>x</p>");
   });
 
   test("removes all event handler attributes", () => {
@@ -168,40 +171,21 @@ describe("sanitize", () => {
     expect(result).toContain('alt="photo"');
   });
 
-  test("preserves Shiki dual-theme <pre> with class, style, and tabindex", () => {
+  test("preserves code boxes with comment spans", () => {
     const html =
-      '<pre class="shiki shiki-themes vitesse-light vitesse-dark" style="background-color:#ffffff;--shiki-dark-bg:#121212;color:#393a34;--shiki-dark:#dbd7caee" tabindex="0"><code><span class="line"></span></code></pre>';
-    const result = sanitize(html);
-    expect(result).toContain("shiki-themes");
-    expect(result).toContain("vitesse-light");
-    expect(result).toContain("vitesse-dark");
-    expect(result).toContain('tabindex="0"');
-    expect(result).toContain("background-color:#ffffff");
-    expect(result).toContain("--shiki-dark-bg:#121212");
-    expect(result).toContain("--shiki-dark:#dbd7caee");
+      '<pre><code><span class="code-comment">// note</span>\nconst x = 1;</code></pre>';
+    expect(sanitize(html)).toBe(html);
   });
 
-  test("preserves Shiki <span> with per-token color and dark variable", () => {
+  test("strips style and tabindex from code boxes", () => {
     const html =
-      '<span style="color:#AB5959;--shiki-dark:#CB7676">const</span>';
-    const result = sanitize(html);
-    expect(result).toContain("color:#AB5959");
-    expect(result).toContain("--shiki-dark:#CB7676");
-    expect(result).toContain("const");
+      '<pre style="background-color:#fff" tabindex="0"><code><span style="color:#AB5959">const</span></code></pre>';
+    expect(sanitize(html)).toBe("<pre><code><span>const</span></code></pre>");
   });
 
-  test("strips dangerous style values even on Shiki-style elements", () => {
-    // expression(), url(javascript:...), and named colors must all be dropped
-    // because they don't match the hex color whitelist regex.
+  test("preserves word breaks in table cells", () => {
     const html =
-      '<pre style="background-color:#fff;color:expression(alert(1));--shiki-dark:url(javascript:alert(1))"><span style="color:red;--shiki-dark:#abc">x</span></pre>';
-    const result = sanitize(html);
-    expect(result).not.toContain("expression(");
-    expect(result).not.toContain("javascript:");
-    // "red" as a named color value should be stripped (only #hex is allowed)
-    expect(result).not.toMatch(/color:\s*red/);
-    // The safe declarations survive
-    expect(result).toContain("background-color:#fff");
-    expect(result).toContain("--shiki-dark:#abc");
+      "<table><tbody><tr><td>新しい<wbr />値</td></tr></tbody></table>";
+    expect(sanitize(html)).toBe(html);
   });
 });

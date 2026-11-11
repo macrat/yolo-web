@@ -1,11 +1,11 @@
 /**
- * LineBreakRemoverTile のユニットテスト（TDD: 実装前に書く）
+ * LineBreakRemoverTile のユニットテスト
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（3モード SegmentedControl 表示・ToggleSwitch 表示）
- * - V-2: variant=remove（固定モード・SegmentedControl 非表示・ToggleSwitch 維持）
- * - V-3: variant=replace-space（固定モード・SegmentedControl 非表示・ToggleSwitch 維持）
- * - V-4: variant=smart-pdf（固定モード・SegmentedControl 非表示・行内改行 SegmentedControl 表示）
+ * - V-1: variant=full でのレンダリング（3モード ラジオボタンの組表示・チェックボックス表示）
+ * - V-2: variant=remove（固定モード・ラジオボタンの組非表示・チェックボックス 維持）
+ * - V-3: variant=replace-space（固定モード・ラジオボタンの組非表示・チェックボックス 維持）
+ * - V-4: variant=smart-pdf（固定モード・ラジオボタンの組非表示・行内改行 ラジオボタンの組表示）
  * - V-5: variant=full で変換ロジックが動作する
  * - V-6: variant=remove でモードが固定されて動作する
  * - V-7: variant=replace-space でモードが固定されて動作する
@@ -15,13 +15,13 @@
  * - V-11: aria 属性（aria-labelledby / aria-live）
  * - V-12: clipboard 不在時の silent fail
  * - V-13: デフォルト variant = full
+ * - V-14: CSS トークン検証（--color-* 不使用・--accent 直塗り禁止・font-weight:700 禁止）
  */
 import { readFileSync } from "fs";
 import { join } from "path";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import LineBreakRemoverTile from "../LineBreakRemoverTile";
-import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
 
 // navigator.clipboard のモック
 const mockWriteText = vi.fn().mockResolvedValue(undefined);
@@ -36,7 +36,7 @@ beforeEach(() => {
 });
 
 // --- V-1: variant=full ---
-describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）", () => {
+describe("V-1: variant=full（全機能・3モード ラジオボタンの組表示）", () => {
   it("3つの変換モードが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     expect(
@@ -56,18 +56,18 @@ describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）"
     expect(screen.getByLabelText("変換結果")).toBeInTheDocument();
   });
 
-  it("初期モード（remove）でトグルスイッチが表示される", () => {
+  it("初期モード（remove）で連続する改行をまとめるチェックボックスが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     expect(
-      screen.getByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
-  it("smart-pdf に切り替えるとトグルが非表示・行内改行オプションが表示される", () => {
+  it("smart-pdf に切り替えるとチェックボックスが非表示・行内改行オプションが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "PDFスマートモード" }));
     expect(
-      screen.queryByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.queryByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "削除する" })).toBeInTheDocument();
     expect(
@@ -76,9 +76,9 @@ describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）"
   });
 });
 
-// --- V-2: variant=remove（モード固定・SegmentedControl 非表示）---
+// --- V-2: variant=remove（モード固定・ラジオボタンの組非表示）---
 describe("V-2: variant=remove（モード固定）", () => {
-  it("モード切替 SegmentedControl が表示されない", () => {
+  it("モード切替 ラジオボタンの組が表示されない", () => {
     render(<LineBreakRemoverTile variant="remove" />);
     // remove/replace-space/PDFスマートモードのラジオが無い
     expect(
@@ -92,10 +92,10 @@ describe("V-2: variant=remove（モード固定）", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("ToggleSwitch（連続改行統合）が表示される（機能を削らない）", () => {
+  it("チェックボックス（連続改行統合）が表示される（機能を削らない）", () => {
     render(<LineBreakRemoverTile variant="remove" />);
     expect(
-      screen.getByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
@@ -108,17 +108,17 @@ describe("V-2: variant=remove（モード固定）", () => {
 
 // --- V-3: variant=replace-space（モード固定）---
 describe("V-3: variant=replace-space（モード固定）", () => {
-  it("モード切替 SegmentedControl が表示されない", () => {
+  it("モード切替 ラジオボタンの組が表示されない", () => {
     render(<LineBreakRemoverTile variant="replace-space" />);
     expect(
       screen.queryByRole("radio", { name: "改行を削除" }),
     ).not.toBeInTheDocument();
   });
 
-  it("ToggleSwitch（連続改行統合）が表示される", () => {
+  it("チェックボックス（連続改行統合）が表示される", () => {
     render(<LineBreakRemoverTile variant="replace-space" />);
     expect(
-      screen.getByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
@@ -131,7 +131,7 @@ describe("V-3: variant=replace-space（モード固定）", () => {
 
 // --- V-4: variant=smart-pdf（モード固定）---
 describe("V-4: variant=smart-pdf（モード固定）", () => {
-  it("モード切替 SegmentedControl が表示されない", () => {
+  it("モード切替 ラジオボタンの組が表示されない", () => {
     render(<LineBreakRemoverTile variant="smart-pdf" />);
     expect(
       screen.queryByRole("radio", { name: "改行を削除" }),
@@ -144,7 +144,7 @@ describe("V-4: variant=smart-pdf（モード固定）", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("行内改行処理の SegmentedControl が表示される", () => {
+  it("行内改行処理の ラジオボタンの組が表示される", () => {
     render(<LineBreakRemoverTile variant="smart-pdf" />);
     expect(screen.getByRole("radio", { name: "削除する" })).toBeInTheDocument();
     expect(
@@ -152,10 +152,10 @@ describe("V-4: variant=smart-pdf（モード固定）", () => {
     ).toBeInTheDocument();
   });
 
-  it("ToggleSwitch（連続改行統合）が表示されない（smart-pdf モード対象外）", () => {
+  it("チェックボックス（連続改行統合）が表示されない（smart-pdf モード対象外）", () => {
     render(<LineBreakRemoverTile variant="smart-pdf" />);
     expect(
-      screen.queryByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.queryByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).not.toBeInTheDocument();
   });
 });
@@ -190,7 +190,7 @@ describe("V-5: variant=full での変換", () => {
     expect(output.value).toBe("行1行2\n\n段落2");
   });
 
-  it("モード切替後に古い結果が残らない（G-1）", () => {
+  it("モード切替後に古い結果が残らない", () => {
     render(<LineBreakRemoverTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "a\nb" } });
@@ -217,7 +217,7 @@ describe("V-6: variant=remove での変換", () => {
 
   it("連続改行統合オンで動作する", () => {
     render(<LineBreakRemoverTile variant="remove" />);
-    const toggle = screen.getByRole("switch", {
+    const toggle = screen.getByRole("checkbox", {
       name: "連続する改行を1つにまとめる",
     });
     fireEvent.click(toggle);
@@ -317,7 +317,7 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
 
   it("空入力時はコピーボタンが disabled", () => {
     render(<LineBreakRemoverTile variant="full" />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "変換結果をコピー" });
     expect(copyButton).toBeDisabled();
   });
 
@@ -325,28 +325,28 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
     render(<LineBreakRemoverTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "abc\ndef" } });
-    expect(screen.getByRole("button", { name: "コピー" })).not.toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "変換結果をコピー" }),
+    ).not.toBeDisabled();
   });
 
-  it("コピーボタンクリック後に COPIED_LABEL に変化する", async () => {
+  it("コピーボタンクリック後に 「コピー済み」に変化する", async () => {
     render(<LineBreakRemoverTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "abc\ndef" } });
 
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "変換結果をコピー" });
     await act(async () => {
       fireEvent.click(copyButton);
     });
 
-    expect(
-      screen.getByRole("button", { name: COPIED_LABEL }),
-    ).toBeInTheDocument();
+    expect(copyButton).toHaveTextContent("コピー済み");
   });
 });
 
 // --- V-11: aria 属性 ---
 describe("V-11: aria 属性", () => {
-  it("variant=full: 変換モード SegmentedControl に aria-labelledby が付与されている", () => {
+  it("variant=full: 変換モード ラジオボタンの組に aria-labelledby が付与されている", () => {
     render(<LineBreakRemoverTile variant="full" />);
     const radiogroups = screen.getAllByRole("radiogroup");
     const modeGroup = radiogroups.find(
@@ -355,7 +355,7 @@ describe("V-11: aria 属性", () => {
     expect(modeGroup).toBeDefined();
   });
 
-  it("variant=full, smart-pdf モード時: 行内改行処理の SegmentedControl にも aria-labelledby が付与される", () => {
+  it("variant=full, smart-pdf モード時: 行内改行処理の ラジオボタンの組にも aria-labelledby が付与される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "PDFスマートモード" }));
     const radiogroups = screen.getAllByRole("radiogroup");
@@ -390,7 +390,9 @@ describe("V-12: clipboard 不在時の silent fail", () => {
 
     await expect(async () => {
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "コピー" }));
+        fireEvent.click(
+          screen.getByRole("button", { name: "変換結果をコピー" }),
+        );
       });
     }).not.toThrow();
 
@@ -404,7 +406,7 @@ describe("V-12: clipboard 不在時の silent fail", () => {
 
 // --- V-13: デフォルト variant ---
 describe("V-13: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等（3モード SegmentedControl 表示）", () => {
+  it("variant 未指定の場合 full と同等（3モード ラジオボタンの組表示）", () => {
     render(<LineBreakRemoverTile />);
     expect(
       screen.getByRole("radio", { name: "改行を削除" }),
@@ -418,11 +420,11 @@ describe("V-13: デフォルト variant", () => {
   });
 });
 
-// --- V-14: CSS トークン検証（旧 E-12 相当の回帰ガード） ---
+// --- V-14: CSS トークン検証 ---
 describe("V-14: CSS トークン検証", () => {
   const cssPath = join(__dirname, "..", "LineBreakRemoverTile.module.css");
 
-  it("--color-* 旧トークンを使用しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

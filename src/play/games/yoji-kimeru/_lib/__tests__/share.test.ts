@@ -1,6 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { generateShareText } from "../share";
-import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { YojiGameState, YojiEntry } from "../types";
 
 const targetYoji: YojiEntry = {
@@ -13,12 +12,6 @@ const targetYoji: YojiEntry = {
   structure: "組合せ",
   sourceUrl: "",
 };
-
-beforeEach(() => {
-  vi.stubGlobal("window", {
-    location: { origin: "https://example.com" },
-  });
-});
 
 describe("generateShareText", () => {
   test("generates correct text for a won game with difficulty", () => {
@@ -43,10 +36,11 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6",
     );
-    expect(text).toContain("\u2B1C\u2B1C\u2B1C\u2B1C");
-    expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
-    expect(text).toContain("#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet");
-    expect(text).toContain("https://example.com/play/yoji-kimeru");
+    expect(text.split("\n").slice(1, 3)).toEqual(["××××", "◯◯◯◯"]);
+    expect(text.split("\n").at(-1)).toBe(
+      "#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet",
+    );
+    expect(text).not.toContain("http");
   });
 
   test("generates correct text for a lost game", () => {
@@ -72,7 +66,7 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u56DB\u5B57\u30AD\u30E1\u30EB #42 (\u4E0A\u7D1A) X/6",
     );
-    const allAbsentRow = "\u2B1C\u2B1C\u2B1C\u2B1C";
+    const allAbsentRow = "××××";
     const lines = text.split("\n");
     for (let i = 1; i <= 6; i++) {
       expect(lines[i]).toBe(allAbsentRow);
@@ -98,7 +92,7 @@ describe("generateShareText", () => {
     expect(text).toContain("(\u521D\u7D1A)");
   });
 
-  test("emoji mapping is correct", () => {
+  test("lines up the same marks as the board, without emoji", () => {
     const state: YojiGameState = {
       puzzleDate: "2026-03-01",
       puzzleNumber: 5,
@@ -113,7 +107,8 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state, "intermediate");
-    expect(text).toContain("\u{1F7E9}\u{1F7E8}\u2B1C\u2B1C");
+    expect(text.split("\n")[1]).toBe("◯△××");
+    expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   test("includes puzzle number in header", () => {
@@ -134,32 +129,5 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u56DB\u5B57\u30AD\u30E1\u30EB #15 (\u4E2D\u7D1A) 1/6",
     );
-  });
-});
-
-describe("generateTwitterShareUrl", () => {
-  test("generates correct Twitter intent URL without pageUrl", () => {
-    const text = "Test share text";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toBe(
-      "https://twitter.com/intent/tweet?text=Test%20share%20text",
-    );
-  });
-
-  test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/play/yoji-kimeru";
-    const text = `\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n${pageUrl}`;
-    const url = generateTwitterShareUrl(text, pageUrl);
-    expect(url).toContain(
-      `text=${encodeURIComponent("\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}")}`,
-    );
-    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
-  });
-
-  test("encodes special characters without pageUrl", () => {
-    const text = "\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\nhttps://example.com";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toContain("https://twitter.com/intent/tweet?text=");
-    expect(url).toContain(encodeURIComponent(text));
   });
 });

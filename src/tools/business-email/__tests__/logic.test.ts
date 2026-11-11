@@ -200,10 +200,9 @@ describe("generateEmail", () => {
   });
 
   /**
-   * 是正テスト(E-4拡張): 12テンプレート全て、placeholder フォールバックで初期表示した際に
+   * 12テンプレート全て、placeholder フォールバックで初期表示した際に
    * 破綻文(同語二重・前置きフレーズ重複・連体終止+体言の組合せ)が生成されないことを検証する。
-   * これはレビュアー指摘(critical: thanks-visit の二重「について」・decline-proposalの前置き重複、
-   * major: apology-mistake の「あったの件」不自然接続)に対応した恒久的な回帰テスト。
+   * 例: thanks-visit の二重「について」、decline-proposal の前置き重複、apology-mistake の「あったの件」という不自然な接続。
    */
   test("all templates: initial preview with placeholder fallback produces no broken Japanese text", () => {
     const templates = getAllTemplates();

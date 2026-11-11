@@ -9,22 +9,16 @@ import {
 export type { BreadcrumbItem };
 
 interface BreadcrumbProps {
-  /** パンくずリストの項目。最後の要素が現在位置（href なし）になる */
+  /** パンくずの項目。ホームから順に並べ、最後の項目がいま開いているページ。 */
   items: BreadcrumbItem[];
 }
 
 /**
- * Breadcrumb — パンくずリストコンポーネント。
- *
- * 仕様:
- * - 外側 <nav aria-label="パンくずリスト"> + 内側 <ol> + <li> の構造
- * - 最後の項目は href なしで aria-current="page" を付与
- * - 区切り文字（/）は各 li 内の <span aria-hidden="true"> で配置する
- * - li を display:inline にすることで separator + テキストが同じインラインコンテキストに属し、
- *   SP での「/」行頭孤立を防ぐ（CSS ::before + inline-flex では flex item が分離する問題あり）
- * - リンクは Next.js の <Link> を使用
- * - スタイルは new デザイン体系のみ（DESIGN.md §2 参照）
- * - BreadcrumbList JSON-LD を <script> で出力（SEO 構造化データ）
+ * パンくず（DESIGN.md §5・§6）。最後の項目がいまのページで、§6 の現在地としてリンクのまま
+ * aria-current="page" を付け、太字で下線を持たない形にする。
+ * 区切りの「/」は前の項目の後ろに置き、項目と同じ li に入れる。折り返しは li のあいだで起き、1つの項目だけで
+ * 行に収まらないときはその項目の名前の中で起きる。どちらでも行の頭には項目の名前が来る。
+ * BreadcrumbList の JSON-LD も出す。
  */
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
@@ -35,28 +29,25 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
           __html: safeJsonLdStringify(generateBreadcrumbJsonLd(items)),
         }}
       />
-      <nav className={styles.nav} aria-label="パンくずリスト">
+      <nav aria-label="パンくずリスト">
         <ol className={styles.list}>
           {items.map((item, index) => {
-            const isLast = index === items.length - 1;
+            const isCurrent = index === items.length - 1;
 
             return (
-              <li key={item.label} className={styles.item}>
-                {/* 2 番目以降の li の先頭に区切り「/」を配置する */}
-                {index > 0 && (
+              <li key={item.href} className={styles.item}>
+                <Link
+                  href={item.href}
+                  className={styles.link}
+                  aria-current={isCurrent ? "page" : undefined}
+                  data-text-box="inline"
+                >
+                  {item.label}
+                </Link>
+                {isCurrent ? null : (
                   <span className={styles.separator} aria-hidden="true">
                     /
                   </span>
-                )}
-                {/* 現在位置（最後の要素）はリンクにしない */}
-                {isLast ? (
-                  <span className={styles.current} aria-current="page">
-                    {item.label}
-                  </span>
-                ) : (
-                  <Link href={item.href ?? "/"} className={styles.link}>
-                    {item.label}
-                  </Link>
                 )}
               </li>
             );

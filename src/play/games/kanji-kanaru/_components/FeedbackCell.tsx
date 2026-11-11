@@ -1,55 +1,42 @@
-"use client";
-
 import type { FeedbackLevel } from "@/play/games/kanji-kanaru/_lib/types";
+import { FEEDBACK_MARKS } from "@/play/games/kanji-kanaru/_lib/marks";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface FeedbackCellProps {
   feedback: FeedbackLevel;
+  /** 列の名前（読み上げで言う。「部首」「音読み」など） */
   label: string;
-  /** Optional suffix displayed after the feedback label (e.g., grade direction arrow). */
-  suffix?: string;
-  /**
-   * Optional suffix appended to the accessible name instead of `suffix`.
-   * Used to express in words what an ambiguous visual suffix (e.g., an arrow)
-   * conveys, since screen readers do not read arrow symbols consistently.
-   */
-  suffixLabel?: string;
+  /** 学年の列で、答えの学年が上か下かを示す矢印（見た目だけ）。 */
+  direction?: string;
+  /** direction を読み上げで言う語。矢印は読み上げで一定に読まれないので、語で言う。 */
+  directionLabel?: string;
 }
 
-const feedbackLabels: Record<FeedbackLevel, string> = {
-  correct: "\u4E00\u81F4",
-  close: "\u8FD1\u3044",
-  wrong: "\u4E0D\u4E00\u81F4",
-};
-
 /**
- * A single colored cell showing feedback for one attribute of a guess.
- * Green = correct, yellow = close, gray = wrong.
+ * 推測の1つの項目への判定のマス。判定は凡例と同じ印（◯・△・×）で示し、読み上げは凡例の意味の語で言う
+ * （DESIGN.md §8）。
  */
 export default function FeedbackCell({
   feedback,
   label,
-  suffix,
-  suffixLabel,
+  direction,
+  directionLabel,
 }: FeedbackCellProps) {
-  const cellClass =
-    feedback === "correct"
-      ? styles.cellCorrect
-      : feedback === "close"
-        ? styles.cellClose
-        : styles.cellWrong;
-
-  const displayText = suffix
-    ? `${feedbackLabels[feedback]}${suffix}`
-    : feedbackLabels[feedback];
-
+  const { mark, meaning } = FEEDBACK_MARKS[feedback];
   return (
     <div
-      className={cellClass}
+      className={`${styles.square} ${feedback === "wrong" ? styles.miss : styles.hit}`}
       role="cell"
-      aria-label={`${label}: ${feedbackLabels[feedback]}${suffixLabel ?? ""}`}
+      aria-label={`${label}: ${meaning}${directionLabel ?? ""}`}
     >
-      {displayText}
+      <span className={styles.mark} aria-hidden="true">
+        {mark}
+      </span>
+      {direction && (
+        <span className={styles.direction} aria-hidden="true">
+          {direction}
+        </span>
+      )}
     </div>
   );
 }

@@ -1,9 +1,20 @@
 "use client";
 
-import { trackContentEnd } from "@/lib/analytics";
-import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import { trackContentEnd, trackSave } from "@/lib/analytics";
+import {
+  type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
+  useState,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+} from "react";
 import type {
   IrodoriColor,
+  IrodoriGameHistory,
   IrodoriGameState,
   IrodoriGameStats,
   IrodoriRound,
@@ -17,6 +28,7 @@ import {
   colorDifference,
   calculateRoundScore,
   calculateTotalScore,
+  scoreBucketIndex,
 } from "@/play/games/irodori/_lib/engine";
 import {
   loadStats,
@@ -24,19 +36,65 @@ import {
   loadHistory,
   loadTodayGame,
   saveTodayGame,
+  HISTORY_KEY,
 } from "@/play/games/irodori/_lib/storage";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
-import GameHeader from "./GameHeader";
-import ProgressBar from "./ProgressBar";
-import ColorTarget from "./ColorTarget";
+import {
+  generateShareText,
+  generateResultImage,
+  downloadImage,
+} from "@/play/games/irodori/_lib/share";
+import type { ItemListItem } from "@/components/ItemList";
+import Button from "@/components/Button";
+import ProgressBar from "@/components/ProgressBar";
+import ShareButtons from "@/components/ShareButtons";
+import { revealControl } from "@/lib/reveal";
+import { SHARE_LABELS } from "@/lib/share-labels";
+import {
+  releaseSavedLayout,
+  resultAreaNames,
+  savedLayoutScript,
+} from "@/play/games/shared/_lib/savedLayout";
+import ReservedResultArea from "@/play/games/shared/_components/ReservedResultArea";
+import { useIsServerRendered } from "@/components/hooks/useIsServerRendered";
+import NextPuzzleTime from "@/play/games/shared/_components/NextPuzzleTime";
+import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
+import ColorPair from "./ColorPair";
 import HslSliders from "./HslSliders";
 import RoundResult from "./RoundResult";
-import ResultModal from "./ResultModal";
-import StatsModal from "./StatsModal";
-import HowToPlayModal from "./HowToPlayModal";
+import FinalResult from "./FinalResult";
+import HowToPlay from "./HowToPlay";
 import styles from "./GameContainer.module.css";
 
-const FIRST_VISIT_KEY = "irodori-first-visit";
+const RESULT_AREA = resultAreaNames("irodori");
+
+/** 端末に今日の記録があるとき、本体の前のスクリプトが書く値の名前。値は、記録を戻すまで盤を見せない visibility。 */
+const SAVED_DAY_PROPERTY = "--irodori-saved-day";
+
+const SAVED_LAYOUT_STYLE_ID = "irodori-saved-layout";
+
+/**
+ * サーバーの HTML で本体の前に置くスクリプト。
+ * - 解き終えた回: 前に同じ画面で描いた結果の区画の高さを本体を描く前に取っておき、読み込むあいだ1問目の盤を
+ *   見せない。
+ * - 途中の回: 盤の高さはどの問でも同じなので場所は取らず、記録を戻すまで、サーバーが描いた1問目の進み具合と
+ *   見本とスライダーを、場所を取ったまま見せない（違う問の盤を見せない）。
+ */
+const SAVED_LAYOUT_SCRIPT = savedLayoutScript({
+  styleId: SAVED_LAYOUT_STYLE_ID,
+  historyKeyPrefix: HISTORY_KEY,
+  finishedStatuses: ["completed"],
+  resultArea: RESULT_AREA,
+  byRecordLength: [
+    { field: "scores", property: SAVED_DAY_PROPERTY, values: ["hidden"] },
+  ],
+});
+
+/** 記録を戻すまでの盤の見せ方。記録の無い初めての来訪者では、値が無いので見せる。 */
+const RESTORING_STYLE: CSSProperties = {
+  visibility:
+    `var(${SAVED_DAY_PROPERTY}, visible)` as CSSProperties["visibility"],
+};
 
 interface GameContainerProps {
   colors: IrodoriColor[];
@@ -46,13 +104,70 @@ interface GameContainerProps {
   /** Human-readable date string for display (e.g. "2026年3月19日"), generated server-side. */
   dateDisplayString: string;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
-  crossCategoryItems: CrossCategoryItem[];
+  crossCategoryItems: ItemListItem[];
 }
 
 /**
- * Top-level client component for the Irodori color challenge game.
- * Receives today's puzzle data from the Server Component (page.tsx) via props,
- * so only the current day's colors are included in the RSC payload.
+ * 問を解いているあいだの段階。"play" は色を作っているあいだ、"judged" は色を決めて、その問の判定を見ている
+ * あいだ（最後の問のあとは、判定の代わりに結果が出る）。
+ */
+type RoundPhase = "play" | "judged";
+
+/** 操作のあと、次に使うものへフォーカスを移す先。 */
+type FocusTarget = "next" | "sliders" | "result";
+
+function newRounds(colors: IrodoriColor[]): IrodoriRound[] {
+  return colors.map((color) => ({
+    target: color,
+    answer: null,
+    deltaE: null,
+    score: null,
+  }));
+}
+
+/** 端末に残した今日の記録から、遊んでいた所の盤を作り直す。 */
+function restoreRounds(
+  colors: IrodoriColor[],
+  saved: IrodoriGameHistory[string],
+): IrodoriRound[] {
+  return colors.map((color, index) => ({
+    target: color,
+    answer: saved.answers?.[index] ?? null,
+    deltaE: null,
+    score: saved.scores[index] ?? null,
+  }));
+}
+
+/** 解き終えた回の結果の画像を描いて落とし、結果の画像の保存として計測する。描けなかったときは何もしない。 */
+async function saveResultImage(state: IrodoriGameState): Promise<void> {
+  const dataUrl = await generateResultImage(state);
+  if (!dataUrl) return;
+  downloadImage(dataUrl, `irodori-${state.puzzleNumber}.png`);
+  trackSave("irodori", "game", "download", "fuda");
+}
+
+/** 端末に今日の記録があれば、その所から続ける回。無ければ initial のまま。 */
+function restoredState(
+  initial: IrodoriGameState,
+  colors: IrodoriColor[],
+): IrodoriGameState {
+  const saved = loadTodayGame(initial.puzzleDate);
+  if (!saved) return initial;
+  const completed = saved.status === "completed";
+  return {
+    ...initial,
+    rounds: restoreRounds(colors, saved),
+    currentRound: completed ? ROUNDS_PER_GAME : saved.currentRound,
+    status: completed ? "completed" : "playing",
+  };
+}
+
+/**
+ * イロドリの盤。お題と作る色の見本・スライダー・決定のボタンを、ページの頭（GameLayout の h1・要約）の下に
+ * 置く。5問を終えると、見本とスライダーの所に結果のボックスが来る（DESIGN.md §8）。
+ *
+ * サーバーの HTML は初めて遊ぶ来訪者の1問目で描く。端末に今日の記録があれば、水和のあとにその所から続ける。
+ * 解き終えた回は、本体の前のスクリプトが結果の区画の場所を取っておくので、結果が出ても下が動かない。
  */
 export default function GameContainer({
   colors,
@@ -66,356 +181,335 @@ export default function GameContainer({
     [todayStr],
   );
 
-  // Determine the initial round index for slider values.
-  // Reads from localStorage once to determine if we are resuming a game.
-  const initialRoundIdx = useMemo(() => {
-    const saved = loadTodayGame(todayStr);
-    if (saved?.status === "playing" && saved.currentRound != null) {
-      return saved.currentRound;
-    }
-    return 0;
-  }, [todayStr]);
-
+  // サーバーの HTML を水和で引き継ぐときは、サーバーと同じ初めの回で描き、端末の記録は水和のあとに当てる。
+  // ほかのページから移ってきて（「戻る」を含む）ブラウザで新しく描くときは、初めから端末の記録の回で描く。
+  // ブラウザが戻す送りの位置に、前に見ていた盤か結果がそのまま来る。
+  const isServerRendered = useIsServerRendered();
   const [gameState, setGameState] = useState<IrodoriGameState>(() => {
-    const saved = loadTodayGame(todayStr);
-    if (saved) {
-      const rounds: IrodoriRound[] = colors.map((color, i) => ({
-        target: color,
-        answer: null, // We don't store answers in history
-        deltaE: null,
-        score: saved.scores[i] ?? null,
-      }));
-
-      if (saved.status === "completed") {
-        return {
-          puzzleDate: todayStr,
-          puzzleNumber,
-          rounds,
-          currentRound: ROUNDS_PER_GAME,
-          status: "completed",
-          initialSliderValues,
-        };
-      }
-
-      // status === "playing": resume from saved round
-      return {
-        puzzleDate: todayStr,
-        puzzleNumber,
-        rounds,
-        currentRound: saved.currentRound,
-        status: "playing",
-        initialSliderValues,
-      };
-    }
-
-    // New game
-    const rounds: IrodoriRound[] = colors.map((color) => ({
-      target: color,
-      answer: null,
-      deltaE: null,
-      score: null,
-    }));
-
-    return {
+    const initial: IrodoriGameState = {
       puzzleDate: todayStr,
       puzzleNumber,
-      rounds,
+      rounds: newRounds(colors),
       currentRound: 0,
       status: "playing",
       initialSliderValues,
     };
+    return isServerRendered ? initial : restoredState(initial, colors);
   });
-
-  const [stats, setStats] = useState<IrodoriGameStats>(() => loadStats());
-
-  // Current slider values - restore to the correct round's initial values on resume
-  const [sliderH, setSliderH] = useState(
-    () => initialSliderValues[initialRoundIdx]?.h ?? 180,
+  const [stats, setStats] = useState<IrodoriGameStats | null>(() =>
+    isServerRendered ? null : loadStats(),
   );
-  const [sliderS, setSliderS] = useState(
-    () => initialSliderValues[initialRoundIdx]?.s ?? 50,
-  );
-  const [sliderL, setSliderL] = useState(
-    () => initialSliderValues[initialRoundIdx]?.l ?? 50,
+  const startValues =
+    initialSliderValues[Math.min(gameState.currentRound, ROUNDS_PER_GAME - 1)];
+  const [sliderH, setSliderH] = useState(startValues.h);
+  const [sliderS, setSliderS] = useState(startValues.s);
+  const [sliderL, setSliderL] = useState(startValues.l);
+  const [phase, setPhase] = useState<RoundPhase>("play");
+  // 結果のボックスの登場の動きは、最後の問を決めた操作で現れたときだけ持つ（§11）。
+  const [resultAppears, setResultAppears] = useState(false);
+
+  const firstSliderRef = useRef<HTMLInputElement>(null);
+  const decideButtonRef = useRef<HTMLButtonElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+  const resultBoxRef = useRef<HTMLElement>(null);
+  const pendingFocusRef = useRef<FocusTarget | null>(null);
+  // 画像を描いているあいだは、次の押下を捨てる。書体の読み込みを待つあいだに押し直されても（キーボードの押下や、
+  // 描くのが遅い端末）、同じ画像が2枚落ちたり、1度の保存が2回数えられたりしない。ダブルクリックの2度目は、描き終えた
+  // あとに届いても handleSaveImage が捨てる。
+  const savingImageRef = useRef(false);
+  const roundResultId = useId();
+
+  const setSliders = useCallback(
+    (roundIndex: number) => {
+      const values = initialSliderValues[roundIndex];
+      if (!values) return;
+      setSliderH(values.h);
+      setSliderS(values.s);
+      setSliderL(values.l);
+    },
+    [initialSliderValues],
   );
 
-  // Phase: "play" or "result" (showing round result before next round)
-  // When resuming a playing game, we start in "play" phase (status !== "completed")
-  const [phase, setPhase] = useState<"play" | "result">(() =>
-    gameState.status === "completed" ? "result" : "play",
-  );
+  // 取っておいた場所の値は、このページから離れるときに外す。
+  useEffect(() => () => releaseSavedLayout(SAVED_LAYOUT_STYLE_ID), []);
 
-  const [showFinalResult, setShowFinalResult] = useState(false);
-  const [showStats, setShowStats] = useState(false);
-  // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
-  // game-end Result). Without it, closing those modals drops focus to <body>.
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const [showHowToPlay, setShowHowToPlay] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      const visited = window.localStorage.getItem(FIRST_VISIT_KEY);
-      if (!visited) {
-        window.localStorage.setItem(FIRST_VISIT_KEY, "1");
-        return true;
-      }
-    } catch {
-      // Silently fail
-    }
-    return false;
-  });
-
-  // Show final result modal after game completion
-  const prevStatusRef = useRef(gameState.status);
+  // 水和で引き継いだ回には、端末の記録を水和が済んでから当てる。
   useEffect(() => {
-    if (
-      prevStatusRef.current === "playing" &&
-      gameState.status === "completed"
-    ) {
-      const timer = setTimeout(() => setShowFinalResult(true), 600);
-      prevStatusRef.current = gameState.status;
-      return () => clearTimeout(timer);
-    }
-    prevStatusRef.current = gameState.status;
-  }, [gameState.status]);
+    if (stats !== null) return;
+    const restored = restoredState(gameState, colors);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 端末の記録（外のもの）を水和のあとに読む
+    setGameState(restored);
+    if (restored.status === "playing") setSliders(restored.currentRound);
+    setStats(loadStats());
+  }, [stats, gameState, colors, setSliders]);
 
-  // Track game completion (GA level_end) once per game.
-  // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
-  // the modal useEffect above (React runs useEffects in declaration order,
-  // so a shared ref would already be updated before this effect runs).
-  // hasRecordedPlayRef prevents re-firing on page reload, where
-  // localStorage restores status as "completed" on mount.
-  const prevStatusForRecordRef = useRef(gameState.status);
-  const hasRecordedPlayRef = useRef(false);
+  // 操作のあと、次に使うものへフォーカスを移し、画面の外にあれば即時に送る（§8・§11）。
   useEffect(() => {
-    if (
-      !hasRecordedPlayRef.current &&
-      prevStatusForRecordRef.current === "playing" &&
-      gameState.status === "completed"
-    ) {
-      trackContentEnd("irodori", "game", true);
-      hasRecordedPlayRef.current = true;
+    const target = pendingFocusRef.current;
+    if (!target) return;
+    pendingFocusRef.current = null;
+    if (target === "next" && nextButtonRef.current) {
+      nextButtonRef.current.focus({ preventScroll: true });
+      revealControl(nextButtonRef.current);
+    } else if (target === "sliders" && firstSliderRef.current) {
+      firstSliderRef.current.focus({ preventScroll: true });
+      if (decideButtonRef.current) revealControl(decideButtonRef.current);
+    } else if (target === "result" && resultBoxRef.current) {
+      resultBoxRef.current.scrollIntoView?.({
+        behavior: "instant",
+        block: "start",
+      });
+      resultBoxRef.current.focus({ preventScroll: true });
     }
-    prevStatusForRecordRef.current = gameState.status;
-  }, [gameState.status]);
+  }, [phase, gameState.currentRound, gameState.status]);
 
-  /**
-   * Submit the current slider values as the answer for the current round.
-   */
-  const handleSubmit = useCallback(() => {
+  const handleDecide = useCallback(() => {
     if (gameState.status !== "playing") return;
 
-    const round = gameState.rounds[gameState.currentRound];
-    const target = round.target;
+    const roundIndex = gameState.currentRound;
+    const round = gameState.rounds[roundIndex];
     const deltaE = colorDifference(
-      target.h,
-      target.s,
-      target.l,
+      round.target.h,
+      round.target.s,
+      round.target.l,
       sliderH,
       sliderS,
       sliderL,
     );
     const score = calculateRoundScore(deltaE);
-
-    const updatedRounds = [...gameState.rounds];
-    updatedRounds[gameState.currentRound] = {
-      ...round,
-      answer: { h: sliderH, s: sliderS, l: sliderL },
-      deltaE,
-      score,
-    };
-
-    const isLastRound = gameState.currentRound === ROUNDS_PER_GAME - 1;
-    const newStatus = isLastRound ? "completed" : "playing";
-
-    const newState: IrodoriGameState = {
-      ...gameState,
-      rounds: updatedRounds,
-      status: newStatus as "playing" | "completed",
-    };
-    setGameState(newState);
-    setPhase("result");
-
-    // Save progress after every round (not just the last)
-    const nextRound = isLastRound
-      ? ROUNDS_PER_GAME
-      : gameState.currentRound + 1;
-    const scores = updatedRounds.map((r) => r.score);
+    const rounds = gameState.rounds.map((r, i) =>
+      i === roundIndex
+        ? {
+            ...r,
+            answer: { h: sliderH, s: sliderS, l: sliderL },
+            deltaE,
+            score,
+          }
+        : r,
+    );
+    const isLastRound = roundIndex === ROUNDS_PER_GAME - 1;
+    const scores = rounds.map((r) => r.score);
     const totalScore = isLastRound
       ? calculateTotalScore(scores.map((s) => s ?? 0))
       : null;
 
+    // 問ごとに残し、途中で閉じても次に開いたとき続きから遊べるようにする。
     saveTodayGame(todayStr, {
       scores,
+      answers: rounds.map((r) => r.answer),
       totalScore,
-      currentRound: nextRound,
+      currentRound: isLastRound ? ROUNDS_PER_GAME : roundIndex + 1,
       status: isLastRound ? "completed" : "playing",
     });
 
-    if (isLastRound) {
-      // Update stats only on game completion
-      const finalScores = scores.map((s) => s ?? 0);
-      const finalTotalScore = calculateTotalScore(finalScores);
-
-      const updatedStats = { ...stats };
-      updatedStats.gamesPlayed += 1;
-
-      // Update average score
-      const totalGamesScore =
-        updatedStats.averageScore * (updatedStats.gamesPlayed - 1) +
-        finalTotalScore;
-      updatedStats.averageScore = totalGamesScore / updatedStats.gamesPlayed;
-
-      updatedStats.bestScore = Math.max(
-        updatedStats.bestScore,
-        finalTotalScore,
-      );
-
-      // Update streak - only count completed games
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = formatDateJST(yesterday);
-      const history = loadHistory();
-      const yesterdayGame = history[yesterdayStr];
-
-      if (
-        stats.lastPlayedDate === yesterdayStr &&
-        yesterdayGame?.status === "completed"
-      ) {
-        updatedStats.currentStreak = stats.currentStreak + 1;
-      } else {
-        updatedStats.currentStreak = 1;
-      }
-      updatedStats.maxStreak = Math.max(
-        updatedStats.maxStreak,
-        updatedStats.currentStreak,
-      );
-      updatedStats.lastPlayedDate = todayStr;
-
-      // Update score distribution
-      const bucket = Math.min(Math.floor(finalTotalScore / 10), 9);
-      updatedStats.scoreDistribution[bucket] += 1;
-
-      setStats(updatedStats);
-      saveStats(updatedStats);
+    if (totalScore === null) {
+      setGameState({ ...gameState, rounds });
+      setPhase("judged");
+      pendingFocusRef.current = "next";
+      return;
     }
+
+    // 水和の直後で端末の成績をまだ読んでいなければ、ここで読む。
+    const previous = stats ?? loadStats();
+
+    const gamesPlayed = previous.gamesPlayed + 1;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = formatDateJST(yesterday);
+    const playedYesterday =
+      previous.lastPlayedDate === yesterdayStr &&
+      loadHistory()[yesterdayStr]?.status === "completed";
+    const currentStreak = playedYesterday ? previous.currentStreak + 1 : 1;
+    const scoreDistribution = [...previous.scoreDistribution];
+    scoreDistribution[scoreBucketIndex(totalScore)] += 1;
+    const updatedStats: IrodoriGameStats = {
+      gamesPlayed,
+      averageScore:
+        (previous.averageScore * previous.gamesPlayed + totalScore) /
+        gamesPlayed,
+      bestScore: Math.max(previous.bestScore, totalScore),
+      currentStreak,
+      maxStreak: Math.max(previous.maxStreak, currentStreak),
+      lastPlayedDate: todayStr,
+      scoreDistribution,
+    };
+    setStats(updatedStats);
+    saveStats(updatedStats);
+
+    setGameState({
+      ...gameState,
+      rounds,
+      currentRound: ROUNDS_PER_GAME,
+      status: "completed",
+    });
+    setResultAppears(true);
+    pendingFocusRef.current = "result";
+    trackContentEnd("irodori", "game", true);
   }, [gameState, sliderH, sliderS, sliderL, todayStr, stats]);
 
-  /**
-   * Move to the next round.
-   */
   const handleNextRound = useCallback(() => {
     const nextRound = gameState.currentRound + 1;
     if (nextRound >= ROUNDS_PER_GAME) return;
-
-    setGameState((prev) => ({
-      ...prev,
-      currentRound: nextRound,
-    }));
-
-    // Set slider to initial values for the next round
-    const init = initialSliderValues[nextRound];
-    if (init) {
-      setSliderH(init.h);
-      setSliderS(init.s);
-      setSliderL(init.l);
-    }
-
+    setGameState((prev) => ({ ...prev, currentRound: nextRound }));
+    setSliders(nextRound);
     setPhase("play");
-  }, [gameState.currentRound, initialSliderValues]);
+    pendingFocusRef.current = "sliders";
+  }, [gameState.currentRound, setSliders]);
 
-  const currentRound = gameState.rounds[gameState.currentRound];
-  const completedRounds = gameState.rounds.filter(
-    (r) => r.score !== null,
-  ).length;
+  // ダブルクリック・トリプルクリックの2度目以降（detail が2以上）は、1度の保存のつもりの押下なので捨てる。
+  // キーボードの押下（detail は0）と、改めての1度の押下（1）は受ける。
+  const handleSaveImage = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      if (event.detail >= 2 || savingImageRef.current) return;
+      savingImageRef.current = true;
+      void saveResultImage(gameState).finally(() => {
+        savingImageRef.current = false;
+      });
+    },
+    [gameState],
+  );
+
+  const completed = gameState.status === "completed";
+  // 端末の記録を当て終えたか（成績を読むのは記録を当てるときと同じ）。
+  const restored = stats !== null;
+  const round = gameState.rounds[gameState.currentRound];
+  const madeColor =
+    phase === "judged" && round?.answer
+      ? `hsl(${round.answer.h}, ${round.answer.s}%, ${round.answer.l}%)`
+      : `hsl(${sliderH}, ${sliderS}%, ${sliderL}%)`;
 
   return (
     <>
-      <GameHeader
-        puzzleNumber={gameState.puzzleNumber}
-        dateString={dateDisplayString}
-        onHelpClick={() => setShowHowToPlay(true)}
-        onStatsClick={() => setShowStats(true)}
-        titleRef={titleRef}
-      />
-      <ProgressBar
-        currentRound={gameState.currentRound}
-        totalRounds={ROUNDS_PER_GAME}
-        completedRounds={completedRounds}
-      />
-
-      {gameState.status === "playing" && phase === "play" && currentRound && (
-        <>
-          <ColorTarget hex={currentRound.target.hex} />
-          <HslSliders
-            h={sliderH}
-            s={sliderS}
-            l={sliderL}
-            onHChange={setSliderH}
-            onSChange={setSliderS}
-            onLChange={setSliderL}
-          />
-          <div className={styles.submitArea}>
-            <button
-              className={styles.submitButton}
-              onClick={handleSubmit}
-              type="button"
-            >
-              {"\u6C7A\u5B9A"}
-            </button>
-          </div>
-        </>
+      {isServerRendered && (
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: SAVED_LAYOUT_SCRIPT }}
+        />
       )}
-
-      {phase === "result" && currentRound && currentRound.score !== null && (
-        <>
-          <RoundResult round={currentRound} />
-          {gameState.status === "playing" && (
-            <div className={styles.submitArea}>
-              <button
-                className={styles.nextButton}
-                onClick={handleNextRound}
-                type="button"
-              >
-                {"\u6B21\u306E\u554F\u984C\u3078"}
-              </button>
+      <div className={styles.stack}>
+        <ReservedResultArea
+          names={RESULT_AREA}
+          showsResult={completed && stats !== null}
+          date={todayStr}
+        >
+          {!completed && (
+            <div style={restored ? undefined : RESTORING_STYLE}>
+              <ProgressBar
+                current={gameState.currentRound + 1}
+                total={ROUNDS_PER_GAME}
+                label="問の進み具合"
+              />
             </div>
           )}
-        </>
-      )}
+          <div className={styles.stack}>
+            {!completed && round && (
+              <div
+                className={styles.board}
+                style={restored ? undefined : RESTORING_STYLE}
+              >
+                <ColorPair target={round.target.hex} made={madeColor} />
+                {phase === "play" ? (
+                  <>
+                    <HslSliders
+                      h={sliderH}
+                      s={sliderS}
+                      l={sliderL}
+                      onHChange={setSliderH}
+                      onSChange={setSliderS}
+                      onLChange={setSliderL}
+                      firstSliderRef={firstSliderRef}
+                    />
+                    <div className={styles.action}>
+                      <Button
+                        ref={decideButtonRef}
+                        variant="primary"
+                        onClick={handleDecide}
+                      >
+                        決定
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <RoundResult round={round} id={roundResultId} />
+                    <div className={styles.action}>
+                      <Button
+                        ref={nextButtonRef}
+                        variant="primary"
+                        onClick={handleNextRound}
+                        aria-describedby={roundResultId}
+                        phrases={["次の", "問題へ"]}
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
 
-      {gameState.status === "completed" && phase === "result" && (
-        <div className={styles.submitArea}>
-          <button
-            className={styles.submitButton}
-            onClick={() => setShowFinalResult(true)}
-            type="button"
-          >
-            {"\u7D50\u679C\u3092\u898B\u308B"}
-          </button>
-        </div>
-      )}
-
-      <HowToPlayModal
-        open={showHowToPlay}
-        onClose={() => setShowHowToPlay(false)}
-        returnFocusRef={titleRef}
-      />
-      <ResultModal
-        open={showFinalResult}
-        onClose={() => setShowFinalResult(false)}
-        gameState={gameState}
-        crossCategoryItems={crossCategoryItems}
-        returnFocusRef={titleRef}
-        onStatsClick={() => {
-          setShowFinalResult(false);
-          setShowStats(true);
-        }}
-      />
-      <StatsModal
-        open={showStats}
-        onClose={() => setShowStats(false)}
-        stats={stats}
-      />
+            {completed && stats && (
+              <>
+                <FinalResult
+                  gameState={gameState}
+                  stats={stats}
+                  appear={resultAppears}
+                  boxRef={resultBoxRef}
+                />
+                <ResultShare
+                  gameState={gameState}
+                  onSaveImage={handleSaveImage}
+                />
+                <NextPuzzleTime />
+                <NextGameBanner currentGameSlug="irodori" />
+                <CrossCategoryBanner items={crossCategoryItems} />
+              </>
+            )}
+          </div>
+        </ReservedResultArea>
+        <HowToPlay />
+        <p className={styles.date}>
+          {dateDisplayString}の問題（#{gameState.puzzleNumber}）
+        </p>
+      </div>
     </>
+  );
+}
+
+interface ResultShareProps {
+  gameState: IrodoriGameState;
+  onSaveImage: (event: MouseEvent<HTMLButtonElement>) => void;
+}
+
+/**
+ * キーを押し続けたときの繰り返しの押下を捨てる。ボタンは Enter の keydown ごとに押されるので、押し続けると同じ画像を
+ * 何枚も落とす。キーを離して改めて押せば、次の押下として受ける。
+ */
+function ignoreKeyRepeat(event: KeyboardEvent<HTMLButtonElement>) {
+  if (event.repeat) event.preventDefault();
+}
+
+/** 結果を持ち帰る・共有する区画。結果のボックスのすぐ下に置く（§8）。 */
+function ResultShare({ gameState, onSaveImage }: ResultShareProps) {
+  const headingId = useId();
+  return (
+    <section className={styles.share} aria-labelledby={headingId}>
+      <h2 id={headingId} className={styles.shareHeading}>
+        この結果を共有
+      </h2>
+      <ShareButtons
+        url="/play/irodori"
+        title="イロドリ"
+        text={generateShareText(gameState)}
+        sns={["x", "line", "copy"]}
+        contentType="game"
+        contentId="irodori"
+        surface="text"
+      >
+        <Button
+          onClick={onSaveImage}
+          onKeyDown={ignoreKeyRepeat}
+          phrases={SHARE_LABELS.saveImage.phrases}
+        />
+      </ShareButtons>
+    </section>
   );
 }

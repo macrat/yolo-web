@@ -192,7 +192,7 @@ export function parseJson(input: string): string[][] {
 export function parseMarkdown(input: string): string[][] {
   const lines = input.trim().split("\n");
   if (lines.length < 2) {
-    // ux-gate-findings.md: エラー文言の句点統一（parseJson のエラーと同様に末尾句点で統一）
+    // エラーの文は parseJson のエラーと同じく句点で終える
     throw new Error("Markdown表には少なくともヘッダー行と区切り行が必要です。");
   }
 

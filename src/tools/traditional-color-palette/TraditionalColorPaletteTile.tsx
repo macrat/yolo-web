@@ -1,76 +1,52 @@
 "use client";
 
 /**
- * TraditionalColorPaletteTile — 伝統色カラーパレットの単一正典タイル（cycle-228 T-19）
+ * TraditionalColorPaletteTile — 伝統色のカラーパレットのタイル。ルートが <Panel>（DESIGN.md §5 のボックス）で
+ * 自己完結する。
  *
- * ## 設計原則
+ * 件数の行・名前の欄・畳める色の系統と並び順の組・色の格子・配色パターンのラジオボタンの組・配色の結果を
+ * 縦に並べる。色の格子の絞り込みと並び順は palette-list.ts の選択肢で、URL のクエリに持つ（§7「件数と備え」）。
+ * 配色の計算は logic.ts の computeHarmony・getAchromaticPalette が持つ。
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **1ツール1実装**: variant="full" のみ（このツールは検索＋参照系で full 1種のみが適切）。
- * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（道具箱での複数タイル同居に対応）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- * - **logic.ts 共有エンジン**: filterColors / computeHarmony / findNearestColor が唯一のロジック源。
- *
- * ## variant
- *
- * - `"full"` (唯一のバリエーション): 検索＋カテゴリ SegmentedControl＋スウォッチグリッド
- *   ＋ハーモニー SegmentedControl＋色詳細カード＋コピー HEX/RGB/HSL
- *   このツールはすべての機能が一体で意味をなすため、full 以外のバリエーションは設けない。
- *
- * ## アクセシビリティ（C-3 準拠）
- *
- * - role="status" aria-live="polite" の div にサマリテキストを置く
- * - スウォッチボタンは aria-label（色名）を持つ
- * - 全フォーム要素は useId ベースの id で label と関連付け
+ * - 色の格子は1つを選ぶラジオボタンの組で、色見本そのものが選択肢になる（§6）。色見本は字を載せず（§2）、
+ *   読み上げの名前に色の名前とカラーコードを持つ。
+ * - 選んだ色の名前とカラーコードは、選んだ見本の行のすぐ下に開く（§8）。
+ * - 選んだ色の配色は、見えない role="status" の文でも読み上げに伝える。
  */
 
-import { useId, useState, useMemo, useCallback } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
 import Link from "next/link";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
-import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import ListStack from "@/components/ListStack";
+import RadioGroup from "@/components/RadioGroup";
+import ListControls from "@/components/ListControls";
+import ListStatus from "@/components/ListStatus";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
+import CopyButton from "@/components/CopyButton";
 import { getAllColors } from "@/dictionary/_lib/colors";
-import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
-import type { ColorEntry, ColorCategory } from "@/dictionary/_lib/types";
+import type { ColorEntry } from "@/dictionary/_lib/types";
 import {
   computeHarmony,
   isAchromatic,
   getAchromaticPalette,
-  filterColors,
-  filterByCategory,
   HARMONY_TYPE_INFO,
 } from "./logic";
 import type { HarmonyType } from "./logic";
+import { PALETTE_ITEMS, PALETTE_SPEC } from "./palette-list";
 import styles from "./TraditionalColorPaletteTile.module.css";
 
-// --- カテゴリオプション定義 ---
-
-const CATEGORY_OPTIONS: Array<{ value: ColorCategory | "all"; label: string }> =
-  [
-    { value: "all", label: "全て" },
-    { value: "red", label: COLOR_CATEGORY_LABELS.red },
-    { value: "orange", label: COLOR_CATEGORY_LABELS.orange },
-    { value: "yellow", label: COLOR_CATEGORY_LABELS.yellow },
-    { value: "green", label: COLOR_CATEGORY_LABELS.green },
-    { value: "blue", label: COLOR_CATEGORY_LABELS.blue },
-    { value: "purple", label: COLOR_CATEGORY_LABELS.purple },
-    { value: "achromatic", label: COLOR_CATEGORY_LABELS.achromatic },
-  ];
-
-/** SegmentedControl 用のカテゴリオプション */
-const CATEGORY_SC_OPTIONS = CATEGORY_OPTIONS.map((opt) => ({
-  label: opt.label,
-  value: opt.value,
-}));
-
-/** SegmentedControl 用の配色パターンオプション */
-const HARMONY_SC_OPTIONS = HARMONY_TYPE_INFO.map((info) => ({
+/** 配色パターンのラジオボタンの組に渡す選択肢 */
+const HARMONY_RADIO_OPTIONS = HARMONY_TYPE_INFO.map((info) => ({
   label: info.label,
   value: info.type,
 }));
@@ -88,49 +64,60 @@ function formatHsl(hsl: [number, number, number]): string {
 /** 全色データ（モジュールレベルでキャッシュ） */
 const allColors = getAllColors();
 
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
-export type TraditionalColorPaletteTileVariant = "full";
-
 export interface TraditionalColorPaletteTileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 検索＋カテゴリ＋スウォッチグリッド＋ハーモニー＋色詳細カード＋コピー
-   *   このツールは参照・検索系のため full 1種のみ。
-   */
-  variant?: TraditionalColorPaletteTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
   as?: "section" | "div" | "article" | "aside";
   /** 追加クラス */
   className?: string;
 }
 
+/** 選んだ色の見本・名前・読み・カラーコード。 */
+function PickedColor({ color }: { color: ColorEntry }) {
+  return (
+    <>
+      <span
+        className={styles.pickedSwatch}
+        style={{ backgroundColor: color.hex }}
+      />
+      <span className={styles.pickedText}>
+        <span className={styles.pickedLabel}>選んだ色</span>
+        <span className={styles.pickedName}>{color.name}</span>
+        <span className={styles.pickedRomaji}>{color.romaji}</span>
+        <span className={styles.pickedHex}>{color.hex}</span>
+      </span>
+    </>
+  );
+}
+
+/** 格子の列の数。格子の幅と列の最小幅からブラウザが決めた数を読む。 */
+function readColumnCount(grid: HTMLElement): number {
+  return getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+}
+
 export default function TraditionalColorPaletteTile({
-  // variant は将来の拡張に備えた props 定義だが現時点では "full" のみのため使用しない
-  variant: _variant = "full", // eslint-disable-line @typescript-eslint/no-unused-vars
   as = "section",
   className,
 }: TraditionalColorPaletteTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  const uid = useId();
-  const searchId = `${uid}-color-search`;
-
   // ---------- State ----------
   const [selectedColor, setSelectedColor] = useState<ColorEntry | null>(null);
   const [harmonyType, setHarmonyType] = useState<HarmonyType>("complementary");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<ColorCategory | "all">(
-    "all",
-  );
-
-  // A-6: クリップボードコピーフック（hex/rgb/hsl の各色コードをコピー可能にする）
-  // 複数カード・複数コードタイプを "slug-codeType" キーで識別する
-  const { copy, copiedKey } = useCopyToClipboard();
-
-  // カテゴリフィルタと検索でスウォッチを絞り込む
-  const filteredColors = useMemo(() => {
-    const byCategory = filterByCategory(categoryFilter, allColors);
-    return filterColors(searchQuery, byCategory);
-  }, [searchQuery, categoryFilter]);
+  const {
+    state,
+    slice,
+    announcement,
+    clear,
+    filtering,
+    matched,
+    searchRef,
+    setKind,
+    setQuery,
+    setSort,
+    statusRef,
+  } = useListBrowseState({
+    items: PALETTE_ITEMS,
+    spec: PALETTE_SPEC,
+    unit: "色",
+  });
 
   // 有彩色の配色計算
   const harmonyResult = useMemo(() => {
@@ -148,11 +135,58 @@ export default function TraditionalColorPaletteTile({
     return getAchromaticPalette(selectedColor, allColors);
   }, [selectedColor]);
 
-  const handleColorSelect = useCallback((color: ColorEntry) => {
-    setSelectedColor(color);
-  }, []);
+  const radioName = useId();
+  const hasItems = slice.items.length > 0;
+  const gridRef = useRef<HTMLDivElement>(null);
+  const pickedRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState(0);
 
-  // ライブリージョン用のサマリテキスト（C-3: 実テキストノードのサマリ）
+  // 選んだ色は見本の行のすぐ下に開くので、1行に並ぶ見本の数を幅の変化に合わせて読む。
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const update = () => setColumns(readColumnCount(grid));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(grid);
+    return () => observer.disconnect();
+  }, [hasItems]);
+
+  // 押した見本の画面の中の位置。選んだ色の欄が開き直って見本の行が上下に動いても、押した見本を同じ位置に保つ。
+  const anchorRef = useRef<{ slug: string; top: number } | null>(null);
+
+  const handleColorSelect = useCallback(
+    (color: ColorEntry, event: ChangeEvent<HTMLInputElement>) => {
+      const swatch = event.currentTarget.closest("label");
+      anchorRef.current = swatch
+        ? { slug: color.slug, top: swatch.getBoundingClientRect().top }
+        : null;
+      setSelectedColor(color);
+    },
+    [],
+  );
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current;
+    anchorRef.current = null;
+    const swatch = gridRef.current
+      ?.querySelector(`[data-swatch-slug="${anchor?.slug}"]`)
+      ?.closest("label");
+    if (!anchor || !swatch) return;
+    window.scrollBy(0, swatch.getBoundingClientRect().top - anchor.top);
+    // 選んだ色の欄が画面の下にはみ出すなら、押した見本が画面の上から出ない範囲で送って見せる。
+    const picked = pickedRef.current;
+    if (!picked) return;
+    const overflow = picked.getBoundingClientRect().bottom - window.innerHeight;
+    const room = swatch.getBoundingClientRect().top;
+    if (overflow > 0) window.scrollBy(0, Math.min(overflow, room));
+  }, [selectedColor]);
+
+  const selectedIndex = selectedColor
+    ? slice.items.findIndex(({ color }) => color.slug === selectedColor.slug)
+    : -1;
+
+  // 選んだ色の配色を読み上げに伝える文。
   const liveSummary = useMemo(() => {
     if (!selectedColor) return "";
     if (isAchromatic(selectedColor)) {
@@ -175,14 +209,9 @@ export default function TraditionalColorPaletteTile({
     const hslValue = formatHsl(color.hsl);
     const cardKey = `${color.slug}-${index}`;
 
-    // コピーキー: "slug-codeType" で複数カード・複数コードタイプを識別
-    const hexKey = `${color.slug}-hex`;
-    const rgbKey = `${color.slug}-rgb`;
-    const hslKey = `${color.slug}-hsl`;
-
     return (
       <div key={cardKey} className={styles.paletteCard}>
-        {/* 色見本: 伝統色の実色を動的背景色で表示（機能なので --accent 直塗り禁止とは別物） */}
+        {/* 色見本。地の色が伝統色そのもの（§2）。 */}
         <div
           className={styles.paletteColorSwatch}
           style={{ backgroundColor: hexValue }}
@@ -191,136 +220,166 @@ export default function TraditionalColorPaletteTile({
         />
         {/* 色名（辞書詳細ページへのリンク） */}
         <div className={styles.paletteColorName}>
+          {color.slug === selectedColor?.slug ? (
+            <span className={styles.pickedLabel}>選んだ色</span>
+          ) : null}
           <Link
             href={`/dictionary/colors/${color.slug}`}
             className={styles.paletteColorNameLink}
+            data-text-box="inline"
           >
             {color.name}
           </Link>
         </div>
         <div className={styles.paletteColorRomaji}>{color.romaji}</div>
 
-        {/* HEX コピーボタン付き */}
+        {/* HEX */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>HEX</span>
           <span className={styles.colorCodeValue}>{hexValue}</span>
-          <Button
-            size="small"
-            variant="default"
-            onClick={() => void copy(hexValue, hexKey)}
-            aria-label={
-              copiedKey === hexKey ? COPIED_LABEL : `HEX ${hexValue} をコピー`
-            }
-          >
-            {copiedKey === hexKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          <CopyButton
+            text={hexValue}
+            target={`${color.name}のHEX`}
+            align="end"
+            className={styles.colorCodeCopy}
+          />
         </div>
 
         {/* RGB */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>RGB</span>
           <span className={styles.colorCodeValue}>{rgbValue}</span>
-          <Button
-            size="small"
-            variant="default"
-            onClick={() => void copy(rgbValue, rgbKey)}
-            aria-label={
-              copiedKey === rgbKey ? COPIED_LABEL : `RGB ${rgbValue} をコピー`
-            }
-          >
-            {copiedKey === rgbKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          <CopyButton
+            text={rgbValue}
+            target={`${color.name}のRGB`}
+            align="end"
+            className={styles.colorCodeCopy}
+          />
         </div>
 
         {/* HSL */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>HSL</span>
           <span className={styles.colorCodeValue}>{hslValue}</span>
-          <Button
-            size="small"
-            variant="default"
-            onClick={() => void copy(hslValue, hslKey)}
-            aria-label={
-              copiedKey === hslKey ? COPIED_LABEL : `HSL ${hslValue} をコピー`
-            }
-          >
-            {copiedKey === hslKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          <CopyButton
+            text={hslValue}
+            target={`${color.name}のHSL`}
+            align="end"
+            className={styles.colorCodeCopy}
+          />
         </div>
       </div>
     );
   };
 
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       <div className={styles.inner}>
-        {/* ライブリージョン（C-3: 実テキストノードのサマリ） */}
-        <div role="status" aria-live="polite" aria-atomic="true">
+        {/* 選んだ色の配色を読み上げに伝える。見える形は選んだ色の欄と下の配色の結果が持つ。 */}
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="visually-hidden"
+        >
           {liveSummary}
         </div>
 
-        {/* 色を検索（useId で id 一意化） */}
-        <div className={styles.searchField}>
-          <label htmlFor={searchId} className={styles.label}>
-            色を検索（名前・ローマ字）
-          </label>
-          <Input
-            id={searchId}
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="例: 鴇、toki"
-            spellCheck={false}
-          />
-        </div>
-
-        {/* カテゴリフィルタ（SegmentedControl） */}
-        <div className={styles.categorySection}>
-          <SegmentedControl
-            options={CATEGORY_SC_OPTIONS}
-            value={categoryFilter}
-            onChange={(v) => setCategoryFilter(v as ColorCategory | "all")}
-            aria-label="カテゴリフィルタ"
-          />
-        </div>
-
-        {/* スウォッチグリッド */}
-        {filteredColors.length === 0 ? (
-          <div className={styles.emptyMessage}>
-            検索条件に一致する色が見つかりませんでした。
+        <ListStack>
+          <div className={styles.head}>
+            <ListStatus
+              ref={statusRef}
+              total={PALETTE_ITEMS.length}
+              matched={matched}
+              filtering={filtering}
+              unit="色"
+              announcement={announcement}
+              onClear={clear}
+            />
+            <ListControls
+              searchLabel="色名・ローマ字で探す"
+              searchRef={searchRef}
+              query={state.query}
+              onQueryChange={setQuery}
+              kindGroup={{
+                legend: "色の系統",
+                options: PALETTE_SPEC.kinds,
+                value: state.kind,
+                onChange: setKind,
+              }}
+              sortGroup={{
+                legend: "並び順",
+                options: PALETTE_SPEC.sorts,
+                value: state.sort,
+                onChange: setSort,
+              }}
+            />
           </div>
-        ) : (
-          <div className={styles.swatchGrid} data-testid="swatch-grid">
-            {filteredColors.map((color) => {
-              const isSelected = selectedColor?.slug === color.slug;
-              return (
-                <button
-                  key={color.slug}
-                  type="button"
-                  className={`${styles.swatch} ${isSelected ? styles.swatchSelected : ""}`}
-                  style={{ backgroundColor: color.hex }}
-                  onClick={() => handleColorSelect(color)}
-                  aria-label={`${color.name} (${color.hex})`}
-                  data-swatch-slug={color.slug}
-                >
-                  <span className={styles.swatchTooltip}>
-                    {color.name} {color.hex}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
 
-        {/* 配色パターン選択（SegmentedControl） */}
+          {hasItems ? (
+            <fieldset
+              role="radiogroup"
+              aria-label="伝統色"
+              className={styles.swatchGroup}
+            >
+              <div
+                ref={gridRef}
+                className={styles.swatchGrid}
+                data-testid="swatch-grid"
+              >
+                {slice.items.map(({ color }, index) => {
+                  const isSelected = selectedColor?.slug === color.slug;
+                  const rowEnd =
+                    columns > 0 &&
+                    (index % columns === columns - 1 ||
+                      index === slice.items.length - 1);
+                  const opensHere =
+                    selectedIndex >= 0 &&
+                    rowEnd &&
+                    Math.floor(selectedIndex / columns) ===
+                      Math.floor(index / columns);
+                  return (
+                    <Fragment key={color.slug}>
+                      <label
+                        className={styles.swatch}
+                        style={{ backgroundColor: color.hex }}
+                      >
+                        <input
+                          type="radio"
+                          name={radioName}
+                          value={color.slug}
+                          className={styles.swatchInput}
+                          checked={isSelected}
+                          onChange={(event) => handleColorSelect(color, event)}
+                          aria-label={`${color.name} (${color.hex})`}
+                          data-swatch-slug={color.slug}
+                        />
+                        <span className={styles.swatchMark} />
+                      </label>
+                      {opensHere && selectedColor ? (
+                        <div
+                          ref={pickedRef}
+                          className={styles.pickedRow}
+                          data-testid="picked-color"
+                        >
+                          <PickedColor color={selectedColor} />
+                        </div>
+                      ) : null}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </fieldset>
+          ) : null}
+        </ListStack>
+
+        {/* 配色パターンの選択 */}
         <div className={styles.harmonySection}>
-          <SegmentedControl
-            options={HARMONY_SC_OPTIONS}
+          <RadioGroup
+            options={HARMONY_RADIO_OPTIONS}
             value={harmonyType}
             onChange={(v) => setHarmonyType(v as HarmonyType)}
-            aria-label="配色パターン"
+            legend="配色パターン"
           />
           {currentHarmonyInfo && (
             <p className={styles.harmonyDescription}>

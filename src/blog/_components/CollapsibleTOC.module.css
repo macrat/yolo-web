@@ -1,76 +1,99 @@
 /*
- * CollapsibleTOC — 開閉可能な目次のスタイル（DESIGN.md フェーズ R「店構え」へ変換）。
+ * 記事の目次（DESIGN.md §5）。ボックスに入れた閉じたアコーディオンで、読み進めるあいだは画面の上端に留める。
  *
- * <details> の summary をクリック領域として、シェブロンで開閉状態を示す。
- * 折りたたまれた状態では、親 .articleBody の :has() ルールにより
- * Grid 列幅が `1fr auto` に切り替わり TOC が縮んで本文が広がる。
- *
- * 区画としての罫囲みはこのコンポーネント自身が持つ（§2「一段沈む面」= --paper-2 +
- * --rule の一本罫。角丸は 0px 基調）。全トークン経由・直書きなし（§10）。
+ * 閉じた目次の高さ（--toc-height）は、上下の太い線と内側の余白と、開閉の行（44px と、本文の1行の高さの大きいほう。
+ * Accordion の開閉の行と同じ）を足したもの。文字の大きさとともに変わるので、描いたあとに測らず、同じ式で出す。
+ * 目次を持つページのルートに置き、ページを送るときの余白にも使う。
  */
-
-.tocDetails {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: var(--space-16) var(--space-24);
-  background: var(--paper-2);
+:global(html):has(.toc) {
+  --toc-height: calc(
+    2 * var(--rule-w) + 2 * var(--box-padding) +
+      max(44px, var(--leading-body) * var(--text-body))
+  );
 }
 
-.tocSummary {
-  font-family: var(--font-gothic);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--ink);
-  /* デフォルト三角マーカーを消し、自作シェブロンで状態を表現する */
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-8);
-}
-
-/* Safari/WebKit でも三角マーカー非表示 */
-.tocSummary::-webkit-details-marker {
-  display: none;
-}
-
-.tocSummary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.tocChevron {
-  flex-shrink: 0;
-  color: var(--ink-2);
-  transition: transform 0.2s ease;
+/* 留めた目次は --paper の地を持ち、下を送られる本文をコンテンツ幅いっぱいに隠す。コンテンツ幅の外は隠さない
+ * ので、本文の全幅の罫線は目次の左右で見えたまま下を通る。 */
+.toc {
+  position: relative;
+  z-index: 1;
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+  background: var(--paper);
 }
 
 /*
- * 折りたたみ時はシェブロンを左向きに（90deg 反時計回転）。
- * 「TOC が右に縮んだ状態。クリックで左方向に広がる」ことを示唆する。
+ * 画面の高さが 500px に満たないとき（横長のスマホ）は、留めた目次が読む行を大きく覆うので留めない。
+ *
+ * 留めるあいだ、目次が閉じていれば、ページを送って要素を見せるときの上の余白を、目次の高さに 16px を足したものに
+ * する。目次から移った先の見出しと、Shift+Tab で上へ戻ったフォーカスのある要素（外に出るリングを含む）が、留めた
+ * 目次の下に隠れない。下の端だけが見えていた要素も、目次の下に隠れた部分が見えるまで送られる。
+ *
+ * 閉じた目次の開閉の行は、この余白を打ち消す。開閉の行の上端は、ボックスの上の線と内側の余白の分だけボックスの
+ * 上端から下にあるので、目次が上端に留まっているとき、画面の上端から「線 + 内側の余白」の所にある。そこが上の
+ * 余白（目次の高さ + 16px）の下端とみなされるよう、差の分だけ上の余白を負にする。留まった開閉の行へフォーカスが
+ * 移っても、上の余白の中に隠れているとしてページが送られず、読んでいた所が動かない。
+ *
+ * 目次が開いているあいだは、上の余白も打ち消しも持たない。開くとき目次は画面の上端に来ていて、開いた一覧が本文に
+ * 重なり、フォーカスは目次の中にある。項目へフォーカスが移ると、項目は一覧の中で送られて見え、ページは動かない。
+ * フォーカスが目次の外へ出るか項目を選ぶと目次は閉じ、上の余白が戻ってから移った先が送られる。
  */
-.tocDetails:not([open]) .tocChevron {
-  transform: rotate(-90deg);
+@media (min-height: 500px) {
+  .toc {
+    position: sticky;
+    top: 0;
+  }
+
+  :global(html):has(.toc > details:not([open])) {
+    scroll-padding-top: calc(var(--toc-height) + var(--space-16));
+  }
+
+  .toc > details:not([open]) > summary {
+    scroll-margin-top: calc(
+      var(--rule-w) + var(--box-padding) - var(--toc-height) - var(--space-16)
+    );
+  }
 }
 
 /*
- * 見出し数が多い記事（38件など）で viewport を超えないよう内部スクロールを持たせる。
- * 8rem の内訳: sticky top 1rem + tocDetails 上下 padding 2rem + summary 約 1.5rem +
- * tocBody margin-top 0.75rem + 余裕 2.75rem ≒ 8rem。
- * デスクトップ（sticky 配置）でも viewport に収まり、モバイル（非 sticky）でも
- * 縦長 TOC が本文への到達を阻害しない。
+ * 開いた一覧。閉じた目次のボックスのすぐ下に同じ幅のボックスで出し、下の本文の上に重ねる。本文を押し下げない
+ * ので、開閉しても本文が動かない。開くとき目次は画面の上端に来る（CollapsibleTOC）ので、一覧を目次の下から画面の
+ * 下端までの高さに収め、中で縦に送る。縦に送る領域はボックスの内側の余白の外で切るので、リンクの押せる範囲が
+ * 字の左へ張り出す分（8px）は余白の中に収まり、hover の線とフォーカスのリングは切れない。一覧の端まで送ったあとの
+ * 指の送りは、ページの引っ張りや跳ね返りにも渡さない。
  */
-.tocBody {
-  margin-top: 0.75rem;
-  max-height: calc(100vh - 8rem);
+.list {
+  position: absolute;
+  top: calc(100% + var(--rule-w));
+  inset-inline: calc(-1 * var(--rule-w));
+  max-height: calc(100dvh - var(--toc-height));
   overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--rule-w) solid var(--rule);
+  border-top: none;
+  padding: var(--box-padding);
+  background: var(--paper);
 }
 
 /*
- * TableOfContents 内部の h2「目次」は summary 側でラベル化済のため非表示。
- * SR では summary の「目次」テキストが <details> の名前として読まれる。
+ * 目次が留まる高さの画面で目次が開いているあいだは、ページ全体を送らない。開いた一覧は留まった目次の下で本文に
+ * 重なるので、そのあいだに本文が動くと、来訪者は気づかないまま読んでいた所を失う。ホイール・指・キー（開閉の行に
+ * フォーカスがあるときや、修飾キーとの組み合わせを含む）のどの送りも、ページの送りを止めれば本文を動かさない。
+ * 一覧は自分の中で送れる。一覧の外に見える本文も開いているあいだは送れないが、目次を開いた来訪者の目的は章を選ぶ
+ * ことで、読むには閉じればよい。項目を選ぶと、目次を閉じて送りの止めを外してから、移った先へ送られる。
+ *
+ * 目次が留まらない低い画面では止めない。目次と一覧はページとともに動くので、ページを送っても一覧が本文を隠した
+ * まま本文だけが動くことはなく、止めると、目次が画面の外にあるとき（開いたまま拡大して低くなったときなど）に
+ * ページを送れなくなる。
+ *
+ * 送りを止めても、スクロールバーの場所は取っておき、開閉でページの幅と本文の折り返しが変わらないようにする。
  */
-.tocBody h2 {
-  display: none;
+:global(html):has(.toc) {
+  scrollbar-gutter: stable;
+}
+
+@media (min-height: 500px) {
+  :global(html):has(.toc > details[open]) {
+    overflow: hidden;
+  }
 }

@@ -1,0 +1,23 @@
+/* 開閉の行は 44px 以上（§6）。ラベルが折り返しても、三角は1行目の字の中央に並ぶ。 */
+.summary {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: fit-content;
+  min-width: 44px;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  list-style: none;
+  cursor: pointer;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.label {
+  min-width: 0;
+}

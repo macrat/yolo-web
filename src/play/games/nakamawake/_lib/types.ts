@@ -1,7 +1,7 @@
 export interface NakamawakeGroup {
   name: string; // Group theme name in Japanese
   words: string[]; // Exactly 4 words
-  difficulty: 1 | 2 | 3 | 4; // 1=yellow(easy), 2=green, 3=blue, 4=purple(hard)
+  difficulty: 1 | 2 | 3 | 4; // 1=易しい 〜 4=とても難しい
 }
 
 export interface NakamawakePuzzle {
@@ -24,7 +24,6 @@ export interface NakamawakeGameState {
   status: "playing" | "won" | "lost";
   selectedWords: string[]; // Currently selected words (0-4)
   remainingWords: string[]; // Words not yet in a solved group
-  guessHistory: { words: string[]; correct: boolean }[]; // All guess attempts
 }
 
 export interface NakamawakeGameStats {
@@ -41,8 +40,5 @@ export interface NakamawakeGameHistory {
     solvedGroups: number[]; // difficulty levels in order solved
     mistakes: number;
     status: "won" | "lost" | "playing";
-    // Optional for backward compatibility with existing localStorage data
-    // that was saved before guessHistory persistence was implemented
-    guessHistory?: { words: string[]; correct: boolean }[];
   };
 }

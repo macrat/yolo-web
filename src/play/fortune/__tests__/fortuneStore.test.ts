@@ -1,15 +1,4 @@
-/**
- * Tests for fortuneStore module.
- *
- * fortuneStore provides a useSyncExternalStore-compatible store for the daily fortune.
- * Key behaviors:
- * - getFortuneSnapshot: returns fortune state on client, null on SSR
- * - getFortuneServerSnapshot: always returns null (for SSR)
- * - Cache is invalidated when the date changes
- * - resetFortuneCache allows test isolation
- */
-
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 vi.mock("@/play/fortune/logic", () => ({
   getUserSeed: () => 12345,
@@ -31,6 +20,7 @@ vi.mock("@/play/games/shared/_lib/crossGameProgress", () => ({
 
 // Import after mocks are set up
 import {
+  msUntilNextJstMidnight,
   getFortuneSnapshot,
   getFortuneServerSnapshot,
   subscribeFortuneStore,
@@ -50,15 +40,6 @@ describe("fortuneStore", () => {
   });
 
   describe("getFortuneSnapshot", () => {
-    it("returns null when window is undefined (SSR)", () => {
-      // window exists in jsdom, but we can test the cache behavior.
-      // SSR guard is covered by getFortuneServerSnapshot returning null.
-      // In jsdom environment, window is available, so it should return a value.
-      const result = getFortuneSnapshot();
-      // jsdom has window, so result should be non-null
-      expect(result).not.toBeNull();
-    });
-
     it("returns fortune state with today's date", () => {
       const result = getFortuneSnapshot();
       expect(result).not.toBeNull();
@@ -102,12 +83,52 @@ describe("fortuneStore", () => {
   });
 
   describe("subscribeFortuneStore", () => {
-    it("registers and unregisters a listener", () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("notifies listeners at the next midnight in Japan", () => {
+      vi.useFakeTimers();
+      // 日本時間の 2026-03-28 23:59:00
+      vi.setSystemTime(new Date("2026-03-28T14:59:00Z"));
+      const listener = vi.fn();
+      subscribeFortuneStore(listener);
+
+      vi.advanceTimersByTime(59_000);
+      expect(listener).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1_000);
+      expect(listener).toHaveBeenCalledTimes(1);
+      // 次の日の 0 時にも知らせる
+      vi.advanceTimersByTime(24 * 60 * 60 * 1000);
+      expect(listener).toHaveBeenCalledTimes(2);
+    });
+
+    it("notifies listeners when the tab becomes visible", () => {
+      const listener = vi.fn();
+      subscribeFortuneStore(listener);
+      document.dispatchEvent(new Event("visibilitychange"));
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+
+    it("stops the timer and the visibility listener after the last unsubscribe", () => {
+      vi.useFakeTimers();
       const listener = vi.fn();
       const unsubscribe = subscribeFortuneStore(listener);
-      expect(typeof unsubscribe).toBe("function");
-      // Unsubscribe should not throw
-      expect(() => unsubscribe()).not.toThrow();
+      unsubscribe();
+      expect(vi.getTimerCount()).toBe(0);
+      document.dispatchEvent(new Event("visibilitychange"));
+      expect(listener).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe("msUntilNextJstMidnight", () => {
+  it("counts to 15:00 UTC, which is midnight in Japan", () => {
+    expect(msUntilNextJstMidnight(Date.parse("2026-03-28T14:00:00Z"))).toBe(
+      60 * 60 * 1000,
+    );
+    expect(msUntilNextJstMidnight(Date.parse("2026-03-28T15:00:00Z"))).toBe(
+      24 * 60 * 60 * 1000,
+    );
   });
 });

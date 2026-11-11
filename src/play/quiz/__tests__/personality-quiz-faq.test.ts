@@ -1,6 +1,6 @@
 /**
  * personality型クイズ11個のFAQデータが正しく定義されていることを確認するテスト
- * B-212: traditional-color, yoji-personality, impossible-advice, contrarian-fortune,
+ * 対象: traditional-color, yoji-personality, impossible-advice, contrarian-fortune,
  *        unexpected-compatibility, music-personality, character-fortune,
  *        animal-personality, science-thinking, japanese-culture, character-personalityのFAQ
  */

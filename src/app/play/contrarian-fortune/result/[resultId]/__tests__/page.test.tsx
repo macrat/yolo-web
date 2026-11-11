@@ -2,7 +2,7 @@
  * /play/contrarian-fortune/result/[resultId] 専用ルートのテスト。
  * - generateStaticParams が全8タイプのresultIdを返すこと
  * - generateMetadata が正しいメタデータを返すこと
- * - CTA_TEXTがモバイル(375px)で1行に収まる文字数であること
+ * - 誘いの文言（CTA_TEXT）が 375px の画面で1行に収まる字数であること
  */
 
 import { describe, it, expect } from "vitest";
@@ -48,11 +48,12 @@ describe("ContrarianFortuneResultPage", () => {
       expect(metadata.openGraph).toBeDefined();
     });
 
-    it("存在しないresultIdに対して空オブジェクトを返す", async () => {
-      const metadata = await generateMetadata({
-        params: Promise.resolve({ resultId: "nonexistent" }),
-      });
-      expect(metadata).toEqual({});
+    it("存在しないresultIdに対してnotFoundを呼ぶ", async () => {
+      await expect(
+        generateMetadata({
+          params: Promise.resolve({ resultId: "nonexistent" }),
+        }),
+      ).rejects.toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
     });
 
     it("robots.indexがtrueに設定される", async () => {
@@ -85,7 +86,7 @@ describe("ContrarianFortuneResultPage", () => {
   });
 
   describe("CTA_TEXT", () => {
-    it("CTA1テキストが14文字以下でモバイル(375px)で1行に収まる長さである", () => {
+    it("誘いの文言が14字以下で、375px の画面で1行に収まる長さである", () => {
       expect(CTA_TEXT.length).toBeLessThanOrEqual(14);
     });
   });

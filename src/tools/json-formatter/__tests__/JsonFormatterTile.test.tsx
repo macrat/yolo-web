@@ -1,351 +1,359 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import JsonFormatterTile from "../JsonFormatterTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+function enter(value: string): void {
+  fireEvent.change(screen.getByLabelText("JSON"), { target: { value } });
+}
+
+function press(name: string): void {
+  fireEvent.click(screen.getByRole("button", { name }));
+}
+
+function enterAndPress(value: string, operation: string): void {
+  render(<JsonFormatterTile />);
+  enter(value);
+  press(operation);
+}
+
+function resultRegion(name: string): HTMLElement {
+  return screen.getByRole("region", { name });
+}
 
 describe("JsonFormatterTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
-  // ---------- 基本レンダリング ----------
-
-  // E-1: デフォルト (variant="full") でレンダリングできる
-  test("renders without crashing (variant=full)", () => {
-    render(<JsonFormatterTile variant="full" />);
-    expect(screen.getByLabelText("入力")).toBeInTheDocument();
-    expect(screen.getByLabelText("出力")).toBeInTheDocument();
-  });
-
-  // E-1b: variant="format-only" でレンダリングできる
-  test("renders without crashing (variant=format-only)", () => {
-    render(<JsonFormatterTile variant="format-only" />);
-    expect(screen.getByLabelText("入力")).toBeInTheDocument();
-    expect(screen.getByLabelText("出力")).toBeInTheDocument();
-  });
-
-  // ---------- variant="full" の機能 ----------
-
-  // E-2: 整形ボタンで出力が更新される (variant=full)
-  test("formats JSON when 整形 button is clicked (variant=full)", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"a":1,"b":2}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const output = screen.getByLabelText("出力") as HTMLTextAreaElement;
-    expect(output.value).toContain('"a": 1');
-  });
-
-  // E-2: 圧縮ボタンで出力が更新される (variant=full)
-  test("minifies JSON when 圧縮 button is clicked (variant=full)", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, {
-      target: { value: '{\n  "a": 1,\n  "b": 2\n}' },
+  describe("入力と操作", () => {
+    test("JSON の欄とインデントの欄がラベルを持つ", () => {
+      render(<JsonFormatterTile />);
+      expect(screen.getByLabelText("JSON").tagName).toBe("TEXTAREA");
+      expect(screen.getByLabelText("インデント").tagName).toBe("SELECT");
     });
-    fireEvent.click(screen.getByRole("button", { name: "圧縮" }));
-    const output = screen.getByLabelText("出力") as HTMLTextAreaElement;
-    expect(output.value).toBe('{"a":1,"b":2}');
+
+    test("入力は太い枠の結果のボックスに入らない", () => {
+      render(<JsonFormatterTile />);
+      enter('{"a":1}');
+      press("整形");
+      expect(screen.getByLabelText("JSON").closest("section")).toBeNull();
+    });
+
+    test("操作する前は結果のボックスを持たない", () => {
+      render(<JsonFormatterTile />);
+      expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    });
   });
 
-  // E-2: 検証ボタンで valid な JSON のとき成功メッセージが日本語で出る (variant=full)
-  test("shows validation success in Japanese (variant=full)", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"key": "value"}' } });
-    fireEvent.click(screen.getByRole("button", { name: "検証" }));
-    const output = screen.getByLabelText("出力") as HTMLTextAreaElement;
-    expect(output.value).toBe("正しいJSONです");
-    expect(output.value).not.toContain("Valid JSON");
+  describe("整形", () => {
+    test("既定の2スペースで整形し、結果をコードで出す", () => {
+      render(<JsonFormatterTile />);
+      enter('{"x":1}');
+      press("整形");
+      const region = resultRegion("整形したJSON");
+      expect(region.querySelector("pre code")?.textContent).toBe(
+        '{\n  "x": 1\n}',
+      );
+    });
+
+    test("インデントを4スペースにすると、4スペースで整形する", () => {
+      render(<JsonFormatterTile />);
+      fireEvent.change(screen.getByLabelText("インデント"), {
+        target: { value: "4" },
+      });
+      enter('{"x":1}');
+      press("整形");
+      expect(
+        resultRegion("整形したJSON").querySelector("code")?.textContent,
+      ).toBe('{\n    "x": 1\n}');
+    });
+
+    test("整形したことを読み上げで知らせる", () => {
+      render(<JsonFormatterTile />);
+      enter('{"a":1}');
+      press("整形");
+      expect(screen.getByRole("status")).toHaveTextContent("整形しました");
+    });
   });
 
-  // E-4: 変換ロジックの正確性（2スペース整形・デフォルト）
-  test("formats with 2 spaces by default", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"x":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const output = screen.getByLabelText("出力") as HTMLTextAreaElement;
-    expect(output.value).toBe('{\n  "x": 1\n}');
+  describe("圧縮", () => {
+    test("空白を除いた1続きの文字列を、折り返すコードで出す", () => {
+      render(<JsonFormatterTile />);
+      enter('{\n  "a": 1,\n  "b": 2\n}');
+      press("圧縮");
+      const region = resultRegion("圧縮したJSON");
+      expect(region.querySelector("code")?.textContent).toBe('{"a":1,"b":2}');
+      expect(region.querySelector("pre")).toBeNull();
+      expect(screen.getByRole("status")).toHaveTextContent("圧縮しました");
+    });
   });
 
-  // E-4: インデント変更が整形に反映される
-  test("formats with 4 spaces when indent changed to 4", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const indentSelect = screen.getByLabelText("インデント");
-    fireEvent.change(indentSelect, { target: { value: "4" } });
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"x":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const output = screen.getByLabelText("出力") as HTMLTextAreaElement;
-    expect(output.value).toBe('{\n    "x": 1\n}');
+  describe("検証", () => {
+    test("正しい JSON なら、日本語の文で結果を出し、コピーのボタンを持たない", () => {
+      render(<JsonFormatterTile />);
+      enter('{"key": "value"}');
+      press("検証");
+      const region = resultRegion("検証の結果");
+      expect(region).toHaveTextContent("正しいJSONです。");
+      expect(region.querySelector("pre")).toBeNull();
+      expect(
+        screen.queryByRole("button", { name: /コピー/ }),
+      ).not.toBeInTheDocument();
+      expect(screen.getByRole("status")).toHaveTextContent("正しいJSONです");
+    });
   });
 
-  // E-4: 無効なJSONでエラー表示（日本語メッセージ必須）
-  test("shows error message for invalid JSON", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: "{invalid}" } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-  });
-
-  // E-4: エラー文言は英語の生パーサーエラーを露出しない（日本語で表示）
-  test("shows Japanese error message, not raw English parser error", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: "{invalid}" } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const alert = screen.getByRole("alert");
-    expect(alert.textContent).not.toMatch(
-      /Expected|Unexpected|position|at line|column/i,
+  describe("エラー", () => {
+    test.each(["整形", "圧縮", "検証"])(
+      "%s で形式の誤りを日本語の文で欄の直下に言い、欄をエラーにする",
+      (operation) => {
+        render(<JsonFormatterTile />);
+        enter("{invalid}");
+        press(operation);
+        const alert = screen.getByRole("alert");
+        expect(alert.textContent).toMatch(/^JSONの形式が正しくありません。/);
+        expect(alert.textContent).not.toMatch(
+          /Expected|Unexpected|position|at line|column/i,
+        );
+        const field = screen.getByLabelText("JSON");
+        expect(field).toHaveAttribute("aria-invalid", "true");
+        expect(field.getAttribute("aria-describedby")).toBe(alert.id);
+        expect(screen.queryByRole("region")).not.toBeInTheDocument();
+      },
     );
-    expect(alert.textContent).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
+
+    test("誤りの行と字の位置を言い、数と単位のあいだで折らない", () => {
+      render(<JsonFormatterTile />);
+      enter('{\n  "a": 1,\n  oops\n}');
+      press("整形");
+      const text = screen.getByRole("alert").textContent ?? "";
+      expect(text).toContain("3\u2060文\u2060字\u2060目\u2060付\u2060近");
+      expect(text.replaceAll("\u2060", "")).toMatch(/（3行目、3文字目付近）/);
+      expect(text).toContain("3\u2060行\u2060目");
+    });
+
+    function alertText(): string {
+      return (screen.getByRole("alert").textContent ?? "").replaceAll(
+        "\u2060",
+        "",
+      );
+    }
+
+    test.each([
+      [
+        "位置を言わないエンジンの文（Safari）",
+        'JSON Parse error: Unexpected identifier "True"',
+      ],
+      [
+        "位置を言わない V8 の文",
+        'Unexpected token \'T\', "{"a": True}" is not valid JSON',
+      ],
+      ["position だけの文", "Unexpected token T in JSON at position 99"],
+    ])("%sでも、道具が読んだ行と字を言う", (_, engineMessage) => {
+      vi.spyOn(JSON, "parse").mockImplementation(() => {
+        throw new SyntaxError(engineMessage);
+      });
+      render(<JsonFormatterTile />);
+      enter('{"a": True}');
+      press("整形");
+      expect(alertText()).toBe(
+        "JSONの形式が正しくありません。（1行目、7文字目付近）",
+      );
+      vi.restoreAllMocks();
+    });
+
+    test.each([
+      ["Python の値", '{\n  "a": None\n}', "2行目、8文字目付近"],
+      ["コメント", '{\n  // 説明\n  "a": 1\n}', "2行目、3文字目付近"],
+      ["末尾のカンマ", "[1, 2,]", "1行目、7文字目付近"],
+    ])("%sの誤りの位置を言う", (_, input, position) => {
+      render(<JsonFormatterTile />);
+      enter(input);
+      press("検証");
+      expect(alertText()).toBe(`JSONの形式が正しくありません。（${position}）`);
+    });
+
+    test("深すぎる入れ子の誤りも、落ちずに位置を言い、前の結果を消す", () => {
+      render(<JsonFormatterTile />);
+      enter('{"a":1}');
+      press("整形");
+      const depth = 30_000;
+      enter("[".repeat(depth) + "]".repeat(depth - 1));
+      press("整形");
+      expect(alertText()).toBe(
+        `JSONの形式が正しくありません。（1行目、${depth * 2}文字目付近）`,
+      );
+      expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    });
+
+    test("形式は正しいのにブラウザが深さで扱えないときは、そう言う", () => {
+      vi.spyOn(JSON, "stringify").mockImplementation(() => {
+        throw new RangeError("Maximum call stack size exceeded");
+      });
+      render(<JsonFormatterTile />);
+      enter('{"a": [1, 2]}');
+      press("整形");
+      expect(alertText()).toBe(
+        "JSONの形式は正しいものの、入れ子が深すぎてこのブラウザでは整形できません。",
+      );
+      vi.restoreAllMocks();
+    });
+
+    test("同じ誤りのまま押し直すと、エラーの文を入れ直す", () => {
+      render(<JsonFormatterTile />);
+      enter("{invalid}");
+      press("整形");
+      const first = screen.getByRole("alert");
+      press("整形");
+      const second = screen.getByRole("alert");
+      expect(second).not.toBe(first);
+      expect(second.textContent).toBe(first.textContent);
+    });
+
+    test("空のまま押すと、JSON を入れるよう言う", () => {
+      render(<JsonFormatterTile />);
+      press("整形");
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "JSONを入力してください。",
+      );
+    });
+
+    test("正しい JSON で操作し直すと、エラーが消えて結果が出る", () => {
+      render(<JsonFormatterTile />);
+      enter("{invalid}");
+      press("整形");
+      expect(screen.getByRole("alert")).toBeInTheDocument();
+      enter('{"a":1}');
+      press("整形");
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(screen.getByLabelText("JSON")).not.toHaveAttribute("aria-invalid");
+      expect(resultRegion("整形したJSON")).toBeInTheDocument();
+    });
+
+    test("エラーになると、前の結果を消す", () => {
+      render(<JsonFormatterTile />);
+      enter('{"a":1}');
+      press("整形");
+      enter("{invalid}");
+      press("整形");
+      expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    });
   });
 
-  // E-4: 検証ボタンでも無効JSON時に日本語エラーが出る
-  test("shows Japanese error message when 検証 is clicked with invalid JSON", () => {
-    render(<JsonFormatterTile variant="full" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: "{bad json}" } });
-    fireEvent.click(screen.getByRole("button", { name: "検証" }));
-    const alert = screen.getByRole("alert");
-    expect(alert.textContent).not.toMatch(
-      /Expected|Unexpected|position|at line|column/i,
-    );
-    expect(alert.textContent).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
+  describe("コピー", () => {
+    test("コピーのボタンは結果のボックスの頭の行にあり、結果のコードを写す", async () => {
+      render(<JsonFormatterTile />);
+      enter('{"a":1}');
+      press("整形");
+      const region = resultRegion("整形したJSON");
+      const copyButton = screen.getByRole("button", {
+        name: "整形したJSONをコピー",
+      });
+      const head = region.firstElementChild as HTMLElement;
+      expect(head.contains(copyButton)).toBe(true);
+      expect(head.querySelector("pre")).toBeNull();
+      fireEvent.click(copyButton);
+      await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+      expect(writeText).toHaveBeenCalledWith('{\n  "a": 1\n}');
+    });
+
+    test("圧縮した結果は「圧縮したJSON」として写す", () => {
+      render(<JsonFormatterTile />);
+      enter('{"a": 1}');
+      press("圧縮");
+      expect(
+        screen.getByRole("button", { name: "圧縮したJSONをコピー" }),
+      ).toBeInTheDocument();
+    });
   });
 
-  // ---------- ARIA ----------
+  describe("結果が出たときの送り", () => {
+    interface Rects {
+      operationsTop: number;
+      resultBottom: number;
+    }
 
-  // E-5: role="status" aria-live="polite" 領域が存在する
-  test("has role=status region with aria-live=polite", () => {
-    render(<JsonFormatterTile />);
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion).toBeInTheDocument();
-    expect(statusRegion).toHaveAttribute("aria-live", "polite");
+    // 結果のボックス（section）と、それ以外（操作の並び）の位置を決める。
+    function stubRects({ operationsTop, resultBottom }: Rects): void {
+      vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(
+        function (this: Element) {
+          return (
+            this.tagName === "SECTION"
+              ? { top: operationsTop + 60, bottom: resultBottom }
+              : { top: operationsTop, bottom: operationsTop + 44 }
+          ) as DOMRect;
+        },
+      );
+    }
+
+    beforeEach(() => {
+      vi.stubGlobal("visualViewport", undefined);
+      vi.stubGlobal("innerHeight", 600);
+      vi.stubGlobal("scrollBy", vi.fn());
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    test("長い結果がはみ出すと、操作の並びを画面の上端から 8px 下に置くまで即時に送る", () => {
+      stubRects({ operationsTop: 500.4, resultBottom: 3000 });
+      enterAndPress('{"a":1}', "整形");
+      expect(window.scrollBy).toHaveBeenCalledWith({
+        top: 493,
+        behavior: "instant",
+      });
+    });
+
+    test("文字盤で狭まった画面（visualViewport）で測る", () => {
+      vi.stubGlobal("visualViewport", { offsetTop: 100, height: 300 });
+      stubRects({ operationsTop: 350, resultBottom: 2000 });
+      enterAndPress('{"a":1}', "整形");
+      expect(window.scrollBy).toHaveBeenCalledWith({
+        top: 242,
+        behavior: "instant",
+      });
+    });
+
+    test("検証の結果のように短い結果は、下端が画面に入るまでで止める", () => {
+      stubRects({ operationsTop: 500, resultBottom: 660 });
+      enterAndPress('{"a":1}', "検証");
+      expect(window.scrollBy).toHaveBeenCalledWith({
+        top: 68,
+        behavior: "instant",
+      });
+    });
+
+    test("結果が画面に入っていれば送らない", () => {
+      stubRects({ operationsTop: 100, resultBottom: 500 });
+      enterAndPress('{"a":1}', "整形");
+      expect(window.scrollBy).not.toHaveBeenCalled();
+    });
   });
 
-  // E-5a: 整形後に role="status" 領域に実テキストサマリが表示される（C-3）
-  test("shows summary text in role=status after formatting", () => {
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"a":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion).toHaveTextContent("整形しました");
-  });
-
-  // E-5b: 圧縮後に role="status" 領域に実テキストサマリが表示される（C-3）
-  test("shows summary text in role=status after minifying", () => {
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{\n  "a": 1\n}' } });
-    fireEvent.click(screen.getByRole("button", { name: "圧縮" }));
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion).toHaveTextContent("圧縮しました");
-  });
-
-  // E-5c: 検証後に role="status" 領域に実テキストサマリが表示される（C-3）
-  test("shows summary text in role=status after validation", () => {
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"key": "value"}' } });
-    fireEvent.click(screen.getByRole("button", { name: "検証" }));
-    const statusRegion = screen.getByRole("status");
-    expect(statusRegion).toHaveTextContent("正しいJSONです");
-  });
-
-  // ---------- コピー ----------
-
-  // E-7: 出力が空のときコピーボタンが disabled
-  test("copy button is disabled when output is empty", () => {
-    render(<JsonFormatterTile />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
-    expect(copyButton).toBeDisabled();
-  });
-
-  // E-7: 出力があるときコピーボタンが enabled
-  test("copy button is enabled when output has content", () => {
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"a":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const copyButton = screen.getByRole("button", { name: "コピー" });
-    expect(copyButton).not.toBeDisabled();
-  });
-
-  // E-6: コピー前は "コピー" が表示される
-  test("copy button label is コピー when not copied", () => {
-    mockHook.copiedKey = null;
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"a":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
-  });
-
-  // E-6: コピー後は COPIED_LABEL ("コピーしました") が表示される
-  test("copy button label changes to COPIED_LABEL when copiedKey is set", () => {
-    mockHook.copiedKey = true;
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"a":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(
-      screen.getByRole("button", { name: "コピーしました" }),
-    ).toBeInTheDocument();
-  });
-
-  // ---------- variant="format-only" の機能 ----------
-
-  // F-1: format-only では整形ボタンのみが表示される（圧縮・検証ボタンなし）
-  test("shows only 整形 button in format-only variant", () => {
-    render(<JsonFormatterTile variant="format-only" />);
-    expect(screen.getByRole("button", { name: "整形" })).toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "圧縮" }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "検証" }),
-    ).not.toBeInTheDocument();
-  });
-
-  // F-2: format-only でも整形ボタンが正常に動く
-  test("formats JSON correctly in format-only variant", () => {
-    render(<JsonFormatterTile variant="format-only" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: '{"x":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const output = screen.getByLabelText("出力") as HTMLTextAreaElement;
-    expect(output.value).toBe('{\n  "x": 1\n}');
-  });
-
-  // F-3: format-only でもインデント Select が表示される
-  test("shows indent Select in format-only variant", () => {
-    render(<JsonFormatterTile variant="format-only" />);
-    expect(screen.getByLabelText("インデント")).toBeInTheDocument();
-  });
-
-  // F-4: format-only でも無効JSONでエラーが表示される
-  test("shows Japanese error in format-only variant for invalid JSON", () => {
-    render(<JsonFormatterTile variant="format-only" />);
-    const input = screen.getByLabelText("入力");
-    fireEvent.change(input, { target: { value: "{invalid}" } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const alert = screen.getByRole("alert");
-    expect(alert.textContent).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
-  });
-
-  // ---------- 複数インスタンス同居（道具箱シミュレーション） ----------
-
-  // I-1: 複数インスタンスで DOM id 重複ゼロ（useId ベース）
-  test("multiple instances have unique DOM ids (no id collision)", () => {
-    const { unmount } = render(
-      <div>
-        <JsonFormatterTile variant="full" />
-        <JsonFormatterTile variant="format-only" />
-      </div>,
-    );
-    // すべての id 属性を収集
-    const ids = Array.from(document.querySelectorAll("[id]")).map(
-      (el) => el.id,
-    );
-    // id 重複ゼロを確認
-    const uniqueIds = new Set(ids);
-    expect(ids.length).toBe(uniqueIds.size);
-    unmount();
-  });
-
-  // I-2: 複数インスタンスで label と input の紐付けが正常（htmlFor 誤結合なし）
-  test("multiple instances associate labels correctly", () => {
-    render(
-      <div>
-        <JsonFormatterTile variant="full" />
-        <JsonFormatterTile variant="format-only" />
-      </div>,
-    );
-    // getByLabelText が複数ある場合は getAllByLabelText を使用
-    const inputs = screen.getAllByLabelText("入力");
-    expect(inputs.length).toBe(2);
-    const outputs = screen.getAllByLabelText("出力");
-    expect(outputs.length).toBe(2);
-  });
-
-  // ---------- エラーリセット ----------
-
-  // E-9: 新しい操作をするとエラーがリセットされる
-  test("clears error when a new valid operation is performed", () => {
-    render(<JsonFormatterTile />);
-    const input = screen.getByLabelText("入力");
-    // まず無効JSON でエラーを出す
-    fireEvent.change(input, { target: { value: "{invalid}" } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    // 有効JSON で整形するとエラーが消える
-    fireEvent.change(input, { target: { value: '{"a":1}' } });
-    fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-  });
-
-  // ---------- CSS トークン検証 ----------
-
-  // E-12: CSS ファイルで旧 --color-* トークン・--accent 直塗り・font-weight:700 不使用
-  test("CSS does not use deprecated tokens or font-weight 700", () => {
-    const cssPath = join(
-      process.cwd(),
-      "src/tools/json-formatter/JsonFormatterTile.module.css",
-    );
-    const css = readFileSync(cssPath, "utf-8");
-
-    // 旧トークン --color-* が存在しないこと
-    expect(css).not.toMatch(/var\(--color-/);
-
-    // --accent 直塗りがないこと
-    const accentDirectUse = css.match(
-      /(?:background|color)\s*:\s*var\(--accent\)/g,
-    );
-    expect(accentDirectUse).toBeNull();
-
-    // font-weight: 700 が CSS 宣言として存在しないこと
-    const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
-    expect(cssWithoutComments).not.toMatch(/font-weight\s*:\s*700/);
-  });
-
-  // E-13: CSS .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
-  test("CSS .controlLabel has white-space: nowrap", () => {
-    const cssPath = join(
-      process.cwd(),
-      "src/tools/json-formatter/JsonFormatterTile.module.css",
-    );
-    const css = readFileSync(cssPath, "utf-8");
-    const controlLabelBlock = css.match(/\.controlLabel\s*\{([\s\S]*?)\}/);
-    expect(controlLabelBlock).not.toBeNull();
-    expect(controlLabelBlock![1]).toMatch(/white-space\s*:\s*nowrap/);
-  });
-
-  // ---------- Panel ルート（A-1） ----------
-
-  // A-1: タイルのルート要素に data-panel 属性があること（Panel コンポーネント）
-  // Panel は section/div/article タグをレンダリングするので、タイルのルートを確認
-  test("root element is a Panel (section by default)", () => {
-    const { container } = render(<JsonFormatterTile />);
-    // Panel は as="section" がデフォルト。第1子要素を確認
-    const root = container.firstElementChild;
-    expect(root?.tagName.toLowerCase()).toBe("section");
+  describe("同じページに複数置く", () => {
+    test("id が重ならず、ラベルがそれぞれの欄を指す", () => {
+      render(
+        <div>
+          <JsonFormatterTile />
+          <JsonFormatterTile />
+        </div>,
+      );
+      const ids = Array.from(document.querySelectorAll("[id]")).map(
+        (el) => el.id,
+      );
+      expect(new Set(ids).size).toBe(ids.length);
+      expect(screen.getAllByLabelText("JSON")).toHaveLength(2);
+      expect(screen.getAllByLabelText("インデント")).toHaveLength(2);
+    });
   });
 });

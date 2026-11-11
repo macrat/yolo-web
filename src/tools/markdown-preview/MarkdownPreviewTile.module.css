@@ -1,38 +1,39 @@
 /* MarkdownPreviewTile.module.css
- * cycle-228 T-24: MarkdownPreviewPage.module.css を正典タイル向けに継承・移植。
- * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
- * DESIGN トークン準拠:
- * - font-weight: 700 不使用
+ * 組み方:
  * - 角丸は --radius（0）に統一・box-shadow 不使用（影は使わない）
  * - プレビュー枠の境界線は --rule-strong
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* 2ペインレイアウト: 入力 textarea ＋ プレビュー（G-1） */
+/* 2ペインレイアウト: 入力 textarea ＋ プレビュー */
 .panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
-/* w360 対応: 縦積み（G-1） */
+/* w360 対応: 縦積み */
 @media (max-width: 768px) {
   .panels {
     grid-template-columns: 1fr;
   }
 }
 
-/* 個別パネル（入力 or プレビュー） */
+/* 個別パネル（入力 or プレビュー）。列の幅は中身の最小の幅に広げず、横に長い表とコードは
+ * プレビューの中で横に送る。 */
 .panel {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  min-width: 0;
 }
 
-/* パネルヘッダー: ラベルとコピーボタンを横並びに配置 */
+/* ラベルとコピーのボタンを1行に並べる。1行に入らないときはボタンを次の行の右端に回し、ラベルの幅を
+ * 削らない（§6）。 */
 .panelHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
@@ -53,7 +54,7 @@
   min-height: 400px;
 }
 
-/* スクリーンリーダー向け非表示テキスト（C-3: 実テキストノードのサマリ） */
+/* スクリーンリーダー向け非表示テキスト（実テキストノードのサマリ） */
 .srOnly {
   position: absolute;
   width: 1px;
@@ -66,15 +67,13 @@
   border: 0;
 }
 
-/* Markdownプレビュー表示エリア */
+/* Markdownプレビュー表示エリア。中の組み方は、記事の本文と同じ Prose が持つ。 */
 .preview {
   min-height: 400px;
   padding: 0.75rem;
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius);
   background-color: var(--paper);
-  overflow-y: auto;
-  line-height: 1.7;
 }
 
 /* 空入力時のヒント */
@@ -89,98 +88,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* === Prose typography for rendered markdown === */
-
-.preview h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0.5em 0;
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.3em;
-}
-
-.preview h2 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin: 0.5em 0;
-}
-
-.preview h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0.5em 0;
-}
-
-.preview p {
-  margin: 0.5em 0;
-}
-
-.preview ul,
-.preview ol {
-  padding-left: 1.5em;
-  margin: 0.5em 0;
-}
-
-.preview li {
-  margin: 0.25em 0;
-}
-
-.preview code {
-  background-color: var(--paper-2);
-  padding: 0.15em 0.3em;
-  border-radius: var(--radius);
-  font-size: 0.85em;
-}
-
-.preview pre {
-  background-color: var(--paper-2);
-  padding: 0.75rem;
-  border-radius: var(--radius);
-  overflow-x: auto;
-}
-
-.preview pre code {
-  background: none;
-  padding: 0;
-}
-
-.preview blockquote {
-  border-left: 3px solid var(--rule-strong);
-  padding-left: 0.75rem;
-  color: var(--ink-2);
-  margin: 0.5em 0;
-}
-
-.preview table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 0.5em 0;
-}
-
-.preview th,
-.preview td {
-  border: 1px solid var(--rule-strong);
-  padding: 0.4rem 0.6rem;
-  text-align: left;
-}
-
-.preview th {
-  background-color: var(--paper-2);
-  font-weight: 600;
-}
-
-.preview a {
-  color: var(--accent);
-}
-
-.preview img {
-  max-width: 100%;
-}
-
-.preview hr {
-  border: none;
-  border-top: 1px solid var(--rule);
-  margin: 1em 0;
 }

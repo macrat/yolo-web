@@ -5,7 +5,7 @@
  * 全関数は純粋関数として実装し、色データは引数で受け取る（テスト容易性のため）。
  */
 
-import type { ColorEntry, ColorCategory } from "@/dictionary/_lib/types";
+import type { ColorEntry } from "@/dictionary/_lib/types";
 
 // --- 型定義 ---
 
@@ -185,40 +185,4 @@ export function getAchromaticPalette(
   return allColors
     .filter((c) => c.category === "achromatic")
     .sort((a, b) => a.hsl[2] - b.hsl[2]);
-}
-
-/**
- * テキスト検索: 名前（日本語）・読み（ローマ字）で部分一致フィルタ。
- * 空文字列の場合は全件を返す。
- * 検索は大文字小文字を区別しない。
- */
-export function filterColors(
-  query: string,
-  colors: ColorEntry[],
-): ColorEntry[] {
-  if (query === "") {
-    return colors;
-  }
-
-  const normalizedQuery = query.toLowerCase();
-  return colors.filter(
-    (c) =>
-      c.name.includes(normalizedQuery) ||
-      c.romaji.toLowerCase().includes(normalizedQuery),
-  );
-}
-
-/**
- * カテゴリフィルタ: 指定カテゴリに属する色のみを返す。
- * "all" の場合は全件を返す。
- */
-export function filterByCategory(
-  category: ColorCategory | "all",
-  colors: ColorEntry[],
-): ColorEntry[] {
-  if (category === "all") {
-    return colors;
-  }
-
-  return colors.filter((c) => c.category === category);
 }

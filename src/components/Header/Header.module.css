@@ -1,248 +1,46 @@
-/**
- * Header（のれん）— DESIGN.md §4「のれん」。
- * 店号（サイト名・明朝）+ 下に一本の --rule-strong 罫。ナビは文字のみ・現在地は朱。
- * ヘッダに背景色・影は付けない（§4）。地は紙のまま。
- * 角丸は 0 基調（--radius）。トークンは DESIGN.md（§2/§3/§4）が正典。
- */
-
+/* 上端（DESIGN.md §5 レイアウト）。背景を敷かず、下に全幅の罫線だけを引く。 */
 .header {
-  /* .inner の height と .mobileOverlay の top が同じ値を参照するためローカル変数で一元化。 */
-  --header-height: 3.5rem;
-  /* §4: 背景色・影を付けない。下辺に一本の強い罫（のれん罫）だけを引く。 */
-  background: transparent;
-  border-bottom: 1px solid var(--rule-strong);
-  width: 100%;
+  border-bottom: var(--rule-w) solid var(--rule);
 }
 
+/* コンテナ（§5）。左右のボーダーを引き、下の全幅の罫線と交わらせる。
+ * 中身の左端はコンテンツ幅の左端に来る。 */
 .inner {
-  /* 操作面の最大幅（§4）。 */
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--space-16);
-  height: var(--header-height);
+  width: var(--container-width);
+  margin-inline: auto;
+  border-inline: var(--rule-w) solid var(--rule);
+  padding: var(--space-8) var(--box-padding);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-24);
+  column-gap: var(--text-box-pad);
 }
 
-/* 店号: サイト名・明朝（§4）。ドット（"."）のみ朱。 */
-.logo {
-  color: var(--ink);
-  text-decoration: none;
-  font-family: var(--font-mincho);
-  font-weight: 600;
-  /* のれんの店号として本文より一段大きく、明朝の顔を立てる（§3 見出しスケール h4 相当）。 */
-  font-size: 1.375rem;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  flex-shrink: 0;
-  /* モバイルのタップターゲット 44px 確保。 */
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.logo:hover {
-  color: var(--ink);
-  text-decoration: none;
-}
-
-/* ドット（"."）の朱アクセント。 */
-.dot {
-  color: var(--accent);
-}
-
-/* ==============================
-   デスクトップ専用要素（デフォルト表示）
-   ============================== */
-
-.desktopNav {
+/* 項目は縁の見えないコントロールで、間隔は押せる範囲のあいだで測る（§5）。間隔を箱の余白と同じ幅にすると、
+ * 前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。狭い画面ではサイト名もナビの項目も接して並べ、
+ * 1行に入る項目を増やす。広い画面では押せる範囲のあいだを、ナビの項目どうしで 8px、サイト名とナビで 16px
+ * あける。 */
+.navList {
+  list-style: none;
   display: flex;
-  align-items: center;
-  gap: var(--space-24);
-  flex: 1;
+  flex-wrap: wrap;
+  column-gap: var(--text-box-pad);
 }
 
-.desktopActions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  flex-shrink: 0;
-}
+@media (min-width: 45rem) {
+  .inner {
+    column-gap: calc(var(--space-16) + var(--text-box-pad));
+  }
 
-/* ハンバーガー / モバイルメニュー: デスクトップでは非表示。 */
-.hamburger {
-  display: none;
-}
-
-.mobileMenu {
-  display: none;
-}
-
-/* ==============================
-   ナビリンク（文字のみ・現在地は朱／§4）
-   ============================== */
-
-.navLink {
-  color: var(--ink-2);
-  text-decoration: none;
-  font-size: 0.9375rem;
-  padding: var(--space-8) 0;
-  white-space: nowrap;
-  transition: color 0.1s;
-}
-
-.navLink:hover {
-  color: var(--ink);
-  /* 下線はリンクの専有（§3）。ホバー時のみ下線で操作可能を示す。 */
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.navLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* 現在地は朱（§4）。usePathname 判定で aria-current="page" が付与される。 */
-.navLink[aria-current="page"] {
-  color: var(--accent);
-}
-
-/* ==============================
-   モバイルオーバーレイ（デフォルトは非表示）
-   ============================== */
-
-.mobileOverlay {
-  position: fixed;
-  top: var(--header-height);
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 10;
-}
-
-@media (min-width: 721px) {
-  .mobileOverlay {
-    display: none;
+  .navList {
+    column-gap: calc(var(--space-8) + var(--text-box-pad));
   }
 }
 
-/* ==============================
-   モバイル（max-width: 720px）
-   ============================== */
-
-@media (max-width: 720px) {
-  .desktopNav {
-    display: none;
-  }
-
-  .desktopActions {
-    display: none;
-  }
-
-  .hamburger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-    min-width: 44px;
-    min-height: 44px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ink);
-    border-radius: var(--radius);
-    flex-shrink: 0;
-  }
-
-  .hamburger:hover {
-    color: var(--accent);
-  }
-
-  .hamburger:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  /* モバイルメニュー: 店構えの流儀（紙地・強い罫・文字）。 */
-  .mobileMenu {
-    display: block;
-    background: var(--paper);
-    border-bottom: 1px solid var(--rule-strong);
-    padding: var(--space-8) var(--space-16) var(--space-16);
-    position: relative;
-    z-index: 11;
-    /* 開閉の状態変化アニメ（§5 で許容。150ms 以下）。 */
-    animation: menuFadeIn 0.15s ease;
-  }
-
-  @keyframes menuFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* 品書きの流儀: 各項目を罫で区切る。 */
-  .mobileNavList {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .mobileNavList li + li {
-    border-top: 1px solid var(--rule);
-  }
-
-  .mobileNavLink {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    color: var(--ink-2);
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.1s;
-  }
-
-  .mobileNavLink:hover {
-    color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-
-  .mobileNavLink:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  .mobileNavLink[aria-current="page"] {
-    color: var(--accent);
-  }
-
-  /* actions スロット（テーマトグル等）: ナビの下に強い罫で区切って配置。 */
-  .mobileActions {
-    margin-top: var(--space-16);
-    padding-top: var(--space-16);
-    border-top: 1px solid var(--rule-strong);
-    display: flex;
-    align-items: center;
-    gap: var(--space-8);
-  }
-}
-
-/* §5: prefers-reduced-motion を尊重（開閉アニメを即時表示に置換）。 */
-@media (prefers-reduced-motion: reduce) {
-  .mobileMenu {
-    animation: none;
-  }
+/* サイト名は見出しの書体で、本文と同じ大きさで組む（§5 レイアウト）。
+ * サイト名は欧文だけで、見出しの書体の欧文は 700 を持つ IBM Plex Sans なので、
+ * トップで現在地の太字になっても合成太字にならない。 */
+.siteName {
+  font-family: var(--font-heading);
+  font-size: var(--text-body);
 }

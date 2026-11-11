@@ -1,0 +1,80 @@
+# cycle-317 の全体のレビュー
+
+対象: ブランチ `ccr-f5a32489-cmh8sa` の HEAD 610766d0。0294b420・8770ffdd・a8a35994、33bd83af の b784-design.md 第3節、index.md、backlog.md、review-ap-check.md の依頼1〜4。
+
+## 確かめたこと
+
+- 33bd83af の第3節: 実装 `.claude/hooks/cycle-doc-size-check.sh` は上限で exit 2、注意の線では `jq -n` で `{hookSpecificOutput:{hookEventName:"PreToolUse",additionalContext:$msg}}` を出して exit 0 で、第3節と一致する。公式文書 https://code.claude.com/docs/en/hooks（2026-10-05 確認）には「Stderr from a hook that exits 0 goes to the debug log only … Claude never sees it」とあり、PreToolUse の `hookSpecificOutput.additionalContext` は「adds context for Claude」（ツールの結果の隣に入る）とある。第3節は正しい。
+- 8770ffdd: AP-WF05・08・12 の発生の欄の末尾に 317 を足しただけで、ほかの文は変わっていない。
+- 0294b420 の backlog: B-641 は T5-8b の分が済んだことと残り（T5-18）に更新され、B-787 は着手の条件・中身・詳細の場所があり、review-t5-8b.md の 45.8px の判断と合う。B-784・B-786 は Done に 317 である。B-754 は Active に残る（完了のコミットで Queued に戻す予定と依頼にある）。
+- index.md のレビュー結果の表: 回数（B-786 設計7・実装2、B-784 設計4・実装4、T5-33 2、T5-8b 2）はレビューの記録の「第n回」と合う。主な結果の数値（0.1625→0、45.8px、40,000 B・50,000 B）も記録と合う。
+- review-ap-check.md の依頼: 1（AP の発生の記録と workflow.md）・2（第3節を全体のレビューの範囲に入れ、経緯を index.md に書く）・3（ブログと ADR の判断）・4（このレビュー）は満たされた。
+- ツギハギ: 8770ffdd と第3節に経緯の書き込みは無い（第3節の「〜ため」は理由で経緯ではない）。index.md は 11,108 B。
+- 完了のチェックリストは未チェックで、先にチェックした跡は無い（完了の処理で入れる）。
+
+## 指摘
+
+1. 軽: review-ap-check.md の AP-WF07・13 の項の「`joinDashes` の確かめで見た件数を残すのが望ましい」が扱われていない。review-t5-8b.md 28 行の「サイトの全体で悪くなる例は見つからなかった」は何をどれだけ見たかが無く、AP-WF09（網羅の主張）の型のまま残る。index.md にも扱い（足すか、足さない理由）の記録が無い。直し方: builder（または当時の reviewer の手元の記録）から確かめた範囲（`PhrasedText` を通るデータの「-」を含む語の件数など）を得て review-t5-8b.md に足すか、得られないなら index.md の補足事項に「件数は残っていない」と事実を書く。根拠: review-ap-check.md 12 行、review-t5-8b.md 28 行。
+2. 軽: review-ap-check.md の AP-WF08 の項が挙げた2つ目の型（review-b786-design*.md・review-b784-design*.md・review-b7*-impl.md が「reviewer の報告を PM が写した」要約になっていること）が index.md の補足事項に記録されていない。補足事項の AP-WF08 は設計の書き換えだけを書く。依頼の要対応1は3件の名指しなので依頼違反ではないが、点検が見つけた型を記録から落とすと次のサイクルで繰り返す。直し方: 補足事項の AP-WF08 の行に、レビューの記録を PM が要約して写したこと（T5 の2本は reviewer が書いた）を一文足す。根拠: review-ap-check.md 10 行、review-b784-impl.md 3 行。
+
+## 判定
+
+改善指示（軽2件）。来訪者に届くものと hook の実装に問題は無い。直したあと、前回の指摘だけでなく全体を見直す形で再レビューを受けること。
+
+## 第2回
+
+対象: HEAD 91ace5a1（差分は index.md・review-t5-8b.md・review-final.md）。
+
+### 確かめたこと
+
+- 前回の指摘2: index.md の補足事項の AP-WF08 の行に、PM がレビューの記録を要約して写したことと、その対象（review-b784-design*.md・review-b786-design*.md・review-b7*-impl.md）と、T5 の2本は reviewer が書いたことが入った。解消している。
+- 前回の指摘1: review-t5-8b.md に「joinDashes の確かめの範囲」が足され、index.md に扱いが書かれた。抜き取りで次を確かめた。
+  - `src/play/quiz/data/*.ts` は21本で合う。
+  - kanji-data.json の語の頭の「-」は「-ship」「-times」「-ization」「-fold」「-ous」「-proof」の6件で合う。
+  - humor-dict の3件（「Wi-Fi」が data.ts 145・150・152 行）で合う。
+- 全体: backlog.md（B-641・B-787・B-754）、index.md のレビューの表と補足事項は前回の確かめから変わっていない。ツギハギの対象外の文書だけの変更で、規則のファイルへの経緯の書き込みは無い。
+
+### 指摘
+
+1. 軽: review-t5-8b.md の「kanji-data.json 21」が再現しない。同じ正規表現 `(?:^|[^-])-(?=[^\s-])` を kanji-data.json の `meanings` に当てると、当たる文字列は 50 件（重なりを除いて 48、当たりの数は 54）で、`examples`・`onYomi`・`kunYomi` には無い。漢字カナールの出題予定（puzzle-schedule-*.json の `kanjiIndex`、1,248字）に絞っても 27 件で、21 にならない。何で絞った 21 かが書かれていないので、「データの 28 件はすべて見た」の範囲が事実と合わず、指摘1で直そうとした「何をどれだけ見たか」がまだ正確でない。来訪者への影響は無い（50 件の中身も「11PM-1AM」「fortune-telling」などの語の中のハイフンと既知の語の頭の6件で、結論の「悪くなる例は無い」は変わらない）。直し方: 件数を実際の数（kanji-data.json の meanings 50 件、合計の数も直す）にするか、21 の絞り方（どの画面に出る分か）を書き、抜き取りの範囲の文をそれに合わせる。根拠: review-t5-8b.md の「結果」「抜き取り」の行、`node` で kanji-data.json を数えた結果。
+
+### 判定
+
+改善指示（軽1件）。PM は builder（または記録の担当）に件数を数え直させて review-t5-8b.md と、必要なら index.md を直させ、そのあと全体を見直す形で再レビューを受けること。
+
+## 第3回
+
+対象: HEAD fb5b8c41（91ace5a1 からの差分は review-t5-8b.md の3行と review-final.md）。
+
+### 確かめたこと
+
+- 前回の指摘（kanji の件数）: `node` で kanji-data.json の全字の `meanings` に `(?:^|[^-])-(?=[^\s-])` を当て、当たる文字列 50・重なりを除いて 48・当たりの数 54 を得た。review-t5-8b.md の記載と一致する。50件を全部並べて見た。語の頭は「-ship」「-times」「-ization」「-fold」「-ous」「-proof」の6件で、残り44件は「11PM-1AM」「three-stroke」「vis-a-vis」「son-in-law」などの語の中のハイフンだけ。悪くなる例は無い。解消している。
+- humor-dict 3（「Wi-Fi」とそれを含む2文）、daily-fortunes 2（「Wi-Fi運 不安定」と本文の「心のWi-Fi」）は一致する。
+- 除いた id・slug: 対象の各ファイルの文字列の値で、当たるもののうち英小文字・数字・ハイフンだけのものを数えると 597 種（1,521 件）で、記載の 607 種（1,543 件）と少し違うが、これは文字列の切り出し方（クォートの扱い・`\u` の文字列）の違いの範囲で、並べて見た中身は「blazing-poet」「q2-a」「animal-personality」「rainy-season」などの id・slug と import のパスだけだった。画面に出る語を除いていないという記載の結論は再現した。
+- index.md の補足事項の扱い（74行）、レビューの表、backlog.md（B-641・B-787・B-754）は第2回から変わっておらず、記録と合う。index.md は 11,707 B で上限内。規則・ソースのファイルに変更は無く、ツギハギの対象のファイルへの経緯の書き込みは無い。
+
+### 指摘
+
+1. 軽: review-t5-8b.md の「数えたのは当たる文字列の数」と「impossible-advice 2」が合わない。impossible-advice.ts で当たる画面の文は 345 行の1文（「俳句（5-7-5）」）だけで、2 はその文の中の当たりの数（「5-7」「7-5」）である。文字列の数で数えるなら impossible-advice は 1、データの合計は 56 になる。来訪者への影響は無く、結論も変わらないが、前回の指摘で正そうとした「何をどれだけ見たか」の数字が自分で書いた数え方と食い違ったまま残る。直し方: impossible-advice を「1（文の中の当たりは 2）」とし、合計を 56 に直す（「抜き取り」の行の「57 件」も合わせる）。根拠: `grep -nP '(?:^|[^-])-(?=[^\s-])' src/play/quiz/data/impossible-advice.ts` で id・slug・href・日時を除くと 345 行だけが残る。
+
+### 判定
+
+改善指示（軽1件）。PM は記録の担当に review-t5-8b.md の impossible-advice の件数と合計を直させ、そのあと全体を見直す形で再レビューを受けること。
+
+## 第4回
+
+対象: HEAD aa4f79f7（fb5b8c41 からの差分は review-t5-8b.md の2行と review-final.md）。
+
+### 確かめたこと
+
+- 前回の指摘（impossible-advice の件数）: `grep -nP '(?:^|[^-])-(?=[^\s-])' src/play/quiz/data/impossible-advice.ts` から variant などの識別子を除くと 345 行の1文（「俳句（5-7-5）」）だけが残り、文字列の数は 1。合計は kanji 50＋humor-dict 3＋daily-fortunes 2＋impossible-advice 1＝56 で、review-t5-8b.md の「結果」「抜き取り」の行の 56 と一致する。「57 件」は記録のどこにも残っていない。解消している。
+- ブログ: `node` で `src/blog/content/` の front matter の `title`・`description` に同じ正規表現を当て、当たる文字列 18・当たりの数 30 を得た。記載と一致する。
+- 全体: 610766d0 からの差分は docs/cycles/cycle-317/ の index.md・review-final.md・review-t5-8b.md だけで、規則・ソース・backlog.md への変更は無い。backlog.md（B-641・B-787・B-754）、index.md のレビューの表と補足事項（74 行の扱い）は第3回の確かめのまま記録と合う。index.md は 11,707 B で上限内。ツギハギの対象のファイルへの経緯の書き込みは無い。
+
+### 指摘
+
+なし。
+
+### 判定
+
+承認。

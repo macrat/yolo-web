@@ -168,10 +168,9 @@ export function saveHistory(
 
 /**
  * Load today's game record from history for a given difficulty.
- * Returns null if no game was played today or if the saved data lacks
- * feedbacks (pre-B-190 format). Old saves without feedbacks cannot be
- * restored without re-evaluation, so they are discarded to keep the
- * code simple.
+ * Returns null if no game was played today or if the saved record lacks
+ * feedbacks (a record holding only the guesses). Such a record cannot be
+ * restored without re-evaluating every guess, so it is discarded.
  */
 export function loadTodayGame(
   date: string,
@@ -181,8 +180,8 @@ export function loadTodayGame(
   const entry = history[date];
   if (!entry) return null;
 
-  // Discard old saves that lack feedbacks (pre-B-190 format).
-  // These cannot be restored without server-side re-evaluation.
+  // Discard records that hold guesses without feedbacks; they cannot be
+  // restored without re-evaluating every guess.
   if (!entry.feedbacks || entry.feedbacks.length === 0) {
     return null;
   }

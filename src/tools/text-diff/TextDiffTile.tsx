@@ -3,8 +3,6 @@
 /**
  * TextDiffTile — テキスト差分比較の単一正典タイル
  *
- * cycle-228 T-23 で TextDiffPage.tsx を Panel ルートのタイルへ移植。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -17,30 +15,29 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl（行/単語/文字）を表示し
+ * - `"full"` (デフォルト): 行・単語・文字のラジオボタンの組を表示し
  *   ユーザーがモードを切り替えられる。
- * - `"line"`: モードを行単位に固定し、SegmentedControl を非表示にする。
- * - `"word"`: モードを単語単位に固定し、SegmentedControl を非表示にする。
- * - `"char"`: モードを文字単位に固定し、SegmentedControl を非表示にする。
+ * - `"line"`: モードを行単位に固定し、ラジオボタンの組を出さない。
+ * - `"word"`: モードを単語単位に固定し、ラジオボタンの組を出さない。
+ * - `"char"`: モードを文字単位に固定し、ラジオボタンの組を出さない。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" の div にサマリテキストを置く
  *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
  * - 差分結果 pre は role="region" aria-label="差分結果"
- * - SegmentedControl に aria-labelledby を設定（C-2 要件）
  *
- * ## 個別論点の解消（旧 TextDiffPage.tsx から継承）
+ * ## 振る舞い
  *
- * - ①-2: mode 別単位文字列（行/単語/文字）で件数・ラベルを一致させる
- * - ①-12: 両入力とも空のとき「差分なし」を誤表示しない
- * - ②-15: コピーボタンなし（知る対象）
- * - U-7: ignoreNewlineAtEof による末尾改行アーティファクト解消
+ * - 件数とラベルは mode ごとの単位（行/単語/文字）で数える
+ * - 両入力とも空のときは「差分なし」を出さない
+ * - 結果は読んで知るためのもので、コピーのボタンを持たない
+ * - 末尾の改行の有無だけの差は、差として数えない（logic.ts の ignoreNewlineAtEof）
  */
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import { computeDiff, hasDifferences, type DiffMode } from "./logic";
 import styles from "./TextDiffTile.module.css";
@@ -51,10 +48,10 @@ export type TextDiffTileVariant = "full" | DiffMode;
 export interface TextDiffTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl を表示し、ユーザーがモードを選択できる
-   * - "line": 行単位モードに固定、SegmentedControl 非表示
-   * - "word": 単語単位モードに固定、SegmentedControl 非表示
-   * - "char": 文字単位モードに固定、SegmentedControl 非表示
+   * - "full": ラジオボタンの組を出し、ユーザーがモードを選択できる
+   * - "line": 行単位モードに固定、ラジオボタンの組を出さない
+   * - "word": 単語単位モードに固定、ラジオボタンの組を出さない
+   * - "char": 文字単位モードに固定、ラジオボタンの組を出さない
    */
   variant?: TextDiffTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -78,7 +75,6 @@ export default function TextDiffTile({
   const uid = useId();
   const oldTextId = `${uid}-old`;
   const newTextId = `${uid}-new`;
-  const modeLabelId = `${uid}-mode-label`;
 
   // ---------- variant からモード固定値を決定 ----------
   // "full" のみ動的切替可能。"line"/"word"/"char" はモード固定。
@@ -101,10 +97,10 @@ export default function TextDiffTile({
   );
   const hasDiff = hasDifferences(diffParts);
 
-  // ①-12: 両入力とも空のとき「差分なし」を表示しない（未入力状態と区別）
+  // 両入力とも空のとき「差分なし」を表示しない（未入力状態と区別）
   const isEmptyInput = oldText === "" && newText === "";
 
-  // モード別単位文字列（①-2: 件数・ラベル一致）
+  // モード別単位文字列（件数・ラベル一致）
   const modeUnit = useMemo(() => {
     switch (mode) {
       case "line":
@@ -116,7 +112,7 @@ export default function TextDiffTile({
     }
   }, [mode]);
 
-  // ①-2: モード別の追加・削除カウント
+  // モード別の追加・削除カウント
   // line モード: part.value の改行カウント（hunk件数ではなく行数合算）
   // word/char モード: diff ライブラリの part.count を総和する
   const addedCount = useMemo(() => {
@@ -147,8 +143,8 @@ export default function TextDiffTile({
       .reduce((sum, p) => sum + (p.count ?? p.value.length), 0);
   }, [diffParts, mode]);
 
-  // C-3: ライブリージョンに入れる実テキストノードのサマリ
-  // ①-12: isEmptyInput のとき空文字（「差分なし」誤表示しない）
+  // ライブリージョンに入れる実テキストノードのサマリ
+  // isEmptyInput のとき空文字（「差分なし」誤表示しない）
   const summaryText = useMemo(() => {
     if (isEmptyInput) return ""; // 両方空 = 入力待ち状態
     if (hasDiff)
@@ -156,7 +152,7 @@ export default function TextDiffTile({
     return "差分なし"; // 入力あり・差分ゼロの場合のみ表示
   }, [isEmptyInput, hasDiff, addedCount, removedCount, modeUnit]);
 
-  // ①-2: 差分本文に「+」「−」記号を付与（meta.ts howItWorks/FAQ との整合）
+  // 差分本文に「+」「−」記号を付与（meta.ts howItWorks/FAQ との整合）
   // line モード: 各行の先頭に記号を付与
   // word/char モード: span 先頭に記号を付与
   const getDisplayValue = (part: {
@@ -184,14 +180,11 @@ export default function TextDiffTile({
       {/* 比較モード切替（variant=full のみ表示。固定 variant は非表示） */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <span id={modeLabelId} className={styles.controlLabel}>
-            比較モード:
-          </span>
-          <SegmentedControl
+          <RadioGroup
+            legend="比較の単位"
             options={DIFF_MODE_OPTIONS}
             value={dynamicMode}
             onChange={(v) => setDynamicMode(v as DiffMode)}
-            aria-labelledby={modeLabelId}
           />
         </div>
       )}
@@ -230,9 +223,9 @@ export default function TextDiffTile({
         </div>
       </div>
 
-      {/* C-3: ライブリージョン（サマリのみ aria-live。長文 pre には aria-live なし）
+      {/* ライブリージョン（サマリのみ aria-live。長文 pre には aria-live なし）
        * 実テキストノードのサマリを直接配置（readOnly textarea ラップ不可）
-       * ①-12: isEmptyInput のとき summaryText="" で「差分なし」誤表示しない */}
+       * isEmptyInput のとき summaryText="" で「差分なし」誤表示しない */}
       <div
         role="status"
         aria-live="polite"

@@ -26,7 +26,7 @@ export default function YojiSearchPage() {
         }}
       />
       <ToolErrorBoundary>
-        <YojiSearchTile variant="full" />
+        <YojiSearchTile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

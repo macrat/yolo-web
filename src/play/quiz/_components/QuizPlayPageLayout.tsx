@@ -1,22 +1,22 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqSection from "@/components/FaqSection";
+import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import ShareButtons from "@/components/ShareButtons";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
-import { generatePlayJsonLd, resolveDisplayCategory } from "@/play/seo";
+import { generatePlayJsonLd } from "@/play/seo";
 import { safeJsonLdStringify } from "@/lib/seo";
-import {
-  playContentBySlug,
-  quizQuestionCountBySlug,
-  DAILY_UPDATE_SLUGS,
-} from "@/play/registry";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { phraseFaq } from "@/lib/faq-phrases";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
+import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
-import { getContentPath } from "@/play/paths";
-import type { PlayContentMeta } from "@/play/types";
-import type { ResultNextContentItem } from "@/play/quiz/_components/ResultNextContent";
+import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
-// プレイ層のスタイルを参照する
+import { choicePhrasesOf } from "@/play/quiz/choicePhrases";
+import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
 import styles from "@/app/play/[slug]/page.module.css";
 
 interface QuizPlayPageLayoutProps {
@@ -26,49 +26,23 @@ interface QuizPlayPageLayoutProps {
 }
 
 /**
- * コスト感情報（所要時間の目安）を返す。
+ * クイズ・診断のページ（プレイ面）の共通の組み方。動的ルート（/play/[slug]）と専用ルート（/play/music-personality
+ * など）が使う。
  *
- * 評価順序:
- * 1. quizQuestionCountBySlug に問数がある → 「全X問」
- * 2. DAILY_UPDATE_SLUGS に含まれる → 「毎日更新」
- * 3. それ以外 → resolveDisplayCategory の結果（「パズル」「診断」等）
+ * ページはセクションを上から並べる（DESIGN.md §5 ページの割り方）。
+ *   1. クイズ本体のセクション。パンくずと主見出し（h1）をここで作って QuizContainer に渡し、QuizContainer が
+ *      段階ごとのセクションを描く。開始の画面と設問では頭と本体の1つ、解き終えた画面では頭と結果と共有・
+ *      このタイプについて・次はこれを試してみよう・すべてのタイプの並び
+ *   2. よくある質問（FAQPage の JSON-LD を持つ）
+ *   3. このクイズ・診断を人に勧めるページの共有。結果の共有は、解き終えた画面の結果のすぐ下にある
+ *   4. 同じ分類のクイズ・診断（RelatedQuizzes）
+ *   5. ほかの分類のおすすめ（RecommendedContent）
+ * 4 と 5 は、並べるものが無ければセクションごと描かない。
  *
- * Server Component（QuizPlayPageLayout）で呼び出すため、registryのimportはOK。
- */
-function buildMetaText(slug: string, content: PlayContentMeta): string {
-  const questionCount = quizQuestionCountBySlug.get(slug);
-  if (questionCount !== undefined) {
-    return `全${questionCount}問`;
-  }
-  if (DAILY_UPDATE_SLUGS.has(slug)) {
-    return "毎日更新";
-  }
-  return resolveDisplayCategory(content);
-}
-
-/**
- * クイズのプレイページ共通レイアウトコンポーネント。
+ * h1 はどの段階でも §4 の主見出しのまま置く。クイズの説明は、開始の画面が「はじめる」の下に置く。
  *
- * 動的ルート（/play/[slug]/page.tsx）と専用ルート（/play/music-personality/page.tsx 等）
- * で共通して使用するレイアウトを提供する。
- *
- * 新デザイン体系（DESIGN.md）に従った左寄せ・パネル構成の章立て。
- * 診断はサイトの中心体験（「自分を知り、楽しむ」の主軸・cycle-277 決定(a)）であり、
- * このプレイページはその入口〜設問の器。落ち着いた土台の上に体験を主役として
- * 置く（入口ファーストビューへの §7 視覚適用は B-553）。ToolPageLayout と同じ
- * 「文脈確認 → 本体（主役）→ 二次情報」の並びを踏襲する。
- *
- * 並び順:
- *   1. パンくず（Breadcrumb。BreadcrumbList JSON-LD 内蔵）
- *   2. コンパクトな h1（quiz.meta.title）+ 短説明（quiz.meta.description）
- *   3. クイズ本体（QuizContainer＝主役。Panel に収める）
- *   4. FAQ（FaqSection。FAQPage JSON-LD 内蔵）
- *   5. シェア（ShareButtons）
- *   6. 関連クイズ・診断（RelatedQuizzes）
- *   7. 他ジャンルのおすすめ（RecommendedContent）
- *
- * 過渡注記: TrustLevelBadge は cycle-253 で撤去済み。trustLevel フィールド自体も
- *   cycle-279 C1 で型・データ・コンポーネントごと一括削除済み（B-432 完了）。
+ * 問の選択肢と、解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品がデータ
+ * から描く文なので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って渡す。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -78,24 +52,16 @@ export default async function QuizPlayPageLayout({
   const meta = playContentBySlug.get(slug);
   const jsonLd = meta ? generatePlayJsonLd(meta) : null;
 
-  // 結果画面直下の回遊導線用データを事前計算。
-  // Server Component で計算することで、registryとseoのimportが
-  // クライアントバンドルに含まれるのを防ぐ。
-  const rawResultNextContents = getResultNextContents(slug);
-  const resultNextContents: ResultNextContentItem[] = rawResultNextContents.map(
-    (content) => ({
-      slug: content.slug,
-      title: content.title,
-      shortTitle: content.shortTitle,
-      category: content.category,
-      contentPath: getContentPath(content),
-      metaText: buildMetaText(content.slug, content),
-      categoryLabel: resolveDisplayCategory(content),
-    }),
-  );
+  const resultNextContents = toPlayListItems(getResultNextContents(slug));
+  const { resultHeadings, readingHeadings } = solvedScreenHeadings(quiz);
+  const faq = phraseFaq(quiz.meta.faq);
+  const recommendHeading =
+    quiz.meta.type === "knowledge"
+      ? ["この", "クイズを", "勧める"]
+      : ["この", "診断を", "勧める"];
 
   return (
-    <article className={styles.layout}>
+    <>
       {jsonLd && (
         <script
           type="application/ld+json"
@@ -103,36 +69,43 @@ export default async function QuizPlayPageLayout({
         />
       )}
 
-      {/* 1. パンくず（BreadcrumbList JSON-LD 内蔵） */}
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
-          { label: quiz.meta.title },
-        ]}
-      />
-
-      {/* 2. コンパクトな h1 + 短説明（ファーストビューを占有しない） */}
-      <header className={styles.header}>
-        <h1 className={styles.title}>{quiz.meta.title}</h1>
-        <p className={styles.shortDescription}>{quiz.meta.description}</p>
-      </header>
-
-      {/* 3. クイズ本体（主役）。Panel に収める（DESIGN.md §1） */}
       <QuizContainer
+        head={
+          <>
+            <Breadcrumb
+              items={[
+                { label: "ホーム", href: "/" },
+                { label: "遊び", href: "/play" },
+                { label: quiz.meta.title, href: `/play/${slug}` },
+              ]}
+            />
+            <PhrasedText
+              as="h1"
+              phrases={splitIntoPhrases(quiz.meta.title)}
+              {...headingFontAttr(quiz.meta.title)}
+            />
+          </>
+        }
         quiz={quiz}
         referrerTypeId={referrerTypeId}
         recommendedContents={resultNextContents}
+        choicePhrases={choicePhrasesOf(quiz)}
+        resultHeadings={resultHeadings}
+        readingHeadings={readingHeadings}
       />
 
-      {/* 4. FAQ（FAQPage JSON-LD 内蔵）。faq が空のとき FaqSection は null を返す */}
-      <FaqSection faq={quiz.meta.faq} />
+      {faq.length > 0 && (
+        <Section>
+          <FaqSection faq={faq} />
+        </Section>
+      )}
 
-      {/* 5. シェア */}
-      <section className={styles.shareSection}>
-        <h2 className={styles.shareSectionTitle}>
-          この診断が楽しかったらシェア
-        </h2>
+      <Section>
+        <PhrasedText
+          as="h2"
+          className={styles.sectionHeading}
+          phrases={recommendHeading}
+        />
         <ShareButtons
           url={"/play/" + slug}
           title={quiz.meta.title}
@@ -140,13 +113,11 @@ export default async function QuizPlayPageLayout({
           contentType="quiz"
           contentId={slug}
         />
-      </section>
+      </Section>
 
-      {/* 6. 関連クイズ・診断 */}
       {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
 
-      {/* 7. 他ジャンルのおすすめ */}
       <RecommendedContent currentSlug={slug} />
-    </article>
+    </>
   );
 }

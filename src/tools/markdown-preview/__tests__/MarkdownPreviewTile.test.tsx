@@ -1,44 +1,40 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
-
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
-
 import MarkdownPreviewTile from "../MarkdownPreviewTile";
 
-describe("MarkdownPreviewTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+describe("MarkdownPreviewTile", () => {
   // --- 基本レンダリング ---
 
-  // E-1: クラッシュなしにレンダリングできる
+  // クラッシュなしにレンダリングできる
   test("renders without crashing", () => {
     render(<MarkdownPreviewTile />);
     expect(screen.getByLabelText("Markdown入力")).toBeInTheDocument();
   });
 
-  // E-1: 入力欄と role="status" ライブリージョンが両方表示される
+  // 入力欄と role="status" ライブリージョンが両方表示される
   test("renders input and live region", () => {
     render(<MarkdownPreviewTile />);
     expect(screen.getByLabelText("Markdown入力")).toBeInTheDocument();
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
-  // [A-1] ルート要素が Panel（section タグ）であること
+  // ルート要素が Panel（section タグ）であること
   test("root element is rendered as section (Panel)", () => {
     const { container } = render(<MarkdownPreviewTile />);
     // Panel のデフォルトは section
@@ -46,7 +42,7 @@ describe("MarkdownPreviewTile", () => {
     expect(root.tagName).toBe("SECTION");
   });
 
-  // [A-1] as="div" を渡すと div タグになること（Panel as prop の透過確認）
+  // as="div" を渡すと div タグになること（Panel as prop の透過確認）
   test("root element can be changed via as prop", () => {
     const { container } = render(<MarkdownPreviewTile as="div" />);
     const root = container.firstChild as HTMLElement;
@@ -55,7 +51,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- サンプル初期値 ---
 
-  // E-10: ツールはサンプルMarkdownがデフォルト値として入っている
+  // ツールはサンプルMarkdownがデフォルト値として入っている
   test("has sample markdown in input by default", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力") as HTMLTextAreaElement;
@@ -64,7 +60,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- リアルタイムプレビュー ---
 
-  // E-2: 入力変更でプレビューが更新される
+  // 入力変更でプレビューが更新される
   test("updates preview when input changes", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -73,7 +69,7 @@ describe("MarkdownPreviewTile", () => {
     expect(status).toBeInTheDocument();
   });
 
-  // E-4: 見出し Markdown のレンダリング確認
+  // 見出し Markdown のレンダリング確認
   test("renders heading markdown correctly", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -86,7 +82,7 @@ describe("MarkdownPreviewTile", () => {
     }
   });
 
-  // E-3: 空入力時にエラーが表示されない
+  // 空入力時にエラーが表示されない
   test("shows empty state when input is cleared", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -96,7 +92,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- アクセシビリティ ---
 
-  // E-5: ARIA — role="status" aria-live="polite" が存在する（C-3）
+  // ARIA — role="status" aria-live="polite" が存在する
   test("has role=status region with aria-live=polite", () => {
     render(<MarkdownPreviewTile />);
     const statusRegion = screen.getByRole("status");
@@ -104,7 +100,7 @@ describe("MarkdownPreviewTile", () => {
     expect(statusRegion).toHaveAttribute("aria-live", "polite");
   });
 
-  // E-5: C-3 設計 — status 領域にサマリテキストが含まれること
+  // status 領域にサマリテキストが含まれること
   test("shows preview summary text in role=status region", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -113,7 +109,7 @@ describe("MarkdownPreviewTile", () => {
     expect(statusRegion.textContent).toBeTruthy();
   });
 
-  // E-5: C-3 設計 — プレビュー本体は role="status" の外にある
+  // プレビュー本体は role="status" の外にある
   test("preview body is outside the live region (role=status)", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -127,7 +123,7 @@ describe("MarkdownPreviewTile", () => {
     }
   });
 
-  // E-5: C-3 設計 — ライブリージョンはサマリのみ（短い文字列）
+  // ライブリージョンはサマリのみ（短い文字列）
   test("live region contains only a short summary text, not full preview HTML", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -144,7 +140,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- エラー処理 ---
 
-  // E-4: 入力超過でエラーが表示される（ErrorMessage: role="alert"）
+  // 入力超過でエラーが表示される（ErrorMessage: role="alert"）
   test("shows error when input exceeds max length", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -152,7 +148,7 @@ describe("MarkdownPreviewTile", () => {
     expect(screen.getByRole("alert")).toBeInTheDocument();
   });
 
-  // E-4: エラー文言が日本語であること（A-4）
+  // エラー文言が日本語であること
   test("shows Japanese error message for oversized input", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -163,16 +159,20 @@ describe("MarkdownPreviewTile", () => {
 
   // --- HTML コピーボタン ---
 
-  // E-6: コピー後は COPIED_LABEL が表示される
-  test("copy button label changes to COPIED_LABEL when copiedKey is set", () => {
-    mockHook.copiedKey = true;
+  // 押すと HTML を写し、ボタンが「コピー済み」になる
+  test("copy button copies the HTML and shows コピー済み", async () => {
     render(<MarkdownPreviewTile />);
-    expect(
-      screen.getByRole("button", { name: "コピーしました" }),
-    ).toBeInTheDocument();
+    const input = screen.getByLabelText("Markdown入力");
+    fireEvent.change(input, { target: { value: "# テスト" } });
+    const copyButton = screen.getByRole("button", { name: "HTMLをコピー" });
+    fireEvent.click(copyButton);
+    await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("テスト</h1>"),
+    );
   });
 
-  // E-7: 入力が空のときコピーボタンが disabled になる
+  // 入力が空のときコピーボタンが disabled になる
   test("copy button is disabled when input is empty", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -181,7 +181,7 @@ describe("MarkdownPreviewTile", () => {
     expect(copyButton).toBeDisabled();
   });
 
-  // E-7: 入力がある場合はコピーボタンが有効
+  // 入力がある場合はコピーボタンが有効
   test("copy button is enabled when input has content", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -192,7 +192,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- クリップボード ---
 
-  // E-8: navigator.clipboard が存在しない環境でも例外を投げない
+  // navigator.clipboard が存在しない環境でも例外を投げない
   test("does not throw when navigator.clipboard is absent", async () => {
     const originalClipboard = navigator.clipboard;
     Object.defineProperty(navigator, "clipboard", {
@@ -219,7 +219,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- 複数インスタンス id 一意性 ---
 
-  // [A-6] 複数インスタンスを同一ページに描画したとき id 重複がないこと
+  // 複数インスタンスを同一ページに描画したとき id 重複がないこと
   test("multiple instances have unique DOM ids (no duplicates)", () => {
     const { container } = render(
       <div>
@@ -236,7 +236,7 @@ describe("MarkdownPreviewTile", () => {
 
   // --- サニタイズ回帰テスト ---
 
-  // [G-5][サニタイズ回帰] <script> タグ入力でスクリプトが実行されないこと
+  // [サニタイズ回帰] <script> タグ入力でスクリプトが実行されないこと
   test("sanitize regression: script tag in input does not execute", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -253,7 +253,7 @@ describe("MarkdownPreviewTile", () => {
     }
   });
 
-  // [G-5][サニタイズ回帰] javascript: URL が除去されること
+  // [サニタイズ回帰] javascript: URL が除去されること
   test("sanitize regression: javascript: href is stripped", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -270,7 +270,7 @@ describe("MarkdownPreviewTile", () => {
     }
   });
 
-  // [G-5][サニタイズ回帰] onmouseover イベントハンドラが除去されること
+  // [サニタイズ回帰] onmouseover イベントハンドラが除去されること
   test("sanitize regression: onerror event handler is stripped from img", () => {
     render(<MarkdownPreviewTile />);
     const input = screen.getByLabelText("Markdown入力");
@@ -287,29 +287,29 @@ describe("MarkdownPreviewTile", () => {
 
   // --- CSS トークン検証 ---
 
-  // E-12: 旧トークン・禁止パターンが CSS に含まれていないこと
-  test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
+  // --color-* トークン・禁止パターンが CSS に含まれていないこと
+  test("CSS does not reference --color-* tokens, fill with --accent directly, or use font-weight 700", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/markdown-preview/MarkdownPreviewTile.module.css",
     );
     const css = readFileSync(cssPath, "utf-8");
 
-    // 旧トークン --color-* が存在しないこと（B-1）
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
 
-    // background に --accent を直接使っていないこと（B-3）
+    // background に --accent を直接使っていないこと
     const accentBackgroundUse = css.match(
       /background(?:-color)?\s*:\s*var\(--accent\)/g,
     );
     expect(accentBackgroundUse).toBeNull();
 
-    // font-weight: 700 が CSS に存在しないこと（B-4）
+    // font-weight: 700 が CSS に存在しないこと
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/font-weight\s*:\s*700/);
   });
 
-  // E-12: 未定義トークンを使っていないこと
+  // 未定義トークンを使っていないこと
   test("CSS does not use undefined tokens --bg-subtle or --fg-muted", () => {
     const cssPath = join(
       process.cwd(),

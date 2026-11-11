@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { trackShare } from "@/lib/analytics";
+import { copyText } from "@/lib/clipboard";
+import Button from "@/components/Button";
 import styles from "./InviteFriendButton.module.css";
 
 interface InviteFriendButtonProps {
@@ -13,9 +15,7 @@ interface InviteFriendButtonProps {
   inviteText: string;
   /**
    * Canonical content id (via `contentIdForQuiz`) for GA4 share tracking
-   * (cycle-280 B-551, surface="invite"). Optional and additive: callers that
-   * do not pass it keep the prior no-tracking behaviour, so wiring can be
-   * rolled out per surface without regressing untracked invite buttons.
+   * (surface="invite"). When omitted, the invite is not tracked.
    */
   contentId?: string;
 }
@@ -30,7 +30,18 @@ export default function InviteFriendButton({
   inviteText,
   contentId,
 }: InviteFriendButtonProps) {
-  const [copied, setCopied] = useState(false);
+  // 写せた知らせは2秒で消し、写せなかった知らせは次に押すまで残す。
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
+  // 写せた知らせを消すタイマー。写し直すと前のタイマーを止めて2秒を数え直し、外したときも止める。
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (copiedTimerRef.current !== null) clearTimeout(copiedTimerRef.current);
+    },
+    [],
+  );
 
   const handleInvite = useCallback(async () => {
     const url =
@@ -45,37 +56,52 @@ export default function InviteFriendButton({
         await navigator.share({ title: text, url });
         // Count only a completed share, not a cancellation: navigator.share
         // rejects when the user dismisses the sheet, so reaching this line
-        // means the share succeeded (B-551 success-only tracking).
+        // means the share succeeded.
         if (contentId) {
           trackShare("web_share", "diagnosis", contentId, "invite");
         }
         return;
-      } catch {
-        // User cancelled or share failed; fall through to clipboard
+      } catch (error) {
+        // The visitor closed the share sheet: they chose not to send, so do
+        // nothing. Closing the sheet also uses up the press, so a copy after
+        // it would fail on browsers that copy only within a press.
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        // Sharing failed for another reason; fall through to clipboard.
       }
     }
 
-    try {
-      await navigator.clipboard.writeText(`${text}\n${url}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      // Count only when the copy actually succeeded (writeText resolved).
+    if (copiedTimerRef.current !== null) {
+      clearTimeout(copiedTimerRef.current);
+      copiedTimerRef.current = null;
+    }
+    setCopyStatus("idle");
+    if (await copyText(`${text}\n${url}`)) {
+      setCopyStatus("copied");
+      copiedTimerRef.current = setTimeout(() => {
+        setCopyStatus("idle");
+        copiedTimerRef.current = null;
+      }, 2000);
+      // Count only when the copy actually succeeded.
       if (contentId) {
         trackShare("clipboard", "diagnosis", contentId, "invite");
       }
-    } catch {
-      // Silently fail
+    } else {
+      setCopyStatus("failed");
     }
   }, [quizSlug, resultTypeId, inviteText, contentId]);
 
   return (
     <div className={styles.wrapper}>
       <p className={styles.label}>友達との相性を調べてみよう</p>
-      <button type="button" className={styles.button} onClick={handleInvite}>
-        友達に診断を送る
-      </button>
+      <Button onClick={handleInvite} phrases={["友達に", "診断を", "送る"]} />
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "リンクをコピーしました!" : ""}
+        {copyStatus === "copied"
+          ? "リンクをコピーしました"
+          : copyStatus === "failed"
+            ? "リンクをコピーできませんでした"
+            : ""}
       </div>
     </div>
   );

@@ -76,8 +76,8 @@ function testRegex(pattern, flags, testString) {
     return {
       success: false,
       matches: [],
-      // A-4: 英語の例外メッセージをそのまま渡さず日本語に変換する
-      // 低指摘: エラーに修正方法を添える
+      // 英語の例外メッセージをそのまま渡さず日本語に変換する
+      // エラーに修正方法を添える
       error: '正規表現の構文が正しくありません。括弧や文字クラスの閉じ忘れがないか確認してください。'
     };
   }
@@ -102,8 +102,8 @@ function replaceWithRegex(pattern, flags, testString, replacement) {
     return {
       success: false,
       output: '',
-      // A-4: 英語の例外メッセージをそのまま渡さず日本語に変換する
-      // 低指摘: エラーに修正方法を添える
+      // 英語の例外メッセージをそのまま渡さず日本語に変換する
+      // エラーに修正方法を添える
       error: '正規表現の構文が正しくありません。括弧や文字クラスの閉じ忘れがないか確認してください。'
     };
   }

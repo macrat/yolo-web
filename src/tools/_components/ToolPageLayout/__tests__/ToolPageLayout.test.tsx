@@ -15,7 +15,7 @@ vi.mock("@/tools/registry", () => ({
       nameEn: "Base64 Encoder/Decoder",
       description: "テスト用",
       keywords: [],
-      category: "encoding",
+      category: "data",
       relatedSlugs: ["char-count"],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
@@ -39,7 +39,7 @@ vi.mock("@/tools/registry", () => ({
 
 // cross-links のモック
 vi.mock("@/lib/cross-links", () => ({
-  getRelatedBlogPostsForTool: vi.fn().mockReturnValue([]),
+  getBlogPostsReferencing: vi.fn().mockReturnValue([]),
 }));
 
 // date のモック
@@ -68,6 +68,7 @@ vi.mock("@/lib/seo", () => ({
 
 import ToolPageLayout from "../index";
 import type { ToolMeta } from "@/tools/types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 // テスト用の最小 ToolMeta
 const baseMeta: ToolMeta = {
@@ -77,7 +78,7 @@ const baseMeta: ToolMeta = {
   description: "テスト用の description",
   shortDescription: "テキストをBase64形式に変換・復元するツール",
   keywords: ["base64", "エンコード"],
-  category: "encoding",
+  category: "data",
   relatedSlugs: ["char-count"],
   publishedAt: "2026-01-01T00:00:00+09:00",
   howItWorks: "ブラウザ上でBase64のエンコード・デコードを処理します。",
@@ -92,7 +93,7 @@ describe("ToolPageLayout", () => {
     vi.clearAllMocks();
   });
 
-  // --- 要素並び順（判断3） ---
+  // --- 並ぶ要素 ---
 
   it("パンくずリスト（Breadcrumb）が描画される", () => {
     render(
@@ -105,7 +106,7 @@ describe("ToolPageLayout", () => {
     ).toBeInTheDocument();
   });
 
-  it("h1 に meta.name が描画される（SEO 用に保持）", () => {
+  it("h1 に meta.name が描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
@@ -119,15 +120,58 @@ describe("ToolPageLayout", () => {
     ).toBeInTheDocument();
   });
 
-  it("shortDescription が描画される（1〜2文の短説明）", () => {
+  it("「このツールについて」は短い説明・仕組み・プライバシーの注記の順の段落で、見出しを名前に持つ", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
       </ToolPageLayout>,
     );
-    expect(
-      screen.getByText("テキストをBase64形式に変換・復元するツール"),
-    ).toBeInTheDocument();
+    const about = screen.getByRole("region", { name: "このツールについて" });
+    const paragraphs = Array.from(about.querySelectorAll("p")).map(
+      (p) => p.textContent,
+    );
+    expect(paragraphs).toEqual([
+      "テキストをBase64形式に変換・復元するツール",
+      "ブラウザ上でBase64のエンコード・デコードを処理します。",
+      "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
+    ]);
+  });
+
+  it("短い説明は頭（パンくずと h1 と道具の本体のセクション）に置かない", () => {
+    const { container } = render(
+      <ToolPageLayout meta={baseMeta}>
+        <div data-testid="tool-body">ツール本体</div>
+      </ToolPageLayout>,
+    );
+    const firstSection = container.querySelector("section");
+    expect(firstSection).toContainElement(
+      screen.getByRole("heading", { level: 1 }),
+    );
+    expect(firstSection).toContainElement(screen.getByTestId("tool-body"));
+    expect(firstSection).not.toHaveTextContent(
+      "テキストをBase64形式に変換・復元するツール",
+    );
+  });
+
+  it("ページはセクションを兄弟として並べ、道具の本体を h1 と同じ最初のセクションに置く（DESIGN.md §5）", () => {
+    const { container } = render(
+      <ToolPageLayout meta={baseMeta}>
+        <div data-testid="tool-body">ツール本体</div>
+      </ToolPageLayout>,
+    );
+    const sections = Array.from(container.children).filter(
+      (el) => el.tagName === "SECTION",
+    );
+    const headings = sections.map(
+      (section) => section.querySelector("h1, h2")?.textContent,
+    );
+    expect(headings).toEqual([
+      "Base64エンコード・デコード",
+      "このツールについて",
+      "よくある質問",
+      "このツールを勧める",
+      "関連ツール",
+    ]);
   });
 
   it("children（ツール本体）が描画される", () => {
@@ -140,7 +184,7 @@ describe("ToolPageLayout", () => {
     expect(screen.getByText("ツール本体コンテンツ")).toBeInTheDocument();
   });
 
-  it("howItWorks セクションが描画される（「このツールについて」）", () => {
+  it("「このツールについて」のセクションが描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
@@ -172,18 +216,21 @@ describe("ToolPageLayout", () => {
         <div>ツール本体</div>
       </ToolPageLayout>,
     );
-    expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "よくある質問" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("テスト質問1")).toBeInTheDocument();
   });
 
-  it("ShareButtons が描画される（シェアセクション）", () => {
+  it("ShareButtons が描画される（「このツールを勧める」のセクション）", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
       </ToolPageLayout>,
     );
-    // ShareButtons は "use client" のため、ラッパー要素や「X でシェア」等のテキストで確認
-    // このツールについてシェアセクションがある
+    expect(
+      screen.getByRole("heading", { level: 2, name: "このツールを勧める" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("X でシェア")).toBeInTheDocument();
   });
 
@@ -194,13 +241,13 @@ describe("ToolPageLayout", () => {
       </ToolPageLayout>,
     );
     expect(
-      screen.getByRole("navigation", { name: "関連ツール" }),
+      screen.getByRole("list", { name: "関連ツール" }),
     ).toBeInTheDocument();
   });
 
   // --- 要素並び順の検証（DOM 上の順序） ---
 
-  it("パンくず→h1→children→howItWorks の順序で DOM に出現する", () => {
+  it("パンくず→h1→children→「このツールについて」の順序で DOM に出現する", () => {
     const { container } = render(
       <ToolPageLayout meta={baseMeta}>
         <div data-testid="tool-body">ツール本体</div>
@@ -208,10 +255,10 @@ describe("ToolPageLayout", () => {
     );
 
     const allElements = container.querySelectorAll(
-      "nav[aria-label='パンくずリスト'], h1, [data-testid='tool-body'], [data-section='howItWorks']",
+      "nav[aria-label='パンくずリスト'], h1, [data-testid='tool-body'], [aria-labelledby='about-tool-heading']",
     );
 
-    // パンくず → h1 → ツール本体 → howItWorks の順
+    // パンくず → h1 → ツール本体 → 「このツールについて」の順
     const breadcrumbIdx = Array.from(allElements).findIndex(
       (el) => el.getAttribute("aria-label") === "パンくずリスト",
     );
@@ -221,20 +268,20 @@ describe("ToolPageLayout", () => {
     const toolBodyIdx = Array.from(allElements).findIndex(
       (el) => el.getAttribute("data-testid") === "tool-body",
     );
-    const howItWorksIdx = Array.from(allElements).findIndex(
-      (el) => el.getAttribute("data-section") === "howItWorks",
+    const aboutIdx = Array.from(allElements).findIndex(
+      (el) => el.getAttribute("aria-labelledby") === "about-tool-heading",
     );
 
     expect(breadcrumbIdx).toBeLessThan(h1Idx);
     expect(h1Idx).toBeLessThan(toolBodyIdx);
-    expect(toolBodyIdx).toBeLessThan(howItWorksIdx);
+    expect(toolBodyIdx).toBeLessThan(aboutIdx);
   });
 
-  // --- N-2: children が空でもレイアウトが破綻しない ---
+  // --- children が空でも並びが崩れない ---
 
-  it("N-2: children が null でも howItWorks 以降が正常に描画される（器の堅牢性）", () => {
+  it("children が null でも「このツールについて」以降が描画される", () => {
     render(<ToolPageLayout meta={baseMeta}>{null}</ToolPageLayout>);
-    // howItWorks が描画される
+    // 「このツールについて」が描画される
     expect(
       screen.getByText(
         "ブラウザ上でBase64のエンコード・デコードを処理します。",
@@ -247,10 +294,12 @@ describe("ToolPageLayout", () => {
       ),
     ).toBeInTheDocument();
     // FAQ が描画される
-    expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "よくある質問" }),
+    ).toBeInTheDocument();
   });
 
-  it("N-2: children が空要素でも howItWorks 以降が正常に描画される", () => {
+  it("children が空要素でも「このツールについて」以降が描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <></>
@@ -338,39 +387,61 @@ describe("ToolPageLayout", () => {
       </ToolPageLayout>,
     );
     expect(
-      screen.queryByRole("region", { name: "FAQ" }),
+      screen.queryByRole("region", { name: "よくある質問" }),
     ).not.toBeInTheDocument();
   });
 
   // --- CSS 規約チェック ---
 
-  it("CSS: max-width が --max-width（操作面の最大幅 960px）を使う（DESIGN.md §4）", () => {
+  it("CSS: 見出しの大きさを上書きせず、h1・h2 の既定（§4 の主見出し・セクションの見出し）に任せる", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--max-width)");
+    const sizes = css.match(/font-size\s*:[^;]*/g) ?? [];
+    expect(sizes).toEqual(["font-size: var(--text-small)"]);
   });
 
-  it("CSS: 長文テキストに --measure（読む面 約42rem）制限が含まれる（DESIGN.md §4）", () => {
+  it("CSS: 長文テキストに --measure（読む面）制限が含まれる（DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("var(--measure)");
   });
 
-  it("CSS: 旧 --color-* トークンを使用しない（新トークンのみ）", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("CSS: box-shadow を使用しない（影なし、DESIGN.md §4/§5）", () => {
+  it("CSS: box-shadow を使用しない（影なし、DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/box-shadow/);
   });
 
-  it("CSS: font-weight: 700 を使用しない（DESIGN.md §3 / 計画判断2）", () => {
+  it("CSS: font-weight: 700 を使用しない", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/font-weight:\s*700/);
+  });
+
+  it("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(
+      <ToolPageLayout meta={baseMeta}>
+        <div>ツール本体</div>
+      </ToolPageLayout>,
+    );
+    const title = screen.getByRole("heading", { level: 1 });
+    expect(title.innerHTML).toBe(
+      splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+    );
+    const headings: string[][] = [
+      ["この", "ツールに", "ついて"],
+      ["この", "ツールを", "勧める"],
+    ];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

@@ -1,65 +1,100 @@
 /**
- * ⚠️ 重要 — このコードは「受検者本人には表示されない」第三者向け結果ページの一部です。
- *
- * ルート `/play/[slug]/result/[resultId]`（診断の result ページ）は【第三者向けの
- * シェア／検索ランディング専用】。診断を遊んだ本人は、完了時に `/play/[slug]` 上に
- * インライン描画される結果（ResultCard 経由）で見ており、この `/result/<id>` ページへは
- * 遷移しない（この URL はシェア用に生成される）。文言・構造・メタ・OGP は
- * 「診断をやっていない第三者が初めて見る」前提で設計すること。本人向け結果体験は
- * `src/play/quiz/_components/ResultCard.tsx` 側で編集する。
- */
-
-/**
- * /play/character-fortune/result/[resultId] 専用ルート。
- * ステップ4: Next.jsのファイルシステムルーティングにより、
+ * character-fortune の結果のページ。この診断の詳しい読みものを組む専用のルートで、
  * 動的ルート /play/[slug]/result/[resultId] より優先される。
  *
- * character-fortune variant のみを対象とするため、
- * variant dispatch ロジックが不要でシンプルな実装になる。
+ * ?with=typeId で友達のタイプを受け取ると、相性をサーバーで解決して CompatibilityDisplay に渡す。
  */
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import ShareButtons from "@/play/quiz/_components/ShareButtons";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "@/play/quiz/_components/ResultReading";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
-import { contentIdForQuiz } from "@/play/quiz/contentId";
-import characterFortuneQuiz from "@/play/quiz/data/character-fortune";
+import characterFortuneQuiz, {
+  getCompatibility,
+  isValidCharacterTypeId,
+} from "@/play/quiz/data/character-fortune";
 import styles from "./page.module.css";
 
 type Props = {
   params: Promise<{ resultId: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 const SLUG = "character-fortune";
 const quiz = characterFortuneQuiz;
+/** 第三者から見た場面の小見出し。コードに書いた決まった文なので、書き手が文節で区切った並びで持つ。 */
+export const THIRD_PARTY_HEADING = [
+  "この",
+  "キャラの",
+  "守護を",
+  "受けている",
+  "人と",
+  "一緒に",
+  "いると",
+] as const;
 
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { resultId } = await params;
   const result = quiz.results.find((r) => r.id === resultId);
-  if (!result) return {};
+  if (!result) notFound();
 
-  // character-fortuneは常にdetailedContentありなので常にindex: true
-  // searchParams処理不要（相性機能なし）
-  const FULL_WIDTH_LIMIT = 60;
-  const candidateTitle = `${result.title} | ${quiz.meta.title}の結果`;
-  const title =
-    countCharWidth(`${candidateTitle} | ${SITE_NAME}`) > FULL_WIDTH_LIMIT
-      ? result.title
-      : candidateTitle;
-  const description = result.description;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const withParam =
+    typeof resolvedSearchParams?.with === "string"
+      ? resolvedSearchParams.with
+      : undefined;
+  const compatFriendTypeId =
+    withParam &&
+    isValidCharacterTypeId(withParam) &&
+    isValidCharacterTypeId(resultId)
+      ? withParam
+      : undefined;
+
+  let title: string;
+  let description: string;
+
+  if (compatFriendTypeId) {
+    const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
+    const compat = getCompatibility(resultId, compatFriendTypeId);
+    title = `${result.title} x ${friendResult?.title ?? ""} - ${compat?.label ?? "相性結果"}`;
+    description = compat?.description ?? result.description;
+  } else {
+    const FULL_WIDTH_LIMIT = 60;
+    const candidateTitle = `${result.title} | ${quiz.meta.title}の結果`;
+    title =
+      countCharWidth(`${candidateTitle} | ${SITE_NAME}`) > FULL_WIDTH_LIMIT
+        ? result.title
+        : candidateTitle;
+    description = result.description;
+  }
+
+  const shouldIndex = !compatFriendTypeId;
 
   return {
     title: `${title} | ${SITE_NAME}`,
     description,
-    robots: { index: true, follow: true },
+    robots: shouldIndex
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       title,
       description,
@@ -78,12 +113,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CharacterFortuneResultPage({ params }: Props) {
+export default async function CharacterFortuneResultPage({
+  params,
+  searchParams,
+}: Props) {
   const { resultId } = await params;
   const result = quiz.results.find((r) => r.id === resultId);
   if (!result) notFound();
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = "あなたはどのタイプ? 診断してみよう";
 
@@ -91,105 +129,87 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
   const cf = result.detailedContent;
   if (!cf || cf.variant !== "character-fortune") notFound();
 
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const withParam =
+    typeof resolvedSearchParams?.with === "string"
+      ? resolvedSearchParams.with
+      : undefined;
+  const compatFriendTypeId =
+    withParam &&
+    isValidCharacterTypeId(withParam) &&
+    isValidCharacterTypeId(resultId)
+      ? withParam
+      : undefined;
+
+  // 相性データの解決（サーバーサイド）
+  let compatData:
+    | {
+        compatibility: { label: string; description: string };
+        myType: { id: string; title: string };
+        friendType: { id: string; title: string };
+      }
+    | undefined;
+
+  if (compatFriendTypeId) {
+    const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
+    const compat = getCompatibility(resultId, compatFriendTypeId);
+    if (friendResult && compat) {
+      compatData = {
+        compatibility: { label: compat.label, description: compat.description },
+        myType: { id: result.id, title: result.title },
+        friendType: { id: friendResult.id, title: friendResult.title },
+      };
+    }
+  }
+
   return (
     <ResultPageShell
       quiz={quiz}
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
+      lead={cf.characterIntro}
+      ctaText={ctaText}
     >
-      {/* character-fortune固有のJSX。
-          旧デザインの per-quiz accentColor インライン注入（自己紹介の面・CTA の背景・
-          見出しの文字色）は全撤去し、共通アクセント（CSS 側 --accent / --accent-weak）へ
-          寄せてインライン結果（ResultCard）とトーン統一した。 */}
-      <div className={styles.detailedSection}>
-        {/* (a) キャラクターの自己紹介。共通アクセントの淡い面（--accent-weak）に左寄せで置く。 */}
-        <p className={styles.characterIntro}>{cf.characterIntro}</p>
+      <Reading>
+        <ReadingHeading
+          phrases={splitIntoPhrases(cf.behaviorsHeading)}
+          headingFont={headingFontAttr(cf.behaviorsHeading)}
+        />
+        <ReadingList items={cf.behaviors} />
 
-        {/* CTA1 */}
-        <div className={styles.trySection}>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
+        <ReadingHeading
+          phrases={splitIntoPhrases(cf.characterMessageHeading)}
+          headingFont={headingFontAttr(cf.characterMessageHeading)}
+        />
+        <ReadingText>{cf.characterMessage}</ReadingText>
 
-        {/* (b) キャラが語る「あるある」 */}
-        <h2 className={styles.detailedSectionHeading}>{cf.behaviorsHeading}</h2>
-        <ul className={styles.behaviorsList}>
-          {cf.behaviors.map((behavior, i) => (
-            <li key={i} className={styles.behaviorsItem}>
-              {behavior}
-            </li>
-          ))}
-        </ul>
+        <ReadingHeading phrases={THIRD_PARTY_HEADING} />
+        <ReadingText>{cf.thirdPartyNote}</ReadingText>
+      </Reading>
 
-        {/* シェアボタン中間配置 */}
-        <div className={styles.midShareSection}>
-          <ShareButtons
-            shareText={shareText}
-            shareUrl={shareUrl}
-            quizTitle={quiz.meta.title}
-            contentType="diagnosis"
-            contentId={contentIdForQuiz(SLUG)}
-            surface="text"
-          />
-        </div>
+      {compatData && (
+        <CompatibilityDisplay
+          quizSlug={SLUG}
+          quizTitle={quiz.meta.title}
+          compatibility={compatData.compatibility}
+          myType={compatData.myType}
+          friendType={compatData.friendType}
+        />
+      )}
 
-        {/* (c) キャラの本音 */}
-        <h2 className={styles.detailedSectionHeading}>
-          {cf.characterMessageHeading}
-        </h2>
-        <p className={styles.characterMessage}>{cf.characterMessage}</p>
-
-        {/* (d) 第三者視点のシーン描写 */}
-        <div className={styles.thirdPartySection}>
-          <h2 className={styles.thirdPartyHeading}>
-            このキャラの守護を受けている人と一緒にいると
-          </h2>
-          <p className={styles.thirdPartyNote}>{cf.thirdPartyNote}</p>
-        </div>
-
-        {/* (e) 相性診断への誘導 */}
-        <div className={styles.compatibilitySection}>
-          <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
-            診断して相性を見てみる
-          </Link>
-        </div>
-
-        {/* (f) 全タイプ一覧 + CTA */}
-        <div className={styles.allTypesSection}>
-          <ul className={styles.allTypesList}>
-            {quiz.results.map((r) => (
-              <li
-                key={r.id}
-                className={
-                  r.id === resultId
-                    ? styles.allTypesItemCurrent
-                    : styles.allTypesItem
-                }
-              >
-                {/* 新デザインでは絵文字（icon）を装飾に使わない（DESIGN.md §8-6）。
-                    各タイプの区別はタイトル文言だけで行う。 */}
-                <Link href={`/play/${SLUG}/result/${r.id}`}>
-                  <span>{r.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className={styles.allTypesCta}>他のキャラも見てみよう</p>
-          <div className={styles.trySection}>
-            <Link href={`/play/${SLUG}`} className={styles.tryButton}>
-              {ctaText}
-            </Link>
-            <p className={styles.tryCost}>
-              全{quiz.meta.questionCount}問 / 登録不要
-            </p>
-          </div>
-        </div>
+      <div className={styles.compatibilitySection}>
+        <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
+        <Link
+          href={`/play/${SLUG}?ref=${resultId}`}
+          className={styles.tryLink}
+          data-text-box="inline"
+        >
+          診断して相性を見てみる
+        </Link>
+        <p className={styles.tryCost}>
+          全{quiz.meta.questionCount}問 / 登録不要
+        </p>
       </div>
     </ResultPageShell>
   );

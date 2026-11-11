@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
 import { YOJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { yoji: yojiParam } = await params;
   const decoded = decodeURIComponent(yojiParam);
   const yoji = getYojiByYoji(decoded);
-  if (!yoji) return {};
+  if (!yoji) notFound();
   return generateYojiPageMetadata(yoji);
 }
 
@@ -42,14 +42,18 @@ export default async function YojiDetailPage({
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
         { label: "四字熟語辞典", href: "/dictionary/yoji" },
-        { label: yoji.yoji },
+        {
+          label: yoji.yoji,
+          href: `/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
+        },
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}
       shareTitle={`「${yoji.yoji}」の意味・読み方`}
+      shareHeading={["この", "四字熟語を", "共有"]}
       playRecommendations={playRecommendations}
     >
-      <YojiDetail yoji={yoji} />
+      {(head) => <YojiDetail yoji={yoji} head={head} />}
     </DictionaryDetailLayout>
   );
 }

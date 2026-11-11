@@ -14,11 +14,7 @@ export interface GameInfo {
   statsKey: string;
 }
 
-/**
- * デイリーゲームのみをGameInfo配列として保持する。
- * isDaily: true のゲームのみが「今日のパズル」進捗の対象となる。
- * ランダム出題型ゲーム（ヨジドル等）はデイリー進捗から除外する。
- */
+/** デイリーゲーム（isDaily が true のゲーム）。解き終えた画面の今日の進み（NextGameBanner）が数えるのはこれだけ。 */
 export const ALL_GAMES: GameInfo[] = allGameMetas
   .filter((meta: GameMeta) => meta.isDaily === true)
   .map((meta: GameMeta): GameInfo => ({

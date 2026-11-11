@@ -413,12 +413,9 @@ export function parseCron(expression: string): ParsedCron {
  *   JST は UTC+9 の固定オフセット（サマータイムなし）なので、
  *   UTC_ms + 9*3600*1000 を UTC getter で読む方が高速かつ正確。
  *
- * これが「真のJST固定化（B-472 内包）」の実体:
- *   旧実装は current.getHours() 等のローカルTZ getter を使っていた。
- *   TZ=JST の環境では偶然正しいが、TZ=UTC の環境では
- *   UTC 09:00（=JST 18:00）にマッチし、表示すると「18時」となる虚偽表示を生む。
- *   本実装は UTC_ms に+9h して getUTC* で読むことで
- *   環境 TZ によらず常に JST 壁時計でマッチングする。
+ * ローカルTZ getter（current.getHours() 等）で読むと、TZ=JST の環境では正しいが、
+ *   TZ=UTC の環境では UTC 09:00（=JST 18:00）にマッチし、表示すると「18時」となる誤表示を生む。
+ *   UTC_ms に+9h して getUTC* で読むことで、環境 TZ によらず常に JST 壁時計でマッチングする。
  */
 const JST_OFFSET_MS = 9 * 60 * 60 * 1000; // 32400000
 
@@ -464,7 +461,7 @@ export function getNextExecutions(
   while (results.length < count && iterations < MAX_ITERATIONS) {
     iterations++;
 
-    // JST壁時計値（UTC+9固定）でマッチングする（B-472 真のJST固定化）
+    // JST壁時計値（UTC+9固定）でマッチングする（環境 TZ によらない）
     const jst = getJstField(currentMs);
 
     const minuteMatch = parsed.minute.values.includes(jst.minute);

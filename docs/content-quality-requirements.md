@@ -90,7 +90,7 @@ usageExample?: UsageExample;
 
 **定義**: Q&A 形式の 2〜5 問。訪問者が抱きやすい疑問に先回りして回答する。
 
-離脱の主要な原因である「疑問が解消されない」を防ぐ。また、B-024 で実装済みの JSON-LD（FAQPage schema）が FaqSection コンポーネント経由で自動付与される。なお、2023年8月以降、GoogleはFAQPageリッチリザルトの表示を政府・医療系サイトに限定しており、一般サイトでは表示されない。ただしBing等の他の検索エンジンでの活用可能性、およびGoogleの方針変更への備えとして維持している。
+離脱の主要な原因である「疑問が解消されない」を防ぐ。また、FAQ を表示する `FaqSection` コンポーネントが JSON-LD（FAQPage schema）も出力する。なお、2023年8月以降、GoogleはFAQPageリッチリザルトの表示を政府・医療系サイトに限定しており、一般サイトでは表示されない。ただしBing等の他の検索エンジンでの活用可能性、およびGoogleの方針変更への備えとして維持している。
 
 #### 基準
 
@@ -163,7 +163,7 @@ faq?: FaqEntry[];
 | -------- | ---------- | ------------------------------------------------------------------ |
 | 一行価値 | **未実装** | ToolMeta に `valueProposition` を追加                              |
 | 具体例   | **未実装** | ToolMeta に `usageExample` を追加                                  |
-| FAQ      | 実装済み   | `ToolMeta.faq` 定義済み。ToolLayout.tsx の `FaqSection` で表示済み |
+| FAQ      | 実装済み   | `ToolMeta.faq` 定義済み。ToolPageLayout の `FaqSection` で表示済み |
 | 関連導線 | 実装済み   | `relatedSlugs` で対応済み。維持する                                |
 
 ToolLayout.tsx への valueProposition・usageExample の表示 UI 追加が残タスクである。
@@ -179,11 +179,15 @@ ToolLayout.tsx への valueProposition・usageExample の表示 UI 追加が残�
 
 ### ゲーム
 
-GameLayout が実装済みであり、FaqSection コンポーネントを通じて FAQPage JSON-LD が自動付与される。
+`GameMeta.faq` を GameLayout の `FaqSection` で表示し、FAQPage JSON-LD も出力する。
+
+### クイズ・診断
+
+`QuizMeta.faq` を QuizPlayPageLayout の `FaqSection` で表示し、FAQPage JSON-LD も出力する。
 
 ### 辞典
 
-DictionaryDetailLayout が実装済みであり、FaqSection コンポーネントを通じて FAQPage JSON-LD が自動付与される。
+`DictionaryMeta.faq` を DictionaryDetailLayout の `FaqSection` で表示し、FAQPage JSON-LD も出力する。
 
 ---
 
@@ -244,13 +248,13 @@ FAQ セクション（存在する場合のみ表示）
 
 ### FaqSection コンポーネント
 
-FAQ の表示は ToolLayout と CheatsheetLayout の両方で共通コンポーネント `src/components/common/FaqSection.tsx` として実装済みである。
+FAQ は、道具・ゲーム・クイズ・辞典の器（ToolPageLayout・GameLayout・QuizPlayPageLayout・DictionaryDetailLayout）が共通のコンポーネント `src/components/FaqSection` で表示する。
 
-- props は `faq: FaqEntry[] | undefined` のみを受け取るシンプルな設計
-- セマンティック HTML の `section[aria-label="FAQ"]` を使用
-- details/summary タグによるアコーディオン形式で Q&A を表示
-- CSS Modules（`FaqSection.module.css`）でスタイルを管理
-- FAQPage schema JSON-LD の生成・出力もこのコンポーネント内で行う（`generateFaqPageJsonLd` を内包）
+- props は、問いを文節で区切った FAQ の並び `faq: readonly PhrasedFaqEntry[]`（`{ question: readonly string[]; answer: string }`）だけを受け取る。空の並びなら何も表示しない
+- 問いの区切りは、器（サーバーのコンポーネント）が meta の `faq` を `phraseFaq`（`src/lib/faq-phrases.ts`）に通して作る。問いはアコーディオンのラベルなので、見出しと同じく文節で折る（DESIGN.md §4）。区切りの関数はサーバーだけで動くので、`FaqSection` 自身は区切らない
+- セマンティック HTML の `section` を使い、区画の名前は見出し「よくある質問」から取る（`aria-labelledby`）。見出しはセクションの見出しの段で組む。上の区切りは持たず、置いた側（ページのセクションの罫線や、器が補助の区画に引く線）が区切る
+- Q&A は `Accordion`（details/summary）で表示する
+- FAQPage schema JSON-LD の生成・出力もこのコンポーネント内で行う（区切りをつないだ問いの文で `generateFaqPageJsonLd` を呼ぶ）
 
 ---
 

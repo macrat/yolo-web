@@ -26,7 +26,7 @@ export default function CharCountPage() {
         }}
       />
       <ToolErrorBoundary>
-        <CharCountTile variant="full" />
+        <CharCountTile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

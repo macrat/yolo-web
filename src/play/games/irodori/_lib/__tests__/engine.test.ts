@@ -6,7 +6,7 @@ import {
   calculateTotalScore,
   getRank,
   getRankLabel,
-  getScoreEmoji,
+  scoreBucketIndex,
 } from "../engine";
 
 describe("ciede2000", () => {
@@ -120,14 +120,13 @@ describe("getRankLabel", () => {
   });
 });
 
-describe("getScoreEmoji", () => {
-  test("returns emoji for each score range", () => {
-    expect(getScoreEmoji(100)).toBe("\uD83C\uDF1F"); // S rank: star
-    expect(getScoreEmoji(95)).toBe("\uD83C\uDF1F"); // S rank: star
-    expect(getScoreEmoji(90)).toBe("\uD83D\uDFE9"); // A rank: green
-    expect(getScoreEmoji(85)).toBe("\uD83D\uDFE9"); // A rank: green
-    expect(getScoreEmoji(70)).toBe("\uD83D\uDFE8"); // B rank: yellow
-    expect(getScoreEmoji(50)).toBe("\uD83D\uDFE7"); // C rank: orange
-    expect(getScoreEmoji(10)).toBe("\uD83D\uDFE5"); // D rank: red
+describe("scoreBucketIndex", () => {
+  test("puts each total score into its tens bucket, and 100 into the last one", () => {
+    expect(scoreBucketIndex(0)).toBe(0);
+    expect(scoreBucketIndex(9)).toBe(0);
+    expect(scoreBucketIndex(10)).toBe(1);
+    expect(scoreBucketIndex(89)).toBe(8);
+    expect(scoreBucketIndex(90)).toBe(9);
+    expect(scoreBucketIndex(100)).toBe(9);
   });
 });

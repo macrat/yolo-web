@@ -20,10 +20,6 @@ export interface PlayContentMeta {
   description: string;
   /** カード表示用の短い説明（~30文字） */
   shortDescription: string;
-  /** アイコン絵文字 */
-  icon: string;
-  /** テーマカラー（CSS hex） */
-  accentColor: string;
   /** 検索インデックス用キーワード配列 */
   keywords: string[];
   /** 公開日時（ISO 8601、タイムゾーン付き） */

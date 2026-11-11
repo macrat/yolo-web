@@ -3,27 +3,25 @@
 /**
  * UnitConverterTile — 単位変換の単一正典タイル
  *
- * cycle-228 T-20: UnitConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。
  * - **1ツール n タイル = variant**: full / 固定カテゴリ系は同一コンポーネントの
- *   設定差で表現。別実装を作らない（A-3・分裂ゼロ）。
+ *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: convert / getAllCategories が唯一のロジック源。
  *
  * ## variant
  *
- * - `"full"` (デフォルト): カテゴリ SegmentedControl を表示し、全カテゴリをユーザーが
- *   切り替えられる。道具箱・詳細ページ共通。
+ * - `"full"` (デフォルト): カテゴリのラジオボタンの組を出し、全カテゴリをユーザーが
+ *   切り替えられる。
  *
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <UnitConverterTile variant="full" />
  * ```
  */
@@ -32,14 +30,16 @@ import { useState, useCallback, useMemo, useId } from "react";
 import Panel from "@/components/Panel";
 import { convert, getAllCategories, type UnitCategory } from "./logic";
 import Select from "@/components/Select";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
+import Button from "@/components/Button";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./UnitConverterTile.module.css";
 
 const categories = getAllCategories();
 
-/** カテゴリ選択のSegmentedControl用オプション */
+/** カテゴリのラジオボタンの組に渡す選択肢 */
 const categoryOptions = categories.map((cat) => ({
   label: cat.name,
   value: cat.id,
@@ -61,7 +61,7 @@ export type UnitConverterTileVariant = "full";
 export interface UnitConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": カテゴリ SegmentedControl を表示し、全カテゴリをユーザーが切り替えられる。
+   * - "full": カテゴリのラジオボタンの組を出し、全カテゴリをユーザーが切り替えられる。
    */
   variant?: UnitConverterTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -75,10 +75,9 @@ export default function UnitConverterTile({
   as = "section",
   className,
 }: UnitConverterTileProps = {}) {
-  // ---------- id インスタンス一意化（A-6: 複数同居時の重複 id・label 誤結合防止） ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const valueInputId = `${uid}-value`;
-  const categoryGroupLabelId = `${uid}-category-label`;
 
   // ---------- State ----------
   const [category, setCategory] = useState<UnitCategory>("length");
@@ -95,7 +94,7 @@ export default function UnitConverterTile({
   const isValidInput = value.trim() !== "" && !isNaN(numericValue);
   const hasInput = value.trim() !== "";
 
-  /** カテゴリ変更時: 単位をそのカテゴリの最初の2つにリセット（G-1: カテゴリ切替後に古い結果が残らない） */
+  /** カテゴリ変更時: 単位をそのカテゴリの最初の2つにリセット（カテゴリ切替後に古い結果が残らない） */
   const handleCategoryChange = useCallback((newCategory: string) => {
     const cat = categories.find((c) => c.id === newCategory)!;
     setCategory(newCategory as UnitCategory);
@@ -144,21 +143,17 @@ export default function UnitConverterTile({
   void variant;
 
   // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）（A-1）
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* カテゴリ選択 — A-2: SegmentedControl に aria-labelledby（C-2）・C-5: 初期値が options 内に存在 */}
-      <div className={styles.categorySection}>
-        <p id={categoryGroupLabelId} className={styles.sectionLabel}>
-          カテゴリ
-        </p>
-        <SegmentedControl
-          options={categoryOptions}
-          value={category}
-          onChange={handleCategoryChange}
-          aria-labelledby={categoryGroupLabelId}
-        />
-      </div>
+      {/* カテゴリの切り替え */}
+      <RadioGroup
+        legend="カテゴリ"
+        options={categoryOptions}
+        value={category}
+        onChange={handleCategoryChange}
+        className={styles.categorySection}
+      />
 
       {/* 変換パネル: 値入力 + 単位セレクト + スワップ + 結果 */}
       <div className={styles.converterPanel}>
@@ -189,15 +184,14 @@ export default function UnitConverterTile({
           </Select>
         </div>
 
-        {/* スワップボタン — B-8: Lucide スタイル線画アイコン、生グリフ・絵文字禁止（C-4: aria-label 必須） */}
-        <button
-          type="button"
+        {/* 単位を入れ替えるボタン。線画の矢印に文字を添え、何が起きるかを字で言う。 */}
+        <Button
           className={styles.swapButton}
           onClick={handleSwap}
           aria-label="変換元と変換先の単位を入れ替え"
         >
-          {/* DESIGN.md §3: Lucide スタイル線画アイコン、stroke 1.5px / 20px */}
           <svg
+            className={styles.swapIcon}
             width="20"
             height="20"
             viewBox="0 0 24 24"
@@ -215,12 +209,13 @@ export default function UnitConverterTile({
             <path d="M3 17h18" />
             <path d="M18 14l3 3-3 3" />
           </svg>
-        </button>
+          <PhrasedText as="span" phrases={["入れ替え"]} />
+        </Button>
 
         {/* 変換先 */}
         <div className={styles.unitGroup}>
           <p className={styles.groupLabel}>結果</p>
-          {/* 結果表示エリア — C-3: role="status" aria-live="polite" のライブリージョン + 実テキストノードのサマリ */}
+          {/* 結果表示エリア — role="status" aria-live="polite" のライブリージョン + 実テキストノードのサマリ */}
           <div
             role="status"
             aria-live="polite"

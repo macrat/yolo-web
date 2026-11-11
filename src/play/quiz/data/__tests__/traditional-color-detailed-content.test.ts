@@ -1,7 +1,7 @@
 /**
  * Tests for detailedContent on all 8 traditional-color results.
  *
- * After the redesign, all 8 results use the TraditionalColorDetailedContent format:
+ * All 8 results use the TraditionalColorDetailedContent format:
  *   - variant: "traditional-color"
  *   - catchphrase: 15-30 chars
  *   - colorMeaning: 80-150 chars
@@ -11,7 +11,7 @@
  *   - colorAdvice: 20-100 chars
  *
  * Also verifies:
- *   - resultPageLabels is removed from meta
+ *   - resultPageLabels is not set on meta
  *   - seoTitle is set on meta
  */
 import { describe, it, expect } from "vitest";
@@ -170,7 +170,7 @@ describe("traditional-color detailedContent — new variant format", () => {
   });
 });
 
-describe("traditional-color meta — resultPageLabels removed", () => {
+describe("traditional-color meta — resultPageLabels", () => {
   it("resultPageLabels is not set on meta", () => {
     expect(traditionalColorQuiz.meta.resultPageLabels).toBeUndefined();
   });

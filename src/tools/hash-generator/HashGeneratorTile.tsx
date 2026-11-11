@@ -3,16 +3,14 @@
 /**
  * HashGeneratorTile — ハッシュ生成ツールの単一正典タイル
  *
- * cycle-228 T-17 で HashGeneratorPage.tsx を Panel ルートのタイルへ統合したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
  * - **1ツール n タイル = variant**: full / sha256 は同一コンポーネントの
  *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: generateHash が唯一のロジック源。再実装・改変禁止。
  *
  * ## variant
@@ -29,7 +27,7 @@
  * また、アンマウント後の setState を避けるため useEffect の cleanup で
  * isMounted フラグを false にする。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力ハッシュ値は <code> 要素で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -38,9 +36,8 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <HashGeneratorTile variant="full" />
- * <HashGeneratorTile variant="sha256" />
  * ```
  */
 
@@ -57,10 +54,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   generateHash,
   HASH_ALGORITHMS,
@@ -95,7 +89,7 @@ export default function HashGeneratorTile({
   as = "section",
   className,
 }: HashGeneratorTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止）[A-6] ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const inputId = `${uid}-input`;
   const formatId = `${uid}-format`;
@@ -113,11 +107,8 @@ export default function HashGeneratorTile({
   const [format, setFormat] = useState<OutputFormat>("hex");
   const [results, setResults] = useState<HashResult[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // C-3: ライブリージョン用サマリテキスト（実テキストノード）
+  // ライブリージョン用サマリテキスト（実テキストノード）
   const [statusSummary, setStatusSummary] = useState("");
-
-  // useCopyToClipboard（AP-I11: タイマー cleanup はフック内で実装済み）
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // ---------- race condition ガード ----------
   // 各 handleGenerate 呼び出しに世代番号を付与し、
@@ -126,7 +117,7 @@ export default function HashGeneratorTile({
   const generationRef = useRef(0);
 
   // ---------- アンマウント後 setState 防止 ----------
-  // useEffect の cleanup で isMounted を false に設定する（D-4 準拠）。
+  // useEffect の cleanup で isMounted を false に設定する。
   const isMountedRef = useRef(true);
   useEffect(() => {
     isMountedRef.current = true;
@@ -157,19 +148,19 @@ export default function HashGeneratorTile({
       );
 
       // race condition ガード: 世代が変わっていたら（後発リクエストが先に完了していたら）
-      // この結果を無視する。アンマウント済みでも無視する（D-4）。
+      // この結果を無視する。アンマウント済みでも無視する。
       if (currentGen !== generationRef.current) return;
       if (!isMountedRef.current) return;
 
       setResults(hashes);
-      // C-3: 実テキストノードのサマリを live region に設定する
+      // 実テキストノードのサマリを live region に設定する
       setStatusSummary(`${hashes.length}件のハッシュ値を生成しました`);
     } catch {
       // race condition ガード: 世代が変わっていたら無視する
       if (currentGen !== generationRef.current) return;
       if (!isMountedRef.current) return;
 
-      // Web Crypto API エラーを日本語メッセージに変換する（A-4 準拠）
+      // Web Crypto API エラーを日本語メッセージに変換する
       setResults([]);
       setStatusSummary("");
       setErrorMessage(
@@ -179,7 +170,7 @@ export default function HashGeneratorTile({
   }, [input, format, displayAlgorithms]);
 
   // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）[A-1]
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       {/* テキスト入力欄 */}
@@ -221,10 +212,10 @@ export default function HashGeneratorTile({
         </Button>
       </div>
 
-      {/* エラー表示（A-4: 共通部品 ErrorMessage を使用・日本語メッセージ） */}
+      {/* エラー表示（共通部品 ErrorMessage を使用・日本語メッセージ） */}
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
-      {/* C-3: ライブリージョン - 実テキストノードのサマリを持つ */}
+      {/* ライブリージョン - 実テキストノードのサマリを持つ */}
       <div
         role="status"
         aria-live="polite"
@@ -241,18 +232,11 @@ export default function HashGeneratorTile({
             <div key={result.algorithm} className={styles.resultRow}>
               <span className={styles.algoLabel}>{result.algorithm}</span>
               <code className={styles.hashValue}>{result.hash}</code>
-              <Button
-                size="small"
-                onClick={() => void copy(result.hash, result.algorithm)}
+              <CopyButton
+                text={result.hash}
+                target={`${result.algorithm}のハッシュ値`}
                 disabled={!result.hash}
-                aria-label={
-                  copiedKey === result.algorithm
-                    ? `${result.algorithm}のハッシュ値: ${COPIED_LABEL}`
-                    : `${result.algorithm}のハッシュ値をコピー`
-                }
-              >
-                {copiedKey === result.algorithm ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
           ))}
         </div>

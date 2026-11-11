@@ -1,60 +1,93 @@
-.wrapper {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem 0.5rem;
-  width: 100%;
+/* 結果のページ。コンテンツ幅の左端から組み（§5）、見出しはコンテンツ幅いっぱいに置く。 */
+.page {
+  padding-block: var(--space-24) var(--space-48);
 }
 
-/* 左寄せに統一（インライン ResultCard と同じトーン）。中央寄せはしない（§4）。 */
-.card {
-  text-align: left;
-  padding: 2rem 1rem;
+/* 何の診断の結果か・タイプ名・読み・色見本。 */
+.header {
+  margin-block: var(--space-24) var(--space-16);
 }
 
-/* === 結果を包みで見せる（MUST-2：§7 トーン統一・personality 型のみ） ===
- * インライン ResultCard と同じ視覚（Tsutsumi）に揃え、単独結果ページ /result/[id] に
- * 着地した第三者にも同じ結果体験を返す。h1 は SEO 用に維持するが控えめに——結果その
- * ものは Tsutsumi が主役（器は静か・§4）。単独ページには「診断完了」バッジは置かない
- * （第三者は完走していない＝偽の完了主張になる）。 */
-.medalWrap {
+.quizName {
+  margin: 0 0 var(--space-8);
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* タイプ名。§4 の主見出しの段（h1 の既定）で、文節の区切りで折る。 */
+.title {
+  margin: 0;
+  color: var(--ink);
+}
+
+/* タイプ名の読み。タイプ名のすぐ下に補助情報として添える。 */
+.reading {
+  margin: var(--space-8) 0 0;
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 結果の色の色見本（§2）。文字を載せず、淡い色が地に溶けないよう細い枠で囲む。 */
+.swatch {
+  inline-size: 100%;
+  block-size: 4rem;
+  margin-block-start: var(--space-16);
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* タイプ名の説明から先は、本文の幅で組む。 */
+.body {
+  max-inline-size: var(--measure);
+}
+
+/* 添えた段落・診断への誘い・タイプの説明。後ろに続く読みもののセクションや共有の区画とは、このあとの余白で
+ * 分かれる。 */
+.intro {
+  margin-block-end: var(--space-32);
+}
+
+.lead {
+  margin: 0 0 var(--space-24);
+}
+
+/* タイプの説明。全文を本文の段落で置く。 */
+.description {
+  margin: var(--space-24) 0 0;
+}
+
+/* 主要な誘い: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
+ * リングは data-inverted（globals.css）が持つ。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、
+ * 字は縁の内側 8px から始める（§5・§6）。文言は「?」の後ろの空白で折る。空白で区切った一続きが1行に入らない
+ * ときだけ、その一続きの中で折れる。 */
+.tryButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-8);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.4;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.tryCost {
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 共有の区画。ページに1つだけ置き、見出しが何を共有するかを言う（§8）。 */
+.share {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin: 0 0 0.75rem;
+  gap: var(--space-8);
+  margin-block-start: var(--space-32);
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 控えめな SEO 見出し。視覚の主役は下の Tsutsumi に譲る。 */
-.medalHeading {
-  font-size: 1rem;
-  color: var(--ink-2);
+.shareHeading {
   margin: 0;
-  line-height: 1.4;
-}
-
-.title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 0.75rem;
-}
-
-/* クイズのshortDescription: 第三者が診断内容を即座に把握するためのコンテキスト */
-.quizName {
-  font-size: 0.875rem;
-  color: var(--ink-2);
-  margin-bottom: 0.25rem;
-}
-
-.quizContext {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  margin-bottom: 1.25rem;
-  line-height: 1.5;
-}
-
-.shareSection {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
+  font-size: var(--text-heading-sub);
 }

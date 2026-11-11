@@ -1,236 +1,31 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル（新デザイン体系・DESIGN.md）。
- * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
- * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
- *
- * character-fortune 専用結果ページのスタイル。
- * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor）を使わず共通 --accent / --accent-weak に寄せる。
- * 新トークンのみ使用（旧 --color-* は撤去）。
+ * 診断の結果のページ（/play/character-fortune/result/[resultId]）のうち、page.tsx だけが持つ要素。
+ * タイプ名・キャラの自己紹介・最初の誘いは ResultPageShell が、詳しい読みものは ResultReading が組む。
  */
 
-/* ============================================================
-   CTA（trySection / tryButton）
-   ============================================================ */
-
-.trySection {
-  margin-bottom: 0;
-}
-
-/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
- * クイズごとの accentColor インライン注入は撤去済み。 */
-.tryButton {
+/* 2つ目からの誘い。1ページに1つまでの反転は最初の誘いが持つので、ここは縁の見えないリンクにする。下線と
+ * 訪問済みの色は a の既定に従い、字の左右の余白と張り出しは data-text-box（globals.css）が持つ。 */
+.tryLink {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
-  padding: 0 1.5rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--paper);
-  color: var(--accent);
-  font-family: var(--font-mincho);
-  font-size: 1.0625rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-}
-
-.tryButton:hover {
-  background-color: var(--accent-weak);
-}
-
-.tryButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 .tryCost {
-  font-size: 0.8rem;
+  margin-block-start: var(--space-8);
+  font-size: var(--text-small);
   color: var(--ink-2);
-  margin-top: 0.5rem;
-  margin-bottom: 0;
 }
 
-/* ============================================================
-   detailedContent セクション（character-fortune 本文）
-   ============================================================ */
-
-.detailedSection {
-  margin-top: 2rem;
-  text-align: left;
-}
-
-/* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
- * .detailedHeading と同じ語彙。朱の左罫は見出しの装飾に使わない・DESIGN.md §3/§4）。 */
-.detailedSectionHeading {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* (b) 「あるある」リスト。旧 💡 絵文字マーカーは撤去。
- * カード風の囲みは維持しつつ無彩・左寄せに統一。 */
-.behaviorsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.behaviorsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-/* ============================================================
-   character-fortune variant 固有ブロック
-   ============================================================ */
-
-/* (a) キャラクターの自己紹介。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
- * 操作・選択状態のハイライトにのみ可で区画の地には不可のため、--paper-2 に統一する。 */
-.characterIntro {
-  font-size: 1rem;
-  line-height: 1.8;
-  text-align: left;
-  color: var(--ink);
-  margin-bottom: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-
-/* (c) キャラの本音（散文） */
-.characterMessage {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  text-align: left;
-  margin-bottom: 2rem;
-  padding: 0 0.25rem;
-}
-
-/* (e) 相性診断への誘導 */
+/* 読みものを締めくくる、相性への誘い。本文の区切りの細い罫線で、前の読みものと分ける。診断への誘いは
+ * ここの1つだけにし、同じ行き先のリンクを続けて並べない。 */
 .compatibilitySection {
-  margin-bottom: 2rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--rule);
-  text-align: left;
+  margin-block-start: var(--space-24);
+  padding-block-start: var(--space-24);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .compatibilityPrompt {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--ink);
-  margin-bottom: 1rem;
-}
-
-/* シェアボタン中間配置用 */
-.midShareSection {
-  margin: 1.5rem 0;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-
-/* (d) 第三者専用セクション */
-.thirdPartySection {
-  margin-bottom: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-.thirdPartyHeading {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 0.875rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-.thirdPartyNote {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  text-align: left;
-  margin: 0;
-}
-
-/* (f) 全タイプ一覧セクション。
- * DESIGN.md §4/§8-4 是正（cycle-278 C4）: 旧来のチップ風横wrap（個々にカード状の全周枠）は
- * 「同型カードのグリッド」に近い質感で §4 の禁止対象に触れるため、他クイズ（例:
- * CharacterPersonalityContent.module.css .allTypesGrid）と同じ罫の升目索引に統一する。
- * 個々のセルはカード化せず、border-bottom の罫だけで区切る。現在地は面を朱で塗らず、
- * 文字色+下罫の朱だけで示す（--accent-weak 不使用）。 */
-.allTypesSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-.allTypesList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  columns: 2;
-  column-gap: 1.5rem;
-}
-
-@media (min-width: 480px) {
-  .allTypesList {
-    columns: 3;
-  }
-}
-
-.allTypesItem,
-.allTypesItemCurrent {
-  break-inside: avoid;
-}
-
-.allTypesItem a,
-.allTypesItemCurrent a {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  min-height: 44px;
-  padding: 0.4rem 0.25rem;
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-  width: 100%;
-}
-
-.allTypesItem a {
-  color: var(--ink);
-}
-
-.allTypesItem a:hover {
-  background-color: var(--paper-2);
-}
-
-/* 現在表示中のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで静かに示す。 */
-.allTypesItemCurrent a {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
-  pointer-events: none;
-}
-
-.allTypesCta {
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--ink);
-  margin-bottom: 1rem;
+  margin: 0 0 var(--space-8);
 }

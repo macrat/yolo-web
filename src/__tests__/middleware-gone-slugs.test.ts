@@ -1,11 +1,25 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { NextRequest } from "next/server";
+import { readFileSync } from "fs";
+import { resolve } from "path";
+import postcss, { type AtRule, type Container } from "postcss";
 import {
   DELETED_BLOG_SLUGS,
   isDeletedBlogSlug,
   build410Html,
   middleware,
+  GONE_PAGE_TOKENS,
+  GONE_PAGE_FALLBACK_FONT_FACE,
+  GONE_PAGE_HEADING_PHRASES,
 } from "../middleware";
+import { SITE_NAME } from "@/lib/constants";
+import { gtagInitScript, gtagLoaderSrc } from "@/lib/google-analytics";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import {
+  FOOTER_LINKS,
+  HEADER_NAV_ITEMS,
+  MAIN_CONTENT_ID,
+} from "@/lib/site-frame";
 
 describe("DELETED_BLOG_SLUGS", () => {
   test("19件の削除済みスラッグが定義されている", () => {
@@ -56,9 +70,11 @@ describe("isDeletedBlogSlug", () => {
 });
 
 describe("build410Html", () => {
-  test("「このコンテンツは終了しました」というメッセージを含む", () => {
+  test("題は「このコンテンツは終了しました | サイト名」", () => {
     const html = build410Html();
-    expect(html).toContain("このコンテンツは終了しました");
+    expect(html).toContain(
+      `<title>このコンテンツは終了しました | ${SITE_NAME}</title>`,
+    );
   });
 
   test("トップページへのリンク（href='/'）を含む", () => {
@@ -73,44 +89,129 @@ describe("build410Html", () => {
     expect(html).toContain("</html>");
   });
 
-  // 店構え（DESIGN.md §2/§3/§4/§8）への移行を固定する契約テスト。
-  // 旧デザイン（青アクセント・冷色スレート・装飾絵文字・8px角丸）への逆戻りを機械的に防ぐ。
+  // 410 ページの見た目を DESIGN.md の色（§2）・書体（§3）・持たないもの（§5）に固定する。
   describe("店構えデザイン契約", () => {
     const html = build410Html();
 
-    test("旧アクセント青（#2563eb / #1d4ed8）を含まない（§8-1）", () => {
+    test("青のアクセント（#2563eb / #1d4ed8）を含まない（§2）", () => {
       expect(html).not.toContain("#2563eb");
       expect(html).not.toContain("#1d4ed8");
     });
 
-    test("冷色スレート地（#f8fafc / #1e293b）を含まない（§10）", () => {
+    test("冷色スレート地（#f8fafc / #1e293b）を含まない（§2）", () => {
       expect(html).not.toContain("#f8fafc");
       expect(html).not.toContain("#1e293b");
     });
 
-    test("装飾絵文字（📄）を含まない（§8-6）", () => {
+    test("絵文字（📄）を含まない（§5）", () => {
       expect(html).not.toContain("📄");
     });
 
-    test("紙・墨・朱の器の色を使う（§2）", () => {
-      expect(html).toContain("#f8f7f2"); // --paper
-      expect(html).toContain("#201e1a"); // --ink
-      expect(html).toContain("#af3622"); // --accent（朱）
+    test("端末の設定が dark なら dark のトークンに切り替わる（§10）", () => {
+      expect(html).toMatch(
+        /@media \(prefers-color-scheme: dark\)\{:root\{color-scheme:dark;--paper:/,
+      );
     });
 
-    test("見出しは明朝スタック（Noto Serif JP）で組む（§3）", () => {
-      expect(html).toContain("Noto Serif JP");
+    test("theme-color はテーマごとの紙の色（§10）", () => {
+      expect(html).toContain(
+        "<meta name='theme-color' media='(prefers-color-scheme: light)' content='#fcfcfc' />",
+      );
+      expect(html).toContain(
+        "<meta name='theme-color' media='(prefers-color-scheme: dark)' content='#121212' />",
+      );
     });
 
-    test("トップへの導線は朱の文字で表す（青ベタボタンでない・§4）", () => {
-      expect(html).toContain("href='/'");
-      // リンク色は朱（--accent）であり、背景ベタ塗りボタンではない
-      expect(html).toContain(`color:#af3622`);
+    test("Web フォントを読まないので、Zen Antique を名指ししない（§3）", () => {
+      expect(html).not.toContain("Zen Antique");
     });
 
-    test("角丸は0基調（8px角丸 0.5rem を含まない・§8-5）", () => {
+    test("リンクは墨の文字と下線で表す（色ベタのボタンでない・§6）", () => {
+      expect(html).toMatch(/a\{color:var\(--ink\);text-decoration:underline;/);
+    });
+
+    test("角丸を持たない（0.5rem の角丸を含まない・§5）", () => {
       expect(html).not.toContain("border-radius:0.5rem");
     });
+  });
+});
+
+describe("build410Html の枠（DESIGN.md §5 レイアウト）", () => {
+  const html = build410Html();
+  const header = html.match(/<header>[\s\S]*<\/header>/)?.[0] ?? "";
+  const footer = html.match(/<footer>[\s\S]*<\/footer>/)?.[0] ?? "";
+
+  /** FrameLink と同じ形のリンク。字を data-label にも持たせ、太字の幅を先に取る。 */
+  const frameLink = (href: string, label: string, extraClass = "") =>
+    `<a class='link${extraClass}' href='${href}' data-text-box='inline'><span class='label' data-label='${label}'>${label}</span></a>`;
+
+  test("上端にサイト名のトップへのリンクと、ほかのページと同じナビの項目を置く", () => {
+    expect(header).toContain(frameLink("/", SITE_NAME, " site-name"));
+    for (const item of HEADER_NAV_ITEMS) {
+      expect(header).toContain(frameLink(item.href, item.label));
+    }
+  });
+
+  test("下端にほかのページと同じリンクを置く", () => {
+    for (const link of FOOTER_LINKS) {
+      expect(footer).toContain(frameLink(link.href, link.label));
+    }
+  });
+
+  test("中間の main にはフォーカスの輪を出さない", () => {
+    expect(html).toContain("main:focus{outline:none;box-shadow:none}");
+  });
+
+  test("スキップのリンクが中間の main を指す", () => {
+    expect(html).toContain(`href='#${MAIN_CONTENT_ID}'`);
+    expect(html).toContain(`<main id='${MAIN_CONTENT_ID}' tabindex='-1'`);
+  });
+});
+
+// 見出しを DESIGN.md §4 の文節で折る。区切りは手で書き、splitIntoPhrases の区切りと同じであることを確かめる。
+describe("build410Html の見出しの折り方（DESIGN.md §4）", () => {
+  const html = build410Html();
+
+  test("手で書いた区切りは splitIntoPhrases の区切りと同じ", () => {
+    const text = GONE_PAGE_HEADING_PHRASES.join("");
+    expect(text).toBe("このコンテンツは終了しました");
+    expect(GONE_PAGE_HEADING_PHRASES).toEqual(splitIntoPhrases(text));
+  });
+
+  test("見出しは文節のあいだにだけ <wbr> を置き、字を分ける要素を持たない", () => {
+    expect(html).toContain("<h1>この<wbr>コンテンツは<wbr>終了しました</h1>");
+  });
+
+  test("見出しは文節の中では1行に収まらないときだけ折り、行頭の禁則を厳しい側で組み、auto-phrase に頼らない", () => {
+    const h1Rule = html.match(/\nh1\{[^}]*\}/)?.[0] ?? "";
+    expect(h1Rule).toContain("word-break:keep-all");
+    expect(h1Rule).toContain("overflow-wrap:anywhere");
+    expect(h1Rule).toContain("line-break:strict");
+    expect(html).not.toContain("auto-phrase");
+  });
+});
+
+// 消した記事の URL に着いた来訪者の数を、ほかのページと同じ GA で数える。
+describe("build410Html の GA", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  test("ID があれば、ほかのページと同じ読み込みの URL と初期化の文を head に置く", () => {
+    vi.stubEnv("NEXT_PUBLIC_GA_TRACKING_ID", "G-TESTID123");
+    const html = build410Html();
+    const head = html.match(/<head>[\s\S]*<\/head>/)?.[0] ?? "";
+    expect(head).toContain(
+      `<script async src='${gtagLoaderSrc("G-TESTID123")}'></script>`,
+    );
+    expect(head).toContain(`<script>${gtagInitScript("G-TESTID123")}</script>`);
+  });
+
+  test("ID が無ければ GA を読み込まない", () => {
+    vi.stubEnv("NEXT_PUBLIC_GA_TRACKING_ID", "");
+    const html = build410Html();
+    expect(html).not.toContain("googletagmanager");
+    expect(html).not.toContain("gtag(");
   });
 });
 
@@ -142,5 +243,70 @@ describe("middleware（統合テスト）", () => {
     const response = middleware(request);
     // NextResponse.next() は status 200 を返す
     expect(response.status).toBe(200);
+  });
+});
+
+/**
+ * 410 のページのトークンが globals.css と同じ名前・同じ値であることの検査。
+ * middleware は globals.css を読めないので、globals.css だけを変えたときに 410 が古い値のまま残らないようにする。
+ */
+describe("build410Html のトークンは globals.css と一致する", () => {
+  const globals = postcss.parse(
+    readFileSync(resolve(__dirname, "../app/globals.css"), "utf-8"),
+  );
+
+  /** 宣言の値の空白を1つにそろえる（globals.css は長い値を折り返して書く）。 */
+  const normalize = (value: string) => value.replace(/\s+/g, " ").trim();
+
+  /** ブロックの直下の :root の宣言を集める。 */
+  function rootDeclarations(block: Container): Map<string, string> {
+    const decls = new Map<string, string>();
+    block.each((node) => {
+      if (node.type !== "rule" || node.selector !== ":root") return;
+      node.walkDecls((decl) => {
+        decls.set(decl.prop, normalize(decl.value));
+      });
+    });
+    return decls;
+  }
+
+  function mediaBlock(query: string): AtRule {
+    const found = globals.nodes.find(
+      (node): node is AtRule =>
+        node.type === "atrule" &&
+        node.name === "media" &&
+        node.params === query,
+    );
+    if (!found) throw new Error(`globals.css に @media ${query} が無い`);
+    return found;
+  }
+
+  /** Web フォントと、Zen Antique の読み込みのあいだに組む書体を除いた並び。410 は Web フォントを読み込まない。 */
+  const toGonePageFontStack = (value: string) =>
+    value.replace(
+      /var\(--font-(plex-sans|zen-antique|zen-antique-fallback)\), /g,
+      "",
+    );
+
+  test.each(Object.entries(GONE_PAGE_TOKENS))("%s", (scope, tokens) => {
+    const expected = rootDeclarations(
+      scope === "root" ? globals : mediaBlock(scope),
+    );
+    for (const [prop, value] of Object.entries(tokens)) {
+      expect(expected.has(prop), `${prop} が globals.css に無い`).toBe(true);
+      expect(value, prop).toBe(toGonePageFontStack(expected.get(prop)!));
+    }
+  });
+
+  test("IBM Plex Sans の代わりの書体の @font-face", () => {
+    const fontFace = globals.nodes.find(
+      (node): node is AtRule =>
+        node.type === "atrule" && node.name === "font-face",
+    );
+    const expected = new Map<string, string>();
+    fontFace!.walkDecls((decl) => {
+      expected.set(decl.prop, decl.value);
+    });
+    expect(Object.fromEntries(expected)).toEqual(GONE_PAGE_FALLBACK_FONT_FACE);
   });
 });

@@ -1,19 +1,39 @@
 /**
- * FudaActions（札の保存/共有）— 分岐ロジックと GA4 計測の回帰ガード（cycle-280 タスクC）。
+ * FudaActions（札の保存/共有）— 分岐ロジックと GA4 計測の回帰ガード。
  *
- * 検証の核心（「実際に完了したアクションだけ計上する」B-551）:
+ * 検証の核心（「実際に完了したアクションだけ計上する」）:
  * - 共有: canShare({files}) true → navigator.share({files}) 成功時に trackShare("web_share",…,"fuda")。
  * - 共有: canShare false/未定義 → clipboard コピー成功時に trackShare("clipboard",…,"fuda")。
+ * - 共有: どの写し方でも写せなかったら計上せず、写せなかったと知らせる。
  * - 共有: 共有シートのキャンセル（reject）では計上しない。
  * - 保存: アンカー download で保存し trackSave(…,"download","fuda")。
  * - fetch 失敗（!res.ok）は握りつぶさずエラー表示にし、UI は壊さない（計上しない）。
+ * - 知らせの文は自分で出さず、onNoticeChange で区画に渡す（テストでは WithNotice が role="status" に出す）。
  *
  * analytics.ts は window.gtag を直接呼ぶので gtag を spy に差し替えて送出 payload を検査する。
  * fetch / navigator.canShare|share|clipboard / URL.createObjectURL をモックする。
  */
 import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
+import { useState } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FudaActions from "../FudaActions";
+
+/** 知らせの文を受け取って出す区画の知らせの行の代わり。 */
+function WithNotice() {
+  const [notice, setNotice] = useState<string[]>([]);
+  return (
+    <>
+      <FudaActions
+        resultId="blazing-strategist"
+        resultTitle="炎の策士"
+        quizName="キャラ性格診断"
+        quizSlug="character-personality"
+        onNoticeChange={setNotice}
+      />
+      <div role="status">{notice.join("")}</div>
+    </>
+  );
+}
 
 const gtagSpy = vi.fn();
 const mockFetch = vi.fn();
@@ -67,20 +87,14 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  delete (document as { execCommand?: unknown }).execCommand;
 });
 
 function renderActions() {
-  render(
-    <FudaActions
-      resultId="blazing-strategist"
-      resultTitle="炎の策士"
-      quizTitle="キャラ性格診断"
-      quizSlug="character-personality"
-    />,
-  );
+  render(<WithNotice />);
   return {
-    saveButton: screen.getByRole("button", { name: "保存" }),
-    shareButton: screen.getByRole("button", { name: "共有" }),
+    saveButton: screen.getByRole("button", { name: "画像を保存" }),
+    shareButton: screen.getByRole("button", { name: "画像を共有" }),
   };
 }
 
@@ -141,6 +155,31 @@ describe("FudaActions 共有", () => {
       content_id: "quiz-character-personality",
       surface: "fuda",
     });
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /^リンクをコピーしました$/,
+    );
+  });
+
+  test("canShare false → どの写し方でも写せなければ計上せず、写せなかったと知らせる", async () => {
+    stubFetchOk();
+    mockCanShare.mockReturnValue(false);
+    mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+    // jsdom は execCommand を持たないので、この文書にだけ置く（afterEach で外す）。
+    Object.defineProperty(document, "execCommand", {
+      value: vi.fn(() => false),
+      configurable: true,
+      writable: true,
+    });
+
+    const { shareButton } = renderActions();
+    fireEvent.click(shareButton);
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        /^リンクをコピーできませんでした。ほかの共有先をお使いください$/,
+      ),
+    );
+    expect(findEventParams("share")).toBeUndefined();
   });
 
   test("共有シートのキャンセル（reject）では計上しない", async () => {
@@ -252,15 +291,71 @@ describe("FudaActions fetch 失敗", () => {
     fireEvent.click(saveButton);
 
     await waitFor(() =>
-      expect(
-        screen.getByText(
-          "画像を用意できませんでした。時間をおいて再度お試しください。",
-        ),
-      ).toBeInTheDocument(),
+      expect(screen.getByRole("status")).toHaveTextContent(
+        /^画像を用意できませんでした。時間をおいて再度お試しください。$/,
+      ),
     );
     expect(findEventParams("save")).toBeUndefined();
     expect(findEventParams("share")).toBeUndefined();
     // ボタンは再度押せる状態に戻っている（busy 解除）。
     expect(saveButton).not.toBeDisabled();
+  });
+});
+
+describe("FudaActions 画像を用意しているあいだ", () => {
+  test("ボタンを無効にせず、押したボタンにフォーカスが残る（キーボードで押してもページの頭に落ちない）", async () => {
+    let resolveFetch: (value: unknown) => void = () => {};
+    mockFetch.mockReturnValue(
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      }),
+    );
+    mockCanShare.mockReturnValue(true);
+    mockShare.mockResolvedValue(undefined);
+
+    const { shareButton } = renderActions();
+    shareButton.focus();
+    fireEvent.click(shareButton);
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "画像を用意しています。",
+      ),
+    );
+    expect(shareButton).toBeEnabled();
+    expect(document.activeElement).toBe(shareButton);
+
+    resolveFetch({
+      ok: true,
+      blob: async () => new Blob(["png-bytes"], { type: "image/png" }),
+    });
+    await waitFor(() => expect(mockShare).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(""),
+    );
+    expect(document.activeElement).toBe(shareButton);
+  });
+
+  test("用意しているあいだにもう一度押しても、画像を2回取らない", async () => {
+    let resolveFetch: (value: unknown) => void = () => {};
+    mockFetch.mockReturnValue(
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      }),
+    );
+    mockCanShare.mockReturnValue(true);
+    mockShare.mockResolvedValue(undefined);
+
+    const { saveButton, shareButton } = renderActions();
+    fireEvent.click(shareButton);
+    fireEvent.click(shareButton);
+    fireEvent.click(saveButton);
+
+    resolveFetch({
+      ok: true,
+      blob: async () => new Blob(["png-bytes"], { type: "image/png" }),
+    });
+    await waitFor(() => expect(mockShare).toHaveBeenCalledTimes(1));
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 });

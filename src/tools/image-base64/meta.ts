@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "Base64 エンコード 画像",
     "画像 文字列 変換",
   ],
-  category: "encoding",
+  category: "image",
   relatedSlugs: ["base64", "url-encode", "hash-generator", "image-resizer"],
   publishedAt: "2026-02-14T13:26:56+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

@@ -1,111 +1,139 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, type Ref } from "react";
+import Button from "@/components/Button";
+import ErrorMessage from "@/components/ErrorMessage";
+import Field from "@/components/Field";
+import Input from "@/components/Input";
+import PhrasedText from "@/components/PhrasedText";
+import type { PhrasedName } from "@/lib/phrased-name";
+import {
+  EVALUATE_UNAVAILABLE_MESSAGE,
+  type GuessSubmitResult,
+} from "@/play/games/shared/_lib/guessSubmit";
 import styles from "./styles/KanjiKanaru.module.css";
 
+const EMPTY_INPUT_MESSAGE = "漢字を1文字入力してください";
+
 interface GuessInputProps {
-  onSubmit: (kanji: string) => Promise<string | null>;
-  disabled: boolean;
+  /**
+   * 欄のラベル。いまの難易度と残りの回数を言う（「中級の漢字を1字入力（あと6回）」）。文節で分けた区切りの並びで
+   * 渡し、そのあいだで折る（PhrasedName）。
+   */
+  label: PhrasedName;
+  onSubmit: (kanji: string) => Promise<GuessSubmitResult>;
+  /** 送信中か。送信のボタンを押せなくし、字で言う。欄は無効にせず、文字盤を閉じさせない。 */
   submitting?: boolean;
+  /** 問題を読み込んでいるあいだ true。欄とボタンを無効にする。 */
+  loading?: boolean;
+  /** 読み込み中を言う文の id。無効の欄の説明として読ませる。 */
+  loadingTextId?: string;
+  /** 入力欄と送信のボタンの並び。推測のあと、画面に入るまで送る相手になる。 */
+  rowRef?: Ref<HTMLDivElement>;
 }
 
 /**
- * Single kanji input field with submit button.
- * Handles IME composition events to prevent premature submission.
- * Returns an error message from onSubmit if validation fails.
- * Supports async onSubmit for server-side evaluation.
+ * 漢字を1字入れる欄と送信のボタン。IME の変換中の Enter では送らない。
+ * 入力の誤りは欄に結び、答え合わせができなかったことは、入力は正しいので欄の外で言う。
  */
 export default function GuessInput({
+  label,
   onSubmit,
-  disabled,
   submitting = false,
+  loading = false,
+  loadingTextId,
+  rowRef,
 }: GuessInputProps) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [shaking, setShaking] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
   const composingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const triggerShake = useCallback(() => {
-    setShaking(true);
-    setTimeout(() => setShaking(false), 400);
-  }, []);
-
   const handleSubmit = useCallback(async () => {
-    if (composingRef.current) return;
-    if (submitting) return;
+    if (composingRef.current || submitting || loading) return;
     const trimmed = value.trim();
     if (!trimmed) {
-      setError(
-        "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
-      );
-      triggerShake();
+      setError(EMPTY_INPUT_MESSAGE);
       return;
     }
 
-    const errorMsg = await onSubmit(trimmed);
-    if (errorMsg) {
-      setError(errorMsg);
-      triggerShake();
+    setUnavailable(false);
+    const result = await onSubmit(trimmed);
+    if (result.kind === "invalid") {
+      setError(result.message);
+    } else if (result.kind === "unavailable") {
+      setError(null);
+      setUnavailable(true);
     } else {
       setError(null);
-      setValue("");
+      // 判定を待つあいだに次の字を打ち始めていたら、それを消さない。送った字のままのときだけ空にする。
+      setValue((current) => (current.trim() === trimmed ? "" : current));
     }
     inputRef.current?.focus();
-  }, [value, onSubmit, triggerShake, submitting]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter" && !composingRef.current) {
-        e.preventDefault();
-        void handleSubmit();
-      }
-    },
-    [handleSubmit],
-  );
+  }, [value, onSubmit, submitting, loading]);
 
   return (
     <div className={styles.inputArea}>
-      <div className={`${styles.inputRow} ${shaking ? styles.shaking : ""}`}>
-        <input
-          ref={inputRef}
-          className={styles.inputField}
-          type="text"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setError(null);
-          }}
-          onKeyDown={handleKeyDown}
-          onCompositionStart={() => {
-            composingRef.current = true;
-          }}
-          onCompositionEnd={() => {
-            composingRef.current = false;
-          }}
-          disabled={disabled}
-          placeholder={
-            submitting
-              ? "\u9001\u4FE1\u4E2D..."
-              : "\u6F22\u5B57\u3092\u5165\u529B"
-          }
-          aria-label={"\u6F22\u5B57\u3092\u5165\u529B"}
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-        />
-        <button
-          className={styles.submitButton}
-          onClick={() => void handleSubmit()}
-          disabled={disabled}
-          type="button"
-        >
-          {submitting ? "\u9001\u4FE1\u4E2D..." : "\u9001\u4FE1"}
-        </button>
-      </div>
-      <div className={styles.errorMessage} role="alert" aria-live="polite">
-        {error ?? ""}
-      </div>
+      <Field label={label} error={error ?? undefined} disabled={loading}>
+        {(control) => (
+          <div ref={rowRef} className={styles.inputRow}>
+            <Input
+              {...control}
+              ref={inputRef}
+              className={styles.inputField}
+              aria-describedby={
+                [control["aria-describedby"], loading ? loadingTextId : null]
+                  .filter(Boolean)
+                  .join(" ") || undefined
+              }
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setError(null);
+                setUnavailable(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !composingRef.current) {
+                  e.preventDefault();
+                  void handleSubmit();
+                }
+              }}
+              onCompositionStart={() => {
+                composingRef.current = true;
+              }}
+              onCompositionEnd={() => {
+                composingRef.current = false;
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+            />
+            <Button
+              variant="primary"
+              onClick={() => void handleSubmit()}
+              disabled={submitting || loading}
+              aria-describedby={loading ? loadingTextId : undefined}
+            >
+              {/* 面の字は2つとも同じ場所に重ねて描き、広いほうの幅をいつも取っておく。送っているあいだに
+                  ボタンが広がって欄が縮むことがない。見えていない面は読み上げでも読まない。 */}
+              <span className={styles.submitFaces}>
+                <PhrasedText
+                  as="span"
+                  phrases={["送信"]}
+                  hidden={submitting || undefined}
+                />
+                <PhrasedText
+                  as="span"
+                  phrases={["送信中……"]}
+                  hidden={!submitting || undefined}
+                />
+              </span>
+            </Button>
+          </div>
+        )}
+      </Field>
+      {unavailable && <ErrorMessage message={EVALUATE_UNAVAILABLE_MESSAGE} />}
     </div>
   );
 }

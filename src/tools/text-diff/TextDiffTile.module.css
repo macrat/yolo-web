@@ -1,23 +1,11 @@
-/* TextDiffTile — text-diff 単一正典タイルスタイル
- * cycle-228 T-23: TextDiffPage.module.css をタイル向けに継承・移植。
- * DESIGN.md（店構え）準拠（色は紙・墨・朱トークン経由・bold禁止・
- * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
+/* TextDiffTile スタイル
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- * box-shadow は使わない（§4）。
  */
 
-/* 比較モードコントロール行 */
+/* 比較の単位のラジオボタンの組と、その下の入力欄のあいだをあける */
 .controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   margin-bottom: 1rem;
-}
-
-.controlLabel {
-  font-size: 0.9rem;
-  color: var(--ink);
 }
 
 /* 2つの入力パネルを横並びで配置 */
@@ -39,7 +27,7 @@
   color: var(--ink-2);
 }
 
-/* サマリ status 欄（C-3: 実テキストノードのサマリ・短文 1 行）
+/* サマリ status 欄（実テキストノードのサマリ・短文 1 行）
  * aria-live="polite" に対応する可視要素（SR が読み上げる実テキストを含む） */
 .summary {
   font-size: 0.85rem;
@@ -79,10 +67,8 @@
   margin: 0;
 }
 
-/* 差分ハイライト（店構え移行）:
- * 旧実装は緑（追加）/赤（削除）の2色で区別していたが、店構えは緑/赤のベタを持たない。
- * このファイルには --accent 直塗りを禁じる正典テスト（E-12）が残っているため、
- * 朱も使わず、意味の区別は装飾（下線=追加 / 取り消し線=削除）だけで担保する。
+/* 差分ハイライト:
+ * 緑/赤のベタや --accent（直塗りを禁じるテストがある）を使わず、意味の区別は装飾（下線=追加 / 取り消し線=削除）だけで担保する。
  * 装飾は色に依らないため色覚多様性下でも区別が保たれ、器は静かなまま。
  *
  * 追加部分: 墨文字 + 下線（沈んだ面 --paper-2） */
@@ -103,7 +89,7 @@
   color: var(--ink);
 }
 
-/* モバイル対応: 縦並びに切り替え（G-1: w360 横はみ出しなし） */
+/* モバイル対応: 縦並びに切り替え（w360 横はみ出しなし） */
 @media (max-width: 768px) {
   .panels {
     grid-template-columns: 1fr;

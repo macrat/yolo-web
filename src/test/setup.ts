@@ -35,6 +35,9 @@ function createLocalStorageMock(): Storage {
 const localStorageMock = createLocalStorageMock();
 
 beforeEach(() => {
+  // Tests in the node environment (`@vitest-environment node`, e.g. the ones that render PNGs
+  // with next/og, whose WebAssembly rejects jsdom's typed arrays) have no window to mock.
+  if (typeof window === "undefined") return;
   Object.defineProperty(window, "localStorage", {
     value: localStorageMock,
     writable: true,

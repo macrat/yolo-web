@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import PlayQuizResultPage from "../page";
+import PlayQuizResultPage, { generateMetadata } from "../page";
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
@@ -15,7 +15,7 @@ vi.mock("@/components/Breadcrumb", () => ({
 }));
 
 // Mock ShareButtons
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
+vi.mock("@/components/ShareButtons", () => ({
   default: () => <div data-testid="share-buttons" />,
 }));
 
@@ -29,52 +29,28 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// Mock CompatibilityDisplay
-vi.mock("../CompatibilityDisplay", () => ({
-  default: () => <div data-testid="compatibility-display" />,
-}));
-
-// Mock extractWithParam
-vi.mock("../extractWithParam", () => ({
-  extractWithParam: vi.fn(() => undefined),
-}));
-
-// Mock DescriptionExpander
-vi.mock("../DescriptionExpander", () => ({
-  default: ({ description }: { description: string; isLong: boolean }) => (
-    <p data-testid="description-expander">{description}</p>
-  ),
-}));
-
-// Mock ResultPageShell: childrenとafterShareを描画する透過的なwrapper
+// ResultPageShell は、ページが渡した値（誘い・説明・中身・共有の文）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
   default: ({
     quiz,
+    description,
+    ctaText,
     children,
-    afterShare,
+    shareText,
   }: {
-    quiz: {
-      meta: {
-        title: string;
-        shortDescription: string;
-        type: string;
-        questionCount: number;
-        accentColor: string;
-        category: string;
-      };
-    };
-    result: { id: string; title: string; description: string; icon?: string };
+    quiz: { meta: { title: string; questionCount: number } };
+    description?: string;
+    ctaText: string;
     children: React.ReactNode;
     shareText: string;
-    shareUrl: string;
-    afterShare?: React.ReactNode;
   }) => (
     <div data-testid="result-page-shell">
       <p>{quiz.meta.title}の結果</p>
-      <p>{quiz.meta.shortDescription}</p>
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {description && <p>{description}</p>}
       {children}
-      {afterShare}
-      <div data-testid="share-buttons" />
+      <div data-testid="share-buttons">{shareText}</div>
     </div>
   ),
 }));
@@ -90,7 +66,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "知識クイズの短い説明",
           type: "knowledge",
           questionCount: 10,
-          accentColor: "#FF0000",
           category: "general",
         },
         results: [
@@ -98,7 +73,6 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-a",
             title: "Aタイプ",
             description: "Aタイプの説明",
-            icon: "A",
           },
         ],
       },
@@ -111,7 +85,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "性格診断の短い説明",
           type: "personality",
           questionCount: 8,
-          accentColor: "#0000FF",
           category: "personality",
         },
         results: [
@@ -119,8 +92,83 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-x",
             title: "Xタイプ",
             description: "Xタイプの説明",
-            icon: "X",
           },
+        ],
+      },
+    ],
+    [
+      "reading-quiz",
+      {
+        meta: {
+          title: "言葉診断",
+          shortDescription: "言葉診断の短い説明",
+          type: "personality",
+          questionCount: 10,
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-y",
+            title: "和顔愛語タイプ",
+            reading: { word: "和顔愛語", kana: "わがんあいご" },
+            description: "和顔愛語タイプの説明",
+          },
+        ],
+      },
+    ],
+    [
+      "reading-long-quiz",
+      {
+        meta: {
+          title: "あなたの言葉センス診断",
+          shortDescription: "言葉センス診断の短い説明",
+          type: "personality",
+          questionCount: 10,
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-z",
+            title: "和顔愛語タイプ",
+            reading: { word: "和顔愛語", kana: "わがんあいご" },
+            description: "和顔愛語タイプの説明",
+          },
+        ],
+      },
+    ],
+    [
+      "short-title-quiz",
+      {
+        meta: {
+          title: "あなたの性格を天気に例えると?",
+          shortTitle: "天気で性格診断",
+          shortDescription: "天気で性格診断の短い説明",
+          type: "personality",
+          questionCount: 8,
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-s",
+            title: "晴れタイプ",
+            description: "晴れタイプの説明",
+          },
+        ],
+      },
+    ],
+    [
+      "japanese-culture",
+      {
+        meta: {
+          title: "日本文化診断",
+          shortDescription: "日本文化診断の短い説明",
+          type: "personality",
+          questionCount: 18,
+          category: "personality",
+        },
+        results: [
+          { id: "sado", title: "茶道タイプ", description: "茶道タイプの説明" },
+          { id: "shodo", title: "書道タイプ", description: "書道タイプの説明" },
         ],
       },
     ],
@@ -132,7 +180,6 @@ vi.mock("@/play/quiz/registry", () => ({
           shortDescription: "詳細診断の短い説明",
           type: "personality",
           questionCount: 5,
-          accentColor: "#00FF00",
           category: "personality",
         },
         results: [
@@ -140,7 +187,6 @@ vi.mock("@/play/quiz/registry", () => ({
             id: "result-detail",
             title: "詳細タイプ",
             description: "詳細タイプの説明",
-            icon: "D",
             detailedContent: {
               traits: ["特徴1", "特徴2"],
               behaviors: ["あるある1", "あるある2"],
@@ -159,12 +205,16 @@ vi.mock("@/play/quiz/registry", () => ({
   getResultIdsForQuiz: vi.fn(() => ["result-a"]),
 }));
 
-// Mock music-personality
-vi.mock("@/play/quiz/data/music-personality", () => ({
-  getCompatibility: vi.fn(() => undefined),
+// Mock japanese-culture
+vi.mock("@/play/quiz/data/japanese-culture", () => ({
+  isValidCultureTypeId: (id: string) => ["sado", "shodo"].includes(id),
+  getCompatibility: (a: string, b: string) =>
+    [a, b].sort().join("--") === "sado--shodo"
+      ? { label: "静と筆の調和", description: "茶道と書道の相性の説明" }
+      : undefined,
 }));
 
-describe("PlayQuizResultPage CTA", () => {
+describe("PlayQuizResultPage 診断への誘い", () => {
   it("knowledge タイプのクイズでは「あなたも挑戦してみよう」と表示する", async () => {
     const params = Promise.resolve({
       slug: "knowledge-quiz",
@@ -210,34 +260,10 @@ describe("PlayQuizResultPage CTA", () => {
 
     expect(screen.getByText("全8問 / 登録不要")).toBeInTheDocument();
   });
-
-  it("旧来のCTAテキスト「あなたも挑戦してみる?」は表示されない", async () => {
-    const params = Promise.resolve({
-      slug: "knowledge-quiz",
-      resultId: "result-a",
-    });
-    const page = await PlayQuizResultPage({ params });
-    render(page);
-
-    expect(screen.queryByText("あなたも挑戦してみる?")).not.toBeInTheDocument();
-  });
 });
 
-describe("PlayQuizResultPage コンテキスト表示", () => {
-  it("shortDescriptionがクイズ名と共に表示される", async () => {
-    const params = Promise.resolve({
-      slug: "knowledge-quiz",
-      resultId: "result-a",
-    });
-    const page = await PlayQuizResultPage({ params });
-    render(page);
-
-    expect(screen.getByText("知識クイズの短い説明")).toBeInTheDocument();
-  });
-});
-
-describe("PlayQuizResultPage CTA2", () => {
-  it("detailedContentがある場合はCTA2が表示される", async () => {
+describe("PlayQuizResultPage 読み終えた人への2つ目の誘い", () => {
+  it("詳しい読みものがあるときは、読みもののあとにも誘いを置く", async () => {
     const params = Promise.resolve({
       slug: "personality-with-detailed",
       resultId: "result-detail",
@@ -245,13 +271,12 @@ describe("PlayQuizResultPage CTA2", () => {
     const page = await PlayQuizResultPage({ params });
     render(page);
 
-    // CTAテキストが複数存在する（CTA1 + CTA2）
     const ctaElements =
       screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaElements.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("detailedContentがない場合はCTA2が表示されない", async () => {
+  it("詳しい読みものが無いときは、誘いは最初の1つだけ", async () => {
     const params = Promise.resolve({
       slug: "personality-quiz",
       resultId: "result-x",
@@ -259,7 +284,6 @@ describe("PlayQuizResultPage CTA2", () => {
     const page = await PlayQuizResultPage({ params });
     render(page);
 
-    // CTAテキストが1つだけ存在する（CTA1のみ）
     const ctaElements =
       screen.queryAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaElements.length).toBe(1);
@@ -280,5 +304,136 @@ describe("PlayQuizResultPage detailedContent見出し", () => {
     expect(
       screen.getByText("このタイプの人へのアドバイス"),
     ).toBeInTheDocument();
+  });
+});
+
+describe("ページの題と共有の文", () => {
+  it("読みを持たないタイプは、題も共有の文も title のまま", async () => {
+    const params = Promise.resolve({
+      slug: "personality-quiz",
+      resultId: "result-x",
+    });
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe("Xタイプ | 性格診断の結果 | yolos.net");
+    render(await PlayQuizResultPage({ params }));
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      /^性格診断の結果は「Xタイプ」でした！あなたは\? #性格診断 #yolosnet$/,
+    );
+  });
+
+  it("短い名前を持つ診断は、共有の文で短い名前を言い、ハッシュタグは正式な名前から作る", async () => {
+    const params = Promise.resolve({
+      slug: "short-title-quiz",
+      resultId: "result-s",
+    });
+    render(await PlayQuizResultPage({ params }));
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      /^天気で性格診断の結果は「晴れタイプ」でした！あなたは\? #あなたの性格を天気に例えると\? #yolosnet$/,
+    );
+  });
+
+  it("読みを持つタイプは、題・og:title・共有の文で語の後ろに読みを添える", async () => {
+    const params = Promise.resolve({
+      slug: "reading-quiz",
+      resultId: "result-y",
+    });
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe(
+      "和顔愛語（わがんあいご）タイプ | 言葉診断の結果 | yolos.net",
+    );
+    expect(metadata.openGraph?.title).toBe(
+      "和顔愛語（わがんあいご）タイプ | 言葉診断の結果",
+    );
+    render(await PlayQuizResultPage({ params }));
+    expect(screen.getByTestId("share-buttons")).toHaveTextContent(
+      "言葉診断の結果は「和顔愛語（わがんあいご）タイプ」でした！",
+    );
+  });
+
+  it("読みを添えた題が長さの上限を超えるときは、クイズ名を省いても読みを残す", async () => {
+    const params = Promise.resolve({
+      slug: "reading-long-quiz",
+      resultId: "result-z",
+    });
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe("和顔愛語（わがんあいご）タイプ | yolos.net");
+    expect(metadata.openGraph?.title).toBe("和顔愛語（わがんあいご）タイプ");
+  });
+});
+
+describe("相性の共有のリンク（?with=）", () => {
+  const params = Promise.resolve({
+    slug: "japanese-culture",
+    resultId: "sado",
+  });
+
+  it("相性を持つ診断で友達のタイプを受け取ると、相性の名前を小見出し（h3）にして相性を出し、そのあとに誘いを置く", async () => {
+    render(
+      await PlayQuizResultPage({
+        params,
+        searchParams: Promise.resolve({ with: "shodo" }),
+      }),
+    );
+
+    const label = screen.getByRole("heading", {
+      level: 3,
+      name: "静と筆の調和",
+    });
+    expect(
+      screen.getByText("「茶道タイプ」と「書道タイプ」の相性"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("茶道と書道の相性の説明")).toBeInTheDocument();
+    const ctas = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
+    expect(ctas).toHaveLength(2);
+    expect(
+      label.compareDocumentPosition(ctas[1]) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("友達のタイプが無い・正しくないときや、相性を持たない診断では、相性を出さない", async () => {
+    for (const [pageParams, searchParams] of [
+      [params, undefined],
+      [params, Promise.resolve({ with: "unknown" })],
+      [params, Promise.resolve({ with: ["shodo"] })],
+      [
+        Promise.resolve({ slug: "personality-quiz", resultId: "result-x" }),
+        Promise.resolve({ with: "result-x" }),
+      ],
+    ] as const) {
+      const { unmount } = render(
+        await PlayQuizResultPage({ params: pageParams, searchParams }),
+      );
+      expect(screen.queryByText(/の相性$/)).toBeNull();
+      expect(
+        screen.getAllByText("あなたはどのタイプ? 診断してみよう"),
+      ).toHaveLength(1);
+      unmount();
+    }
+  });
+
+  it("相性のページは検索に載せず、題と説明で相性を言い、正規の URL はタイプの結果のページ", async () => {
+    const metadata = await generateMetadata({
+      params,
+      searchParams: Promise.resolve({ with: "shodo" }),
+    });
+    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.title).toBe(
+      "茶道タイプ x 書道タイプ - 静と筆の調和 | yolos.net",
+    );
+    expect(metadata.description).toBe("茶道と書道の相性の説明");
+    expect(metadata.alternates?.canonical).toMatch(
+      /\/play\/japanese-culture\/result\/sado$/,
+    );
+  });
+
+  it("詳しい読みものを持つタイプは、相性を出さないページを検索に載せる", async () => {
+    const detailed = Promise.resolve({
+      slug: "personality-with-detailed",
+      resultId: "result-detail",
+    });
+    expect((await generateMetadata({ params: detailed })).robots).toEqual({
+      index: true,
+      follow: true,
+    });
   });
 });

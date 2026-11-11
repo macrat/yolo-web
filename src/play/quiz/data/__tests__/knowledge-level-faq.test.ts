@@ -5,7 +5,6 @@ import yojiLevelQuiz from "../yoji-level";
 
 /**
  * knowledge型クイズ3個（漢字力・ことわざ力・四字熟語力）のFAQデータ検証
- * B-212: faqフィールド追加のテスト
  */
 describe("knowledge level quizzes faq data", () => {
   describe("漢字力診断 (kanji-level)", () => {

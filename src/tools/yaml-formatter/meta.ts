@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "JSON YAML 変換",
     "YAMLバリデーション",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: [
     "json-formatter",
     "csv-converter",

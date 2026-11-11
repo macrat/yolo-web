@@ -1,0 +1,635 @@
+# T4 着手前の洗い出し（結果と中身の扱い）
+
+計測日: 2026-09-26
+本書は実測とコードの読み取りの列挙のみ。案・評価は含まない。推測は「推測」と書く。
+
+- 対象: `e8a7e06` のコード。`f81cf56`（初版）から `e8a7e06` までの `src/` の変更は `src/tools/keigo-reference/KeigoReferenceTile.module.css`（`06b9d20`）だけで、本書の行番号には効かない。画面は `f81cf56`・`aefc705`・`e8a7e06` のビルドで測り、どれも本書で扱う面に差が無い。
+- 画面: `npm run build` のあと `next start` で配信したものを、Playwright（`/opt/pw-browsers/chromium`）で **375×667** と **1280×800** で開いた。性格診断の解き終えた画面（2-5）・包み・ブログの本文は、ライトとダークの両方で見た。解き終えた画面は `/play/character-personality` を実際に最後まで解いて開き、`prefers-reduced-motion: reduce` で測った（結果の登場の動きを待たないため）。
+- y 座標は、ことわりの無いものはページ先頭からの CSS px。2-5 の「着いたときの画面の中の位置」だけは、結果に着いて画面が動いたあとの画面の上端からの px。
+- Web フォントの字の有無は、ビルドが配る CSS（`.next/static/**/*.css`）の Zen Antique の `@font-face` 122件の `unicode-range` と、それぞれの woff2 の cmap（fontTools）の両方で確かめた。
+- 行番号は `e8a7e06` のもの。
+
+---
+
+## 1. 結果を出す面と、その組み方
+
+§8 の結果: 結果はボックス（§5。太い線 `--rule-w` で囲む）に入る。数字・短い語は §4 の主見出しの段（`--text-heading-main`）で組み、単位を明記する。コード・表・一覧が結果なら、そのボックスが結果のボックスで、ボーダーを二重に持たない。結果は操作の直後に置き、あいだに置けるのは結果の見出しだけ。
+
+### 1-1. 道具（36本）
+
+36本とも、入力と結果を同じ1つの `Panel`（`src/components/Panel`。§5 のボックス＝太い線の枠）に入れる。結果だけのボックスは無い。結果の中の区画は、細い `--ink` の枠（`1px solid var(--rule)` / `var(--rule-strong)`）と `--paper-2` の地を持つ「カード」で組むものが多い。
+
+| 結果の形                    | 道具                                                                                                                                                                                                           | いまの組み方（主なクラス・ファイル）                                                                                                                                                                                                                         | §8 と食い違う所                                                                                                                                                                                                                                                                                       |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 数字（主役の1つ＋ほかの数） | char-count・byte-counter                                                                                                                                                                                       | `.primaryStat` を細い `--ink` の枠＋`--paper-2` の地のカードにし、値を `3rem`（狭い画面 `2.5rem`）・`2rem`、ウェイト 600。ほかの数は `.stat` のカードの格子で `1.5rem`・600（`CharCountTile.module.css`・`ByteCounterTile.module.css`）                      | 値が §4 の主見出しの段でない。ウェイト 600 は §3 に無い（400・700 だけ）。ボックスの中に枠を持つカードを入れ子にしている。単位の明記が無い（文字数・バイト数はラベルに言うだけ）。ラベル `.primaryStatLabel` `0.85rem`・`.statLabel` `0.8rem`（`CharCountTile.module.css:33`・`:63`）は §4 の下限未満 |
+| 数字（ラベルと値の行）      | age-calculator・bmi-calculator・date-calculator・unix-timestamp・cron-parser・image-resizer（結果の行）                                                                                                        | `.resultRow` を `--paper-2` の地の行にし、値を等幅（`--font-mono`）の `0.85〜0.9rem`                                                                                                                                                                         | 値が本文より小さく、等幅（§3 はコードだけ等幅）。`0.85rem` 以下は §4 の下限（`0.875rem`）未満                                                                                                                                                                                                         |
+| 数字（1つ）                 | percent-calculator                                                                                                                                                                                             | `.resultArea`（`--paper-2` の地）に値を等幅 `1.5rem`、式を下に                                                                                                                                                                                               | 段と書体が §8・§3 と違う                                                                                                                                                                                                                                                                              |
+| 数字（複数の単位・基数）    | unit-converter・number-base-converter・color-converter                                                                                                                                                         | `.resultDisplay`・`.allResults`・`.resultItem`・`.resultCard` を細い `--ink` の枠のカードにし、値は等幅 `0.875〜1rem`。color-converter は色見本 `.colorPreview`（細い `--rule-strong` の枠）を持つ                                                           | 同上。カードの入れ子                                                                                                                                                                                                                                                                                  |
+| 数字の図                    | bmi-calculator（メーター）・password-generator（強さの帯）                                                                                                                                                     | bmi は `.meterTrack`（細い枠・`--paper-2`）の中の4区画をすべて `--paper-2`、位置を `--ink` の印で示し、区画の名前を `0.7rem` で添える。判定の文字は `.categoryLow` だけ `--ink-2`、ほかは `--ink`。password は `.strengthMeterFill*` をすべて `--ink` で塗る | `0.7rem` は下限未満。区画・強さは色で分けていない（文字で言う）                                                                                                                                                                                                                                       |
+| 文章（変換結果）            | base64・business-email・csv-converter・dummy-text・fullwidth-converter・html-entity・image-base64・json-formatter・kana-converter・line-break-remover・sql-formatter・text-replace・url-encode・yaml-formatter | 読み取り専用の `Textarea` に出す。読み上げ用に `role=status` の要約の文を別に置く（`.statusSummary` の多くは `0.8rem`）                                                                                                                                      | 結果が入力欄の見た目（細い枠）で出る。§8 の「文章は本文の大きさで組む」の組み方と、欄として出すことの関係は DESIGN.md に書かれていない                                                                                                                                                                |
+| 文章（1件ずつの値）         | hash-generator・email-validator                                                                                                                                                                                | hash は `.resultRow`（細い `--rule-strong` の枠＋`--paper-2`）に等幅 `0.8rem`。email-validator は判定を自前の svg の印と `h2`「エラー」「警告」の箇条書き                                                                                                    | 下限未満。自前の印（T5 の行で扱う）                                                                                                                                                                                                                                                                   |
+| コード・一覧                | regex-tester（マッチの一覧・`pre`）・text-diff（差分の `pre`）・cron-parser（次回実行の `ul`）                                                                                                                 | regex は `.matchInfo`（細い枠）の中に `.matchItem`（`--paper-2`）と `.matchText`（細い枠）を入れ子。text-diff は `.result`（細い `--rule-strong` の枠）の中に `pre`                                                                                          | 結果のボックスとコードのボックスが二重。細い `--ink` の枠は §6 の hover と読み違えうる                                                                                                                                                                                                                |
+| 表                          | keigo-reference（768px 超で `table`）                                                                                                                                                                          | `KeigoReferenceTile.tsx:191`。T3 で組み直し済み                                                                                                                                                                                                              | —                                                                                                                                                                                                                                                                                                     |
+| 画像                        | qr-code・image-resizer・image-base64                                                                                                                                                                           | `.result`・`.imagePreview`・`.preview` を細い枠＋`--paper-2` の地で囲む                                                                                                                                                                                      | 画像の外にもう1枚の枠                                                                                                                                                                                                                                                                                 |
+| 文章（組んだ HTML）         | markdown-preview                                                                                                                                                                                               | `.preview`（細い `--rule-strong` の枠）の中で h1〜h3 を `1.5/1.3/1.1rem`、表の全セルに細い `--ink` の枠、`th` に `--paper-2`、`blockquote` に左 `3px`                                                                                                        | 表と引用の組み方がブログ本文（4-3）と同じ問題を持つ                                                                                                                                                                                                                                                   |
+| 一覧                        | yoji-search・traditional-color-palette                                                                                                                                                                         | T3 で組み直し済み                                                                                                                                                                                                                                            | —                                                                                                                                                                                                                                                                                                     |
+
+数値は `src/tools/*/*Tile.module.css` から、結果に関わるクラスの宣言を抜き出して数えた。細い `--ink` の枠（`1px solid var(--rule)` と `var(--rule-strong)`）を結果の区画に持つ道具は 18本（bmi-calculator・byte-counter・char-count・color-converter・cron-parser・business-email・email-validator・hash-generator・image-base64・image-resizer・markdown-preview・number-base-converter・password-generator・qr-code・regex-tester・text-diff・unit-converter・unix-timestamp）。
+
+### 1-2. 診断・クイズ（15本）
+
+| 面                                                             | 描く部品                                                                            | 組み方                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解き終えた画面（`/play/[slug]` の結果。URL はプレイ面と同じ）  | `QuizContainer` → `ResultCard`（`src/play/quiz/_components/ResultCard.tsx`）        | 性格診断12本は、補助情報「診断完了」「あなたの結果」（`.medalLabel`）→ 包み（character-personality の実測は 2-5）（`Tsutsumi`。`typeNameAs="h2"`、`ResultCard.tsx:468`）→ 説明 → 詳細（`.detailedSection`）→ 共有 → 「もう一度挑戦する」。包みを出す条件は `quizType === "personality"` かつ結果が `icon` と `color` を持つこと（`ResultCard.tsx:451`）。いまの12本の全結果がどちらも持つ（下の表）。結果全体を囲むボックスは無い                                                             |
+| 同上（知識クイズ3本: kanji-level・kotowaza-level・yoji-level） | `ResultCard` の包みを出さない側                                                     | 「あなたの結果」（`0.8rem`）→ h2 のタイトル（`1.5rem`）→ 「N問中M問正解」（`.score`、`0.95rem`・`--ink-2`。`ResultCard.module.css:65`）                                                                                                                                                                                                                                                                                                                                                       |
+| 結果のページ（`/play/[slug]/result/[resultId]` ほか専用9本）   | `ResultPageShell`（`src/play/quiz/_components/ResultPageShell.tsx`）＋各 `*Content` | パンくず → 「〇〇の結果」と診断の短い説明 → h1（タイプ名。`.medalHeading` は `1rem`・`--ink-2`）→ 包み（`ResultPageShell.tsx:81`。h1 と同じタイプ名をもう一度大きく出す）→ 各診断の本文 → 共有 → 関連。実測（375px）: `/play/character-personality/result/blazing-poet` は h1 y=287〜332・包み y=344〜804（最初の画面の下端 667 で切れる）、`/play/traditional-color/result/ai` は h1 y=268〜290・包み y=302〜660。1280px では同じ順に h1 224〜246・包み 258〜643、h1 224〜246・包み 258〜557 |
+| 結果の詳細                                                     | `renderStandardContent`・`*Content.tsx` 8本                                         | 「特徴」は `--paper-2` の地の行（`.traitsItem`）、「あるある」は細い `--ink` の枠の行（`.behaviorsItem`）、「アドバイス」は `--paper-2` の地のカード（`.adviceCard`）。見出し `.detailedHeading` は `1.05rem` と下に細い `--ink` の線。contrarian-fortune の表 `.humorMetricsTable` は全セルに細い `--ink` の枠・`th` に `--paper-2`・600                                                                                                                                                     |
+| 相性                                                           | `CompatibilitySection`・`CompatibilityDisplay`                                      | 細い `--ink` の線で区切る区画                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 理系思考タイプ診断の追加                                       | `ScienceThinkingResultExtra`・`RadarChart`                                          | レーダーの多角形と軸ごとのスコアの帯を、結果の id から選んだ和色で塗る（2-3・5章）                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 同点の開示（word-sense-personality）                           | `renderTiedTypesDisclosure`                                                         | 細い `--ink` の枠＋`--paper-2` の地の区画（`.tiedDisclosure`）                                                                                                                                                                                                                                                                                                                                                                                                                                |
+
+結果の CSS に残る古い組み方の件数（ファイルごとの行数。細い `--ink` の枠 / `--paper-2` の地 / ウェイト 500・600 / `--radius`）:
+
+| ファイル                                                                                                                                                                 | 細い枠 | `--paper-2` | 500・600 | `--radius` |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ----------- | -------- | ---------- |
+| `src/play/quiz/_components/ResultCard.module.css`                                                                                                                        | 4      | 5           | 1        | 5          |
+| `ContrarianFortuneContent.module.css`                                                                                                                                    | 3      | 4           | 1        | 4          |
+| `TraditionalColorContent.module.css`・`UnexpectedCompatibilityContent.module.css`・`YojiPersonalityContent.module.css`                                                   | 各2    | 各3         | 0        | 各4        |
+| `CharacterPersonalityContent.module.css`・`ImpossibleAdviceContent.module.css`                                                                                           | 各2    | 各2         | 0        | 各3        |
+| `AnimalPersonalityContent.module.css`・`MusicPersonalityContent.module.css`                                                                                              | 各2    | 各1         | 0        | 各2        |
+| `ScienceThinkingResultExtra.module.css`                                                                                                                                  | 1      | 1           | 2        | 1          |
+| `CompatibilitySection.module.css`                                                                                                                                        | 1      | 0           | 1        | 0          |
+| `src/app/play/character-fortune/result/[resultId]/page.module.css`                                                                                                       | 7      | 1           | 0        | 2          |
+| `src/app/play/[slug]/result/[resultId]/page.module.css`                                                                                                                  | 3      | 2           | 0        | 3          |
+| 専用の結果ページ8本の `page.module.css`（animal・character-personality・contrarian・impossible・music・traditional-color・unexpected・yoji）。character-fortune は上の行 | 各1    | 0〜1        | 0〜1     | 0〜1       |
+
+診断ごとの結果の数と、包みを出す条件のデータ（`src/play/quiz/data/*.ts` の `color: "#…"` と `icon:` の行数。icon はメタの1行を含む）:
+
+| 診断                                                                                                                                                                                                                                                                         | 種類        | 結果の `color` | 包み     |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | -------------- | -------- |
+| animal-personality 12・character-fortune 6・character-personality 24・contrarian-fortune 8・impossible-advice 7・japanese-culture 7・music-personality 8・science-thinking 10・traditional-color 8・unexpected-compatibility 8・word-sense-personality 8・yoji-personality 8 | personality | 全件           | 出す     |
+| kanji-level・kotowaza-level・yoji-level                                                                                                                                                                                                                                      | knowledge   | 0              | 出さない |
+
+### 1-3. 占い
+
+| 面            | 部品                                                                      | 組み方                                                                                                                                                                                                                                    |
+| ------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/play/daily` | `DailyFortuneCard`（`src/play/fortune/_components/DailyFortuneCard.tsx`） | 日付 → 「占い完了」「今日の結果」 → 包み（`seal="占"`、`:77`）→ 星（`StarRating`）→ 説明 → `dl` のラッキーアイテムと今日のアクション（細い `--ink` の枠2件）→ 共有 → 「明日も来てね!」。`DailyFortuneCard.module.css` に `--accent` が1件 |
+
+### 1-4. ゲーム（4本）
+
+結果はどれも `GameDialog`（`src/play/games/shared/_components/new/GameDialog.tsx`。`GameDialog.module.css:6` の細い `--ink` の枠・`:7` の `--radius`・`max-width: 90vw`）の中に出る。ボックスは持たない。**DESIGN.md にはダイアログの定義が無い**（§5・§6・§8 のどこにも無い）。統計と遊び方も同じダイアログに出る。
+
+| ゲーム       | 結果の中身                                                                                                            | 組み方                                                                                                                                                                                                                                                                                                    |
+| ------------ | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| kanji-kanaru | 正解の字（`ResultModal.tsx:72`）・音訓・意味・例・「N/6 で正解しました!」・共有・カウントダウン・次のゲーム・他の分野 | 正解の字 `.resultAnswer` は `--font-heading`・`1.5rem`（`KanjiKanaru.module.css:247`）。回数の文は本文 `1rem`。題は「正解!」「残念...」。盤の判定のマスは `0.7rem`・600（`:140`。§4 の下限未満）                                                                                                          |
+| yoji-kimeru  | 正解の熟語・読み・意味・出典とカテゴリ（縦棒の字で区切る）・回数                                                      | 正解 `.resultAnswer` は `--font-heading`・`2rem`・中央揃え・字間 0.1em（`YojiKimeru.module.css:206`）                                                                                                                                                                                                     |
+| nakamawake   | 「パーフェクト!」などの文・4グループ（難易度の順）                                                                    | グループを和色の地の帯（`ResultModal.module.css:35-53`）に、名前を太字 `0.85rem`（`:27`）、語を「、」でつないで `0.8125rem`（`:32`）で置く（どちらも §4 の下限未満）                                                                                                                                      |
+| irodori      | 5問の各結果（`RoundResult`）と最終結果（`FinalResult`）                                                               | `RoundResult` は `--paper-2` の地の区画に「お題」「あなたの回答」の色見本 80px（細い `--ink` の枠）・点数 `1.2rem`・700・色差・色名のリンク。`FinalResult` は合計 `2rem`・700 に「/100」、順位の印 `rankBadge`、各問の小さな色見本 28px と `0.7rem` の点数・`0.65rem` の「問N」（どちらも §4 の下限未満） |
+
+順位の印（rankBadge）は1か所だけ: `src/play/games/irodori/_components/FinalResult.tsx:35`（`<span className={styles.rankBadge}>{rank}ランク</span>`）と `FinalResult.module.css:32`（ウェイト 700・`color: var(--accent)`）。ランクの説明文 `getRankLabel(rank)` が同じ行に続く。
+
+統計のダイアログ（3本の `StatsModal`）: 回数を `1.5rem`・700 の格子、分布を `--ink-2` の地の帯で組む。帯の中の回数は `0.75rem`・600（`KanjiKanaru.module.css:341`・`YojiKimeru.module.css:299`・nakamawake の `StatsModal.module.css:60`。§4 の下限未満）。
+
+4本の結果のダイアログには、次の問題までのカウントダウン（`CountdownTimer`。ラベル `0.8125rem`、`CountdownTimer.module.css:10`。§4 の下限未満）が出て、1秒ごとに書き換わる（10章）。
+
+### 1-5. 辞典
+
+| 面                          | 結果にあたるもの                                                       | 組み方                                                                                                                   |
+| --------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `DictionarySearch`（3辞典） | 検索の結果の一覧                                                       | T3 の行の一覧（`DictionaryEntryList`）                                                                                   |
+| 漢字の詳細                  | 大字（`KanjiDetail.tsx` の `span.character`）                          | `--font-heading`・`6rem`（狭い画面 `4rem`）・`aria-hidden`、`headingFontAttr` 付き。横に h1「漢字「水」」（`1.5625rem`） |
+| 四字熟語の詳細              | 大字（`YojiDetail.tsx:102`）                                           | `--font-heading`・`3.25rem`、`headingFontAttr` 付き。構成する漢字へのリンクの並び（`:129`）も `--font-heading`・`2rem`   |
+| 伝統色の詳細                | 色見本（`ColorDetail.tsx:86`、インラインの `backgroundColor`）と値の表 | 色名・読み・HEX などの文字を見本の横と表で出す                                                                           |
+
+### 1-6. トップ
+
+`src/app/page.tsx:234` が「結果はこんな札になります（これは見本です）。」と添えて包みの見本を1枚出す（`typeName="静かな観察者"`・`symbol="観"`・`color="ai"`・`seal="診"`・`productName="キャラ診断"`）。実測: 375px で y=839〜1249（幅 223px。最初の画面 〜667 には入らない）、1280px で y=418〜754（幅 352px）。印は 375px で 40×12px、1280px で 63×14px。
+
+---
+
+## 2. 包み（Tsutsumi）
+
+### 2-1. 使う面
+
+| 呼び出し                                               | 面                                        | 渡すもの                                                                                                                                                          |
+| ------------------------------------------------------ | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/play/quiz/_components/ResultCard.tsx:468`         | 性格診断12本の解き終えた画面              | `typeName`=タイトル（h2）・`word`=キャッチコピー（8 variant）・`symbol`=`pickResultSymbol`・`color`=`pickResultWairoColor(id)`・`productName`=診断名・`seal="診"` |
+| `src/play/quiz/_components/ResultPageShell.tsx:81`     | 性格診断の結果のページ（12本 × 結果の数） | 同上。`word` と `typeNameAs` は渡さない（タイプ名は `p`。h1 が別にある）                                                                                          |
+| `src/play/fortune/_components/DailyFortuneCard.tsx:77` | `/play/daily`                             | 運勢のタイトル・`pickResultWairoColor(fortune.id)`・`productName="今日のユーモア運勢"`・`seal="占"`                                                               |
+| `src/app/page.tsx:234`                                 | トップ                                    | 見本（1-6）                                                                                                                                                       |
+
+ほかに包みの見た目を写すもの: 札画像 `src/lib/fuda-image.tsx`（8章）。`FudaActions`（札の保存と共有）は character-personality の解き終えた画面にだけ出る（`ResultCard.tsx:483`）。
+
+### 2-2. 見た目（`src/components/Tsutsumi/Tsutsumi.module.css`・`index.tsx`）
+
+| 部位                           | いま                                                                                                                                                                                                                                                                                                                                                                                                                                                    | DESIGN.md との食い違い                                                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 外枠                           | 幅はいまの列の幅で決まる（下の注）。`border: 1px solid var(--rule-strong)`（`:12`）・`border-radius: var(--radius)`（`:13`）・`max-inline-size: 22rem`（`:17`）。幅は解き終えた画面で 375px 297px・1280px 352px、結果のページで 375px 273px・1280px 352px、トップの見本で 375px 223px                                                                                                                                                                   | 細い `--ink` の枠（§5 の2種の線のどちらでもない）。コンテンツ幅いっぱいでない（§8）   |
+| 見出し帯                       | 「yolos.net」（`0.8125rem`・`--ink-2`）と品名（`--font-heading`・`0.9375rem`）、下に細い `--ink` の線                                                                                                                                                                                                                                                                                                                                                   | `0.8125rem` は §4 の下限未満                                                          |
+| 印（`In`）                     | 右上に絶対配置。`In` に `size="100%"` を渡し、`--in-size: 100%` で幅・高さ・字の大きさ（`calc(var(--in-size) * 0.55)`）を決める。実測（幅×高さ）は、解き終えた画面で 375px 54×13px・1280px 63×14px、結果のページで 375px 49×13px・1280px 63×14px、トップで 375px 40×12px・1280px 63×14px。字はどれも 9.35px。円は潰れ、字は読めない大きさ。解き終えた画面の 375px では印が品名の字に重なる（2-5）。線と字の色は `--accent`（`In.module.css:34`・`:42`） | §4 の下限未満。§10 は画像に印を足さないと定め、DESIGN.md に印の定義が無い             |
+| 記号面                         | `data-color` の和色の地（`--fill`）に `--on` の色で、数字（`4.5rem`・600）か記号（`--font-heading`・`4rem`）を置く。最小の高さ `8.5rem`                                                                                                                                                                                                                                                                                                                 | §2「コンテンツの色の上に文字を置かない」。和色は結果の中身ではない（2-3）             |
+| タイプ名                       | `--font-heading`・`1.9375rem`・行間 1.4。解き終えた画面では `h2` なので `globals.css:235-245` の `word-break: auto-phrase` が掛かる（Chromium だけで効き、WebKit と Firefox では `normal` と同じ）。結果のページとトップでは `p` なので `normal`。どちらでも語の途中で折れる（2-5。WebKit の近似では Chromium よりずっと多く割れる）                                                                                                                    | §4 の段（`2.08rem` など）でない。行間が §4 の見出しの `1.25` 以下でない               |
+| 一言・注記                     | `1rem`・行間 1.9・`--ink-2`／`0.8125rem`                                                                                                                                                                                                                                                                                                                                                                                                                | 本文の大きさ（`1.0625rem`）でない。注記は下限未満（どの呼び出しも注記を渡していない） |
+| 数字・単位（`number`・`unit`） | どの呼び出しも渡していない（使われていない）                                                                                                                                                                                                                                                                                                                                                                                                            | —                                                                                     |
+
+結果のページの 375px では、h1（y=287）と包みのタイプ名が同じ文を2度出す（`ResultPageShell.tsx:80` と `:82`）。
+
+注（測った幅の前提）: 包みの幅と、印が品名に重なるかどうかは、包みが置かれる列の幅で決まる。その列はいま §5 と違い、T5（面ごとの適用）で §5 のコンテンツ幅に戻る。
+
+| 面             | いまのコンテンツの左端（375px ／ 1280px） | 列の決まり方                                                                                                         | §5 のコンテンツ幅の左端（375px ／ 1280px） |
+| -------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| 解き終えた画面 | x=39 ／ x=195（包み 297px ／ 352px）      | `src/app/play/[slug]/page.module.css:13` の `.layout` の内側の余白 `1.5rem 1rem`（狭い画面 `:62` で `1rem 0.75rem`） | x=27 ／ x=179                              |
+| 結果のページ   | x=51 ／ x=364（包み 273px ／ 352px）      | `ResultPageShell.module.css` の `.wrapper`（`max-width: 600px`・中央寄せ）と `.card` の余白                          | 同上                                       |
+| ブログの本文   | x=51 ／ x=203                             | 記事の自前の列                                                                                                       | 同上                                       |
+
+§5 のとおりなら、375px のコンテンツ幅は 321px になり、§8 の結果のボックス（太い線と内側の余白 8px）の中身の幅は 299px になる（計算）。
+
+### 2-3. データ
+
+| データ | 値の出どころ                                                                                                                                                                   |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 和色   | 8色（紅・柿・山吹・萌黄・常磐・藍・藤・蘇芳）。型 `WairoColor`（`Tsutsumi/index.tsx:9`）。結果の id を多項式ハッシュで8色へ写す `pickResultWairoColor`（`resultVisual.ts:27`） |
+| 品名   | 診断名（`quiz.meta.title`）・「今日のユーモア運勢」・トップの「キャラ診断」                                                                                                    |
+| 記号   | タイプ名の最初の意味のある字（開き括弧・引用符・空白を飛ばす。`pickResultSymbol`、`resultVisual.ts:74`）。トップは「観」                                                       |
+| 印の字 | 「診」（診断・トップ・札の既定 `fuda-image.tsx:44`）・「占」（占い）                                                                                                           |
+
+伝統色診断（traditional-color）では、結果そのものが伝統色（`result.color`。例: 藍色 `#0d5661`）なのに、画面の包みの地は id から選んだ和色になる。`/play/traditional-color/result/ai`（藍色）の画面の地は紅（計算値 `lab(40.2 54.8 23.3)`）で、同じ結果の OGP 画像の地は `#0d5661`（8章）。伝統色そのものは「他のタイプ」の行の色見本（`OtherTypesNav.tsx:68`）と OGP にだけ出る。
+
+### 2-4. OGP との関係
+
+`fuda-image.tsx` が包みと同じ構図（店号・品名・記号面・タイプ名・印）で 1200×630 の PNG を描き、character-personality と traditional-color の結果の `og:image` と、character-personality の札の保存（`fuda-image/route.ts`）が同じ関数を呼ぶ。詳しくは8章。
+
+### 2-5. 性格診断の解き終えた画面（character-personality の実測）
+
+結果に着いた回数の9割がこの画面である（9章）。`/play/character-personality` を最後まで解いて開いた。結果に着くと `QuizContainer.tsx:65-86` が結果の区画を画面の上端へ送り（`scrollIntoView`、`block: "start"`）、区画にフォーカスを移す。着いたときのページの送りは 375px で 399px、1280px で 284px（ライト・ダークとも同じ）。
+
+**着いたときの画面の中の位置**（Chromium の実測。画面の上端からの px。包みの高さはタイプ名の行数と一言の長さで変わる）
+
+| 幅     | 画面の高さ | 「診断完了」「あなたの結果」 | 包み               | うち記号面 | タイプ名          | 「この結果を札として持ち帰る」 | 「保存」のボタン     |
+| ------ | ---------- | ---------------------------- | ------------------ | ---------- | ----------------- | ------------------------------ | -------------------- |
+| 375px  | 667        | 0〜26                        | 38〜492 ／ 38〜622 | 116〜252   | 268〜398 ／ 〜528 | 520〜545 ／ 650〜675           | 553〜597 ／ 683〜727 |
+| 1280px | 800        | 0〜26                        | 38〜449 ／ 38〜579 | 116〜252   | 268〜355 ／ 〜485 | 477〜502 ／ 607〜632           | 510〜554 ／ 640〜684 |
+
+（「／」の左は包みがいちばん低いタイプ、右は解いて開いた中でいちばん高いタイプの実測。375px の右は 584px の包みで、24タイプの最大。1280px の右は 541px の包みで、1280px の最大 584px では「保存」は 683〜727 になる（高さの差から求めた））
+
+- **最初の画面に入るもの**（Chromium の実測）: 375px では、結果のラベル・包み（見出し帯・記号面・タイプ名・一言）までで画面がほぼ埋まる。24タイプのうち、「保存」のボタンが最初の画面に全部入るのは包みの高さが 497px 以下の11タイプで、残りの13タイプでは画面の下端に掛かるか、画面の外に出る。WebKit の近似（`word-break: normal`）では、包みが低くなり21タイプで入る（下の「タイプ名の折れ方」）。1280px では、包みがいちばん高い 584px でも「保存」の下端は 727px で、どのタイプでも入る。説明の文（`result.description`）は「保存」と「共有」の下に続く。
+- **印が品名の字に重なる**（375px）。包みが 297px になり、品名「あなたに似たキャラ診断」（x=130〜295・y=462〜490、ページ先頭から）が店号と同じ行に並ぶ。右上に絶対配置の印（x=258・y=473、54×13px）が品名の最後の字「断」の上に載る。1280px（包み 352px、印 x=459）と結果のページ（375px の包みは 273px で品名が次の行に落ちる）では重ならない。
+- **包みの地**: 実測した地は、紫・紅・蘇芳・常磐などタイプごとに変わる（ダークでも地の明るさだけ変わる）。
+- **ダーク**: 印・品名・タイプ名の位置と折れ方はライトと同じ。
+
+**タイプ名の折れ方**（24タイプ。包みの中の h2 の字を1つずつ差し替えて、行の切れ目を測った。「／」が行の切れ目、括弧は包みの高さ px。一言は解いて出た1つのタイプのものに固めた）
+
+測った条件: 解き終えた画面のタイプ名は `Tsutsumi` が `h2` で出すので、`globals.css:235-245` の見出しの規則 `word-break: auto-phrase` が掛かる（計算値も `auto-phrase`）。`auto-phrase` は Chromium でしか効かず、Safari（iOS を含む）と Firefox では `normal` と同じに折れる（`globals.css:233-234` のコメントと caniuse）。このコンテナには Chromium しか無いので、WebKit の値は、Chromium で h2 に `word-break: normal` を当てて測った**近似**である（字の幅は同じ書体の同じ Chromium のもので、Safari の禁則の実装の差は含まない）。結果のページのタイプ名は `p` なので、Chromium でも `normal` で折れる。
+
+直近28日の character-personality の結果に着いた回数 1,181 のうち、WebKit で描かれたのは約 776（66%）、Chromium は約 405（34%）（9-2）。**いちばん多い来訪者（iPhone の Safari）が見るのは `normal` の列である。**
+
+| id                   | 375px・`auto-phrase`（Chromium）                                                        | 375px・`normal`（WebKit の近似）                                                      | 1280px・`auto-phrase`（Chromium）                                                       | 1280px・`normal`（WebKit の近似）                                                   |
+| -------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| blazing-strategist   | 締切3分前に／5手先を読む炎の／策士（454）                                               | 締切3分前に5手／先を読む炎の策／士（454）                                             | 締切3分前に5手先を／読む炎の策士（410）                                                 | 締切3分前に5手先を／読む炎の策士（410）                                             |
+| blazing-poet         | 「よし行く／ぞ！」と叫んで／3秒後に空を／見上げる炎の／詩人（540）                      | 「よし行く／ぞ！」と叫んで3／秒後に空を見上／げる炎の詩人（497）                      | 「よし行くぞ！」と／叫んで3秒後に空を／見上げる炎の詩人（454）                          | 「よし行くぞ！」と／叫んで3秒後に空を見／上げる炎の詩人（454）                      |
+| blazing-schemer      | 正攻法3秒で／飽きて全員を／裏道に／連れ込む司令塔（497）                                | 正攻法3秒で飽き／て全員を裏道に／連れ込む司令塔（454）                                | 正攻法3秒で飽きて／全員を裏道に／連れ込む司令塔（454）                                  | 正攻法3秒で飽きて全／員を裏道に連れ込む／司令塔（454）                              |
+| blazing-warden       | 先頭を／走りながら／「全員来てる／か！」と／叫び続ける／守護司令塔（584）               | 先頭を走りなが／ら「全員来てる／か！」と叫び続／ける守護司令塔（497）                 | 先頭を走りながら／「全員来てるか！」／と叫び続ける／守護司令塔（497）                   | 先頭を走りながら／「全員来てるか！」／と叫び続ける守護司／令塔（497）               |
+| blazing-canvas       | 締切1時間前に／突然スイッチが／入って傑作を／叩き出す情熱の／画家（540）                | 締切1時間前に突／然スイッチが入／って傑作を叩き／出す情熱の画家（497）                | 締切1時間前に／突然スイッチが／入って傑作を／叩き出す情熱の画家（497）                  | 締切1時間前に突然ス／イッチが入って傑作／を叩き出す情熱の画／家（497）              |
+| dreaming-scholar     | 夢の中で3本の／論文を／書き終えた／学術夢想家（497）                                    | 夢の中で3本の論／文を書き終えた／学術夢想家（454）                                    | 夢の中で3本の論文を／書き終えた／学術夢想家（454）                                      | 夢の中で3本の論文を／書き終えた学術夢想／家（454）                                  |
+| contrarian-professor | 正解を／出した後で／「でも／違う解釈だ／と…」と／追加する人（584）                      | 正解を出した後／で「でも違う解／釈だと…」と追／加する人（497）                        | 正解を出した後で／「でも／違う解釈だと…」と／追加する人（497）                          | 正解を出した後で／「でも違う解釈だ／と…」と追加する人（454）                        |
+| careful-scholar      | 安全確認を／17回やってから／実験を始める／慎重博士（497）                               | 安全確認を17回／やってから実験／を始める慎重博／士（497）                             | 安全確認を／17回やってから／実験を始める／慎重博士（497）                               | 安全確認を17回やっ／てから実験を始める／慎重博士（454）                             |
+| academic-artist      | 数式を見て／「これ詩みたい／だ」と感動する／データの詩人（497）                         | 数式を見て「こ／れ詩みたいだ」／と感動するデー／タの詩人（497）                       | 数式を見て／「これ詩みたいだ」／と感動するデータの／詩人（497）                         | 数式を見て「これ詩／みたいだ」と感動す／るデータの詩人（454）                       |
+| star-chaser          | 夢を語りながら／「でも／これ普通じゃな／いよね」と／逆張りする／妄想家（584）           | 夢を語りながら／「でもこれ普通／じゃないよね」／と逆張りする妄／想家（540）           | 夢を語りながら／「でも／これ普通じゃないよ／ね」と逆張りする／妄想家（540）             | 夢を語りながら「で／もこれ普通じゃない／よね」と逆張りする／妄想家（497）           |
+| tender-dreamer       | 「みんなが／幸せな世界」を／毎晩脳内で／丁寧に設計する／夢想家（540）                   | 「みんなが幸せ／な世界」を毎晩／脳内で丁寧に設／計する夢想家（497）                   | 「みんなが幸せな／世界」を毎晩脳内で／丁寧に設計する／夢想家（497）                     | 「みんなが幸せな世／界」を毎晩脳内で丁／寧に設計する夢想家（454）                   |
+| dreaming-canvas      | 目を閉じると／映画が始まる／感性と妄想の／重ね塗りタイプ（497）                         | 目を閉じると映／画が始まる感性／と妄想の重ね塗／りタイプ（497）                       | 目を閉じると映画が／始まる感性と妄想の／重ね塗りタイプ（454）                           | 目を閉じると映画が／始まる感性と妄想の／重ね塗りタイプ（454）                       |
+| clever-guardian      | 「悪用できる／穴」を見つけて／自分で／塞ぐ戦略的安全／係（540）                         | 「悪用できる／穴」を見つけて／自分で塞ぐ戦略／的安全係（497）                         | 「悪用できる穴」を／見つけて自分で／塞ぐ戦略的安全係（454）                             | 「悪用できる穴」を／見つけて自分で塞ぐ／戦略的安全係（454）                         |
+| creative-disruptor   | 「王道でいく／理由ある?」と／言いながら意図／的に外す曲者（497）                        | 「王道でいく理／由ある?」と言い／ながら意図的に／外す曲者（497）                      | 「王道でいく／理由ある?」と／言いながら意図的に／外す曲者（497）                        | 「王道でいく理由あ／る?」と言いながら意／図的に外す曲者（454）                      |
+| gentle-fortress      | 「大丈夫?」と／聞きながら自分／が／一番疲れている／守護芸術家（540）                    | 「大丈夫?」と聞／きながら自分が／一番疲れている／守護芸術家（497）                    | 「大丈夫?」と／聞きながら自分が／一番疲れている／守護芸術家（497）                      | 「大丈夫?」と聞きな／がら自分が一番疲れ／ている守護芸術家（454）                    |
+| ultimate-commander   | 「考えるより／動け」を／文字通り実践す／る覇王（497）                                   | 「考えるより動／け」を文字通り／実践する覇王（454）                                   | 「考えるより動け」／を文字通り実践する／覇王（454）                                     | 「考えるより動け」／を文字通り実践する／覇王（454）                                 |
+| endless-researcher   | 「もう少し／調べてから」と／言って／気づいたら／10年経っていた／博士（584）             | 「もう少し調べ／てから」と言っ／て気づいたら10／年経っていた博／士（540）             | 「もう少し／調べてから」と／言って気づいたら／10年経っていた博士（497）                 | 「もう少し調べてか／ら」と言って気づい／たら10年経っていた／博士（497）             |
+| eternal-dreamer      | 「いつかやる」／と／言いながら脳内／では／47回旅立ってい／る妄想家（584）               | 「いつかやる」／と言いながら脳／内では47回旅立／っている妄想家（497）                 | 「いつかやる」と／言いながら脳内では／47回旅立っている／妄想家（497）                   | 「いつかやる」と言／いながら脳内では47／回旅立っている妄想／家（497）               |
+| ultimate-trickster   | 裏の裏の裏を／読んで頭が／痛くなっても／続ける策略家（497）                             | 裏の裏の裏を読／んで頭が痛くな／っても続ける策／略家（497）                           | 裏の裏の裏を読んで／頭が痛くなっても／続ける策略家（454）                               | 裏の裏の裏を読んで／頭が痛くなっても続／ける策略家（454）                           |
+| ultimate-guardian    | 晴れの日に傘を／7本持って山に／登る備えの王（454）                                      | 晴れの日に傘を7／本持って山に登／る備えの王（454）                                    | 晴れの日に傘を／7本持って山に登る／備えの王（454）                                      | 晴れの日に傘を7本持／って山に登る備えの／王（454）                                  |
+| ultimate-artist      | 「うーん、／なんか違う」を／1000回繰り返す／美の追求者（497）                           | 「うーん、なん／か違う」を1000／回繰り返す美の／追求者（497）                         | 「うーん、なんか／違う」を／1000回繰り返す美の／追求者（497）                           | 「うーん、なんか違／う」を1000回繰り返／す美の追求者（454）                         |
+| data-fortress        | 心配の原因を／全部データで／証明してから／対策する／論理的守護者（540）                 | 心配の原因を全／部データで証明／してから対策す／る論理的守護者（497）                 | 心配の原因を／全部データで／証明してから／対策する／論理的守護者（540）                 | 心配の原因を全部デ／ータで証明してから／対策する論理的守護／者（497）               |
+| vibe-rebel           | 直感で走ったら／3歩目で／全員置き去りに／していた野生の／芸術家（540）                  | 直感で走ったら3／歩目で全員置き／去りにしていた／野生の芸術家（497）                  | 直感で走ったら／3歩目で／全員置き去りに／していた野生の／芸術家（540）                  | 直感で走ったら3歩目／で全員置き去りにし／ていた野生の芸術家（454）                  |
+| guardian-charger     | 普段は後方で／全員の顔色を／確認しながら、／本当に必要な／時だけ前に出る／守護者（584） | 普段は後方で全／員の顔色を確認／しながら、本当／に必要な時だけ／前に出る守護者（540） | 普段は後方で全員の／顔色を／確認しながら、／本当に必要な／時だけ前に出る／守護者（584） | 普段は後方で全員の／顔色を確認しなが／ら、本当に必要な時／だけ前に出る守護者（497） |
+
+- **語の途中で折れるもの**（§4「見出しは意味の切れ目で折る。語の途中で折らない」と食い違う）:
+  - `auto-phrase`（Chromium）: 375px で9タイプ（「行く／ぞ」「来てる／か」「解釈だ／と」「みたい／だ」「じゃな／いよね」「安全／係」「意図／的」「実践す／る」「旅立ってい／る」）、1280px で1タイプ（「ないよ／ね」）。1字だけの行（「が」「と」「係」）が 375px で3タイプに出る。
+  - `normal`（WebKit の近似）: 375px ではほぼすべてのタイプが語の途中で折れる（例「叫んで3／秒後に空を見上／げる」「10／年経っていた博／士」「脳内で丁寧に設／計する」）。数字と助数詞も割れる（「3／秒」「10／年」「7／本」「1000／回」）。1字だけの行（「士」）が3タイプに出る。1280px でも「見／上げる」「司／令塔」「夢想／家」「デ／ータ」など、多くのタイプが語の途中で折れる。
+- **包みの高さの分布と「保存」**（375px。「保存」のボタンの下端が 667 以下なら最初の画面に全部入る）:
+  - `auto-phrase`（Chromium）: 454px 2・497px 9・540px 7・584px 6。「保存」が入るのは24のうち11タイプ。
+  - `normal`（WebKit の近似）: 454px 5・497px 16・540px 3。「保存」が入るのは24のうち21タイプ。字を詰めて折るぶん行が減り、包みが低くなる。
+  - 1280px では、どちらの折り方でもすべてのタイプで入る。
+- 2-5 の冒頭の表の位置（Chromium の実測）と、ここの高さは同じ一言で測った。一言の行数が違えば1行ぶん変わる（推測）。
+
+---
+
+## 3. 字形が主題の要素と書体
+
+### 3-1. 要素ごとの書体
+
+| 要素                                    | ファイル                                                     | 書体                                                                | Zen Antique に無い字の扱い                                                                                                                                                                                                                   |
+| --------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 漢字の詳細の大字                        | `src/dictionary/_components/kanji/KanjiDetail.tsx`           | `--font-heading`                                                    | サーバーで `headingFontAttr`（`src/lib/zen-antique-charset.ts`）を付ける。`/dictionary/kanji/𠮟` の大字は `data-heading-font="fallback"` で `"BIZ UDGothic", …` の並びになる（実測）                                                         |
+| 四字熟語の詳細の大字・構成字のリンク    | `src/dictionary/_components/yoji/YojiDetail.tsx:102`・`:129` | `--font-heading`                                                    | 同上                                                                                                                                                                                                                                         |
+| 漢字カナールの正解                      | `src/play/games/kanji-kanaru/_components/ResultModal.tsx:72` | `--font-heading`（`KanjiKanaru.module.css:247`）                    | 属性を付けない（クライアントの部品）。無い字は、`--font-heading` の並びの中で Zen Antique の次の `--font-ja-heading-fallback` に落ちる（CSS の字ごとの代替。推測ではなく並びの定義から。1字なので、1つの見出しの中で書体が混ざることはない） |
+| 漢字カナールの盤の字（推測した字）      | `GuessRow.tsx:77`・`.guessKanji`                             | 本文の書体・ウェイト 700                                            | —                                                                                                                                                                                                                                            |
+| 四字キメルの正解                        | `src/play/games/yoji-kimeru/_components/ResultModal.tsx`     | `--font-heading`（`2rem`）                                          | 属性を付けない                                                                                                                                                                                                                               |
+| 四字キメルの盤の字                      | `CharFeedbackCell.tsx`・`.cell`                              | 本文の書体・ウェイト 700・`1.5rem`（480px 以上 `1.75rem`）          | —                                                                                                                                                                                                                                            |
+| 包みの記号・タイプ名・品名              | `Tsutsumi.module.css`                                        | `--font-heading`                                                    | 属性を付けない（ResultCard と DailyFortuneCard はクライアントの部品）                                                                                                                                                                        |
+| 包みの印の字                            | `In.module.css:43`                                           | `--font-heading`                                                    | 同上                                                                                                                                                                                                                                         |
+| 札・OGP の品名・タイプ名・記号・印・`y` | `fuda-image.tsx`・`ogp-image.tsx`                            | Noto Serif JP 600（明朝。Google Fonts から取得）と Noto Sans JP 400 | Zen Antique を使っていない（8章）                                                                                                                                                                                                            |
+
+### 3-2. Zen Antique に無い字（ビルドの配る分割ファイルで確かめた）
+
+- 確かめ方: ビルドの CSS の Zen Antique の `@font-face` 122件について、字がどれかの `unicode-range` に入り、かつその woff2 の cmap にあるか。`src/data/zen-antique-charset.json`（`scripts/generate-zen-antique-charset.ts` が作る表）の判定と同じ結果になった。
+- 𠮟（U+20B9F）・剝（U+525D）・塡（U+5861）・頰（U+9830）: **4字とも無い**。診（U+8A3A）・占（U+5360）・観（U+89B3）はある。
+
+| データ                                                                                                         | 無い字                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 常用漢字 2,136字（`src/data/kanji-data.json`）                                                                 | 4字（𠮟・剝・塡・頰）。4字とも学年7（中学以降）                                                                                                        |
+| 漢字カナールの出題の範囲                                                                                       | 初級（学年2まで 240字）・中級（学年6まで 1,026字）は0字。上級（学年7まで 2,136字）は4字すべてを含む                                                    |
+| 漢字カナールの出題表（3難易度 × 730日、2026-03-01〜2028-02-28）                                                | 上級の 2026-08-10 が「塡」（過ぎた日）。これから先の日付には無い。表の後は日付のハッシュで範囲の中から選ぶ（`_lib/daily.ts`）ので、上級では4字が出うる |
+| 四字熟語 400語（`src/data/yoji-data.json`）・四字キメルの正解                                                  | 0語                                                                                                                                                    |
+| 診断・占いのタイトル 190件（`src/play/quiz/data/*.ts`・`src/play/fortune/data/daily-fortunes.ts` の `title:`） | 0件（包みのタイプ名・記号・品名に無い字は出ない）                                                                                                      |
+| 伝統色 250色の名（`src/data/traditional-colors.json`）                                                         | 1色「纁」（sohi）。伝統色の詳細の h1 は `headingFontAttr` を付ける。イロドリの色名（`RoundResult`）は本文の書体                                        |
+
+---
+
+## 4. 中身か装飾か
+
+### 4-1. 色が主題の面
+
+| 面                                         | 色の出し方                                                                                              | 文字でも伝わるか                                                                                    |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 伝統色の詳細                               | 色見本（`ColorDetail.tsx:86`）                                                                          | 色名・読み・HEX・RGB を文字で出す                                                                   |
+| 伝統色の一覧・分類                         | 行の先頭の色見本（T3）                                                                                  | 名前と HEX                                                                                          |
+| traditional-color-palette・color-converter | 見本の格子・`.colorPreview`                                                                             | 選んだ見本の名前と値（T3）・変換値                                                                  |
+| 伝統色診断                                 | 「他のタイプ」の行の色見本（`OtherTypesNav.tsx:68`）・OGP の地（`colorOverride`）                       | タイプ名（例「藍色(あいいろ)」）。画面の包みの地は結果の色でない和色（2-3）                         |
+| イロドリ                                   | お題の見本 120〜140px（`ColorTarget`）、各問の「お題」「あなたの回答」80〜100px、最終結果の 28px の見本 | 各問は点数・色差・色名。最終結果の 28px の見本には `role`・名前が無く、どちらがお題かは並びの順だけ |
+
+### 4-2. 色で状態を示している面
+
+§2 は、色を使うのは「その色がコンテンツそのものであるときだけ」とし、「区別・強調・気分のために色を足すことは、コンテンツであっても認めない」「コンテンツの色の上に文字を置かない」と定める。T4 の行の「字か形でも伝わるようにする」は、これより弱い（色を残して字・形を足す）。下の表の「色の性質」は、その色が中身そのもの（色の名や値が結果）か、区別・強調・気分のための色かを分ける。
+
+| 面                                                                     | 色                                                                                                                                                                                        | 色の性質（§2）                                                                                | 色の上に字があるか                      | 色のほかに伝えるもの                                                                                                                                                                                                                                                                                                                                                                             |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| kanji-kanaru の判定のマス（`FeedbackCell.tsx`）                        | 一致=常磐・近い=山吹・不一致=`--ink-2`（`KanjiKanaru.module.css:148-165`）                                                                                                                | 区別の色                                                                                      | ある（「一致」などの語を `-on` の色で） | マスの字「一致」「近い」「不一致」（学年は矢印を添え、読み上げは語で言う）。**色なしでも伝わる**                                                                                                                                                                                                                                                                                                 |
+| yoji-kimeru の判定のマス（`CharFeedbackCell.tsx`）                     | 正しい位置=常磐・別の位置=山吹・含まれない=`--ink-2`（`YojiKimeru.module.css:107-124`）                                                                                                   | 区別の色                                                                                      | ある（推測した字）                      | マスに見えるのは推測した字だけ。判定は `aria-label` にだけある。**目で見る人には色だけで伝わる**。CSS の冒頭の注記（`:7-8`）は「セル内の文字＋aria-label で判定できる」と書くが、見える文字は判定を言わない                                                                                                                                                                                      |
+| 判定の凡例（遊び方。kanji-kanaru・yoji-kimeru）                        | 常磐・山吹・`--ink-2` の 1.1rem の四角（`.legendChip*`）                                                                                                                                  | 区別の色（盤の色の見本）                                                                      | 無い（四角の横に語）                    | 語                                                                                                                                                                                                                                                                                                                                                                                               |
+| nakamawake のグループの難易度（`SolvedGroups.tsx`・`ResultModal.tsx`） | 易=山吹・普=萌黄・難=藍・超難=藤（`SolvedGroups.module.css:37-55`・`ResultModal.module.css:35-53`）                                                                                       | 区別の色                                                                                      | ある（グループ名と語）                  | 帯にはグループ名と語だけ。難易度は色だけ。結果のダイアログでは難易度の順に並ぶ（順は見えるが、それが難易度だとは書かれていない）。遊び方の凡例は色見本と「黄 = 易しい」など色の名で言う（`HowToPlayModal.tsx:61-74`）                                                                                                                                                                            |
+| 統計の分布の強調（kanji-kanaru・yoji-kimeru の `StatsModal`）          | 今回の回数の帯を常磐、ほかを `--ink-2`（`KanjiKanaru.module.css:347-351`・`YojiKimeru.module.css:305-309`）                                                                               | 強調の色                                                                                      | ある（帯の中の回数）                    | 回数の数字は同じ。**強調は色だけ**                                                                                                                                                                                                                                                                                                                                                               |
+| 統計の分布（nakamawake の `StatsModal`）                               | `.distributionBarHighlight`（常磐）が `StatsModal.module.css:65-69` にあるが、`StatsModal.tsx` は使っていない（強調は無い）                                                               | —                                                                                             | 帯の中に回数（地は `--ink-2`）          | — （cycle-316 の T4 の行の「nakamawake の統計の分布の強調」は、画面には無い）                                                                                                                                                                                                                                                                                                                    |
+| irodori の進みの点（`ProgressBar.tsx`）                                | 済み `--ink`・いま `--accent`・未 `--rule`（`GameContainer.module.css:16-31`）。どれも `--ink` を指す（`globals.css:27`・`:31`）ので、**3つの状態がすべて同じ色**で、形も同じ 10px の四角 | UI の無彩（和色ではない）                                                                     | 無い                                    | 横の「n/5」の文字（いまの問の番号。`.progressText` `0.85rem`・600 は §4 の下限未満）。`role=progressbar` の `aria-valuenow` は済んだ数で、見える文字（いまの問）と数え方が違う。イロドリの5問は、§5 の「進み具合の帯」（設問のように順に進むものの済んだ所。太い線で囲んだ `--paper-2` の地を済んだ割合だけ `--ink` で塗り、左に「3 / 10」を補助情報の大きさで添え、読み上げでも伝える）にあたる |
+| 占いの星（`StarRating.tsx`）                                           | ★を山吹（`StarRating.module.css:9`）、☆を `--rule-strong`                                                                                                                                 | 気分の色（金に見立てた飾り）                                                                  | 星の字そのものが色                      | ★と☆の形・「(3.5)」の数字。半分の星は☆で、空の星と形が同じ（数字で伝わる）                                                                                                                                                                                                                                                                                                                       |
+| 包みの記号面（2章）                                                    | 結果の id のハッシュで選ぶ和色8色                                                                                                                                                         | 飾りの色（結果の中身ではない）。伝統色診断だけは結果の色が中身だが、いまは使っていない（2-3） | ある（記号の1字を `4rem`）              | タイプ名・品名は紙の上の字                                                                                                                                                                                                                                                                                                                                                                       |
+| 理系思考タイプ診断のレーダーとスコアの帯                               | 結果の id から選んだ和色                                                                                                                                                                  | 飾りの色（どの軸も1色で、状態を示していない）                                                 | 無い（軸の名前と数値は紙の上）          | 軸の名前と数値                                                                                                                                                                                                                                                                                                                                                                                   |
+| bmi-calculator のメーター・password-generator の強さ                   | 色で分けていない（1-1）                                                                                                                                                                   | —                                                                                             | —                                       | 文字                                                                                                                                                                                                                                                                                                                                                                                             |
+| ゲームの共有の文                                                       | 4本すべて（kanji-kanaru・yoji-kimeru・nakamawake・irodori）が 🟩🟨⬜🟦🟪🟧🟥 の絵文字で判定を並べる（各 `_lib/share.ts`。yoji-kimeru は `:16-20`）                                        | 区別の色（サイトの外に出る文）                                                                | —                                       | 回数などは文字                                                                                                                                                                                                                                                                                                                                                                                   |
+
+中身の色（§2 が認める色）にあたるのは、4-1 の面の色見本（伝統色・色の道具・イロドリの見本・伝統色診断の他のタイプの見本）と、伝統色診断の結果の色だけである。4-2 の和色は、どれも区別・強調・気分の色にあたる。
+
+### 4-3. ブログ本文（`src/blog/content/*.md` 87本、うち `draft: true` 1本）
+
+| 中身               | 数                                                                                                                                                                                                           | いまの組み方                                                                                                                                                                                                                                                                                                  | 色・形                                                                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| コードのブロック   | 59本・408ブロック（mermaid 19 を含む。多い順に typescript 73・text 60・言語なし 49・sql 41・tsx 35）                                                                                                         | Shiki（`src/lib/highlight.ts`）の vitesse-light / vitesse-dark をビルドの時に埋め込む。`pre` はインラインの地 `#ffffff`（ダークは `--shiki-dark-bg` `#121212`）と `tabindex="0"` を持つ。`.prose pre`（`page.module.css:122`）が枠を `1px solid var(--rule)` にする（実測 `1px solid`）                       | 色分けは字の種類を示す飾りで、字そのものは色なしでも読める。地が `--paper-2` でない。枠が §5 の太い線でない（`globals.css:344` の `:where(pre)` は太い線だが、ブログが上書き） |
+| インラインのコード | —                                                                                                                                                                                                            | `.prose code`（`page.module.css:103`）: `--paper-2`・`0.85em`                                                                                                                                                                                                                                                 | —                                                                                                                                                                              |
+| mermaid            | 10本・19図（flowchart・graph 13、sequenceDiagram 4、gantt 1 ほか）。`style`・`classDef` の色指定は0                                                                                                          | `MermaidRenderer.tsx` がクライアントで描く。テーマは mermaid の `default` / `dark`                                                                                                                                                                                                                            | 図の色は mermaid の既定の配色（飾り）。gantt の `crit`（赤）は「テスト失敗」の文字でも言う                                                                                     |
+| 絵文字             | 本文（コードの外）で2本・5行。すべて題材としての絵文字（「😀」「👨‍👩‍👧‍👦」の数え方の説明。`2026-02-14-character-counting-guide.md:33`・`:48`・`:158`・`:240`）と `↔`（`2026-06-15-git-command-cheatsheet.md:116`） | 本文の字として出す                                                                                                                                                                                                                                                                                            | 中身                                                                                                                                                                           |
+| 表                 | 60本・約200表                                                                                                                                                                                                | `.table-scroll`（`src/lib/markdown.ts:161`）で包む。`.prose :global(.table-scroll)` は `overflow-x: auto` だけで、枠と `tabindex` は無い（実測 `tabindex=null`）。`.prose th, .prose td` は全セルに `1px solid var(--rule)`（外枠を含む）・`0.9375rem`、`th` に `--paper-2`・600（`page.module.css:174-190`） | §5 の表（外枠なし・細い `--rule-2`）と違う。`globals.css:352-386` の既定の表の規則を上書きしている                                                                             |
+| GFM Alert          | **42本・100件**（NOTE 48・WARNING 18・TIP 17・IMPORTANT 11・CAUTION 6）                                                                                                                                      | `marked-alert` が `div.markdown-alert.markdown-alert-<種別>` と、octicon の svg（`aria-hidden`）と英語の見出し「Note」「Warning」「Tip」「Important」「Caution」を出す。`globals.css:578-608`: 細い `--rule-2` の枠・`--paper-2` の地、WARNING と CAUTION だけ左に太い `--ink` の線                           | 種別は色で分けず、英語の語と svg の形で分ける。細い線の囲みは §6 の hover と、左だけの太い線は §5・§6 のどの形とも読み分けの表に無い。見出しが英語（§9）                       |
+| `hr`               | 7本・19件（`2026-03-16-memo-system-rise-and-fall.md` 6・`2026-03-29-pm-premise-contamination-in-multi-agent-ai.md` 5・`2026-04-20-stop-piling-rules-give-ai-its-wish.md` 4 ほか4本各1）                      | `globals.css:323`: 細い `--rule-2` の上の線・上下 24px                                                                                                                                                                                                                                                        | §5 の線の使い場所（細い線: 一覧の区切り・表・色見本・入力欄・hover・小見出しの上）に `hr` は無い                                                                               |
+| 引用               | —                                                                                                                                                                                                            | `.prose blockquote`（`page.module.css:161`）: 左 `2px solid var(--rule-strong)`・`--ink-2`                                                                                                                                                                                                                    | 2px は §5 の2種の線のどちらでもない                                                                                                                                            |
+
+ダークとライトの違い（375px、`/blog/cron-parser-guide`・`/blog/workflow-simplification-stopping-rule-violations` で実測）:
+
+- コードのブロックの地は、ライトで `#ffffff`（`--paper` は `#fcfcfc` 相当）、ダークで `#121212`（`--paper` のダークと同じ明るさ）。どちらの場合も `--paper-2` の調子の差が無く、ダークでは地が背景と同じになり、枠は明るい `--ink` の 1px になる。
+- 表のセルの枠（`--ink` の 1px）と `th` の地（`--paper-2`）、GFM Alert の地（`--paper-2`）と枠（`--rule-2`）・左の太い線（`--ink`）は、ダークでもトークンのダークの値に替わるだけで、組み方は同じ。
+- mermaid の図は、テーマ（`default`・`dark`）で色が替わる。どちらでも、図は mermaid が付ける `max-width`（図の幅）の中で本文の幅に縮められる。1つ目の図は幅 1,510px の図を 375px で 273px（0.18倍）、1280px で 622px（0.41倍）に縮めて出し、375px では図の中の字が読めない大きさになる（`page.module.css:204` のコメントは横に送れるようにすると書くが、送られない）。
+
+直近28日（2026-08-29〜09-25）のブログ記事の表示は 71回（PC 63・スマホ 8。9章）。
+
+---
+
+## 5. 和色のトークン
+
+### 5-1. 定義（`src/app/globals.css`、26行）
+
+| 行      | 内容                                                                                                               |
+| ------- | ------------------------------------------------------------------------------------------------------------------ |
+| 108-123 | 使う所と対比の表のコメント（「包み・診断の結果の図・ゲームの判定のセル・なかまわけの統計の強調・運勢の星で使う」） |
+| 126-127 | `--wairo-ink-white`・`--wairo-ink-sumi`（地の上の文字色）                                                          |
+| 130-137 | 8色（ライト）                                                                                                      |
+| 140-147 | 8色の `-on`（白か墨を指す）                                                                                        |
+| 179-187 | 8色（ダーク）                                                                                                      |
+
+### 5-2. 使う所（`var(--wairo-` の行数。テストを除く）
+
+| ファイル                                                                | 行数 | 使う色                     | 何に                                                           |
+| ----------------------------------------------------------------------- | ---- | -------------------------- | -------------------------------------------------------------- |
+| `src/components/Tsutsumi/Tsutsumi.module.css:147-178`                   | 16   | 8色と `-on`                | 包みの記号面の地と字                                           |
+| `src/play/quiz/_components/RadarChart.module.css:39-62`                 | 8    | 8色                        | レーダーの多角形（`--radar-fill`）                             |
+| `src/play/quiz/_components/ScienceThinkingResultExtra.module.css:73-96` | 8    | 8色                        | スコアの帯（`--extra-fill`）                                   |
+| `src/play/fortune/_components/StarRating.module.css:9`                  | 1    | 山吹                       | ★の字の色                                                      |
+| `src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css` | 8    | 常磐・山吹と `-on`         | 判定のマス（150-157）・分布の強調（349-350）・凡例（389・393） |
+| `src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css`   | 8    | 常磐・山吹と `-on`         | 判定のマス（109-116）・分布の強調（307-308）・凡例（351・355） |
+| `src/play/games/nakamawake/_components/SolvedGroups.module.css:38-54`   | 8    | 山吹・萌黄・藍・藤と `-on` | 解けたグループの帯                                             |
+| `src/play/games/nakamawake/_components/ResultModal.module.css:36-52`    | 8    | 同上                       | 結果のグループの帯                                             |
+| `src/play/games/nakamawake/_components/HowToPlayModal.module.css:36-48` | 4    | 同上                       | 凡例の色見本                                                   |
+| `src/play/games/nakamawake/_components/StatsModal.module.css:67-68`     | 2    | 常磐と `-on`               | 使われていない `.distributionBarHighlight`                     |
+
+TS から和色に触れる所: 型 `WairoColor`（`Tsutsumi/index.tsx:9`）を `resultVisual.ts`・`RadarChart.tsx:3`・`wairoHex.ts:1` が使う。`pickResultWairoColor` を `ResultCard.tsx:476`・`ResultPageShell.tsx:84`・`DailyFortuneCard.tsx:80`・`ScienceThinkingResultExtra.tsx:80`・`fuda-image.tsx:111` が呼ぶ。hex の写し `WAIRO_HEX`（`src/lib/wairoHex.ts:47`、ライトの値）を `fuda-image.tsx` が使う。`src/lib/oklchToHex.ts` のコメントも和色の hex 化を言う。
+
+テスト: `src/lib/__tests__/wairoHex.test.ts`（globals.css の oklch と hex 表の一致）・`src/lib/__tests__/fuda-image.test.tsx`・`src/play/quiz/_components/__tests__/resultVisual.test.ts`・`src/test/design-gate.test.ts`（和色の背景を状態のセレクタの外で使う宣言の検出と、その例外の一覧 94-197 行）。
+
+---
+
+## 6. `accentColor`
+
+| 区分         | 所                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 型（必須）   | `QuizMeta.accentColor: string`（`src/play/quiz/types.ts:301`）・`GameMeta.accentColor: string`（`src/play/games/types.ts:18`）・`PlayContentMeta.accentColor: string`（`src/play/types.ts:26`）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| データ       | クイズ15本の `meta.accentColor`（`src/play/quiz/data/*.ts`。例 `traditional-color.ts:27` `#0d5661`）。ゲーム4本（`src/play/games/registry.ts:12`・`:71`・`:132`・`:193`）。占い `fortunePlayContentMeta`（`src/play/registry.ts:68`）                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 写し         | `src/play/registry.ts:20`（ゲーム）・`:45`（クイズ）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 表示での使用 | **0件**。`accentColor` を読むのは写しだけ。コメントで触れるのは `ScienceThinkingResultExtra.tsx:79`（「使わない」）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| テスト       | 32ファイル・72行。値の検査をするもの: `src/play/quiz/__tests__/registry.test.ts:46`・`src/play/games/__tests__/registry.test.ts:33`・`:40-42`（hex の形）・`src/play/__tests__/registry.test.ts:33`・`:83`・`:132-133`・`src/play/__tests__/color-utils.test.ts`（全19種の accentColor のコントラスト、5行）・`src/play/quiz/data/__tests__/animal-personality-detailed.test.ts:283-287`・`src/app/play/{traditional-color,music-personality,yoji-personality}/result/[resultId]/__tests__/page.test.ts`（各3行「accentColor が定義されている」）・`src/lib/__tests__/ogp-image.test.tsx`（7行。OGP が accentColor を受け取らないことの検査）。ほかはモックのデータに値を書くだけ |
+| そのほか     | ブログ記事 `src/blog/content/2026-02-22-game-infrastructure-refactoring.md:133` がコードの例として型を載せる                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+
+`QuizResult.color`（結果ごとの色）は別のフィールドで、表示では包みを出す条件（`ResultCard.tsx:451`・`ResultPageShell.tsx:55`）・伝統色診断の他のタイプの色見本・伝統色診断の OGP の地に使う。`src/play/color-utils.ts` の `getContrastTextColor` は `fuda-image.tsx:109` が使う。
+
+---
+
+## 7. DESIGN.md に無い節や語を指すコメント
+
+いまの DESIGN.md の節: §1 考え方・§2 色（UI・コンテンツ）・§3 書体・§4 組版・§5 構造・§6 コントロール・§7 一覧・§8 入力と結果・§9 文章・§10 サイトの外での見え方・§11 モーション・§12 満たすべき要件。「成果物パレット」「包み」「札」「印」「店構え」「フェーズR」「例外規定」「器」「パネル」は DESIGN.md に無い。
+
+### 7-1. 結果の部品
+
+| ファイル:行                                                               | 指しているもの                                                                                                                | いまの DESIGN.md                         |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `src/play/quiz/_components/resultVisual.ts:5`                             | 「§2「成果物パレット」」                                                                                                      | 無い                                     |
+| `resultVisual.ts:21-22`                                                   | 「DESIGN.md §2 は成果物パレットを和色8色に限定する」                                                                          | §2 は「色の範囲を制限しない」（逆）      |
+| `src/components/Tsutsumi/index.tsx:6`・`:71`・`Tsutsumi.module.css:2-3`   | 「成果物パレット」「見せたくなる結果」「--rule-strong の一本罫」                                                              | 無い                                     |
+| `src/components/In/index.tsx:31-38`・`In.module.css:2-5`                  | 「`--accent` 一色」「器（ページ UI・のれん・品書き）」                                                                        | 印の定義が無い。`--accent` は §2 に無い  |
+| `src/play/fortune/_components/DailyFortuneCard.tsx:33`・`:36`             | 「§4「包み」/§7「見せたくなる結果」」「§2「成果物パレットは8色に限る」」                                                      | 無い                                     |
+| `DailyFortuneCard.module.css:2`・`:4`・`:5`・`:10`                        | 「フェーズR・店構え（§4「包み」/§7「見せたくなる結果」）」「§2「成果物パレット」」「§10（直書き）」「§5 の目安（250–400ms）」 | 無い。結果の登場の長さは §11             |
+| `src/play/fortune/_components/StarRating.module.css:2-4`                  | 「フェーズR・店構え」「成果物パレットの和色」                                                                                 | 無い                                     |
+| `src/play/quiz/_components/RadarChart.tsx:16-18`                          | 「結果の成果物（包み）」「和色8色（成果物パレット）」                                                                         | 無い                                     |
+| `src/play/quiz/_components/ScienceThinkingResultExtra.tsx:78`             | 「成果物パレット（和色8色）」                                                                                                 | 無い                                     |
+| `src/play/quiz/_components/CompatibilitySection.module.css:3`             | 「見せたくなる結果」                                                                                                          | 無い                                     |
+| `src/play/games/nakamawake/_components/SolvedGroups.module.css:2`・`:5`   | 「フェーズ R・店構え」「§2 の例外規定」                                                                                       | 無い                                     |
+| `nakamawake/_components/ResultModal.module.css:1-2`                       | 「フェーズ R・店構え」「成果物色」                                                                                            | 無い                                     |
+| `nakamawake/_components/HowToPlayModal.module.css:1`・`:34`               | 「フェーズ R・店構え」「DESIGN.md §2 成果物色」                                                                               | 無い                                     |
+| `src/play/games/irodori/_components/ColorTarget.module.css:1`・`:3`       | 「フェーズ R・店構え」「§4/§8-5」                                                                                             | 無い（`§8-5` の形も無い）                |
+| `irodori/_components/HowToPlayModal.module.css:1`                         | 「フェーズ R・店構え」                                                                                                        | 無い                                     |
+| `irodori/_components/FinalResult.tsx:17-18`                               | 「フェーズR・店構え」「§6「見出し・ナビ・ボタンに絵文字を使わない」」                                                         | §6 に無い（絵文字は §5「持たないもの」） |
+| `irodori/_components/GameContainer.module.css:24`                         | 「現在地は --accent」                                                                                                         | `--accent` は §2 に無い                  |
+| `src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css:7-8` | 「セル内の文字＋aria-label で判定できる（§2）」                                                                               | 見える文字は判定を言わない（4-2）        |
+| `src/play/games/shared/_components/new/GameDialog.tsx:48`                 | 「店構えへ再移行」                                                                                                            | 無い                                     |
+| `src/lib/fuda-image.tsx:16-30`・`:74`・`:81`                              | 「札（Tsutsumi）」「成果物パレット」「器＝紙・罫・墨へ色を漏らさない・DESIGN.md §1」                                          | 無い                                     |
+| `src/lib/wairoHex.ts:4`・`:10`・`:28`                                     | 「成果物パレット「和色」（DESIGN.md §2）」「DESIGN §2/§4「札」」「DESIGN §2「トークン値を変更したら必ず再計測」」             | 無い                                     |
+| `src/lib/oklchToHex.ts:5`                                                 | 「成果物パレット（和色）」                                                                                                    | 無い                                     |
+| `src/lib/utsuwaHex.ts:2`                                                  | 「器（うつわ）の色 … （DESIGN.md §2）」                                                                                       | 語が無い                                 |
+| `src/lib/ogp-image.tsx:5-9`                                               | 「のれん帯・明朝（Noto Serif JP）の品名・識別マーク」                                                                         | §10 は見出し書体（Zen Antique）          |
+
+### 7-2. 結果の部品の外で同じ語を使うもの
+
+- 道具のタイル32本の「タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）」（例 `src/tools/char-count/CharCountTile.tsx:85`）。§1 にパネルは無い。
+- `src/dictionary/_components/new/DictionaryDetailLayout.module.css:4`「店構え」。`src/app/page.tsx:250`「見せたくなる結果」。
+
+### 7-3. 包みの見た目の古い呼び名と、経緯のコメント
+
+T4 の行は、結果の包みのクラス名を今の見た目の呼び名にすると定める。古い呼び名（メダル）は6つ・3部品にある。
+
+| 名前             | 所                                                                                                                                                                               |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `showMedal`      | `ResultCard.tsx:451`・`:456`、`ResultPageShell.tsx:52`・`:72`                                                                                                                    |
+| `medalWrap`      | `ResultCard.tsx:462`・`ResultCard.module.css:35`・`:113`、`ResultPageShell.tsx:79`・`ResultPageShell.module.css:19`、`DailyFortuneCard.tsx:72`・`DailyFortuneCard.module.css:40` |
+| `medalLabel`     | `ResultCard.tsx:464`・`ResultCard.module.css:49`、`DailyFortuneCard.tsx:73`・`DailyFortuneCard.module.css:48`                                                                    |
+| `medalLabelDone` | `DailyFortuneCard.tsx:74`・`DailyFortuneCard.module.css:56`                                                                                                                      |
+| `medalHeading`   | `ResultPageShell.tsx:80`・`ResultPageShell.module.css:28`                                                                                                                        |
+| `medalReveal`    | `ResultCard.module.css:42`（`animation`）・`:97`（`@keyframes`）                                                                                                                 |
+
+`ResultCard.tsx:505` のコメントも `showMedal` を言う。テストでは `src/play/quiz/_components/__tests__/ResultCard.test.tsx:1141`・`:1210`・`:1302`・`:1448` が `showMedal` などの名を言う（クラス名を改めるときに一緒に直す所）。
+
+経緯を書いたコメント（CLAUDE.md のツギハギ禁止で、触るときに消すもの）:
+
+| ファイル:行                                                          | 内容                                                                                                                                                                 |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/play/fortune/_components/StarRating.tsx:4-7`                    | 「旧トップページの FortunePreview 用だった "purple" variant は … cycle-232 … T-6 r1 N-1」                                                                            |
+| `src/lib/fuda-image.tsx:104`                                         | 「未指定なら従来どおり … 既存挙動を完全に保つ」                                                                                                                      |
+| `src/play/games/shared/_components/new/GameDialog.tsx:41-49`         | 冒頭のコメント全体（「legacy 版は廃止済み」「cycle-268 で legacy 版…から (new) austere へ質的入れ替え」「角丸 12px→2px相当」「cycle-279 でさらに店構えへ再移行し」） |
+| `src/play/games/shared/_components/new/CountdownTimer.tsx:74-78`     | 「(new) デザイン体系版・cycle-268 フォーク」「legacy `../CountdownTimer` との差分は CSS のみ」                                                                       |
+| `src/play/games/nakamawake/_components/SolvedGroups.module.css:9-10` | 「旧 --nw-difficulty-* ローカル SSoT は撤去」                                                                                                                        |
+| 7-1 の「フェーズR・店構え」を言う8か所                               | 変換の経緯                                                                                                                                                           |
+
+使われていない定義: `src/app/globals.css:610-621` の `@keyframes spin` は、コメントが言う `ImageResizerTile.tsx` を含め `src/` のどこからも使われていない（ゲームの `spin` はそれぞれの CSS Modules が自分の `@keyframes` を持つ）。T4 が `globals.css` から和色の定義を消すときに、一緒に消せるもの。
+
+### 7-4. 古い語の全件（結果の部品）
+
+7-1 は、DESIGN.md の節や文言と食い違うものを抜き出した表である。語そのものの全件は次のとおり。語「成果物」「店構え」「フェーズR」「器」「例外規定」「見せたくなる」「のれん」「パレット」を、結果の部品（`src/play`（データとテストを除く）・`src/components/Tsutsumi`・`src/components/In`・`src/lib/fuda-image.tsx`・`ogp-image.tsx`・`wairoHex.ts`・`utsuwaHex.ts`・`oklchToHex.ts`）で `grep` した。**36ファイル・99行**。
+
+| ファイル                                                                | 行数 | 行                                               |
+| ----------------------------------------------------------------------- | ---- | ------------------------------------------------ |
+| `src/components/In/In.module.css`                                       | 3    | 2・17・22                                        |
+| `src/components/In/index.tsx`                                           | 3    | 10・31・38                                       |
+| `src/components/Tsutsumi/Tsutsumi.module.css`                           | 8    | 2・3・4・9・30・49・63・111                      |
+| `src/components/Tsutsumi/index.tsx`                                     | 9    | 6・43・54・57・71・74・76・107・128              |
+| `src/lib/fuda-image.tsx`                                                | 11   | 17・22・36・74・81・158・164・197・220・239・261 |
+| `src/lib/ogp-image.tsx`                                                 | 6    | 5・8・26・208・268・331                          |
+| `src/lib/oklchToHex.ts`                                                 | 1    | 5                                                |
+| `src/lib/utsuwaHex.ts`                                                  | 3    | 2・8・10                                         |
+| `src/lib/wairoHex.ts`                                                   | 2    | 4・32                                            |
+| `src/play/fortune/_components/DailyFortuneCard.module.css`              | 3    | 2・3・4                                          |
+| `src/play/fortune/_components/DailyFortuneCard.tsx`                     | 4    | 33・34・35・36                                   |
+| `src/play/fortune/_components/StarRating.module.css`                    | 3    | 2・3・4                                          |
+| `src/play/games/_components/new/GameLayout.module.css`                  | 3    | 1・2・3                                          |
+| `src/play/games/irodori/_components/ColorTarget.module.css`             | 2    | 1・2                                             |
+| `src/play/games/irodori/_components/FinalResult.tsx`                    | 2    | 17・21                                           |
+| `src/play/games/irodori/_components/HowToPlayModal.module.css`          | 1    | 1                                                |
+| `src/play/games/irodori/_components/RoundResult.module.css`             | 1    | 2                                                |
+| `src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css` | 4    | 8・147・346・378                                 |
+| `src/play/games/nakamawake/_components/HowToPlayModal.module.css`       | 2    | 1・34                                            |
+| `src/play/games/nakamawake/_components/ResultModal.module.css`          | 2    | 1・2                                             |
+| `src/play/games/nakamawake/_components/SolvedGroups.module.css`         | 3    | 2・4・5                                          |
+| `src/play/games/nakamawake/_components/StatsModal.module.css`           | 1    | 2                                                |
+| `src/play/games/shared/_components/new/GameDialog.module.css`           | 1    | 1                                                |
+| `src/play/games/shared/_components/new/GameDialog.tsx`                  | 1    | 48                                               |
+| `src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css`   | 4    | 8・106・304・340                                 |
+| `src/play/quiz/_components/CompatibilitySection.module.css`             | 2    | 3・4                                             |
+| `src/play/quiz/_components/QuizContainer.module.css`                    | 2    | 4・5                                             |
+| `src/play/quiz/_components/QuizContainer.tsx`                           | 1    | 251                                              |
+| `src/play/quiz/_components/RadarChart.module.css`                       | 1    | 2                                                |
+| `src/play/quiz/_components/RadarChart.tsx`                              | 2    | 16・17                                           |
+| `src/play/quiz/_components/ResultCard.module.css`                       | 2    | 33・34                                           |
+| `src/play/quiz/_components/ResultCard.tsx`                              | 1    | 458                                              |
+| `src/play/quiz/_components/ResultPageShell.module.css`                  | 1    | 17                                               |
+| `src/play/quiz/_components/ResultPageShell.tsx`                         | 1    | 74                                               |
+| `src/play/quiz/_components/ScienceThinkingResultExtra.tsx`              | 1    | 78                                               |
+| `src/play/quiz/_components/resultVisual.ts`                             | 2    | 5・22                                            |
+
+---
+
+## 8. 診断の結果の OGP 画像
+
+結果のページの `og:image` は2つの描き方に分かれる。ビルドの出力（`.next/server/app/play/**/opengraph-image.body`）の PNG を見て確かめた。
+
+| 描き方                                            | ルート                                                                                                                                                                                  | alt                              |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| 札（`renderFudaImage`、`fuda-image.tsx`）         | character-personality（24枚）・traditional-color（8枚。地は `result.color`）                                                                                                            | 「診断結果の札」・「クイズ結果」 |
+| 共通（`createOgpImageResponse`、`ogp-image.tsx`） | `[slug]/result/[resultId]`（knowledge 3本と word-sense・science-thinking・japanese-culture）と、animal・character-fortune・contrarian・impossible・music・unexpected・yoji の専用ルート | 「クイズ結果」                   |
+
+| §10 の規定                                                        | 札                                                                                                                                         | 共通                                                                                                                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `--paper` の背景・`--ink` の文字                                  | 満たす（`utsuwaHex.ts` の hex）                                                                                                            | 満たす                                                                                                                                   |
+| 全幅の罫線                                                        | 画像の縁に `2px` の枠（`fuda-image.tsx:159`）。見出し帯の下の線は `1px` の `RULE_2` で、左右 64px の余白の内側だけ（画像の端まで届かない） | 同じ（`ogp-image.tsx:263`・`:275`）                                                                                                      |
+| 見出し書体                                                        | Noto Serif JP 600（明朝）。店号「yolos.net」は Noto Sans JP                                                                                | 同じ                                                                                                                                     |
+| 名前とサイト名が画像単体で読める                                  | 読める（店号・品名・タイプ名）                                                                                                             | 読める（店号・タイプ名・診断名）                                                                                                         |
+| 主題が色であるページだけ色見本を1つ持つ。ほかの画像や印を足さない | 色が主題でない character-personality にも 300×300 の和色の面を持つ。どちらにも右上に円と「診」の印（`:261-305`）を足す                     | 右上に回した明朝の「y」（`ogp-image.tsx:331-360`）を足す。「y」の下が見出し帯の線に重なる（animal-personality の 1200×630 の画像で確認） |
+| §2 コンテンツの色の上に文字を置かない                             | 色の面の上に記号を 190px で置く（`:208-236`。traditional-color も同じ）                                                                    | 色を持たない                                                                                                                             |
+
+character-personality の札は保存の画像も兼ねる（`fuda-image/route.ts`）。直近28日の札の保存（`save`、`surface=fuda`・`method=download`）は34回、札の共有は9回（9章）。
+
+---
+
+## 9. 直近28日の表示（GA4・BigQuery）
+
+期間: 2026-08-29〜2026-09-25（BigQuery の最新の日が 2026-09-25）。`page_view` の全体は 3,327（mobile 2,533・desktop 696）。パスは末尾の `/` とクエリを外して数えた。
+
+### 9-1. 結果を出す面
+
+| 面                                                                | 表示  | mobile | desktop | tablet |
+| ----------------------------------------------------------------- | ----- | ------ | ------- | ------ |
+| 診断のプレイ面（解き終えた画面を含む。`/play/[slug]` の15本）     | 2,716 | 2,365  | 261     | 90     |
+| うち `/play/character-personality`                                | 2,516 | 2,197  | 239     | 80     |
+| うち `/play/word-sense-personality`                               | 44    | 37     | 6       | 1      |
+| うち `/play/character-fortune`・`/play/traditional-color`         | 各31  | 28・27 | 2・3    | 1・1   |
+| 辞典の詳細（漢字）                                                | 50    | 31     | 19      | 0      |
+| 道具の詳細（36本の計）                                            | 44    | 17     | 27      | 0      |
+| うち `/tools/yoji-search`                                         | 34    | 15     | 19      | 0      |
+| 診断の結果のページ（`/play/*/result/*`）                          | 35    | 30     | 3       | 2      |
+| うち character-personality                                        | 22    | 18     | 2       | 2      |
+| 辞典の詳細（伝統色）                                              | 33    | 13     | 20      | 0      |
+| ゲーム4本                                                         | 24    | 2      | 20      | 2      |
+| 辞典の詳細（四字熟語）                                            | 14    | 9      | 4       | 1      |
+| `/play/daily`                                                     | 3     | 2      | 0       | 1      |
+| 辞典の詳細（ユーモア）                                            | 2     | 1      | 1       | 0      |
+| （参考）ブログ記事                                                | 71    | 8      | 63      | 0      |
+| （参考）トップ `/`（包みの見本は 1280px で最初の画面に入る。1-6） | 65    | 19     | 46      | 0      |
+
+ブログ記事の表示 71 を、本文の中身ごとに分けると次のとおり（記事の Markdown の中身と、表示の URL を突き合わせた）。
+
+| 中身を持つ記事   | 表示 | mobile | desktop |
+| ---------------- | ---- | ------ | ------- |
+| GFM Alert        | 45   | 8      | 37      |
+| 表               | 59   | 4      | 55      |
+| コードのブロック | 54   | 4      | 50      |
+| mermaid          | 9    | 0      | 9       |
+
+### 9-2. 結果に着いた回数（`level_end`）と保存・共有
+
+`level_end` は、診断を解き終えて結果を出したときと、ゲームを終えたとき（勝ち負けとも。`kanji-kanaru/_components/GameContainer.tsx:281`・`yoji-kimeru/…/GameContainer.tsx:288`・`nakamawake/…/GameContainer.tsx:180`・`irodori/…/GameContainer.tsx:196` の `trackContentEnd`）に送られる。`level_start` は診断だけが送る（ゲームは送らない）。診断とゲームの結果は `/play/[slug]` と同じ URL に出るので、表示の数では分からない。
+
+| content_id                                 | level_start   | level_end | level_end の mobile / desktop / tablet |
+| ------------------------------------------ | ------------- | --------- | -------------------------------------- |
+| quiz-character-personality                 | 1,620         | 1,181     | 1,026 / 106 / 49                       |
+| quiz-word-sense-personality                | 32            | 21        | 16 / 5 / 0                             |
+| quiz-traditional-color                     | 24            | 20        | 16 / 3 / 1                             |
+| quiz-science-thinking                      | 15            | 14        | 13 / 1 / 0                             |
+| quiz-yoji-personality                      | 14            | 11        | 9 / 1 / 1                              |
+| quiz-music-personality                     | 13            | 10        | 8 / 1 / 1                              |
+| quiz-kanji-level                           | 9             | 8         | 6 / 1 / 1                              |
+| quiz-character-fortune                     | 14            | 8         | 7 / 0 / 1                              |
+| ほか6本                                    | 17            | 14        | —                                      |
+| kanji-kanaru（ゲーム）                     | —（送らない） | 1         | 0 / 0 / 1                              |
+| yoji-kimeru・nakamawake・irodori（ゲーム） | —（送らない） | 0         | —                                      |
+
+- 保存: character-personality の札の画像の保存 34回（mobile 29）。
+- **描画のエンジン**: character-personality の `level_end` 1,181 を OS とブラウザで分けると、iOS のモバイル 693（Safari 577・Chrome 59・アプリ内の Safari 57）、iOS のタブレット 34（Chrome 17・Safari 11・アプリ内 6）、Mac の Safari 49 で、**WebKit が 776（66%）**。iOS では Chrome も WebKit で描く。Chromium（Android の Chrome 315・Webview 16・Samsung 2・Silk 2、タブレットの Android の Chrome 13、Chrome OS 29、Windows の Chrome 17・Edge 6、Linux 3、Mac の Chrome 2）は 405（34%）。Firefox は0。
+- 共有: 16回（character-personality の札 9・招待 1・文 1・旧 content_id 3、science-thinking 1、traditional-color 1）。すべて mobile。
+- 道具の最初の操作（`tile_first_interaction`）: yoji-search 22・traditional-color-palette 3・char-count 2。
+- **ゲームの結果に着いた回数は、28日で1回**（kanji-kanaru・tablet）。ゲーム4本の表示は 24（desktop 20）。期間を 2026-06-01〜09-25 に広げても、kanji-kanaru 12・yoji-kimeru 7・irodori 7・nakamawake 5 で計31回。
+
+診断の結果に着いた回数の 9割以上（診断の `level_end` 1,287 のうち 1,181）は character-personality の解き終えた画面（`ResultCard` の包み）で、その 87% が mobile である。
+
+---
+
+## 10. 結果の登場の動き（§11）
+
+§11: UI の動きは「結果の登場（1回・250–400ms）」「操作フィードバック（150ms 以下）」「アコーディオンの開閉（150ms 以下）」の3つだけ。`prefers-reduced-motion` では自動で始まる動きが止まり、結果の登場は即時表示になる。cycle-316 の完了の条件にも「`prefers-reduced-motion` のとき結果の登場は即時表示になる」がある。
+
+| 所                                                                                                                   | 動き                                                  | いつ                                      | `prefers-reduced-motion`                                     |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
+| `ResultCard.module.css:11`（`.card`）                                                                                | `fadeIn 0.4s`（不透明度と 8px の立ち上がり）          | 解き終えた画面の結果全体の登場            | 止める（`:108-116`）                                         |
+| `ResultCard.module.css:42`（`.medalWrap`）                                                                           | `medalReveal 0.4s`（不透明度と 6px の立ち上がり）     | 同時に、その中の包みの登場（入れ子で2つ） | 止める                                                       |
+| `QuizContainer.tsx:65-86`                                                                                            | 結果の区画へ `scrollIntoView`（`behavior: "smooth"`） | 結果に着いたとき                          | 即時のスクロールに替える                                     |
+| `DailyFortuneCard.module.css:11`                                                                                     | `reveal 350ms`                                        | 運勢の結果の登場                          | 止める（`:112`）                                             |
+| `CompatibilitySection.module.css:11`                                                                                 | `fadeIn 0.4s`                                         | 相性の区画の登場                          | 止める（`:72`）                                              |
+| `RadarChart.module.css:17`                                                                                           | `fadeScaleIn 0.3s`                                    | レーダーの登場                            | 止める（`:33`）                                              |
+| `ScienceThinkingResultExtra.module.css:63`                                                                           | 帯の幅の `transition 0.3s`                            | スコアの帯                                | 止める（`:68`）                                              |
+| `KanjiKanaru.module.css:144`・`YojiKimeru.module.css:103`                                                            | 判定のマスの `flipIn 0.4s`                            | 推測を送るたびに                          | **止めない**（両ファイルに `prefers-reduced-motion` が無い） |
+| `KanjiKanaru.module.css:210`・`YojiKimeru.module.css:169`                                                            | 入力の誤りの `shake 0.4s`                             | 誤った推測のとき                          | **止めない**                                                 |
+| `kanji-kanaru/_components/GameContainer.module.css:20`・`yoji-kimeru/_components/styles/GameContainer.module.css:20` | 読み込みの回転 `spin 0.8s` の繰り返し                 | 読み込みのあいだ                          | **止めない**                                                 |
+| `nakamawake/_components/GameContainer.module.css:25`                                                                 | 残りミス1回の点滅 `mistakePulse 1.5s` の繰り返し      | ミスが残り1回のあいだ                     | 止める（`:28-32`）                                           |
+| `irodori/_components/GameContainer.module.css:21`                                                                    | 進みの点の `transition 0.2s`                          | 問が進むとき                              | 止めない（3状態が同じ色なので、見える変化は無い。4-2）       |
+
+自動で更新し続ける表示（§11「自動で始まり5秒を超えて続く動きは、止められる」にあたるかは DESIGN.md に書かれていない。WCAG 2.2.2 は自動で更新する情報も同じ扱いにする）:
+
+| 所                                                               | 更新                                                                        | 止められるか |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------ |
+| `src/play/games/shared/_components/new/CountdownTimer.tsx:40-55` | ゲーム4本の結果のダイアログの「次の問題まで HH:MM:SS」を1秒ごとに書き換える | 止められない |
+| `src/tools/unix-timestamp/UnixTimestampTile.tsx:161-163`         | いまの時刻のタイムスタンプを1秒ごとに書き換える                             | 止められない |
+
+解き終えた画面では、結果全体と包みの2つの登場の動きが同時に走る。§11 の「1回」にこれがあたるかは DESIGN.md に書かれていない。
+
+---
+
+## 11. 設計で決める論点
+
+棚卸しから出た、T4 の設計で決める必要のある論点。優先の材料は9章（結果に着いた回数の9割が character-personality の解き終えた画面で、87% が mobile、66% が WebKit。ゲームの結果は28日で1回）。
+
+### 11-1. 結果の組み方
+
+1. **性格診断の解き終えた画面（2-5）**: 375px で印が品名に重なること、タイプ名が語の途中で折れること（9/24タイプ）、包みが最初の画面をほぼ占め、24タイプのうち13タイプで「保存」の入口が最初の画面の下端に掛かるか外に出ること。§8 の結果のボックス・§4 の段・§4 の折り方でどう組み直すか。数は Chromium の値で、WebKit の近似では「保存」が入らないのは3タイプだけになる（2-5）。
+   - **§4 の折り方を WebKit でも守る手段**。いまの見出しは `word-break: auto-phrase` に頼り、これは Chromium でしか効かない。結果に着いた回数の66%（iPhone の Safari が 577回）は WebKit で描かれ、タイプ名はほぼすべてが語の途中で、数字と助数詞も割れて折れる（2-5）。`auto-phrase` に頼らない折り所の指定（データ側で折り所を持つ・`<wbr>`・文節を単位にした `inline-block` など）を決める。carryover-tasks.md の T5 は、ページの見出しにビルドの時に BudouX で文節の区切りを入れる予定である。**これを、タイプ名のようにデータから作る見出し（診断のタイプ名・占いのタイトル・辞典の見出し語など）にも広げるか**。解き終えた画面のタイプ名はクライアントの部品が描くので、区切りをビルドの時にデータへ入れるか、描くときに入れるかも決める。これはサイトのすべての見出しに関わるので、T4 で決めるか、T1 の土台（§4 の実装）に戻すか、T5 の BudouX の作業にまとめるかも論点になる。
+   - **結果の中の並び**。いまは包み → 札の保存と共有 → 説明の文 → 詳細（特徴・あるある・アドバイス）→ 共有 → 「もう一度挑戦する」の順で、結果のあいだに保存と共有が挟まる。§8「1つの結果を切り分けて見せる分割・段階表示を持たない」と照らして、この並びをどうするか。札の保存は28日で34回・共有9回で、結果に着いた 1,181 回と比べられる（9-2）。
+   - **タイプ名が §8 のどの形にあたるか**。20〜37字のタイプ名を §8 の「短い語」（主見出しの段で組み、収まらなければ段を下げる）とするか「文章」（本文の大きさ）とするか。どちらにするかで、包みの高さと「保存」の位置が大きく変わる。
+2. **包み（Tsutsumi）を何に置き換えるか**: §8 の「結果はボックス」で、コンテンツ幅いっぱいにするか。結果のページの h1 とタイプ名の重複、トップの見本（375px では最初の画面の外。1280px では入る。トップの表示は28日で 65・うち desktop 46）を残すか。いま測った包みの幅はいまの列の幅での値で、列は T5 で §5 のコンテンツ幅に戻る（375px で 321px。2-2 の注）。結果のボックスの幅は §5 の幅を前提に決める。
+3. **印（In）**: DESIGN.md に定義が無く、§10 は画像に印を足さないと定める。画面の印も残すか。
+4. **道具の結果**: 入力と結果を同じ Panel に置くままにするか。§8 の数字の段・単位・等幅をやめること・カードの入れ子を外すことの当て方。読み取り専用の Textarea に出す文章の結果が §8 の「文章」にあたるかを DESIGN.md に書くか。
+5. **ゲームの結果・統計・遊び方のダイアログ**: DESIGN.md にダイアログの定義が無い（1-4）。§8 の「結果はボックスにある」とどう合わせるか、ダイアログを DESIGN.md に足すか。ゲームの結果は28日で1回・表示は24（desktop 20）で、ほかの結果の面より来訪者に効く度合いが小さい。
+6. **順位の印（rankBadge）**: irodori の1か所だけ（1-4）。§8 のどの形で組むか。
+
+### 11-2. 色（§2 との突き合わせ。4-2）
+
+7. **判定の色を残して字・形を足すか、§2 のとおり色を外して字・形だけで示すか**。T4 の行は「字か形でも伝わるようにする」と書き、§2 は「区別・強調のための色はコンテンツでも認めない」「コンテンツの色の上に文字を置かない」と定める。対象は kanji-kanaru・yoji-kimeru の判定のマスと凡例、nakamawake の難易度の4色、統計の分布の強調。どれも区別・強調の色で、多くはその地の上に字を置く。どちらに従うかで、yoji-kimeru のマス（いまは色だけで伝わる）と nakamawake の難易度（色だけ）の組み方が変わる。
+8. **包みの記号面の和色を残すか**。id のハッシュで選ぶ色は結果の中身でない（§2 の「その色がコンテンツそのものであるときだけ」にあたらない）。中身の色にあたるのは伝統色診断の結果の色だけで、いまの画面はそれを使わず、OGP と食い違う（2-3）。
+9. **理系思考タイプ診断のレーダーとスコアの帯、占いの★の色**（気分・飾りの色）を無彩にするか。
+10. **和色のトークンを消したあと**、残す色（伝統色診断の結果の色など）をどこから渡すか（中身の色としてインラインで渡す）。`design-gate.test.ts` の和色の例外の一覧と、`wairoHex.test.ts`・`WAIRO_HEX`・`fuda-image` の扱い（8章の OGP の判断と結びつく）。
+11. **irodori の進みの点**（済み・いま・未がすべて同じ色と形）。イロドリの5問は §5 の「進み具合の帯」にあたり、形と読み上げはそこで決まっている。論点は、点をやめて §5 の帯にするかと、帯が数えるものを `aria-valuenow`（済んだ数）と見える「n/5」（いまの問）のどちらに合わせるか。
+12. **ゲームの共有の文の絵文字**（4本すべてが 🟩🟨⬜ などで判定を並べる。4-2）。§5「絵文字は、どこにも置かない」と §2 の区別の色の両方に掛かり、サイトの外に出る文である。T4 で決めるか、T6（サイトの外に出るもの）に渡すか。ゲームの結果は28日で1回。
+13. **`accentColor`**（表示での使用0件）と、`QuizResult.color` のうち使わなくなる分を、型・データ・写し・テストからまとめて外すか（6章）。
+
+### 11-3. 字形
+
+14. 字形が主題の要素（辞典の大字・カナールとキメルの正解・包みの品名と印の字）を見出しの書体で組むか。カナールの正解はクライアントで決まり、いまは `--font-heading` の並びの字ごとの代替で Zen Antique に無い4字を本文の書体に落とす。1字なので §3「一つの見出しの中で和文の書体が混ざらない」と食い違わないとみてよいか（3-1）。
+
+### 11-4. ブログ本文（4-3）
+
+効く来訪者の数（9-1）: 記事の表示は28日で 71（desktop 63・mobile 8）。GFM Alert を持つ記事 45（mobile 8）、表を持つ記事 59（mobile 4）、コードを持つ記事 54（mobile 4）、mermaid を持つ記事 9（mobile 0）。
+
+15. GFM Alert（42本・100件）の囲み（細い線は §6 の hover と読み違えうる）と英語の見出し（§9）を、DESIGN.md のどの形にするか。
+16. 表（全セルの枠・`th` の地）を `globals.css` の §5 の表に戻すか。`.table-scroll` に §5 のボックスの枠と `tabindex` を付ける形。
+17. コードのボックス: Shiki の地（ライト `#ffffff`・ダーク `#121212`）と 1px の枠を、§2 の `--paper-2` と §5 の太い線にするか。コードの色分け（飾り）を残すか。
+18. `hr`（7本・19件）と引用（2px の線）の線を §5 の2種のどちらにするか。
+19. mermaid の図が狭い画面で読めない大きさに縮むこと（0.18倍）と、図の配色（mermaid の既定）。狭い画面で mermaid を持つ記事を見た来訪者は28日で0回。
+
+### 11-5. 動き（10章）
+
+20. 解き終えた画面の入れ子の2つの登場の動き（結果全体と包み）を、§11 の「結果の登場は1回」として1つにするか。
+21. kanji-kanaru・yoji-kimeru の判定のマスの `flipIn`・誤りの `shake`・読み込みの `spin` が `prefers-reduced-motion` で止まらないこと。
+22. 自動で更新し続ける表示（ゲームの結果のダイアログのカウントダウン、unix-timestamp のいまの時刻。10章）を §11 の「自動で始まり5秒を超えて続く動き」とみなすか。みなすなら、止める手段を持たせるか、更新をやめるか。
+
+### 11-6. そのほか
+
+23. 古い語と経緯のコメント（7章。結果の部品の古い語 36ファイル・99行（7-4）、そのうち DESIGN.md の節や文言と食い違うもの 7-1 の表、道具のタイルの「§1 パネル準拠」32本、7-3 のクラス名6つ・経緯のコメント・使われていない `@keyframes spin`）のうち、どの範囲を T4 で直すか。
+24. 診断の結果の OGP 画像（8章）の §10 との食い違いを T4 で決めるか、T6 に渡すか。札の保存は28日で34回・共有9回で、その判断の材料になる。

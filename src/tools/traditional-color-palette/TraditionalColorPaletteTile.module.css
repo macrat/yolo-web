@@ -1,12 +1,6 @@
 /* TraditionalColorPaletteTile.module.css
- * cycle-228 T-19: 単一正典タイル化
- * DESIGN.md（店構え）準拠:
- * - 旧 --color-* トークン不使用（紙 --paper/--paper-2・墨 --ink/--ink-2・朱 --accent）
- * - --accent を background に直接使わない（スウォッチの動的実色は成果物パレットなので対象外）
- * - 太字（700）不使用
- * - 角丸は var(--radius)、罫線は var(--rule)
- * - box-shadow は使わない（outline と地の対比で表現）
- * Panel がルート要素なので container クラスは不要（Panel.module.css に委譲）
+ * 色が出るのは、伝統色そのもの（色見本の地）だけ。UI は無彩のトークンで組む（§2）。
+ * 枠と内側の余白はルートの Panel が持つ。
  */
 
 /* コンテンツ縦並び */
@@ -18,92 +12,133 @@
   width: 100%;
 }
 
-/* --- 検索フィールド --- */
+/* --- 色の格子の絞り込み --- */
 
-.searchField {
+.head {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--space-16);
 }
 
-.label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--ink-2);
+/* --- 色の格子 --- */
+
+/* fieldset の既定の枠と余白を持たない。min-inline-size の既定（min-content）のままだと、格子が幅からはみ出す。 */
+.swatchGroup {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
-/* --- カテゴリフィルタ（SegmentedControl を使用する） --- */
-
-.categorySection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-/* --- スウォッチグリッド --- */
-
+/* 色見本の列の数は幅から決める。1つの見本が 44px 以上のタップターゲットになり（§6）、広い画面ほど1行に
+ * 多くの色が並んで見比べやすい。見本は字を持たないので、文字サイズを大きくしても列の最小幅は変えない。
+ * 見本どうしは 8px あける（§5）。 */
 .swatchGrid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 0.375rem;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: var(--space-8);
 }
 
+/* 色見本は1つを選ぶラジオボタンの行で、見本全体が押せる範囲になる（§6）。細い線で囲み、淡い色が背景に溶けない
+ * ようにする（§2）。字を載せず、色だけを見せる。
+ * hover の細い線は、見本の枠と一続きにならないよう、枠の内側に太い線の太さの --paper を挟んで引く（§6）。 */
 .swatch {
-  width: 100%;
+  --hover-line:
+    inset 0 0 0 var(--rule-w) var(--paper),
+    inset 0 0 0 calc(var(--rule-w) + var(--rule-w-hair)) var(--rule-2);
+  display: grid;
+  place-items: center;
   aspect-ratio: 1;
-  border: 2px solid var(--rule);
-  border-radius: var(--radius);
+  border: var(--rule-w-hair) solid var(--rule-2);
   cursor: pointer;
-  transition: transform 0.1s;
-  position: relative;
-  background: transparent;
-  padding: 0;
-  /* C-1: タッチターゲット確保（スウォッチは aspect-ratio=1 で自動サイズ） */
-  min-height: 28px;
 }
 
-.swatch:hover {
-  transform: scale(1.15);
-  z-index: 1;
+.swatch:where(:hover, :active) {
+  box-shadow: var(--hover-line);
 }
 
-/* 選択済みスウォッチ: box-shadow は使わず outline で代替（B-6 準拠） */
-.swatchSelected {
-  outline: 3px solid var(--accent);
-  outline-offset: 1px;
+/* 中の入力が受けたフォーカスを、見本の内側に密着した二重リングで出す（§6）。 */
+.swatch:has(:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: calc(-1 * var(--rule-w));
+  box-shadow: inset 0 0 0 calc(2 * var(--rule-w)) var(--paper);
 }
 
-.swatch:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.swatchTooltip {
+/* 見えないまま、フォーカスと押した結果を受ける。display: none にするとフォーカスを受けない。 */
+.swatchInput {
   position: absolute;
-  bottom: calc(100% + 0.5rem);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.25rem 0.5rem;
-  background-color: var(--ink);
-  color: var(--paper);
-  font-size: 0.7rem;
-  border-radius: var(--radius);
-  white-space: nowrap;
-  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  margin: 0;
   opacity: 0;
-  transition: opacity 0.15s;
-  z-index: 10;
+  pointer-events: none;
 }
 
-.swatch:hover .swatchTooltip {
-  opacity: 1;
+/* 選んだ見本だけが、中央に選択済みのラジオボタンの円を持つ（§6）。円は --paper の地を持ち、外に太い線の
+ * 太さの --paper の縁を持つので、どの色の上でも形が見える（§2）。 */
+.swatchMark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: var(--rule-w) solid var(--rule);
+  border-radius: 50%;
+  background: var(--paper);
+  outline: var(--rule-w) solid var(--paper);
+  visibility: hidden;
 }
 
-.emptyMessage {
-  padding: 1rem;
-  text-align: center;
+.swatchMark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.swatchInput:checked + .swatchMark {
+  visibility: visible;
+}
+
+/* --- 選んだ色 --- */
+
+/* 選んだ見本の行のすぐ下に、格子の幅いっぱいで開く（§8）。見本と字を横に並べ、字は幅が足りなければ折り返す。 */
+.pickedRow {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.pickedSwatch {
+  flex: none;
+  width: 44px;
+  aspect-ratio: 1;
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.pickedText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-16);
+  min-width: 0;
+  line-height: var(--leading-body);
+}
+
+.pickedLabel {
+  flex-basis: 100%;
   color: var(--ink-2);
-  font-size: 0.875rem;
+  font-size: var(--text-small);
+}
+
+.pickedName {
+  font-weight: 700;
+}
+
+.pickedRomaji {
+  color: var(--ink-2);
+  font-size: var(--text-small);
 }
 
 /* --- 配色パターンセクション --- */
@@ -152,6 +187,7 @@
 }
 
 .paletteCard {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -168,18 +204,23 @@
   border-radius: var(--radius);
 }
 
+/* 選んだ色のカードでは、色名の上に「選んだ色」と字で添える。 */
 .paletteColorName {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-size: 0.9rem;
   color: var(--ink);
 }
 
+/* 色の辞典へ進むリンク。縁の見えないコントロールで、下線と訪問済みの色は globals.css の a の既定に従う（§6）。
+ * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。字の箱が 44px に届かない
+ * 1字の色名では、箱を右へ広げる（§5）。 */
 .paletteColorNameLink {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.paletteColorNameLink:hover {
-  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .paletteColorRomaji {
@@ -187,11 +228,24 @@
   color: var(--ink-2);
 }
 
-/* 色コード行（コピーボタン付き） */
+/* 色コードの行。種類・値・コピーのボタンを1行に並べ、値とボタンが1行に収まらないときは、ボタンを次の行の
+ * 右端に送って値に行の幅を渡す。値が桁の途中で折れないためである。カードが、ふつうの長さの値とボタンを
+ * 並べられないほど狭いときは、どの行もボタンを次の行に送り、同じカードの中でボタンの位置をそろえる。 */
 .colorCodeRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.375rem;
+}
+
+.colorCodeCopy {
+  flex: 1 0 auto;
+}
+
+@container (max-width: 16em) {
+  .colorCodeCopy {
+    flex-basis: 100%;
+  }
 }
 
 .colorCodeLabel {
@@ -206,23 +260,14 @@
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--ink);
-  word-break: break-all;
-  flex: 1;
+  overflow-wrap: anywhere;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* --- レスポンシブ --- */
 
-@media (max-width: 1024px) {
-  .swatchGrid {
-    grid-template-columns: repeat(8, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
-  .swatchGrid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
   .paletteResults {
     grid-template-columns: 1fr;
   }

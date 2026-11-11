@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "日本語ダミーテキスト",
     "テスト文章 生成",
   ],
-  category: "generator",
+  category: "text",
   relatedSlugs: ["password-generator", "char-count", "byte-counter"],
   publishedAt: "2026-02-14T07:55:07+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

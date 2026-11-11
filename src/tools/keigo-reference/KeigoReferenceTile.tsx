@@ -1,40 +1,32 @@
 "use client";
 
 /**
- * KeigoReferenceTile — 敬語早見表の単一正典タイル
+ * KeigoReferenceTile — 敬語早見表のタイル。ルートが <Panel>（DESIGN.md §5 のボックス）で自己完結する。
  *
- * cycle-228 T-18: KeigoReferencePage.tsx をタイル・アーキテクチャへ移行。
- * ルートが <Panel>（DESIGN.md §1 パネル準拠）で自己完結。
+ * 表示する内容（敬語早見表・よくある間違い）を切り替える。早見表は、件数の行・名前の欄・畳める分類の組と、
+ * 広い画面の表・狭い画面の開閉する行を縦に並べる（§7「件数と備え」・§8）。絞り込みは URL のクエリに持つ。
  *
- * ## 設計原則
- *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。
- * - **1ツール 1タイル**: 唯一の共有エンジン logic.ts を使う。variant は full のみ。
- * - **id インスタンス一意化**: useId ベースで生成。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- *
- * ## variant
- *
- * - `"full"` (デフォルト): 全機能（SegmentedControl table/mistakes + 検索 + フィルタ + テーブル/カード）
- *
- * ## アクセシビリティ
- *
- * - C-2: 全 SegmentedControl に aria-label 付与
- * - C-3: role="status" aria-live="polite" のライブリージョン＋件数サマリ
- * - C-8: テーブルは <tr> に role="button" 禁止（ARIA in HTML 仕様）。
- *   先頭セル <th scope="row"> 内の実 <button aria-expanded> でキーボード操作する。
- *   モバイルカード <div> は role="button" + tabIndex=0 + onKeyDown で可。
+ * - 普通語は読みを持たず五十音順に並べられないので、並び順は分類順だけにし、件数の行がそれを言う。分類は
+ *   表の列と行の字に出し、何の順かが見えるようにする。
+ * - 表の <tr> に role="button" を付けると表の構造が壊れるので、先頭のセル <th scope="row"> の中の
+ *   <button aria-expanded> で開閉する。
+ * - 表の開閉のボタンと狭い画面の開閉する行は、どちらも読み上げの名前を普通語だけにする。開閉の状態は
+ *   aria-expanded が伝える。狭い画面の行は、分類と敬語の形を説明として読ませる。
  */
 
-import { useState, useMemo, Fragment, useId } from "react";
+import { useState, Fragment } from "react";
 import Panel from "@/components/Panel";
-import SegmentedControl from "@/components/SegmentedControl";
-import Input from "@/components/Input";
+import ListStack from "@/components/ListStack";
+import RadioGroup from "@/components/RadioGroup";
+import ListControls from "@/components/ListControls";
+import ListStatus from "@/components/ListStatus";
+import DisclosureTriangle from "@/components/DisclosureTriangle";
+import DisclosureRow from "@/tools/_components/DisclosureRow";
+import { useListBrowseState } from "@/components/hooks/useListBrowseState";
 import {
-  filterEntries,
-  getKeigoCategories,
+  KEIGO_LIST_ITEMS,
+  KEIGO_LIST_SPEC,
   getCommonMistakes,
-  type KeigoCategory,
   type KeigoEntry,
   type MistakeType,
 } from "./logic";
@@ -42,19 +34,9 @@ import styles from "./KeigoReferenceTile.module.css";
 
 type ActiveTab = "table" | "mistakes";
 
-const CATEGORIES = getKeigoCategories();
-
 const TAB_OPTIONS: { label: string; value: ActiveTab }[] = [
   { label: "敬語早見表", value: "table" },
   { label: "よくある間違い", value: "mistakes" },
-];
-
-const CATEGORY_OPTIONS = [
-  { label: "すべて", value: "all" as KeigoCategory | "all" },
-  ...CATEGORIES.map((cat) => ({
-    label: cat.name,
-    value: cat.id as KeigoCategory | "all",
-  })),
 ];
 
 const MISTAKE_SECTIONS: { type: MistakeType; label: string }[] = [
@@ -63,221 +45,194 @@ const MISTAKE_SECTIONS: { type: MistakeType; label: string }[] = [
   { type: "baito-keigo", label: "バイト敬語" },
 ];
 
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
-export type KeigoReferenceTileVariant = "full";
+const COMMON_MISTAKES = getCommonMistakes();
+
+/** 狭い画面の行に、普通語に続けて並べる敬語の形。 */
+const KEIGO_FORMS = [
+  ["尊敬語", "sonkeigo"],
+  ["謙譲語", "kenjogo"],
+  ["丁寧語", "teineigo"],
+] as const satisfies ReadonlyArray<readonly [string, keyof KeigoEntry]>;
+
+/** 開いた行の例文に、場面ごとに並べる言い方。 */
+const EXAMPLE_FORMS = [
+  ["普通", "casual"],
+  ["尊敬語", "sonkeigo"],
+  ["謙譲語", "kenjogo"],
+] as const satisfies ReadonlyArray<
+  readonly [string, keyof KeigoEntry["examples"][number]]
+>;
+
+const [SORT] = KEIGO_LIST_SPEC.sorts;
 
 export interface KeigoReferenceTileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 全機能（タブ切替・検索・カテゴリフィルタ・テーブル/カード表示）
-   */
-  variant?: KeigoReferenceTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
   as?: "section" | "div" | "article" | "aside";
   /** 追加クラス */
   className?: string;
 }
 
+/**
+ * 「・」で区切って並べた敬語の形。形ごとに折らないまとまりにし、行を折るのは「・」の後ろだけにする（§4）。
+ * 1つの形が1行に収まらないときだけ、形の中で折る（CSS の .forms）。
+ */
+function KeigoForms({ value }: { value: string }) {
+  const forms = value.split("・");
+  return (
+    <span className={styles.forms}>
+      {forms.map((form, i) => (
+        <Fragment key={i}>
+          {form}
+          {i < forms.length - 1 ? (
+            <>
+              ・<wbr />
+            </>
+          ) : null}
+        </Fragment>
+      ))}
+    </span>
+  );
+}
+
+/**
+ * 行を開いたときに出る例文と注記。場面ごとに、言い方の名前の右に例文を置く。名前は補助情報の字で組み、
+ * 例文と注記は本文の字で読ませる（§4）。
+ */
+function EntryExamples({ entry }: { entry: KeigoEntry }) {
+  return (
+    <div className={styles.examples}>
+      {entry.examples.map((example, i) => (
+        <div key={i}>
+          <p className={styles.exampleContext}>{example.context}</p>
+          <dl className={styles.exampleLines}>
+            {EXAMPLE_FORMS.map(([label, key]) => (
+              <div key={key} className={styles.exampleLine}>
+                <dt className={styles.exampleLabel}>{label}</dt>
+                <dd className={styles.exampleText}>{example[key]}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
+      {entry.notes ? <p className={styles.note}>{entry.notes}</p> : null}
+    </div>
+  );
+}
+
 export default function KeigoReferenceTile({
-  variant = "full",
   as = "section",
   className,
 }: KeigoReferenceTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  // SegmentedControl は id prop を持たないが、Input には useId を使う。
-  const uid = useId();
-  const searchId = `${uid}-search`;
-
-  // ---------- State ----------
   const [activeTab, setActiveTab] = useState<ActiveTab>("table");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<
-    KeigoCategory | "all"
-  >("all");
-  const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
-
-  // ---------- 派生データ ----------
-  const filteredEntries = useMemo(
-    () => filterEntries(searchQuery, selectedCategory),
-    [searchQuery, selectedCategory],
-  );
-
-  const commonMistakes = useMemo(() => getCommonMistakes(), []);
-
-  // ---------- ハンドラ ----------
+  const {
+    state,
+    slice,
+    announcement,
+    clear,
+    filtering,
+    matched,
+    searchRef,
+    setKind,
+    setQuery,
+    statusRef,
+  } = useListBrowseState({
+    items: KEIGO_LIST_ITEMS,
+    spec: KEIGO_LIST_SPEC,
+    unit: "語",
+  });
+  // 開いた行を1つに保つ。ほかの行を開くと、前に開いていた行は閉じる。
+  const [openEntryId, setOpenEntryId] = useState<string | null>(null);
   const toggleEntry = (id: string) => {
-    setExpandedEntryId((prev) => (prev === id ? null : id));
+    setOpenEntryId((current) => (current === id ? null : id));
   };
 
-  /**
-   * テーブル行の <button> キーボード操作ハンドラ（WCAG 2.1.1 Keyboard Level A）
-   * Enter / Space キーでアコーディオン展開/折り畳みする
-   */
-  const handleExpandKeyDown = (
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    id: string,
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleEntry(id);
-    }
-  };
-
-  /**
-   * モバイルカード向けキーボード操作ハンドラ（<div role="button"> で使う）
-   */
-  const handleCardKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    id: string,
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleEntry(id);
-    }
-  };
-
-  // C-3: ライブリージョン用のサマリテキスト（実テキストノード）
-  const resultSummary =
-    activeTab === "table"
-      ? searchQuery.trim() || selectedCategory !== "all"
-        ? `${filteredEntries.length}件の動詞が一致しました`
-        : `${filteredEntries.length}件の動詞`
-      : "";
-
-  // 空クエリ時に「「」に一致する…」が表示されないよう分岐（cycle-225 reviewer指摘3対応）
-  const noResultsMessage = searchQuery.trim()
-    ? `「${searchQuery}」に一致する動詞が見つかりませんでした`
-    : "該当する敬語が見つかりませんでした";
-
-  const renderEntryExamples = (entry: KeigoEntry) => (
-    <div className={styles.examplePanel}>
-      {entry.examples.map((ex, i) => (
-        <div key={i} className={styles.exampleItem}>
-          <div className={styles.exampleContext}>{ex.context}</div>
-          <div className={styles.exampleLine}>
-            <span className={styles.exampleLabel}>普通:</span>
-            {ex.casual}
-          </div>
-          <div className={styles.exampleLine}>
-            <span className={styles.exampleLabel}>尊敬語:</span>
-            {ex.sonkeigo}
-          </div>
-          <div className={styles.exampleLine}>
-            <span className={styles.exampleLabel}>謙譲語:</span>
-            {ex.kenjogo}
-          </div>
-        </div>
-      ))}
-      {entry.notes && <div className={styles.noteText}>{entry.notes}</div>}
-    </div>
-  );
-
-  // ---------- variant は現在 full のみ。将来の拡張に備えて variant 変数を参照しておく。
-  void variant;
-
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       <div className={styles.inner}>
-        {/* メインタブ切替: SegmentedControl（C-2: aria-label 必須）*/}
-        <SegmentedControl
+        {/* 表示する内容の切り替え。早見表の絞り込みではなく道具の画面の切り替えなので、畳む枠の外に置く。 */}
+        <RadioGroup
           options={TAB_OPTIONS}
           value={activeTab}
           onChange={(val) => setActiveTab(val as ActiveTab)}
-          aria-label="表示切替"
+          legend="表示する内容"
         />
 
-        {/* 表タブコンテンツ */}
         {activeTab === "table" && (
-          <>
-            {/* 検索バー: 操作側は flexShrink:0（AP-P21 スクロール競合防止） */}
-            <div className={styles.searchBar}>
-              {/* 検索入力: Input コンポーネント（共通部品必須再利用）*/}
-              <div className={styles.searchInputWrapper}>
-                <Input
-                  id={searchId}
-                  type="text"
-                  placeholder="動詞を検索..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  aria-label="敬語を検索"
-                />
-              </div>
-
-              {/* カテゴリフィルター: SegmentedControl（C-2: aria-label 必須）*/}
-              <SegmentedControl
-                options={CATEGORY_OPTIONS}
-                value={selectedCategory}
-                onChange={(val) =>
-                  setSelectedCategory(val as KeigoCategory | "all")
-                }
-                aria-label="カテゴリフィルター"
-                className={styles.categoryControl}
+          <ListStack>
+            <div className={styles.head}>
+              <ListStatus
+                ref={statusRef}
+                total={KEIGO_LIST_ITEMS.length}
+                matched={matched}
+                filtering={filtering}
+                unit="語"
+                sortName={SORT.name}
+                announcement={announcement}
+                onClear={clear}
+              />
+              <ListControls
+                searchLabel="普通語・敬語で探す"
+                searchRef={searchRef}
+                query={state.query}
+                onQueryChange={setQuery}
+                kindGroup={{
+                  legend: "分類",
+                  options: KEIGO_LIST_SPEC.kinds,
+                  value: state.kind,
+                  onChange: setKind,
+                }}
               />
             </div>
 
-            {/* C-3: ライブリージョン（実テキストノードのサマリ）*/}
-            <div
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-              className={styles.resultCount}
-            >
-              {resultSummary}
-            </div>
-
-            {/* テーブル/カード領域: 膨張側（AP-P21）*/}
-            {filteredEntries.length > 0 ? (
+            {slice.items.length > 0 ? (
               <>
-                {/* デスクトップテーブル */}
+                {/* 広い画面の表。先頭のセルの開閉のボタンで、次の行に例文を出す。 */}
                 <div className={styles.desktopTable}>
                   <table className={styles.table}>
                     <thead>
                       <tr>
-                        <th className={styles.th}>普通語</th>
-                        <th className={styles.th}>尊敬語</th>
-                        <th className={styles.th}>謙譲語</th>
-                        <th className={styles.th}>丁寧語</th>
+                        <th scope="col">普通語</th>
+                        <th scope="col">分類</th>
+                        <th scope="col">尊敬語</th>
+                        <th scope="col">謙譲語</th>
+                        <th scope="col">丁寧語</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredEntries.map((entry) => (
+                      {slice.items.map(({ entry, kind }) => (
                         <Fragment key={entry.id}>
                           {/*
-                           * <tr> にはネイティブの暗黙ロール "row" があるため
-                           * role="button" を付けるとテーブル構造が壊れる（ARIA in HTML仕様違反）。
-                           * <tr> は素のまま維持し、先頭セルを <th scope="row"> にして
-                           * その中の実 <button> にインタラクション（aria-expanded等）を持たせる。
+                           * <tr> は暗黙の役割 row を持つので、role="button" を付けると表の構造が壊れる。
+                           * 先頭のセルを <th scope="row"> にし、その中のボタンで開閉する。
                            */}
-                          <tr
-                            className={`${styles.tableRow} ${expandedEntryId === entry.id ? styles.tableRowExpanded : ""}`}
-                          >
-                            {/* 先頭セルを th scope="row" にし、実 button を内包 */}
-                            <th
-                              scope="row"
-                              className={`${styles.td} ${styles.casualCell} ${styles.casualTh}`}
-                            >
+                          <tr>
+                            <th scope="row" className={styles.casualCell}>
                               <button
                                 type="button"
                                 className={styles.expandButton}
                                 onClick={() => toggleEntry(entry.id)}
-                                onKeyDown={(e) =>
-                                  handleExpandKeyDown(e, entry.id)
-                                }
-                                aria-expanded={expandedEntryId === entry.id}
-                                aria-label={`${entry.casual} の例文を${expandedEntryId === entry.id ? "閉じる" : "表示"}`}
+                                aria-expanded={openEntryId === entry.id}
                               >
+                                <DisclosureTriangle />
                                 {entry.casual}
                               </button>
                             </th>
-                            <td className={styles.td}>{entry.sonkeigo}</td>
-                            <td className={styles.td}>{entry.kenjogo}</td>
-                            <td className={styles.td}>{entry.teineigo}</td>
+                            <td className={styles.kindCell}>{kind}</td>
+                            <td>
+                              <KeigoForms value={entry.sonkeigo} />
+                            </td>
+                            <td>
+                              <KeigoForms value={entry.kenjogo} />
+                            </td>
+                            <td>
+                              <KeigoForms value={entry.teineigo} />
+                            </td>
                           </tr>
-                          {expandedEntryId === entry.id && (
-                            <tr className={styles.examplePanelRow}>
-                              <td colSpan={4}>{renderEntryExamples(entry)}</td>
+                          {openEntryId === entry.id && (
+                            <tr>
+                              <td colSpan={5}>
+                                <EntryExamples entry={entry} />
+                              </td>
                             </tr>
                           )}
                         </Fragment>
@@ -286,58 +241,51 @@ export default function KeigoReferenceTile({
                   </table>
                 </div>
 
-                {/* モバイルカードビュー */}
-                {/* モバイルカードは <div> なので role="button" + tabIndex=0 が適切（<tr>/<li> でないため問題なし）*/}
-                <div className={styles.mobileCards}>
-                  {filteredEntries.map((entry) => (
-                    <div key={entry.id}>
-                      <div
-                        className={styles.mobileCard}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => toggleEntry(entry.id)}
-                        onKeyDown={(e) => handleCardKeyDown(e, entry.id)}
-                        aria-expanded={expandedEntryId === entry.id}
+                {/* 狭い画面の行。1行1項目で、各行は開閉する行で、開くと例文が出る（§6・§8）。 */}
+                <ul className={styles.mobileRows}>
+                  {slice.items.map(({ entry, kind }) => (
+                    <li key={entry.id} className={styles.mobileRow}>
+                      <DisclosureRow
+                        open={openEntryId === entry.id}
+                        onToggle={() => toggleEntry(entry.id)}
+                        headClassName={styles.mobileRowHead}
+                        nameClassName={styles.mobileRowTitle}
+                        descriptionClassName={styles.mobileRowDetails}
+                        name={entry.casual}
+                        description={
+                          <>
+                            <span className={styles.mobileRowKind}>{kind}</span>
+                            {KEIGO_FORMS.map(([label, key]) => (
+                              <Fragment key={key}>
+                                {" "}
+                                <span className={styles.mobileRowForm}>
+                                  <span className={styles.mobileRowLabel}>
+                                    {label}
+                                  </span>{" "}
+                                  <span className={styles.mobileRowValue}>
+                                    <KeigoForms value={entry[key]} />
+                                  </span>
+                                </span>
+                              </Fragment>
+                            ))}
+                          </>
+                        }
                       >
-                        <div className={styles.mobileCardTitle}>
-                          {entry.casual}
-                        </div>
-                        <div className={styles.mobileCardRow}>
-                          <span className={styles.mobileCardLabel}>
-                            尊敬語:
-                          </span>
-                          <span>{entry.sonkeigo}</span>
-                        </div>
-                        <div className={styles.mobileCardRow}>
-                          <span className={styles.mobileCardLabel}>
-                            謙譲語:
-                          </span>
-                          <span>{entry.kenjogo}</span>
-                        </div>
-                        <div className={styles.mobileCardRow}>
-                          <span className={styles.mobileCardLabel}>
-                            丁寧語:
-                          </span>
-                          <span>{entry.teineigo}</span>
-                        </div>
-                      </div>
-                      {expandedEntryId === entry.id &&
-                        renderEntryExamples(entry)}
-                    </div>
+                        <EntryExamples entry={entry} />
+                      </DisclosureRow>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </>
-            ) : (
-              <div className={styles.noResults}>{noResultsMessage}</div>
-            )}
-          </>
+            ) : null}
+          </ListStack>
         )}
 
         {/* よくある間違いタブコンテンツ */}
         {activeTab === "mistakes" && (
           <>
             {MISTAKE_SECTIONS.map((section) => {
-              const mistakes = commonMistakes.filter(
+              const mistakes = COMMON_MISTAKES.filter(
                 (m) => m.mistakeType === section.type,
               );
               if (mistakes.length === 0) return null;

@@ -1,0 +1,11 @@
+/* 見出し・説明の一言・一覧のあいだ（§5 の間隔）。見出しの大きさは h2 の既定（§4 のセクションの見出し）に従い、
+ * 前のセクションとのあいだの全幅の罫線と余白は Section が持つ。 */
+.heading {
+  margin-block-end: var(--space-8);
+}
+
+.subtext {
+  margin-block-end: var(--space-16);
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}

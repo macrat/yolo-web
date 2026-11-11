@@ -1,244 +1,140 @@
 "use client";
 
-/**
- * JsonFormatterTile — JSON 整形・圧縮・検証の単一正典タイル
- *
- * cycle-228 T-12 で JsonFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
- * ## 設計原則
- *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **1ツール n タイル = variant**: full / format-only は同一コンポーネントの
- *   設定差で表現。別実装を作らない（分裂ゼロ）。
- * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- * - **logic.ts 共有エンジン**: formatJson / minifyJson / validateJson が唯一のロジック源。
- *
- * ## variant
- *
- * - `"full"` (デフォルト): 整形・圧縮・検証の3操作 + インデント Select + コピー
- * - `"format-only"`: 整形操作に絞る（T-31 道具箱恒久展示用）。
- *   インデント Select は維持。「JSON を整形する道具」として一目で分かる丁寧な作り。
- *
- * ## 使い方
- *
- * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
- * <JsonFormatterTile variant="full" />
- * <JsonFormatterTile variant="format-only" />
- * ```
- *
- * ## アクセシビリティ（C-3 準拠）
- *
- * - 出力 textarea は readOnly で表示専用
- * - role="status" aria-live="polite" の div にサマリテキストを置く
- *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
- */
-
-import { useId, useState, useCallback } from "react";
-import Panel from "@/components/Panel";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import Button from "@/components/Button";
+import CopyButton from "@/components/CopyButton";
+import Field from "@/components/Field";
+import ResultBox from "@/components/ResultBox";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
-import ErrorMessage from "@/components/ErrorMessage";
+import { WORD_JOINER } from "@/lib/phrase-dashes";
+import { revealResult } from "@/lib/reveal";
 import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
-import { formatJson, minifyJson, validateJson, type IndentType } from "./logic";
+  findJsonErrorPosition,
+  formatJson,
+  isValidJson,
+  minifyJson,
+  type IndentType,
+} from "./logic";
 import styles from "./JsonFormatterTile.module.css";
 
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
-export type JsonFormatterTileVariant = "full" | "format-only";
+/** 操作が生んだ結果。整形と圧縮はコード、検証は文で出す。 */
+type JsonResult =
+  { kind: "format" | "minify"; code: string } | { kind: "valid" };
+
+const RESULT_CAPTIONS: Record<JsonResult["kind"], string> = {
+  format: "整形したJSON",
+  minify: "圧縮したJSON",
+  valid: "検証の結果",
+};
+
+/** 結果が出たときに読み上げで言う文。 */
+const RESULT_ANNOUNCEMENTS: Record<JsonResult["kind"], string> = {
+  format: "整形しました",
+  minify: "圧縮しました",
+  valid: "正しいJSONです",
+};
+
+const EMPTY_INPUT_ERROR = "JSONを入力してください。";
+const INVALID_JSON_ERROR = "JSONの形式が正しくありません。";
+const TOO_DEEP_ERROR =
+  "JSONの形式は正しいものの、入れ子が深すぎてこのブラウザでは整形できません。";
 
 /**
- * JSON パーサーが返す英語エラーメッセージを日本語に変換する。
- *
- * JSON.parse は常に英語のエラーメッセージを返す（例:
- * "Expected property name or '}' in JSON at position 1 (line 1 column 2)"）。
- * 日本語サイトとして、生の英語パーサーエラーを来訪者に露出しないよう、
- * エラー位置情報（line/column）を活かした日本語メッセージに整形する。
- *
- * @param rawError - JSON.parse が投げたエラーの message（英語）
- * @returns 日本語の人間可読エラーメッセージ
+ * 数と、それに続く単位の字をつなぎ、あいだで折らない（「3行目」を「3行／目」に、「3文字目付近」を「3文字目付／近」に
+ * しない。§4）。字のあいだに幅の無い WORD JOINER を挟む。エラーの文は Field が字で受けるので、折り方を字の側で決める。
  */
-function toJapaneseJsonError(rawError: string): string {
-  // "line N column M" パターンを抽出（Chrome/Firefox/Node 共通形式）
-  const lineColMatch = rawError.match(/line\s+(\d+)\s+column\s+(\d+)/i);
-  if (lineColMatch) {
-    const line = lineColMatch[1];
-    const col = lineColMatch[2];
-    return `JSONの形式が正しくありません。（${line}行目、${col}文字目付近）`;
-  }
-
-  // "position N" だけのパターン（一部の環境）
-  const posMatch = rawError.match(/position\s+(\d+)/i);
-  if (posMatch) {
-    const pos = posMatch[1];
-    return `JSONの形式が正しくありません。（位置 ${pos} 付近）`;
-  }
-
-  // 位置情報が取れない場合のフォールバック
-  return "JSONの形式が正しくありません。";
+function keepTogether(text: string): string {
+  return [...text].join(WORD_JOINER);
 }
 
-export interface JsonFormatterTileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 整形・圧縮・検証の3操作 + インデント Select + コピー
-   * - "format-only": 整形操作のみ（道具箱恒久展示用）。インデント Select は維持。
-   */
-  variant?: JsonFormatterTileVariant;
-  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
-  as?: "section" | "div" | "article" | "aside";
-  /** 追加クラス */
-  className?: string;
+/**
+ * 操作できなかった JSON に、なぜかを言う日本語の文を返す。誤りの位置は道具が自分で読んで求めるので、エンジンの
+ * 誤りの文（英語で、ブラウザと誤りの種類によって位置を言わない）に頼らず、どのブラウザでも同じ行と字を言う。
+ * 読んで誤りが無いのに操作できなかったときは、形式は正しく、ブラウザが扱える入れ子の深さを超えている。
+ */
+function failureMessage(input: string): string {
+  const position = findJsonErrorPosition(input);
+  if (!position) return TOO_DEEP_ERROR;
+  const line = keepTogether(`${position.line}行目`);
+  const column = keepTogether(`${position.column}文字目付近`);
+  return `${INVALID_JSON_ERROR}（${line}、${column}）`;
 }
 
-export default function JsonFormatterTile({
-  variant = "full",
-  as = "section",
-  className,
-}: JsonFormatterTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  const uid = useId();
-  const inputId = `${uid}-input`;
-  const outputId = `${uid}-output`;
-  const indentId = `${uid}-indent`;
-
-  // ---------- State ----------
+/**
+ * JSON の整形・圧縮・検証（DESIGN.md §8）。入力は囲まず、結果だけを結果のボックスに入れる。整形と圧縮の
+ * 結果は、結果のボックスがそのままコードのボックスになり、写すコピーのボタンをボックスの頭の行に持つ。
+ * 数百行の結果でも、来訪者は結果の頭でそのまま写せる。
+ *
+ * 整形した JSON は字下げが中身なので、折り返さずボックスの中で横に送る（§5）。圧縮した JSON は改行を持たない
+ * 1続きの文字列なので、ボックスの幅で、どの字のあいだでも折り返し、送らずに終わりまで読める。
+ *
+ * 結果が画面に入りきらないときは、操作の並びを画面の上に置き、その下に結果を見せる（§8）。
+ */
+export default function JsonFormatterTile() {
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
-  const [error, setError] = useState("");
   const [indent, setIndent] = useState<IndentType>("2");
-  // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
-  // role="status" aria-live="polite" 領域に実テキストとして配置する
-  const [statusSummary, setStatusSummary] = useState("");
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<JsonResult | null>(null);
+  // 操作ごとに増やし、結果のボックスを新しく出し直して登場の動きと読み上げを毎回起こす。
+  const [run, setRun] = useState(0);
 
-  // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
-  const { copy, copiedKey } = useCopyToClipboard();
+  const operationsRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLElement>(null);
 
-  // ---------- ハンドラ ----------
-
-  const handleFormat = useCallback(() => {
+  function showResult(next: JsonResult): void {
     setError("");
-    setStatusSummary("");
+    setResult(next);
+    setRun((previous) => previous + 1);
+  }
+
+  function showError(message: string): void {
+    // 同じ誤りのまま押し直したときも、エラーの文を入れ直して読み上げに言い直させる。文を消した形を先に
+    // 描き切ってから入れるので、画面は一度も文の無い形を見せない。
+    flushSync(() => setError(""));
+    setError(message);
+    setResult(null);
+  }
+
+  function runOperation(operate: (text: string) => JsonResult): void {
     if (!input.trim()) {
-      setOutput("");
+      showError(EMPTY_INPUT_ERROR);
       return;
     }
     try {
-      const formatted = formatJson(input, indent);
-      setOutput(formatted);
-      // C-3: 整形成功サマリを role="status" 領域に実テキストとして配置
-      setStatusSummary("整形しました");
-    } catch (e) {
-      // JSON.parse の英語エラーを日本語に変換して表示（生エラーを露出しない）
-      const rawMsg = e instanceof Error ? e.message : String(e);
-      setError(toJapaneseJsonError(rawMsg));
-      setOutput("");
+      showResult(operate(input));
+    } catch {
+      showError(failureMessage(input));
     }
-  }, [input, indent]);
+  }
 
-  const handleMinify = useCallback(() => {
-    setError("");
-    setStatusSummary("");
-    if (!input.trim()) {
-      setOutput("");
-      return;
-    }
-    try {
-      const minified = minifyJson(input);
-      setOutput(minified);
-      // C-3: 圧縮成功サマリを role="status" 領域に実テキストとして配置
-      setStatusSummary("圧縮しました");
-    } catch (e) {
-      // JSON.parse の英語エラーを日本語に変換して表示（生エラーを露出しない）
-      const rawMsg = e instanceof Error ? e.message : String(e);
-      setError(toJapaneseJsonError(rawMsg));
-      setOutput("");
-    }
-  }, [input]);
+  const handleFormat = () =>
+    runOperation((text) => ({
+      kind: "format",
+      code: formatJson(text, indent),
+    }));
 
-  const handleValidate = useCallback(() => {
-    setError("");
-    setStatusSummary("");
-    if (!input.trim()) {
-      setOutput("");
-      return;
-    }
-    const result = validateJson(input);
-    if (result.valid) {
-      // 検証成功は日本語メッセージで表示（"Valid JSON" 等の英語は使わない）
-      setOutput("正しいJSONです");
-      // C-3: 検証成功サマリを role="status" 領域に実テキストとして配置
-      setStatusSummary("正しいJSONです");
-    } else {
-      // validateJson の result.error は英語の生パーサーエラーなので日本語に変換
-      const rawMsg = result.error ?? "";
-      setError(toJapaneseJsonError(rawMsg));
-      setOutput("");
-    }
-  }, [input]);
+  const handleMinify = () =>
+    runOperation((text) => ({ kind: "minify", code: minifyJson(text) }));
 
-  const handleCopy = useCallback(async () => {
-    if (!output) return;
-    await copy(output);
-  }, [output, copy]);
+  const handleValidate = () =>
+    runOperation((text) => {
+      if (!isValidJson(text)) throw new SyntaxError("invalid JSON");
+      return { kind: "valid" };
+    });
 
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
+  useEffect(() => {
+    if (run === 0 || !operationsRef.current || !resultRef.current) return;
+    revealResult(operationsRef.current, resultRef.current);
+  }, [run]);
+
   return (
-    <Panel as={as} className={className}>
-      {/* コントロール行: インデント選択 + 操作ボタン */}
-      <div className={styles.controls}>
-        {/* インデント選択（full・format-only 両方に表示） */}
-        <div className={styles.indentControl}>
-          <label htmlFor={indentId} className={styles.controlLabel}>
-            インデント
-          </label>
-          <Select
-            id={indentId}
-            aria-label="インデント"
-            value={indent}
-            onChange={(e) => setIndent(e.target.value as IndentType)}
-          >
-            <option value="2">2スペース</option>
-            <option value="4">4スペース</option>
-            <option value="tab">タブ</option>
-          </Select>
-        </div>
-
-        {/* 操作ボタン群 */}
-        <div className={styles.buttons}>
-          <Button onClick={handleFormat} type="button" variant="primary">
-            整形
-          </Button>
-          {/* variant="full" のみ圧縮・検証ボタンを表示 */}
-          {variant === "full" && (
-            <>
-              <Button onClick={handleMinify} type="button">
-                圧縮
-              </Button>
-              <Button onClick={handleValidate} type="button">
-                検証
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* 入出力パネル（2カラムグリッド） */}
-      <div className={styles.panels}>
-        {/* 入力欄 */}
-        <div className={styles.panel}>
-          <label htmlFor={inputId} className={styles.panelLabel}>
-            入力
-          </label>
+    <div className={styles.tile}>
+      <Field label="JSON" error={error || undefined}>
+        {(control) => (
           <Textarea
-            id={inputId}
-            aria-label="入力"
+            {...control}
             variant="mono"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -246,50 +142,70 @@ export default function JsonFormatterTile({
             spellCheck={false}
             rows={12}
           />
-        </div>
+        )}
+      </Field>
 
-        {/* 出力欄 */}
-        <div className={styles.panel}>
-          <div className={styles.outputHeader}>
-            <label htmlFor={outputId} className={styles.panelLabel}>
-              出力
-            </label>
-            {/* コピーボタン: 出力が空のとき disabled */}
-            <Button
-              onClick={() => void handleCopy()}
-              type="button"
-              size="small"
-              disabled={!output}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
+      <div ref={operationsRef} className={styles.controls}>
+        <Field label="インデント">
+          {(control) => (
+            <Select
+              {...control}
+              value={indent}
+              onChange={(e) => setIndent(e.target.value as IndentType)}
             >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
-          </div>
-          {/* C-3: role="status" aria-live="polite" で動的通知。
-              実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。
-              readOnly textarea をラップするだけでは値変化が読み上げられないため分離する。 */}
-          <div
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-            className={styles.statusSummary}
-          >
-            {statusSummary}
-          </div>
-          <Textarea
-            id={outputId}
-            aria-label="出力"
-            variant="mono"
-            value={output}
-            readOnly
-            placeholder="結果がここに表示されます"
-            rows={12}
-          />
+              <option value="2">2スペース</option>
+              <option value="4">4スペース</option>
+              <option value="tab">タブ</option>
+            </Select>
+          )}
+        </Field>
+        <div className={styles.buttons}>
+          <Button variant="primary" onClick={handleFormat}>
+            整形
+          </Button>
+          <Button onClick={handleMinify}>圧縮</Button>
+          <Button onClick={handleValidate}>検証</Button>
         </div>
       </div>
 
-      {/* エラー表示: A-4 ErrorMessage を使用。空のときは非表示 */}
-      {error && <ErrorMessage message={error} />}
-    </Panel>
+      <p role="status" className="visually-hidden">
+        {result && <span key={run}>{RESULT_ANNOUNCEMENTS[result.kind]}</span>}
+      </p>
+
+      {result &&
+        (result.kind === "valid" ? (
+          <ResultBox
+            key={run}
+            ref={resultRef}
+            caption={RESULT_CAPTIONS.valid}
+            appear
+          >
+            <p>正しいJSONです。</p>
+          </ResultBox>
+        ) : (
+          <ResultBox
+            key={run}
+            ref={resultRef}
+            caption={RESULT_CAPTIONS[result.kind]}
+            kind="code"
+            appear
+            copyButton={
+              <CopyButton
+                text={result.code}
+                target={RESULT_CAPTIONS[result.kind]}
+                align="end"
+              />
+            }
+          >
+            {result.kind === "format" ? (
+              <pre>
+                <code>{result.code}</code>
+              </pre>
+            ) : (
+              <code className="continuous-code">{result.code}</code>
+            )}
+          </ResultBox>
+        ))}
+    </div>
   );
 }

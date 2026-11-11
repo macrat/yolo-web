@@ -1,8 +1,8 @@
 /**
  * UnixTimestampTile テスト
  *
- * 旧 UnixTimestampPage.test.tsx の振る舞いを移植・拡張。
- * hydration 安全パターン・タイマー管理・variant・複数インスタンス id 一意性を検証。
+ * 変換・コピー・いまの時刻の刻みと止め方・タイマーの片付け・サーバーの HTML・複数置いたときの id を
+ * 確かめる。
  */
 import { describe, test, expect, beforeEach, vi, afterEach } from "vitest";
 import {
@@ -11,11 +11,14 @@ import {
   fireEvent,
   waitFor,
   act,
+  within,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { renderToString } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import UnixTimestampTile from "../UnixTimestampTile";
-import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
+import { timestampToDate } from "../logic";
 
 // navigator.clipboard のモック
 const writeTextMock = vi.fn().mockResolvedValue(undefined);
@@ -34,8 +37,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-// --- A-1: Panel ルート要件 ---
-describe("A-1: Panel ルート要件", () => {
+describe("ルートの要素", () => {
   test("デフォルトでルート要素が section であること（Panel デフォルト）", () => {
     const { container } = render(<UnixTimestampTile />);
     expect(container.firstChild?.nodeName).toBe("SECTION");
@@ -47,8 +49,7 @@ describe("A-1: Panel ルート要件", () => {
   });
 });
 
-// --- A-6: useId ベースの複数インスタンス id 一意性 ---
-describe("A-6: 複数インスタンスで DOM id が重複しない", () => {
+describe("複数置いても DOM の id が重複しない", () => {
   test("2インスタンスをレンダリングしたとき id が重複しないこと", () => {
     render(
       <>
@@ -68,17 +69,18 @@ describe("A-6: 複数インスタンスで DOM id が重複しない", () => {
   });
 });
 
-// --- E-1: 基本レンダリング ---
-describe("E-1: 基本レンダリング", () => {
+describe("基本の描画", () => {
   test("コンポーネントが正常にレンダリングされること", () => {
     render(<UnixTimestampTile />);
     expect(screen.getByText("タイムスタンプ → 日時")).toBeInTheDocument();
     expect(screen.getByText("日時 → タイムスタンプ")).toBeInTheDocument();
   });
 
-  test("現在のUNIXタイムスタンプラベルが存在すること", () => {
+  test("いまの時刻の見出しが「…のUNIXタイムスタンプ」であること", () => {
     render(<UnixTimestampTile />);
-    expect(screen.getByText("現在のUNIXタイムスタンプ:")).toBeInTheDocument();
+    expect(
+      screen.getByText(/^UNIXタイムスタンプ$/).parentElement!.textContent,
+    ).toMatch(/\u00a0のUNIXタイムスタンプ$/);
   });
 
   test("variant=full でも全セクションが表示されること", () => {
@@ -88,28 +90,37 @@ describe("E-1: 基本レンダリング", () => {
   });
 });
 
-// --- hydration 安全パターン ---
-describe("hydration 安全パターン", () => {
-  test("初期状態ではライブタイムスタンプが空文字（SSR 一致）", () => {
-    render(<UnixTimestampTile />);
-    // mounted=false の間は code 要素が空文字になる
-    const codeEl = document.querySelector("code");
-    // mounted は非同期なため初期レンダリング直後は空文字になるはず
-    // （テスト環境では useEffect は同期的に実行されることがあるが、
-    //   少なくとも hydration エラーなくレンダリングされること）
-    expect(codeEl).toBeInTheDocument();
+describe("サーバーの HTML", () => {
+  test("いまの時刻は空で、止める・コピーのボタンは押せない", () => {
+    const host = document.createElement("div");
+    host.innerHTML = renderToString(<UnixTimestampTile />);
+
+    expect(host.querySelector("code")?.textContent).toBe("");
+    // 見出しの日時の所は、マウント後の「YYYY/MM/DD hh:mm:ss」と同じ字数の見えない字で場所を取る。
+    const label = within(host).getByText(/^UNIXタイムスタンプ$/).parentElement!;
+    expect(label.textContent).toMatch(
+      /^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\u00a0のUNIXタイムスタンプ$/,
+    );
+    const buttons = within(host).getAllByRole("button");
+    const toggle = within(host).getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+    const copy = within(host).getByRole("button", {
+      name: "現在のタイムスタンプをコピー",
+    });
+    expect(buttons.slice(0, 2)).toEqual([toggle, copy]);
+    expect(toggle).toBeDisabled();
+    expect(copy).toBeDisabled();
   });
 });
 
-// --- D-4: タイマー管理 ---
-describe("D-4: タイマー管理（setInterval cleanup）", () => {
+describe("いまの時刻の刻み", () => {
   test("マウント後にライブタイムスタンプが数値になること（fake timers）", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2024-01-01T00:00:00Z"));
     render(<UnixTimestampTile />);
 
-    // useEffect がマウント後に動くのを待つ（setInterval の無限ループを避けるため
-    // runAllTimers ではなく advanceTimersByTime を使用する）
+    // 刻みは止まらずに続くので、runAllTimers ではなく advanceTimersByTime で進める。
     await act(async () => {
       vi.advanceTimersByTime(100);
     });
@@ -143,8 +154,210 @@ describe("D-4: タイマー管理（setInterval cleanup）", () => {
   });
 });
 
-// --- E-2: 入力→結果更新 ---
-describe("E-2: 入力→結果更新", () => {
+describe("いまの時刻を止める・動かす", () => {
+  // user-event は setTimeout で待つので、刻みに使う setInterval と Date だけを偽物にする。
+  async function renderAt(iso: string) {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+    vi.setSystemTime(new Date(iso));
+    const result = render(<UnixTimestampTile />);
+    await act(async () => {
+      vi.advanceTimersByTime(100);
+    });
+    return result;
+  }
+
+  /** タイムスタンプ（秒）を、動かしている環境のローカルの日時で言ったもの。 */
+  function localAt(seconds: number) {
+    return timestampToDate(seconds)!.localString;
+  }
+
+  function labelText() {
+    return screen.getByText(/^UNIXタイムスタンプ$/).parentElement!.textContent;
+  }
+
+  function mockReducedMotion() {
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+  }
+
+  function currentValue() {
+    return document.querySelector("code")?.textContent;
+  }
+
+  async function pass(ms: number) {
+    await act(async () => {
+      vi.advanceTimersByTime(ms);
+    });
+  }
+
+  test("プライマリでない「止める」ボタンがあり、押すと「動かす」に変わる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    const stop = screen.getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+    expect(stop).toHaveTextContent("止める");
+    expect(stop).toHaveAttribute("data-variant", "default");
+
+    fireEvent.click(stop);
+
+    expect(stop).toHaveTextContent("動かす");
+    expect(stop).toHaveAccessibleName("タイムスタンプの刻みを動かす");
+  });
+
+  test("見出しは値の日時を言い、数字と一緒に刻み、止めると一緒に止まる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    expect(labelText()).toBe(
+      `${localAt(1704067200)}\u00a0のUNIXタイムスタンプ`,
+    );
+
+    await pass(1000);
+    expect(currentValue()).toBe("1704067201");
+    expect(labelText()).toBe(
+      `${localAt(1704067201)}\u00a0のUNIXタイムスタンプ`,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "タイムスタンプの刻みを止める" }),
+    );
+    await pass(5000);
+
+    expect(labelText()).toBe(
+      `${localAt(1704067201)}\u00a0のUNIXタイムスタンプ`,
+    );
+  });
+
+  test("止めると刻みのタイマーが消え、動かすとまた1つになる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    expect(vi.getTimerCount()).toBe(1);
+    const toggle = screen.getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+
+    fireEvent.click(toggle);
+    expect(vi.getTimerCount()).toBe(0);
+
+    fireEvent.click(toggle);
+    expect(vi.getTimerCount()).toBe(1);
+  });
+
+  test("アンマウントすると刻みのタイマーが消える", async () => {
+    const { unmount } = await renderAt("2024-01-01T00:00:00Z");
+    expect(vi.getTimerCount()).toBe(1);
+
+    unmount();
+
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  test("止めると、5秒たっても表示が書き換わらない", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    fireEvent.click(
+      screen.getByRole("button", { name: "タイムスタンプの刻みを止める" }),
+    );
+    const stopped = currentValue();
+    expect(stopped).toBe("1704067200");
+
+    await pass(5000);
+
+    expect(currentValue()).toBe(stopped);
+  });
+
+  test("止めた値をコピーできる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    fireEvent.click(
+      screen.getByRole("button", { name: "タイムスタンプの刻みを止める" }),
+    );
+    await pass(5000);
+
+    await act(async () => {
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: `${localAt(1704067200)} のタイムスタンプをコピー`,
+        }),
+      );
+    });
+
+    expect(writeTextMock).toHaveBeenCalledWith("1704067200");
+  });
+
+  test("動かすと、すぐにいまの時刻になり、また刻み始める", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    const toggle = screen.getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+    fireEvent.click(toggle);
+    await pass(5000);
+
+    fireEvent.click(toggle);
+    expect(currentValue()).toBe("1704067205");
+    expect(toggle).toHaveTextContent("止める");
+
+    await pass(1000);
+    expect(currentValue()).toBe("1704067206");
+  });
+
+  test("キーボードで止めて動かせる（フォーカスはボタンに残る）", async () => {
+    const user = userEvent.setup();
+    await renderAt("2024-01-01T00:00:00Z");
+    const toggle = screen.getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+    toggle.focus();
+
+    await user.keyboard("{Enter}");
+    expect(toggle).toHaveFocus();
+    expect(toggle).toHaveAccessibleName("タイムスタンプの刻みを動かす");
+    await pass(5000);
+    expect(currentValue()).toBe("1704067200");
+
+    await user.keyboard(" ");
+    expect(toggle).toHaveFocus();
+    expect(toggle).toHaveAccessibleName("タイムスタンプの刻みを止める");
+    expect(currentValue()).toBe("1704067205");
+  });
+
+  test("prefers-reduced-motion: reduce のときは止めた状態で始まり、見出しが値の日時を言う", async () => {
+    const original = window.matchMedia;
+    mockReducedMotion();
+    try {
+      await renderAt("2024-01-01T00:00:00Z");
+      expect(
+        screen.getByRole("button", { name: "タイムスタンプの刻みを動かす" }),
+      ).toBeInTheDocument();
+      expect(vi.getTimerCount()).toBe(0);
+      expect(labelText()).toBe(
+        `${localAt(1704067200)}\u00a0のUNIXタイムスタンプ`,
+      );
+      await pass(5000);
+      expect(currentValue()).toBe("1704067200");
+    } finally {
+      window.matchMedia = original;
+    }
+  });
+
+  test("いまの時刻のコピーを押すと「コピー済み」に変わる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    const copy = screen.getByRole("button", {
+      name: "現在のタイムスタンプをコピー",
+    });
+
+    await act(async () => {
+      fireEvent.click(copy);
+    });
+
+    expect(copy).toHaveTextContent("コピー済み");
+  });
+});
+
+describe("入力と結果", () => {
   test("タイムスタンプ入力後に変換ボタンを押すと結果が表示されること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
@@ -169,8 +382,7 @@ describe("E-2: 入力→結果更新", () => {
   });
 });
 
-// --- E-3: 空入力 ---
-describe("E-3: 空入力", () => {
+describe("空の入力", () => {
   test("タイムスタンプ入力が空のとき変換ボタンを押してもエラーが表示されること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
@@ -190,8 +402,7 @@ describe("E-3: 空入力", () => {
   });
 });
 
-// --- E-4: 変換ロジックの正確性 ---
-describe("E-4: 変換ロジックの正確性", () => {
+describe("変換の正しさ", () => {
   test("1704067200 が 2024-01-01T00:00:00.000Z に変換されること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
@@ -237,12 +448,11 @@ describe("E-4: 変換ロジックの正確性", () => {
   });
 });
 
-// --- E-5: ARIA ---
-describe("E-5: ARIA属性", () => {
-  test("SegmentedControl に role='radiogroup' が存在すること", () => {
+describe("ARIA 属性", () => {
+  test("ラジオボタンの組に role='radiogroup' が存在すること", () => {
     render(<UnixTimestampTile />);
     const radiogroup = screen.getByRole("radiogroup", {
-      name: "タイムスタンプ単位",
+      name: "単位",
     });
     expect(radiogroup).toBeInTheDocument();
   });
@@ -272,7 +482,7 @@ describe("E-5: ARIA属性", () => {
     });
   });
 
-  test("現在タイムスタンプ表示領域（ライブ時計）に aria-live がないこと（C-3: 1秒毎読み上げ防止）", () => {
+  test("現在タイムスタンプ表示領域（ライブ時計）に aria-live がないこと（1秒ごとに読み上げさせない）", () => {
     render(<UnixTimestampTile />);
     // currentBar の code 要素は aria-live を持たない
     // ライブ時計の親/祖先に aria-live=polite/assertive が設定されていないことを確認
@@ -284,9 +494,8 @@ describe("E-5: ARIA属性", () => {
   });
 });
 
-// --- E-6: コピー文言変化 ---
-describe("E-6: コピー文言変化", () => {
-  test("変換後にコピーボタンを押すとCOPIED_LABELに変わること", async () => {
+describe("コピーの文言の変化", () => {
+  test("変換後にコピーボタンを押すと「コピー済み」に変わること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
     fireEvent.change(input, { target: { value: "1704067200" } });
@@ -297,13 +506,12 @@ describe("E-6: コピー文言変化", () => {
     const isoButton = screen.getByRole("button", { name: "ISO 8601をコピー" });
     fireEvent.click(isoButton);
     await waitFor(() => {
-      expect(screen.getAllByText(COPIED_LABEL).length).toBeGreaterThan(0);
+      expect(isoButton).toHaveTextContent("コピー済み");
     });
   });
 });
 
-// --- E-7: コピー disabled 状態 ---
-describe("E-7: コピー disabled 状態", () => {
+describe("変換前のコピーボタン", () => {
   test("タイムスタンプ変換前はISO 8601コピーボタンが存在しないこと", () => {
     render(<UnixTimestampTile />);
     expect(
@@ -314,13 +522,12 @@ describe("E-7: コピー disabled 状態", () => {
   test("日時変換前は日時変換結果コピーボタンが存在しないこと", () => {
     render(<UnixTimestampTile />);
     expect(
-      screen.queryByRole("button", { name: "ミリ秒をコピー" }),
+      screen.queryByRole("button", { name: "日時から求めたミリ秒をコピー" }),
     ).not.toBeInTheDocument();
   });
 });
 
-// --- E-8: clipboard 不在時の silent fail ---
-describe("E-8: clipboard 不在時の silent fail", () => {
+describe("clipboard が無いとき", () => {
   test("navigator.clipboard が存在しない場合でも例外を投げないこと", async () => {
     Object.defineProperty(navigator, "clipboard", {
       value: undefined,
@@ -345,9 +552,8 @@ describe("E-8: clipboard 不在時の silent fail", () => {
   });
 });
 
-// --- G-3: 全機能保持（コピーターゲット） ---
-describe("G-3: コピーターゲット6個の保持", () => {
-  test("タイムスタンプ変換後に5個のコピーターゲット（現在・ローカル・UTC・ISO・秒・ミリ秒）が存在すること", async () => {
+describe("コピーの対象", () => {
+  test("タイムスタンプ変換後に、現在・ローカル時刻・UTC・ISO 8601・秒・ミリ秒のコピーのボタンがあること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
     fireEvent.change(input, { target: { value: "1704067200" } });
@@ -355,7 +561,9 @@ describe("G-3: コピーターゲット6個の保持", () => {
     await waitFor(() => {
       expect(screen.getByText("ローカル時刻")).toBeInTheDocument();
     });
-    // ローカル・UTC・ISO・秒・ミリ秒 のコピーボタンが存在すること
+    expect(
+      screen.getByRole("button", { name: "現在のタイムスタンプをコピー" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "ローカル時刻をコピー" }),
     ).toBeInTheDocument();
@@ -366,16 +574,37 @@ describe("G-3: コピーターゲット6個の保持", () => {
       screen.getByRole("button", { name: "ISO 8601をコピー" }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: "秒をコピー" }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("button", { name: "秒をコピー" }),
+    ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: "ミリ秒をコピー" }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole("button", { name: "ミリ秒をコピー" }),
+    ).toBeInTheDocument();
+  });
+
+  test("日時から求めた秒・ミリ秒のコピーのボタンは、タイムスタンプから求めたものと名前で分かれること", async () => {
+    render(<UnixTimestampTile />);
+    const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
+    fireEvent.change(input, { target: { value: "1704067200" } });
+    fireEvent.click(screen.getAllByRole("button", { name: "変換" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "変換" })[1]);
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "日時から求めた秒をコピー" }),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.getByRole("button", { name: "日時から求めたミリ秒をコピー" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "秒をコピー" })).toHaveLength(
+      1,
+    );
+    expect(
+      screen.getAllByRole("button", { name: "ミリ秒をコピー" }),
+    ).toHaveLength(1);
   });
 });
 
-// --- reviewer-1: 共通 Input コンポーネント使用 ---
-describe("reviewer-1: 共通Inputコンポーネント使用", () => {
+describe("日時の入力欄", () => {
   test("年/月/日/時/分/秒の入力欄が spinbutton として存在すること", () => {
     render(<UnixTimestampTile />);
     expect(screen.getByRole("spinbutton", { name: "年" })).toBeInTheDocument();
@@ -387,8 +616,7 @@ describe("reviewer-1: 共通Inputコンポーネント使用", () => {
   });
 });
 
-// --- reviewer-2: ローカル時刻コピーボタン ---
-describe("reviewer-2: ローカル時刻コピーボタン", () => {
+describe("ローカル時刻のコピーボタン", () => {
   test("タイムスタンプ変換後にローカル時刻行のコピーボタンが存在すること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
@@ -405,8 +633,7 @@ describe("reviewer-2: ローカル時刻コピーボタン", () => {
   });
 });
 
-// --- reviewer-3: 見出しレベル ---
-describe("reviewer-3: 見出しレベル", () => {
+describe("見出しの段", () => {
   test("セクション見出しが h2 で始まること（h3 をスキップしないこと）", () => {
     render(<UnixTimestampTile />);
     const h2Elements = document.querySelectorAll("h2");
@@ -416,14 +643,13 @@ describe("reviewer-3: 見出しレベル", () => {
   });
 });
 
-// --- E-12: CSS トークン検証 ---
-describe("E-12: CSSトークン検証（UnixTimestampTile.module.css）", () => {
+describe("CSS のトークン（UnixTimestampTile.module.css）", () => {
   const cssPath = join(
     process.cwd(),
     "src/tools/unix-timestamp/UnixTimestampTile.module.css",
   );
 
-  test("--color-* 旧トークンが存在しないこと", () => {
+  test("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     const matches = css.match(/var\(--color-[^)]+\)/g) ?? [];
     expect(matches).toHaveLength(0);

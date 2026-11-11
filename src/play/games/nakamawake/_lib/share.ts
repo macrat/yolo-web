@@ -1,40 +1,25 @@
 import type { NakamawakeGameState } from "./types";
-import { getDifficultyEmoji } from "./engine";
 
 /**
- * Generate the share text for a completed game.
+ * 解き終えた回の共有の文。1行目は画面の結果の見出しと同じ語で言い、次の行に、当てた組の難易度の数（画面の
+ * 「難易度1」〜「難易度4」と同じ数）を当てた順に並べる。答えの語を明かさずに、どの順に解いたかを見せる。
+ * 当てた組が無い回は、並びの行を持たない。ページの URL は文に入れず、ShareButtons が共有先ごとの形で付ける。
  *
- * Format:
- *   ナカマワケ #42 ミス2回
- *   🟨🟨🟨🟨
- *   🟩🟩🟩🟩
- *   🟦🟦🟦🟦
- *   🟪🟪🟪🟪
+ * 例:
+ *   ナカマワケ #42 4組すべて正解（間違い2回）
+ *   当てた順（難易度）: 1→3→2→4
  *   #ナカマワケ #yolosnet
- *   https://.../play/nakamawake
  */
 export function generateShareText(state: NakamawakeGameState): string {
   const result =
     state.status === "won"
-      ? `${state.mistakes === 0 ? "\u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!" : `\u30DF\u30B9${state.mistakes}\u56DE`}`
-      : "X";
+      ? `4組すべて正解（間違い${state.mistakes}回）`
+      : `4回間違えて終了（${state.solvedGroups.length}組正解）`;
+  const order = state.solvedGroups.map((group) => group.difficulty).join("→");
 
-  // Show each guess as a row of difficulty emojis
-  const rows = state.guessHistory
-    .filter((g) => g.correct)
-    .map((g) => {
-      // Find which group this guess matched
-      const group = state.puzzle.groups.find((grp) => {
-        const sorted = [...grp.words].sort();
-        const gSorted = [...g.words].sort();
-        return sorted.every((w, i) => w === gSorted[i]);
-      });
-      return group ? getDifficultyEmoji(group.difficulty).repeat(4) : "";
-    })
-    .filter(Boolean);
-
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/play/nakamawake`;
-
-  return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet\n${url}`;
+  return [
+    `ナカマワケ #${state.puzzleNumber} ${result}`,
+    ...(order ? [`当てた順（難易度）: ${order}`] : []),
+    "#ナカマワケ #yolosnet",
+  ].join("\n");
 }

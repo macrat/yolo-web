@@ -27,7 +27,7 @@ export default function HashGeneratorPage() {
         }}
       />
       <ToolErrorBoundary>
-        {/* A-4: ToolPageLayout 内に HashGeneratorTile variant="full" を描く */}
+        {/* ToolPageLayout 内に HashGeneratorTile variant="full" を描く */}
         <HashGeneratorTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>

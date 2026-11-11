@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./ErrorBoundary.module.css";
 
 interface ErrorBoundaryProps {
@@ -9,7 +10,6 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error: Error | null;
 }
 
 export default class ToolErrorBoundary extends React.Component<
@@ -18,20 +18,22 @@ export default class ToolErrorBoundary extends React.Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div role="alert" className={styles.error}>
-          <h2 className={styles.heading}>
-            ツールの読み込みでエラーが発生しました
-          </h2>
+        <div role="alert">
+          <PhrasedText
+            as="h2"
+            className={styles.heading}
+            phrases={["ツールの", "読み込みで", "エラーが", "発生しました"]}
+          />
           <p className={styles.text}>
             ページを再読み込みしてください。問題が続く場合は、しばらく時間をおいてからお試しください。
           </p>

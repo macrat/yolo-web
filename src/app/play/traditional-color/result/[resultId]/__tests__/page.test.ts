@@ -67,11 +67,6 @@ describe("traditional-color 専用結果ページ: detailedContent の variant �
 });
 
 describe("traditional-color クイズメタデータ", () => {
-  it("accentColor が定義されている", () => {
-    expect(traditionalColorQuiz.meta.accentColor).toBeTruthy();
-    expect(typeof traditionalColorQuiz.meta.accentColor).toBe("string");
-  });
-
   it("slug が 'traditional-color'", () => {
     expect(traditionalColorQuiz.meta.slug).toBe("traditional-color");
   });

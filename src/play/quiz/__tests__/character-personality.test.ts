@@ -7,21 +7,21 @@ import characterPersonalityQuiz, {
 import type { QuizAnswer, QuizResult } from "../types";
 
 /**
- * cycle-295 E4: character-personality 専用の恒久 CI 回帰ガード。
+ * character-personality 専用の恒久 CI 回帰ガード。
  *
  * この診断はサイトの玄関(全PVの31%)で、6アーキタイプ採点 → 主軸×副軸の専用判定
  * (determineCharacterPersonalityResult / count 軸判定・同型 count≥8・逆順フォールバック)を
- * 使う。汎用の reachability.test.ts からは GENERIC_TIEBREAK_EXCLUDED で除外済み(E2)。
+ * 使う。汎用の reachability.test.ts からは GENERIC_TIEBREAK_EXCLUDED で除外している。
  * 本ファイルが character-personality の専用ガードで、以下を非flaky・決定的に固定する:
  *
  *   G1: ∀理想回答者テスト(本番判定)で全24タイプに本人が届く(24/24)。
- *       旧・直接配点機構では 2/24 が本人に永久に届かなかった Rule4 実害の再発防止。
+ *       正直に答えた本人が届かないタイプを作らないため(constitution Rule4)。
  *       計器の検出力も固定する(既知のゴミ=定数判定/誤 P を通さないこと)。
  *   G4a: 測度 M(c∈{1.0,0.85})のサンプリングで全24タイプが ≥1% の床にマージンを
  *        もって到達する(恒常敗退の検出)。
  *
- * G2(悉皆 4^12)は timeout 確実のため CI に入れない(D2 の一度きり検証で真値記録済:
- * docs/cycles/cycle-295/verification.md)。
+ * G2(悉皆 4^12)は timeout 確実のため CI に入れない(一度きりの検証の真値は
+ * docs/cycles/cycle-295/verification.md にある)。
  */
 
 // ---- アーキタイプ index(ARCHETYPE_IDS の正準順) ----
@@ -33,7 +33,7 @@ const archIndex = (id: string) => ARCHETYPE_IDS.indexOf(id as never);
 
 /**
  * 24タイプの定義 = (主軸アーキタイプ, 副軸アーキタイプ)。同型は主軸=副軸。
- * design.md §2 の写像表(コード註の逐語が典拠)を独立な spec として明記する
+ * docs/cycles/cycle-295/design.md §2 の写像表(コード註の逐語が典拠)を独立な spec として明記する
  * ——実装(AXIS_PAIR_TO_TYPE)から導出しない。判定機構がこの spec を実現している
  * ことを G1 で本番判定に通して検証する。
  */
@@ -389,7 +389,7 @@ function sampleMeasure(
  * G4a 回帰: 一貫回答モデル c∈{1.0,0.85} で全24タイプが ≥1% に到達する。
  * 決定的シード・非flaky(design/verification の実測 min≈2.26%/2.44% に対し床1%へ
  * +1.2pt 以上のマージン。N=200,000 でサンプリング std≈0.03pt=マージンの ~40 分の1)。
- * 一様(c=0)は測度Mの grid に含むが、同型6は一様で消える(G4c 撤回)ため床は
+ * 一様(c=0)は測度Mの grid に含むが、同型6は一様では出にくいため床は
  * 異型18のみに課す。
  */
 const SAMPLE_N = 200_000;
@@ -413,7 +413,7 @@ describe("character-personality: G4a 到達性フロア(測度M・決定的サ�
   }
 
   it(
-    "c=0(一様): 異型18タイプが ≥1% に到達する(同型6はG4c撤回で床を課さない)",
+    "c=0(一様): 異型18タイプが ≥1% に到達する(同型6は一様では出にくいので床を課さない)",
     () => {
       const tc = sampleMeasure(0.0, SAMPLE_N, SEED);
       const below: string[] = [];

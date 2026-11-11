@@ -54,6 +54,8 @@ export interface IrodoriGameStats {
 export interface IrodoriGameHistory {
   [date: string]: {
     scores: (number | null)[];
+    /** The color the player made in each round (null until answered). A record may hold the scores only. */
+    answers?: ({ h: number; s: number; l: number } | null)[];
     totalScore: number | null;
     /** Next round to play (0-4: playing, 5: completed). */
     currentRound: number;

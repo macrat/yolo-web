@@ -3,8 +3,6 @@
 /**
  * LineBreakRemoverTile — 改行削除ツールの単一正典タイル
  *
- * cycle-228 T-4 で LineBreakRemoverPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -17,22 +15,19 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl で3種の変換モードを切替可能。ToggleSwitch 表示。
- * - `"remove"`: モードを remove に固定。SegmentedControl 非表示。ToggleSwitch 維持。
- * - `"replace-space"`: モードを replace-space に固定。SegmentedControl 非表示。ToggleSwitch 維持。
- * - `"smart-pdf"`: モードを smart-pdf に固定。SegmentedControl 非表示。行内改行オプション表示。
+ * - `"full"` (デフォルト): ラジオボタンの組で3種の変換モードを切替可能。チェックボックス表示。
+ * - `"remove"`: モードを remove に固定。ラジオボタンの組を出さない。チェックボックス維持。
+ * - `"replace-space"`: モードを replace-space に固定。ラジオボタンの組を出さない。チェックボックス維持。
+ * - `"smart-pdf"`: モードを smart-pdf に固定。ラジオボタンの組を出さない。行内改行オプション表示。
  *
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <LineBreakRemoverTile variant="full" />
- * <LineBreakRemoverTile variant="remove" />
- * <LineBreakRemoverTile variant="replace-space" />
- * <LineBreakRemoverTile variant="smart-pdf" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -41,15 +36,11 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import Checkbox from "@/components/Checkbox";
+import CopyButton from "@/components/CopyButton";
 import {
   removeLineBreaks,
   type RemoveMode,
@@ -60,7 +51,7 @@ import styles from "./LineBreakRemoverTile.module.css";
 /** variant prop の型。full は全機能表示、それ以外はモード固定（RemoveMode の値に揃える）。 */
 export type LineBreakRemoverTileVariant = "full" | RemoveMode;
 
-/** 変換モードの選択肢（SegmentedControl の options として渡す） */
+/** 変換モードの選択肢 */
 const MODE_OPTIONS: { label: string; value: RemoveMode }[] = [
   { value: "remove", label: "改行を削除" },
   { value: "replace-space", label: "改行をスペースに置換" },
@@ -68,8 +59,7 @@ const MODE_OPTIONS: { label: string; value: RemoveMode }[] = [
 ];
 
 /**
- * smart-pdf モードの行内改行処理選択肢（SegmentedControl の options として渡す）。
- * 相互排他の選択肢は SegmentedControl で実装する。
+ * smart-pdf モードの行内改行処理の選択肢。どちらか一方だけを選ぶので、ラジオボタンの組にする。
  */
 const SMART_PDF_JOIN_OPTIONS: { label: string; value: SmartPdfJoinStyle }[] = [
   { value: "remove", label: "削除する" },
@@ -79,9 +69,9 @@ const SMART_PDF_JOIN_OPTIONS: { label: string; value: SmartPdfJoinStyle }[] = [
 export interface LineBreakRemoverTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 3モード SegmentedControl 表示（ユーザーがモードを切り替え可能）
-   * - "remove": モードを remove に固定。SegmentedControl 非表示。ToggleSwitch 維持。
-   * - "replace-space": モードを replace-space に固定。ToggleSwitch 維持。
+   * - "full": 3モードのラジオボタンの組を出す（ユーザーがモードを切り替え可能）
+   * - "remove": モードを remove に固定。ラジオボタンの組を出さない。チェックボックス維持。
+   * - "replace-space": モードを replace-space に固定。チェックボックス維持。
    * - "smart-pdf": モードを smart-pdf に固定。行内改行オプション表示。
    */
   variant?: LineBreakRemoverTileVariant;
@@ -100,8 +90,6 @@ export default function LineBreakRemoverTile({
   const uid = useId();
   const inputId = `${uid}-input`;
   const outputId = `${uid}-output`;
-  const modeLabelId = `${uid}-mode-label`;
-  const joinLabelId = `${uid}-join-label`;
 
   // ---------- variant からモードを決定 ----------
   // "full" の場合はユーザーがモードを切り替え可能。それ以外は固定。
@@ -115,8 +103,6 @@ export default function LineBreakRemoverTile({
   const [smartPdfJoinStyle, setSmartPdfJoinStyle] =
     useState<SmartPdfJoinStyle>("remove");
   const [input, setInput] = useState("");
-
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
@@ -134,7 +120,7 @@ export default function LineBreakRemoverTile({
 
   const hasOutput = result.output.length > 0;
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const summaryText = useMemo(() => {
     if (!input || result.error) return "";
     if (mode === "remove")
@@ -146,40 +132,30 @@ export default function LineBreakRemoverTile({
 
   // ---------- ハンドラ ----------
   function handleModeChange(newMode: string): void {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(newMode as RemoveMode);
-  }
-
-  async function handleCopy(): Promise<void> {
-    if (!hasOutput) return;
-    await copy(result.output);
   }
 
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 変換モード切替（variant=full のみ表示）
-          fixedMode がある場合は固定モードのため SegmentedControl を表示しない */}
+      {/* 変換モード切替（variant=full のみ表示）。固定 variant はモードが決まっているので出さない。 */}
       {fixedMode === null && (
-        <div className={styles.modeControl}>
-          <span id={modeLabelId} className={styles.modeLabel}>
-            変換モード
-          </span>
-          <SegmentedControl
-            options={MODE_OPTIONS}
-            value={dynamicMode}
-            onChange={handleModeChange}
-            aria-labelledby={modeLabelId}
-          />
-        </div>
+        <RadioGroup
+          legend="変換モード"
+          options={MODE_OPTIONS}
+          value={dynamicMode}
+          onChange={handleModeChange}
+          className={styles.modeControl}
+        />
       )}
 
       {/* オプション（remove/replace-space モード用）
           fixed の場合も機能を削らないため維持 */}
       {(mode === "remove" || mode === "replace-space") && (
         <div className={styles.optionRow}>
-          <ToggleSwitch
+          <Checkbox
             label="連続する改行を1つにまとめる"
             checked={mergeConsecutive}
             onChange={(e) => setMergeConsecutive(e.target.checked)}
@@ -187,20 +163,15 @@ export default function LineBreakRemoverTile({
         </div>
       )}
 
-      {/* オプション（smart-pdf モード用）
-          相互排他の選択肢は SegmentedControl で実装する。 */}
+      {/* オプション（smart-pdf モード用） */}
       {mode === "smart-pdf" && (
-        <div className={styles.smartPdfOptions}>
-          <span id={joinLabelId} className={styles.optionLabel}>
-            行内改行の処理
-          </span>
-          <SegmentedControl
-            options={SMART_PDF_JOIN_OPTIONS}
-            value={smartPdfJoinStyle}
-            onChange={(v) => setSmartPdfJoinStyle(v as SmartPdfJoinStyle)}
-            aria-labelledby={joinLabelId}
-          />
-        </div>
+        <RadioGroup
+          legend="行内改行の処理"
+          options={SMART_PDF_JOIN_OPTIONS}
+          value={smartPdfJoinStyle}
+          onChange={(v) => setSmartPdfJoinStyle(v as SmartPdfJoinStyle)}
+          className={styles.smartPdfOptions}
+        />
       )}
 
       {/* 入出力パネル */}
@@ -227,17 +198,14 @@ export default function LineBreakRemoverTile({
             <label htmlFor={outputId} className={styles.panelLabel}>
               変換結果
             </label>
-            {/* コピーボタン */}
-            <Button
-              size="small"
-              onClick={handleCopy}
+            <CopyButton
+              text={result.output}
+              target="変換結果"
+              align="end"
               disabled={!hasOutput}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
-          {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+          {/* readOnly textarea は role="status" 対象外。
               別途サマリ div を置いてスクリーンリーダーへ通知する。
               視覚的にも表示する（変換件数サマリ）。 */}
           <div
@@ -249,7 +217,7 @@ export default function LineBreakRemoverTile({
             {summaryText}
           </div>
           {/* readOnly textarea はフォーム値変更をスクリーンリーダーに届けないため
-              role="status" は付与しない（C-3 参照）。 */}
+              role="status" は付与しない。 */}
           <Textarea
             id={outputId}
             value={result.output}

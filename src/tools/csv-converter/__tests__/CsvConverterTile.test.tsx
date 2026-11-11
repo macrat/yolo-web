@@ -1,5 +1,5 @@
 /**
- * CsvConverterTile のユニットテスト（TDD: 実装前に書く）
+ * CsvConverterTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（入力形式・出力形式 Select が表示される）
@@ -8,39 +8,34 @@
  * - V-4: 変換ボタンで CSV → Markdown 変換が動く
  * - V-5: 無効な JSON 入力でエラーが日本語で表示される（英語エラー露出なし）
  * - V-6: ARIA — role="status" aria-live="polite" 領域が存在する
- * - V-7: 変換後に role="status" 領域に実テキストサマリが表示される（C-3）
+ * - V-7: 変換後に role="status" 領域に実テキストサマリが表示される
  * - V-8: 出力が空のときコピーボタンが disabled
  * - V-9: 出力があるときコピーボタンが enabled
  * - V-10: コピーボタン文言変化（コピー前/後）
  * - V-11: id インスタンス一意性（同一ページに2つ描画して id 重複なし）
  * - V-12: CSS トークン検証（--color-* 不使用・--accent 直塗り禁止・font-weight:700 禁止）
  * - V-13: navigator.clipboard 不在環境でクラッシュしない
- * - V-14: 変換後に形式変更すると旧結果がクリアされない（ユーザーが再度「変換」ボタンを押すまで）
  */
-import { describe, test, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, test, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import CsvConverterTile from "../CsvConverterTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("CsvConverterTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // V-1: 基本レンダリング
   describe("V-1: variant=full でのレンダリング", () => {
     it("renders without crashing", () => {
@@ -155,7 +150,7 @@ describe("CsvConverterTile", () => {
 
   // V-7: 変換後に role="status" 領域に実テキストサマリが表示される
   describe("V-7: ライブリージョン サマリ", () => {
-    it("変換後に role=status 領域に実テキストサマリが表示される（C-3）", () => {
+    it("変換後に role=status 領域に実テキストサマリが表示される", () => {
       render(<CsvConverterTile variant="full" />);
       const input = screen.getByLabelText("入力データ");
       fireEvent.change(input, { target: { value: "a,b\n1,2" } });
@@ -170,7 +165,9 @@ describe("CsvConverterTile", () => {
     it("出力が空のときコピーボタンが disabled", () => {
       render(<CsvConverterTile variant="full" />);
       // 初期状態（サンプルデータ）でも出力欄は空。変換前は disabled。
-      const copyButton = screen.getByRole("button", { name: "コピー" });
+      const copyButton = screen.getByRole("button", {
+        name: "変換結果をコピー",
+      });
       expect(copyButton).toBeDisabled();
     });
   });
@@ -188,33 +185,36 @@ describe("CsvConverterTile", () => {
       fireEvent.change(toSelect, { target: { value: "json" } });
 
       fireEvent.click(screen.getByRole("button", { name: "変換" }));
-      const copyButton = screen.getByRole("button", { name: "コピー" });
+      const copyButton = screen.getByRole("button", {
+        name: "変換結果をコピー",
+      });
       expect(copyButton).not.toBeDisabled();
     });
   });
 
   // V-10: コピーボタン文言変化
   describe("V-10: コピーボタン文言変化", () => {
-    it("コピー前は 'コピー' が表示される（copiedKey=null）", () => {
-      mockHook.copiedKey = null;
+    it("コピー前は 'コピー' が表示される", () => {
       render(<CsvConverterTile variant="full" />);
       const input = screen.getByLabelText("入力データ");
       fireEvent.change(input, { target: { value: "a,b\n1,2" } });
       fireEvent.click(screen.getByRole("button", { name: "変換" }));
       expect(
-        screen.getByRole("button", { name: "コピー" }),
+        screen.getByRole("button", { name: "変換結果をコピー" }),
       ).toBeInTheDocument();
     });
 
-    it("コピー後は COPIED_LABEL が表示される（copiedKey 設定済み）", () => {
-      mockHook.copiedKey = true;
+    it("押すと結果を写し、ボタンが「コピー済み」になる", async () => {
       render(<CsvConverterTile variant="full" />);
       const input = screen.getByLabelText("入力データ");
       fireEvent.change(input, { target: { value: "a,b\n1,2" } });
       fireEvent.click(screen.getByRole("button", { name: "変換" }));
-      expect(
-        screen.getByRole("button", { name: "コピーしました" }),
-      ).toBeInTheDocument();
+      const copyButton = screen.getByRole("button", {
+        name: "変換結果をコピー",
+      });
+      fireEvent.click(copyButton);
+      await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+      expect(writeText).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -252,7 +252,7 @@ describe("CsvConverterTile", () => {
     );
     const css = readFileSync(cssPath, "utf-8");
 
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
 
     // --accent 直塗りがないこと（フォーカス用途 outline: 2px solid var(--accent) は許可）

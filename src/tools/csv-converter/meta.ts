@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "CSV Markdown 変換",
     "CSV TSV 変換 オンライン",
   ],
-  category: "developer",
+  category: "data",
   relatedSlugs: [
     "json-formatter",
     "markdown-preview",

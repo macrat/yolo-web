@@ -1,22 +1,15 @@
-import { expect, test, describe, it } from "vitest";
+import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
-import FaqSection from "@/components/FaqSection";
-import type { FaqEntry } from "@/lib/seo";
+import FaqSection, { type PhrasedFaqEntry } from "@/components/FaqSection";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-const sampleFaq: FaqEntry[] = [
-  { question: "テスト質問1", answer: "テスト回答1" },
-  { question: "テスト質問2", answer: "テスト回答2" },
+const sampleFaq: PhrasedFaqEntry[] = [
+  { question: ["テスト", "質問1"], answer: "テスト回答1" },
+  { question: ["テスト", "質問2"], answer: "テスト回答2" },
 ];
 
 describe("FaqSection", () => {
   // --- レンダリング ---
-
-  test("faq が undefined のとき null を返す（何も描画しない）", () => {
-    const { container } = render(<FaqSection faq={undefined} />);
-    expect(container.firstChild).toBeNull();
-  });
 
   test("faq が空配列のとき null を返す（何も描画しない）", () => {
     const { container } = render(<FaqSection faq={[]} />);
@@ -25,7 +18,9 @@ describe("FaqSection", () => {
 
   test("faq がある場合に section が描画される", () => {
     render(<FaqSection faq={sampleFaq} />);
-    expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "よくある質問" }),
+    ).toBeInTheDocument();
   });
 
   test("見出し「よくある質問」が表示される", () => {
@@ -93,37 +88,31 @@ describe("FaqSection", () => {
     expect(parsed["@context"]).toBe("https://schema.org");
   });
 
-  // --- CSS 規約（DESIGN.md 準拠） ---
-
-  it(".section は --rule トークンを使った border-top を持つ（DESIGN.md §4: 区切りは罫）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--rule)");
+  test("質問の行がアコーディオンの summary で、質問の文を持つ", () => {
+    const { container } = render(<FaqSection faq={sampleFaq} />);
+    const summaries = container.querySelectorAll("summary");
+    expect(summaries[0]).toHaveTextContent("テスト質問1");
+    expect(summaries[1]).toHaveTextContent("テスト質問2");
   });
 
-  it(".item は --radius を使った border-radius を持つ（DESIGN.md §4: 角丸は 0px 基調）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--radius)");
+  test("質問は渡された文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    const { container } = render(<FaqSection faq={sampleFaq} />);
+    const summaries = container.querySelectorAll("summary");
+    sampleFaq.forEach((entry, index) => {
+      expect(summaries[index].querySelector("wbr")).not.toBeNull();
+      expect(summaries[index].innerHTML).toContain(
+        entry.question.join("<wbr>"),
+      );
+    });
   });
 
-  it("フォーカス可視: outline: 2px solid var(--accent) が含まれる（DESIGN.md §2）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("outline: 2px solid var(--accent)");
-    expect(css).toContain("outline-offset: 2px");
-  });
-
-  it("旧トークン --color-* を使用しない（新トークンのみ）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("影なし: box-shadow を使用しない（DESIGN.md §5: 通常の要素にエレベーションを使わない）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // shadow-button や shadow-dragging が含まれていないこと
-    expect(css).not.toMatch(/box-shadow/);
+  test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<FaqSection faq={sampleFaq} />);
+    const headings: string[][] = [["よくある", "質問"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

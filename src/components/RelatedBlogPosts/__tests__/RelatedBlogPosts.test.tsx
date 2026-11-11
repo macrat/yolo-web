@@ -1,11 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import { render, screen, within } from "@testing-library/react";
 
-// `getRelatedBlogPostsForTool` をモックする
+// `getBlogPostsReferencing` をモックする
 vi.mock("@/lib/cross-links", () => ({
-  getRelatedBlogPostsForTool: vi.fn(),
+  getBlogPostsReferencing: vi.fn(),
 }));
 
 // `formatDate` をモックする
@@ -13,14 +11,24 @@ vi.mock("@/lib/date", () => ({
   formatDate: vi.fn((isoString: string) => isoString.slice(0, 10)),
 }));
 
-import { getRelatedBlogPostsForTool } from "@/lib/cross-links";
+import { getBlogPostsReferencing } from "@/lib/cross-links";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+import Section from "@/components/Section";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-const mockGetRelatedBlogPostsForTool = vi.mocked(getRelatedBlogPostsForTool);
+const mockGetBlogPostsReferencing = vi.mocked(getBlogPostsReferencing);
+
+/** Section が描く要素の class。関連ブログ記事の根がこれと同じなら、同じセクションの罫線と余白を持つ。 */
+function sectionClassName(): string {
+  const { container, unmount } = render(<Section />);
+  const className = (container.firstElementChild as HTMLElement).className;
+  unmount();
+  return className;
+}
 
 describe("RelatedBlogPosts", () => {
   it("関連記事がある場合にセクションが描画される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "test-post",
         title: "テスト記事",
@@ -35,12 +43,41 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
-    expect(screen.getByRole("region")).toBeInTheDocument();
+    render(<RelatedBlogPosts slug="test-tool" />);
+    expect(
+      screen.getByRole("list", { name: "関連ブログ記事" }),
+    ).toBeInTheDocument();
+  });
+
+  it("ページの1つのセクション（Section）として描き、見出しはセクションの見出し（h2）", () => {
+    mockGetBlogPostsReferencing.mockReturnValue([
+      {
+        slug: "test-post",
+        title: "テスト記事",
+        published_at: "2026-01-15T10:00:00+09:00",
+        updated_at: "2026-01-15T10:00:00+09:00",
+        description: "テスト説明",
+        tags: [],
+        category: "tool-guides",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+    ]);
+
+    const expectedClassName = sectionClassName();
+    const { container } = render(<RelatedBlogPosts slug="test-tool" />);
+    const root = container.firstElementChild as HTMLElement;
+    expect(container.childElementCount).toBe(1);
+    expect(root.tagName).toBe("SECTION");
+    expect(root.className).toBe(expectedClassName);
+    expect(
+      within(root).getByRole("heading", { level: 2, name: "関連ブログ記事" }),
+    ).toBeInTheDocument();
   });
 
   it("関連記事のタイトルが表示される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "test-post",
         title: "テスト記事タイトル",
@@ -55,12 +92,12 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     expect(screen.getByText("テスト記事タイトル")).toBeInTheDocument();
   });
 
   it("関連記事の日付（published_at）が表示される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "test-post",
         title: "日付テスト記事",
@@ -75,7 +112,7 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     // formatDate のモックは先頭10文字を返す
     const timeEl = screen.getByText("2026-03-20");
     expect(timeEl).toBeInTheDocument();
@@ -84,14 +121,14 @@ describe("RelatedBlogPosts", () => {
   });
 
   it("関連記事が 0 件のとき null を返す", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([]);
+    mockGetBlogPostsReferencing.mockReturnValue([]);
 
-    const { container } = render(<RelatedBlogPosts toolSlug="no-posts-tool" />);
+    const { container } = render(<RelatedBlogPosts slug="no-posts-tool" />);
     expect(container.firstChild).toBeNull();
   });
 
   it("関連記事のリンクが /blog/<slug> を向いている", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "linked-post",
         title: "リンクテスト記事",
@@ -106,13 +143,13 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     const link = screen.getByRole("link", { name: /リンクテスト記事/ });
     expect(link).toHaveAttribute("href", "/blog/linked-post");
   });
 
   it("複数の記事が存在するとき全件描画される", () => {
-    mockGetRelatedBlogPostsForTool.mockReturnValue([
+    mockGetBlogPostsReferencing.mockReturnValue([
       {
         slug: "post-1",
         title: "記事1",
@@ -139,39 +176,71 @@ describe("RelatedBlogPosts", () => {
       },
     ]);
 
-    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    render(<RelatedBlogPosts slug="test-tool" />);
     expect(screen.getByText("記事1")).toBeInTheDocument();
     expect(screen.getByText("記事2")).toBeInTheDocument();
   });
 
-  // CSS規約チェック: 旧トークン（--color-*）を使っていないこと
-  it("CSS が旧トークン --color-* を使っていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/--color-/);
+  it("行は説明と分類を持ち、リンクの読み上げの名前は題名だけである", () => {
+    mockGetBlogPostsReferencing.mockReturnValue([
+      {
+        slug: "name-post",
+        title: "名前テスト記事",
+        published_at: "2026-02-10T10:00:00+09:00",
+        updated_at: "2026-02-10T10:00:00+09:00",
+        description: "名前テストの説明",
+        tags: [],
+        category: "tool-guides",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+      {
+        slug: "other-post",
+        title: "別の分類の記事",
+        published_at: "2026-02-11T10:00:00+09:00",
+        updated_at: "2026-02-11T10:00:00+09:00",
+        description: "別の分類の説明",
+        tags: [],
+        category: "dev-notes",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+    ]);
+
+    render(<RelatedBlogPosts slug="test-tool" />);
+    expect(screen.getByText("名前テストの説明")).toBeInTheDocument();
+    expect(screen.getByText("ツールガイド")).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "関連ブログ記事" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("link")[0]).toHaveAccessibleName(
+      "名前テスト記事",
+    );
   });
 
-  // CSS規約チェック: 新トークンを使っていること（DESIGN.md フェーズ R・店構え）
-  it("CSS が新トークン（--ink / --rule / --accent 等）を使っている", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // --ink, --rule, --accent のいずれか一つ以上を参照していること
-    expect(css).toMatch(/var\(--(ink|rule|accent)/);
-  });
-
-  // CSS規約チェック: フォーカススタイルが DESIGN.md 準拠
-  it("CSS が DESIGN.md 準拠のフォーカススタイル（outline: 2px solid var(--accent)）を持つ", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("outline: 2px solid var(--accent)");
-    expect(css).toContain("outline-offset: 2px");
-  });
-
-  // CSS規約チェック: 旧トークン（--r-normal / --r-interactive 等）を使っていないこと。
-  // §4「品書き」の行リンクはカードではないため角丸は不要（旧トークン痕跡の不在で確認する）。
-  it("CSS が旧角丸トークン（--r-normal / --r-interactive）を使っていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
+  it("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    mockGetBlogPostsReferencing.mockReturnValue([
+      {
+        slug: "test-post",
+        title: "テスト記事",
+        published_at: "2026-01-15T10:00:00+09:00",
+        updated_at: "2026-01-15T10:00:00+09:00",
+        description: "テスト説明",
+        tags: [],
+        category: "tool-guides",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+    ]);
+    render(<RelatedBlogPosts slug="test-tool" />);
+    const headings: string[][] = [["関連", "ブログ", "記事"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

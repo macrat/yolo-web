@@ -56,6 +56,9 @@ export const CATEGORY_DESCRIPTIONS: Record<BlogCategory, string> = {
     "四字熟語、ことわざ、伝統色など、日本語と日本文化を楽しく学べるコンテンツ。クイズやゲームと合わせてお楽しみください。",
 };
 
+/** Minimum number of posts a tag must have to get its own listing page. */
+export const MIN_POSTS_FOR_TAG_PAGE = 3;
+
 /**
  * Minimum number of posts required for a tag page to be indexed by search engines.
  * Tag pages with fewer posts will have noindex meta tag set.

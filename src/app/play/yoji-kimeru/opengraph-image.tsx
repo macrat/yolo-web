@@ -1,19 +1,14 @@
-import {
-  createOgpImageResponse,
-  ogpSize,
-  ogpContentType,
-} from "@/lib/ogp-image";
-import { gameBySlug } from "@/play/games/registry";
+import { playContentBySlug } from "@/play/registry";
+import { playShareImageContent } from "@/play/share-image-content";
+import { createShareImageResponse, shareImageAlt } from "@/lib/share-image";
+import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from "@/lib/share-image-frame";
 
-const meta = gameBySlug.get("yoji-kimeru")!;
+const content = playShareImageContent(playContentBySlug.get("yoji-kimeru")!);
 
-export const alt = "yolos.net yoji-kimeru";
-export const size = ogpSize;
-export const contentType = ogpContentType;
+export const alt = shareImageAlt(content);
+export const size = { width: SHARE_IMAGE_WIDTH, height: SHARE_IMAGE_HEIGHT };
+export const contentType = "image/png";
 
-export default async function OpenGraphImage() {
-  return createOgpImageResponse({
-    title: meta.title,
-    subtitle: meta.ogpSubtitle,
-  });
+export default function OpenGraphImage() {
+  return createShareImageResponse(content);
 }

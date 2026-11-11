@@ -280,14 +280,6 @@ describe("animal-personality — new variant format (8 types)", () => {
   });
 });
 
-describe("animal-personality — accentColor WCAG AA compliance", () => {
-  it("accentColor must be #15803d (WCAG AA compliant, contrast ratio 4.59:1 on white)", () => {
-    // #16a34a has contrast ratio 3.30:1 — fails WCAG AA (requires 4.5:1)
-    // #15803d has contrast ratio 4.59:1 — passes WCAG AA
-    expect(animalPersonalityQuiz.meta.accentColor).toBe("#15803d");
-  });
-});
-
 describe("animal-personality — existing data unchanged", () => {
   it("meta slug is unchanged", () => {
     expect(animalPersonalityQuiz.meta.slug).toBe("animal-personality");
@@ -299,22 +291,21 @@ describe("animal-personality — existing data unchanged", () => {
     );
   });
 
-  it("result titles are unchanged", () => {
+  it("each result has its type name as the title", () => {
     const expectedTitles: Record<string, string> = {
-      "nihon-zaru": "ニホンザル -- 温泉を発明した革命児",
-      "hondo-tanuki": "ホンドタヌキ -- 化かすどころか化かされる愛されキャラ",
-      "nihon-kitsune":
-        "ニホンキツネ -- お稲荷さんの看板を背負う孤高のリアリスト",
+      "nihon-zaru": "ニホンザル——温泉を発明した革命児",
+      "hondo-tanuki": "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
+      "nihon-kitsune": "ニホンキツネ——お稲荷さんの看板を背負う孤高のリアリスト",
       "iriomote-yamaneko":
-        "イリオモテヤマネコ -- 西表島だけで生き残った究極のサバイバー",
-      "amami-kuro-usagi": "アマミノクロウサギ -- 走れないウサギの逆転戦略",
-      yamane: "ヤマネ -- 手のひらサイズの森の忍者",
-      "nihon-momonga": "ニホンモモンガ -- 空飛ぶハンカチの大冒険家",
-      "nihon-kamoshika": "ニホンカモシカ -- 山の哲学者は首をかしげる",
-      "hondo-ten": "ホンドテン -- 季節ごとに着替える孤高の変身ハンター",
-      musasabi: "ムササビ -- 座布団サイズで120m飛ぶ孤高の夢想家",
-      "nihon-risu": "ニホンリス -- 隠し場所を忘れる慎重な貯蓄家",
-      "ezo-shika": "エゾシカ -- 北の大地を群れで駆ける繊細戦士",
+        "イリオモテヤマネコ——西表島だけで生き残った究極のサバイバー",
+      "amami-kuro-usagi": "アマミノクロウサギ——走れないウサギの逆転戦略",
+      yamane: "ヤマネ——手のひらサイズの森の忍者",
+      "nihon-momonga": "ニホンモモンガ——空飛ぶハンカチの大冒険家",
+      "nihon-kamoshika": "ニホンカモシカ——山の哲学者は首をかしげる",
+      "hondo-ten": "ホンドテン——季節ごとに着替える孤高の変身ハンター",
+      musasabi: "ムササビ——座布団サイズで120m飛ぶ孤高の夢想家",
+      "nihon-risu": "ニホンリス——隠し場所を忘れる慎重な貯蓄家",
+      "ezo-shika": "エゾシカ——北の大地を群れで駆ける繊細戦士",
     };
     for (const result of animalPersonalityQuiz.results) {
       expect(result.title, `Title changed for ${result.id}`).toBe(

@@ -1,29 +1,41 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { PAPER, INK, INK_2, RULE, ACCENT } from "@/lib/utsuwaHex";
+import { PAPER, PAPER_DARK } from "@/lib/token-hex";
+import { SITE_NAME } from "@/lib/constants";
+import {
+  gaTrackingId,
+  gtagInitScript,
+  gtagLoaderSrc,
+} from "@/lib/google-analytics";
+import {
+  AI_NOTICE,
+  FOOTER_LINKS,
+  HEADER_NAV_ITEMS,
+  MAIN_CONTENT_ID,
+  type SiteLink,
+} from "@/lib/site-frame";
 
 /**
  * 削除済みブログ記事のスラッグ一覧。
  * これらのURLに対して HTTP 410 Gone を返す。
- * cycle番号はそのスラッグが削除された際のサイクルを示す。
  */
 export const DELETED_BLOG_SLUGS: readonly string[] = [
-  "ai-agent-site-strategy-formulation", // cycle-66で3部作に置換
-  "ai-agent-bias-and-context-engineering", // cycle-68でスラッグ変更
-  "forced-ideation-1728-combinations", // cycle-68でスラッグ変更
-  "ai-agent-workflow-limits-when-4-skills-break", // cycle-68でスラッグ変更
-  "nextjs-static-page-split-for-tools", // cycle-84で削除、改良版記事あり
-  "achievement-system-multi-agent-incidents", // cycle-84で削除
-  "character-fortune-text-art", // cycle-84で削除
-  "music-personality-design", // cycle-84で削除
-  "q43-humor-fortune-portal", // cycle-84で削除
-  "password-security-guide", // cycle-88で削除
-  "hash-generator-guide", // cycle-88で削除
-  "unit-converter-guide", // cycle-89で削除
-  "rss-feed", // cycle-89で削除
-  "html-sql-cheatsheets", // cycle-89で削除
-  "web-developer-tools-guide", // cycle-90で削除
-  "quality-improvement-and-restructure-design", // cycle-15で短期間公開後削除
+  "ai-agent-site-strategy-formulation", // 3部作の記事に置き換え
+  "ai-agent-bias-and-context-engineering", // スラッグを変更
+  "forced-ideation-1728-combinations", // スラッグを変更
+  "ai-agent-workflow-limits-when-4-skills-break", // スラッグを変更
+  "nextjs-static-page-split-for-tools", // 改良版の記事あり
+  "achievement-system-multi-agent-incidents",
+  "character-fortune-text-art",
+  "music-personality-design",
+  "q43-humor-fortune-portal",
+  "password-security-guide",
+  "hash-generator-guide",
+  "unit-converter-guide",
+  "rss-feed",
+  "html-sql-cheatsheets",
+  "web-developer-tools-guide",
+  "quality-improvement-and-restructure-design", // 短期間公開後削除
   "site-name-yolos-net", // 短期間公開後削除
   "tools-expansion-27", // 短期間公開後削除
   "traditional-colors-dictionary", // 短期間公開後削除
@@ -40,34 +52,143 @@ export function isDeletedBlogSlug(slug: string): boolean {
 }
 
 /**
- * 410 ページの器の色（DESIGN.md §2「紙・墨・朱」）は、器色 hex の SSoT である中立モジュール
- * `@/lib/utsuwaHex`（`PAPER`/`INK`/`INK_2`/`RULE`/`ACCENT` 等）から import する。utsuwaHex は
- * import ゼロの純粋な hex 定数モジュール（next/og 等に依存しない葉）なので、Edge 実行されうる
- * middleware からも安全に import できる。globals.css の light トークンを hex 化した値であり、
- * 乖離ガード（`src/lib/__tests__/wairoHex.test.ts` が globals.css の oklch と一致を検証）の対象。
- * ここで hex を独自に再定義すると器色の第3複製になり、globals.css を変えても 410 だけ旧値へ
- * 静かにドリフトするため、必ず SSoT を参照する。旧デザインの青（#2563eb 等）・冷色スレート
- * （#f8fafc/#1e293b）は §8-1/§10 違反のため撤去済み。
+ * 410 のページが使う globals.css のトークン（DESIGN.md §2〜§5）。middleware は globals.css を読めないので、
+ * 同じ名前・同じ値をここに持つ。一致は __tests__/middleware-gone-slugs.test.ts が globals.css と照らして確かめる。
+ * 書体の並びだけは、Web フォント（--font-plex-sans・--font-zen-antique）と、Zen Antique の読み込みのあいだに
+ * 見出しを組む書体（--font-zen-antique-fallback）を除いた並びにする。このページは Web フォントを読み込まないので、
+ * 見出しの和文を初めから見出しの和文の並び（--font-ja-heading-fallback）で組む。
  */
+export const GONE_PAGE_TOKENS = {
+  root: {
+    "color-scheme": "light",
+    "--paper": "oklch(0.99 0 0)",
+    "--ink": "oklch(0.15 0 0)",
+    "--ink-2": "oklch(0.44 0 0)",
+    "--rule": "var(--ink)",
+    "--rule-2": "oklch(0.62 0 0)",
+    "--rule-w": "3px",
+    "--rule-w-hair": "1px",
+    "--space-8": "8px",
+    "--space-16": "16px",
+    "--space-24": "24px",
+    "--space-48": "48px",
+    "--measure": "40rem",
+    "--max-width": "60rem",
+    "--box-padding": "var(--space-8)",
+    "--text-box-pad": "var(--space-8)",
+    "--focus-ring": "var(--rule-w) solid var(--ink)",
+    "--focus-ring-offset": "var(--rule-w)",
+    "--focus-ring-fill": "0 0 0 var(--rule-w) var(--paper)",
+    "--hover-line": "inset 0 0 0 var(--rule-w-hair) var(--rule-2)",
+    "--container-width": "min(var(--max-width), 100% - 2 * var(--space-16))",
+    "--text-body": "1.0625rem",
+    "--text-step-3": "2.08rem",
+    "--text-step-4": "2.92rem",
+    "--text-step-5": "4.08rem",
+    "--text-heading-main": "var(--text-step-3)",
+    "--leading-body": "1.85",
+    "--leading-heading": "1.25",
+    "--font-ja-body":
+      '"BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif',
+    "--font-ja-heading-fallback":
+      '"BIZ UDGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif',
+    "--font-heading":
+      '"IBM Plex Sans Fallback", var(--font-ja-heading-fallback)',
+    "--font-body": '"IBM Plex Sans Fallback", var(--font-ja-body)',
+  },
+  "(min-width: 45rem)": {
+    "--box-padding": "var(--space-16)",
+    "--text-heading-main": "var(--text-step-4)",
+  },
+  "(min-width: 64rem)": {
+    "--text-heading-main": "var(--text-step-5)",
+  },
+  "(prefers-color-scheme: dark)": {
+    "color-scheme": "dark",
+    "--paper": "oklch(0.18 0 0)",
+    "--ink": "oklch(0.97 0 0)",
+    "--ink-2": "oklch(0.74 0 0)",
+    "--rule-2": "oklch(0.53 0 0)",
+  },
+} as const satisfies Record<string, Record<string, string>>;
+
+/** IBM Plex Sans の代わりの書体。globals.css の同じ @font-face と同じ記述で、一致は試験が確かめる。 */
+export const GONE_PAGE_FALLBACK_FONT_FACE = {
+  "font-family": '"IBM Plex Sans Fallback"',
+  src: 'local("Arial")',
+  "size-adjust": "101.13%",
+  "ascent-override": "101.35%",
+  "descent-override": "27.19%",
+  "line-gap-override": "0%",
+  "unicode-range": "U+0000-007F",
+} as const;
+
+function declarations(decls: Readonly<Record<string, string>>): string {
+  return Object.entries(decls)
+    .map(([prop, value]) => `${prop}:${value}`)
+    .join(";");
+}
+
+function tokenRules(): string {
+  const { root, ...media } = GONE_PAGE_TOKENS;
+  return [
+    `@font-face{${declarations(GONE_PAGE_FALLBACK_FONT_FACE)}}`,
+    `:root{${declarations(root)}}`,
+    ...Object.entries(media).map(
+      ([query, decls]) => `@media ${query}{:root{${declarations(decls)}}}`,
+    ),
+  ].join("\n");
+}
 
 /**
- * 見出しの明朝スタック（DESIGN §3「見出しは明朝」）。この静的HTMLは Web フォントを
- * 読み込まないため Noto Serif JP を先頭に置きつつシステム明朝へ素直にフォールバックする
- * （globals.css の --font-mincho フォールバック相当）。本文はシステムゴシックでよい。
+ * 見出しの文を、書き手が文節で分けた並び（DESIGN.md §4）。middleware は要求のたびに走るので、BudouX の分け方の表を
+ * 持つ splitIntoPhrases（@/lib/phrase-breaks）を束に入れず、決まった1文の区切りをここに書く。並びが
+ * splitIntoPhrases の結果と同じであることは、__tests__/middleware-gone-slugs.test.ts が確かめる。
  */
-const MINCHO_STACK = "'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif";
-const GOTHIC_STACK =
-  "'Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
+export const GONE_PAGE_HEADING_PHRASES = [
+  "この",
+  "コンテンツは",
+  "終了しました",
+] as const;
+
+const GONE_PAGE_HEADING = GONE_PAGE_HEADING_PHRASES.join("");
+
+/**
+ * GA の読み込み。ほかのページの GoogleAnalytics と同じく `@/lib/google-analytics` の URL と初期化の文を使い、
+ * 消した記事の URL に着いた来訪者の数をほかのページの数と同じ所で見られるようにする。ID が無い環境では何も出さない。
+ */
+function analyticsTags(): string {
+  const id = gaTrackingId();
+  if (!id) return "";
+  return `<script async src='${gtagLoaderSrc(id)}'></script>
+<script>${gtagInitScript(id)}</script>
+`;
+}
+
+/**
+ * 上端・下端のリンク。React の FrameLink と同じ組み方で、現在地を持たない（410 はナビの行き先でない）。
+ */
+function frameLink(link: SiteLink, extraClass = ""): string {
+  const className = extraClass ? `link ${extraClass}` : "link";
+  return `<a class='${className}' href='${link.href}' data-text-box='inline'><span class='label' data-label='${link.label}'>${link.label}</span></a>`;
+}
+
+function frameLinks(links: readonly SiteLink[]): string {
+  return links.map((link) => `<li>${frameLink(link)}</li>`).join("");
+}
 
 /**
  * 410 Gone ページのHTMLを生成する。
  * middlewareからはReactコンポーネントやCSSモジュールが使用できないため、
- * インラインスタイル付きの静的HTMLで構成する。
+ * 見た目の規則を <style> の中に書いた静的HTMLで構成する。
  *
- * デザインは「店構え」（DESIGN.md §2色/§3タイポ/§4罫/§8禁止）。既に店構え化された
- * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・明朝見出し・罫）を揃える。
- * 中央寄せの静かな告知として組み、操作（トップへ戻る導線）は §4「罫と墨で、装飾を足さない」に
- * 従い朱の文字＋罫囲みで表す（青ベタボタン・装飾絵文字・8px角丸は撤去済み）。
+ * どのページとも同じ枠（DESIGN.md §5 レイアウト）を持たせる。スキップのリンク・上端・中間・下端を置き、
+ * コンテナの左右のボーダーを上端から下端まで通して、上端・下端の全幅の罫線と交わらせる。
+ * 規則は SiteFrame・SkipLink・Header・Footer・FrameLink の CSS と同じ宣言で書き、トークンは
+ * GONE_PAGE_TOKENS から取る。上端・下端の文字と行き先、AI 運営の告知は `@/lib/site-frame` から取る。
+ * テーマはほかのページと同じく端末の設定に従う（§10）。theme-color の値は、meta が CSS のトークンを
+ * 読めないので `@/lib/token-hex` から取る。
+ * 見出しは PhrasedText と同じ宣言で組み、文節のあいだの <wbr> で折る（§4）。GA はほかのページと同じものを読み込む。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>
@@ -75,26 +196,54 @@ export function build410Html(): string {
 <head>
 <meta charset='utf-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1' />
-<title>このコンテンツは終了しました | yolos.net</title>
-<style>
+<meta name='theme-color' media='(prefers-color-scheme: light)' content='${PAPER}' />
+<meta name='theme-color' media='(prefers-color-scheme: dark)' content='${PAPER_DARK}' />
+<title>${GONE_PAGE_HEADING} | ${SITE_NAME}</title>
+${analyticsTags()}<style>
+${tokenRules()}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:${GOTHIC_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
-.container{max-width:34rem;width:100%;text-align:center}
-h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.5;letter-spacing:0.02em}
-.rule{width:3rem;height:0;border-top:1px solid ${RULE};margin:1.25rem auto}
-p{font-family:${GOTHIC_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-bottom:2rem}
-a.home{display:inline-block;padding:0.6rem 1.75rem;color:${ACCENT};text-decoration:none;border:1px solid ${RULE};border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
-a.home:hover,a.home:focus-visible{border-color:${ACCENT}}
-a.home:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}
+html,body{max-width:100vw;overflow-x:clip;background:var(--paper);color:var(--ink)}
+body{display:flex;flex-direction:column;min-height:100svh;font-family:var(--font-body);font-size:var(--text-body);line-height:var(--leading-body);overflow-wrap:break-word}
+a{color:var(--ink);text-decoration:underline;text-decoration-thickness:var(--rule-w-hair);text-underline-offset:0.15em}
+a:visited{color:var(--ink-2)}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-ring-offset);box-shadow:var(--focus-ring-fill)}
+:where(a[href][data-text-box]):where(:hover,:active){box-shadow:var(--hover-line)}
+[data-text-box=inline]{padding-inline:var(--text-box-pad);margin-inline-start:calc(-1 * var(--text-box-pad));--focus-ring-offset:calc(-1 * var(--rule-w));--focus-ring-fill:inset 0 0 0 calc(2 * var(--rule-w)) var(--paper)}
+.skip-row{padding-block:var(--space-8)}
+.skip-row:not(:focus-within){position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.container{width:var(--container-width);margin-inline:auto;border-inline:var(--rule-w) solid var(--rule);padding-inline:var(--box-padding)}
+header{border-bottom:var(--rule-w) solid var(--rule)}
+header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--text-box-pad);padding-block:var(--space-8)}
+footer{border-top:var(--rule-w) solid var(--rule)}
+footer .container{display:flex;flex-direction:column;gap:var(--space-16);padding-block:var(--space-24)}
+ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:var(--text-box-pad)}
+@media (min-width:45rem){header .container{column-gap:calc(var(--space-16) + var(--text-box-pad))}ul{column-gap:calc(var(--space-8) + var(--text-box-pad))}}
+.link{display:inline-flex;align-items:center;min-width:44px;min-height:44px}
+.label{display:grid}
+.label::after{content:attr(data-label);height:0;overflow:hidden;visibility:hidden;font-weight:700}
+.site-name{font-family:var(--font-heading);font-size:var(--text-body)}
+main{flex:1;display:flex;flex-direction:column;gap:var(--space-24);padding-block:var(--space-48)}
+main:focus{outline:none;box-shadow:none}
+main .link{align-self:flex-start}
+h1{font-family:var(--font-heading);font-size:var(--text-heading-main);font-weight:400;line-height:var(--leading-heading);word-break:keep-all;overflow-wrap:anywhere;line-break:strict}
+p{max-width:var(--measure)}
 </style>
 </head>
 <body>
-<div class='container'>
-<h1>このコンテンツは終了しました</h1>
-<div class='rule'></div>
+<div class='container skip-row'><a class='link' href='#${MAIN_CONTENT_ID}' data-text-box='inline'>メインコンテンツへスキップ</a></div>
+<header><div class='container'>
+${frameLink({ label: SITE_NAME, href: "/" }, "site-name")}
+<nav aria-label='メインナビゲーション'><ul>${frameLinks(HEADER_NAV_ITEMS)}</ul></nav>
+</div></header>
+<main id='${MAIN_CONTENT_ID}' tabindex='-1' class='container'>
+<h1>${GONE_PAGE_HEADING_PHRASES.join("<wbr>")}</h1>
 <p>お探しのページはすでに削除されており、現在はご覧いただけません。</p>
-<a class='home' href='/'>トップページへ</a>
-</div>
+<a class='link' href='/' data-text-box='inline'>トップページへ</a>
+</main>
+<footer><div class='container'>
+<p>${AI_NOTICE}</p>
+<nav aria-label='サイトの案内'><ul>${frameLinks(FOOTER_LINKS)}</ul></nav>
+</div></footer>
 </body>
 </html>`;
 }

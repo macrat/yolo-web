@@ -1,4 +1,5 @@
 import { expect, test, describe, vi } from "vitest";
+import { useState } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Pagination from "@/components/Pagination";
 
@@ -55,51 +56,48 @@ describe("Pagination", () => {
       expect(current).toHaveAttribute("aria-current", "page");
     });
 
-    test("前のページが存在しないとき「前へ」は <span> でレンダリングされ <a> ではない", () => {
+    test("1 ページ目では「前へ」を置かない", () => {
       render(<Pagination currentPage={1} totalPages={5} basePath="/blog" />);
-      // disabled 状態の prev は span（linkではない）でレンダリングされる
-      // role="link" を持つ要素としては存在しないことを確認
-      const prevLink = screen.queryByRole("link", { name: "前のページ" });
-      expect(prevLink).toBeNull();
-      // span として存在し aria-disabled を持つ
-      const prevSpan = screen.getByLabelText("前のページ");
-      expect(prevSpan.tagName.toLowerCase()).toBe("span");
-      expect(prevSpan).toHaveAttribute("aria-disabled", "true");
+      expect(screen.queryByLabelText(/^前へ/)).toBeNull();
     });
 
-    test("次のページが存在しないとき「次へ」は <span> でレンダリングされ <a> ではない", () => {
+    test("最終ページでは「次へ」を置かない", () => {
       render(<Pagination currentPage={5} totalPages={5} basePath="/blog" />);
-      const nextLink = screen.queryByRole("link", { name: "次のページ" });
-      expect(nextLink).toBeNull();
-      const nextSpan = screen.getByLabelText("次のページ");
-      expect(nextSpan.tagName.toLowerCase()).toBe("span");
-      expect(nextSpan).toHaveAttribute("aria-disabled", "true");
+      expect(screen.queryByLabelText(/^次へ/)).toBeNull();
     });
 
-    test("1 ページ目で「前へ」の span が href を持たない（不正 URL を生成しない）", () => {
-      render(<Pagination currentPage={1} totalPages={5} basePath="/blog" />);
-      const prevSpan = screen.getByLabelText("前のページ");
-      expect(prevSpan).not.toHaveAttribute("href");
-    });
-
-    test("最終ページで「次へ」の span が href を持たない（不正 URL を生成しない）", () => {
-      render(<Pagination currentPage={5} totalPages={5} basePath="/blog" />);
-      const nextSpan = screen.getByLabelText("次のページ");
-      expect(nextSpan).not.toHaveAttribute("href");
+    test("端では「前へ」「次へ」の代わりに、読み上げずフォーカスも受けない場所取りを置く", () => {
+      const { container } = render(
+        <Pagination currentPage={1} totalPages={5} basePath="/blog" />,
+      );
+      const nav = container.querySelector("nav");
+      const first = nav?.firstElementChild;
+      expect(first?.tagName).toBe("SPAN");
+      expect(first).toHaveAttribute("aria-hidden", "true");
+      expect(first).not.toHaveAttribute("tabindex");
+      expect(first).toHaveTextContent("前へ");
     });
 
     test("前のページが存在するとき「前へ」リンクが機能する href を持つ", () => {
       render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
-      const prev = screen.getByRole("link", { name: "前のページ" });
-      expect(prev).not.toHaveAttribute("aria-disabled");
+      const prev = screen.getByRole("link", { name: /^前へ/ });
       expect(prev).toHaveAttribute("href", "/blog/page/2");
     });
 
     test("次のページが存在するとき「次へ」リンクが機能する href を持つ", () => {
       render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
-      const next = screen.getByRole("link", { name: "次のページ" });
-      expect(next).not.toHaveAttribute("aria-disabled");
+      const next = screen.getByRole("link", { name: /^次へ/ });
       expect(next).toHaveAttribute("href", "/blog/page/4");
+    });
+
+    test("「前へ」「次へ」の読み上げ名は、見える文言を含み、行き先のページを言う（WCAG 2.5.3）", () => {
+      render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
+      expect(
+        screen.getByRole("link", { name: "前へ（ページ2）" }),
+      ).toHaveTextContent("前へ");
+      expect(
+        screen.getByRole("link", { name: "次へ（ページ4）" }),
+      ).toHaveTextContent("次へ");
     });
 
     test("10 ページの中間では省略記号が表示される", () => {
@@ -107,6 +105,40 @@ describe("Pagination", () => {
       // generatePageNumbers が返す ... (ellipsis) が表示される
       const ellipses = screen.getAllByText("...");
       expect(ellipses.length).toBeGreaterThanOrEqual(1);
+    });
+
+    test("省略記号は番号と同じ箱の決まりで組み、読み上げない", () => {
+      render(<Pagination currentPage={5} totalPages={10} basePath="/blog" />);
+      const number = screen.getByRole("link", { name: "ページ4" });
+      for (const ellipsis of screen.getAllByText("...")) {
+        expect(ellipsis).toHaveAttribute(
+          "data-text-box",
+          number.getAttribute("data-text-box"),
+        );
+        expect(ellipsis.className).toContain(number.className.split(" ")[0]);
+        expect(ellipsis).toHaveAttribute("aria-hidden", "true");
+      }
+    });
+
+    test("番号の並びは、どのページでも総ページ数の番号と省略記号を最も広い中身として渡す", () => {
+      for (const currentPage of [1, 9, 10, 22]) {
+        const { unmount } = render(
+          <Pagination
+            currentPage={currentPage}
+            totalPages={22}
+            basePath="/blog"
+          />,
+        );
+        const numbers = screen.getByRole("link", { name: "ページ1" })
+          .parentElement?.parentElement as HTMLElement;
+        expect(
+          numbers.style.getPropertyValue("--page-item-widest-number"),
+        ).toBe('"22"');
+        expect(numbers.style.getPropertyValue("--page-item-ellipsis")).toBe(
+          '"..."',
+        );
+        unmount();
+      }
     });
   });
 
@@ -128,6 +160,19 @@ describe("Pagination", () => {
         expect(text).not.toMatch(/^\d+ \/ \d+$/);
       }
     });
+
+    // role を持たない span の aria-label は読まれないので、読ませる文を文字で持つ
+    test("「n / N」は aria-label を持たず、文字で「ページ n / N」と読ませる", () => {
+      const { container } = render(
+        <Pagination currentPage={3} totalPages={10} basePath="/blog" />,
+      );
+      const indicator = Array.from(
+        container.querySelectorAll("nav > span"),
+      ).find((el) => /\d+ \/ \d+$/.test(el.textContent ?? ""));
+      expect(indicator).toBeDefined();
+      expect(indicator).not.toHaveAttribute("aria-label");
+      expect(indicator).toHaveTextContent("ページ 3 / 10");
+    });
   });
 
   describe("button モード", () => {
@@ -145,32 +190,16 @@ describe("Pagination", () => {
       expect(handlePageChange).toHaveBeenCalledWith(2);
     });
 
-    test("disabled 状態のボタンは disabled 属性を持つ", () => {
-      const handlePageChange = vi.fn();
+    test("1 ページ目では「前へ」のボタンを置かない", () => {
       render(
         <Pagination
           mode="button"
           currentPage={1}
           totalPages={5}
-          onPageChange={handlePageChange}
+          onPageChange={vi.fn()}
         />,
       );
-      const prevBtn = screen.getByRole("button", { name: "前のページ" });
-      expect(prevBtn).toBeDisabled();
-    });
-
-    test("disabled ボタンをクリックしても onPageChange が呼ばれない", () => {
-      const handlePageChange = vi.fn();
-      render(
-        <Pagination
-          mode="button"
-          currentPage={1}
-          totalPages={5}
-          onPageChange={handlePageChange}
-        />,
-      );
-      fireEvent.click(screen.getByRole("button", { name: "前のページ" }));
-      expect(handlePageChange).not.toHaveBeenCalled();
+      expect(screen.queryByRole("button", { name: /^前へ/ })).toBeNull();
     });
 
     test("「次へ」ボタンで currentPage+1 が渡される", () => {
@@ -183,8 +212,30 @@ describe("Pagination", () => {
           onPageChange={handlePageChange}
         />,
       );
-      fireEvent.click(screen.getByRole("button", { name: "次のページ" }));
+      fireEvent.click(screen.getByRole("button", { name: /^次へ/ }));
       expect(handlePageChange).toHaveBeenCalledWith(4);
+    });
+
+    test("端に着いて「次へ」が消えたら、フォーカスをいまのページに移す", () => {
+      function Controlled() {
+        const [page, setPage] = useState(4);
+        return (
+          <Pagination
+            mode="button"
+            currentPage={page}
+            totalPages={5}
+            onPageChange={setPage}
+          />
+        );
+      }
+      render(<Controlled />);
+      const next = screen.getByRole("button", { name: /^次へ/ });
+      next.focus();
+      fireEvent.click(next);
+      expect(screen.queryByRole("button", { name: /^次へ/ })).toBeNull();
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: "ページ5" }),
+      );
     });
   });
 });

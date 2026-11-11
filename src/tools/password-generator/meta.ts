@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "安全なパスワード",
     "パスワードジェネレーター",
   ],
-  category: "security",
+  category: "data",
   relatedSlugs: ["hash-generator", "qr-code", "email-validator"],
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

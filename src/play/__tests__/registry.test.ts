@@ -6,7 +6,6 @@ import {
   allPlayContents,
   playContentBySlug,
   getPlayContentsByCategory,
-  getAllPlaySlugs,
   DAILY_UPDATE_SLUGS,
   PLAY_FEATURED_ITEMS,
 } from "../registry";
@@ -29,8 +28,6 @@ describe("gameMetaToPlayContentMeta", () => {
     expect(playMeta.title).toBe(gameMeta.title);
     expect(playMeta.description).toBe(gameMeta.description);
     expect(playMeta.shortDescription).toBe(gameMeta.shortDescription);
-    expect(playMeta.icon).toBe(gameMeta.icon);
-    expect(playMeta.accentColor).toBe(gameMeta.accentColor);
     expect(playMeta.keywords).toBe(gameMeta.keywords);
     expect(playMeta.publishedAt).toBe(gameMeta.publishedAt);
   });
@@ -61,15 +58,6 @@ describe("gameMetaToPlayContentMeta", () => {
   });
 });
 
-describe("allPlayContents (ゲーム4種のみの旧テスト)", () => {
-  test("contains all expected game slugs", () => {
-    const slugs = allPlayContents.map((c) => c.slug);
-    for (const slug of EXPECTED_GAME_SLUGS) {
-      expect(slugs).toContain(slug);
-    }
-  });
-});
-
 describe("quizMetaToPlayContentMeta", () => {
   test("converts a QuizMeta to PlayContentMeta with correct fields", () => {
     const quizMeta = allQuizMetas[0];
@@ -79,8 +67,6 @@ describe("quizMetaToPlayContentMeta", () => {
     expect(playMeta.title).toBe(quizMeta.title);
     expect(playMeta.description).toBe(quizMeta.description);
     expect(playMeta.shortDescription).toBe(quizMeta.shortDescription);
-    expect(playMeta.icon).toBe(quizMeta.icon);
-    expect(playMeta.accentColor).toBe(quizMeta.accentColor);
     expect(playMeta.keywords).toBe(quizMeta.keywords);
     expect(playMeta.publishedAt).toBe(quizMeta.publishedAt);
   });
@@ -112,6 +98,48 @@ describe("quizMetaToPlayContentMeta", () => {
   });
 });
 
+describe("quizMetaToPlayContentMeta — shortTitle", () => {
+  test("maps shortTitle from QuizMeta when present", () => {
+    const quizMetaWithShortTitle = {
+      ...allQuizMetas[0],
+      shortTitle: "短縮タイトル",
+    };
+    const playMeta = quizMetaToPlayContentMeta(quizMetaWithShortTitle);
+    expect(playMeta.shortTitle).toBe("短縮タイトル");
+  });
+
+  test("shortTitle is undefined when not set in QuizMeta", () => {
+    const quizMetaWithoutShortTitle = { ...allQuizMetas[0] };
+    delete (quizMetaWithoutShortTitle as { shortTitle?: string }).shortTitle;
+    const playMeta = quizMetaToPlayContentMeta(quizMetaWithoutShortTitle);
+    expect(playMeta.shortTitle).toBeUndefined();
+  });
+
+  test("science-thinking has shortTitle set in its data", () => {
+    const scienceThinkingContent = playContentBySlug.get("science-thinking");
+    expect(scienceThinkingContent).toBeDefined();
+    expect(scienceThinkingContent?.shortTitle).toBe("理系思考タイプ診断");
+  });
+
+  test("traditional-color has shortTitle set in its data", () => {
+    const traditionalColorContent = playContentBySlug.get("traditional-color");
+    expect(traditionalColorContent).toBeDefined();
+    expect(traditionalColorContent?.shortTitle).toBe("日本の伝統色診断");
+  });
+
+  test("kotowaza-level has shortTitle set in its data", () => {
+    const content = playContentBySlug.get("kotowaza-level");
+    expect(content).toBeDefined();
+    expect(content?.shortTitle).toBe("ことわざ力診断");
+  });
+
+  test("yoji-personality has shortTitle set in its data", () => {
+    const content = playContentBySlug.get("yoji-personality");
+    expect(content).toBeDefined();
+    expect(content?.shortTitle).toBe("四字熟語で性格診断");
+  });
+});
+
 describe("fortunePlayContentMeta", () => {
   test("has slug 'daily'", () => {
     expect(fortunePlayContentMeta.slug).toBe("daily");
@@ -128,15 +156,10 @@ describe("fortunePlayContentMeta", () => {
   test("has correct title", () => {
     expect(fortunePlayContentMeta.title).toBe("今日のユーモア運勢");
   });
-
-  test("has correct accentColor", () => {
-    expect(fortunePlayContentMeta.accentColor).toBe("#7c3aed");
-  });
 });
 
-describe("allPlayContents (20種)", () => {
+describe("allPlayContents", () => {
   test("contains exactly 20 contents (4 games + 15 quizzes + 1 fortune)", () => {
-    // ゲーム4種 + クイズ15種 + Fortune 1種 = 20種
     expect(allPlayContents).toHaveLength(20);
   });
 
@@ -160,7 +183,7 @@ describe("allPlayContents (20種)", () => {
   });
 });
 
-describe("getPlayContentsByCategory (20種)", () => {
+describe("getPlayContentsByCategory", () => {
   test("returns all 4 games for category 'game'", () => {
     const results = getPlayContentsByCategory("game");
     expect(results).toHaveLength(4);
@@ -210,70 +233,7 @@ describe("playContentBySlug", () => {
   });
 });
 
-describe("getPlayContentsByCategory (ゲームのみ旧テスト)", () => {
-  test("returns all 4 games for category 'game'", () => {
-    const results = getPlayContentsByCategory("game");
-    expect(results).toHaveLength(4);
-  });
-});
-
-describe("getAllPlaySlugs", () => {
-  test("returns slugs for all 20 contents", () => {
-    const slugs = getAllPlaySlugs();
-    expect(slugs).toHaveLength(20);
-    for (const slug of EXPECTED_GAME_SLUGS) {
-      expect(slugs).toContain(slug);
-    }
-  });
-});
-
-describe("quizMetaToPlayContentMeta - shortTitle フィールド (7-10)", () => {
-  test("maps shortTitle from QuizMeta when present", () => {
-    const quizMetaWithShortTitle = {
-      ...allQuizMetas[0],
-      shortTitle: "短縮タイトル",
-    };
-    const playMeta = quizMetaToPlayContentMeta(quizMetaWithShortTitle);
-    expect(playMeta.shortTitle).toBe("短縮タイトル");
-  });
-
-  test("shortTitle is undefined when not set in QuizMeta", () => {
-    const quizMetaWithoutShortTitle = { ...allQuizMetas[0] };
-    delete (quizMetaWithoutShortTitle as { shortTitle?: string }).shortTitle;
-    const playMeta = quizMetaToPlayContentMeta(quizMetaWithoutShortTitle);
-    expect(playMeta.shortTitle).toBeUndefined();
-  });
-
-  test("science-thinking has shortTitle set in its data", () => {
-    const scienceThinkingContent = playContentBySlug.get("science-thinking");
-    expect(scienceThinkingContent).toBeDefined();
-    expect(scienceThinkingContent?.shortTitle).toBe("理系思考タイプ診断");
-  });
-
-  test("traditional-color has shortTitle set in its data", () => {
-    const traditionalColorContent = playContentBySlug.get("traditional-color");
-    expect(traditionalColorContent).toBeDefined();
-    expect(traditionalColorContent?.shortTitle).toBe("日本の伝統色診断");
-  });
-
-  test("kotowaza-level has shortTitle set in its data", () => {
-    const content = playContentBySlug.get("kotowaza-level");
-    expect(content).toBeDefined();
-    expect(content?.shortTitle).toBe("ことわざ力診断");
-  });
-
-  test("yoji-personality has shortTitle set in its data", () => {
-    const content = playContentBySlug.get("yoji-personality");
-    expect(content).toBeDefined();
-    expect(content?.shortTitle).toBe("四字熟語で性格診断");
-  });
-});
-
-describe("DAILY_UPDATE_SLUGS (共有定数)", () => {
-  test("is exported from registry", () => {
-    expect(DAILY_UPDATE_SLUGS).toBeDefined();
-  });
-
+describe("DAILY_UPDATE_SLUGS", () => {
   test("contains 'daily'", () => {
     expect(DAILY_UPDATE_SLUGS.has("daily")).toBe(true);
   });
@@ -299,11 +259,7 @@ describe("DAILY_UPDATE_SLUGS (共有定数)", () => {
   });
 });
 
-describe("PLAY_FEATURED_ITEMS (B-209: /playページイチオシセクション)", () => {
-  test("is exported from registry", () => {
-    expect(PLAY_FEATURED_ITEMS).toBeDefined();
-  });
-
+describe("PLAY_FEATURED_ITEMS (/playページイチオシセクション)", () => {
   test("contains exactly 3 items", () => {
     expect(PLAY_FEATURED_ITEMS).toHaveLength(3);
   });

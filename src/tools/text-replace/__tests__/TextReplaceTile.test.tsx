@@ -1,19 +1,19 @@
 /**
- * TextReplaceTile のユニットテスト（TDD: 実装前に書く）
+ * TextReplaceTile のユニットテスト
  *
  * 検証観点:
- * - V-1: variant=full での基本レンダリング（3 ToggleSwitch・入出力欄・role=status）
+ * - V-1: variant=full での基本レンダリング（3つのチェックボックス・入出力欄・role=status）
  * - V-2: 置換ロジック（通常・正規表現・大文字小文字・全置換）
- * - V-3: 置換件数サマリが role=status に表示される（C-3 要件）
- * - V-4: 正規表現エラー時に日本語エラーが表示される（A-4・G-2 要件）
- * - V-5: 正規表現 ON 時に補足説明が表示される（G-2 要件）
- * - V-6: id インスタンス一意性（複数同居で id 重複なし・A-6 要件）
+ * - V-3: 置換件数サマリが role=status に表示される
+ * - V-4: 正規表現エラー時に日本語エラーが表示される
+ * - V-5: 正規表現 ON 時に補足説明が表示される
+ * - V-6: id インスタンス一意性（複数同居で id 重複なし）
  * - V-7: コピーボタン disabled 制御（空出力時）
  * - V-8: コピー動作（コピー文言変化・clipboard 不在 silent fail）
  * - V-9: アクセシビリティ（role=status/aria-live・role=status 外の出力欄）
  * - V-10: CSS トークン検証（--color-* ゼロ・font-weight:700 ゼロ・--accent 直塗りなし）
  * - V-11: variant 未指定（デフォルト=full）
- * - V-12: ルート要素が Panel であること（A-1 要件）
+ * - V-12: ルート要素が Panel であること
  */
 import { readFileSync } from "fs";
 import { resolve } from "path";
@@ -37,16 +37,16 @@ Object.defineProperty(navigator, "clipboard", {
 
 // --- V-1: variant=full での基本レンダリング ---
 describe("V-1: variant=full 基本レンダリング", () => {
-  it("3つのToggleSwitchが表示される（正規表現・大文字小文字・すべて置換）", () => {
+  it("3つのチェックボックスが表示される（正規表現・大文字小文字・すべて置換）", () => {
     render(<TextReplaceTile variant="full" />);
     expect(
-      screen.getByRole("switch", { name: "正規表現" }),
+      screen.getByRole("checkbox", { name: "正規表現" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "大文字小文字を区別" }),
+      screen.getByRole("checkbox", { name: "大文字小文字を区別" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "すべて置換" }),
+      screen.getByRole("checkbox", { name: "すべて置換" }),
     ).toBeInTheDocument();
   });
 
@@ -68,7 +68,9 @@ describe("V-1: variant=full 基本レンダリング", () => {
   it("コピーボタンが存在する", () => {
     render(<TextReplaceTile variant="full" />);
     // 初期は disabled だが存在する
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -100,11 +102,11 @@ describe("V-2: 置換ロジック", () => {
       target: { value: "NUM" },
     });
     // 正規表現ON
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByLabelText("置換結果")).toHaveValue("fooNUMbarNUM");
   });
 
-  it("大文字小文字区別トグルOFFで大文字小文字を無視して置換する", () => {
+  it("大文字小文字を区別するチェックを外すと、大文字小文字を無視して置換する", () => {
     render(<TextReplaceTile variant="full" />);
     fireEvent.change(screen.getByLabelText("入力テキスト"), {
       target: { value: "Hello HELLO hello" },
@@ -118,11 +120,13 @@ describe("V-2: 置換ロジック", () => {
     // 初期状態（区別ON）
     expect(screen.getByLabelText("置換結果")).toHaveValue("Hello HELLO hi");
     // 区別OFFに
-    fireEvent.click(screen.getByRole("switch", { name: "大文字小文字を区別" }));
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "大文字小文字を区別" }),
+    );
     expect(screen.getByLabelText("置換結果")).toHaveValue("hi hi hi");
   });
 
-  it("すべて置換トグルOFFで最初の1件だけ置換する", () => {
+  it("すべて置換のチェックを外すと、最初の1件だけ置換する", () => {
     render(<TextReplaceTile variant="full" />);
     fireEvent.change(screen.getByLabelText("入力テキスト"), {
       target: { value: "foo bar foo" },
@@ -133,7 +137,7 @@ describe("V-2: 置換ロジック", () => {
     fireEvent.change(screen.getByLabelText("置換文字列"), {
       target: { value: "baz" },
     });
-    fireEvent.click(screen.getByRole("switch", { name: "すべて置換" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "すべて置換" }));
     expect(screen.getByLabelText("置換結果")).toHaveValue("baz bar foo");
   });
 
@@ -173,7 +177,7 @@ describe("V-3: 置換件数サマリ", () => {
 
 // --- V-4: 正規表現エラー（日本語化） ---
 describe("V-4: 正規表現エラー日本語化", () => {
-  it("不正な正規表現入力時に日本語エラーが表示される（A-4 要件）", () => {
+  it("不正な正規表現入力時に日本語エラーが表示される", () => {
     render(<TextReplaceTile variant="full" />);
     fireEvent.change(screen.getByLabelText("入力テキスト"), {
       target: { value: "test" },
@@ -181,7 +185,7 @@ describe("V-4: 正規表現エラー日本語化", () => {
     fireEvent.change(screen.getByLabelText("検索文字列"), {
       target: { value: "[invalid" },
     });
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByRole("alert")).toBeInTheDocument();
     // 英語エラーが露出していないこと
     expect(screen.queryByText("Invalid regular expression")).toBeNull();
@@ -195,8 +199,10 @@ describe("V-4: 正規表現エラー日本語化", () => {
     fireEvent.change(screen.getByLabelText("検索文字列"), {
       target: { value: "[invalid" },
     });
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
-    expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).toBeDisabled();
   });
 });
 
@@ -211,13 +217,13 @@ describe("V-5: 正規表現ON時の補足説明", () => {
 
   it("正規表現スイッチON時に補足説明が表示される", () => {
     render(<TextReplaceTile variant="full" />);
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByText(/分からなければオフのまま/)).toBeInTheDocument();
   });
 
   it("正規表現スイッチON時に $1 などの説明が含まれる", () => {
     render(<TextReplaceTile variant="full" />);
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     const regexHint = screen.getByTestId("regex-hint");
     expect(regexHint).toBeInTheDocument();
     expect(regexHint.textContent).toMatch(/\$1/);
@@ -252,7 +258,9 @@ describe("V-6: id インスタンス一意性", () => {
 describe("V-7: コピーボタン disabled 制御", () => {
   it("初期状態（出力空）でコピーボタンが disabled", () => {
     render(<TextReplaceTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).toBeDisabled();
   });
 
   it("置換結果がある場合コピーボタンは有効", () => {
@@ -266,7 +274,9 @@ describe("V-7: コピーボタン disabled 制御", () => {
     fireEvent.change(screen.getByLabelText("置換文字列"), {
       target: { value: "A" },
     });
-    expect(screen.getByRole("button", { name: "コピー" })).not.toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "置換結果をコピー" }),
+    ).not.toBeDisabled();
   });
 });
 
@@ -287,14 +297,12 @@ describe("V-8: コピー動作", () => {
     fireEvent.change(screen.getByLabelText("置換文字列"), {
       target: { value: "A" },
     });
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "置換結果をコピー" });
     await act(async () => {
       fireEvent.click(copyBtn);
     });
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "コピーしました" }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 
@@ -314,7 +322,7 @@ describe("V-8: コピー動作", () => {
       target: { value: "a" },
     });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "置換結果をコピー" });
     await expect(
       act(async () => {
         fireEvent.click(copyBtn);
@@ -332,7 +340,7 @@ describe("V-8: コピー動作", () => {
 
 // --- V-9: アクセシビリティ ---
 describe("V-9: アクセシビリティ", () => {
-  it("role=status の外に出力 textarea が存在する（C-3 実テキストノード要件）", () => {
+  it("role=status の外に出力 textarea が存在する（実テキストノード要件）", () => {
     render(<TextReplaceTile variant="full" />);
     const statusEl = screen.getByRole("status");
     const outputTextarea = screen.getByLabelText("置換結果");
@@ -342,7 +350,7 @@ describe("V-9: アクセシビリティ", () => {
 
 // --- V-10: CSS トークン検証 ---
 describe("V-10: CSS トークン検証", () => {
-  it("CSS ファイルに --color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = resolve(__dirname, "../TextReplaceTile.module.css");
     let css = "";
     try {
@@ -364,7 +372,7 @@ describe("V-10: CSS トークン検証", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("CSS ファイルに --accent 直塗りが存在しない（B-3 要件）", () => {
+  it("CSS ファイルに --accent 直塗りが存在しない", () => {
     const cssPath = resolve(__dirname, "../TextReplaceTile.module.css");
     let css = "";
     try {
@@ -379,22 +387,22 @@ describe("V-10: CSS トークン検証", () => {
 
 // --- V-11: デフォルト variant ---
 describe("V-11: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等（3 ToggleSwitch が表示される）", () => {
+  it("variant 未指定の場合 full と同等（3つのチェックボックス が表示される）", () => {
     render(<TextReplaceTile />);
     expect(
-      screen.getByRole("switch", { name: "正規表現" }),
+      screen.getByRole("checkbox", { name: "正規表現" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "大文字小文字を区別" }),
+      screen.getByRole("checkbox", { name: "大文字小文字を区別" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "すべて置換" }),
+      screen.getByRole("checkbox", { name: "すべて置換" }),
     ).toBeInTheDocument();
   });
 });
 
 // --- V-12: Panel ルート要素 ---
-describe("V-12: Panel ルート要素（A-1 要件）", () => {
+describe("V-12: Panel ルート要素", () => {
   it("ルート要素が section タグ（Panel のデフォルト as）", () => {
     const { container } = render(<TextReplaceTile variant="full" />);
     // Panel はデフォルトで section を出力する

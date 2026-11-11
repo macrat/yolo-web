@@ -1,7 +1,4 @@
 /* TextReplaceTile スタイル
- * cycle-228 T-5: TextReplacePage.module.css をタイル向けに継承・移植。
- * DESIGN.md（店構え）準拠（色は紙・墨・朱トークン経由・bold禁止・
- * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -37,16 +34,16 @@
   }
 }
 
-/* オプション（ToggleSwitch）の横並び */
+/* オプション（チェックボックス）の横並び。間隔を押せる範囲の余白と同じ幅にして、押せる範囲どうしを接する（§5）。 */
 .optionsRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  column-gap: var(--text-box-pad);
   align-items: center;
   margin-bottom: 1rem;
 }
 
-/* 正規表現モード時の補足説明（G-2: 平易な日本語） */
+/* 正規表現モード時の補足説明（平易な日本語） */
 .regexHint {
   padding: 0.75rem;
   border: 1px solid var(--rule-strong);
@@ -65,14 +62,16 @@
   margin: 0;
 }
 
-/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+/* ラベルとコピーのボタンを1行に並べる。1行に入らないときはボタンを次の行の右端に回し、ラベルの幅を
+ * 削らない（§6）。 */
 .outputHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+/* ライブリージョン（実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
   color: var(--ink-2);

@@ -1,12 +1,20 @@
 /**
- * サイト共通の Metadata オブジェクト。
+ * サイト共通の Metadata と Viewport。
  *
- * src/app/layout.tsx から import して使う（cycle-279 C1 で (legacy)/layout.tsx は
- * 削除済み・フェーズ R・C1 で旧 Route Group (new) も平坦化済み・import元は本ファイルの一本のみ）。
+ * ルートのレイアウト（src/app/layout.tsx）から import して使う。
  */
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
+import { PAPER, PAPER_DARK } from "@/lib/token-hex";
+
+/** theme-color は端末のテーマごとの --paper（DESIGN.md §10）。 */
+export const sharedViewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: PAPER },
+    { media: "(prefers-color-scheme: dark)", color: PAPER_DARK },
+  ],
+};
 
 /** サイト共通の Metadata。src/app/layout.tsx が使う。 */
 export const sharedMetadata: Metadata = {
@@ -14,10 +22,9 @@ export const sharedMetadata: Metadata = {
   title: "yolos.net",
   description:
     "AIエージェントによる実験的Webサイト。コンテンツはAIが生成しており、不正確な場合があります。",
-  // サイト共通 keywords（cycle-277 決定(a)で道具箱中心から診断中心
-  //（自分を知り、楽しむ）へ刷新。上位＝自己発見系（性格・キャラ診断／占い）、
-  // 中程度＝辞典系（漢字・四字熟語・伝統色）、実用層のオンライン道具は少数だけ残す。
-  // docs/research/2026-07-03-market-research-b545.md 決定(a)・docs/site-concept.md 参照）
+  // サイト共通 keywords（サイトの主軸＝自分を知り、楽しむ体験に合わせる。
+  // 上位＝自己発見系（性格・キャラ診断／占い）、中程度＝辞典系（漢字・四字熟語・伝統色）、
+  // 実用層のオンライン道具は少数だけ。docs/site-concept.md 参照）
   keywords: [
     "性格診断",
     "キャラ診断",
@@ -35,7 +42,7 @@ export const sharedMetadata: Metadata = {
     follow: true,
     "max-image-preview": "large",
   },
-  // favicon/アイコン一式（ブランド標章 F2「朱の印・白抜き y」・B-576）。
+  // favicon/アイコン一式（朱の角丸タイルに白抜きの y）。
   // 実体は public/ の静的配信で、ここから <link rel="icon"/apple-touch-icon> を出力する
   // （Google の favicon クローラが crawlable なトップで link を見つけられるようにする）。
   // 資産は scripts/generate-favicons.ts で再現生成する（手でバイナリを置かない）。

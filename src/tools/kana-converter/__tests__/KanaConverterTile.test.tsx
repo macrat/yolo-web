@@ -1,8 +1,8 @@
 /**
- * KanaConverterTile のユニットテスト（TDD: 実装前に書く）
+ * KanaConverterTile のユニットテスト
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（4択 SegmentedControl が表示される）
+ * - V-1: variant=full でのレンダリング（4択 ラジオボタンの組が表示される）
  * - V-2: variant=hiragana-to-katakana（固定・モード選択 UI 非表示）
  * - V-3: variant=katakana-to-hiragana（固定・モード選択 UI 非表示）
  * - V-4: variant=to-fullwidth-katakana（固定・モード選択 UI 非表示）
@@ -19,11 +19,11 @@
  * - V-15: コピーボタンが空入力時に disabled
  * - V-16: コピーボタンが出力ありのとき有効
  * - V-17: 空入力時モード切替後に古い結果が残らない
- * - V-18: SegmentedControl に aria-label が設定されている（C-2）
+ * - V-18: ラジオボタンの組に aria-label が設定されている
  * - V-19: CSS トークン検証（--color-* 不使用・--accent 直塗りなし・bold なし）
- * - V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる（旧 E-6 相当）
- * - V-21: コピー後に COPIED_LABEL が表示される（ラベル遷移）
- * - V-22: clipboard 不在時の silent fail（旧 E-8 相当）
+ * - V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる
+ * - V-21: コピー後に「コピー済み」が表示される（ラベル遷移）
+ * - V-22: clipboard 不在時の silent fail
  */
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -46,7 +46,7 @@ beforeEach(() => {
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("4択の SegmentedControl（radiogroup）が表示される", () => {
+  it("4択の ラジオボタンの組が表示される", () => {
     render(<KanaConverterTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
     // 4つのラジオボタンが存在する
@@ -64,7 +64,7 @@ describe("V-1: variant=full", () => {
 
 // --- V-2: variant=hiragana-to-katakana（固定） ---
 describe("V-2: variant=hiragana-to-katakana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="hiragana-to-katakana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -80,7 +80,7 @@ describe("V-2: variant=hiragana-to-katakana（固定）", () => {
 
 // --- V-3: variant=katakana-to-hiragana（固定） ---
 describe("V-3: variant=katakana-to-hiragana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="katakana-to-hiragana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -88,7 +88,7 @@ describe("V-3: variant=katakana-to-hiragana（固定）", () => {
 
 // --- V-4: variant=to-fullwidth-katakana（固定） ---
 describe("V-4: variant=to-fullwidth-katakana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="to-fullwidth-katakana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -96,7 +96,7 @@ describe("V-4: variant=to-fullwidth-katakana（固定）", () => {
 
 // --- V-5: variant=to-halfwidth-katakana（固定） ---
 describe("V-5: variant=to-halfwidth-katakana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="to-halfwidth-katakana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -249,7 +249,7 @@ describe("V-13: タイルのルートが section（Panel）", () => {
 });
 
 // --- V-14: ライブリージョン ---
-describe("V-14: ライブリージョン（C-3）", () => {
+describe("V-14: ライブリージョン", () => {
   it("role=status aria-live=polite が存在する", () => {
     render(<KanaConverterTile variant="full" />);
     const statusEl = screen.getByRole("status");
@@ -269,7 +269,9 @@ describe("V-14: ライブリージョン（C-3）", () => {
 describe("V-15: コピーボタン empty 時 disabled", () => {
   it("空入力時はコピーボタンが disabled", () => {
     render(<KanaConverterTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "変換結果をコピー" }),
+    ).toBeDisabled();
   });
 });
 
@@ -279,7 +281,9 @@ describe("V-16: コピーボタン出力あり時有効", () => {
     render(<KanaConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "あ" } });
-    expect(screen.getByRole("button", { name: "コピー" })).not.toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "変換結果をコピー" }),
+    ).not.toBeDisabled();
   });
 });
 
@@ -298,8 +302,8 @@ describe("V-17: モード切替後に古い結果が残らない", () => {
   });
 });
 
-// --- V-18: SegmentedControl に aria-label（C-2） ---
-describe("V-18: SegmentedControl に aria-label（C-2）", () => {
+// --- V-18: ラジオボタンの組に aria-label ---
+describe("V-18: ラジオボタンの組に aria-label", () => {
   it("variant=full の radiogroup に aria-label が設定されている", () => {
     render(<KanaConverterTile variant="full" />);
     const radiogroup = screen.getByRole("radiogroup");
@@ -313,7 +317,7 @@ describe("V-18: SegmentedControl に aria-label（C-2）", () => {
 
 // --- V-19: CSS トークン検証 ---
 describe("V-19: CSS トークン検証", () => {
-  it("KanaConverterTile.module.css に旧トークン --color-* が存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = join(__dirname, "..", "KanaConverterTile.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
@@ -340,14 +344,14 @@ describe("デフォルト variant", () => {
   });
 });
 
-// --- V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる（旧 E-6 相当） ---
+// --- V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる ---
 describe("V-20: コピーボタンクリックで出力値が書き込まれる", () => {
   it("クリックで navigator.clipboard.writeText が変換結果で呼ばれる", async () => {
     render(<KanaConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "あいうえお" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
@@ -360,7 +364,7 @@ describe("V-20: コピーボタンクリックで出力値が書き込まれる"
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "さくら" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
@@ -369,25 +373,23 @@ describe("V-20: コピーボタンクリックで出力値が書き込まれる"
   });
 });
 
-// --- V-21: コピー後に COPIED_LABEL が表示される（ラベル遷移） ---
-describe("V-21: コピー後 COPIED_LABEL に遷移する", () => {
-  it("コピーボタンクリック後に「コピーしました」と表示される", async () => {
+// --- V-21: コピー後に「コピー済み」が表示される（ラベル遷移） ---
+describe("V-21: コピー後 「コピー済み」に遷移する", () => {
+  it("コピーボタンクリック後に「コピー済み」と表示される", async () => {
     render(<KanaConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト");
     fireEvent.change(input, { target: { value: "あ" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "コピーしました" }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 });
 
-// --- V-22: clipboard 不在時の silent fail（旧 E-8 相当） ---
+// --- V-22: clipboard 不在時の silent fail ---
 describe("V-22: clipboard 不在時の silent fail", () => {
   it("navigator.clipboard が undefined でもコピー操作が例外を投げない", async () => {
     const originalClipboard = navigator.clipboard;
@@ -402,7 +404,7 @@ describe("V-22: clipboard 不在時の silent fail", () => {
     fireEvent.change(input, { target: { value: "あ" } });
 
     await expect(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "コピー" }));
+      fireEvent.click(screen.getByRole("button", { name: "変換結果をコピー" }));
     }).not.toThrow();
 
     Object.defineProperty(navigator, "clipboard", {

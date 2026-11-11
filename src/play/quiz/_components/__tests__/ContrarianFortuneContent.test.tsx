@@ -2,43 +2,20 @@
  * ContrarianFortuneContent コンポーネントのテスト。
  *
  * テスト対象:
- * - coreSentence / behaviors / persona / thirdPartyNote の4セクション表示
+ * - behaviors / persona / thirdPartyNote の3セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
- * - 全タイプ一覧（"pill" は caller 互換用ラベルで、新デザインでは内部で grid にマップされる）
- * - headingLevel prop（h2/h3）
- * - resultColor の CSS変数注入（--type-color。caller 互換のため受け取りのみ）
+ * - 小見出しの段（h3）と、すべてのタイプを持たないこと
  * - afterThirdPartyNote スロット
- * - 現在タイプのハイライト（aria-current）
  */
 
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import ContrarianFortuneContent from "../ContrarianFortuneContent";
 import type { ContrarianFortuneDetailedContent } from "../../types";
-import type { QuizResult } from "../../types";
-
-// next/link をモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
 
 const sampleContent: ContrarianFortuneDetailedContent = {
   variant: "contrarian-fortune",
   catchphrase: "「みんなと違う」が生きがいの人",
-  coreSentence:
-    "流行を追わないのではなく、流行を避けることで自分を定義している。",
   behaviors: [
     "人気のカフェに行かない理由を3つ以上言える。",
     "「みんながいいって言うから」という理由だけで何かを避ける。",
@@ -59,65 +36,9 @@ const sampleContentWithMetrics: ContrarianFortuneDetailedContent = {
   ],
 };
 
-const sampleAllResults: QuizResult[] = [
-  {
-    id: "antitrend",
-    title: "逆張りマスター",
-    description: "説明1",
-    color: "#7c3aed",
-    icon: "🔄",
-  },
-  {
-    id: "unique",
-    title: "マイウェイ型",
-    description: "説明2",
-    color: "#0891b2",
-    icon: "🌊",
-  },
-  {
-    id: "classic",
-    title: "王道無視型",
-    description: "説明3",
-    color: "#dc2626",
-    icon: "🎭",
-  },
-];
-
-const sampleColor = "#7c3aed";
-const sampleQuizSlug = "contrarian-fortune";
-
 describe("ContrarianFortuneContent - 基本レンダリング", () => {
-  it("coreSentenceセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    expect(
-      screen.getByText(
-        "流行を追わないのではなく、流行を避けることで自分を定義している。",
-      ),
-    ).toBeInTheDocument();
-  });
-
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
+    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     expect(screen.getByText("あるある行動")).toBeInTheDocument();
     expect(
       screen.getByText("人気のカフェに行かない理由を3つ以上言える。"),
@@ -128,17 +49,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
   });
 
   it("personaセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
+    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     expect(screen.getByText("このタイプの人物像")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -148,17 +59,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
   });
 
   it("thirdPartyNoteセクションが表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
+    render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     expect(
       screen.getByText("このタイプの人と一緒にいると"),
     ).toBeInTheDocument();
@@ -168,55 +69,26 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
       ),
     ).toBeInTheDocument();
   });
-
-  it("全タイプ一覧が表示されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
-    expect(screen.getByText("逆張りマスター")).toBeInTheDocument();
-    expect(screen.getByText("マイウェイ型")).toBeInTheDocument();
-    expect(screen.getByText("王道無視型")).toBeInTheDocument();
-  });
 });
 
 describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () => {
   it("humorMetricsが存在しない場合、テーブルが表示されないこと", () => {
     const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContent} />,
     );
     expect(container.querySelector("table")).toBeNull();
+    expect(screen.queryByText("このタイプを数字で見ると")).toBeNull();
   });
 
   it("humorMetricsが存在する場合、テーブルが表示されること", () => {
     render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContentWithMetrics}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContentWithMetrics} />,
     );
     expect(screen.getByRole("table")).toBeInTheDocument();
+    // 表は自分の小見出しの下に置き、「一緒にいると」の区画の中身に見せない
+    expect(
+      screen.getByRole("heading", { name: "このタイプを数字で見ると" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("逆張り指数")).toBeInTheDocument();
     expect(screen.getByText("98%")).toBeInTheDocument();
     expect(screen.getByText("流行回避率")).toBeInTheDocument();
@@ -224,96 +96,16 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
   });
 });
 
-describe("ContrarianFortuneContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("ContrarianFortuneContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // behaviors / persona / thirdPartyNote / 全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(3);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(3);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
-  });
-});
-
-describe("ContrarianFortuneContent - allTypesLayout prop", () => {
-  // 新デザインでは旧 "pill"（角丸999px・派手色枠）レイアウトは廃止された。
-  // public props "pill" は caller signature 互換のため維持しているが、
-  // 内部実装では Character/Yoji と同じ allTypesGrid（2-3列）にマップされる。
-  // テストの本来の意図（「指定したレイアウトに対応する CSS クラスが付く」）は保ち、
-  // 新クラス名 allTypesGrid を検証する。
-  it("allTypesLayout='pill' の場合、新デザインの allTypesGrid レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // 旧 pill レイアウトクラスは撤去されたことも確認する
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).toBeNull();
-    // "pill" と "list" は別レイアウトとして担保したいので縦リストクラスは付かない
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  // ResultCard（インライン）経路は "list" を渡し、Character/Animal と同じ
-  // 縦リスト（allTypesListVertical）で表示する。8 variant 共通で
-  // インライン側の「他のタイプも見てみよう」を縦リストに揃えるための分岐。
-  it("allTypesLayout='list' の場合、allTypesListVertical レイアウトクラスが適用され allTypesGrid は付かないこと", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="list"
-        resultColor={sampleColor}
-      />,
-    );
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).not.toBeNull();
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -324,13 +116,7 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
     );
     render(
       <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
         detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
         afterThirdPartyNote={afterContent}
       />,
     );
@@ -342,147 +128,22 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
 
   it("afterThirdPartyNote が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(
-        <ContrarianFortuneContent
-          quizSlug={sampleQuizSlug}
-          resultId="antitrend"
-          detailedContent={sampleContent}
-          allResults={sampleAllResults}
-          headingLevel={2}
-          allTypesLayout="pill"
-          resultColor={sampleColor}
-        />,
-      );
+      render(<ContrarianFortuneContent detailedContent={sampleContent} />);
     }).not.toThrow();
   });
 });
 
-describe("ContrarianFortuneContent - wrapper クラスと --type-color CSS変数", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
+describe("ContrarianFortuneContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
+      <ContrarianFortuneContent detailedContent={sampleContent} />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const wrapper = container.querySelector(
-      "[class*='wrapper']",
-    ) as HTMLElement;
-    expect(wrapper).not.toBeNull();
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
-  });
-});
-
-describe("ContrarianFortuneContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
-  });
-});
-
-describe("ContrarianFortuneContent - aria-current", () => {
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /逆張りマスター/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-
-  it("別のresultIdを渡した場合、そのタイプがカレントになること", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="unique"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="pill"
-        resultColor="#0891b2"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-    const otherLink = screen.getByRole("link", { name: /逆張りマスター/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-});
-
-describe("ContrarianFortuneContent - リンクのhref", () => {
-  it("全タイプ一覧のリンクが正しいhrefを持つこと", () => {
-    render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const uniqueLink = screen.getByRole("link", { name: /マイウェイ型/ });
-    expect(uniqueLink).toHaveAttribute(
-      "href",
-      `/play/${sampleQuizSlug}/result/unique`,
-    );
+    for (const text of [sampleContent.persona, sampleContent.thirdPartyNote]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [...sampleContent.behaviors]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });

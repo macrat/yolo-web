@@ -1,16 +1,13 @@
-import {
-  createOgpImageResponse,
-  ogpSize,
-  ogpContentType,
-} from "@/lib/ogp-image";
+import { createShareImageResponse, shareImageAlt } from "@/lib/share-image";
+import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from "@/lib/share-image-frame";
 
-export const alt = "yolos.net プライバシーポリシー";
-export const size = ogpSize;
-export const contentType = ogpContentType;
+/** 名前はページの h1 と同じ題。 */
+const content = { name: "プライバシーポリシー" };
 
-export default async function OpenGraphImage() {
-  return createOgpImageResponse({
-    title: "プライバシーポリシー",
-    subtitle: "yolos.net",
-  });
+export const alt = shareImageAlt(content);
+export const size = { width: SHARE_IMAGE_WIDTH, height: SHARE_IMAGE_HEIGHT };
+export const contentType = "image/png";
+
+export default function OpenGraphImage() {
+  return createShareImageResponse(content);
 }

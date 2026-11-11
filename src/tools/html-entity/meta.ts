@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "HTMLデコード",
     "HTML文字参照",
   ],
-  category: "encoding",
+  category: "data",
   relatedSlugs: ["url-encode", "base64", "markdown-preview"],
   publishedAt: "2026-02-14T07:34:27+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

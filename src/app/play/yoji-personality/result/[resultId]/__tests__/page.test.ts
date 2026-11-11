@@ -55,23 +55,9 @@ describe("yoji-personality 専用結果ページ: detailedContent の variant �
       }
     }
   });
-
-  it("全結果に color が存在する（OGP画像用）", () => {
-    for (const result of yojiPersonalityQuiz.results) {
-      expect(result.color).toBeDefined();
-      expect(typeof result.color).toBe("string");
-      // HEXカラーコードのフォーマット検証
-      expect(result.color).toMatch(/^#[0-9a-fA-F]{3,8}$/);
-    }
-  });
 });
 
 describe("yoji-personality クイズメタデータ", () => {
-  it("accentColor が定義されている", () => {
-    expect(yojiPersonalityQuiz.meta.accentColor).toBeTruthy();
-    expect(typeof yojiPersonalityQuiz.meta.accentColor).toBe("string");
-  });
-
   it("slug が 'yoji-personality'", () => {
     expect(yojiPersonalityQuiz.meta.slug).toBe("yoji-personality");
   });

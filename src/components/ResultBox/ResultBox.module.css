@@ -1,0 +1,106 @@
+/* 結果のボックス（DESIGN.md §5・§8）。置かれた幅いっぱいを太い線で囲み、コンテナと同じ内側の余白を持つ。 */
+.box {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+}
+
+/* 結果の登場（§11）。操作に応えて新しく現れたボックスだけが、1回だけ、250〜400ms で出る。動きで気分が
+ * 悪くなる来訪者には即時に出す。 */
+.appears {
+  animation: appear 300ms ease-out both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appears {
+    animation: none;
+  }
+}
+
+/* 頭の行。結果の名前を左に、コピーのボタンを右に置き、ボタンの字は名前の1行目の字と同じ高さに並ぶ。名前が
+ * ボタンの横で1行に収まらないときは、ボタンを次の行の右端に送り、名前に行の幅を渡す（§6）。名前はボタンの
+ * 場所のために削られて折れることがない。 */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-8) var(--space-16);
+  margin-block-end: var(--space-16);
+}
+
+.title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.caption {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 補助情報の行と見出しは、§5 の間隔のいちばん小さい値であける。接していると、見出しが補助情報の続きに見える。 */
+.caption + .heading {
+  margin-block-start: var(--space-8);
+}
+
+/* 名前を持つ結果の見出しは、ボックスの見出しの段が何であっても §4 のセクションの見出しの段で組む（§8）。 */
+.heading {
+  font-size: var(--text-heading-section);
+}
+
+/* 見出しの名前の読み方。補助情報の大きさで見出しのすぐ下に置き、見出しとのあいだを、頭の行と中身のあいだ
+ * （16px）より狭くして、見出しと1つの組に見せる。 */
+.reading {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+.copy {
+  margin-inline-start: auto;
+}
+
+/* コードと表の結果は、ボックスの幅に収まらない中身をボックスの中で横に送る。送るときは中身の区画が
+ * フォーカスを受けるが、区画の縁には線が無いので、リングは区画でなくボックスの太い線の外に密着して出す
+ * （§6。内の --paper の輪が線に接し、その外に --ink の輪）。 */
+.code .body,
+.table .body {
+  overflow-x: auto;
+}
+
+.body:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.box:has(> .body:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--rule-w);
+  box-shadow: 0 0 0 var(--rule-w) var(--paper);
+}
+
+/* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、送るのはボックスの側が持つ。
+ * pre は中身の幅を持ち（枠より狭いときは枠の幅）、行が長くなると幅が伸びる。 */
+.code {
+  background: var(--paper-2);
+}
+
+.code .body pre {
+  border: none;
+  padding: 0;
+  background: none;
+  overflow-x: visible;
+  width: max-content;
+  min-width: 100%;
+}
+
+.table .body table {
+  width: 100%;
+}

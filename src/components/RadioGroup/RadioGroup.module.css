@@ -1,0 +1,25 @@
+/* fieldset の既定の枠と余白を持たない。min-inline-size の既定（min-content）のままだと、選択肢が折り返さずに
+ * 幅からはみ出す。 */
+.group {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* 組の見出しはラベルと同じく本文の大きさで組み、選択肢の行とのあいだを 8px あける（§5）。 */
+.legend {
+  padding: 0;
+  margin-block-end: var(--space-8);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+/* 間隔を押せる範囲の余白と同じ幅にして、押せる範囲どうしを接する（§5）。折り返した行の頭も、
+ * 円が並びの左端に揃う。 */
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--text-box-pad);
+}

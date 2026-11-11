@@ -3,35 +3,14 @@
  *
  * テスト対象:
  * - diagnosisCore / behaviors / practicalTip の3セクション表示
- * - 全タイプ一覧（pill レイアウト）
- * - headingLevel prop（h2/h3）
- * - resultColor の CSS変数注入（--type-color）
+ * - 小見出しの段（h3）と、すべてのタイプを持たないこと
  * - afterPracticalTip スロット
- * - 現在タイプのハイライト（aria-current）
  */
 
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import ImpossibleAdviceContent from "../ImpossibleAdviceContent";
 import type { ImpossibleAdviceDetailedContent } from "../../types";
-import type { QuizResult } from "../../types";
-
-// next/link をモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
 
 const sampleContent: ImpossibleAdviceDetailedContent = {
   variant: "impossible-advice",
@@ -47,46 +26,9 @@ const sampleContent: ImpossibleAdviceDetailedContent = {
     "「決める」ではなく「決めてみる」と言い換えてみてください。取り消せる選択なら、まず試してみることが答えになります。",
 };
 
-const sampleAllResults: QuizResult[] = [
-  {
-    id: "perfectionist",
-    title: "完璧主義の迷宮",
-    description: "説明1",
-    color: "#7c3aed",
-    icon: "🌀",
-  },
-  {
-    id: "overthinking",
-    title: "考えすぎのループ",
-    description: "説明2",
-    color: "#0891b2",
-    icon: "💭",
-  },
-  {
-    id: "comparison",
-    title: "比較の罠",
-    description: "説明3",
-    color: "#dc2626",
-    icon: "⚖️",
-  },
-];
-
-const sampleColor = "#7c3aed";
-const sampleQuizSlug = "impossible-advice";
-
 describe("ImpossibleAdviceContent - 基本レンダリング", () => {
   it("diagnosisCoreセクションが表示されること", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
+    render(<ImpossibleAdviceContent detailedContent={sampleContent} />);
     expect(screen.getByText("あなたの悩みの本質")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -96,17 +38,7 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
   });
 
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
+    render(<ImpossibleAdviceContent detailedContent={sampleContent} />);
     expect(screen.getByText("ついやってしまうこと")).toBeInTheDocument();
     expect(
       screen.getByText("選択肢が多いほど決められなくなる。"),
@@ -117,17 +49,7 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
   });
 
   it("practicalTipセクションが表示されること", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
+    render(<ImpossibleAdviceContent detailedContent={sampleContent} />);
     expect(screen.getByText("本当に使える小さなヒント")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -135,112 +57,18 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
       ),
     ).toBeInTheDocument();
   });
-
-  it("全タイプ一覧が表示されること", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
-    expect(screen.getByText("完璧主義の迷宮")).toBeInTheDocument();
-    expect(screen.getByText("考えすぎのループ")).toBeInTheDocument();
-    expect(screen.getByText("比較の罠")).toBeInTheDocument();
-  });
 });
 
-describe("ImpossibleAdviceContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("ImpossibleAdviceContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
+      <ImpossibleAdviceContent detailedContent={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // diagnosisCore / behaviors / practicalTip / 全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(4);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(4);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
-  });
-});
-
-describe("ImpossibleAdviceContent - allTypesLayout prop", () => {
-  // 新デザインでは旧 pill 型（角丸999px・派手色枠・font-weight 700）をやめ、
-  // CharacterPersonalityContent / YojiPersonalityContent と同じ allTypesGrid（2-3列）に
-  // 内部マッピングしている。public props "pill" を渡したときに所定のレイアウトクラスが
-  // 付くというテスト意図は保ったまま、新クラス名 allTypesGrid を検証する。
-  it("allTypesLayout='pill' の場合、全タイプ一覧のレイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // "pill" と "list" は別レイアウトとして担保したいので縦リストクラスは付かない
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  // ResultCard（インライン）経路は "list" を渡し、Character/Animal と同じ
-  // 縦リスト（allTypesListVertical）で表示する。8 variant 共通で
-  // インライン側の「他のタイプも見てみよう」を縦リストに揃えるための分岐。
-  it("allTypesLayout='list' の場合、allTypesListVertical レイアウトクラスが適用され allTypesGrid は付かないこと", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="list"
-        resultColor={sampleColor}
-      />,
-    );
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).not.toBeNull();
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -251,13 +79,7 @@ describe("ImpossibleAdviceContent - afterPracticalTip スロット", () => {
     );
     render(
       <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
         detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
         afterPracticalTip={afterContent}
       />,
     );
@@ -267,147 +89,25 @@ describe("ImpossibleAdviceContent - afterPracticalTip スロット", () => {
 
   it("afterPracticalTip が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(
-        <ImpossibleAdviceContent
-          quizSlug={sampleQuizSlug}
-          resultId="perfectionist"
-          detailedContent={sampleContent}
-          allResults={sampleAllResults}
-          headingLevel={2}
-          allTypesLayout="pill"
-          resultColor={sampleColor}
-        />,
-      );
+      render(<ImpossibleAdviceContent detailedContent={sampleContent} />);
     }).not.toThrow();
   });
 });
 
-describe("ImpossibleAdviceContent - wrapper クラスと --type-color CSS変数", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
+describe("ImpossibleAdviceContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
+      <ImpossibleAdviceContent detailedContent={sampleContent} />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const wrapper = container.querySelector(
-      "[class*='wrapper']",
-    ) as HTMLElement;
-    expect(wrapper).not.toBeNull();
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
-  });
-});
-
-describe("ImpossibleAdviceContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
-  });
-});
-
-describe("ImpossibleAdviceContent - aria-current", () => {
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /完璧主義の迷宮/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /考えすぎのループ/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-
-  it("別のresultIdを渡した場合、そのタイプがカレントになること", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="overthinking"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="pill"
-        resultColor="#0891b2"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /考えすぎのループ/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-    const otherLink = screen.getByRole("link", { name: /完璧主義の迷宮/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-});
-
-describe("ImpossibleAdviceContent - リンクのhref", () => {
-  it("全タイプ一覧のリンクが正しいhrefを持つこと", () => {
-    render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const loopLink = screen.getByRole("link", { name: /考えすぎのループ/ });
-    expect(loopLink).toHaveAttribute(
-      "href",
-      `/play/${sampleQuizSlug}/result/overthinking`,
-    );
+    for (const text of [
+      sampleContent.diagnosisCore,
+      sampleContent.practicalTip,
+    ]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [...sampleContent.behaviors]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });
