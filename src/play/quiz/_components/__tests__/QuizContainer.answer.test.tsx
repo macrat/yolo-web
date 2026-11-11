@@ -306,44 +306,54 @@ describe("QuizContainer — 見せるあいだの再入力", () => {
 });
 
 describe("QuizContainer — 「はじめる」の直後の1問目の押し", () => {
-  test("500ms より前の指やマウスの押しは答えにならず、選んだ形もフォーカスも変わらない", async () => {
+  /** いま出ている問の選択肢のうち、押せるボタンのままのものの数。答えると、どの行も字に替わって 0 になる。 */
+  const pressableChoiceCount = () =>
+    screen.queryAllByRole("button", { name: /^選択/ }).length;
+
+  test("499ms の指やマウスの押しは答えにならず、選んだ形にもならない", async () => {
     renderQuiz();
     await pressWithPointer("はじめる");
-    const heading = screen.getByRole("heading", { level: 2, name: "問1" });
-    expect(document.activeElement).toBe(heading);
-
-    await advance(START_PRESS_GUARD_MS - 1);
+    await advance(499);
     await pressWithPointer("選択1A");
-    expect(screen.getAllByRole("button")).toHaveLength(3);
-    expect(document.activeElement).toBe(heading);
+    expect(pressableChoiceCount()).toBe(3);
     await advance(ANSWER_SHOWN_MS);
     expect(questionNumber()).toBe("1");
   });
 
-  test("500ms より前に選択肢へ落ちた押しは、既定の動き（フォーカスの移り）を止め、過ぎたあとは止めない", async () => {
+  test("500ms の指やマウスの押しは、すぐ答えになる", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    await advance(500);
+    await pressWithPointer("選択1A");
+    expect(pressableChoiceCount()).toBe(0);
+    expect(faceOf("選択1A").tagName).toBe("SPAN");
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionNumber()).toBe("2");
+  });
+
+  test("499ms に選択肢へ落ちた押しは、既定の動き（フォーカスの移り）を止め、500ms では止めない", async () => {
     renderQuiz();
     await pressWithPointer("はじめる");
     const choice = screen.getByRole("button", { name: "選択1A" });
+    await advance(499);
     expect(fireEvent.mouseDown(choice, { detail: 1 })).toBe(false);
-    await advance(START_PRESS_GUARD_MS);
+    await advance(1);
     expect(fireEvent.mouseDown(choice, { detail: 1 })).toBe(true);
   });
 
-  test("500ms を過ぎた指やマウスの押しは、すぐ答えになる", async () => {
+  test("500ms より前でも、選択肢の外（問の見出し）へ落ちた押しの既定の動きは止めない", async () => {
     renderQuiz();
     await pressWithPointer("はじめる");
-    await advance(START_PRESS_GUARD_MS);
-    await pressWithPointer("選択1A");
-    expect(faceOf("選択1A")).toHaveClass(buttonUnderlineClassName);
-    await advance(ANSWER_SHOWN_MS);
-    expect(questionNumber()).toBe("2");
+    const heading = screen.getByRole("heading", { level: 2, name: "問1" });
+    expect(fireEvent.mouseDown(heading, { detail: 1 })).toBe(true);
   });
 
   test("受け付けなかった押しのあと、500ms を過ぎて押し直すと答えになる", async () => {
     renderQuiz();
     await pressWithPointer("はじめる");
     await pressWithPointer("選択1A");
-    await advance(START_PRESS_GUARD_MS);
+    expect(pressableChoiceCount()).toBe(3);
+    await advance(500);
     await pressWithPointer("選択1B");
     await advance(ANSWER_SHOWN_MS);
     expect(await finish()).toBe("c1b,c2a");
@@ -354,14 +364,20 @@ describe("QuizContainer — 「はじめる」の直後の1問目の押し", () 
     await pressWithPointer("はじめる");
     screen.getByRole("button", { name: "選択1B" }).focus();
     await pressEnter();
-    expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
+    expect(pressableChoiceCount()).toBe(0);
+    expect(faceOf("選択1B").tagName).toBe("SPAN");
+    await advance(ANSWER_SHOWN_MS);
+    expect(await finish()).toBe("c1b,c2a");
   });
 
   test("キーボードで「はじめる」を押したあとは、500ms より前の指やマウスの押しも答えになる", async () => {
     renderQuiz();
     await start();
     await pressWithPointer("選択1B");
-    expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
+    expect(pressableChoiceCount()).toBe(0);
+    expect(faceOf("選択1B").tagName).toBe("SPAN");
+    await advance(ANSWER_SHOWN_MS);
+    expect(await finish()).toBe("c1b,c2a");
   });
 
   test("2問目からは、500ms より前の指やマウスの押しも答えになる", async () => {
@@ -372,9 +388,10 @@ describe("QuizContainer — 「はじめる」の直後の1問目の押し", () 
     await advance(ANSWER_SHOWN_MS);
     expect(questionNumber()).toBe("2");
 
-    // 「はじめる」から 150ms で、1問目なら押しを受け付けないあいだにいる。
+    // 2問目を押す時点は「はじめる」から ANSWER_SHOWN_MS で、1問目なら押しを受け付けないあいだにいる。
+    expect(ANSWER_SHOWN_MS).toBeLessThan(START_PRESS_GUARD_MS);
     await pressWithPointer("選択2B");
-    expect(faceOf("選択2B")).toHaveClass(buttonUnderlineClassName);
+    expect(pressableChoiceCount()).toBe(0);
     await advance(ANSWER_SHOWN_MS);
     expect(screen.getByTestId("answers").textContent).toBe("c1a,c2b");
   });
@@ -382,7 +399,7 @@ describe("QuizContainer — 「はじめる」の直後の1問目の押し", () 
   test("「もう一度挑戦する」のあとに始め直した1問目でも、500ms より前の押しは答えにならない", async () => {
     renderQuiz();
     await pressWithPointer("はじめる");
-    await advance(START_PRESS_GUARD_MS);
+    await advance(500);
     await pressWithPointer("選択1A");
     await advance(ANSWER_SHOWN_MS);
     await finish();
@@ -390,9 +407,10 @@ describe("QuizContainer — 「はじめる」の直後の1問目の押し", () 
 
     await pressWithPointer("はじめる");
     await pressWithPointer("選択1A");
-    expect(screen.getAllByRole("button")).toHaveLength(3);
-    await advance(START_PRESS_GUARD_MS);
+    expect(pressableChoiceCount()).toBe(3);
+    await advance(500);
     await pressWithPointer("選択1B");
-    expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
+    expect(pressableChoiceCount()).toBe(0);
+    expect(faceOf("選択1B").tagName).toBe("SPAN");
   });
 });

@@ -134,12 +134,12 @@ description が無いページは新しい版に 0。
 - **`@type` の並び（14 ページ）**: `/about`・`/blog`・`/blog/page/2`・`/privacy`・`/tools` の 5 ページで、本番に無かった `BreadcrumbList` が増えた。伝統色の一覧と分類の 8 ページは、本番で 2 つ重なっていた `BreadcrumbList` が 1 つになった。`/dictionary/humor` は並ぶ順だけの差。型が減ったページは無い。
 - **伝統色の 250 ページ**: `DefinedTerm.inDefinedTermSet.name` が「日本の伝統色辞典」→「伝統色辞典」。
 - **ブログの記事 86 本**: `BlogPosting.image` の URL の末尾に `?v=...` が付いた（指す画像は同じパスで、200 を返す）。
-- **よくある質問（`FAQPage`）**: 答えの文の差が 17 ページ（`/play` 以下 13、`/tools` 以下 4。例: `/play/animal-personality` の「所要時間は1〜2分程度です。」→「所要時間は約3分です。」）、問いの文の差が 12 ページ（大半は `？` のあとの空白。`/tools/age-calculator` は「干支はどのように決まりますか？」の位置に「年齢はいつ1つ増えますか？」が入り、問いが 1 つ増えた）。`/play/word-sense-personality` は問いが 1 つ減った（「診断結果は科学的な根拠がありますか？」が無い）。
+- **よくある質問（`FAQPage`）**: 答えの文の差が 17 ページ（`/play` 以下 13、`/tools` 以下 4。例: `/play/animal-personality` の「所要時間は1〜2分程度です。」→「所要時間は約3分です。」）、問いの文の差が 12 ページ（大半は `？` のあとの空白。`/tools/age-calculator` は3番目に「年齢はいつ1つ増えますか？」が足され、問いが 1 つ増えた。消えた問いは無い）。`/play/word-sense-personality` は問いが 1 つ減った（「友達との言葉センス相性診断はできますか？」が無い。「診断結果は科学的な根拠がありますか？」は残っている）。
 - **そのほか**: `Quiz.description` 11 ページ・`Quiz.name` 3 ページ・`VideoGame.description` 2 ページ（description や title と同じ書き替え）、`WebApplication.dateModified` 3 ページ（sitemap の `lastmod` が変わったツールと同じ 3 本）、`WebApplication.description` 1 ページ（`/tools/qr-code`: 「SVG形式で…」→「PNG画像で保存できる…」）。
 
 ### 頼まれた項目のほかに見つけた差
 
-- **X（Twitter）用の画像の URL（153 ページ）**: 本番は `twitter:image` が `…/twitter-image` を指し、新しい版は `…/opengraph-image` を指す（ブログの記事 86、ツール 36、ユーモア辞典 30、`/privacy`）。新しい版には `…/twitter-image` という URL そのものが無く、本番の HTML が指している 153 本は新しい版で 404 になる（例: `/tools/base64/twitter-image`）。サイトの直下の `/twitter-image` は両方にある。新しい版の HTML が指す画像の URL 547 本は、すべて 200 で PNG を返した。本番の `og:image` の URL 545 本は、問い合わせ文字列つきのままでも新しい版ですべて 200 だった。
+- **X（Twitter）用の画像の URL（153 ページ）**: 本番は `twitter:image` が `…/twitter-image` を指し、新しい版は `…/opengraph-image` を指す（ブログの記事 86、ツール 36、ユーモア辞典 30、`/privacy`）。新しい版には `…/twitter-image` という URL そのものが無く、本番の HTML が指している 153 本は新しい版で 404 になる（例: `/tools/base64/twitter-image`）。サイトの直下の `/twitter-image` は両方にある。新しい版の HTML が指す画像の URL 547 本は、すべて 200 で PNG を返した。本番の `og:image` の URL 545 本は、問い合わせ文字列つきのままでも新しい版ですべて 200 だった（この確かめで当てたのは 60 本で、残りはレビュー [review-t2d.md](./review-t2d.md) が当てた）。
 - **`/tools` のフィードへの案内**: 本番の `/tools` の `<head>` には RSS と Atom への `link rel=alternate` があるが、新しい版には無い（ほかのページでは差が無い）。
 - **`meta keywords`**: `/play/irodori` で「色覚テスト 無料」が無くなった（1 ページ）。
 - **`<h1>`（324 ページ）**: 伝統色の 250 ページで「藍（ai）」→「藍」。診断の結果などで記号が全角になった。ブログの記事 26 本と診断の結果で、h1 の中に折り返しを抑える見えない文字（U+2060）が入った（title・description・`og:title` には 1 件も入っていない）。本番で h1 が空だった 3 ページ（`/play/daily` など）は、新しい版では入っている。h1 が無い・2 つ以上あるページは新しい版に 0。
@@ -169,7 +169,7 @@ description が無いページは新しい版に 0。
 4. **漢字の一覧 230 ページの description の書き替え。**「漢字」→「常用漢字」になり、文が長くなった。
 5. **半角の記号が全角になり、`？` `！` のあとに全角の空白が入る書き替え**（title 33 ページ、description 約 79 ページ、JSON-LD の問いと答え）。検索結果の文言が少し変わるだけで、意味は同じ。
 6. **`…/twitter-image` の 153 本が 404 になる。** 新しく X に貼られるときは新しい版の HTML が `…/opengraph-image` を指すので画像は出る。過去に貼られた投稿の画像を X がいつ取り直すかは分からない。
-7. **`/play/word-sense-personality` のよくある質問から「診断結果は科学的な根拠がありますか？」が無くなった。** JSON-LD から消えているので、画面からも消えているはず（画面は見ていない）。「科学的な根拠は無い」という断りがほかの場所に残っているかは、PM が確かめるのがよい。
+7. **`/play/word-sense-personality` のよくある質問から「友達との言葉センス相性診断はできますか？」が無くなった。** 相性を約束する文を外したことに合わせたもの。「診断結果は科学的な根拠がありますか？」の問いと答えは残っている。
 8. **`/tools` の `<head>` からフィードへの案内が無くなった。** フィードそのものは変わらず取れる。
 9. **ブログの記事のパンくずに分類が入った**（86 ページ）。検索結果に出るパンくずが「ブログ > 分類名」になりうる。
 10. **`/blog/page/2` の中身が変わる**（URL と title の型は同じで、載る記事が 13〜24 件目から 13 件目以降すべてになる）。
