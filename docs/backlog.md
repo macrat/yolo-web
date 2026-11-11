@@ -102,6 +102,7 @@
 | B-804 | 狭い画面で文字サイズを200%にするとページ送りの「次へ」が2行目に回る | P4 | 着手: B-754の出荷のあと。320px（ブログ・漢字辞典）と375px（漢字辞典）。字は欠けず押せる。詳細cycle-321/review-t4-pagination.md |
 | B-805 | 記事の画像が幅1,200pxのままで狭い画面で右側が見えない | P3 | 着手: B-754の出荷のあと。/blog/character-quiz-result-as-fuda の画像2枚。375pxで右が切れる。本番も同じ。詳細cycle-321/t2d-result.md |
 | B-806 | 古い分類名のページ番号つきURLが2回の転送で着く | P4 | 着手: B-754の出荷のあと。/blog/category/technical/page/2 など。next.config の古い分類名の転送を、着き先へ1回で送る形にする。詳細cycle-321/fix-pagination-redirect.md |
+| B-807 | ナカマワケの盤が320px幅の長い語の日に1画面に入らない | P4 | 着手: B-754の出荷のあと。320×568で、片仮名の長い語の日とことわざの日（年に15日ほど）に、盤の頭から「チェック」までが画面を超える。4つ選べば「チェック」は画面に入る。詳細cycle-321/fix-nakamawake-grid.md |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | 着手: B-754の出荷のあと、mainで。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
 | B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | 着手: B-754の出荷のあと、mainで。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
