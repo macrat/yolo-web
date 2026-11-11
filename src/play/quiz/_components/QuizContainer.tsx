@@ -73,6 +73,13 @@ type QuizContainerProps = {
  */
 export const ANSWER_SHOWN_MS = 150;
 
+/**
+ * 「はじめる」を指やマウスで押してから、1問目の選択肢が指やマウスの押しを受け付けないあいだの長さ（ms）。1問目の選択肢は
+ * 「はじめる」のあった所に出るので、速い二度押しの2打目がそこに落ちる。二度押しの2打目が届く間隔（300ms ほどまで）
+ * より長く、1問目を読んで答えるまでの時間より短い。
+ */
+export const START_PRESS_GUARD_MS = 500;
+
 /** 結果のボックスの頭の、結果の名前の要素。ボックスはこの名前で名付けられている（無ければボックスそのもの）。 */
 function resultNameOf(box: HTMLElement): Element {
   const nameId = box.getAttribute("aria-labelledby");
@@ -151,8 +158,13 @@ export default function QuizContainer({
   const screenRef = useRef({ phase, answered, isPersonality });
   /** 最新の切り替わりの番号。window の受け手が、React の click の処理より先に読む。 */
   const transitionRef = useRef(progress.transition);
-  /** 1打目を押した点（click の座標）。キーボードで押したとき（click の detail が 0）は null。 */
+  /** いちばん新しい押しの点（click の座標）。キーボードで押したとき（click の detail が 0）は null。 */
   const pressPointRef = useRef<ScreenPoint | null>(null);
+  /**
+   * 「はじめる」を指やマウスで押した時刻（performance.now()。端末の時計を変えても動かない）。キーボードで押した
+   * ときは null。
+   */
+  const pointerStartedAtRef = useRef<number | null>(null);
   /** 連続の押しの1打目（detail が 1 の mousedown）のときの切り替わりの番号。 */
   const pressSequenceStartRef = useRef<number | null>(null);
   /** いまの問か答えたあとの形を見せてから、来訪者が自分で画面を送ったか。 */
@@ -183,6 +195,15 @@ export default function QuizContainer({
         : contentHeight;
     heldStageRef.current = { height, layout };
     stage.style.minHeight = `${height}px`;
+  }, []);
+
+  /** 指やマウスで押した「はじめる」から、1問目の選択肢が押しを受け付けないあいだ（START_PRESS_GUARD_MS）にいるか。 */
+  const isWithinStartPressGuard = useCallback((): boolean => {
+    const pointerStartedAt = pointerStartedAtRef.current;
+    return (
+      pointerStartedAt !== null &&
+      performance.now() - pointerStartedAt < START_PRESS_GUARD_MS
+    );
   }, []);
 
   /** 知識クイズで答えたあとに見せる範囲の上端の行。押した行と正解の行の上のほう。 */
@@ -239,16 +260,17 @@ export default function QuizContainer({
     const choices = choicesRef.current;
 
     if (!answered) {
-      // 次の問が出た。「はじめる」と知識クイズの「次へ」のあとは、まだ読んでいない問に答えを入れないよう、次の問の
-      // 選択肢も避ける。診断の答えのあとは、点の真下に次の問の選択肢が来るのがほぼ毎問なので、避けると問ごとに
-      // 選択肢の位置が動く。そこで避けない。
+      // 問が出た。知識クイズの「次へ」のあとは、まだ読んでいない問に答えを入れないよう、次の問の選択肢も避ける。
+      // 「はじめる」のあとの1問目の選択肢は、押しを受け付けないあいだ（START_PRESS_GUARD_MS）が2打目を止めるので
+      // 避けない。診断の答えのあとは、点の真下に次の問の選択肢が来るのがほぼ毎問なので、避けると問ごとに選択肢の
+      // 位置が動く。そこで避けない。
       if (stage && choices) {
-        const fromDiagnosisAnswer =
-          previous.phase === "playing" && isPersonality;
+        const fromKnowledgeNext =
+          previous.phase === "playing" && !isPersonality;
         revealLanding(
           measureGroupPlan(stage, choices),
           point,
-          fromDiagnosisAnswer ? { exclude: stage } : { avoidNext: stage },
+          fromKnowledgeNext ? { avoidNext: stage } : { exclude: stage },
         );
       }
       questionHeadingRef.current?.focus({ preventScroll: true });
@@ -277,16 +299,26 @@ export default function QuizContainer({
   // ページの上の入力と、字の読み込みと画面の大きさの変わりの受け手。押した点と2打目の受け手は捕捉の段階で受け、
   // React の click の処理より先に走る。
   useEffect(() => {
-    // 押した点を覚える。切り替わったあとの着地は、同じ点に落ちる2打目を見て選ぶ。
+    // 押した点を覚える。切り替わったあとの着地は、同じ点に落ちる2打目を見て選ぶ。答えの受け付けは、指やマウスの
+    // 押しかキーボードの押しかを、点の有る無しで見分ける。
     const rememberPressPoint = (event: MouseEvent): void => {
       pressPointRef.current =
         event.detail === 0 ? null : { x: event.clientX, y: event.clientY };
     };
-    // 2打目で語を選ばない。連続の押しの1打目が画面を切り替えたら（番号が増えていたら）、2打目からの既定の動き
-    // （語の選択）を止める。入れ替わった先の字（答えたあとの行・解説・次の問の見出し・結果・開始の画面）に黒い地の
-    // 選択が残らない。字の上で始めたダブルクリックと引いて選ぶことは、1打目が何も切り替えないので止めない。
-    // 2打目の click はそのまま届く。
-    const guardSecondPress = (event: MouseEvent): void => {
+    // 押しの既定の動きのうち、来訪者が望んでいないものを止める。どちらも click はそのまま届く。
+    // - 「はじめる」の直後の、押しを受け付けないあいだに選択肢へ落ちた押しでは、フォーカスを問の見出しから選択肢へ
+    //   移さない。
+    // - 2打目で語を選ばない。連続の押しの1打目が画面を切り替えたら（番号が増えていたら）、2打目からの語の選択を
+    //   止める。入れ替わった先の字（答えたあとの行・解説・次の問の見出し・結果・開始の画面）に黒い地の選択が
+    //   残らない。字の上で始めたダブルクリックと引いて選ぶことは、1打目が何も切り替えないので止めない。
+    const stopUnwantedPressDefaults = (event: MouseEvent): void => {
+      if (
+        isWithinStartPressGuard() &&
+        event.target instanceof Node &&
+        choicesRef.current?.contains(event.target)
+      ) {
+        event.preventDefault();
+      }
       if (event.detail === 1) {
         pressSequenceStartRef.current = transitionRef.current;
         return;
@@ -325,7 +357,7 @@ export default function QuizContainer({
     const fonts = document.fonts as FontFaceSet | undefined;
 
     window.addEventListener("click", rememberPressPoint, true);
-    window.addEventListener("mousedown", guardSecondPress, true);
+    window.addEventListener("mousedown", stopUnwantedPressDefaults, true);
     window.addEventListener("wheel", noteVisitorScroll, { passive: true });
     window.addEventListener("touchmove", noteVisitorScroll, { passive: true });
     window.addEventListener("keydown", noteVisitorScroll, true);
@@ -333,26 +365,41 @@ export default function QuizContainer({
     fonts?.addEventListener("loadingdone", revealAfterFontLoad);
     return () => {
       window.removeEventListener("click", rememberPressPoint, true);
-      window.removeEventListener("mousedown", guardSecondPress, true);
+      window.removeEventListener("mousedown", stopUnwantedPressDefaults, true);
       window.removeEventListener("wheel", noteVisitorScroll);
       window.removeEventListener("touchmove", noteVisitorScroll);
       window.removeEventListener("keydown", noteVisitorScroll, true);
       window.removeEventListener("resize", holdStageHeight);
       fonts?.removeEventListener("loadingdone", revealAfterFontLoad);
     };
-  }, [holdStageHeight, upperAnsweredRow]);
+  }, [holdStageHeight, upperAnsweredRow, isWithinStartPressGuard]);
 
   // パンくずと h1 を、その下の中身と同じ間隔で積む（§5 の間隔）。
   const pageHead = <div className={styles.head}>{head}</div>;
 
-  const handleStart = useCallback(() => dispatch({ type: "start" }), []);
+  const handleStart = useCallback(() => {
+    pointerStartedAtRef.current =
+      pressPointRef.current === null ? null : performance.now();
+    dispatch({ type: "start" });
+  }, []);
 
   const handleAnswer = useCallback(
     (choiceId: string) => {
       if (currentId === undefined) return;
+      // 「はじめる」の二度押しの2打目を、1問目の答えにしない。受け付けないのは、指やマウスで押した「はじめる」の
+      // 直後の、1問目への指やマウスの押しだけで、何も起こさずに捨てる。キーボードの押しには同じ点に落ちる2打目が
+      // 無いので、「はじめる」と答えのどちらかがキーボードなら、すぐに受け付ける。2問目からは、速く答える人の
+      // 答えを捨てないよう、いつでも受け付ける。
+      if (
+        currentIndex === 0 &&
+        pressPointRef.current !== null &&
+        isWithinStartPressGuard()
+      ) {
+        return;
+      }
       dispatch({ type: "answer", questionId: currentId, choiceId });
     },
-    [currentId],
+    [currentId, currentIndex, isWithinStartPressGuard],
   );
 
   const handleNext = useCallback(() => {

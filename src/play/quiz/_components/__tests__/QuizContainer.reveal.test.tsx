@@ -13,7 +13,10 @@
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
+import QuizContainer, {
+  ANSWER_SHOWN_MS,
+  START_PRESS_GUARD_MS,
+} from "../QuizContainer";
 import type { ItemListItem } from "@/components/ItemList";
 import type {
   QuizDefinition,
@@ -477,22 +480,18 @@ describe("QuizContainer — 押した点の真下を避ける着地", () => {
     });
   }
 
-  test("「はじめる」の点の真下に1問目の選択肢が来るときは、選択肢の外へずらす（まだ読んでいない問に答えを入れない）", async () => {
+  test("「はじめる」のあとは、点の真下に1問目の選択肢が来ても送らない（2打目は、押しを受け付けないあいだが止める）", async () => {
     renderQuiz(makePersonalityQuiz(2));
     stubQuestionUnderPoint();
     await pressAt(screen.getByRole("button", { name: "はじめる" }), 500);
-    // 基準は送らない（まとまりは画面に入っている）。点 500 が選択肢の上端 480 より上に出る、いちばん近い送り。
-    expect(scrollBySpy).toHaveBeenCalledTimes(1);
-    expect(scrollBySpy).toHaveBeenCalledWith({
-      top: -21,
-      behavior: "instant",
-    });
+    expect(scrollBySpy).not.toHaveBeenCalled();
   });
 
   test("診断の答えのあとは、点の真下に次の問の選択肢が来ても送らない（問ごとに選択肢の位置を動かさない）", async () => {
     renderQuiz(makePersonalityQuiz(2));
     stubQuestionUnderPoint();
     await pressWithKeyboard(screen.getByRole("button", { name: "はじめる" }));
+    await advance(START_PRESS_GUARD_MS);
     await pressAt(choiceButton("選択1"), 500);
     await advance(ANSWER_SHOWN_MS);
     expect(screen.getByRole("heading", { level: 2, name: "問2" })).toBe(
@@ -552,6 +551,7 @@ describe("QuizContainer — 押した点の真下を避ける着地", () => {
       }
       return undefined;
     });
+    await advance(START_PRESS_GUARD_MS);
     await pressAt(choiceButton("不正解"), 560);
     // 範囲（92〜252）の中で、「次へ」の下端が点から 100 離れる、基準にいちばん近い送り（684 − s が 460 以下）。
     expect(scrollBySpy).toHaveBeenCalledTimes(1);

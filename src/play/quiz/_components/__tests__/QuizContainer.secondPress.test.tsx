@@ -9,15 +9,20 @@
 
 import { test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import QuizContainer from "../QuizContainer";
+import QuizContainer, { START_PRESS_GUARD_MS } from "../QuizContainer";
 import type { QuizDefinition, QuizMeta } from "../../types";
 
+// 時刻（performance.now()）は手で進める。
+let now = 0;
 beforeEach(() => {
   (window as unknown as { gtag: () => void }).gtag = vi.fn();
   vi.stubGlobal("scrollBy", vi.fn());
+  now = 0;
+  vi.spyOn(performance, "now").mockImplementation(() => now);
 });
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 vi.mock("../ResultCard", () => ({
@@ -68,6 +73,7 @@ const quiz: QuizDefinition = {
   results: [{ id: "lv-1", title: "Level 1", description: "L1" }],
 };
 
+/** 始めて、1問目の選択肢が指やマウスの押しを受け付ける時刻まで進める。 */
 async function renderAndStart(): Promise<void> {
   render(
     <QuizContainer
@@ -81,6 +87,7 @@ async function renderAndStart(): Promise<void> {
   await act(async () => {
     screen.getByRole("button", { name: "はじめる" }).click();
   });
+  now += START_PRESS_GUARD_MS;
 }
 
 /** mousedown を送り、既定の動きが止められたかを返す。 */

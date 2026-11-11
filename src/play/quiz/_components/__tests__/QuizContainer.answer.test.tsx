@@ -5,11 +5,17 @@
  * 押す前と同じ下線を持ち、ほかの行は下線の無い字になって押せない。1つの問に答えは1つで、2打目がどの経路
  * （同じ描画の中の2回の click・別の task で届く click・キーボードの連打）から届いても答えは変わらない
  * （docs/knowledge/input-events-and-guards.md §2 の3経路）。
+ *
+ * 「はじめる」を指やマウスで押してから 500ms のあいだは、1問目の選択肢が指やマウスの押しを受け付けない（「はじめる」の
+ * 二度押しの2打目を答えにしない）。キーボードの押しと、2問目からの押しは、いつでも受け付ける。
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import QuizContainer, { ANSWER_SHOWN_MS } from "../QuizContainer";
+import QuizContainer, {
+  ANSWER_SHOWN_MS,
+  START_PRESS_GUARD_MS,
+} from "../QuizContainer";
 import { buttonUnderlineClassName } from "@/components/Button";
 import type {
   QuizAnswer,
@@ -27,10 +33,21 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-// 結果の画面では、記録した答えの並びを見えるようにする（追加の読みものは答えの並びを受け取る）。
+// 結果の画面では、記録した答えの並びを見えるようにし（追加の読みものは答えの並びを受け取る）、「もう一度挑戦する」を置く。
 vi.mock("../ResultCard", () => ({
-  default: ({ extra }: { extra?: React.ReactNode }) => (
-    <div data-testid="result-card">{extra}</div>
+  default: ({
+    extra,
+    onRetry,
+  }: {
+    extra?: React.ReactNode;
+    onRetry: () => void;
+  }) => (
+    <div data-testid="result-card">
+      {extra}
+      <button type="button" onClick={onRetry}>
+        もう一度挑戦する
+      </button>
+    </div>
   ),
 }));
 vi.mock("../ResultExtraLoader", () => ({
@@ -108,6 +125,16 @@ const start = () =>
   act_(() => screen.getByRole("button", { name: "はじめる" }).click());
 const questionNumber = () =>
   screen.getByRole("progressbar").getAttribute("aria-valuenow");
+
+/** 指やマウスで押す（click の detail が 1 で、押した点を持つ）。 */
+const pressWithPointer = (name: string) =>
+  act_(() =>
+    fireEvent.click(screen.getByRole("button", { name }), {
+      detail: 1,
+      clientX: 100,
+      clientY: 300,
+    }),
+  );
 
 /** 選択肢の名前の字の箱（ボタンか、答えたあとの字）。 */
 function faceOf(name: string): HTMLElement {
@@ -275,5 +302,96 @@ describe("QuizContainer — 見せるあいだの再入力", () => {
     await advance(200);
     expect(consoleError).not.toHaveBeenCalled();
     consoleError.mockRestore();
+  });
+});
+
+describe("QuizContainer — 「はじめる」の直後の1問目の押し", () => {
+  test("500ms より前の指やマウスの押しは答えにならず、選んだ形もフォーカスも変わらない", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    const heading = screen.getByRole("heading", { level: 2, name: "問1" });
+    expect(document.activeElement).toBe(heading);
+
+    await advance(START_PRESS_GUARD_MS - 1);
+    await pressWithPointer("選択1A");
+    expect(screen.getAllByRole("button")).toHaveLength(3);
+    expect(document.activeElement).toBe(heading);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionNumber()).toBe("1");
+  });
+
+  test("500ms より前に選択肢へ落ちた押しは、既定の動き（フォーカスの移り）を止め、過ぎたあとは止めない", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    const choice = screen.getByRole("button", { name: "選択1A" });
+    expect(fireEvent.mouseDown(choice, { detail: 1 })).toBe(false);
+    await advance(START_PRESS_GUARD_MS);
+    expect(fireEvent.mouseDown(choice, { detail: 1 })).toBe(true);
+  });
+
+  test("500ms を過ぎた指やマウスの押しは、すぐ答えになる", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    await advance(START_PRESS_GUARD_MS);
+    await pressWithPointer("選択1A");
+    expect(faceOf("選択1A")).toHaveClass(buttonUnderlineClassName);
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionNumber()).toBe("2");
+  });
+
+  test("受け付けなかった押しのあと、500ms を過ぎて押し直すと答えになる", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    await pressWithPointer("選択1A");
+    await advance(START_PRESS_GUARD_MS);
+    await pressWithPointer("選択1B");
+    await advance(ANSWER_SHOWN_MS);
+    expect(await finish()).toBe("c1b,c2a");
+  });
+
+  test("キーボードの押しは、500ms より前でも答えになる", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    screen.getByRole("button", { name: "選択1B" }).focus();
+    await pressEnter();
+    expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
+  });
+
+  test("キーボードで「はじめる」を押したあとは、500ms より前の指やマウスの押しも答えになる", async () => {
+    renderQuiz();
+    await start();
+    await pressWithPointer("選択1B");
+    expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
+  });
+
+  test("2問目からは、切り替わりの直後の指やマウスの押しも答えになる", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    await advance(START_PRESS_GUARD_MS);
+    await pressWithPointer("選択1A");
+    await advance(ANSWER_SHOWN_MS);
+    expect(questionNumber()).toBe("2");
+
+    await pressWithPointer("選択2B");
+    expect(faceOf("選択2B")).toHaveClass(buttonUnderlineClassName);
+    await advance(ANSWER_SHOWN_MS);
+    expect(screen.getByTestId("answers").textContent).toBe("c1a,c2b");
+  });
+
+  test("「もう一度挑戦する」のあとに始め直した1問目でも、500ms より前の押しは答えにならない", async () => {
+    renderQuiz();
+    await pressWithPointer("はじめる");
+    await advance(START_PRESS_GUARD_MS);
+    await pressWithPointer("選択1A");
+    await advance(ANSWER_SHOWN_MS);
+    await finish();
+    await pressWithPointer("もう一度挑戦する");
+
+    await pressWithPointer("はじめる");
+    await pressWithPointer("選択1A");
+    expect(screen.getAllByRole("button")).toHaveLength(3);
+    await advance(START_PRESS_GUARD_MS);
+    await pressWithPointer("選択1B");
+    expect(faceOf("選択1B")).toHaveClass(buttonUnderlineClassName);
   });
 });
