@@ -17,12 +17,20 @@
   gap: var(--space-16);
 }
 
-/* 盤。当てた組と語の格子を、マスどうしと同じ間隔で1つの盤に並べる。 */
+/* 盤。当てた組と語の格子を、マスどうしと同じ間隔（--board-gap）で1つの盤に並べる。間隔は、狭い画面では 4px に
+ * して、語のマスの1行に入る字を増やす（DESIGN.md §5）。 */
 .board {
+  --board-gap: calc(var(--space-8) / 2);
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--board-gap);
   max-width: var(--measure);
+}
+
+@media (min-width: 45rem) {
+  .board {
+    --board-gap: var(--space-8);
+  }
 }
 
 /* 遊んでいるあいだの、残りのミスの字と操作。どちらもチェックの前後に一緒に見るものなので、1つのまとまりとして

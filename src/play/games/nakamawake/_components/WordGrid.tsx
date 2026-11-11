@@ -19,8 +19,8 @@ interface Props {
 
 /**
  * まだ組になっていない語の格子。語を押して選び、選んだかどうかは語に添えた四角の塗りで示す
- * （DESIGN.md §6 チェックボックスと同じ形）。列の数は、その列の数のときにマスの中で語の字が使える幅で決める
- * （WordGrid.module.css）。
+ * （DESIGN.md §6 チェックボックスと同じ形）。列の数と四角の位置は、その組み方のときにマスの中で語の字が使える
+ * 幅で決める。組み方ごとに、その幅を測るコンテナを入れ子に持つ（WordGrid.module.css）。
  */
 export default function WordGrid({
   words,
@@ -39,31 +39,33 @@ export default function WordGrid({
     >
       <div className={styles.fourColumnText}>
         <div className={styles.twoColumnText}>
-          <div className={styles.grid}>
-            {words.map((word) => (
-              <button
-                key={word}
-                className={styles.wordButton}
-                data-thick-frame
-                style={reservedDisplay && { display: reservedDisplay(word) }}
-                onClick={() => onWordToggle(word)}
-                aria-pressed={selectedWords.includes(word)}
-                aria-label={word}
-                type="button"
-              >
-                <span className={styles.mark} aria-hidden="true" />
-                <span>
-                  {wordPhrases[word]
-                    ? wordPhrases[word].map((phrase, index) => (
-                        <Fragment key={index}>
-                          {index > 0 && <wbr />}
-                          <span className={styles.phrase}>{phrase}</span>
-                        </Fragment>
-                      ))
-                    : word}
-                </span>
-              </button>
-            ))}
+          <div className={styles.twoColumnBesideText}>
+            <div className={styles.grid}>
+              {words.map((word) => (
+                <button
+                  key={word}
+                  className={styles.wordButton}
+                  data-thick-frame
+                  style={reservedDisplay && { display: reservedDisplay(word) }}
+                  onClick={() => onWordToggle(word)}
+                  aria-pressed={selectedWords.includes(word)}
+                  aria-label={word}
+                  type="button"
+                >
+                  <span className={styles.mark} aria-hidden="true" />
+                  <span>
+                    {wordPhrases[word]
+                      ? wordPhrases[word].map((phrase, index) => (
+                          <Fragment key={index}>
+                            {index > 0 && <wbr />}
+                            <span className={styles.phrase}>{phrase}</span>
+                          </Fragment>
+                        ))
+                      : word}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
