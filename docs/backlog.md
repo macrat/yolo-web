@@ -98,6 +98,10 @@
 | B-800 | T11の残り | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、T3レビュー中止時にbuilderが直したDESIGN.mdの文言を確かめ、[data-thick-frame]のhoverを§6に書く。design-rollout-wipはB-793後に消す。詳細cycle-316/carryover-tasks.md |
 | B-801 | ADR009の基線を取る | P1 | 着手: B-754の出荷後2週以内。出荷の直前28日のSCのカテゴリ別とGAの基線をADR009に保存し撤退基準を確定(次回確認の2・3)。出荷日から変わる計測(ブログ目次のtoc_open・toc_jump、410のGA等)もADR009へ。SCのCWV実地値はB-758へ。SCは約16か月・GAはBigQueryに残り後で取れる |
 | B-802 | 日本語として正しくない用語の利用を是正する | P3 | 着手: B-754の出荷のあと。DESIGN.md・スキル・knowledge・コードのコメントとテスト名の「着地」「道具」「測り」「送り」「面」など。過去のサイクル文書は記録なので直さない。経緯cycle-320/incident-3.md |
+| B-803 | 文節の分け方が複合動詞の中に折り所を置く | P3 | 着手: B-754の出荷のあと。「成し／遂げている」「思い／描いてから」など、診断の選択肢で375px・320pxに4か所ずつ。見出しにも効く共通の分け方（splitIntoPhrases）を直し、全ページの折れ方を確かめ直す。詳細cycle-321/review-fix-choice-wrap.md |
+| B-804 | 狭い画面で文字サイズを200%にするとページ送りの「次へ」が2行目に回る | P4 | 着手: B-754の出荷のあと。320px（ブログ・漢字辞典）と375px（漢字辞典）。字は欠けず押せる。詳細cycle-321/review-t4-pagination.md |
+| B-805 | 記事の画像が幅1,200pxのままで狭い画面で右側が見えない | P3 | 着手: B-754の出荷のあと。/blog/character-quiz-result-as-fuda の画像2枚。375pxで右が切れる。本番も同じ。詳細cycle-321/t2d-result.md |
+| B-806 | 古い分類名のページ番号つきURLが2回の転送で着く | P4 | 着手: B-754の出荷のあと。/blog/category/technical/page/2 など。next.config の古い分類名の転送を、着き先へ1回で送る形にする。詳細cycle-321/fix-pagination-redirect.md |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | 着手: B-754の出荷のあと、mainで。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
 | B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | 着手: B-754の出荷のあと、mainで。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
