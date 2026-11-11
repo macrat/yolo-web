@@ -191,7 +191,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
         },
         {
           id: "q5-d",
-          text: "クマ（食べることと寝ることが好き）",
+          text: "クマ（食べて寝るのが好き）",
           points: { snackphilosopher: 2, sleeparchitect: 1 },
         },
       ],
