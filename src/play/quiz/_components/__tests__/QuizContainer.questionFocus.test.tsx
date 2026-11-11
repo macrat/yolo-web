@@ -120,6 +120,7 @@ function renderQuiz(quiz: QuizDefinition) {
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
+      choicePhrases={{}}
       resultHeadings={{}}
       readingHeadings={{}}
     />,

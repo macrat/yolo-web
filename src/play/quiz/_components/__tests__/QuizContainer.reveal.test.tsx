@@ -53,16 +53,18 @@ vi.mock("@/components/Button", () => ({
   buttonFaceBoxClassName: "faceBox",
   buttonUnderlineClassName: "underline",
   default: ({
+    phrases,
     children,
     onClick,
     ref,
   }: {
-    children: React.ReactNode;
+    phrases?: readonly string[];
+    children?: React.ReactNode;
     onClick: () => void;
     ref?: React.Ref<HTMLButtonElement>;
   }) => (
     <button type="button" onClick={onClick} ref={ref}>
-      {children}
+      {phrases?.join("") ?? children}
     </button>
   ),
 }));
@@ -191,6 +193,7 @@ function renderQuiz(
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={quiz}
+      choicePhrases={{}}
       resultHeadings={resultHeadings}
       readingHeadings={{}}
       recommendedContents={recommendedContents}

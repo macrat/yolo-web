@@ -44,6 +44,7 @@ import type { ResultHeading } from "@/components/ResultBox";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
 import ResultExtraLoader, { hasResultExtra } from "./ResultExtraLoader";
+import type { ChoicePhrases } from "@/play/quiz/choicePhrases";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./QuizContainer.module.css";
 
@@ -58,6 +59,8 @@ type QuizContainerProps = {
    * サーバーで行にしてから受け取る。
    */
   recommendedContents?: ItemListItem[];
+  /** 選択肢の文節の区切り。選択肢の id ごとに、サーバーで作ってから受け取る。 */
+  choicePhrases: ChoicePhrases;
   /** 結果の見出し（タイプ名）の文節の区切りと書体の属性。結果の id ごとに、サーバーで作ってから受け取る。 */
   resultHeadings: Readonly<Record<string, ResultHeading>>;
   /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ってから受け取る。 */
@@ -87,6 +90,7 @@ export default function QuizContainer({
   quiz,
   referrerTypeId,
   recommendedContents,
+  choicePhrases,
   resultHeadings,
   readingHeadings,
 }: QuizContainerProps) {
@@ -427,6 +431,7 @@ export default function QuizContainer({
             key={question.id}
             question={question}
             quizType={quiz.meta.type}
+            choicePhrases={choicePhrases}
             answeredChoiceId={currentAnswer}
             onAnswer={handleAnswer}
             onNext={handleNext}

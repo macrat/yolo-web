@@ -27,12 +27,14 @@ vi.mock("@/play/quiz/_components/QuizContainer", () => ({
     head,
     quiz,
     referrerTypeId,
+    choicePhrases,
     resultHeadings,
     readingHeadings,
   }: {
     head: React.ReactNode;
     quiz: QuizDefinition;
     referrerTypeId?: string;
+    choicePhrases: Record<string, string[]>;
     resultHeadings: Record<string, { phrases: string[] }>;
     readingHeadings: Record<string, string[]>;
   }) => (
@@ -40,6 +42,7 @@ vi.mock("@/play/quiz/_components/QuizContainer", () => ({
       data-testid="quiz-container"
       data-quiz-slug={quiz.meta.slug}
       data-referrer={referrerTypeId}
+      data-choice-phrases={JSON.stringify(choicePhrases)}
       data-result-headings={JSON.stringify(resultHeadings)}
       data-reading-headings={JSON.stringify(readingHeadings)}
     >
@@ -302,6 +305,36 @@ test("名前と読みを持つタイプの見出しの区切りは、名前だ�
       "{}",
   );
   expect(headings["ai-iro"].phrases.join("")).toBe("藍色");
+});
+
+test("選択肢の文節の区切りを、サーバーで作って渡す", async () => {
+  const text = "場の本音と建前を読み取って、みんなとは違う角度から会話に入る";
+  const component = await QuizPlayPageLayout({
+    quiz: {
+      ...mockQuiz,
+      questions: [
+        {
+          id: "q1",
+          text: "問",
+          choices: [
+            { id: "q1-a", text },
+            { id: "q1-b", text: "はい" },
+          ],
+        },
+      ],
+    },
+    slug: "test-quiz",
+  });
+  render(component);
+
+  const choicePhrases = JSON.parse(
+    screen.getByTestId("quiz-container").getAttribute("data-choice-phrases") ??
+      "{}",
+  );
+  expect(Object.keys(choicePhrases)).toEqual(["q1-a", "q1-b"]);
+  expect(choicePhrases["q1-a"]).toEqual(splitIntoPhrases(text));
+  expect(choicePhrases["q1-a"].length).toBeGreaterThan(1);
+  expect(choicePhrases["q1-b"]).toEqual(["はい"]);
 });
 
 test("解き終えた画面の読みものの小見出しの区切りを、サーバーで作って渡す", async () => {

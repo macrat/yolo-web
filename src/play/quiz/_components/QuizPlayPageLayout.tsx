@@ -15,6 +15,7 @@ import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
 import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
+import { choicePhrasesOf } from "@/play/quiz/choicePhrases";
 import { solvedScreenHeadings } from "@/play/quiz/solvedScreenHeadings";
 import styles from "@/app/play/[slug]/page.module.css";
 
@@ -40,8 +41,8 @@ interface QuizPlayPageLayoutProps {
  *
  * h1 はどの段階でも §4 の主見出しのまま置く。クイズの説明は、開始の画面が「はじめる」の下に置く。
  *
- * 解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品が描くデータから作る
- * 見出しなので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って渡す。
+ * 問の選択肢と、解き終えた画面の結果の見出し（タイプ名）と詳しい読みものの小見出しは、クライアントの部品がデータ
+ * から描く文なので、文節の区切りをここ（サーバー）で全件ぶん作って渡す（§4）。FAQ の問いの区切りも、ここで作って渡す。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -88,6 +89,7 @@ export default async function QuizPlayPageLayout({
         quiz={quiz}
         referrerTypeId={referrerTypeId}
         recommendedContents={resultNextContents}
+        choicePhrases={choicePhrasesOf(quiz)}
         resultHeadings={resultHeadings}
         readingHeadings={readingHeadings}
       />

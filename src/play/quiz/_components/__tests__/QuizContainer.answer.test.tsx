@@ -85,11 +85,12 @@ function makePersonalityQuiz(): QuizDefinition {
   return { meta, questions, results };
 }
 
-function renderQuiz() {
+function renderQuiz(choicePhrases: Record<string, readonly string[]> = {}) {
   return render(
     <QuizContainer
       head={<h1>見出し</h1>}
       quiz={makePersonalityQuiz()}
+      choicePhrases={choicePhrases}
       resultHeadings={{}}
       readingHeadings={{}}
     />,
@@ -154,6 +155,25 @@ describe("QuizContainer — 診断の答えを見せるあいだ", () => {
     expect(questionNumber()).toBe("1");
     await advance(1);
     expect(questionNumber()).toBe("2");
+  });
+
+  test("選択肢の字は受け取った文節の区切りで折り、押したあとも同じ区切りで組む", async () => {
+    renderQuiz({ c1a: ["選択", "1A"], c1b: ["選択", "1B"] });
+    await start();
+    const phrasedTextOf = (name: string) => faceOf(name).firstElementChild;
+
+    expect(faceOf("選択1A").tagName).toBe("BUTTON");
+    expect(phrasedTextOf("選択1A")?.innerHTML).toBe("選択<wbr>1A");
+    expect(phrasedTextOf("選択1B")?.innerHTML).toBe("選択<wbr>1B");
+    // 区切りを受け取っていない選択肢は、文の全体を1つの文節として組む。
+    expect(phrasedTextOf("選択1C")?.innerHTML).toBe("選択1C");
+
+    await act_(() => screen.getByRole("button", { name: "選択1A" }).click());
+
+    expect(faceOf("選択1A").tagName).toBe("SPAN");
+    expect(phrasedTextOf("選択1A")?.innerHTML).toBe("選択<wbr>1A");
+    expect(phrasedTextOf("選択1B")?.innerHTML).toBe("選択<wbr>1B");
+    expect(phrasedTextOf("選択1C")?.innerHTML).toBe("選択1C");
   });
 
   test("最後の問でも、150ms 見せてから結果へ移る", async () => {

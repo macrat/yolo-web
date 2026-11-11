@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, type Ref } from "react";
+import type { ChoicePhrases } from "@/play/quiz/choicePhrases";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
 import { isCorrectChoice } from "@/play/quiz/scoring";
 import Button, {
@@ -23,6 +24,11 @@ function shuffleArray<T>(array: readonly T[]): T[] {
 type QuestionCardProps = {
   question: QuizQuestion;
   quizType: QuizType;
+  /**
+   * 選択肢の文節の区切り（選択肢の id ごと）。押す前のボタンの面も、答えたあとの字も、同じ区切りで組む。区切りを
+   * 受け取っていない選択肢は、文の全体を1つの文節として組む。
+   */
+  choicePhrases: ChoicePhrases;
   /** この問に記録した答えの選択肢の id。まだ答えていなければ undefined。押した形はこの記録から描く。 */
   answeredChoiceId: string | undefined;
   onAnswer: (choiceId: string) => void;
@@ -55,6 +61,7 @@ function feedbackOf(
 
 /**
  * 1つの問。選択肢は押すと回答が決まるボタンで、答えたあとはどれもボタンでない字に替わる（DESIGN.md §6）。
+ * 選択肢の字は、ボタンでも字でも同じ文節の区切りで折り、押しても折れる位置が変わらない（§4）。
  * 診断では、押した行の字は次の問か結果が出るまで押す前と同じ下線を持ったままでいて（実行のさいちゅう）、ほかの行は
  * 下線の無い字（答えた選択肢）になる。知識クイズでは、どの行も答えた選択肢になり、正誤の字と解説と「次へ」が出る。
  * 自分では画面を送らずフォーカスも動かさず、送りの範囲を測る要素とフォーカスを受ける要素を QuizContainer に渡す。
@@ -62,6 +69,7 @@ function feedbackOf(
 export default function QuestionCard({
   question,
   quizType,
+  choicePhrases,
   answeredChoiceId,
   onAnswer,
   onNext,
@@ -97,6 +105,7 @@ export default function QuestionCard({
       <ul ref={choicesRef} className={styles.choices} data-text-box="rows">
         {shuffledChoices.map((choice) => {
           const pressed = choice.id === answeredChoiceId;
+          const phrases = choicePhrases[choice.id] ?? [choice.text];
           const feedback =
             isKnowledge && answered
               ? feedbackOf(question, choice.id, pressed)
@@ -127,25 +136,24 @@ export default function QuestionCard({
               {!answered ? (
                 <Button
                   className={styles.choiceButton}
+                  phrases={phrases}
                   onClick={() => onAnswer(choice.id)}
                   data-hit-area="after"
-                >
-                  {choice.text}
-                </Button>
+                />
               ) : pressed && !isKnowledge ? (
                 <span
                   className={`${buttonFaceBoxClassName} ${buttonUnderlineClassName} ${styles.answeredFace} ${styles.pressedFace}`}
                   data-text-box="inline"
                   data-hit-area="after"
                 >
-                  <PhrasedText as="span" phrases={[choice.text]} />
+                  <PhrasedText as="span" phrases={phrases} />
                 </span>
               ) : (
                 <span
                   className={`${buttonFaceBoxClassName} ${styles.answeredFace}`}
                   data-text-box="inline"
                 >
-                  <PhrasedText as="span" phrases={[choice.text]} />
+                  <PhrasedText as="span" phrases={phrases} />
                 </span>
               )}
               {feedback && <span className={styles.feedback}>{feedback}</span>}
