@@ -2,7 +2,8 @@
  * マスが本文の幅より広がると、行を目で横に追う距離が延びる。
  * 選んだ語は、語に添えた 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。四角は、マスの幅に
  * ゆとりがあれば語の左に、無ければ語の上に置く。
- * 語のマスの太い枠と、その内側に離して出す hover の線とフォーカスのリングは data-thick-frame（globals.css）が持つ。 */
+ * 語のマスの太い枠は data-thick-frame（globals.css）が持つ。枠の内側に離して出す hover の線とフォーカスのリングは、
+ * マスの左右の余白に合わせてここで決める。 */
 
 /* 格子の幅のコンテナ。語の字の大きさと、マスの寸法をここで決める。狭い画面では語の字を補助情報の大きさにし、
  * 四角を語の上に置くマスの左右の余白を、マスどうしの間隔（盤が決める --board-gap）と同じ 4px にして、マスの
@@ -129,8 +130,26 @@
 }
 
 /* 語はマスの内側の余白（§5）の中で、行の長さをそろえて折り返す。行頭に長音符と小書きの仮名を置かない
- * （line-break: strict）。 */
+ * （line-break: strict）。
+ * フォーカスのリングと hover の線は、枠と字のあいだの左右の余白の中に出す（§6）。リングは、余白の中で両側に
+ * 細い線の太さの地を残せる太さ（太い線の太さまで）にし、枠とのあいだに、字の側に細い線の太さの地を残せる幅
+ * （太い線の太さまで）の地を挟む。hover の線も、枠とのあいだに同じ幅の地を挟む。余白が 8px のマスでは、3px の地・
+ * 3px のリング・2px の地、余白が 4px のマスでは、1px の地・2px のリング・1px の地が、枠と字のあいだに並ぶ。 */
 .wordButton {
+  --cell-ring-w: min(var(--rule-w), var(--cell-pad) - 2 * var(--rule-w-hair));
+  --cell-ring-gap: min(
+    var(--rule-w),
+    var(--cell-pad) - var(--cell-ring-w) - var(--rule-w-hair)
+  );
+  --focus-ring: var(--cell-ring-w) solid var(--ink);
+  --focus-ring-offset: calc(
+    -1 * (var(--rule-w) + var(--cell-ring-gap) + var(--cell-ring-w))
+  );
+  --focus-ring-fill: inset 0 0 0 calc(var(--cell-ring-gap) + var(--cell-ring-w))
+    var(--paper);
+  --hover-line:
+    inset 0 0 0 var(--cell-ring-gap) var(--paper),
+    inset 0 0 0 calc(var(--cell-ring-gap) + var(--rule-w-hair)) var(--rule-2);
   display: flex;
   flex-direction: var(--cell-direction);
   align-items: var(--cell-align);
