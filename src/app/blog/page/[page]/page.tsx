@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import {
-  BLOG_LIST_PER_PAGE,
   blogListMetadata,
+  blogListPageFromParam,
   blogListPageParams,
-  blogListPosts,
 } from "@/blog/_lib/blog-list";
-import { listPageFromParam } from "@/lib/list-pages";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
@@ -22,11 +20,7 @@ export function generateStaticParams(): Array<{ page: string }> {
 
 async function resolvePage(params: Props["params"]): Promise<number> {
   const { page } = await params;
-  return listPageFromParam(
-    page,
-    blogListPosts(SCOPE).length,
-    BLOG_LIST_PER_PAGE,
-  );
+  return blogListPageFromParam(SCOPE, page);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

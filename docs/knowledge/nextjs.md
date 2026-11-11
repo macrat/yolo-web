@@ -192,3 +192,15 @@ Next.js 16.3.0 の Turbopack のビルドでは、`next/font/google` に `adjust
 **対処**: `not-found.tsx` の `metadata` に `robots: null` を書く。受け継いだ `robots` が消え、Next が足す `noindex` の1つだけが出る。ほかのページの `robots` は変わらない。あわせて、動的ルートの `generateMetadata` は、該当なしのときに `{}` を返さず `notFound()` を呼ぶ。そうすると読み込みのあとも `not-found.tsx` の題と `noindex` の1つが保たれる。確かめるときは本番のビルドを `next start` で起こし、404 の URL と通常のページについて、HTML の `<meta name="robots"` を数えるのに加え、実際のブラウザで開いて読み込みのあとの `document.title` と robots の meta を数える。
 
 **根拠**: 実測（cycle-316。T5-22 の設計の調べ（`docs/cycles/cycle-316/t5-design.md` の 0-8）で、受け継いだときに2つ出ること、`robots: null` で `/zz-not-exist`・`/dictionary/kanji/zz`・`/tools/zz` の `noindex` が1つになり `/tools/base64` の `index, follow, max-image-preview:large` が変わらないことを確かめた。`robots: { index: false }` で `noindex` が2つになることは、同じ調べのレビューの再ビルドで確かめた。T5-22 の実装のビルドで、5つの 404 の URL の HTML の robots が `noindex` の1つだけであることを確かめた。T5-22b で、`generateMetadata` が `{}` を返すブログ・辞典・遊びの16ルートの 17 URL で、読み込みのあとに題が `yolos.net` になり robots が2つ並ぶことと、`notFound()` を呼ぶように直したあとは読み込みのあとも題が「ページが見つかりません | yolos.net」、robots が `noindex` の1つだけになることを確かめた）。
+
+---
+
+## 14. 静的に生成するページの `permanentRedirect()` は、ビルドのときに 308 の応答として固まる
+
+`dynamicParams = false` と `generateStaticParams` を持つ App Router のページ（`page.tsx`）が、描くさいちゅう（`generateMetadata` の中でもよい）に `permanentRedirect()` を呼ぶと、そのパスはビルドのときに「状態コード 308 と `location` ヘッダ」の応答として静的に固まる。`generateStaticParams` に無い値は、ページの関数が走らずに 404 になる。項目の数で転送の要否が決まるような、`next.config.ts` の `redirects()` には書けない転送を、サーバーの処理を足さずに静的なまま出せる。
+
+- 状態コードと `location` は、ビルドの出力の `.next/server/app/<パス>.meta` に入る。手元のビルドでは `.next/prerender-manifest.json` の `initialStatus`・`initialHeaders` には入らない（Next.js は Vercel の上でビルドしたときだけ、ページのぶんをそこへ書く）。手元で確かめるときは `.meta` を見るか、`next start` に `curl -I` を当てる。
+- 応答の `location` は、`permanentRedirect()` に渡した文字列そのままで、問い合わせ文字列は引き継がれない（`next.config.ts` の `redirects()` は引き継ぐ）。
+- `next.config.ts` の `redirects()` はファイルの経路より先に当たるので、同じパスに両方があると `redirects()` が勝つ。
+
+**根拠**: 実測（cycle-321。Next.js 16.3.0 で `/blog/page/3` などの 19 本を `permanentRedirect()` で固め、`next start` に `curl` を当てて 308 と `location` を確かめた。`.meta` と `prerender-manifest.json` の中身はビルドの出力で、Vercel の上でだけ書く分かれ目は `node_modules/next/dist/export/routes/app-page.js` の `hasNextSupport` で確かめた。ルートハンドラ（`route.ts`）の同じ作りは、本番の `/tools/page/2` が Vercel の上で 308 と `location: /tools` を返していることで確かめた。ページ（`page.tsx`）の作りが Vercel の上で同じ応答になることは、出荷して確かめる）。

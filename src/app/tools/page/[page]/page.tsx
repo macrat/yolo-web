@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { listPageFromParam } from "@/lib/list-pages";
 import ToolListView from "@/tools/_components/ToolListView";
 import {
-  TOOL_LIST_PER_PAGE,
   toolListMetadata,
+  toolListPageFromParam,
   toolListPageParams,
 } from "@/tools/_lib/tool-list";
-import { allToolMetas } from "@/tools/registry";
 
 interface Props {
   params: Promise<{ page: string }>;
@@ -20,7 +18,7 @@ export function generateStaticParams(): Array<{ page: string }> {
 
 async function resolvePage(params: Props["params"]): Promise<number> {
   const { page } = await params;
-  return listPageFromParam(page, allToolMetas.length, TOOL_LIST_PER_PAGE);
+  return toolListPageFromParam(page);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -193,8 +193,8 @@ describe("静的metadataページのSEO検証", () => {
 
 describe("動的metadataページのSEO検証", () => {
   test("/blog/page/[page]: SEO必須項目が存在する", async () => {
-    const { blogListPageParams } = await import("@/blog/_lib/blog-list");
-    if (blogListPageParams({ type: "all" }).length === 0) return; // 2ページ目がなければスキップ
+    const { blogListPageCount } = await import("@/blog/_lib/blog-list");
+    if (blogListPageCount({ type: "all" }) < 2) return; // 2ページ目がなければスキップ
 
     const { generateMetadata } = await import("@/app/blog/page/[page]/page");
     const meta = await generateMetadata({
@@ -222,12 +222,11 @@ describe("動的metadataページのSEO検証", () => {
 
   test("/blog/category/[category]/page/[page]: SEO必須項目が存在する", async () => {
     const { ALL_CATEGORIES } = await import("@/blog/_lib/blog");
-    const { blogListPageParams } = await import("@/blog/_lib/blog-list");
+    const { blogListPageCount } = await import("@/blog/_lib/blog-list");
 
     // 2ページ以上あるカテゴリを探す
     const targetCategory = ALL_CATEGORIES.find(
-      (category) =>
-        blogListPageParams({ type: "category", category }).length > 0,
+      (category) => blogListPageCount({ type: "category", category }) >= 2,
     );
     if (!targetCategory) return; // 2ページ以上のカテゴリがなければスキップ
 

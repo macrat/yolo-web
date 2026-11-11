@@ -8,9 +8,12 @@ import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
 import type { BrowseItem, BrowseSort } from "@/lib/list-browse";
 import {
+  listPageCount,
+  listPageFromParam,
   listPageHref,
   listPageStaticParams,
   listPageTitle,
+  type ListPageForwarding,
 } from "@/lib/list-pages";
 import {
   ALL_CATEGORIES,
@@ -34,6 +37,12 @@ export type BlogListScope =
 
 /** 1ページの件数。記事の行は説明を持つので 50（DESIGN.md §7）。 */
 export const BLOG_LIST_PER_PAGE = 50;
+
+/**
+ * 検索結果やブックマークに残っているページ番号の区切り。1ページ 12 件で数えた番号が残っているので、
+ * その番号を、同じ記事が載っているいまのページへ送る。
+ */
+const BLOG_LIST_FORWARDED_PER_PAGE = 12;
 
 /** ブログの一覧の名前。上端のナビ・パンくず・見出し・ページの題で同じ名前を使う。 */
 const BLOG_TITLE = "ブログ";
@@ -146,11 +155,40 @@ export function blogListDescription(scope: BlogListScope): string {
   }
 }
 
-/** 2ページ目から最後のページまでの `page` の値。 */
+function blogListForwarding(scope: BlogListScope): ListPageForwarding {
+  return {
+    basePath: blogListBasePath(scope),
+    perPage: BLOG_LIST_FORWARDED_PER_PAGE,
+  };
+}
+
+/** 範囲の一覧のページの数。 */
+export function blogListPageCount(scope: BlogListScope): number {
+  return listPageCount(blogListPosts(scope).length, BLOG_LIST_PER_PAGE);
+}
+
+/** 静的に生成する `page` の値。2ページ目から最後のページまでと、いまのページへ送る番号。 */
 export function blogListPageParams(
   scope: BlogListScope,
 ): Array<{ page: string }> {
-  return listPageStaticParams(blogListPosts(scope).length, BLOG_LIST_PER_PAGE);
+  return listPageStaticParams(
+    blogListPosts(scope).length,
+    BLOG_LIST_PER_PAGE,
+    blogListForwarding(scope),
+  );
+}
+
+/** 経路の `page` の値を、範囲の一覧のページの番号にする。送る番号なら 308 で送り、ほかは 404。 */
+export function blogListPageFromParam(
+  scope: BlogListScope,
+  param: string,
+): number {
+  return listPageFromParam(
+    param,
+    blogListPosts(scope).length,
+    BLOG_LIST_PER_PAGE,
+    blogListForwarding(scope),
+  );
 }
 
 /** 一覧のページの metadata。2ページ目からも自分を canonical にする。 */

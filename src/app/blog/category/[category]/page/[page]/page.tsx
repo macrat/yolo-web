@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ALL_CATEGORIES } from "@/blog/_lib/blog";
 import {
-  BLOG_LIST_PER_PAGE,
   blogListMetadata,
+  blogListPageFromParam,
   blogListPageParams,
-  blogListPosts,
   isBlogCategory,
   type BlogListScope,
 } from "@/blog/_lib/blog-list";
-import { listPageFromParam } from "@/lib/list-pages";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
@@ -34,14 +32,7 @@ async function resolve(params: Props["params"]) {
   const { category, page } = await params;
   if (!isBlogCategory(category)) notFound();
   const scope: BlogListScope = { type: "category", category };
-  return {
-    scope,
-    page: listPageFromParam(
-      page,
-      blogListPosts(scope).length,
-      BLOG_LIST_PER_PAGE,
-    ),
-  };
+  return { scope, page: blogListPageFromParam(scope, page) };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

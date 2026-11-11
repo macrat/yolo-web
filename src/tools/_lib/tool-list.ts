@@ -6,9 +6,11 @@ import type { Metadata } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
 import {
+  listPageFromParam,
   listPageHref,
   listPageStaticParams,
   listPageTitle,
+  type ListPageForwarding,
 } from "@/lib/list-pages";
 import {
   sortBrowseItems,
@@ -36,6 +38,15 @@ export const TOOL_LIST_INTRO = "登録不要。入力は手元で処理。";
 
 /** 1ページの件数。ツールの行は説明を持つので 50（DESIGN.md §7）。 */
 export const TOOL_LIST_PER_PAGE = 50;
+
+/**
+ * 検索結果やブックマークに残っているページ番号の区切り。1ページ 24 件で数えた番号が残っているので、
+ * その番号を、並びの同じ位置が載っているいまのページへ送る。
+ */
+const TOOL_LIST_FORWARDING: ListPageForwarding = {
+  basePath: TOOL_LIST_BASE_PATH,
+  perPage: 24,
+};
 
 /** 種別。行に見せる語と同じ語で、並びが種別順の順になる。値はクエリの `kind` に書く。 */
 export const TOOL_KINDS: BrowseChoice[] = TOOL_CATEGORIES.map(
@@ -82,9 +93,23 @@ export function toolListItems(): BrowseItem[] {
   return sortBrowseItems(allToolMetas.map(toolItem), TOOL_SORTS[0]);
 }
 
-/** 2ページ目から最後のページまでの `page` の値。 */
+/** 静的に生成する `page` の値。2ページ目から最後のページまでと、いまのページへ送る番号。 */
 export function toolListPageParams(): Array<{ page: string }> {
-  return listPageStaticParams(allToolMetas.length, TOOL_LIST_PER_PAGE);
+  return listPageStaticParams(
+    allToolMetas.length,
+    TOOL_LIST_PER_PAGE,
+    TOOL_LIST_FORWARDING,
+  );
+}
+
+/** 経路の `page` の値を、一覧のページの番号にする。送る番号なら 308 で送り、ほかは 404。 */
+export function toolListPageFromParam(param: string): number {
+  return listPageFromParam(
+    param,
+    allToolMetas.length,
+    TOOL_LIST_PER_PAGE,
+    TOOL_LIST_FORWARDING,
+  );
 }
 
 const TOOL_LIST_DESCRIPTION = `文字数カウント・日付計算・パスワード生成から、JSON整形・正規表現のテストまで、全${allToolMetas.length}個の無料ツールを一覧できます。登録は不要で、ブラウザの中ですぐに使えます。`;

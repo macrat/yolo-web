@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MIN_POSTS_FOR_TAG_PAGE, getTagsWithMinPosts } from "@/blog/_lib/blog";
 import {
-  BLOG_LIST_PER_PAGE,
   blogListMetadata,
+  blogListPageFromParam,
   blogListPageParams,
-  blogListPosts,
   hasTagPage,
   type BlogListScope,
 } from "@/blog/_lib/blog-list";
-import { listPageFromParam } from "@/lib/list-pages";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
@@ -32,14 +30,7 @@ async function resolve(params: Props["params"]) {
   const tag = decodeURIComponent(rawTag);
   if (!hasTagPage(tag)) notFound();
   const scope: BlogListScope = { type: "tag", tag };
-  return {
-    scope,
-    page: listPageFromParam(
-      page,
-      blogListPosts(scope).length,
-      BLOG_LIST_PER_PAGE,
-    ),
-  };
+  return { scope, page: blogListPageFromParam(scope, page) };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
