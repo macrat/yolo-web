@@ -1,45 +1,74 @@
 "use client";
 
+import { Fragment, type Ref } from "react";
 import styles from "./WordGrid.module.css";
 
 interface Props {
   words: string[];
   selectedWords: string[];
   onWordToggle: (word: string) => void;
-  disabled: boolean;
+  /**
+   * 端末の記録を当てる前の場所取り。渡すと、語のマスの見せ方（display）をこの値にする。本体の前のスクリプトが、
+   * 記録で当てた組の語を格子から外す値を書く。
+   */
+  reservedDisplay?: (word: string) => string;
+  /** ことわざのように句を持つ語の句の並び（サーバーで分けたもの）。句の切れ目で折る。 */
+  wordPhrases: Record<string, string[]>;
+  ref?: Ref<HTMLDivElement>;
 }
 
 /**
- * 4x4 grid of word buttons. Players tap words to select them.
+ * まだ組になっていない語の格子。語を押して選び、選んだかどうかは語に添えた四角の塗りで示す
+ * （DESIGN.md §6 チェックボックスと同じ形）。列の数と四角の位置は、その組み方のときにマスの中で語の字が使える
+ * 幅で決める。組み方ごとに、その幅を測るコンテナを入れ子に持つ（WordGrid.module.css）。
  */
 export default function WordGrid({
   words,
   selectedWords,
   onWordToggle,
-  disabled,
+  reservedDisplay,
+  wordPhrases,
+  ref,
 }: Props) {
   return (
     <div
-      className={styles.grid}
+      ref={ref}
+      className={styles.frame}
       role="group"
-      aria-label={"\u8A00\u8449\u306E\u30B0\u30EA\u30C3\u30C9"}
+      aria-label="言葉の格子"
     >
-      {words.map((word) => {
-        const isSelected = selectedWords.includes(word);
-        return (
-          <button
-            key={word}
-            className={`${styles.wordButton} ${isSelected ? styles.selected : ""}`}
-            onClick={() => onWordToggle(word)}
-            disabled={disabled}
-            aria-pressed={isSelected}
-            aria-label={word}
-            type="button"
-          >
-            {word}
-          </button>
-        );
-      })}
+      <div className={styles.fourColumnText}>
+        <div className={styles.twoColumnText}>
+          <div className={styles.twoColumnBesideText}>
+            <div className={styles.grid}>
+              {words.map((word) => (
+                <button
+                  key={word}
+                  className={styles.wordButton}
+                  data-thick-frame
+                  style={reservedDisplay && { display: reservedDisplay(word) }}
+                  onClick={() => onWordToggle(word)}
+                  aria-pressed={selectedWords.includes(word)}
+                  aria-label={word}
+                  type="button"
+                >
+                  <span className={styles.mark} aria-hidden="true" />
+                  <span>
+                    {wordPhrases[word]
+                      ? wordPhrases[word].map((phrase, index) => (
+                          <Fragment key={index}>
+                            {index > 0 && <wbr />}
+                            <span className={styles.phrase}>{phrase}</span>
+                          </Fragment>
+                        ))
+                      : word}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

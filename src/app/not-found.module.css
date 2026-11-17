@@ -1,0 +1,9 @@
+/* 見出しは §4 の段（h1 は主見出し、h2 はセクションの見出し）のまま、下に続く文や一覧とあける。 */
+.title {
+  margin-block-end: var(--space-16);
+}
+
+/* 何が起きたかの説明。本文の幅で組む。 */
+.lead {
+  max-inline-size: var(--measure);
+}

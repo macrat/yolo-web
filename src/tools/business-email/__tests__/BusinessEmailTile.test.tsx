@@ -1,5 +1,5 @@
 /**
- * BusinessEmailTile のユニットテスト（TDD: 実装前に書く）
+ * BusinessEmailTile のユニットテスト
  *
  * 検証観点:
  * - T-1: variant=full での基本レンダリング
@@ -8,36 +8,33 @@
  * - T-4: フィールド入力でプレビューが更新される
  * - T-5: コピー3ターゲット（件名/本文/全体）の振る舞い
  * - T-6: id インスタンス一意性（動的フィールド含む）
- * - T-7: ARIA 要件（C-3 role="status"・C-2 aria-label・A-6）
+ * - T-7: ARIA 要件（role="status"・aria-label）
  * - T-8: カテゴリ切替時に古いプレビューが残らない
  * - T-9: 初期表示でプレースホルダーによるメール生成が破綻しない
  * - T-10: CSS トークン検証
  * - T-11: 12テンプレート全体の回帰テスト
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import BusinessEmailTile from "../BusinessEmailTile";
 import { generateEmail, getAllTemplates } from "../logic";
 
-// useCopyToClipboard をモック（clipboard API 不在環境対策）
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("BusinessEmailTile", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   // T-1: 基本レンダリング
   describe("T-1: 基本レンダリング（variant=full）", () => {
     it("クラッシュせずにレンダリングされる", () => {
@@ -73,16 +70,16 @@ describe("BusinessEmailTile", () => {
     it("初期カテゴリは「お礼」でチェック状態", () => {
       render(<BusinessEmailTile variant="full" />);
       const thanksOption = screen.getByRole("radio", { name: "お礼" });
-      expect(thanksOption).toHaveAttribute("aria-checked", "true");
+      expect(thanksOption).toBeChecked();
     });
 
     it("「お詫び」に切り替えるとチェック状態が変わる", () => {
       render(<BusinessEmailTile variant="full" />);
       const apologyOption = screen.getByRole("radio", { name: "お詫び" });
       fireEvent.click(apologyOption);
-      expect(apologyOption).toHaveAttribute("aria-checked", "true");
+      expect(apologyOption).toBeChecked();
       const thanksOption = screen.getByRole("radio", { name: "お礼" });
-      expect(thanksOption).toHaveAttribute("aria-checked", "false");
+      expect(thanksOption).not.toBeChecked();
     });
 
     it("カテゴリ切替後にテンプレートセレクトが存在する", () => {
@@ -166,12 +163,39 @@ describe("BusinessEmailTile", () => {
       expect(copyAllBtn).not.toBeDisabled();
     });
 
-    it("copiedKey='subject' のとき件名コピーボタンが COPIED_LABEL になる", () => {
-      mockHook.copiedKey = "subject";
+    it("件名のコピーを押すと件名を写し、そのボタンだけが「コピー済み」になる", async () => {
       render(<BusinessEmailTile variant="full" />);
+      const subjectCopyBtn = screen.getByRole("button", {
+        name: "件名をコピー",
+      });
+      const subject = (
+        screen.getByLabelText("件名プレビュー") as HTMLInputElement
+      ).value;
+      fireEvent.click(subjectCopyBtn);
+      await waitFor(() =>
+        expect(subjectCopyBtn).toHaveTextContent("コピー済み"),
+      );
+      expect(writeText).toHaveBeenCalledWith(subject);
       expect(
-        screen.getByRole("button", { name: "コピーしました" }),
+        screen.getByRole("button", { name: "本文をコピー" }),
       ).toBeInTheDocument();
+    });
+
+    it("全文のコピーは、押す前の面で何を写すかを言い、件名と本文をまとめて写す", async () => {
+      render(<BusinessEmailTile variant="full" />);
+      const copyAllBtn = screen.getByRole("button", {
+        name: "メール全文をコピー",
+      });
+      expect(copyAllBtn).toHaveTextContent(/^メール全文をコピー$/);
+      const subject = (
+        screen.getByLabelText("件名プレビュー") as HTMLInputElement
+      ).value;
+      const body = (
+        screen.getByLabelText("本文プレビュー") as HTMLTextAreaElement
+      ).value;
+      fireEvent.click(copyAllBtn);
+      await waitFor(() => expect(copyAllBtn).toHaveTextContent("コピー済み"));
+      expect(writeText).toHaveBeenCalledWith(`件名: ${subject}\n\n${body}`);
     });
   });
 
@@ -213,17 +237,18 @@ describe("BusinessEmailTile", () => {
 
   // T-7: ARIA 要件
   describe("T-7: ARIA 要件", () => {
-    it("role=status aria-live=polite の領域が存在する（C-3）", () => {
+    it("role=status aria-live=polite の領域が存在する", () => {
       render(<BusinessEmailTile variant="full" />);
       const statusRegion = screen.getByRole("status");
       expect(statusRegion).toBeInTheDocument();
       expect(statusRegion).toHaveAttribute("aria-live", "polite");
     });
 
-    it("SegmentedControl に aria-label が付与されている（C-2）", () => {
+    it("ラジオボタンの組は見出しを名前として持つ", () => {
       render(<BusinessEmailTile variant="full" />);
-      const radiogroup = screen.getByRole("radiogroup");
-      expect(radiogroup).toHaveAttribute("aria-label");
+      expect(
+        screen.getByRole("radiogroup", { name: "メールの種類" }),
+      ).toBeInTheDocument();
     });
 
     it("件名・本文プレビューに aria-label が付与されている", () => {
@@ -287,23 +312,23 @@ describe("BusinessEmailTile", () => {
 
   // T-10: CSS トークン検証
   describe("T-10: CSS トークン検証（デザインシステム準拠）", () => {
-    it("CSS に旧 --color-* トークン・--accent 直塗り・font-weight:700 が含まれない", () => {
+    it("CSS に --color-* トークン・--accent 直塗り・font-weight:700 が含まれない", () => {
       const cssPath = join(
         process.cwd(),
         "src/tools/business-email/BusinessEmailTile.module.css",
       );
       const css = readFileSync(cssPath, "utf-8");
 
-      // 旧トークン --color-* が存在しないこと（B-1）
+      // --color-* トークンを参照しないこと
       expect(css).not.toMatch(/var\(--color-/);
 
-      // --accent 直塗りがないこと（B-3）
+      // --accent 直塗りがないこと
       const accentDirectUse = css.match(
         /(?:background|color)\s*:\s*var\(--accent\)/g,
       );
       expect(accentDirectUse).toBeNull();
 
-      // font-weight: 700 が存在しないこと（B-4）
+      // font-weight: 700 が存在しないこと
       const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
       expect(cssWithoutComments).not.toMatch(/font-weight\s*:\s*700/);
     });

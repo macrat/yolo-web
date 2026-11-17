@@ -26,8 +26,19 @@ describe("countChars", () => {
   });
 
   it("絵文字（サロゲートペア）を1文字としてカウントする", () => {
-    // UTF-16では2コードユニット（length=2）だが、コードポイントとしては1
     expect(countChars("😀")).toBe(1);
+  });
+
+  it("画面で1文字に見えるまとまり（書記素）を1文字としてカウントする", () => {
+    expect(countChars("👨‍👩‍👧")).toBe(1); // ZWJ でつないだ絵文字（5コードポイント）
+    expect(countChars("🇯🇵")).toBe(1); // 国旗（2コードポイント）
+    expect(countChars("👍🏽")).toBe(1); // 肌の色つき（2コードポイント）
+    expect(countChars("か\u3099")).toBe(1); // 濁点を分けて書いた「が」
+    expect(countChars("が")).toBe(1);
+  });
+
+  it("CRLF は1つの改行として1文字に数える", () => {
+    expect(countChars("a\r\nb")).toBe(3);
   });
 
   it("絵文字を含む混在文字列を正しくカウントする", () => {
@@ -53,6 +64,7 @@ describe("countCharsNoSpaces", () => {
   it("絵文字（サロゲートペア）はスペース除外後に1文字としてカウントする", () => {
     // "a"(1) + " "(除外) + "😀"(1) = 2
     expect(countCharsNoSpaces("a 😀")).toBe(2);
+    expect(countCharsNoSpaces("👨‍👩‍👧 🇯🇵\nか\u3099")).toBe(3);
   });
 });
 

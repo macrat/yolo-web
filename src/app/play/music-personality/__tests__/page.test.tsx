@@ -3,6 +3,10 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
+import { shareOpenGraphImage } from "@/lib/share-image";
+import { playContentBySlug } from "@/play/registry";
+import { generatePlayMetadata } from "@/play/seo";
+import { playShareImageContent } from "@/play/share-image-content";
 import { generateStaticParams, generateMetadata } from "../page";
 
 // Mock next/navigation
@@ -23,7 +27,6 @@ vi.mock("@/play/quiz/registry", () => ({
           slug: "music-personality",
           type: "personality",
           questionCount: 10,
-          accentColor: "#7c3aed",
           category: "personality",
         },
         results: [
@@ -64,7 +67,6 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
       slug: "music-personality",
       type: "personality",
       questionCount: 10,
-      accentColor: "#7c3aed",
       category: "personality",
     },
     results: [
@@ -131,6 +133,22 @@ describe("music-personality 専用プレイページ: generateMetadata", () => {
     const metadata = await generateMetadata();
     expect(metadata).toBeDefined();
     expect(metadata.title).toBeTruthy();
+  });
+
+  it("音楽性格診断の画像（/play/music-personality/opengraph-image）を generatePlayMetadata に渡す", async () => {
+    await generateMetadata();
+    const meta = playContentBySlug.get("music-personality")!;
+    expect(generatePlayMetadata).toHaveBeenLastCalledWith(
+      meta,
+      shareOpenGraphImage(
+        "/play/music-personality",
+        playShareImageContent(meta),
+      ),
+    );
+    const [, shareImage] = vi.mocked(generatePlayMetadata).mock.lastCall!;
+    expect(shareImage!.url).toMatch(
+      /^https:\/\/yolos\.net\/play\/music-personality\/opengraph-image\?v=[0-9a-f]{16}$/,
+    );
   });
 });
 

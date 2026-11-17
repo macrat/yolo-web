@@ -42,8 +42,6 @@ describe("quiz registry", () => {
           expect(quiz.meta.shortDescription).toBeTruthy();
           expect(quiz.meta.type).toMatch(/^(knowledge|personality)$/);
           expect(quiz.meta.questionCount).toBeGreaterThan(0);
-          expect(quiz.meta.icon).toBeTruthy();
-          expect(quiz.meta.accentColor).toBeTruthy();
           expect(quiz.meta.publishedAt).toBeTruthy();
         });
 
@@ -53,6 +51,13 @@ describe("quiz registry", () => {
 
         it("has at least one result", () => {
           expect(quiz.results.length).toBeGreaterThan(0);
+        });
+
+        it("results carry a color only when the result itself is a color", () => {
+          const isColorQuiz = slug === "traditional-color";
+          for (const result of quiz.results) {
+            expect(result.color !== undefined, result.id).toBe(isColorQuiz);
+          }
         });
 
         it("all result IDs are unique", () => {

@@ -1,49 +1,40 @@
+import type { Ref } from "react";
+import Button from "@/components/Button";
 import styles from "./GameControls.module.css";
 
 interface Props {
   onCheck: () => void;
   onShuffle: () => void;
   onDeselectAll: () => void;
-  disabled: boolean;
   canCheck: boolean;
+  /** チェックのボタン。4つ目の語を選んだとき、このボタンを画面に入れるのに使う。 */
+  checkRef?: Ref<HTMLButtonElement>;
 }
 
 /**
- * Game control buttons: shuffle, deselect all, and check.
+ * 語の格子の下に並べる操作。並べ替えと選び直しはプライマリでないボタン、選んだ4語の答え合わせは
+ * プライマリボタン（DESIGN.md §6）。
  */
 export default function GameControls({
   onCheck,
   onShuffle,
   onDeselectAll,
-  disabled,
   canCheck,
+  checkRef,
 }: Props) {
   return (
     <div className={styles.controls}>
-      <button
-        className={styles.secondaryButton}
-        onClick={onShuffle}
-        disabled={disabled}
-        type="button"
-      >
-        {"\u30B7\u30E3\u30C3\u30D5\u30EB"}
-      </button>
-      <button
-        className={styles.secondaryButton}
-        onClick={onDeselectAll}
-        disabled={disabled}
-        type="button"
-      >
-        {"\u9078\u629E\u89E3\u9664"}
-      </button>
-      <button
-        className={styles.primaryButton}
+      <Button onClick={onShuffle}>シャッフル</Button>
+      <Button onClick={onDeselectAll}>選択解除</Button>
+      <Button
+        ref={checkRef}
+        variant="primary"
         onClick={onCheck}
-        disabled={disabled || !canCheck}
-        type="button"
+        disabled={!canCheck}
+        disabledReason="言葉を4つ選ぶとチェックできます"
       >
-        {"\u30C1\u30A7\u30C3\u30AF"}
-      </button>
+        チェック
+      </Button>
     </div>
   );
 }

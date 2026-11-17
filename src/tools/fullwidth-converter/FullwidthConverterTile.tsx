@@ -3,8 +3,6 @@
 /**
  * FullwidthConverterTile — 全角半角変換の単一正典タイル
  *
- * cycle-227 T-3 で FullwidthConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。
@@ -18,28 +16,25 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   toHalfwidth / toFullwidth をユーザーが切り替えられる。
- * - `"toHalfwidth"`: 方向を toHalfwidth に固定し、SegmentedControl を非表示にする。
- * - `"toFullwidth"`: 方向を toFullwidth に固定し、SegmentedControl を非表示にする。
+ * - `"toHalfwidth"`: 方向を toHalfwidth に固定し、ラジオボタンの組を出さない。
+ * - `"toFullwidth"`: 方向を toFullwidth に固定し、ラジオボタンの組を出さない。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
  * - checkbox 3個は role=group + aria-label="変換対象" でグループ化
- * - 各 checkbox は useId ベースの id と htmlFor で label と正しく関連付け
+ * - 各 checkbox は useId ベースの id を持ち、ラベルを含む行（Checkbox）に包まれる
  */
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import Checkbox from "@/components/Checkbox";
+import CopyButton from "@/components/CopyButton";
 import { convert, type ConvertMode, type ConvertOptions } from "./logic";
 import styles from "./FullwidthConverterTile.module.css";
 
@@ -66,9 +61,9 @@ const OPTION_KEYS = ["alphanumeric", "katakana", "symbol"] as const;
 export interface FullwidthConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（toHalfwidth / toFullwidth をユーザーが切り替え）
-   * - "toHalfwidth": 方向を toHalfwidth に固定、方向トグル非表示
-   * - "toFullwidth": 方向を toFullwidth に固定、方向トグル非表示
+   * - "full": 方向のラジオボタンを出す（toHalfwidth / toFullwidth をユーザーが切り替え）
+   * - "toHalfwidth": 方向を toHalfwidth に固定、方向のラジオボタンを出さない
+   * - "toFullwidth": 方向を toFullwidth に固定、方向のラジオボタンを出さない
    */
   variant?: FullwidthConverterTileVariant;
   /** 初期入力値（デフォルト: ""） */
@@ -120,8 +115,6 @@ export default function FullwidthConverterTile({
     symbol: true,
   });
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
 
@@ -130,13 +123,13 @@ export default function FullwidthConverterTile({
     return convert(input, mode, options);
   }, [input, mode, options]);
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const statusSummary =
     output.length > 0 ? `変換しました（${output.length}文字）` : "";
 
   // ---------- ハンドラ ----------
   function handleModeChange(val: string): void {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(val as ConvertMode);
   }
 
@@ -148,23 +141,18 @@ export default function FullwidthConverterTile({
     setInput(e.target.value);
   }
 
-  async function handleCopy(): Promise<void> {
-    if (!output) return;
-    await copy(output);
-  }
-
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 方向トグル: variant=full のみ表示。toHalfwidth/toFullwidth は固定のため非表示。 */}
+      {/* 方向のラジオボタン: variant=full のみ表示。toHalfwidth/toFullwidth は固定のため非表示。 */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <SegmentedControl
+          <RadioGroup
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="変換モード"
+            legend="変換モード"
           />
         </div>
       )}
@@ -173,19 +161,13 @@ export default function FullwidthConverterTile({
       {/* role=group + aria-label でアクセシブルにグループ化 */}
       <div className={styles.optionsRow} role="group" aria-label="変換対象">
         {OPTION_KEYS.map((key) => (
-          <label
+          <Checkbox
             key={key}
-            className={styles.checkboxLabel}
-            htmlFor={checkboxIds[key]}
-          >
-            <input
-              id={checkboxIds[key]}
-              type="checkbox"
-              checked={options[key]}
-              onChange={() => handleOptionChange(key)}
-            />
-            {OPTION_LABELS[key]}
-          </label>
+            id={checkboxIds[key]}
+            label={OPTION_LABELS[key]}
+            checked={options[key]}
+            onChange={() => handleOptionChange(key)}
+          />
         ))}
       </div>
 
@@ -210,19 +192,15 @@ export default function FullwidthConverterTile({
           <label htmlFor={outputId} className={styles.fieldLabel}>
             変換結果
           </label>
-          {/* コピーボタン */}
-          <Button
-            variant="default"
-            size="small"
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="変換結果"
+            align="end"
             disabled={!output}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"

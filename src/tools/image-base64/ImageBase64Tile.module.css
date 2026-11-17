@@ -1,16 +1,11 @@
 /* ImageBase64Tile スタイル
- * cycle-228 T-26: ImageBase64Page.module.css をタイル向けに移植。
- * DESIGN トークン準拠（紙・墨・朱の新トークン。--rule-strong / --radius / --paper-2 / --ink-2 使用）
+ * トークン（--rule-strong / --radius / --paper-2 / --ink-2 使用）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* コントロール行: SegmentedControl */
+/* 方向のラジオボタンの組と、その下の欄のあいだをあける */
 .controls {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -31,7 +26,7 @@
 
 /* 画像プレビュー
  * border-radius は var(--radius)（非インタラクティブ要素）
- * box-shadow は使わない（DESIGN.md §4） */
+ * box-shadow は使わない（DESIGN.md §5） */
 .preview {
   max-width: 100%;
   max-height: 300px;
@@ -59,9 +54,11 @@
   gap: 0.4rem;
 }
 
-/* 出力グループヘッダー（ラベル + コピーボタン） */
+/* ラベルとコピーのボタンを1行に並べる。1行に入らないときはボタンを次の行の右端に回し、ラベルの幅を
+ * 削らない（§6）。 */
 .outputHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
@@ -79,7 +76,7 @@
   display: flex;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ）
+/* ライブリージョン（実テキストノードのサマリ）
  * 視覚的には非表示だが SR には読み上げられる。 */
 .srOnly {
   position: absolute;

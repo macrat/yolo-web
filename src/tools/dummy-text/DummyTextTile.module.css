@@ -1,8 +1,4 @@
 /* DummyTextTile スタイル
- * cycle-228 T-8: DummyTextPage.module.css をタイル向けに移植。
- * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
- * DESIGN.md 準拠（補足文字は --ink-2・font-weight 700 禁止・
- * 角丸 0（--radius）基調・入力欄は共通 Input が --radius-sm を提供）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -30,10 +26,7 @@
   color: var(--ink-2);
 }
 
-/* number input の幅のみを指定する。
-   border/padding/min-height/color/background/border-radius は共通 Input が提供する。
-   :focus-visible も共通 Input.module.css が担う（重複定義しない）。
-   親 .numberField が width:fit-content のため Input の width:100% は親幅に収まる。 */
+/* number input の幅のみを指定する。枠・余白・フォーカスは共通の入力欄（globals.css の [data-field]）が持つ。 */
 .numberInput {
   width: 5rem;
 }
@@ -55,8 +48,11 @@
   gap: 0.5rem;
 }
 
+/* ラベルとコピーのボタンを1行に並べる。1行に入らないときはボタンを次の行の右端に回し、ラベルの幅を
+ * 削らない（§6）。 */
 .outputHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
@@ -66,14 +62,14 @@
   color: var(--ink-2);
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+/* ライブリージョン（実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
   color: var(--ink-2);
   min-height: 1.2em;
 }
 
-/* 言語 SegmentedControl のラッパー（variant="full" のみ表示） */
+/* 言語のラジオボタンの組と、その下の設定のあいだをあける */
 .languageControl {
   margin-bottom: 1rem;
 }

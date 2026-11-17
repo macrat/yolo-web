@@ -1,0 +1,15 @@
+.howToPlay {
+  max-width: var(--measure);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding-block: var(--space-8);
+}
+
+.note {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}

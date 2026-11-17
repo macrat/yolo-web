@@ -1,44 +1,26 @@
 /*
- * 記事タグ（値札）— DESIGN.md フェーズ R「店構え」へ変換。
- * §4「値札は罫囲みの静かな器」に従い、背景ベタ塗り・ピル角丸を撤去し
- * Nefuda と同じ視覚言語（罫囲み・--ink-2・角丸 2px）へ揃えた。
- * 全トークン経由・直書きなし（§10）。
+ * 記事のタグ。押すとタグのページが開くリンクなので、下線で示す（§6）。
  */
+
+/* タグは縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。間隔を箱の余白と同じ幅にすると、
+ * 前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。 */
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: var(--text-box-pad);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.tag {
-}
-
+/* タップの標的は 44px 以上（§6）。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box
+ * （globals.css）が持ち、hover の線とフォーカスの二重リングはその箱の内側に出る。下線と訪問済みの色は
+ * globals.css の a の既定に従う。 */
 .tagLink {
   display: inline-flex;
   align-items: center;
-  /* タップターゲット 44px（§10・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
+  min-width: 44px;
   min-height: 44px;
-  color: var(--ink-2);
-  font-family: var(--font-gothic);
-  padding: 0.15em 0.6em;
-  font-size: 0.8125rem; /* 13px 補助情報 */
-  text-decoration: none;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.tagLink:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.tagLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
 }

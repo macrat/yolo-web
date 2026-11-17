@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "面積 変換",
     "速度 変換",
   ],
-  category: "generator",
+  category: "number",
   relatedSlugs: [
     "number-base-converter",
     "date-calculator",

@@ -1,36 +1,38 @@
 /**
- * SqlFormatterTile のユニットテスト（TDD: 実装前に書く）
+ * SqlFormatterTile のユニットテスト
  *
  * 検証観点:
  * - V-1: variant=full でのレンダリング（全機能が表示される）
  * - V-2: 整形ボタンで出力が更新される
  * - V-3: 圧縮ボタンで出力が更新される
- * - V-4: キーワード大文字トグルスイッチ
+ * - V-4: キーワード大文字のチェックボックス
  * - V-5: インデント選択が整形に反映される
  * - V-6: ARIA（role="status" aria-live="polite"）
  * - V-7: コピーボタンの有効/無効
  * - V-8: id インスタンス一意性（複数インスタンス同居）
- * - V-9: CSS トークン検証（旧 --color-* / font-weight: 700 禁止）
+ * - V-9: CSS トークン検証（--color-* / font-weight: 700 禁止）
  * - V-10: エラー表示（日本語化）
+ * - V-11: variant 未指定のとき full として描画される
  */
 
-import { describe, it, test, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import SqlFormatterTile from "../SqlFormatterTile";
 
-// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
-const mockHook = vi.hoisted(() => ({
-  copy: vi.fn(),
-  copiedKey: null as string | number | boolean | null,
-}));
+// クリップボードの API を持つ端末にする。
+const writeText = vi.fn();
 
-// useCopyToClipboard をモックする（clipboard API 不在環境）
-vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => mockHook,
-  COPIED_LABEL: "コピーしました",
-}));
+beforeEach(() => {
+  vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+  writeText.mockReset();
+  writeText.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("V-1: variant=full のレンダリング", () => {
   it("入力欄と出力欄が存在する", () => {
@@ -50,16 +52,18 @@ describe("V-1: variant=full のレンダリング", () => {
     expect(screen.getByLabelText("インデント")).toBeInTheDocument();
   });
 
-  it("キーワード大文字トグルスイッチが表示される", () => {
+  it("キーワード大文字のチェックボックスが表示される", () => {
     render(<SqlFormatterTile variant="full" />);
     expect(
-      screen.getByRole("switch", { name: "キーワード大文字" }),
+      screen.getByRole("checkbox", { name: "キーワード大文字" }),
     ).toBeInTheDocument();
   });
 
   it("コピーボタンが表示される", () => {
     render(<SqlFormatterTile variant="full" />);
-    expect(screen.getByRole("button", { name: "コピー" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "出力をコピー" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -118,7 +122,7 @@ describe("V-3: 圧縮ボタンの動作", () => {
   });
 });
 
-describe("V-4: キーワード大文字トグル", () => {
+describe("V-4: キーワード大文字のチェックボックス", () => {
   it("デフォルト（ON）でキーワードが大文字になる", () => {
     render(<SqlFormatterTile variant="full" />);
     const input = screen.getByLabelText("SQL入力");
@@ -131,9 +135,9 @@ describe("V-4: キーワード大文字トグル", () => {
     expect(output.value).toContain("FROM");
   });
 
-  it("トグルをOFFにするとキーワードが小文字になる", () => {
+  it("チェックを外すとキーワードが小文字になる", () => {
     render(<SqlFormatterTile variant="full" />);
-    const toggle = screen.getByRole("switch", { name: "キーワード大文字" });
+    const toggle = screen.getByRole("checkbox", { name: "キーワード大文字" });
     fireEvent.click(toggle);
     const input = screen.getByLabelText("SQL入力");
     fireEvent.change(input, {
@@ -176,14 +180,9 @@ describe("V-6: ARIA アクセシビリティ", () => {
 });
 
 describe("V-7: コピーボタン", () => {
-  beforeEach(() => {
-    mockHook.copiedKey = null;
-    mockHook.copy = vi.fn();
-  });
-
   it("出力が空のときコピーボタンが disabled", () => {
     render(<SqlFormatterTile variant="full" />);
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).toBeDisabled();
   });
 
@@ -194,21 +193,21 @@ describe("V-7: コピーボタン", () => {
       target: { value: "select id from users" },
     });
     fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    const copyButton = screen.getByRole("button", { name: "コピー" });
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
     expect(copyButton).not.toBeDisabled();
   });
 
-  it("コピー済み状態では COPIED_LABEL が表示される", () => {
-    mockHook.copiedKey = true;
+  it("押すと結果を写し、ボタンが「コピー済み」になる", async () => {
     render(<SqlFormatterTile variant="full" />);
     const input = screen.getByLabelText("SQL入力");
     fireEvent.change(input, {
       target: { value: "select id from users" },
     });
     fireEvent.click(screen.getByRole("button", { name: "整形" }));
-    expect(
-      screen.getByRole("button", { name: "コピーしました" }),
-    ).toBeInTheDocument();
+    const copyButton = screen.getByRole("button", { name: "出力をコピー" });
+    fireEvent.click(copyButton);
+    await waitFor(() => expect(copyButton).toHaveTextContent("コピー済み"));
+    expect(writeText).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -234,13 +233,13 @@ describe("V-8: id インスタンス一意性", () => {
 });
 
 describe("V-9: CSS トークン検証", () => {
-  test("CSS に旧 --color-* トークン・--accent 直塗り・font-weight 700 が含まれない", () => {
+  test("CSS に --color-* トークン・--accent 直塗り・font-weight 700 が含まれない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/sql-formatter/SqlFormatterTile.module.css",
     );
     const css = readFileSync(cssPath, "utf-8");
-    // 旧トークン --color-* が存在しないこと
+    // --color-* トークンを参照しないこと
     expect(css).not.toMatch(/var\(--color-/);
     // background/color に --accent が直接使われていないこと
     const accentDirectUse = css.match(

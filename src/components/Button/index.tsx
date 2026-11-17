@@ -1,57 +1,96 @@
-import type { ComponentPropsWithoutRef } from "react";
+import { useId, type ComponentPropsWithRef, type ReactNode } from "react";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./Button.module.css";
 
 /**
- * ボタンのバリアント（DESIGN.md §2「紙・墨・朱」）:
- * - "primary": 主ボタン。`--accent`（朱）地×`--paper`（紙）文字。アクションの主要な選択肢に使う。
- * - "default": 副ボタン。地は`--paper`のまま罫（`--rule`）で輪郭を示す線画。補助的なアクションに使う。
+ * ボタンの種類（DESIGN.md §6）。どちらも、押すとそのページで何かが実行されるものに使う。
+ * - "primary": プライマリボタン。反転で示す。1ページに1つまで。
+ * - "default": プライマリでないボタン。下線で示す。
+ * その場で状態を変えるもの（選ぶ・開閉する）は、ボタンではなくラジオボタン・チェックボックス・
+ * アコーディオンで組む。
  */
 type ButtonVariant = "primary" | "default";
-type ButtonSize = "default" | "small";
 
 interface ButtonOwnProps {
-  /** ボタンの見た目バリアント（デフォルト: "default"） */
+  /** ボタンの種類（既定: "default"） */
   variant?: ButtonVariant;
-  /** ボタンのサイズ（デフォルト: "default"） */
-  size?: ButtonSize;
-  /** ボタンに表示する内容 */
-  children: React.ReactNode;
+  /**
+   * 無効のときに、なぜ押せないかを言う文（§6 無効）。disabled のときだけ、ボタンの横に出して
+   * ボタンの説明として読ませる。
+   */
+  disabledReason?: string;
 }
 
-type ButtonProps = ButtonOwnProps &
-  Omit<ComponentPropsWithoutRef<"button">, keyof ButtonOwnProps>;
+/**
+ * ボタンの面。面の字は見出しと同じく文節で折り、語の中で折らない（PhrasedText）。phrases と children は
+ * どちらか一方だけを渡す。
+ * - phrases: 2文節以上の面。書き手が文節で分けた区切りの並び（「画像を」「保存」）を渡し、そのあいだで折る。
+ *   並びは followsPhraseRules（@/lib/phrase-breaks）と同じ禁則を満たす。
+ * - children: 1文節の面（「計算」「{n}件を表示」）は字で渡し、1つの文節として組む。要素を含む面は、その要素が
+ *   折り方を持つ（面の字を PhrasedText の span で組む）。
+ */
+type ButtonFace =
+  | { phrases: readonly string[]; children?: never }
+  | { children: ReactNode; phrases?: never };
 
-/** variant → CSS クラス のマッピング */
+type ButtonProps = ButtonOwnProps &
+  ButtonFace &
+  Omit<ComponentPropsWithRef<"button">, keyof ButtonOwnProps | "children">;
+
+/** children の面が字だけなら、その字を1続きの文にしたもの。JSX で字と値を並べた面（配列）も1つの文にする。 */
+function faceText(children: ReactNode): string | undefined {
+  if (typeof children === "string" || typeof children === "number") {
+    return String(children);
+  }
+  if (
+    Array.isArray(children) &&
+    children.every(
+      (child) => typeof child === "string" || typeof child === "number",
+    )
+  ) {
+    return children.join("");
+  }
+  return undefined;
+}
+
 const variantClassMap: Record<ButtonVariant, string> = {
-  default: styles.variantDefault,
+  default: `${styles.variantDefault} ${styles.underline}`,
   primary: styles.variantPrimary,
 };
 
-/** size → CSS クラス のマッピング */
-const sizeClassMap: Record<ButtonSize, string | undefined> = {
-  default: undefined, // ベーススタイル (.button) で定義済み
-  small: styles.sizeSmall,
-};
+/**
+ * ボタンの面の箱のクラス。押すとボタンから字に替わるもの（答えたあとの問の選択肢）は、字をこの箱に置き、押す前の
+ * ボタンと同じ位置・幅・行間・余白で組む（DESIGN.md §5・§6）。箱は `data-text-box="inline"` と組で使う。
+ */
+export const buttonFaceBoxClassName = styles.faceBox;
+
+/** プライマリでないボタンの下線のクラス。押したあとも下線を持ったままでいる字（§6 の実行のさいちゅう）が使う。 */
+export const buttonUnderlineClassName = styles.underline;
 
 /**
- * Button — クリック操作のボタン。
- *
- * DESIGN.md §4: 角丸は var(--radius)（0px 基調）・box-shadow は使わない（詳細は
- * Button.module.css 冒頭コメント参照）。
+ * ボタン（DESIGN.md §6）。見え方は Button.module.css が持つ。ref は button 要素に渡るので、呼び出し側が
+ * フォーカスを移せる。
  */
 function Button({
   variant = "default",
-  size = "default",
+  disabledReason,
+  phrases,
   children,
   className,
   disabled,
   onClick,
+  "aria-describedby": ariaDescribedBy,
   ...rest
 }: ButtonProps) {
+  const reasonId = useId();
+  const text = faceText(children);
+  const facePhrases = phrases ?? (text === undefined ? undefined : [text]);
+  const showReason = Boolean(disabled && disabledReason);
+
   const classes = [
+    styles.faceBox,
     styles.button,
     variantClassMap[variant],
-    sizeClassMap[size],
     className,
   ]
     .filter(Boolean)
@@ -68,19 +107,46 @@ function Button({
     onClick?.(e);
   }
 
-  return (
+  const describedBy =
+    [ariaDescribedBy, showReason ? reasonId : undefined]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
+  const button = (
     <button
       type="button"
       className={classes}
       disabled={disabled}
       onClick={handleClick}
-      /* data 属性でバリアント/サイズを公開し、テストから検証可能にする */
+      aria-describedby={describedBy}
+      /* data 属性で種類を公開し、テストから検証可能にする */
       data-variant={variant}
-      data-size={size}
+      /* プライマリでないボタンは縁が見えないので、字を並びの左端に置く箱で組む（§5）。 */
+      data-text-box={variant === "default" ? "inline" : undefined}
+      /* プライマリボタンは反転の地で示し、hover の線とフォーカスのリングもその地に合わせる（§6）。 */
+      data-inverted={variant === "primary" ? "" : undefined}
       {...rest}
     >
-      {children}
+      {facePhrases === undefined ? (
+        children
+      ) : (
+        <PhrasedText as="span" phrases={facePhrases} />
+      )}
     </button>
+  );
+
+  if (disabledReason === undefined) return button;
+
+  // 無効と有効が切り替わってもボタンの要素を作り直さないよう、理由を持つボタンはいつも包む。
+  return (
+    <span className={styles.withReason}>
+      {button}
+      {showReason && (
+        <span id={reasonId} className={styles.reason}>
+          {disabledReason}
+        </span>
+      )}
+    </span>
   );
 }
 

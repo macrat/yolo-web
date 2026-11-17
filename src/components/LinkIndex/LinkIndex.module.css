@@ -1,0 +1,59 @@
+/* 索引（DESIGN.md §7）。語は縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。
+ * 間隔を箱の余白と同じ幅にすると、前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。 */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--text-box-pad);
+}
+
+/* 下線と訪問済みの色は globals.css の a の既定に従う（§6）。タップの標的は 44px 以上で、単字のように
+ * 44px に届かない箱は、字を左に置いたまま右へ広げる（§5）。字の左右の余白と、字を並びの左端に置く
+ * 張り出しは data-text-box（globals.css）が持つ。 */
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* 字の形を見て選ぶ単字は、リンクの本文の書体のまま、§4 の段の2段目の大きさで組む（§7）。行の高さを字の
+ * 大きさにし、既定の文字サイズでは押せる範囲の 44px に収まる。 */
+.singleCharacter {
+  font-size: var(--text-step-2);
+  line-height: 1;
+}
+
+/* 現在地は太字で示し、押しても何も起きないので下線を持たない（§6）。 */
+.link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 区切りの見出しはセクションの中の小見出しで、大きさは §4 の段に従い、上の細い罫線で前の区切りと分ける（§5）。
+ * 区切りを持つ索引はいつも索引の見出しかアコーディオンのラベルのすぐ下にあり、最初の区切りの前には分ける
+ * 内容が無いので、線は2つ目の区切りから引く（§7）。 */
+.group + .group {
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.groupHeading {
+  margin: 0 0 var(--space-8);
+  font-size: var(--text-heading-sub);
+}
+
+/* 単字の索引では、小見出しの段が字の大きさを下回る幅でも、区切りの見出しを字と同じ大きさにし、見出しが
+ * その下に並ぶ字に埋もれないようにする（§7）。 */
+.singleCharacterGroups .groupHeading {
+  font-size: max(var(--text-heading-sub), var(--text-step-2));
+}

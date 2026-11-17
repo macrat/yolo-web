@@ -3,7 +3,7 @@ import { getTiedTypeIds, determineResult } from "../scoring";
 import type { QuizDefinition, QuizAnswer, QuizQuestion } from "../types";
 
 /**
- * getTiedTypeIds（P2b・cycle-303）の単体テスト。
+ * getTiedTypeIds の単体テスト。
  *
  * 最高得点を分け合う全 typeId を quiz.results の配列順で返す純関数。
  * - 単独勝者 = 1 件
@@ -57,8 +57,6 @@ const personalityQuiz: QuizDefinition = {
     type: "personality",
     category: "personality",
     questionCount: 3,
-    icon: "S",
-    accentColor: "#000",
     keywords: [],
     publishedAt: "2026-01-01",
   },

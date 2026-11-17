@@ -3,7 +3,7 @@
 import { useState, useCallback, useId, useMemo } from "react";
 import Panel from "@/components/Panel";
 import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import {
   percentOf,
   whatPercent,
@@ -131,11 +131,11 @@ export default function PercentCalculatorTile({
   return (
     <Panel as={as} className={className}>
       {/* 計算モード切替 */}
-      <SegmentedControl
+      <RadioGroup
         options={MODE_OPTIONS}
         value={mode}
         onChange={handleModeChange}
-        aria-label="計算パターン"
+        legend="計算パターン"
       />
 
       {/* モードの説明 */}
@@ -176,11 +176,11 @@ export default function PercentCalculatorTile({
         {/* 増減モードの方向切替 */}
         {mode === "adjustByPercent" && (
           <div className={styles.directionControl}>
-            <SegmentedControl
+            <RadioGroup
               options={DIRECTION_OPTIONS}
               value={direction}
               onChange={(val) => setDirection(val as AdjustDirection)}
-              aria-label="増減の方向"
+              legend="増減の方向"
             />
           </div>
         )}

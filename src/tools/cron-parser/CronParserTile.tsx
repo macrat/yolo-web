@@ -3,8 +3,6 @@
 /**
  * CronParserTile — cron-parser の単一正典タイル
  *
- * cycle-228 T-28: CronParserPage.tsx（571行）を Panel ルートのタイルへ移植。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -18,9 +16,9 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl でモード切替（parser/builder）が可能。
- * - `"parser"`: 解析モードに固定。SegmentedControl 非表示。
- * - `"builder"`: ビルダーモードに固定。SegmentedControl 非表示。
+ * - `"full"` (デフォルト): ラジオボタンの組でモード切替（parser/builder）が可能。
+ * - `"parser"`: 解析モードに固定。ラジオボタンの組を出さない。
+ * - `"builder"`: ビルダーモードに固定。ラジオボタンの組を出さない。
  *
  * ## 機能（feature-preserving）
  *
@@ -29,36 +27,29 @@
  *
  * ## アクセシビリティ
  *
- * - C-2: SegmentedControl に aria-label="モード切替"
- * - C-3: role="status" aria-live="polite" のライブリージョン+実テキストサマリ
- * - A-4: エラーは ErrorMessage コンポーネント+日本語文言
- * - A-6: 全 DOM id と htmlFor は useId ベースで一意化
+ * - モードのラジオボタンの組は、見える見出し（legend）を名前として読ませる
+ * - role="status" aria-live="polite" のライブリージョン+実テキストサマリ
+ * - エラーは ErrorMessage コンポーネント+日本語文言
+ * - 全 DOM id と htmlFor は useId ベースで一意化
  * - タッチターゲット: Button/Input min-height 44px（共通部品準拠）
  *
  * ## 共通部品
  *
  * - Panel: タイルのルート
- * - SegmentedControl: モード切替（full のみ）
+ * - RadioGroup: モード切替（full のみ）
  * - ErrorMessage: エラー表示
  * - Input: cron式入力・ビルダー各フィールド
- * - Button: 解析・プリセット・コピー
- * - useCopyToClipboard: ビルダー出力のコピー
- *
- * ## タイマー
- *
- * D-4: 直接 setTimeout/setInterval は使わない（useCopyToClipboard に委譲）。
+ * - Button: 解析・プリセット
+ * - CopyButton: ビルダーが生成した式のコピー
  */
 
 import { useId, useState, useCallback } from "react";
 import Panel from "@/components/Panel";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   parseCron,
   getNextExecutions,
@@ -79,9 +70,9 @@ export type CronParserTileVariant = "full" | "parser" | "builder";
 export interface CronParserTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl でモード切替可能
-   * - "parser": 解析モードに固定、SegmentedControl 非表示
-   * - "builder": ビルダーモードに固定、SegmentedControl 非表示
+   * - "full": ラジオボタンの組でモードを切り替える
+   * - "parser": 解析モードに固定、ラジオボタンの組を出さない
+   * - "builder": ビルダーモードに固定、ラジオボタンの組を出さない
    */
   variant?: CronParserTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -107,9 +98,7 @@ const PRESETS: Preset[] = [
   { label: "毎月1日", expression: "0 0 1 * *" },
 ];
 
-// SegmentedControl の options 型に合わせて { label: string; value: string }[] で宣言。
-// as const を使うと readonly リテラル型になり unknown 経由のキャストが必要になるため、
-// 型アノテーションで { label: string; value: string }[] を付与する（型安全性維持）。
+// RadioGroup の options に渡せるよう、readonly のリテラル型にせず { label: string; value: string }[] で宣言する。
 const MODE_OPTIONS: { label: string; value: string }[] = [
   { label: "解析", value: "parser" },
   { label: "ビルダー", value: "builder" },
@@ -120,7 +109,7 @@ const MODE_OPTIONS: { label: string; value: string }[] = [
 // =========================================================
 
 /**
- * 次回実行日時を JST（Asia/Tokyo）固定でフォーマットする（B-472 内包）。
+ * 次回実行日時を JST（Asia/Tokyo）固定でフォーマットする。
  *
  * ブラウザのローカル TZ によらず常に JST で表示するため、
  * Intl.DateTimeFormat に timeZone: "Asia/Tokyo" を明示する。
@@ -138,10 +127,10 @@ function formatDateJst(date: Date): string {
 }
 
 /**
- * parseCron が返すエラーメッセージを日本語に確認・整形し、修正ヒントを添える（A-4 + U-4 低指摘）。
+ * parseCron が返すエラーメッセージを日本語に確認・整形し、修正ヒントを添える。
  *
  * logic.ts の parseCron はすでに日本語エラーを返すが、
- * U-4 低指摘対応として「どうすればよいか」の範囲説明を追記する。
+ * 「どうすればよいか」が分かるよう各フィールドの範囲説明を添える。
  */
 function toJapaneseError(error: string | undefined): string {
   if (!error || error.trim() === "") {
@@ -186,8 +175,8 @@ export default function CronParserTile({
   const dayOfWeekId = `${uid}-day-of-week`;
 
   // ---------- variant から固定モードを決定 ----------
-  // "full" は SegmentedControl でユーザーが切り替え可能。
-  // "parser" / "builder" は固定（SegmentedControl 非表示）。
+  // "full" はラジオボタンの組で来訪者が切り替える。
+  // "parser" / "builder" は固定（ラジオボタンの組を出さない）。
   const fixedMode: TabMode | null =
     variant === "parser" ? "parser" : variant === "builder" ? "builder" : null;
 
@@ -204,11 +193,8 @@ export default function CronParserTile({
   > | null>(null);
   const [nextExecs, setNextExecs] = useState<Date[]>([]);
 
-  /** C-3 ライブリージョン用サマリテキスト */
+  /** ライブリージョン用サマリテキスト */
   const [liveSummary, setLiveSummary] = useState("");
-
-  /** ビルダー出力のコピー用フック（T-4b 更新: ビルダー生成式は持ち帰り対象） */
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // --- ビルダーモード ---
   const [bMinute, setBMinute] = useState("*");
@@ -255,7 +241,7 @@ export default function CronParserTile({
       setBDayOfMonth(fields[2]);
       setBMonth(fields[3]);
       setBDayOfWeek(fields[4]);
-      // C-3: ビルダーのプリセット選択時もライブリージョンを更新する
+      // ビルダーのプリセット選択時もライブリージョンを更新する
       const result = parseCron(expression);
       setLiveSummary(
         result.valid ? `ビルダー: ${result.description}` : "無効な式です",
@@ -264,7 +250,7 @@ export default function CronParserTile({
   }, []);
 
   // ---------- ビルダーモードフィールド変更ハンドラ ----------
-  // C-3: 出力変化をライブリージョンに反映
+  // 出力変化をライブリージョンに反映
   const handleBuilderFieldChange = useCallback(
     (
       setter: (v: string) => void,
@@ -310,7 +296,7 @@ export default function CronParserTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* C-3: role="status" aria-live="polite" で実テキストサマリを提供。
+      {/* role="status" aria-live="polite" で実テキストサマリを提供。
        * 解析モード・ビルダーモード両方での出力変化をスクリーンリーダーに通知する。 */}
       <div
         role="status"
@@ -321,19 +307,18 @@ export default function CronParserTile({
         {liveSummary}
       </div>
 
-      {/* モード切替（variant=full のみ表示・C-2: aria-label 付与）
-       * U-4 是正(a): モード切替時に liveSummary をリセットして stale 表示を防止する。
+      {/* モード切替（variant=full のみ表示）。
+       * モードを切り替えたら、前のモードの結果を読み上げないよう liveSummary を空にする。
        * fixedMode がある（parser/builder）場合は非表示。 */}
       {fixedMode === null && (
-        <SegmentedControl
+        <RadioGroup
           options={MODE_OPTIONS}
           value={dynamicMode}
           onChange={(v) => {
             setDynamicMode(v as TabMode);
-            // U-4 是正(a): モード切替で liveSummary をリセット（stale 表示防止）
             setLiveSummary("");
           }}
-          aria-label="モード切替"
+          legend="使う機能"
         />
       )}
 
@@ -344,7 +329,7 @@ export default function CronParserTile({
             <h2 className={styles.sectionTitle}>Cron式を入力</h2>
             <div className={styles.row}>
               <div className={styles.cronInputWrapper}>
-                {/* A-6: useId で一意化した id を label に結合 */}
+                {/* useId で一意化した id を label に結合 */}
                 <Input
                   id={cronInputId}
                   type="text"
@@ -358,18 +343,16 @@ export default function CronParserTile({
                   error={parseResult !== null && !parseResult.valid}
                 />
               </div>
-              {/* 共通 Button primary バリアント: var(--accent) 地に var(--paper) 文字で塗る（B-3準拠）。*/}
+              {/* 共通 Button primary バリアント: var(--accent) 地に var(--paper) 文字で塗る。*/}
               <Button variant="primary" onClick={handleParse}>
                 解析
               </Button>
             </div>
             <div className={styles.presetRow}>
               {PRESETS.map((preset) => (
-                /* 共通 Button default/small バリアント（B-3準拠）。*/
                 <Button
                   key={preset.expression}
                   variant="default"
-                  size="small"
                   onClick={() => handlePreset(preset.expression)}
                   aria-label={`プリセット: ${preset.label}`}
                 >
@@ -379,7 +362,7 @@ export default function CronParserTile({
             </div>
           </section>
 
-          {/* エラー表示（A-4: ErrorMessage 使用・message は日本語） */}
+          {/* エラー表示（ErrorMessage 使用・message は日本語） */}
           {parseResult && !parseResult.valid && (
             <ErrorMessage message={toJapaneseError(parseResult.error)} />
           )}
@@ -442,7 +425,6 @@ export default function CronParserTile({
                 <Button
                   key={preset.expression}
                   variant="default"
-                  size="small"
                   onClick={() => handleBuilderPreset(preset.expression)}
                   aria-label={`プリセット: ${preset.label}`}
                 >
@@ -451,7 +433,7 @@ export default function CronParserTile({
               ))}
             </div>
             <div className={styles.fieldGrid}>
-              {/* 分フィールド（A-6: useId ベース id）*/}
+              {/* 分フィールド（useId ベース id）*/}
               <div>
                 <label htmlFor={minuteId} className={styles.fieldLabel}>
                   分 (0-59){" "}
@@ -565,9 +547,7 @@ export default function CronParserTile({
           {/* 生成されたCron式 */}
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>生成されたCron式</h2>
-            {/* A-6: コピーボタン（T-4b 更新方針: ビルダー生成式は持ち帰り対象）
-             * useCopyToClipboard フック + COPIED_LABEL で統一実装。
-             * 生成式が無効（バリデーション失敗）のときはコピーボタンを disabled にする（E-7）。*/}
+            {/* 生成式が無効のあいだは、写すものが無いのでコピーを押せない。 */}
             <div className={styles.builtExpressionRow}>
               <code
                 className={styles.builtExpression}
@@ -575,15 +555,12 @@ export default function CronParserTile({
               >
                 {builtExpression}
               </code>
-              {/* aria-label をコピー状態に合わせて動的に変える（スクリーンリーダーに正確な状態を伝える）。*/}
-              <Button
-                variant="default"
-                onClick={() => copy(builtExpression)}
+              <CopyButton
+                text={builtExpression}
+                target="生成されたCron式"
+                align="end"
                 disabled={!builtResult.valid}
-                aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-              >
-                {copiedKey ? COPIED_LABEL : "コピー"}
-              </Button>
+              />
             </div>
             {/* 生成式の説明 */}
             {builtResult.valid && (
@@ -591,13 +568,13 @@ export default function CronParserTile({
                 {builtResult.description}
               </div>
             )}
-            {/* 生成式のエラー（A-4: ErrorMessage 使用・文言は日本語） */}
+            {/* 生成式のエラー（ErrorMessage 使用・文言は日本語） */}
             {!builtResult.valid && builtResult.error && (
               <ErrorMessage message={toJapaneseError(builtResult.error)} />
             )}
           </section>
 
-          {/* U-4 低指摘: ビルダーにも次回実行予定を表示する（JST固定表示）
+          {/* ビルダーにも次回実行予定を表示する（JST固定表示）
            * 解析モードと同様に、有効な式の場合のみ次回実行を表示する。*/}
           {builtResult.valid &&
             (() => {

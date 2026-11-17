@@ -3,27 +3,25 @@
 /**
  * DummyTextTile — ダミーテキスト生成の単一正典タイル
  *
- * cycle-228 T-8 で DummyTextPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
  * - **1ツール n タイル = variant**: full / 2固定言語 は同一コンポーネントの
  *   設定差で表現。別実装を作らない（分裂ゼロ）。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: generateText が唯一のロジック源（再実装・改変禁止）。
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 言語 SegmentedControl を表示し、Lorem/日本語をユーザーが切り替えられる。
- * - `"lorem"`: 言語を Lorem Ipsum に固定し、SegmentedControl を非表示にする。
- * - `"japanese"`: 言語を日本語に固定し、SegmentedControl を非表示にする。
+ * - `"full"` (デフォルト): 言語のラジオボタンの組を出し、Lorem/日本語をユーザーが切り替えられる。
+ * - `"lorem"`: 言語を Lorem Ipsum に固定し、ラジオボタンの組を出さない。
+ * - `"japanese"`: 言語を日本語に固定し、ラジオボタンの組を出さない。
  *
- * 固定 variant でも段落数・文数コントロール・コピーボタンは維持（G-3 feature-preserving）。
+ * 固定 variant でも段落数・文数コントロール・コピーボタンは維持する。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -32,14 +30,10 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import Input from "@/components/Input";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   generateText,
   countGeneratedWords,
@@ -51,7 +45,7 @@ import styles from "./DummyTextTile.module.css";
 /** variant prop: 表示バリエーションの設定差。別実装ではない。 */
 export type DummyTextTileVariant = "full" | "lorem" | "japanese";
 
-/** 言語選択の options 配列（C-5: value は options 内の値であること） */
+/** 言語選択の options 配列（value は options 内の値であること） */
 const LANGUAGE_OPTIONS: { label: string; value: TextLanguage }[] = [
   { label: "Lorem Ipsum", value: "lorem" },
   { label: "日本語", value: "japanese" },
@@ -60,9 +54,9 @@ const LANGUAGE_OPTIONS: { label: string; value: TextLanguage }[] = [
 export interface DummyTextTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 言語 SegmentedControl 表示（ユーザーが Lorem/日本語を切り替え）
-   * - "lorem": 言語を Lorem Ipsum に固定、SegmentedControl 非表示
-   * - "japanese": 言語を日本語に固定、SegmentedControl 非表示
+   * - "full": 言語のラジオボタンの組を出す（ユーザーが Lorem/日本語を切り替え）
+   * - "lorem": 言語を Lorem Ipsum に固定、ラジオボタンの組を出さない
+   * - "japanese": 言語を日本語に固定、ラジオボタンの組を出さない
    */
   variant?: DummyTextTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -94,8 +88,6 @@ export default function DummyTextTile({
   const [paragraphs, setParagraphs] = useState(3);
   const [sentencesPerParagraph, setSentencesPerParagraph] = useState(5);
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使う言語: fixed があればそれを使い、なければ state を使う
   const language = fixedLanguage ?? dynamicLanguage;
 
@@ -109,8 +101,8 @@ export default function DummyTextTile({
   const wordCount = useMemo(() => countGeneratedWords(output), [output]);
   const charCount = useMemo(() => countGeneratedChars(output), [output]);
 
-  // C-3: スクリーンリーダーへ通知する統計サマリ（実テキストノード）
-  // 日本語モードでは文字数のみ（文数は pool[0] の2文問題で入力値と一致せず廃止）
+  // スクリーンリーダーへ通知する統計サマリ（実テキストノード）
+  // 日本語モードでは文字数のみ（文の素材 pool[0] が2文を含み、数えた文数が入力の文数と合わないため文数は出さない）
   // Lorem モードでは「単語数」を表示（英語はスペース区切りで単語数が有意味）
   const statusSummary =
     language === "japanese"
@@ -119,7 +111,7 @@ export default function DummyTextTile({
 
   // ---------- ハンドラ ----------
   function handleLanguageChange(value: string): void {
-    // fixedLanguage がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedLanguage がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicLanguage(value as TextLanguage);
   }
 
@@ -139,29 +131,23 @@ export default function DummyTextTile({
     }
   }
 
-  async function handleCopy(): Promise<void> {
-    if (!output) return;
-    await copy(output);
-  }
-
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 言語切り替え: variant=full のみ SegmentedControl を表示。固定 variant は非表示。
-          C-2: aria-label="テキスト言語" でアクセシブル名を付与（html-entity 正典と同じパターン）。 */}
+      {/* 言語の切り替え: variant=full のみ出す。固定 variant は言語が決まっているので出さない。 */}
       {fixedLanguage === null && (
         <div className={styles.languageControl}>
-          <SegmentedControl
+          <RadioGroup
             options={LANGUAGE_OPTIONS}
             value={dynamicLanguage}
             onChange={handleLanguageChange}
-            aria-label="テキスト言語"
+            legend="文章の言語"
           />
         </div>
       )}
 
-      {/* 設定行: 段落数・文数（固定 variant でも維持: G-3 feature-preserving） */}
+      {/* 設定行: 段落数・文数（固定 variant でも維持） */}
       <div className={styles.settingsRow}>
         <div className={styles.numberField}>
           <label htmlFor={paragraphsId} className={styles.numberLabel}>
@@ -197,7 +183,7 @@ export default function DummyTextTile({
       </div>
 
       {/* 統計バー（段落数・文字数・単語数）
-          日本語モードでは文字数のみを表示する（文数は廃止: pool[0]の2文問題）。
+          日本語モードでは文字数のみを表示する（文の素材 pool[0] が2文を含み、文数が入力と合わないため）。
           Lorem モードでは単語数を表示（英語はスペース区切りで有意味）。 */}
       <div className={styles.statsBar} aria-hidden="true">
         <span>{paragraphs}段落</span>
@@ -213,18 +199,15 @@ export default function DummyTextTile({
           <label htmlFor={outputId} className={styles.outputLabel}>
             生成結果
           </label>
-          {/* T-4b: コピーボタンあり確定。出力が空のとき disabled（通常は空にならない） */}
-          <Button
-            size="small"
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="生成結果"
+            align="end"
             disabled={!output}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"
@@ -235,7 +218,7 @@ export default function DummyTextTile({
           {statusSummary}
         </div>
 
-        {/* A-1: Textarea コンポーネント使用（readOnly 出力欄） */}
+        {/* Textarea コンポーネント使用（readOnly 出力欄） */}
         <Textarea
           id={outputId}
           aria-label="生成結果"

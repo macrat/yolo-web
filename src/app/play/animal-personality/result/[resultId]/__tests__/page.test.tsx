@@ -15,7 +15,7 @@ vi.mock("@/components/Breadcrumb", () => ({
 }));
 
 // Mock ShareButtons
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
+vi.mock("@/components/ShareButtons", () => ({
   default: () => <div data-testid="share-buttons" />,
 }));
 
@@ -29,22 +29,33 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// Mock DescriptionExpander
-vi.mock("@/app/play/[slug]/result/[resultId]/DescriptionExpander", () => ({
-  default: ({ description }: { description: string }) => (
-    <p data-testid="description-expander">{description}</p>
-  ),
-}));
-
 // Mock CompatibilityDisplay
-vi.mock("@/app/play/[slug]/result/[resultId]/CompatibilityDisplay", () => ({
+vi.mock("@/play/quiz/_components/CompatibilityDisplay", () => ({
   default: () => <div data-testid="compatibility-display" />,
 }));
 
-// Mock ResultPageShell: childrenを透過的にレンダリングするmock
+// ResultPageShell は、ページが渡した値（添えた段落・誘い・説明・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="result-page-shell">{children}</div>
+  default: ({
+    quiz,
+    lead,
+    description,
+    ctaText,
+    children,
+  }: {
+    quiz: { meta: { questionCount: number } };
+    lead?: string;
+    description?: string;
+    ctaText: string;
+    children: React.ReactNode;
+  }) => (
+    <div data-testid="result-page-shell">
+      {lead && <p>{lead}</p>}
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {description && <p>{description}</p>}
+      {children}
+    </div>
   ),
 }));
 
@@ -64,15 +75,13 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
       shortDescription: "日本にしかいない動物12タイプで性格診断",
       type: "personality",
       questionCount: 10,
-      accentColor: "#16a34a",
       category: "personality",
     },
     results: [
       {
         id: "nihon-zaru",
-        title: "ニホンザル -- 温泉を発明した革命児",
+        title: "ニホンザル——温泉を発明した革命児",
         description: "ニホンザルの説明テキスト。",
-        icon: "🐒",
         detailedContent: {
           variant: "animal-personality" as const,
           catchphrase: "テストキャッチコピー",
@@ -89,9 +98,8 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
       },
       {
         id: "hondo-tanuki",
-        title: "ホンドタヌキ -- 化かすどころか化かされる愛されキャラ",
+        title: "ホンドタヌキ——化かすどころか化かされる愛されキャラ",
         description: "ホンドタヌキの説明テキスト。",
-        icon: "🦡",
         detailedContent: {
           variant: "animal-personality" as const,
           catchphrase: "タヌキキャッチコピー",
@@ -135,8 +143,8 @@ describe("AnimalPersonalityResultPage catchphrase", () => {
   });
 });
 
-describe("AnimalPersonalityResultPage CTA1", () => {
-  it("最初のCTAボタンが表示されること", async () => {
+describe("AnimalPersonalityResultPage 最初の誘い", () => {
+  it("最初の誘いのボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "nihon-zaru" });
     const page = await AnimalPersonalityResultPage({ params });
     render(page);
@@ -188,28 +196,12 @@ describe("AnimalPersonalityResultPage todayAction", () => {
   });
 });
 
-describe("AnimalPersonalityResultPage 全タイプ一覧", () => {
-  it("全タイプが一覧表示されること", async () => {
+describe("AnimalPersonalityResultPage 読み終えた人への2つ目の誘い", () => {
+  it("2つ目の誘いのリンクが表示されること", async () => {
     const params = Promise.resolve({ resultId: "nihon-zaru" });
     const page = await AnimalPersonalityResultPage({ params });
     render(page);
 
-    expect(
-      screen.getByText("ニホンザル -- 温泉を発明した革命児"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("ホンドタヌキ -- 化かすどころか化かされる愛されキャラ"),
-    ).toBeInTheDocument();
-  });
-});
-
-describe("AnimalPersonalityResultPage CTA2", () => {
-  it("CTA2テキストリンクが表示されること", async () => {
-    const params = Promise.resolve({ resultId: "nihon-zaru" });
-    const page = await AnimalPersonalityResultPage({ params });
-    render(page);
-
-    // CTA2はテキストリンク形式
     const links = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(links.length).toBeGreaterThanOrEqual(1);
   });

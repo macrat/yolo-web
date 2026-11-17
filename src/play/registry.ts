@@ -16,8 +16,6 @@ export function gameMetaToPlayContentMeta(gameMeta: GameMeta): PlayContentMeta {
     title: gameMeta.title,
     description: gameMeta.description,
     shortDescription: gameMeta.shortDescription,
-    icon: gameMeta.icon,
-    accentColor: gameMeta.accentColor,
     keywords: gameMeta.keywords,
     publishedAt: gameMeta.publishedAt,
     updatedAt: gameMeta.updatedAt,
@@ -41,8 +39,6 @@ export function quizMetaToPlayContentMeta(quizMeta: QuizMeta): PlayContentMeta {
     shortTitle: quizMeta.shortTitle,
     description: quizMeta.description,
     shortDescription: quizMeta.shortDescription,
-    icon: quizMeta.icon,
-    accentColor: quizMeta.accentColor,
     keywords: quizMeta.keywords,
     publishedAt: quizMeta.publishedAt,
     updatedAt: quizMeta.updatedAt,
@@ -64,8 +60,6 @@ export const fortunePlayContentMeta: PlayContentMeta = {
   description:
     "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形?",
   shortDescription: "AIが毎日生成するユーモラスな運勢",
-  icon: "🔮",
-  accentColor: "#7c3aed",
   keywords: ["運勢", "占い", "デイリー", "ユーモア", "AI"],
   publishedAt: "2026-02-01T00:00:00+09:00",
   contentType: "fortune",
@@ -104,11 +98,6 @@ export function getPlayContentsByCategory(
   return allPlayContents.filter((c) => c.category === category);
 }
 
-/** 全 PlayContent のスラグ配列を返す */
-export function getAllPlaySlugs(): string[] {
-  return allPlayContents.map((c) => c.slug);
-}
-
 /**
  * slug → questionCount のルックアップマップ（クイズの問数表示用）。
  * /play 配下の一覧・レイアウトコンポーネントから参照される共有マップ。
@@ -116,10 +105,6 @@ export function getAllPlaySlugs(): string[] {
 export const quizQuestionCountBySlug: Map<string, number> = new Map(
   allQuizMetas.map((q) => [q.slug, q.questionCount]),
 );
-
-// 旧トップページ専用だった getHeroPickupContents / getDefaultTabContents /
-// getNonFortuneContents は cycle-232（トップの道具箱化・Phase 10.3）で
-// 旧トップとともに削除した。
 
 /**
  * /play ページの「イチオシ」セクションに表示するコンテンツとおすすめ理由のペア。

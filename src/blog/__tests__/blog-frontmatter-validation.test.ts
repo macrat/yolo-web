@@ -5,12 +5,10 @@
  * in .claude/rules/blog-writing.md. They are designed to catch data quality
  * issues early, before they cause runtime bugs or mislead other developers.
  *
- * Background (Accident Report 3, cycle-122):
- * A test that assumed identical published_at timestamps ("defensive code for
- * duplicate timestamps") led PM to falsely believe published_at was date-only
- * (YYYY-MM-DD). The actual data uses full ISO 8601 datetime with time and
- * timezone. The defensive test was removed, and these validation tests were
- * added to verify the data is actually correct.
+ * The tests read the raw frontmatter instead of the parsed metadata, so that
+ * what they check is the data itself. For example, published_at and updated_at
+ * are full ISO 8601 datetimes with time and timezone, not dates; code that
+ * sorts or compares posts relies on that.
  */
 
 import { describe, test, expect } from "vitest";

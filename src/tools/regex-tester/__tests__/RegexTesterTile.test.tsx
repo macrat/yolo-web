@@ -1,10 +1,8 @@
 /**
- * RegexTesterTile ユニットテスト（TDD: 実装前に書く）
+ * RegexTesterTile ユニットテスト
  *
- * タイル正典化（cycle-228 T-29）の要件検証。
- * 旧 RegexTesterPage.test.tsx の振る舞いを移植し、Tile 固有要件（Panel ルート・useId・複数インスタンス）を拡張。
- *
- * Worker モックは旧テストの作法を引き継ぐ。
+ * 照合・置換の振る舞いと、タイルとしての要件（Panel ルート・useId・複数インスタンス）を確かめる。
+ * Worker はモックに置き換える。
  */
 
 import { render, screen, fireEvent, act } from "@testing-library/react";
@@ -93,13 +91,29 @@ async function flushWorker() {
   await vi.runAllTimersAsync();
 }
 
-// RegexTesterTile を静的 import（実装ファイルが存在しない場合はコンパイル段階で失敗する）
 import RegexTesterTile from "../RegexTesterTile";
 
+/** 置換のアコーディオンの開閉の行。 */
+function getReplaceSummary(): HTMLElement {
+  const summary = screen
+    .getByText("置換", { selector: "summary *" })
+    .closest("summary");
+  if (!summary) throw new Error("置換の開閉の行が無い");
+  return summary as HTMLElement;
+}
+
+/** 置換のアコーディオンを開く。details の toggle はタイマーで遅れて届くので、偽のタイマーを進めて届ける。 */
+async function openReplace(): Promise<void> {
+  await act(async () => {
+    fireEvent.click(getReplaceSummary());
+    vi.advanceTimersByTime(0);
+  });
+}
+
 // =========================================================
-// T-1: Panel ルート（アーキテクチャ要件 A-1）
+// Panel ルート
 // =========================================================
-describe("T-1: Panel ルート", () => {
+describe("Panel ルート", () => {
   it("タイルのルート要素が <section>（Panel デフォルト）で描画される", () => {
     const { container } = render(<RegexTesterTile variant="full" />);
     // Panel の デフォルト as="section"
@@ -115,9 +129,9 @@ describe("T-1: Panel ルート", () => {
 });
 
 // =========================================================
-// T-2: variant=full の基本レンダリング
+// variant=full の基本レンダリング
 // =========================================================
-describe("T-2: variant=full 基本レンダリング", () => {
+describe("variant=full 基本レンダリング", () => {
   it("正規表現パターン入力欄が存在する", () => {
     render(<RegexTesterTile variant="full" />);
     expect(
@@ -145,9 +159,9 @@ describe("T-2: variant=full 基本レンダリング", () => {
 });
 
 // =========================================================
-// T-3: 入力 → マッチ結果更新
+// 入力 → マッチ結果更新
 // =========================================================
-describe("T-3: 入力→マッチ結果更新", () => {
+describe("入力→マッチ結果更新", () => {
   it("パターン・テスト文字列を入力するとマッチ件数が更新される", async () => {
     render(<RegexTesterTile variant="full" />);
     const patternInput = screen.getByRole("textbox", {
@@ -189,9 +203,9 @@ describe("T-3: 入力→マッチ結果更新", () => {
 });
 
 // =========================================================
-// T-4: エラー表示（無効な正規表現）
+// エラー表示（無効な正規表現）
 // =========================================================
-describe("T-4: エラー表示", () => {
+describe("エラー表示", () => {
   it("無効な正規表現でエラーが表示される（日本語）", async () => {
     render(<RegexTesterTile variant="full" />);
     const patternInput = screen.getByRole("textbox", {
@@ -215,9 +229,9 @@ describe("T-4: エラー表示", () => {
 });
 
 // =========================================================
-// T-5: ARIA 要件
+// ARIA 要件
 // =========================================================
-describe("T-5: ARIA", () => {
+describe("ARIA", () => {
   it("マッチ件数サマリ欄に role=status と aria-live=polite が付与されている", () => {
     render(<RegexTesterTile variant="full" />);
     const statusEl = screen.getByRole("status");
@@ -247,9 +261,9 @@ describe("T-5: ARIA", () => {
 });
 
 // =========================================================
-// T-6: フラグ操作
+// フラグ操作
 // =========================================================
-describe("T-6: フラグ操作", () => {
+describe("フラグ操作", () => {
   it("g フラグチェックボックスが存在しデフォルトでオンになっている", () => {
     render(<RegexTesterTile variant="full" />);
     const gCheckbox = screen.getByRole("checkbox", { name: /g/ });
@@ -293,28 +307,23 @@ describe("T-6: フラグ操作", () => {
 });
 
 // =========================================================
-// T-7: 置換機能
+// 置換機能
 // =========================================================
-describe("T-7: 置換機能", () => {
-  it("「置換を表示」ボタンが存在する", () => {
+describe("置換機能", () => {
+  it("「置換」の開閉の行が存在する", () => {
     render(<RegexTesterTile variant="full" />);
-    expect(screen.getByRole("button", { name: /置換/ })).toBeInTheDocument();
+    expect(getReplaceSummary()).toBeInTheDocument();
   });
 
-  it("「置換を表示」ボタンを押すと置換文字列入力欄が表示される", async () => {
+  it("「置換」の行を開くと置換文字列入力欄が表示される", async () => {
     render(<RegexTesterTile variant="full" />);
-    const toggleBtn = screen.getByRole("button", { name: /置換を表示/ });
-    await act(async () => {
-      fireEvent.click(toggleBtn);
-    });
+    await openReplace();
     expect(screen.getByLabelText(/置換文字列/)).toBeInTheDocument();
   });
 
   it("パターン・テスト文字列・置換文字列を入力すると置換結果が表示される", async () => {
     render(<RegexTesterTile variant="full" />);
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /置換を表示/ }));
-    });
+    await openReplace();
 
     const patternInput = screen.getByRole("textbox", {
       name: /正規表現パターン/,
@@ -336,9 +345,9 @@ describe("T-7: 置換機能", () => {
 });
 
 // =========================================================
-// T-8: サンプル投入機能
+// サンプル投入機能
 // =========================================================
-describe("T-8: サンプル投入機能", () => {
+describe("サンプル投入機能", () => {
   it("サンプル選択セレクトが存在する", () => {
     render(<RegexTesterTile variant="full" />);
     const select = screen.getByRole("combobox", { name: /サンプル/ });
@@ -384,9 +393,9 @@ describe("T-8: サンプル投入機能", () => {
 });
 
 // =========================================================
-// T-9: 複数インスタンス同居（道具箱）
+// 複数インスタンス同居
 // =========================================================
-describe("T-9: 複数インスタンス同居（道具箱）", () => {
+describe("複数インスタンス同居", () => {
   it("2つのインスタンスを描画して DOM id が重複しない", () => {
     const { container } = render(
       <div>
@@ -426,14 +435,12 @@ describe("T-9: 複数インスタンス同居（道具箱）", () => {
 });
 
 // =========================================================
-// T-10: 置換結果の aria-labelledby 紐付け
+// 置換結果の aria-labelledby 紐付け
 // =========================================================
-describe("T-10: 置換結果 aria-labelledby", () => {
+describe("置換結果 aria-labelledby", () => {
   it("置換結果ラベルに id が付与され <pre> が aria-labelledby で紐付いている", async () => {
     render(<RegexTesterTile variant="full" />);
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /置換を表示/ }));
-    });
+    await openReplace();
 
     const patternInput = screen.getByRole("textbox", {
       name: /正規表現パターン/,
@@ -459,12 +466,12 @@ describe("T-10: 置換結果 aria-labelledby", () => {
 });
 
 // =========================================================
-// T-11: CSS トークン検証
+// CSS トークン検証
 // =========================================================
-describe("T-11: CSS トークン検証", () => {
+describe("CSS トークン検証", () => {
   const cssPath = resolve(__dirname, "../RegexTesterTile.module.css");
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
@@ -490,20 +497,27 @@ describe("T-11: CSS トークン検証", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("patternRow:focus-within に outline: 2px solid var(--accent) が存在する", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toMatch(/\.patternRow:focus-within/);
-    expect(css).toMatch(/outline:\s*2px\s+solid\s+var\(--accent\)/);
+  it("パターンの欄は、入力を包む行が共通の入力欄の形（data-field）を持つ", () => {
+    render(<RegexTesterTile />);
+    const input = screen.getByRole("textbox", { name: "正規表現パターン" });
+    expect(input.closest("[data-field]")).not.toBeNull();
+    expect(input).not.toHaveAttribute("data-field");
   });
 
-  it("patternInput に min-height: 2.25rem 以上が設定されている", () => {
+  it("入力が受けたフォーカスを、枠を持つ行に二重リングで出す", () => {
+    const css = readFileSync(cssPath, "utf-8");
+    const ringSection =
+      css.match(
+        /\.patternRow:has\(\.patternInput:focus-visible\)\s*\{[^}]+\}/,
+      )?.[0] ?? "";
+    expect(ringSection).toMatch(/outline:\s*var\(--focus-ring\)/);
+  });
+
+  it("patternInput は文字の大きさを持たず、入力欄の既定（16px 以上）に従う", () => {
     const css = readFileSync(cssPath, "utf-8");
     const patternInputSection =
       css.match(/\.patternInput\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(patternInputSection).not.toMatch(/min-height:\s*2rem\b/);
-    expect(patternInputSection).toMatch(
-      /min-height:\s*(2\.[2-9]\d*rem|3rem|44px)/,
-    );
+    expect(patternInputSection).not.toMatch(/font-size/);
   });
 
   it(".replaceInput 独自セクションが存在しない（Input 共通部品に委譲）", () => {
@@ -513,10 +527,10 @@ describe("T-11: CSS トークン検証", () => {
 });
 
 // =========================================================
-// T-13: マッチ一覧見出しの見出しレベル（a11y 回帰防止）
+// マッチ一覧見出しの見出しレベル
 // =========================================================
-describe("T-13: マッチ一覧見出しの見出しレベル", () => {
-  // B-593: h1→h3 飛び是正の回帰防止。
+describe("マッチ一覧見出しの見出しレベル", () => {
+  // 本体セクション見出しは h1 の直下なので h2 である。
   // ツール本体セクション見出し「マッチ結果」が h2 であることを保証し、
   // h2 を飛ばして h3 になる見出し階層崩れの再発を防ぐ。
   it("マッチが出たとき「マッチ結果」見出しが見出しレベル2（h2）で描画される", async () => {
@@ -544,9 +558,9 @@ describe("T-13: マッチ一覧見出しの見出しレベル", () => {
 });
 
 // =========================================================
-// T-12: Worker クリーンアップ確認（terminate が呼ばれる）
+// Worker クリーンアップ確認（terminate が呼ばれる）
 // =========================================================
-describe("T-12: Worker ライフサイクル", () => {
+describe("Worker ライフサイクル", () => {
   it("アンマウント後に Worker.terminate が呼ばれる", async () => {
     const { unmount } = render(<RegexTesterTile variant="full" />);
     const patternInput = screen.getByRole("textbox", {

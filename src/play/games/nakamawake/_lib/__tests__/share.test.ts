@@ -1,6 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { generateShareText } from "../share";
-import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { NakamawakeGameState, NakamawakePuzzle } from "../types";
 
 const samplePuzzle: NakamawakePuzzle = {
@@ -43,13 +42,6 @@ const samplePuzzle: NakamawakePuzzle = {
   ],
 };
 
-beforeEach(() => {
-  // Mock window.location.origin
-  vi.stubGlobal("window", {
-    location: { origin: "https://example.com" },
-  });
-});
-
 describe("generateShareText", () => {
   test("generates correct text for a won game with no mistakes", () => {
     const state: NakamawakeGameState = {
@@ -61,60 +53,22 @@ describe("generateShareText", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3046\u3055\u304E",
-            "\u304F\u307E",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3042\u304B",
-            "\u3042\u304A",
-            "\u304D\u3044\u308D",
-            "\u307F\u3069\u308A",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u306F\u308B",
-            "\u306A\u3064",
-            "\u3042\u304D",
-            "\u3075\u3086",
-          ],
-          correct: true,
-        },
-      ],
     };
 
     const text = generateShareText(state);
-    expect(text).toContain(
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!",
+    expect(text).toBe(
+      [
+        "ナカマワケ #1 4組すべて正解（間違い0回）",
+        "当てた順（難易度）: 1→2→3→4",
+        "#ナカマワケ #yolosnet",
+      ].join("\n"),
     );
-    // Row 1: difficulty 1 (yellow)
-    expect(text).toContain("\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}");
-    // Row 2: difficulty 2 (green)
-    expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
-    // Row 3: difficulty 3 (blue)
-    expect(text).toContain("\u{1F7E6}\u{1F7E6}\u{1F7E6}\u{1F7E6}");
-    // Row 4: difficulty 4 (purple)
-    expect(text).toContain("\u{1F7EA}\u{1F7EA}\u{1F7EA}\u{1F7EA}");
-    expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
-    expect(text).toContain("https://example.com/play/nakamawake");
+    // 絵文字を持たない
+    expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
+    expect(text.split("\n").at(-1)).toBe(
+      "#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet",
+    );
+    expect(text).not.toContain("http");
   });
 
   test("generates correct text for a won game with mistakes", () => {
@@ -127,67 +81,10 @@ describe("generateShareText", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3044\u306C",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u306D\u3053",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3046\u3055\u304E",
-            "\u304F\u307E",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3042\u304B",
-            "\u3042\u304A",
-            "\u304D\u3044\u308D",
-            "\u307F\u3069\u308A",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u306F\u308B",
-            "\u306A\u3064",
-            "\u3042\u304D",
-            "\u3075\u3086",
-          ],
-          correct: true,
-        },
-      ],
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain(
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #42 \u30DF\u30B92\u56DE",
+    expect(generateShareText(state).split("\n")[0]).toBe(
+      "ナカマワケ #42 4組すべて正解（間違い2回）",
     );
   });
 
@@ -201,60 +98,16 @@ describe("generateShareText", () => {
       status: "lost",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3042\u304B",
-            "\u306F\u308B",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3042\u304A",
-            "\u306A\u3064",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u304D\u3044\u308D",
-            "\u3042\u304D",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u307F\u3069\u308A",
-            "\u3075\u3086",
-          ],
-          correct: false,
-        },
-      ],
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain("\u30CA\u30AB\u30DE\u30EF\u30B1 #10 X");
-    // Only 1 correct row (fruits, difficulty 1)
-    expect(text).toContain("\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}");
-    expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
+    // 当てた1組（難易度1）だけを並べる
+    expect(generateShareText(state)).toBe(
+      [
+        "ナカマワケ #10 4回間違えて終了（1組正解）",
+        "当てた順（難易度）: 1",
+        "#ナカマワケ #yolosnet",
+      ].join("\n"),
+    );
   });
 
   test("includes puzzle number in header", () => {
@@ -267,89 +120,66 @@ describe("generateShareText", () => {
       status: "won",
       selectedWords: [],
       remainingWords: [],
-      guessHistory: [
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3044\u306C",
-          ],
-          correct: false,
-        },
-        {
-          words: [
-            "\u308A\u3093\u3054",
-            "\u307F\u304B\u3093",
-            "\u3076\u3069\u3046",
-            "\u3082\u3082",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3044\u306C",
-            "\u306D\u3053",
-            "\u3046\u3055\u304E",
-            "\u304F\u307E",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u3042\u304B",
-            "\u3042\u304A",
-            "\u304D\u3044\u308D",
-            "\u307F\u3069\u308A",
-          ],
-          correct: true,
-        },
-        {
-          words: [
-            "\u306F\u308B",
-            "\u306A\u3064",
-            "\u3042\u304D",
-            "\u3075\u3086",
-          ],
-          correct: true,
-        },
-      ],
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain(
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #15 \u30DF\u30B91\u56DE",
+    expect(generateShareText(state).split("\n")[0]).toBe(
+      "ナカマワケ #15 4組すべて正解（間違い1回）",
     );
   });
 });
 
-describe("generateTwitterShareUrl", () => {
-  test("generates correct Twitter intent URL without pageUrl", () => {
-    const text = "Test share text";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toBe(
-      "https://twitter.com/intent/tweet?text=Test%20share%20text",
+describe("generateShareText solve order", () => {
+  test("lists the solved groups' difficulty in the order they were solved", () => {
+    const [easy, medium, hard, hardest] = samplePuzzle.groups;
+    const state: NakamawakeGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 226,
+      puzzle: samplePuzzle,
+      solvedGroups: [easy, hard, medium, hardest],
+      mistakes: 1,
+      status: "won",
+      selectedWords: [],
+      remainingWords: [],
+    };
+
+    expect(generateShareText(state).split("\n")[1]).toBe(
+      "当てた順（難易度）: 1→3→2→4",
     );
   });
 
-  test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/play/nakamawake";
-    const text = `\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\n\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}\n${pageUrl}`;
-    const url = generateTwitterShareUrl(text, pageUrl);
-    // text param should not contain the page URL
-    expect(url).toContain(
-      `text=${encodeURIComponent("\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\n\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}")}`,
-    );
-    // url param should contain the page URL
-    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
-  });
+  test("does not use wording that is not on the screen", () => {
+    const state: NakamawakeGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 226,
+      puzzle: samplePuzzle,
+      solvedGroups: [samplePuzzle.groups[1]],
+      mistakes: 4,
+      status: "lost",
+      selectedWords: [],
+      remainingWords: [],
+    };
 
-  test("encodes special characters without pageUrl", () => {
-    const text =
-      "\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\nhttps://example.com";
-    const url = generateTwitterShareUrl(text);
-    expect(url).toContain("https://twitter.com/intent/tweet?text=");
-    // Should be properly encoded
-    expect(url).toContain(encodeURIComponent(text));
+    const text = generateShareText(state);
+    expect(text).not.toMatch(/\bX\b/);
+    expect(text).not.toContain("パーフェクト");
+  });
+});
+
+describe("generateShareText with no solved group", () => {
+  test("has no order line and no empty line", () => {
+    const state: NakamawakeGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 7,
+      puzzle: samplePuzzle,
+      solvedGroups: [],
+      mistakes: 4,
+      status: "lost",
+      selectedWords: [],
+      remainingWords: [],
+    };
+
+    expect(generateShareText(state)).toBe(
+      "ナカマワケ #7 4回間違えて終了（0組正解）\n#ナカマワケ #yolosnet",
+    );
   });
 });

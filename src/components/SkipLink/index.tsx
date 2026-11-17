@@ -1,19 +1,20 @@
+import { MAIN_CONTENT_ID } from "@/lib/site-frame";
 import styles from "./SkipLink.module.css";
 
 /**
- * スキップ先となる layout.tsx の <main> の id。
- * リンクの href（#main-content）と main の id を 1 箇所で束ね、両者のズレを防ぐ。
- */
-export const MAIN_CONTENT_ID = "main-content";
-
-/**
- * SkipLink — 本文へのスキップリンク（WCAG 2.4.1 Bypass Blocks(A)）。
- * body 直下・Header より前に置く最初の focusable 要素として配置する。
+ * 本文へのスキップのリンク（WCAG 2.4.1）。SiteFrame が上端より前に、最初にフォーカスが入る要素として置く。
+ * フォーカスが入ったときだけ、上端の上に1行として出る。
  */
 export default function SkipLink() {
   return (
-    <a href={`#${MAIN_CONTENT_ID}`} className={styles.skipLink}>
-      メインコンテンツへスキップ
-    </a>
+    <div className={styles.row}>
+      <a
+        href={`#${MAIN_CONTENT_ID}`}
+        className={styles.link}
+        data-text-box="inline"
+      >
+        メインコンテンツへスキップ
+      </a>
+    </div>
   );
 }

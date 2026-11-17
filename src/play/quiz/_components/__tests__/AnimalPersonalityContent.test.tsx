@@ -1,52 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import AnimalPersonalityContent from "../AnimalPersonalityContent";
 import type { AnimalPersonalityDetailedContent } from "../../types";
-
-// next/linkをモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
-
-// animal-personalityデータモジュールをモック
-vi.mock("@/play/quiz/data/animal-personality", () => ({
-  default: {
-    meta: {
-      slug: "animal-personality",
-      title: "日本にしかいない動物で性格診断",
-      accentColor: "#16a34a",
-      questionCount: 10,
-    },
-    results: [
-      {
-        id: "nihon-zaru",
-        title: "ニホンザル",
-        icon: "🐵",
-      },
-      {
-        id: "hondo-tanuki",
-        title: "ホンドタヌキ",
-        icon: "🦝",
-      },
-    ],
-  },
-  getCompatibility: vi.fn(),
-  isValidAnimalTypeId: vi.fn((id: string) =>
-    ["nihon-zaru", "hondo-tanuki"].includes(id),
-  ),
-}));
 
 const sampleContent: AnimalPersonalityDetailedContent = {
   variant: "animal-personality",
@@ -59,148 +14,43 @@ const sampleContent: AnimalPersonalityDetailedContent = {
 
 describe("AnimalPersonalityContent - 基本レンダリング", () => {
   it("strengthsセクションが表示されること", () => {
-    render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<AnimalPersonalityContent content={sampleContent} />);
     expect(screen.getByText("このタイプの強み")).toBeInTheDocument();
     expect(screen.getByText("強み1")).toBeInTheDocument();
     expect(screen.getByText("強み2")).toBeInTheDocument();
   });
 
   it("weaknessesセクションが表示されること", () => {
-    render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<AnimalPersonalityContent content={sampleContent} />);
     expect(screen.getByText("このタイプの弱み")).toBeInTheDocument();
     expect(screen.getByText("弱み1")).toBeInTheDocument();
     expect(screen.getByText("弱み2")).toBeInTheDocument();
   });
 
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<AnimalPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この動物に似た行動パターン")).toBeInTheDocument();
     expect(screen.getByText("行動1")).toBeInTheDocument();
     expect(screen.getByText("行動4")).toBeInTheDocument();
   });
 
   it("todayActionセクションが表示されること", () => {
-    render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<AnimalPersonalityContent content={sampleContent} />);
     expect(screen.getByText("今日試してほしいこと")).toBeInTheDocument();
     expect(screen.getByText("今日のアクション")).toBeInTheDocument();
   });
-
-  it("全タイプ一覧が表示されること（見出しテキストは「他の動物も見てみよう」）", () => {
-    render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    expect(screen.getByText("他の動物も見てみよう")).toBeInTheDocument();
-    expect(screen.getByText("ニホンザル")).toBeInTheDocument();
-    expect(screen.getByText("ホンドタヌキ")).toBeInTheDocument();
-  });
 });
 
-describe("AnimalPersonalityContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("AnimalPersonalityContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
+      <AnimalPersonalityContent content={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // 少なくとも強み・弱み・行動・アクション・全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(5);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(5);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
-  });
-});
-
-describe("AnimalPersonalityContent - allTypesLayout prop", () => {
-  // 新デザイン言語ではピル型は廃止し、"pill" は内部で grid にマップする（caller 互換のため
-  // public props の文字列値自体は維持）。Character/Music/Yoji 等と質感を揃える方針。
-  it("allTypesLayout='pill' の場合、grid レイアウトクラスにマップされること", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    // gridクラスを持つul要素が存在すること
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // 旧 pill クラスは撤去済みであるべき（撤去の証跡）
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).toBeNull();
-    // list（縦並び）レイアウトとは別物であること
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  it("allTypesLayout='list' の場合、縦並びリスト型レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    // listクラスを持つul要素が存在すること
-    const listEl = container.querySelector("[class*='allTypesListVertical']");
-    expect(listEl).not.toBeNull();
-    // grid とは別物であること
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -212,9 +62,6 @@ describe("AnimalPersonalityContent - afterTodayAction スロット", () => {
     render(
       <AnimalPersonalityContent
         content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
         afterTodayAction={afterContent}
       />,
     );
@@ -224,80 +71,26 @@ describe("AnimalPersonalityContent - afterTodayAction スロット", () => {
 
   it("afterTodayAction が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(
-        <AnimalPersonalityContent
-          content={sampleContent}
-          resultId="nihon-zaru"
-          headingLevel={2}
-          allTypesLayout="pill"
-        />,
-      );
+      render(<AnimalPersonalityContent content={sampleContent} />);
     }).not.toThrow();
   });
 });
 
-describe("AnimalPersonalityContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
+describe("AnimalPersonalityContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
+      <AnimalPersonalityContent content={sampleContent} />,
     );
-    // 現在のタイプのアイテムは "current" クラスを持つ
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
-  });
-});
-
-describe("AnimalPersonalityContent - wrapper クラス", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること（CSS変数定義のため）", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-});
-
-describe("AnimalPersonalityContent - インラインスタイル不使用（CSS変数管理）", () => {
-  it("sectionHeadingにインラインスタイルが設定されていないこと", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    // CSS変数はCSSクラス側で管理するため、インラインスタイルを使用しない
-    const headings = container.querySelectorAll("[class*='sectionHeading']");
-    headings.forEach((heading) => {
-      expect((heading as HTMLElement).style.color).toBe("");
-    });
-  });
-
-  it("todayActionCardにインラインスタイルが設定されていないこと", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    // CSS変数はCSSクラス側で管理するため、インラインスタイルを使用しない
-    const card = container.querySelector("[class*='todayActionCard']");
-    expect(card).not.toBeNull();
-    expect((card as HTMLElement).style.backgroundColor).toBe("");
+    for (const text of [sampleContent.todayAction]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [
+      ...sampleContent.strengths,
+      ...sampleContent.weaknesses,
+      ...sampleContent.behaviors,
+    ]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });

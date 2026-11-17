@@ -1,0 +1,24 @@
+/*
+ * 辞典の詳細のページの組み方。ページの割り方と、セクションのあいだの全幅の罫線と余白は Section が持つ
+ * （DESIGN.md §5）。見出しの大きさは h2 の既定（§4 のセクションの見出し）に従う。
+ */
+
+/* ページの頭（パンくずと名乗りの一言）。項目の本文とのあいだも同じ間隔をあける（§5 の間隔）。 */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
+}
+
+/* 名乗りの一言は、どの辞典の項目かを言う補助情報（§4）。本文の幅で折り返す（§5）。 */
+.valueProposition {
+  max-width: var(--measure);
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
+}

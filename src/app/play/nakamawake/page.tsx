@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
-import GameLayout from "@/play/games/_components/new/GameLayout";
+import GameLayout from "@/play/games/_components/GameLayout";
 import GameContainer from "@/play/games/nakamawake/_components/GameContainer";
 import type {
   NakamawakePuzzle,
@@ -12,6 +13,7 @@ import {
   getTodaysPuzzle,
   formatDateJST,
 } from "@/play/games/nakamawake/_lib/daily";
+import { sayingPhrases } from "@/play/games/nakamawake/_lib/engine";
 import puzzleDataJson from "@/play/games/nakamawake/data/nakamawake-data.json";
 import scheduleJson from "@/play/games/nakamawake/data/nakamawake-schedule.json";
 import { computeCrossCategoryItems } from "@/play/games/shared/_lib/crossCategoryItems";
@@ -36,6 +38,16 @@ export default function NakamawakePage() {
   const schedule = scheduleJson as NakamawakeScheduleEntry[];
 
   const { puzzle, puzzleNumber } = getTodaysPuzzle(puzzleData, schedule);
+
+  // ことわざのように句を持つ語は、語のマスの中で句の切れ目で折る。
+  const wordPhrases = Object.fromEntries(
+    puzzle.groups
+      .flatMap((group) => group.words)
+      .flatMap((word) => {
+        const phrases = sayingPhrases(splitIntoPhrases(word));
+        return phrases ? [[word, phrases] as const] : [];
+      }),
+  );
 
   // Generate todayStr on the server so the puzzle selection date and
   // localStorage key always match, even near JST midnight boundaries.
@@ -65,6 +77,7 @@ export default function NakamawakePage() {
           todayStr={todayStr}
           dateDisplayString={dateDisplayString}
           crossCategoryItems={crossCategoryItems}
+          wordPhrases={wordPhrases}
         />
       </GameLayout>
     </>

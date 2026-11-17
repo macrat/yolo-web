@@ -1,16 +1,3 @@
-/**
- * ⚠️ 重要 — このページは「受検者本人には表示されない」第三者向けページです。
- *
- * ルート `/play/[slug]/result/[resultId]` は【第三者向けのシェア／検索ランディング専用】。
- * 診断を遊んだ本人は、完了した時点で同一 URL `/play/[slug]` 上にインライン描画される
- * `ResultCard`（`QuizContainer` の intro→playing→result フェーズ遷移）で結果を見ます。
- * 本人はこの `/result/<id>` ページへは遷移しません（この URL は ResultCard が
- * シェア用に生成するもの）。
- *
- * したがって、このページの文言・構造・メタ・JSON-LD は「診断をやっていない第三者が
- * 初めて見る」ことを前提に設計すること。本人向けの結果体験を変えたい場合は
- * `src/play/quiz/_components/ResultCard.tsx` 側を編集する。
- */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,18 +8,110 @@ import {
 } from "@/play/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
-import { getCompatibility } from "@/play/quiz/data/music-personality";
-import CompatibilityDisplay from "./CompatibilityDisplay";
-import { extractWithParam } from "./extractWithParam";
-import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
+import CompatibilityDisplay from "@/play/quiz/_components/CompatibilityDisplay";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "@/play/quiz/_components/ResultReading";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import {
+  headingFontAttr,
+  type HeadingFontAttr,
+} from "@/lib/zen-antique-charset";
+import { resultNameWithReading } from "@/play/quiz/resultName";
+import { DEFAULT_READING_HEADINGS } from "@/play/quiz/readingHeadings";
+import type { CompatibilityEntry, QuizDefinition } from "@/play/quiz/types";
+import {
+  getCompatibility as getCultureCompatibility,
+  isValidCultureTypeId,
+} from "@/play/quiz/data/japanese-culture";
 import styles from "./page.module.css";
 
 type Props = {
   params: Promise<{ slug: string; resultId: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
+
+/**
+ * 解き終えた画面が相性の共有のリンク（?with=）を作る診断のうち、結果のページをこのルートが描くもの。
+ */
+const COMPATIBILITY_BY_SLUG: Record<
+  string,
+  {
+    isValidTypeId: (id: string) => boolean;
+    getCompatibility: (
+      typeA: string,
+      typeB: string,
+    ) => CompatibilityEntry | undefined;
+  }
+> = {
+  "japanese-culture": {
+    isValidTypeId: isValidCultureTypeId,
+    getCompatibility: getCultureCompatibility,
+  },
+};
+
+interface ResolvedCompatibility {
+  compatibility: CompatibilityEntry;
+  myType: { id: string; title: string };
+  friendType: { id: string; title: string };
+}
+
+/**
+ * ?with=typeId で友達のタイプを受け取ったときの相性。解き終えた画面の相性の共有のリンクがこの形で来る。
+ * 相性を持たない診断や、正しくないタイプのときは undefined を返す。
+ */
+async function resolveCompatibility(
+  slug: string,
+  quiz: QuizDefinition,
+  resultId: string,
+  searchParams: Props["searchParams"],
+): Promise<ResolvedCompatibility | undefined> {
+  const source = COMPATIBILITY_BY_SLUG[slug];
+  if (!source) return undefined;
+
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const withParam =
+    typeof resolvedSearchParams?.with === "string"
+      ? resolvedSearchParams.with
+      : undefined;
+  if (
+    !withParam ||
+    !source.isValidTypeId(withParam) ||
+    !source.isValidTypeId(resultId)
+  ) {
+    return undefined;
+  }
+
+  const myResult = quiz.results.find((r) => r.id === resultId);
+  const friendResult = quiz.results.find((r) => r.id === withParam);
+  const compatibility = source.getCompatibility(resultId, withParam);
+  if (!myResult || !friendResult || !compatibility) return undefined;
+
+  return {
+    compatibility,
+    myType: { id: myResult.id, title: myResult.title },
+    friendType: { id: friendResult.id, title: friendResult.title },
+  };
+}
+
+/**
+ * 読みものの小見出しの区切りと書体の属性。診断が言い替えた文はデータなので、サーバーで文節に区切り、見出しの書体に
+ * 無い字を含むかを調べる。言い替えないときは、決まった文の並びをそのまま使う。
+ */
+function readingHeading(
+  label: string | undefined,
+  fallback: readonly string[],
+): { phrases: readonly string[]; headingFont?: HeadingFontAttr } {
+  if (label === undefined) return { phrases: fallback };
+  return {
+    phrases: splitIntoPhrases(label),
+    headingFont: headingFontAttr(label),
+  };
+}
 
 /**
  * 全クイズの slug + resultId の組み合わせを返す。
@@ -56,42 +135,33 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { slug, resultId } = await params;
   const quiz = quizBySlug.get(slug);
-  if (!quiz) return {};
+  if (!quiz) notFound();
   const result = quiz.results.find((r) => r.id === resultId);
-  if (!result) return {};
+  if (!result) notFound();
 
-  const resolvedSearchParams = searchParams ? await searchParams : undefined;
-  const compatFriendTypeId = extractWithParam(
-    resolvedSearchParams,
-    slug,
-    resultId,
-  );
+  const compat = await resolveCompatibility(slug, quiz, resultId, searchParams);
 
   let title: string;
   let description: string;
 
-  if (compatFriendTypeId) {
-    const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
-    const compat = getCompatibility(resultId, compatFriendTypeId);
-    title = `${result.title} x ${friendResult?.title ?? ""} - ${compat?.label ?? "相性結果"}`;
-    description = compat?.description ?? result.description;
+  if (compat) {
+    title = `${compat.myType.title} x ${compat.friendType.title} - ${compat.compatibility.label}`;
+    description = compat.compatibility.description;
   } else {
-    // 新しいtitle形式: 「結果タイトル | クイズ名の結果 | SITE_NAME」
-    // 完全なtitle（candidateTitle + " | " + SITE_NAME）が全角30文字相当（width 60）を
-    // 超える場合はクイズ名部分を省略してフォールバック。
-    // SITE_NAMEサフィックス（" | yolos.net" = 半角12文字）を含めた幅で判定する。
+    // 題は「タイプ名 | 診断名の結果 | サイト名」。サイト名まで含めた全体が全角30字相当（幅 60）を超えるときは、
+    // 検索の結果で切れないよう、診断名の部分を省く。
     const FULL_WIDTH_LIMIT = 60;
-    const candidateTitle = `${result.title} | ${quiz.meta.title}の結果`;
+    const resultName = resultNameWithReading(result);
+    const candidateTitle = `${resultName} | ${quiz.meta.title}の結果`;
     title =
       countCharWidth(`${candidateTitle} | ${SITE_NAME}`) > FULL_WIDTH_LIMIT
-        ? result.title
+        ? resultName
         : candidateTitle;
     description = result.description;
   }
 
-  // detailedContent があり、かつ相性ページでない場合のみ index: true にする
-  const hasDetailedContent = Boolean(result.detailedContent);
-  const shouldIndex = hasDetailedContent && !compatFriendTypeId;
+  // 詳しい読みものを持つタイプだけを検索に載せる。相性のページは載せない。
+  const shouldIndex = Boolean(result.detailedContent) && !compat;
 
   return {
     title: `${title} | ${SITE_NAME}`,
@@ -118,13 +188,8 @@ export async function generateMetadata({
 }
 
 /**
- * 静的結果ページ — シェアリンクや検索から来た「第三者」向けのランディングページ。
- *
- * このページを閲覧するのはクイズを受けた本人ではない。本人は /play/[slug] 上の
- * ResultCard（動的コンポーネント）で結果を確認し、そこからシェアする。
- * このページに到達するのは、シェアリンクをクリックした友人や、検索エンジンから
- * 来た来訪者であり、彼らにとっての主要アクションは「自分もクイズを受けてみる」
- * （CTAボタン）である。
+ * 診断・クイズの結果のページ。シェアのリンクや検索から来た来訪者と、解き終えた画面（ResultCard）の
+ * 一覧から来た来訪者が開く。まだ遊んでいない来訪者が最初に着くページでもあるので、この診断を遊ぶ誘いを持つ。
  */
 export default async function PlayQuizResultPage({
   params,
@@ -137,73 +202,22 @@ export default async function PlayQuizResultPage({
   const result = quiz.results.find((r) => r.id === resultId);
   if (!result) notFound();
 
-  const resolvedSearchParams = searchParams ? await searchParams : undefined;
-  const compatFriendTypeId = extractWithParam(
-    resolvedSearchParams,
-    slug,
-    resultId,
-  );
-
-  // Resolve compatibility data server-side for all quiz slugs.
-  // This keeps CompatibilityDisplay as a simple display component with required props.
-  let compatData:
-    | {
-        compatibility: { label: string; description: string };
-        myType: { id: string; title: string; icon?: string };
-        friendType: { id: string; title: string; icon?: string };
-      }
-    | undefined;
-
-  if (compatFriendTypeId) {
-    const myResult2 = quiz.results.find((r) => r.id === resultId);
-    const friendResult2 = quiz.results.find((r) => r.id === compatFriendTypeId);
-    const compat = getCompatibility(resultId, compatFriendTypeId);
-    if (myResult2 && friendResult2 && compat) {
-      compatData = {
-        compatibility: {
-          label: compat.label,
-          description: compat.description,
-        },
-        myType: {
-          id: myResult2.id,
-          title: myResult2.title,
-          icon: myResult2.icon,
-        },
-        friendType: {
-          id: friendResult2.id,
-          title: friendResult2.title,
-          icon: friendResult2.icon,
-        },
-      };
-    }
-  }
-
   // 末尾に「あなたは?」を追加してシェアした友人の興味を引く
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.shortTitle ?? quiz.meta.title}の結果は「${resultNameWithReading(result)}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
-  // CTAテキストをクイズタイプに応じて出し分ける
   const ctaText =
     quiz.meta.type === "personality"
       ? "あなたはどのタイプ? 診断してみよう"
       : "あなたも挑戦してみよう";
 
   const { detailedContent } = result;
+  // variant を持つ詳しい読みものは、その診断の専用のルートが描く。
+  const standardReading =
+    detailedContent && !detailedContent.variant ? detailedContent : undefined;
+  const compat = await resolveCompatibility(slug, quiz, resultId, searchParams);
 
-  // descriptionが4行を超えるかどうかの判定:
-  // countCharWidth は全角1文字を width 2 としてカウントするため、
-  // 1行あたり全角16文字 = width 32。4行分 = width 32 × 4 = 128。
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
-
-  // resultPageLabels から見出しを取得（未設定時はデフォルト値）
-  const traitsHeading =
-    quiz.meta.resultPageLabels?.traitsHeading ?? "このタイプの特徴";
-  const behaviorsHeading =
-    quiz.meta.resultPageLabels?.behaviorsHeading ?? "このタイプのあるある";
-  const adviceHeading =
-    quiz.meta.resultPageLabels?.adviceHeading ?? "このタイプの人へのアドバイス";
+  const labels = quiz.meta.resultPageLabels;
 
   return (
     <ResultPageShell
@@ -211,77 +225,59 @@ export default async function PlayQuizResultPage({
       result={result}
       shareText={shareText}
       shareUrl={shareUrl}
-      afterShare={
-        compatData ? (
-          <CompatibilityDisplay
-            quizSlug={slug}
-            quizTitle={quiz.meta.title}
-            compatibility={compatData.compatibility}
-            myType={compatData.myType}
-            friendType={compatData.friendType}
-          />
-        ) : undefined
-      }
+      description={result.description}
+      ctaText={ctaText}
     >
-      {/* Standard variant のレンダリングロジックをインライン化 */}
-      {/* DescriptionExpander + CTA1 は常に表示 */}
-      <DescriptionExpander
-        description={result.description}
-        isLong={isDescriptionLong}
-      />
+      {(standardReading || compat) && (
+        <>
+          {standardReading && (
+            <Reading>
+              <ReadingHeading
+                {...readingHeading(
+                  labels?.traitsHeading,
+                  DEFAULT_READING_HEADINGS.traits,
+                )}
+              />
+              <ReadingList items={standardReading.traits} />
 
-      {/* CTA1 */}
-      <div className={styles.trySection}>
-        <Link href={`/play/${slug}`} className={styles.tryButton}>
-          {ctaText}
-        </Link>
-        <p className={styles.tryCost}>
-          全{quiz.meta.questionCount}問 / 登録不要
-        </p>
-      </div>
+              <ReadingHeading
+                {...readingHeading(
+                  labels?.behaviorsHeading,
+                  DEFAULT_READING_HEADINGS.behaviors,
+                )}
+              />
+              <ReadingList items={standardReading.behaviors} />
 
-      {/* detailedContent がある場合のみ追加セクションを表示（標準形式）。
-          専用ルートを持つクイズはNext.jsのファイルシステムルーティングが自動的に優先する。
-          型ナローイングのために !detailedContent.variant を条件に含める。 */}
-      {detailedContent && !detailedContent.variant && (
-        <div className={styles.detailedSection}>
-          <h2 className={styles.detailedSectionHeading}>{traitsHeading}</h2>
-          <ul className={styles.traitsList}>
-            {detailedContent.traits.map((trait, i) => (
-              <li key={i} className={styles.traitsItem}>
-                {trait}
-              </li>
-            ))}
-          </ul>
+              <ReadingHeading
+                {...readingHeading(
+                  labels?.adviceHeading,
+                  DEFAULT_READING_HEADINGS.advice,
+                )}
+              />
+              <ReadingText>{standardReading.advice}</ReadingText>
+            </Reading>
+          )}
 
-          <h2 className={styles.detailedSectionHeading}>{behaviorsHeading}</h2>
-          <ul className={styles.behaviorsList}>
-            {detailedContent.behaviors.map((behavior, i) => (
-              <li key={i} className={styles.behaviorsItem}>
-                {behavior}
-              </li>
-            ))}
-          </ul>
+          {compat && (
+            <CompatibilityDisplay
+              quizSlug={slug}
+              quizTitle={quiz.meta.title}
+              compatibility={compat.compatibility}
+              myType={compat.myType}
+              friendType={compat.friendType}
+            />
+          )}
 
-          <h2 className={styles.detailedSectionHeading}>{adviceHeading}</h2>
-          <div className={styles.adviceCard}>{detailedContent.advice}</div>
-
-          {/* 他のタイプ回遊（受検者本人の ResultCard と同じ導線を、検索/シェアで
-              この結果ページに流入した第三者にも提供する。cycle-249 / B-516）。 */}
-          <OtherTypesNav
-            quizSlug={slug}
-            currentResultId={result.id}
-            results={quiz.results}
-            headingLevel={2}
-          />
-
-          {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
           <div className={styles.cta2Section}>
-            <Link href={`/play/${slug}`} className={styles.cta2Link}>
+            <Link
+              href={`/play/${slug}`}
+              className={styles.cta2Link}
+              data-text-box="inline"
+            >
               {ctaText}
             </Link>
           </div>
-        </div>
+        </>
       )}
     </ResultPageShell>
   );

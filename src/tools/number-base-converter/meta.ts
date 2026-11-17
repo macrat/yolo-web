@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "8進数 変換",
     "基数変換 オンライン",
   ],
-  category: "developer",
+  category: "number",
   relatedSlugs: [
     "color-converter",
     "unix-timestamp",

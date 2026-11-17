@@ -1,9 +1,12 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import RelatedQuizzes from "../RelatedQuizzes";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-// getPlayContentsByCategory をモックしてテストを安定させる
+// 遊びの登録をモックしてテストを安定させる
 vi.mock("@/play/registry", () => ({
+  DAILY_UPDATE_SLUGS: new Set<string>(),
+  quizQuestionCountBySlug: new Map([["kotowaza-level", 10]]),
   getPlayContentsByCategory: (category: string) => {
     if (category === "knowledge") {
       return [
@@ -11,11 +14,9 @@ vi.mock("@/play/registry", () => ({
           slug: "kanji-level",
           title: "漢字レベル診断",
           shortDescription: "あなたの漢字力を測定",
-          icon: "📝",
           category: "knowledge",
           contentType: "quiz",
           description: "漢字力を測る",
-          accentColor: "#ff5733",
           keywords: ["漢字"],
           publishedAt: "2026-01-01T00:00:00+09:00",
         },
@@ -25,11 +26,9 @@ vi.mock("@/play/registry", () => ({
           // shortTitle が存在する場合は title より優先して表示されることをテストするためのデータ
           shortTitle: "ことわざ診断",
           shortDescription: "ことわざの知識を確認",
-          icon: "📖",
           category: "knowledge",
           contentType: "quiz",
           description: "ことわざ力を測る",
-          accentColor: "#33a1ff",
           keywords: ["ことわざ"],
           publishedAt: "2026-01-02T00:00:00+09:00",
         },
@@ -37,11 +36,9 @@ vi.mock("@/play/registry", () => ({
           slug: "yoji-level",
           title: "四字熟語レベル診断",
           shortDescription: "四字熟語の知識を確認",
-          icon: "🈵",
           category: "knowledge",
           contentType: "quiz",
           description: "四字熟語力を測る",
-          accentColor: "#5733ff",
           keywords: ["四字熟語"],
           publishedAt: "2026-01-03T00:00:00+09:00",
         },
@@ -49,11 +46,9 @@ vi.mock("@/play/registry", () => ({
           slug: "traditional-color",
           title: "伝統色クイズ",
           shortDescription: "日本の伝統色を学ぼう",
-          icon: "🎨",
           category: "knowledge",
           contentType: "quiz",
           description: "伝統色の知識を測る",
-          accentColor: "#33ff57",
           keywords: ["伝統色"],
           publishedAt: "2026-01-04T00:00:00+09:00",
         },
@@ -66,12 +61,9 @@ vi.mock("@/play/registry", () => ({
 test("RelatedQuizzes renders related quizzes excluding current", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 
-  // 見出しが表示される
+  // 見出しが一覧の名前になる
   expect(
-    screen.getByRole("navigation", { name: "関連コンテンツ" }),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText("他のクイズ・診断も試してみよう"),
+    screen.getByRole("list", { name: "他のクイズ・診断も試してみよう" }),
   ).toBeInTheDocument();
 
   // 現在のスラグは除外される
@@ -117,14 +109,6 @@ test("RelatedQuizzes renders shortDescription for each item", () => {
   expect(screen.getByText("四字熟語の知識を確認")).toBeInTheDocument();
 });
 
-test("RelatedQuizzes does not render emoji icons (新デザイン体系・cycle-253)", () => {
-  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
-
-  // DESIGN.md §3: 絵文字は使わない。回遊カードから絵文字アイコンを撤去した。
-  expect(screen.queryByText("📖")).not.toBeInTheDocument();
-  expect(screen.queryByText("🈵")).not.toBeInTheDocument();
-});
-
 test("RelatedQuizzes prefers shortTitle over title when shortTitle is set", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 
@@ -132,4 +116,49 @@ test("RelatedQuizzes prefers shortTitle over title when shortTitle is set", () =
   // title: "ことわざレベル診断" ではなく shortTitle が表示される
   expect(screen.getByText("ことわざ診断")).toBeInTheDocument();
   expect(screen.queryByText("ことわざレベル診断")).not.toBeInTheDocument();
+});
+
+test("RelatedQuizzes のリンクの読み上げの名前が行の名前だけであること", () => {
+  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
+
+  const list = screen.getByRole("list", {
+    name: "他のクイズ・診断も試してみよう",
+  });
+  const names = within(list)
+    .getAllByRole("link")
+    .map((link) => link.textContent);
+  expect(names).toEqual(["ことわざ診断", "四字熟語レベル診断", "伝統色クイズ"]);
+});
+
+test("RelatedQuizzes は全件で同じになる種別を出さず、問数を補助情報に出すこと", () => {
+  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
+
+  expect(screen.queryByText("クイズ")).not.toBeInTheDocument();
+  expect(screen.getByText("全10問")).toBeInTheDocument();
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
+  const headings: string[][] = [
+    ["他の", "クイズ・", "診断も", "試して", "みよう"],
+  ];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
+});
+
+test("ページの1つのセクションで、見出しはセクションの見出し（h2）", () => {
+  const { container } = render(
+    <RelatedQuizzes currentSlug="kanji-level" category="knowledge" />,
+  );
+  const section = container.firstChild as HTMLElement;
+  expect(section.tagName).toBe("SECTION");
+  expect(
+    within(section).getByRole("heading", {
+      level: 2,
+      name: "他のクイズ・診断も試してみよう",
+    }),
+  ).toBeInTheDocument();
 });

@@ -52,11 +52,6 @@ export interface AbExperiment {
 /**
  * The experiment registry, keyed by experiment id. Add future experiments
  * here so that assignment and analysis share one source of truth.
- *
- * quiz_result_visual_v1（inline クイズ結果の視覚言語 retro vs minimal）は
- * cycle-279 C1 でオーナー裁定により結果を読まずに撤去済み（旧々デザインと旧
- * デザインの比較であり、デザイン刷新後はどちらの結果も使い道がないため。
- * ADR001 参照）。現在登録済みの実験はない。
  */
 export const AB_EXPERIMENTS: Readonly<Record<string, AbExperiment>> = {};
 

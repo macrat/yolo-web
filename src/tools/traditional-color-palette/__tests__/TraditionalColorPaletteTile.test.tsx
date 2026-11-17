@@ -1,17 +1,8 @@
-/**
- * TraditionalColorPaletteTile 単一正典タイルのテスト（cycle-228 T-19）
- *
- * 旧 TraditionalColorPalettePage.test.tsx の全振る舞いを移植し、
- * タイルアーキテクチャ要件（Panel ルート・useId・variant・複数インスタンス）を追加。
- *
- * CSS トークン検証: readFileSync（import { readFileSync } from "fs"）を使用。
- */
-
-import { readFileSync } from "fs";
-import { join } from "path";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { hexToOklch } from "@/lib/hexToOklch";
 import TraditionalColorPaletteTile from "../TraditionalColorPaletteTile";
+import { PALETTE_ITEMS } from "../palette-list";
 
 // =========================================================
 // navigator.clipboard モック
@@ -23,58 +14,46 @@ beforeEach(() => {
       writeText: vi.fn().mockResolvedValue(undefined),
     },
   });
+  // 格子の列の数を読む ResizeObserver と、押した見本の位置を保つ scrollBy は jsdom に無い。
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
+  vi.stubGlobal("scrollBy", vi.fn());
 });
 
 afterEach(() => {
   vi.restoreAllMocks();
   vi.useRealTimers();
+  // 絞り込みと並び順は URL のクエリに持つので、テストごとにクエリの無い URL へ戻す。
+  window.history.replaceState(null, "", "/tools/traditional-color-palette");
 });
 
-// =========================================================
-// CSS トークン検証（新タイル CSS）
-// =========================================================
-describe("CSS トークン検証", () => {
-  const cssPath = join(
-    process.cwd(),
-    "src/tools/traditional-color-palette/TraditionalColorPaletteTile.module.css",
+// 見えている件数の行。読み上げに伝える文は、これとは別の見えない role="status" が持つ。
+function countLine(): HTMLElement {
+  const line = document.querySelector<HTMLElement>('p[tabindex="-1"]');
+  if (!line) throw new Error("件数の行がありません");
+  return line;
+}
+
+function searchBox(): HTMLElement {
+  return screen.getByRole("searchbox", { name: "色名・ローマ字で探す" });
+}
+
+function swatchSlugs(): string[] {
+  return Array.from(
+    document.querySelectorAll<HTMLElement>("[data-swatch-slug]"),
+    (swatch) => swatch.dataset.swatchSlug ?? "",
   );
-
-  it("--color-* 旧トークンが存在しない（B-1）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("--accent を塗り（background）に直接使っていない（B-3）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    const lines = css.split("\n");
-    for (const line of lines) {
-      if (
-        line.includes("var(--accent)") &&
-        (line.includes("background") || line.includes("background-color"))
-      ) {
-        throw new Error(
-          `--accent を background に直接使っている行: ${line.trim()}`,
-        );
-      }
-    }
-    expect(true).toBe(true);
-  });
-
-  it("font-weight: 700 が存在しない（B-4）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight\s*:\s*700/);
-  });
-
-  it("規定外 box-shadow が存在しない（B-6）", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/box-shadow.*var\(--accent\)/);
-  });
-});
+}
 
 // =========================================================
-// A-1: Panel ルート要素
+// ルート要素
 // =========================================================
-describe("Panel ルート要素（A-1）", () => {
+describe("ルート要素", () => {
   it("ルート要素に panel クラスが付与されている", () => {
     const { container } = render(<TraditionalColorPaletteTile />);
     // Panel コンポーネントが出力した最初の要素
@@ -87,9 +66,9 @@ describe("Panel ルート要素（A-1）", () => {
 });
 
 // =========================================================
-// A-6: DOM id の useId による一意化（複数インスタンス同居）
+// 複数のタイル
 // =========================================================
-describe("複数インスタンスで id 重複がない（A-6）", () => {
+describe("複数インスタンスで id 重複がない", () => {
   it("2つのタイルを同一ページに描画しても id 重複がない", () => {
     render(
       <div>
@@ -119,7 +98,7 @@ describe("基本レンダリング", () => {
   it("カテゴリフィルタが表示される", () => {
     render(<TraditionalColorPaletteTile />);
     expect(
-      screen.getByRole("radiogroup", { name: "カテゴリフィルタ" }),
+      screen.getByRole("radiogroup", { name: "色の系統" }),
     ).toBeInTheDocument();
   });
 
@@ -135,7 +114,7 @@ describe("基本レンダリング", () => {
 // 入力→結果更新
 // =========================================================
 describe("入力→結果更新", () => {
-  it("スウォッチをクリックすると配色結果が表示される", async () => {
+  it("色見本を押すと配色結果が表示される", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     expect(swatches.length).toBeGreaterThan(0);
@@ -158,7 +137,7 @@ describe("入力→結果更新", () => {
     await act(async () => {
       fireEvent.click(analogousOption);
     });
-    expect(analogousOption).toHaveAttribute("aria-checked", "true");
+    expect(analogousOption).toBeChecked();
   });
 });
 
@@ -178,7 +157,7 @@ describe("空入力・未選択状態", () => {
 // 変換ロジックの正確性（UI 経由）
 // =========================================================
 describe("変換ロジックの正確性（UI 経由）", () => {
-  it("スウォッチを選ぶと HEX 値が表示される", async () => {
+  it("色見本を選ぶと HEX 値が表示される", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
@@ -187,6 +166,22 @@ describe("変換ロジックの正確性（UI 経由）", () => {
     const hexPattern = /#[0-9a-fA-F]{6}/;
     const allText = document.body.textContent ?? "";
     expect(hexPattern.test(allText)).toBe(true);
+  });
+
+  it("無彩色を選ぶと、明度の違う無彩色のカードのうち選んだ色のカードに「選んだ色」と添える", () => {
+    render(<TraditionalColorPaletteTile />);
+    fireEvent.click(screen.getByRole("radio", { name: /無彩色/ }));
+    const swatch = document.querySelector<HTMLElement>("[data-swatch-slug]")!;
+    fireEvent.click(swatch);
+    const slug = swatch.dataset.swatchSlug!;
+    const cards = screen.getByTestId("palette-results");
+    const pickedCards = Array.from(cards.children).filter((card) =>
+      card.textContent?.includes("選んだ色"),
+    );
+    expect(pickedCards).toHaveLength(1);
+    expect(
+      pickedCards[0].querySelector(`a[href="/dictionary/colors/${slug}"]`),
+    ).not.toBeNull();
   });
 
   it("無彩色を選んだ場合は無彩色パレット表示になる", async () => {
@@ -205,12 +200,12 @@ describe("変換ロジックの正確性（UI 経由）", () => {
 });
 
 // =========================================================
-// ARIA 属性（C-3）
+// ARIA 属性
 // =========================================================
-describe("ARIA 属性（C-3）", () => {
+describe("ARIA 属性", () => {
   it("カテゴリフィルタに role='radiogroup' が付与されている", () => {
     render(<TraditionalColorPaletteTile />);
-    const group = screen.getByRole("radiogroup", { name: "カテゴリフィルタ" });
+    const group = screen.getByRole("radiogroup", { name: "色の系統" });
     expect(group).toBeInTheDocument();
   });
 
@@ -220,7 +215,7 @@ describe("ARIA 属性（C-3）", () => {
     expect(group).toBeInTheDocument();
   });
 
-  it("ライブリージョンに role='status' と aria-live='polite' が付与されている（C-3）", () => {
+  it("ライブリージョンに role='status' と aria-live='polite' が付与されている", () => {
     render(<TraditionalColorPaletteTile />);
     const liveRegion = document.querySelector(
       "[role='status'][aria-live='polite']",
@@ -228,7 +223,7 @@ describe("ARIA 属性（C-3）", () => {
     expect(liveRegion).toBeInTheDocument();
   });
 
-  it("選択時にライブリージョンに実テキストノードのサマリが入る（C-3）", async () => {
+  it("選択時にライブリージョンに配色の文が入る", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
@@ -257,7 +252,7 @@ describe("コピー文言変化", () => {
     expect(hexCopyButtons.length).toBeGreaterThan(0);
   });
 
-  it("コピーボタンをクリックすると COPIED_LABEL に文言が変わる", async () => {
+  it("コピーボタンをクリックすると「コピー済み」に文言が変わる", async () => {
     vi.useFakeTimers();
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
@@ -270,9 +265,7 @@ describe("コピー文言変化", () => {
     await act(async () => {
       fireEvent.click(hexCopyButtons[0]);
     });
-    expect(
-      screen.getByRole("button", { name: /コピーしました/ }),
-    ).toBeInTheDocument();
+    expect(hexCopyButtons[0]).toHaveTextContent("コピー済み");
   });
 });
 
@@ -288,7 +281,7 @@ describe("コピーボタン状態", () => {
     expect(copyButtons).toHaveLength(0);
   });
 
-  it("カード描画時、コピーボタンは共通 Button コンポーネント(size=small)を使っている", async () => {
+  it("カード描画時、コピーボタンは共通 Button コンポーネントを使っている", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
@@ -298,32 +291,23 @@ describe("コピーボタン状態", () => {
       "[data-testid='palette-results']",
     );
     expect(paletteResults).toBeInTheDocument();
-    const smallButtons = document.querySelectorAll("[data-size='small']");
-    expect(smallButtons.length).toBeGreaterThan(0);
+    const sharedButtons = paletteResults!.querySelectorAll("[data-variant]");
+    expect(sharedButtons.length).toBeGreaterThan(0);
   });
 
-  it("カード描画時、各コピーボタンに有効な aria-label が付いている", async () => {
+  it("カード描画時、各コピーボタンはどの色のどのコードを写すかを名前で言う", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
       fireEvent.click(swatches[0] as HTMLElement);
     });
-    const hexButtons = screen.queryAllByRole("button", {
-      name: /HEX.*コピー|HEXをコピー/,
-    });
-    const rgbButtons = screen.queryAllByRole("button", {
-      name: /RGB.*コピー|RGBをコピー/,
-    });
-    const hslButtons = screen.queryAllByRole("button", {
-      name: /HSL.*コピー|HSLをコピー/,
-    });
-    expect(hexButtons.length).toBeGreaterThan(0);
-    expect(rgbButtons.length).toBeGreaterThan(0);
-    expect(hslButtons.length).toBeGreaterThan(0);
-    [...hexButtons, ...rgbButtons, ...hslButtons].forEach((btn) => {
-      expect(btn).toHaveAttribute("aria-label");
-      expect(btn.getAttribute("aria-label")).not.toBe("");
-    });
+    for (const code of ["HEX", "RGB", "HSL"]) {
+      expect(
+        screen.queryAllByRole("button", {
+          name: new RegExp(`^\\S+の${code}をコピー$`),
+        }).length,
+      ).toBeGreaterThan(0);
+    }
   });
 });
 
@@ -354,53 +338,107 @@ describe("clipboard 不在時の silent fail", () => {
 });
 
 // =========================================================
-// 検索機能
+// 件数・名前の欄・色の系統・並び順
 // =========================================================
-describe("検索機能", () => {
-  it("検索するとスウォッチが絞り込まれる", async () => {
+describe("色の格子の件数と備え", () => {
+  it("件数の行が全体の数を言い、色の系統と並び順の組を畳む", () => {
     render(<TraditionalColorPaletteTile />);
-    const searchInput = screen.getByLabelText(/色を検索/);
-    const allSwatches = document.querySelectorAll("[data-swatch-slug]");
-    const allCount = allSwatches.length;
-
-    await act(async () => {
-      fireEvent.change(searchInput, { target: { value: "鴇" } });
-    });
-
-    const filteredSwatches = document.querySelectorAll("[data-swatch-slug]");
-    expect(filteredSwatches.length).toBeLessThanOrEqual(allCount);
-    expect(filteredSwatches.length).toBeGreaterThan(0);
+    expect(countLine()).toHaveTextContent("全250色");
+    expect(swatchSlugs()).toHaveLength(250);
+    expect(
+      screen.getByRole("button", {
+        name: "絞り込みと並び順（すべて、色み順）",
+      }),
+    ).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("マッチしない検索語では空メッセージが表示される", async () => {
+  it("名前の欄で絞り込み、件数の行が該当件数を言う", () => {
     render(<TraditionalColorPaletteTile />);
-    const searchInput = screen.getByLabelText(/色を検索/);
-    await act(async () => {
-      fireEvent.change(searchInput, {
-        target: { value: "存在しない色xyzxyz" },
-      });
-    });
-    expect(screen.getByText(/見つかりませんでした/)).toBeInTheDocument();
+    fireEvent.change(searchBox(), { target: { value: "鴇" } });
+    expect(swatchSlugs()[0]).toBe("toki");
+    expect(countLine()).toHaveTextContent(
+      `${swatchSlugs().length}色（全250色）`,
+    );
   });
-});
 
-// =========================================================
-// カテゴリフィルタ
-// =========================================================
-describe("カテゴリフィルタ", () => {
-  it("赤系タブをクリックするとスウォッチが絞り込まれる", async () => {
+  it("当たらないときは件数の行が言い、「絞り込みを外す」で名前の欄へ戻る", () => {
     render(<TraditionalColorPaletteTile />);
-    const allSwatches = document.querySelectorAll("[data-swatch-slug]");
-    const allCount = allSwatches.length;
-
-    const redOption = screen.getByRole("radio", { name: /赤系/ });
-    await act(async () => {
-      fireEvent.click(redOption);
+    fireEvent.change(searchBox(), {
+      target: { value: "存在しない色xyzxyz" },
     });
+    expect(countLine()).toHaveTextContent(
+      "条件に合う色はありません（全250色）",
+    );
+    expect(swatchSlugs()).toHaveLength(0);
+    fireEvent.click(screen.getByRole("button", { name: "絞り込みを外す" }));
+    expect(swatchSlugs()).toHaveLength(250);
+    expect(searchBox()).toHaveFocus();
+  });
 
-    const filteredSwatches = document.querySelectorAll("[data-swatch-slug]");
-    expect(filteredSwatches.length).toBeGreaterThan(0);
-    expect(filteredSwatches.length).toBeLessThan(allCount);
+  it("色の系統で絞り込み、URL の kind に書く", () => {
+    render(<TraditionalColorPaletteTile />);
+    fireEvent.click(screen.getByRole("radio", { name: "赤系" }));
+    expect(swatchSlugs().length).toBeGreaterThan(0);
+    expect(swatchSlugs().length).toBeLessThan(250);
+    expect(new URLSearchParams(window.location.search).get("kind")).toBe("red");
+  });
+
+  it("色見本は1つを選ぶラジオボタンの組で、選んだ見本だけが選ばれた状態になる", () => {
+    render(<TraditionalColorPaletteTile />);
+    const group = screen.getByRole("radiogroup", { name: "伝統色" });
+    const swatches = Array.from(
+      group.querySelectorAll<HTMLInputElement>("[data-swatch-slug]"),
+    );
+    expect(swatches).toHaveLength(250);
+    expect(swatches.every((swatch) => swatch.type === "radio")).toBe(true);
+    expect(swatches.some((swatch) => swatch.hasAttribute("aria-pressed"))).toBe(
+      false,
+    );
+    fireEvent.click(swatches[2]);
+    expect(swatches[2]).toBeChecked();
+    expect(swatches.filter((swatch) => swatch.checked)).toHaveLength(1);
+  });
+
+  it("選んだ色の名前とカラーコードが、選んだ見本のすぐ後ろに出る", () => {
+    render(<TraditionalColorPaletteTile />);
+    expect(screen.queryByTestId("picked-color")).toBeNull();
+    const toki = PALETTE_ITEMS.find(({ color }) => color.slug === "toki")!;
+    const swatch = document.querySelector<HTMLElement>(
+      '[data-swatch-slug="toki"]',
+    )!;
+    fireEvent.click(swatch);
+    const picked = screen.getByTestId("picked-color");
+    expect(picked).toHaveTextContent(toki.color.name);
+    expect(picked).toHaveTextContent(toki.color.hex);
+    // jsdom では格子の列の数が1になるので、選んだ見本の次に開く。
+    expect(swatch.closest("label")?.nextElementSibling).toBe(picked);
+  });
+
+  it("色見本は字を載せず、読み上げの名前に色の名前とカラーコードを持つ", () => {
+    render(<TraditionalColorPaletteTile />);
+    const swatch = document.querySelector<HTMLElement>(
+      '[data-swatch-slug="toki"]',
+    );
+    expect(swatch).not.toBeNull();
+    expect(swatch).toHaveTextContent("");
+    const toki = PALETTE_ITEMS.find(({ color }) => color.slug === "toki")!;
+    expect(swatch).toHaveAccessibleName(
+      `${toki.color.name} (${toki.color.hex})`,
+    );
+  });
+
+  it("URL のクエリの並び順で出す", () => {
+    window.history.replaceState(
+      null,
+      "",
+      "/tools/traditional-color-palette?sort=light",
+    );
+    render(<TraditionalColorPaletteTile />);
+    expect(screen.getByRole("radio", { name: "明るい順" })).toBeChecked();
+    const lightest = PALETTE_ITEMS.reduce((a, b) =>
+      hexToOklch(b.color.hex).l > hexToOklch(a.color.hex).l ? b : a,
+    );
+    expect(swatchSlugs()[0]).toBe(lightest.color.slug);
   });
 });
 
@@ -419,10 +457,10 @@ describe("配色パターンタブ", () => {
     expect(screen.getByRole("radio", { name: "分裂補色" })).toBeInTheDocument();
   });
 
-  it("初期状態で「補色」が選択されている（C-5）", () => {
+  it("初期状態で「補色」が選択されている", () => {
     render(<TraditionalColorPaletteTile />);
     const complementaryOption = screen.getByRole("radio", { name: "補色" });
-    expect(complementaryOption).toHaveAttribute("aria-checked", "true");
+    expect(complementaryOption).toBeChecked();
   });
 });
 
@@ -444,9 +482,9 @@ describe("伝統色詳細ページリンク", () => {
 // =========================================================
 // 独立レンダリング
 // =========================================================
-describe("独立レンダリング（ToolPageLayout 非依存）", () => {
+describe("独立レンダリング", () => {
   it("コンポーネントが独立してレンダリングされる", () => {
     render(<TraditionalColorPaletteTile />);
-    expect(screen.getByLabelText(/色を検索/)).toBeInTheDocument();
+    expect(searchBox()).toBeInTheDocument();
   });
 });

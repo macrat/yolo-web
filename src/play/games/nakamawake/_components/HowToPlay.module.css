@@ -1,0 +1,9 @@
+/* くわしい遊び方。開いた中身は本文の大きさで、本文の幅で折り返す（DESIGN.md §5）。 */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--measure);
+  padding-block-end: var(--space-8);
+}

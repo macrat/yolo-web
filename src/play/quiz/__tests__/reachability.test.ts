@@ -5,11 +5,11 @@ import { determineScienceThinkingResult } from "../data/science-thinking";
 import type { QuizDefinition, QuizAnswer } from "../types";
 
 /**
- * cycle-294 の検証（docs/cycles/cycle-294/findings.md）を恒久ガード化する回帰テスト。
+ * 全診断・全回答空間で「到達不能タイプは存在しない」ことを恒久に守る回帰テスト
+ * （計測の記録は docs/cycles/cycle-294/findings.md）。
  *
  * 背景: personality 診断は同点時に quiz.results の配列順で決着する（scoring.ts）。
- * cycle-294 で全診断・全回答空間を計測し「到達不能タイプは存在しない」ことを確認したが、
- * 将来のデータ編集で以下の事故が起きうる:
+ * データの編集で以下の事故が起きうる:
  *   - 結果タイプを追加したのに、そのタイプへ配点する choice を繋ぎ忘れる（孤児タイプ）
  *   - 配点構造が偏り、あるタイプが常に他タイプに敗れて選ばれなくなる（恒常敗退）
  * どちらも「そのタイプに絶対にならない診断」を来訪者に渡すことになる。これを防ぐ。
@@ -20,9 +20,9 @@ import type { QuizDefinition, QuizAnswer } from "../types";
  *   - 孤児チェック: これらは choice.points のキーが 24 タイプ ID ではなく軸/アーキタイプ名
  *     なので、typeId を集計する汎用の孤児チェックでは全タイプが孤児に見えてしまう。
  *   - 一様標本チェック: 軸ベース判定では同型/純タイプが一様ランダム回答では希薄になり得るため、
- *     汎用の「50万一様標本で全タイプ出現」ガードとは整合しない（cycle-295 G4c 撤回の経緯）。
- * 専用の到達性ガードは実判定関数を用いて別途設ける（science-thinking は末尾の describe。
- * character-personality の G1/G4 回帰は後続タスク E4 で追加予定）。
+ *     汎用の「50万一様標本で全タイプ出現」ガードとは整合しない。
+ * 専用の到達性ガードは実判定関数を用いて別に置く（science-thinking は末尾の describe、
+ * character-personality は character-personality.test.ts）。
  */
 
 const GENERIC_TIEBREAK_EXCLUDED = new Set([
@@ -105,7 +105,7 @@ describe("personality診断の結果タイプ到達性ガード", () => {
   );
   // 悉皆不可の大規模・汎用判定の診断（japanese-culture=690億 等）を対象に、
   // 決定的シード付き乱数で標本抽出する。SAMPLE_N は最小勝者でも期待数千ヒットする水準に取る。
-  // （character-personality=1670万 は専用判定へ移行し GENERIC_TIEBREAK_EXCLUDED で除外済み。）
+  // （character-personality=1670万 は専用判定なので GENERIC_TIEBREAK_EXCLUDED で除外している。）
   const sampledQuizzes = personalityQuizzes.filter(
     (q) => comboCount(q) > EXHAUSTIVE_CAP,
   );
@@ -169,7 +169,7 @@ describe("personality診断の結果タイプ到達性ガード", () => {
     "%s: 全タイプが到達可能（決定的サンプリングで確認）",
     (_slug, quiz) => {
       // 悉皆不可のため「50万標本で到達が観測されない」ことをもって恒常敗退の高確度検出とする
-      // （厳密証明ではない点は findings.md に明記）。玄関 character-personality を含む。
+      // （厳密証明ではない点は docs/cycles/cycle-294/findings.md に明記）。
       it(
         "すべての結果タイプがサンプル中で勝者になる",
         () => {
@@ -184,15 +184,14 @@ describe("personality診断の結果タイプ到達性ガード", () => {
     },
   );
 
-  // ---- 理想回答者ガード（cycle-297 で追加・弱い到達性の格上げ）----
+  // ---- 理想回答者ガード ----
   //
-  // なぜ弱い到達性では不十分だったか:
+  // なぜ弱い到達性では不十分か:
   //   上の「全タイプ到達性」ガードは『回答空間のどこかにそのタイプが単独最大になる回答が
   //   1つでも存在するか』しか見ていない（＝機械的到達性）。そのタイプを犠牲にする不自然な
-  //   回答でも単独最大になれば緑になってしまう。実際 traditional-color の wakakusa（若草色）は
-  //   この弱いガードを緑で通過していたが、cycle-297 で「若草色を各設問で最大化した最も正直な
-  //   回答者」でも桜色に strict 敗北する dead type だと判明した（若草色の +1 が毎回 桜色の +2 に
-  //   相乗りする『桜色の影』構造）。弱い到達性はこれを見逃す。
+  //   回答でも単独最大になれば緑になってしまう。たとえば、あるタイプの +1 が毎回ほかのタイプの +2 に
+  //   相乗りする構造では、そのタイプを各設問で最大化した最も正直な回答者でも strict 敗北する
+  //   dead type になる。弱い到達性はこれを見逃す。
   //
   // 正しい理想回答者ガード:
   //   各タイプ T について「各設問で points[T] が最大の choice（T-argmax）を選ぶ正直回答者」を考える。
@@ -331,10 +330,10 @@ describe("personality診断の結果タイプ到達性ガード", () => {
     );
   });
 
-  // ---- word-sense-personality の同点率 悉皆退行ガード（cycle-303 P2a で追加）----
+  // ---- word-sense-personality の同点率 悉皆退行ガード ----
   //
   // なぜ必要か:
-  //   cycle-303 で word-sense を結果先行で再設計した（docs/cycles/cycle-303/redesign-v2.md）。
+  //   word-sense は結果先行で組んである（docs/cycles/cycle-303/redesign-v2.md）。
   //   設計の芯は「同点率をゼロにする」ことではなく（10問4択8フラット型では整数投票の同点は
   //   構造的に残る＝単一signalでも約43%）、「配点をタイプの意味からのみ導き、内容非依存の
   //   調律重みで同点を消さない」こと。真の残余同点は開示UIで正直に開示する方針。
@@ -347,7 +346,7 @@ describe("personality診断の結果タイプ到達性ガード", () => {
   //     word-sense-personality.test.ts の pure/blended 形状ガード（各 choice は {main:3} か
   //     {main:2, nuance:1} のみ＝設問固有の任意重みを配点に持ち込めない）である。両者は別々の
   //     退行を検出するため、どちらも必要。
-  //   実装後の悉皆実測（4^10=1,048,576）: 同点率 20.78%（2型 15.90% / 3型以上 4.88%）。
+  //   悉皆実測（4^10=1,048,576）: 同点率 20.78%（2型 15.90% / 3型以上 4.88%）。
   describe("word-sense-personality: 同点率の悉皆退行ガード", () => {
     const quiz = quizBySlug.get("word-sense-personality");
     // 実測 20.78% に余裕を持たせた退行検出上限（0%目標ではない）。

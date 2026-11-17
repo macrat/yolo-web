@@ -6,8 +6,6 @@ import {
   computeHarmony,
   isAchromatic,
   getAchromaticPalette,
-  filterColors,
-  filterByCategory,
 } from "../logic";
 
 // --- テスト用モックデータ ---
@@ -417,64 +415,5 @@ describe("getAchromaticPalette", () => {
   test("S=5でcategory!=achromaticの色は含まれない", () => {
     const result = getAchromaticPalette(mockBorderlineColor, allMockColors);
     expect(result.find((c) => c.slug === "shironezumi")).toBeUndefined();
-  });
-});
-
-describe("filterColors", () => {
-  test("日本語名での検索", () => {
-    const result = filterColors("鴇", mockChromatic);
-    expect(result).toHaveLength(1);
-    expect(result[0].slug).toBe("toki");
-  });
-
-  test("ローマ字での検索", () => {
-    const result = filterColors("toki", mockChromatic);
-    // "toki" は 鴇(toki) と 常磐(tokiwa) にマッチ
-    expect(result.length).toBeGreaterThanOrEqual(1);
-    expect(result.some((c) => c.slug === "toki")).toBe(true);
-  });
-
-  test("大文字小文字を区別しない", () => {
-    const result = filterColors("TOKI", mockChromatic);
-    expect(result.some((c) => c.slug === "toki")).toBe(true);
-  });
-
-  test("空文字列で全件返却", () => {
-    const result = filterColors("", mockChromatic);
-    expect(result).toHaveLength(mockChromatic.length);
-  });
-
-  test("マッチしない検索語で空配列", () => {
-    const result = filterColors("存在しない色", mockChromatic);
-    expect(result).toHaveLength(0);
-  });
-});
-
-describe("filterByCategory", () => {
-  test('"all"で全件を返す', () => {
-    const result = filterByCategory("all", allMockColors);
-    expect(result).toHaveLength(allMockColors.length);
-  });
-
-  test("特定カテゴリでフィルタリング", () => {
-    const result = filterByCategory("red", allMockColors);
-    result.forEach((c) => {
-      expect(c.category).toBe("red");
-    });
-    expect(result.length).toBeGreaterThan(0);
-  });
-
-  test("achromaticカテゴリでフィルタリング", () => {
-    const result = filterByCategory("achromatic", allMockColors);
-    result.forEach((c) => {
-      expect(c.category).toBe("achromatic");
-    });
-    expect(result.length).toBe(mockAchromatic.length);
-  });
-
-  test("該当なしのカテゴリで空配列", () => {
-    // orangeカテゴリのモックデータがない
-    const result = filterByCategory("orange", allMockColors);
-    expect(result).toHaveLength(0);
   });
 });

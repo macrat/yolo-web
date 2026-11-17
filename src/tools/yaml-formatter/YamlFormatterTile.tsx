@@ -3,16 +3,14 @@
 /**
  * YamlFormatterTile — YAML整形・検証・JSON相互変換の単一正典タイル
  *
- * cycle-228 T-14: YamlFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>
  * - **1ツール n タイル = variant**: full / format / yaml-to-json / json-to-yaml は
- *   同一コンポーネントの設定差で表現。別実装を作らない（A-5）。
+ *   同一コンポーネントの設定差で表現。別実装を作らない。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6）。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
  * - **logic.ts 共有エンジン**: formatYaml/validateYaml/yamlToJson/jsonToYaml が唯一のロジック源。
  *
  * ## variant
@@ -22,7 +20,7 @@
  * - `"yaml-to-json"`: モードを YAML→JSON に固定し、モード Select を非表示にする。
  * - `"json-to-yaml"`: モードを JSON→YAML に固定し、モード Select を非表示にする。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -35,10 +33,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { formatYaml, validateYaml, yamlToJson, jsonToYaml } from "./logic";
 import styles from "./YamlFormatterTile.module.css";
 
@@ -123,7 +118,7 @@ export default function YamlFormatterTile({
   as = "section",
   className,
 }: YamlFormatterTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止）(A-6) ----------
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const inputId = `${uid}-input`;
   const outputId = `${uid}-output`;
@@ -140,10 +135,8 @@ export default function YamlFormatterTile({
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
   const [indent, setIndent] = useState<2 | 4>(2);
-  // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
+  // スクリーンリーダーへ通知するための短いサマリテキスト
   const [statusSummary, setStatusSummary] = useState("");
-
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const mode = fixedMode ?? dynamicMode;
@@ -217,11 +210,6 @@ export default function YamlFormatterTile({
     }
   }, [input]);
 
-  const handleCopy = useCallback(async () => {
-    if (!output) return;
-    await copy(output);
-  }, [output, copy]);
-
   const getPlaceholder = (): string => {
     switch (mode) {
       case "format":
@@ -233,12 +221,12 @@ export default function YamlFormatterTile({
   };
 
   // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）(A-1)
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       {/* コントロール行: モード選択（fullのみ）+ インデント選択 + 操作ボタン */}
       <div className={styles.controls}>
-        {/* variant=full のみモード Select を表示。その他は固定のため非表示。(A-5) */}
+        {/* variant=full のみモード Select を表示。その他は固定のため非表示。 */}
         {fixedMode === null && (
           <div className={styles.controlGroup}>
             <label htmlFor={modeId} className={styles.controlLabel}>
@@ -310,18 +298,14 @@ export default function YamlFormatterTile({
             <label htmlFor={outputId} className={styles.panelLabel}>
               出力
             </label>
-            {/* コピーボタン。出力が空のとき disabled。 */}
-            <Button
-              onClick={handleCopy}
-              type="button"
-              size="small"
+            <CopyButton
+              text={output}
+              target="出力"
+              align="end"
               disabled={!output}
-              aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-            >
-              {copiedKey ? COPIED_LABEL : "コピー"}
-            </Button>
+            />
           </div>
-          {/* C-3: role="status" aria-live="polite" で動的通知。
+          {/* role="status" aria-live="polite" で動的通知。
               実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。
               readOnly textarea をラップするだけでは値変化が読み上げられないため分離する。 */}
           <div

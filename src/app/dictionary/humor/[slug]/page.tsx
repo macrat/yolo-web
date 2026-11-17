@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
+import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
 import ShareButtons from "@/components/ShareButtons";
 import {
   generateHumorDictEntryMetadata,
@@ -10,7 +12,14 @@ import {
 } from "@/lib/seo";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
 import EntryRatingButton from "@/humor-dict/_components/EntryRatingButton";
+import { getDefinitionPreview } from "@/humor-dict/_lib/definition-preview";
+import { humorShareImageContent } from "@/humor-dict/_lib/share-image-content";
+import { shareOpenGraphImage } from "@/lib/share-image";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
+
+const RELATED_HEADING_ID = "related-words";
 
 export function generateStaticParams(): Array<{ slug: string }> {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -23,8 +32,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const entry = getEntryBySlug(slug);
-  if (!entry) return {};
-  return generateHumorDictEntryMetadata(entry);
+  if (!entry) notFound();
+  return generateHumorDictEntryMetadata(
+    entry,
+    shareOpenGraphImage(
+      `/dictionary/humor/${slug}`,
+      humorShareImageContent(entry),
+    ),
+  );
 }
 
 export default async function HumorDictEntryPage({
@@ -54,14 +69,19 @@ export default async function HumorDictEntryPage({
           { label: "ホーム", href: "/" },
           { label: "辞典", href: "/dictionary" },
           { label: "ユーモア辞典", href: "/dictionary/humor" },
-          { label: entry.word },
+          { label: entry.word, href: `/dictionary/humor/${entry.slug}` },
         ]}
       />
       <article className={styles.article}>
         {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}
         <header className={styles.header}>
           <div className={styles.headingGroup}>
-            <h1 className={styles.word}>{entry.word}</h1>
+            <PhrasedText
+              as="h1"
+              className={styles.word}
+              phrases={splitIntoPhrases(entry.word)}
+              {...headingFontAttr(entry.word)}
+            />
             <span className={styles.reading}>【{entry.reading}】</span>
           </div>
           <blockquote className={styles.definition}>
@@ -83,25 +103,20 @@ export default async function HumorDictEntryPage({
           </blockquote>
         </section>
 
-        {/* 関連語 */}
         {relatedEntries.length > 0 && (
           <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>関連語</h2>
-            <ul className={styles.relatedList}>
-              {relatedEntries.map((related) => (
-                <li key={related.slug}>
-                  <Link
-                    href={`/dictionary/humor/${related.slug}`}
-                    className={styles.relatedLink}
-                  >
-                    <span className={styles.relatedWord}>{related.word}</span>
-                    <span className={styles.relatedReading}>
-                      【{related.reading}】
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <h2 id={RELATED_HEADING_ID} className={styles.sectionTitle}>
+              関連語
+            </h2>
+            <ItemList
+              labelledBy={RELATED_HEADING_ID}
+              items={relatedEntries.map((related) => ({
+                name: related.word,
+                href: `/dictionary/humor/${related.slug}`,
+                reading: related.reading,
+                description: getDefinitionPreview(related.definition),
+              }))}
+            />
           </section>
         )}
 
@@ -118,7 +133,13 @@ export default async function HumorDictEntryPage({
 
         {/* 一覧へ戻るリンク */}
         <div className={styles.backLink}>
-          <Link href="/dictionary/humor">← ユーモア辞典一覧へ</Link>
+          <Link
+            href="/dictionary/humor"
+            className={styles.backLinkAnchor}
+            data-text-box="inline"
+          >
+            ← ユーモア辞典一覧へ
+          </Link>
         </div>
       </article>
     </div>

@@ -1,56 +1,70 @@
-/* GameContainer（なかまわけ）— ミス表示・フィードバック帯（DESIGN.md フェーズ R・店構えへ変換） */
+/*
+ * ナカマワケの遊ぶ区画。盤・操作・結果・くわしい遊び方・問題の日付を、コンテンツ幅の左端から縦に積む
+ * （DESIGN.md §5）。
+ */
 
-.mistakeIndicator {
-  text-align: center;
-  font-size: 1rem;
-  margin: var(--space-8) 0;
+.game {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 盤と、その下の結果の区画（遊んでいるあいだは残りのミスの字と操作、解き終えたら結果と共有と次の遊びの案内）。
+ * 解き終えた回を開き直したときは、この区画ごと前に描いた高さを取っておく（ReservedResultArea）。 */
+.area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 盤。当てた組と語の格子を、マスどうしと同じ間隔（--board-gap）で1つの盤に並べる。間隔は、狭い画面では 4px に
+ * して、語のマスの1行に入る字を増やす（DESIGN.md §5）。 */
+.board {
+  --board-gap: calc(var(--space-8) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--board-gap);
+  max-width: var(--measure);
+}
+
+@media (min-width: 45rem) {
+  .board {
+    --board-gap: var(--space-8);
+  }
+}
+
+/* 遊んでいるあいだの、残りのミスの字と操作。どちらもチェックの前後に一緒に見るものなので、1つのまとまりとして
+ * 8px で積む。 */
+.play {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* 端末の記録を読み、語を並べ替えるまでは、場所を取ったまま語の格子・残りのミスの字・操作を見せない。 */
+.pending {
+  visibility: hidden;
+}
+
+/* 残りのミスの数と、チェックへの応え。本文の大きさで字で言う。 */
+.status {
+  max-width: var(--measure);
+}
+
+/* 結果を持ち帰る・共有する区画。ボックスのすぐ下にある小見出しは、ボックスの太い枠がすでに切れ目なので、
+ * 上に線を持たない（§5）。 */
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.shareHeading {
+  font-size: var(--text-heading-sub);
+}
+
+/* 問題の日付と番号。補助情報（§4・§7）。 */
+.date {
+  font-size: var(--text-small);
   color: var(--ink-2);
-}
-
-.feedback {
-  text-align: center;
-  font-weight: 600;
-  color: var(--ink);
-  padding: var(--space-8);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-
-/* 残りミス1回の警告状態。色（--danger 等）ではなく朱+文字で示す
- * （DESIGN.md: ステータス色は緑/赤ベタでなく墨/朱＋文字＋罫）。
- * 点滅は状態変化の強調のみに使い、prefers-reduced-motion では静止表示にする（§5）。 */
-.mistakeDanger {
-  color: var(--accent);
-  font-weight: 600;
-  animation: mistakePulse 1.5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mistakeDanger {
-    animation: none;
-  }
-}
-
-@keyframes mistakePulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/* Screen-reader only text for accessibility */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }

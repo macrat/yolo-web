@@ -284,8 +284,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // 結果ページは detailedContent（独立した読み物価値）を持つ場合のみ robots:index になる
     // （result/[resultId]/page.tsx の shouldIndex = hasDetailedContent && !compatFriendTypeId）。
     // detailedContent を持たない結果は noindex のため sitemap に載せない（robots と整合させる）。
-    // cycle-136 で確立した「実体的価値を備えた結果ページの index 化は副次効果」に沿い、
-    // 価値を持つに至ったページを発見可能にする（UX には不可視・無害な発見補助）。
+    // 読み物価値を持つ結果ページを検索から発見可能にする（UX には不可視・無害な発見補助）。
     ...allQuizMetas.flatMap((meta, index) => {
       const quiz = quizBySlug.get(meta.slug);
       if (!quiz) return [];

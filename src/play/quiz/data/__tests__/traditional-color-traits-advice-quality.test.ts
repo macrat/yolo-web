@@ -1,14 +1,12 @@
 /**
  * Quality tests for behaviors and colorAdvice in traditional-color results.
  *
- * After the redesign to TraditionalColorDetailedContent variant:
+ * - behaviors must not be paraphrases of description.
+ *   Each item must not share a 15+ character exact substring with description.
  *
- * R2-1: behaviors must not be paraphrases of description.
- *       Each item must not share a 15+ character exact substring with description.
- *
- * R2-2: colorAdvice must be diverse and action-oriented, not just generic praise.
- *       All 8 results must NOT use the "あなたのXXは才能/強みです" template exclusively.
- *       At least 6 out of 8 results must contain a specific action suggestion.
+ * - colorAdvice must be diverse and action-oriented, not just generic praise.
+ *   All 8 results must NOT use the "あなたのXXは才能/強みです" template exclusively.
+ *   At least 6 out of 8 results must contain a specific action suggestion.
  */
 import { describe, it, expect } from "vitest";
 import type { TraditionalColorDetailedContent } from "../../types";
@@ -29,7 +27,7 @@ function hasLongOverlap(source: string, str: string, minLen: number): boolean {
   return false;
 }
 
-describe("R2-1: behaviors must not paraphrase description", () => {
+describe("behaviors must not paraphrase description", () => {
   it("each behavior must not share a 15+ char exact substring with its description", () => {
     const violations: string[] = [];
     for (const result of allResults) {
@@ -46,7 +44,7 @@ describe("R2-1: behaviors must not paraphrase description", () => {
   });
 });
 
-describe("R2-2: colorAdvice must be diverse and action-oriented", () => {
+describe("colorAdvice must be diverse and action-oriented", () => {
   /**
    * Pattern for specific action suggestions.
    * Matches phrases that suggest doing something new or different.

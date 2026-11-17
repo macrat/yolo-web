@@ -13,7 +13,7 @@ export const meta: ToolMeta = {
     "補色 伝統色",
     "カラーパレット 日本",
   ],
-  category: "generator",
+  category: "color",
   relatedSlugs: ["color-converter"],
   publishedAt: "2026-02-28T14:03:07+09:00",
   structuredDataType: "WebApplication",

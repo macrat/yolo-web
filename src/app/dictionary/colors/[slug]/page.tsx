@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
 import { COLOR_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";
 import { getColorBySlug, getAllColorSlugs } from "@/dictionary/_lib/colors";
 import { getPlayRecommendationsForDictionary } from "@/play/recommendation";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 
 export function generateStaticParams() {
   return getAllColorSlugs().map((slug) => ({ slug }));
@@ -18,7 +20,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const color = getColorBySlug(slug);
-  if (!color) return {};
+  if (!color) notFound();
   return generateColorPageMetadata(color);
 }
 
@@ -31,10 +33,9 @@ export default async function ColorDetailPage({
   const color = getColorBySlug(slug);
   if (!color) notFound();
 
-  // 辞典固有の JSON-LD のみ渡す。
-  // breadcrumb JSON-LD は Breadcrumb コンポーネントが自動出力するため手動呼び出し不要。
   const jsonLd = generateColorJsonLd(color);
   const playRecommendations = getPlayRecommendationsForDictionary("colors");
+  const title = `${color.name}（${color.romaji}）`;
 
   return (
     <DictionaryDetailLayout
@@ -43,14 +44,22 @@ export default async function ColorDetailPage({
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
         { label: "伝統色辞典", href: "/dictionary/colors" },
-        { label: color.name },
+        { label: color.name, href: `/dictionary/colors/${color.slug}` },
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/colors/${color.slug}`}
-      shareTitle={`${color.name}（${color.romaji}）`}
+      shareTitle={title}
+      shareHeading={["この", "伝統色を", "共有"]}
       playRecommendations={playRecommendations}
     >
-      <ColorDetail color={color} />
+      {(head) => (
+        <ColorDetail
+          color={color}
+          namePhrases={splitIntoPhrases(color.name)}
+          nameFontAttr={headingFontAttr(color.name)}
+          head={head}
+        />
+      )}
     </DictionaryDetailLayout>
   );
 }

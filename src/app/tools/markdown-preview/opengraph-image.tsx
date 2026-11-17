@@ -1,20 +1,16 @@
 import { toolsBySlug } from "@/tools/registry";
-import {
-  createOgpImageResponse,
-  ogpSize,
-  ogpContentType,
-} from "@/lib/ogp-image";
+import { toolShareImageContent } from "@/tools/_lib/share-image-content";
+import { createShareImageResponse, shareImageAlt } from "@/lib/share-image";
+import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from "@/lib/share-image-frame";
 
-export const alt = "yolos.net tool";
-export const size = ogpSize;
-export const contentType = ogpContentType;
+const content = toolShareImageContent(
+  toolsBySlug.get("markdown-preview")!.meta,
+);
 
-export default async function OpenGraphImage() {
-  const tool = toolsBySlug.get("markdown-preview");
-  const title = tool?.meta.name ?? "Tool";
-  const subtitle = tool?.meta.shortDescription ?? "";
-  return createOgpImageResponse({
-    title,
-    subtitle,
-  });
+export const alt = shareImageAlt(content);
+export const size = { width: SHARE_IMAGE_WIDTH, height: SHARE_IMAGE_HEIGHT };
+export const contentType = "image/png";
+
+export default function OpenGraphImage() {
+  return createShareImageResponse(content);
 }

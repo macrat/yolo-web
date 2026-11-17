@@ -1,33 +1,25 @@
 /**
- * CharacterPersonalityContent - character-personality variant の共通コンテンツコンポーネント。
+ * あなたに似たキャラ診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
- * ResultCard.tsx からは next/dynamic で遅延ロードされるため、クライアントバンドルへの
- * character-personality データの混入を防ぐ。
- *
- * 共通化対象:
- * - archetypeBreakdown / behaviors / characterMessage / 全タイプ一覧 の4セクション
- * - CSS変数 --type-color をインラインスタイルで注入（YojiPersonalityContent と同じパターン）
- * - referrerTypeId による相性セクション / 招待ボタン（ResultCard向け）
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - ShareButtons / もう一度挑戦するボタン
+ * 成り立ち・日常・キャラからのメッセージを並べる。解き終えた画面では、読みものの最後の相性と招待もここで組む
+ * （CompatibilityArea）。結果のページは afterCharacterMessage で、?with= の相性と招待と診断への誘いを差し込む。
+ * キャッチコピー・共有・すべてのタイプ・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import type { CharacterPersonalityDetailedContent } from "@/play/quiz/types";
 import type { CompatibilityEntry } from "@/play/quiz/types";
-import characterPersonalityQuiz, {
-  CHARACTER_PERSONALITY_TYPE_IDS,
-} from "@/play/quiz/data/character-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import styles from "./CharacterPersonalityContent.module.css";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 
 const QUIZ_SLUG = "character-personality";
 const QUIZ_TITLE = "あなたに似たキャラ診断";
@@ -36,42 +28,27 @@ const INVITE_TEXT = "似たキャラ診断で相性を調べよう!";
 interface CompatibilityApiResponse {
   label: string;
   description: string;
-  myType: { title: string; icon?: string };
-  friendType: { title: string; icon?: string };
+  myType: { title: string };
+  friendType: { title: string };
 }
 
 interface CharacterPersonalityContentProps {
-  /** detailedContent（archetypeBreakdown, behaviors, characterMessage を含む） */
   content: CharacterPersonalityDetailedContent;
-  /** 結果ID（全タイプ一覧で現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。友達との相性と招待に使う。 */
   resultId: string;
-  /** 結果タイプのテーマカラー（--type-color CSS変数に注入） */
-  resultColor: string;
-  /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
-  headingLevel: 2 | 3;
-  /**
-   * 全タイプ一覧のレイアウト。
-   * "list": ResultCard内で使用する縦並びリスト形式
-   * "grid": 結果ページで使用する2-3列グリッド形式（アイコン+タイトル）
-   */
-  allTypesLayout: "list" | "grid";
-  /**
-   * 相性診断用の referrer タイプID。
-   * ResultCard から渡される場合、内部で相性セクション・招待ボタンを生成する。
-   * page.tsx（結果ページ）から使用する場合は afterCharacterMessage スロットを使用する。
-   */
+  /** 相性を見る友達のタイプの id（共有のリンクの ref）。解き終えた画面で使う。 */
   referrerTypeId?: string;
   /**
-   * characterMessage後・全タイプ一覧前にページ固有要素（相性セクション・CTA等）を挿入するスロット。
-   * 渡された場合は referrerTypeId によるAPI呼び出しは行わず、このスロットを優先する。
+   * キャラからのメッセージのあと、読みものの最後に置くもの（結果のページの ?with= の相性・招待・診断への誘い）。
+   * 渡したときは、解き終えた画面の相性と招待（CompatibilityArea）を組まず、これだけを置く。
    */
   afterCharacterMessage?: React.ReactNode;
 }
 
 /**
- * 相性エリアのレンダリングを管理するコンポーネント。
- * referrerTypeId がある場合はAPIから相性データをフェッチする。
- * afterCharacterMessage が渡された場合はそちらを優先する。
+ * あなたに似たキャラ診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
+ * 相性は /api/quiz/compatibility から読み込み、読み込むあいだは読み込んでいることを文で言う。
  */
 function CompatibilityArea({
   resultId,
@@ -115,7 +92,6 @@ function CompatibilityArea({
     };
   }, [resultId, referrerTypeId]);
 
-  // referrerTypeId がない場合は招待ボタンのみ
   if (!referrerTypeId) {
     return (
       <InviteFriendButton
@@ -126,16 +102,10 @@ function CompatibilityArea({
     );
   }
 
-  // フェッチ中はローディング表示
   if (loading) {
-    return (
-      <div style={{ textAlign: "center", padding: "1rem", opacity: 0.6 }}>
-        相性データを読み込み中...
-      </div>
-    );
+    return <ReadingText>友達との相性を読み込んでいます</ReadingText>;
   }
 
-  // フェッチ失敗またはデータなしの場合は招待ボタンのみ
   if (fetchFailed || !compatibilityData) {
     return (
       <InviteFriendButton
@@ -146,7 +116,6 @@ function CompatibilityArea({
     );
   }
 
-  // フェッチ成功: 相性セクションと招待ボタンを表示
   const compatibility: CompatibilityEntry = {
     label: compatibilityData.label,
     description: compatibilityData.description,
@@ -155,15 +124,14 @@ function CompatibilityArea({
   return (
     <>
       <CompatibilitySection
+        placement="solvedScreen"
         myType={{
           id: resultId,
           title: compatibilityData.myType.title,
-          icon: compatibilityData.myType.icon,
         }}
         friendType={{
           id: referrerTypeId,
           title: compatibilityData.friendType.title,
-          icon: compatibilityData.friendType.icon,
         }}
         compatibility={compatibility}
         quizTitle={QUIZ_TITLE}
@@ -181,23 +149,9 @@ function CompatibilityArea({
 export default function CharacterPersonalityContent({
   content,
   resultId,
-  resultColor,
-  headingLevel,
-  allTypesLayout,
   referrerTypeId,
   afterCharacterMessage,
 }: CharacterPersonalityContentProps) {
-  const quiz = characterPersonalityQuiz;
-  // headingLevel に応じて h2 または h3 タグを動的に切り替える
-  const Heading = `h${headingLevel}` as "h2" | "h3";
-
-  const allTypesListClass =
-    allTypesLayout === "grid"
-      ? styles.allTypesGrid
-      : styles.allTypesListVertical;
-
-  // afterCharacterMessage が外部から渡された場合はそちらを優先する。
-  // 渡されない場合（ResultCard からの呼び出し）は referrerTypeId を使って内部で生成する。
   const resolvedAfterCharacterMessage =
     afterCharacterMessage !== undefined ? (
       afterCharacterMessage
@@ -206,69 +160,17 @@ export default function CharacterPersonalityContent({
     );
 
   return (
-    // 新デザインでは --type-color を装飾に使わない（共通アクセントに統一）。
-    // ただし page.tsx / ResultCard など caller の signature 互換を壊さないため、
-    // resultColor の受け取りと --type-color の注入自体は残す（dead 注入だが互換目的）。
-    <div
-      className={styles.wrapper}
-      style={{ "--type-color": resultColor } as React.CSSProperties}
-    >
-      {/* archetypeBreakdown セクション: 2つのアーキタイプの融合解説 */}
-      <Heading className={styles.sectionHeading}>このキャラの成り立ち</Heading>
-      <div className={styles.archetypeBreakdownCard}>
-        {content.archetypeBreakdown}
-      </div>
+    <Reading>
+      <ReadingHeading phrases={["この", "キャラの", "成り立ち"]} />
+      <ReadingText>{content.archetypeBreakdown}</ReadingText>
 
-      {/* behaviors セクション: あるある4項目 */}
-      <Heading className={styles.sectionHeading}>このキャラの日常</Heading>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading phrases={["この", "キャラの", "日常"]} />
+      <ReadingList items={content.behaviors} />
 
-      {/* characterMessage セクション: キャラからのメッセージ */}
-      <Heading className={styles.sectionHeading}>
-        キャラからのメッセージ
-      </Heading>
-      <div className={styles.characterMessageCard}>
-        {content.characterMessage}
-      </div>
+      <ReadingHeading phrases={["キャラからの", "メッセージ"]} />
+      <ReadingText>{content.characterMessage}</ReadingText>
 
-      {/* afterCharacterMessage スロット: 相性セクション・CTA等のページ固有要素 */}
       {resolvedAfterCharacterMessage}
-
-      {/* 全タイプ一覧セクション */}
-      <div className={styles.allTypesSection}>
-        <Heading className={styles.allTypesCta}>他のキャラも見てみよう</Heading>
-        <ul className={allTypesListClass}>
-          {CHARACTER_PERSONALITY_TYPE_IDS.map((typeId) => {
-            const result = quiz.results.find((r) => r.id === typeId);
-            if (!result) return null;
-            return (
-              <li
-                key={result.id}
-                className={
-                  result.id === resultId
-                    ? styles.allTypesItemCurrent
-                    : styles.allTypesItem
-                }
-              >
-                <Link
-                  href={`/play/${QUIZ_SLUG}/result/${result.id}`}
-                  aria-current={result.id === resultId ? "page" : undefined}
-                >
-                  {/* 新デザインでは絵文字アイコン（result.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
-                      各タイプの区別はタイトル文言で行う。 */}
-                  <span>{result.title}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>
+    </Reading>
   );
 }

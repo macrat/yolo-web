@@ -14,7 +14,7 @@ export const meta: ToolMeta = {
     "画像 拡大",
     "画像 変換",
   ],
-  category: "generator",
+  category: "image",
   relatedSlugs: ["image-base64", "base64", "qr-code"],
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

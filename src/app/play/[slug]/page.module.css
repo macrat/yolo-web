@@ -1,71 +1,10 @@
 /*
- * クイズ共通プレイ画面（/play/[slug]・/play/music-personality）の章立てスタイル。
- *
- * DESIGN.md（紙・墨・朱の店構え）。「文脈確認 → 本体（主役）→ 二次情報」の
- * 左寄せ構成。器（背景・囲み）は持たず、地（--paper）にそのまま置く（§4 器は静か）。
- * 新トークンのみ使用。bold 不使用・影なし・角丸0基調。
+ * クイズ・診断のページ（/play/[slug]・/play/music-personality）の組み方。ページの割り方と、セクションの
+ * あいだの全幅の罫線と余白は Section が持つ（DESIGN.md §5）。見出しの大きさは h1・h2 の既定（§4 の主見出し・
+ * セクションの見出し）に従う。
  */
 
-/* ページ全体のラッパー。最大 --max-width(960px) でセンタリングしない
- * （§4「本文・品書きは左揃え基調」）。左寄せの読み幅で運用する。 */
-.layout {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* === ゾーン1: 文脈確認（パンくず・h1・短説明）=== */
-
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-/* h1: SEO 用に保持しつつ視覚的に小さく。bold は明朝の 600 一本（DESIGN.md §3） */
-.title {
-  font-size: 1.25rem;
-  color: var(--ink);
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* 短説明: 1〜2 文。読む面は --measure に絞る（DESIGN.md §4） */
-.shortDescription {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  margin: 0;
-  max-width: var(--measure);
-}
-
-/* === ゾーン3: 補助情報（本体より下に二次配置）=== */
-
-/* シェアセクション */
-.shareSection {
-  max-width: var(--measure);
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-.shareSectionTitle {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin: 0 0 0.75rem;
-  color: var(--ink-2);
-}
-
-/* モバイル対応 */
-@media (max-width: 768px) {
-  .layout {
-    padding: 1rem 0.75rem;
-    gap: 1rem;
-  }
-
-  .title {
-    font-size: 1.1rem;
-  }
+/* セクションの見出しと、その下の中身のあいだ（§5 の間隔）。 */
+.sectionHeading {
+  margin-block-end: var(--space-16);
 }

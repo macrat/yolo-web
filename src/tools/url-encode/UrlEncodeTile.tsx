@@ -3,8 +3,6 @@
 /**
  * UrlEncodeTile — URL エンコード/デコードの単一正典タイル
  *
- * cycle-226 T-1 で UrlEncodePage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -17,21 +15,19 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   encode / decode をユーザーが切り替えられる。
- * - `"encode"`: 方向を encode に固定し、SegmentedControl を非表示にする。
- * - `"decode"`: 方向を decode に固定し、SegmentedControl を非表示にする。
+ * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。
+ * - `"decode"`: 方向を decode に固定し、ラジオボタンの組を出さない。
  *
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <UrlEncodeTile variant="full" />
- * <UrlEncodeTile variant="encode" />
- * <UrlEncodeTile variant="decode" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -40,15 +36,11 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import { encodeUrl, decodeUrl, type EncodeMode } from "./logic";
 import styles from "./UrlEncodeTile.module.css";
 
@@ -62,7 +54,7 @@ const DIRECTION_OPTIONS: { label: string; value: Direction }[] = [
   { label: "デコード", value: "decode" },
 ];
 
-/** エラーを日本語に変換する（A-4 準拠: 英語生エラーを露出しない） */
+/** エラーを日本語に変換する（英語生エラーを露出しない） */
 function toJapaneseError(direction: Direction): string {
   if (direction === "decode") {
     return "不正な URL エンコード文字列です。パーセント記号に続く 2 桁の 16 進数を確認してください。";
@@ -73,9 +65,9 @@ function toJapaneseError(direction: Direction): string {
 export interface UrlEncodeTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向トグル非表示
-   * - "decode": 方向を decode に固定、方向トグル非表示
+   * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
+   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない
+   * - "decode": 方向を decode に固定、方向のラジオボタンを出さない
    */
   variant?: UrlEncodeTileVariant;
   /** 初期のエンコードモード（デフォルト: "component"） */
@@ -113,8 +105,6 @@ export default function UrlEncodeTile({
   const [mode, setMode] = useState<EncodeMode>(defaultMode);
   const [input, setInput] = useState(defaultInput);
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // 実際に使う方向: fixed があればそれを使い、なければ state を使う
   const direction = fixedDirection ?? dynamicDirection;
 
@@ -132,7 +122,7 @@ export default function UrlEncodeTile({
       ? toJapaneseError(direction)
       : "";
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const statusSummary = (() => {
     if (!input) return "";
     if (errorMessage) return "";
@@ -142,7 +132,7 @@ export default function UrlEncodeTile({
 
   // ---------- ハンドラ ----------
   function handleDirectionChange(val: string) {
-    // fixedDirection がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedDirection がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicDirection(val as Direction);
   }
 
@@ -154,24 +144,19 @@ export default function UrlEncodeTile({
     setInput(e.target.value);
   }
 
-  async function handleCopy() {
-    if (!output) return;
-    await copy(output);
-  }
-
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
       {/* コントロール行: 方向選択（full のみ表示）+ モード選択 */}
       <div className={styles.controls}>
-        {/* variant=full のみ方向トグルを表示。encode/decode は固定のため非表示。 */}
+        {/* variant=full のみ方向のラジオボタンを出す。encode/decode は固定のため非表示。 */}
         {fixedDirection === null && (
-          <SegmentedControl
+          <RadioGroup
             options={DIRECTION_OPTIONS}
             value={dynamicDirection}
             onChange={handleDirectionChange}
-            aria-label="変換方向"
+            legend="変換の向き"
           />
         )}
 
@@ -206,7 +191,7 @@ export default function UrlEncodeTile({
         />
       </div>
 
-      {/* エラー表示（A-4 準拠: 日本語化済みメッセージを渡す） */}
+      {/* エラー表示（日本語化済みメッセージを渡す） */}
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
       {/* 出力欄 */}
@@ -215,19 +200,15 @@ export default function UrlEncodeTile({
           <label htmlFor={outputId} className={styles.fieldLabel}>
             出力
           </label>
-          {/* コピーボタン */}
-          <Button
-            variant="default"
-            size="small"
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="出力"
+            align="end"
             disabled={!output}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
+        {/* readOnly textarea は role="status" 対象外。
             別途サマリ div を置いてスクリーンリーダーへ通知する */}
         <div
           role="status"

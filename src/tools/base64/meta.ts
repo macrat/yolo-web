@@ -8,7 +8,7 @@ export const meta: ToolMeta = {
     "Base64エンコード・デコードツール。テキストをBase64に変換、またはBase64からテキストに復元。UTF-8対応。登録不要・無料で使えるオンラインツールです。",
   shortDescription: "テキストとBase64の相互変換",
   keywords: ["Base64", "エンコード", "デコード", "Base64変換", "UTF-8"],
-  category: "encoding",
+  category: "data",
   relatedSlugs: ["url-encode", "hash-generator", "image-base64"],
   publishedAt: "2026-02-13T18:57:05+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
@@ -24,7 +24,7 @@ export const meta: ToolMeta = {
     {
       question: "エンコードとデコードはどのように切り替えますか？",
       answer:
-        "画面上部の「エンコード」「デコード」ボタンで切り替えられます。エンコードモードではテキストからBase64へ、デコードモードではBase64からテキストへ変換します。",
+        "画面上部の「エンコード」「デコード」で切り替えられます。エンコードではテキストからBase64へ、デコードではBase64からテキストへ変換します。切り替えると、いまの結果が入力欄に移るので、変換した結果をそのまま逆に戻して確かめられます。",
     },
     {
       question: "Base64エンコードするとデータサイズはどのくらい増えますか？",

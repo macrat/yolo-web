@@ -1,364 +1,80 @@
 /*
- * 結果カード（受検者本人向けインライン結果）。DESIGN.md（紙・墨・朱の店構え）。
- * 左寄せ・新トークンのみ・bold 不使用・絵文字なし・影なし。
- * personality 型・icon/color 両方あるタイプは結果を包み（Tsutsumi）で見せる（§4/§7）。
- * 角丸は 0px 基調（--radius）。値札的な小ラベルのみ例外で --radius-sm。
- * リビールは 1 回・400ms 以下・prefers-reduced-motion 尊重（§5）。
+ * 解き終えた画面（DESIGN.md §5・§8 結果）。セクションのあいだの全幅の罫線と余白は Section が持ち、ここは最初の
+ * セクションの結果のボックスと結果を持ち帰る・共有する区画の組み方だけを持つ。ボックスの枠・余白・登場の動きは
+ * ResultBox が持つ。
  */
 
-.card {
-  text-align: left;
-  animation: fadeIn 0.4s ease;
+/* 結果に着いたときに送る先（結果のボックス）。ボックスを画面の上端に貼り付けず、フォーカスのリング（ボックスの
+ * 線の外に 6px）まで画面に入る余白を上に残す（§12「フォーカスが必ず見え、隠れない」）。 */
+.card :where(section[tabindex="-1"]) {
+  scroll-margin-top: var(--space-16);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* === 結果のボックスの中 === */
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-/* 「あなたの結果」ラベル（小見出し・フォールバック用） */
-.resultLabel {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  margin: 0 0 0.25rem;
+/* 伝統色診断の結果の色。字を載せない色見本で、細い線で地と分ける（§2・§5）。 */
+.swatch {
+  block-size: var(--space-64);
+  border: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* === 結果を包みで見せる（§7・personality 型のみ） ===
- * この見出し部（器）は静かな到達ラベルだけを持つ。結果そのものは Tsutsumi（罫で
- * 明確に包まれた独立ビジュアル）が主役——器は賑やかにしない（§4）。 */
-.medalWrap {
+/* 結果の説明は文章なので、本文の幅で折り返す（§8）。 */
+.description {
+  max-width: var(--measure);
+}
+
+/* 同点の開示。主タイプと同じ強さのタイプを文で言い、そのタイプの結果のページへのリンクを並べる。 */
+.tied {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--measure);
+}
+
+.tiedTypeLinks {
+  list-style: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.75rem;
-  margin: 0 0 1rem;
-  /* リビールは 1 回・450ms 以下（§5 の上限内）。opacity 中心＋わずかな立ち上がり。 */
-  animation: medalReveal 0.4s ease both;
-}
-
-/* 到達の承認ラベル（静かな達成感。煽らない） */
-.medalLabel {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* 「診断完了」バッジ。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
- * 操作・選択状態のハイライトにのみ可で静的なラベル地には不可のため、
- * 値札（メタ情報ラベル・§4）の語彙——--rule 罫囲み + --ink-2 の文字に統一する
- * （値札ラベルに準じ --radius-sm を例外適用）。 */
-.medalLabelDone {
-  padding: 0.1rem 0.45rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--rule);
-  color: var(--ink-2);
-  font-size: 0.75rem;
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 0.5rem;
-  line-height: 1.4;
-}
-
-.score {
-  font-size: 0.95rem;
-  color: var(--ink-2);
-  margin: 0 0 1rem;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-}
-
-.description {
-  font-size: 1rem;
-  line-height: 1.8;
-  margin: 0 0 1.5rem;
-  color: var(--ink);
-  max-width: 720px;
-}
-
-/* おすすめリンク（任意）。罫の線画（トップページ .heroLink と同じ語彙・ピル禁止）。 */
-.recommendation {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-bottom: 1.5rem;
-  padding: 0 1.1rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: background-color 0.15s ease;
-}
-
-.recommendation:hover {
-  background-color: var(--accent-weak);
-}
-
-.recommendation:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* もう一度挑戦ボタン。罫の線画ボタン（ブランド色・影なし・角丸0）。 */
-.retryButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  margin-top: 0.5rem;
-  padding: 0 1.25rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background-color: var(--paper);
-  color: var(--ink);
-  font-size: 0.9rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.retryButton:hover {
-  background-color: var(--accent-weak);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.retryButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-@keyframes medalReveal {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card {
-    animation: none;
-  }
-
-  .medalWrap {
-    animation: none;
-  }
-}
-
-/* === 真の残余同点の開示ブロック（P2b・cycle-303／word-sense-personality のみ） ===
- * 恣意的・不可視に配列順で割らず、主タイプと副タイプを同格に開示する静かな区画。
- * DESIGN.md §4: 罫（--rule）＋一段沈む面（--paper-2）。影なし・角丸0基調・絵文字なし。
- * 朱（--accent）は中のリンクだけに使う（区画の地・見出しには使わない）。 */
-.tiedDisclosure {
-  margin: 0 0 1.5rem;
-  padding: 1.1rem 1.25rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: var(--paper-2);
-  max-width: 720px;
-}
-
-/* 同格開示の本文。型名は【】括弧＋墨（--ink）の組版で示し、色付き強調はしない。 */
-.tiedDisclosureText {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  margin: 0;
-}
-
-/* co-type の結果解説ページへのリンク群。罫の線画リンク（.recommendation と同語彙）。 */
-.tiedTypeLinks {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .tiedTypeLink {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 1.1rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  /* 型名は「柔和温順（にゅうわおんじゅん）タイプ」のように長い。語中改行を抑える。 */
   word-break: keep-all;
   overflow-wrap: anywhere;
-  transition: background-color 0.15s ease;
 }
 
-.tiedTypeLink:hover {
-  background-color: var(--accent-weak);
-}
-
-.tiedTypeLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* detailedContent セクション（全 variant 共通の親コンテナ） */
-.detailedSection {
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-/* セクション見出し。サイト共通の罫下線で静かに区切る
- * （DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない——朱はリンク/現在地/主ボタン/印に限る） */
-.detailedHeading {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* traits（持ち味）リスト */
-.traitsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
+/* === 結果を持ち帰る・共有する区画 ===
+ * 結果を読み終えた所で出会うよう、ボックスのすぐ下に置く。ボックスのすぐ下にある小見出しは、ボックスの太い枠が
+ * すでに切れ目なので、上に線を持たない（§5）。 */
+.share {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
+  margin-top: var(--space-24);
 }
 
-.traitsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.625rem 0.875rem;
-  background: var(--paper-2);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
+.shareHeading {
+  font-size: var(--text-heading-sub);
 }
 
-/* 絵文字を使わない静かなマーカー。朱の縦バーは§8-3（罫箱＋色付き左罫）に抵触するため中黒（墨）に置換。 */
-.traitsItem::before {
-  content: "・";
-  flex-shrink: 0;
-  color: var(--ink-2);
+/* 結果ごとのおすすめのリンク。縁の見えないコントロールで、字の左右の余白と、字を並びの左端に置く張り出しは
+ * data-text-box（globals.css）が持つ。 */
+.recommendation {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
-/* behaviors リスト */
-.behaviorsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.behaviorsItem {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-/* advice カード（標準 variant）。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
- * 操作・選択状態のハイライトにのみ可で区画の地には不可のため、
- * characterIntro と同じ --paper-2（一段沈む面）に統一する。 */
-.adviceCard {
-  padding: 1.1rem 1.25rem;
-  border-radius: var(--radius);
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--ink);
-  margin-bottom: 0;
-  text-align: left;
-  background: var(--paper-2);
-}
-
-/* catchphrase（contrarian-fortune detailedSection 内） */
-.catchphrase {
-  font-size: 1rem;
-  font-style: italic;
-  color: var(--ink-2);
-  text-align: left;
-  margin-bottom: 1.5rem;
-  line-height: 1.7;
-}
-
-/* catchphraseBeforeDescription（description の前に表示する一言）。
- * variant 別の派手な装飾線は廃し、静かなリード文として左寄せで置く。 */
-.catchphraseBeforeDescription {
-  font-size: 1.1rem;
-  color: var(--ink-2);
-  text-align: left;
-  margin: 0 0 1rem;
-  line-height: 1.7;
-}
-
-/* humorMetrics テーブル（contrarian-fortune） */
-.humorMetricsTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 0;
-  font-size: 0.9rem;
-}
-
-.humorMetricsTable th,
-.humorMetricsTable td {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--rule);
-  text-align: left;
-}
-
-.humorMetricsTable th {
-  background: var(--paper-2);
-  font-weight: 600;
-  width: 50%;
-}
-
-/* characterIntro（character-fortune）。淡い面に置く */
-.characterIntro {
-  font-size: 1rem;
-  line-height: 1.8;
-  text-align: left;
-  color: var(--ink);
-  margin-bottom: 1.5rem;
-  padding: 1.1rem 1.25rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-
-/* characterMessage（character-fortune） */
-.characterMessage {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--ink);
-  text-align: left;
-  margin-bottom: 0;
+/* 「このタイプについて」の読みもののすぐ後ろに置く、その結果の辞典の項目へのリンク。読みものの段落と同じ間隔で続ける。 */
+.aboutLink {
+  margin-top: var(--space-16);
 }

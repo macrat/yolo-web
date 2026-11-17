@@ -3,12 +3,10 @@
 /**
  * ImageResizerTile — 画像リサイズの単一正典タイル
  *
- * cycle-228 T-27: ImageResizerPage.tsx（559行）を Panel ルートのタイルへ移行。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **full のみ**: 全機能を1バリエーション（variant="full"）に収める（計画確定済み）。
+ * - **full のみ**: 全機能を1バリエーション（variant="full"）に収める。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
  *   同居しても id 重複・label 誤結合が起きない。Canvas は id を使わず ref 参照。
  * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
@@ -24,12 +22,12 @@
  * - 連続ドロップ: 新しいファイルが選択された時点で直前の結果をクリアし、
  *   古い処理結果が新しい結果を上書きしないよう処理 ID を管理する。
  *
- * ## GIF 警告（個別論点①-5）
+ * ## GIF 警告
  *
  * GIF受け取り時に「アニメーションGIFはリサイズ後にアニメーションが失われる」旨を
  * role="status"（advisory = polite）で表示。処理自体は継続可能。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" の div にリサイズ完了サマリテキストを置く。
  * - GIF 警告も role="status" aria-live="polite"（処理を妨げない注意 → alert は過剰）。
@@ -38,10 +36,12 @@
 
 import { useState, useCallback, useRef, useId, useEffect } from "react";
 import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import Checkbox from "@/components/Checkbox";
 import FileDropZone from "@/components/FileDropZone";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import {
   calculateDimensions,
@@ -88,14 +88,13 @@ export default function ImageResizerTile({
 }: ImageResizerTileProps = {}) {
   // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
-  const resizeModeId = `${uid}-resize-mode`;
   const widthId = `${uid}-resize-width`;
   const heightId = `${uid}-resize-height`;
   const percentId = `${uid}-resize-percent`;
   const formatId = `${uid}-output-format`;
   const qualityId = `${uid}-output-quality`;
 
-  // ---------- アンマウント後 setState 防止（D-4） ----------
+  // ---------- アンマウント後 setState 防止 ----------
   const isMounted = useRef(true);
   useEffect(() => {
     isMounted.current = true;
@@ -124,6 +123,7 @@ export default function ImageResizerTile({
   const [outputFormat, setOutputFormat] = useState("image/png");
   const [quality, setQuality] = useState(80);
   const [result, setResult] = useState<ResizedResult | null>(null);
+  const [fileError, setFileError] = useState("");
   const [error, setError] = useState("");
   const [gifWarning, setGifWarning] = useState(false);
   const [resultSummary, setResultSummary] = useState("");
@@ -131,6 +131,7 @@ export default function ImageResizerTile({
   // ---------- ファイル選択ハンドラ ----------
   const handleFile = useCallback((file: File) => {
     // 状態をリセット
+    setFileError("");
     setError("");
     setResult(null);
     setGifWarning(false);
@@ -140,16 +141,18 @@ export default function ImageResizerTile({
 
     // ファイルサイズ上限チェック（FileDropZone が呼ぶ前に弾くが念のため）
     if (file.size > MAX_FILE_SIZE) {
-      setError("ファイルサイズが20MBを超えています");
+      setFileError(
+        "ファイルが20MBを超えています。20MB以下のファイルを選んでください",
+      );
       return;
     }
 
     if (!file.type.startsWith("image/")) {
-      setError("画像ファイルを選択してください");
+      setFileError("画像ファイルを選んでください（PNG・JPEG・GIF・WebP）");
       return;
     }
 
-    // 個別論点①-5: GIF誤誘導解消
+    // GIF はアニメーションが失われることを知らせる
     if (file.type === "image/gif") {
       setGifWarning(true);
     }
@@ -161,7 +164,7 @@ export default function ImageResizerTile({
 
     const reader = new FileReader();
     reader.onload = () => {
-      // アンマウント後は何もしない（D-4）
+      // アンマウント後は何もしない
       if (!isMounted.current) return;
       // 古い処理は無視（連続ドロップ安全性）
       if (currentProcessId !== processIdRef.current) return;
@@ -187,20 +190,25 @@ export default function ImageResizerTile({
       img.onerror = () => {
         if (!isMounted.current) return;
         if (currentProcessId !== processIdRef.current) return;
-        setError("画像の読み込みに失敗しました");
+        setFileError(
+          "画像を読み込めませんでした。壊れていない画像ファイルを選び直してください",
+        );
       };
       img.src = dataUrl;
     };
     reader.onerror = () => {
       if (!isMounted.current) return;
       if (currentProcessId !== processIdRef.current) return;
-      setError("ファイルの読み込みに失敗しました");
+      setFileError(
+        "ファイルを読み込めませんでした。もう一度選び直してください",
+      );
     };
     reader.readAsDataURL(file);
   }, []);
 
   const handleFileError = useCallback((message: string) => {
-    setError(message);
+    setFileError(message);
+    setError("");
     setResult(null);
     setGifWarning(false);
   }, []);
@@ -333,7 +341,7 @@ export default function ImageResizerTile({
         fileName,
       });
 
-      // C-3: ライブリージョン用の実テキストサマリ
+      // ライブリージョン用の実テキストサマリ
       setResultSummary(
         `リサイズ完了: ${newWidth}×${newHeight}px（推定 ${formatFileSize(estimatedSize)}）`,
       );
@@ -375,30 +383,32 @@ export default function ImageResizerTile({
       <div className={styles.inner}>
         {/* ファイル選択 */}
         <FileDropZone
+          label="画像ファイル"
           onFileSelect={handleFile}
           onError={handleFileError}
           maxSizeBytes={MAX_FILE_SIZE}
           accept="image/*"
           description="PNG, JPEG, GIF, WebP対応 (最大20MB)"
+          error={fileError || undefined}
         />
 
         {/* エラー表示 */}
         {error && <ErrorMessage message={error} />}
 
-        {/* GIF警告（個別論点①-5: アニメーション消失の明示）
+        {/* GIF警告（アニメーション消失の明示）
          * GIF受け取り時の注意（advisory）のため role="status"（polite）を使用。
          * 処理を妨げない注意であり role="alert"（assertive）は過剰なため不使用。
          */}
         {gifWarning && (
-          <div
-            className={styles.gifWarningBox}
+          <p
+            className={styles.gifWarning}
             role="status"
             aria-live="polite"
             data-testid="gif-warning"
           >
             <strong>GIF画像の注意:</strong>{" "}
             アニメーションGIFはリサイズ後にアニメーションが失われ、最初のフレームのみが出力されます。アニメーションを保持したい場合はご注意ください。
-          </div>
+          </p>
         )}
 
         {/* 元画像情報とリサイズ設定 */}
@@ -426,18 +436,12 @@ export default function ImageResizerTile({
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}>リサイズ設定</h2>
 
-              {/* モード切替 (SegmentedControl) */}
-              <div className={styles.modeRow}>
-                <span id={resizeModeId} className={styles.modeLabel}>
-                  モード:
-                </span>
-                <SegmentedControl
-                  options={RESIZE_MODE_OPTIONS}
-                  value={resizeMode}
-                  onChange={(v) => setResizeMode(v as ResizeMode)}
-                  aria-labelledby={resizeModeId}
-                />
-              </div>
+              <RadioGroup
+                legend="サイズの決め方"
+                options={RESIZE_MODE_OPTIONS}
+                value={resizeMode}
+                onChange={(v) => setResizeMode(v as ResizeMode)}
+              />
 
               {/* サイズ指定モード */}
               {resizeMode === "dimensions" ? (
@@ -456,73 +460,6 @@ export default function ImageResizerTile({
                       />
                     </div>
                     <span className={styles.label}>px</span>
-                    {/* DESIGN.md §3: 絵文字禁止 → Lucide スタイル SVG 線画 + 可視テキストラベル */}
-                    <button
-                      type="button"
-                      className={`${styles.lockButton} ${maintainAspectRatio ? styles.lockButtonActive : ""}`}
-                      onClick={() =>
-                        setMaintainAspectRatio(!maintainAspectRatio)
-                      }
-                      aria-label={
-                        maintainAspectRatio
-                          ? "アスペクト比 固定中（クリックで解除）"
-                          : "アスペクト比 固定解除（クリックで固定）"
-                      }
-                    >
-                      {maintainAspectRatio ? (
-                        /* Lucide "Lock" (施錠) — stroke 1.5px / 16px */
-                        <>
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-                            <rect
-                              x="3"
-                              y="11"
-                              width="18"
-                              height="11"
-                              rx="2"
-                              ry="2"
-                            />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                          </svg>
-                          <span className={styles.lockLabel}>固定中</span>
-                        </>
-                      ) : (
-                        /* Lucide "Unlock" (開錠) — stroke 1.5px / 16px */
-                        <>
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-                            <rect
-                              x="3"
-                              y="11"
-                              width="18"
-                              height="11"
-                              rx="2"
-                              ry="2"
-                            />
-                            <path d="M7 11V7a5 5 0 0 1 9.9-1" />
-                          </svg>
-                          <span className={styles.lockLabel}>固定解除</span>
-                        </>
-                      )}
-                    </button>
                   </div>
                   <div className={styles.row}>
                     <label htmlFor={heightId} className={styles.label}>
@@ -539,6 +476,11 @@ export default function ImageResizerTile({
                     </div>
                     <span className={styles.label}>px</span>
                   </div>
+                  <Checkbox
+                    label="縦横比を保つ"
+                    checked={maintainAspectRatio}
+                    onChange={(e) => setMaintainAspectRatio(e.target.checked)}
+                  />
                 </>
               ) : (
                 /* パーセント指定モード */
@@ -599,18 +541,18 @@ export default function ImageResizerTile({
                 </div>
               )}
 
-              <button
-                type="button"
-                className={styles.resizeButton}
+              <Button
+                variant="primary"
+                className={styles.action}
                 onClick={handleResize}
               >
                 リサイズ
-              </button>
+              </Button>
             </div>
           </>
         )}
 
-        {/* C-3: ライブリージョン — 実テキストノードのサマリ */}
+        {/* ライブリージョン — 実テキストノードのサマリ */}
         <div
           role="status"
           aria-live="polite"
@@ -644,13 +586,9 @@ export default function ImageResizerTile({
                 </span>
               </div>
             </div>
-            <button
-              type="button"
-              className={styles.downloadButton}
-              onClick={handleDownload}
-            >
+            <Button className={styles.action} onClick={handleDownload}>
               ダウンロード
-            </button>
+            </Button>
           </div>
         )}
 

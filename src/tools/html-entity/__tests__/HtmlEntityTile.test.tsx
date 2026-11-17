@@ -1,10 +1,10 @@
 /**
- * HtmlEntityTile のユニットテスト（TDD: 実装前に作成）
+ * HtmlEntityTile のユニットテスト
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（方向トグルが表示される）
- * - V-2: variant=encode でのレンダリング（方向固定・トグル非表示）
- * - V-3: variant=decode でのレンダリング（方向固定・トグル非表示）
+ * - V-1: variant=full でのレンダリング（方向のラジオボタンが表示される）
+ * - V-2: variant=encode でのレンダリング（方向固定・方向のラジオボタン非表示）
+ * - V-3: variant=decode でのレンダリング（方向固定・方向のラジオボタン非表示）
  * - V-4: variant=encode でエンコード変換が動く
  * - V-5: variant=decode でデコード変換が動く
  * - V-6: variant=full でエンコード→デコード切り替えが動く
@@ -14,7 +14,7 @@
  * - V-10: コピーボタン disabled / 有効状態
  * - V-11: コピー後テキスト変化
  * - V-12: 変換ロジックの正確性（UI経由）
- * - V-13: CSS トークン検証（旧トークン不使用）
+ * - V-13: CSS トークン検証（--color-* トークン不使用）
  */
 import { readFileSync } from "fs";
 import path from "path";
@@ -42,7 +42,7 @@ afterEach(() => {
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("方向トグル（SegmentedControl）が表示される", () => {
+  it("方向のラジオボタンの組が表示される", () => {
     render(<HtmlEntityTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -57,8 +57,8 @@ describe("V-1: variant=full", () => {
 });
 
 // --- V-2: variant=encode ---
-describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+describe("V-2: variant=encode（方向固定・方向のラジオボタン非表示）", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<HtmlEntityTile variant="encode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -71,8 +71,8 @@ describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
 });
 
 // --- V-3: variant=decode ---
-describe("V-3: variant=decode（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+describe("V-3: variant=decode（方向固定・方向のラジオボタン非表示）", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<HtmlEntityTile variant="decode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -108,8 +108,8 @@ describe("V-5: variant=decode での変換", () => {
   });
 });
 
-// --- V-6: variant=full でのトグル切り替え ---
-describe("V-6: variant=full でのトグル切り替え", () => {
+// --- V-6: variant=full での方向の切り替え ---
+describe("V-6: variant=full での方向の切り替え", () => {
   it("デコードに切り替えてデコードが動く", () => {
     render(<HtmlEntityTile variant="full" />);
     const decodeBtn = screen.getByRole("radio", { name: "デコード" });
@@ -149,7 +149,7 @@ describe("V-7: id インスタンス一意性", () => {
 
 // --- V-8: デフォルト variant は full と同等 ---
 describe("V-8: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等の動作をする（トグルが表示される）", () => {
+  it("variant 未指定の場合 full と同等の動作をする（方向のラジオボタンが表示される）", () => {
     render(<HtmlEntityTile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -168,7 +168,7 @@ describe("V-9: a11y（role='status' aria-live='polite'）", () => {
     expect(status).toHaveAttribute("aria-live", "polite");
   });
 
-  it("入力後にサマリテキストが入る（C-3 要件）", () => {
+  it("入力後にサマリテキストが入る", () => {
     render(<HtmlEntityTile variant="full" />);
     fireEvent.change(screen.getByLabelText("テキスト入力"), {
       target: { value: "<b>test</b>" },
@@ -177,10 +177,11 @@ describe("V-9: a11y（role='status' aria-live='polite'）", () => {
     expect(status.textContent).not.toBe("");
   });
 
-  it("SegmentedControl に aria-label が付いている（C-2 要件）", () => {
+  it("ラジオボタンの組は見出しを名前として持つ", () => {
     render(<HtmlEntityTile variant="full" />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label");
+    expect(
+      screen.getByRole("radiogroup", { name: "変換の向き" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -213,7 +214,7 @@ describe("V-11: コピーボタンの文言変化", () => {
     expect(copyButton).toHaveTextContent("コピー");
   });
 
-  it("コピー後は 'コピーしました' が表示される", async () => {
+  it("コピー後は 'コピー済み' が表示される", async () => {
     mockWriteText.mockResolvedValue(undefined);
     render(<HtmlEntityTile variant="full" />);
     fireEvent.change(screen.getByLabelText("テキスト入力"), {
@@ -223,7 +224,7 @@ describe("V-11: コピーボタンの文言変化", () => {
     await act(async () => {
       fireEvent.click(copyButton);
     });
-    expect(copyButton).toHaveTextContent("コピーしました");
+    expect(copyButton).toHaveTextContent("コピー済み");
   });
 });
 
@@ -281,7 +282,7 @@ describe("V-12: 変換ロジックの正確性", () => {
 describe("V-13: CSS トークン検証", () => {
   const cssPath = path.resolve(__dirname, "../HtmlEntityTile.module.css");
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });

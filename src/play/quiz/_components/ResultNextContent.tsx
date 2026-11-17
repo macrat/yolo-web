@@ -1,61 +1,45 @@
 "use client";
 
-import Link from "next/link";
+import { useId, type ReactNode } from "react";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import styles from "./ResultNextContent.module.css";
 
-/**
- * クイズ結果画面直下の「次のおすすめ」に表示する1件分のデータ。
- * Server Component（page.tsx）で事前計算してprops経由で渡す。
- */
-export interface ResultNextContentItem {
-  slug: string;
-  title: string;
-  shortTitle?: string;
-  category: string;
-  /** getContentPath() の結果（例: "/play/kanji-level"） */
-  contentPath: string;
-  /** コスト感情報（「全10問」「毎日更新」「パズル」等） */
-  metaText: string;
-  /** resolveDisplayCategory() の結果（「診断」「クイズ」「パズル」等） */
-  categoryLabel: string;
-}
-
 interface ResultNextContentProps {
-  contents: ResultNextContentItem[];
+  /** 見出しのすぐ下に並べる操作（「もう一度挑戦する」と、結果ごとのおすすめのリンク）。 */
+  children: ReactNode;
+  /**
+   * 操作の下に並べる次の遊びの行。遊びの登録と分類の語をクライアントに持ち込まないよう、サーバーで行にしてから渡す。
+   */
+  items: ItemListItem[];
 }
 
 /**
- * クイズ結果画面直下の「次のおすすめ」回遊導線コンポーネント。
- *
- * - ResultCard の直後に配置され、来訪者が結果確認後に次のコンテンツを発見できるようにする
- * - props で受け取ったデータを表示するだけの純粋な表示コンポーネント
- * - QuizContainer（Client Component）の子として描画されるため "use client" を指定
- * - contents が空配列の場合は null を返す
- * - registryやseoへのimportを持たず、クライアントバンドルを肥大化させない
+ * 診断・クイズを解き終えた画面のセクション「次はこれを試してみよう」。見出しのすぐ下に、呼び出し側から受け取る
+ * 操作（「もう一度挑戦する」と、結果ごとのおすすめのリンク）を置き、その下に次の遊びの一覧を置く。結果を読み終えた
+ * 来訪者が、続けて遊ぶ先をここで選ぶ。
  */
 export default function ResultNextContent({
-  contents,
+  children,
+  items,
 }: ResultNextContentProps) {
-  if (contents.length === 0) return null;
+  const headingId = useId();
 
   return (
-    <section className={styles.section} aria-label="次のおすすめ">
-      <h3 className={styles.heading}>次はこれを試してみよう</h3>
-      <ul className={styles.list}>
-        {contents.map((content) => (
-          <li key={content.slug}>
-            <Link href={content.contentPath} className={styles.link}>
-              <span className={styles.title}>
-                {content.shortTitle ?? content.title}
-              </span>
-              <span className={styles.metaRow}>
-                <span className={styles.badge}>{content.categoryLabel}</span>
-                <span className={styles.meta}>{content.metaText}</span>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <Section aria-labelledby={headingId}>
+      <PhrasedText
+        as="h2"
+        id={headingId}
+        className={styles.heading}
+        phrases={["次は", "これを", "試して", "みよう"]}
+      />
+      <div className={styles.actions}>{children}</div>
+      {items.length > 0 && (
+        <div className={styles.list}>
+          <ItemList labelledBy={headingId} items={items} />
+        </div>
+      )}
+    </Section>
   );
 }

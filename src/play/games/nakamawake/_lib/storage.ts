@@ -1,7 +1,8 @@
 import type { NakamawakeGameStats, NakamawakeGameHistory } from "./types";
 
 const STATS_KEY = "nakamawake-stats";
-const HISTORY_KEY = "nakamawake-history";
+/** 日付ごとの回の記録のキー。本体の前のスクリプトも、開き直した回の高さを取っておくために読む。 */
+export const HISTORY_KEY = "nakamawake-history";
 
 /**
  * Default stats for a new player.

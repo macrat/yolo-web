@@ -1,174 +1,219 @@
 import { describe, expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import type { BlogPostMeta } from "@/blog/_lib/blog";
-
-// useSearchParams / useRouter のモック（BlogFilterableList が使用）
-vi.mock("next/navigation", () => ({
-  useSearchParams: vi.fn(() => new URLSearchParams()),
-  useRouter: vi.fn(() => ({ replace: vi.fn() })),
-}));
-
-// next/link のモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    className,
-    children,
-    "data-active": dataActive,
-    "aria-current": ariaCurrent,
-  }: {
-    href: string;
-    className?: string;
-    children: React.ReactNode;
-    "data-active"?: string;
-    "aria-current"?: React.AriaAttributes["aria-current"];
-  }) => (
-    <a
-      href={href}
-      className={className}
-      data-active={dataActive}
-      aria-current={ariaCurrent}
-    >
-      {children}
-    </a>
-  ),
-}));
-
-// BlogListView は Server Component だが jsdom では同期的にレンダリングされる
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { CATEGORY_LABELS, getAllBlogPosts } from "@/blog/_lib/blog";
+import {
+  BLOG_LIST_PER_PAGE,
+  blogIndexEntries,
+  blogListPosts,
+} from "@/blog/_lib/blog-list";
 import BlogListView from "../BlogListView";
 
-/** テスト用 BlogPostMeta を生成するヘルパー */
-function makePost(overrides: Partial<BlogPostMeta> = {}): BlogPostMeta {
-  return {
-    slug: "test-post",
-    title: "テスト記事タイトル",
-    description: "テスト記事の説明文",
-    published_at: "2026-01-01",
-    updated_at: "2026-01-01",
-    tags: ["TypeScript"],
-    category: "dev-notes",
-    series: undefined,
-    related_tool_slugs: [],
-    draft: false,
-    readingTime: 3,
-    ...overrides,
-  };
+const navigation = vi.hoisted(() => ({ pathname: "/blog" }));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => navigation.pathname,
+}));
+
+function visit(path: string) {
+  navigation.pathname = path;
+  window.history.replaceState(null, "", path);
 }
 
-const mockPosts: BlogPostMeta[] = [
-  makePost({ slug: "post-a", title: "記事A" }),
-  makePost({ slug: "post-b", title: "記事B" }),
-  makePost({ slug: "post-c", title: "記事C" }),
-];
+function rows(): HTMLElement[] {
+  return within(screen.getByRole("list", { name: "記事の一覧" })).getAllByRole(
+    "listitem",
+  );
+}
 
-describe("BlogListView 統合テスト", () => {
-  test("ページタイトル（h1）が表示される", () => {
-    render(
-      <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-      />,
-    );
-    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+describe("BlogListView", () => {
+  test("/blog は新しい順の1ページ目を並べ、行のリンクの名前は題名だけである", () => {
+    visit("/blog");
+    render(<BlogListView scope={{ type: "all" }} page={1} />);
+    const posts = getAllBlogPosts();
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "ブログ" }),
+    ).toBeInTheDocument();
+    const listRows = rows();
+    expect(listRows).toHaveLength(Math.min(posts.length, BLOG_LIST_PER_PAGE));
+    listRows.forEach((row, index) => {
+      const links = within(row).getAllByRole("link");
+      expect(links).toHaveLength(1);
+      expect(links[0]).toHaveAccessibleName(posts[index].title);
+      expect(links[0]).toHaveAttribute("href", `/blog/${posts[index].slug}`);
+    });
   });
 
-  test("BlogFilterableList へ posts が渡され、カード（記事タイトル）が表示される", () => {
-    render(
-      <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-        allPosts={mockPosts}
-      />,
-    );
-    expect(screen.getByText("記事A")).toBeInTheDocument();
-    expect(screen.getByText("記事B")).toBeInTheDocument();
-    expect(screen.getByText("記事C")).toBeInTheDocument();
-  });
+  test("行は分類・公開日・読了時間を持ち、「新着」の印を持たない", () => {
+    visit("/blog");
+    render(<BlogListView scope={{ type: "all" }} page={1} />);
+    const [post] = getAllBlogPosts();
+    const [row] = rows();
 
-  test("BlogFilterableList へ newSlugs が渡される（古い記事には「新着」マークなし）", () => {
-    // published_at が 2026-01-01（現在から約 126 日前）なので「新着」マークなし
-    render(
-      <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-        allPosts={mockPosts}
-      />,
+    expect(row).toHaveTextContent(CATEGORY_LABELS[post.category]);
+    expect(row).toHaveTextContent(`${post.readingTime}分で読める`);
+    expect(row.querySelector("time")).toHaveAttribute(
+      "datetime",
+      post.published_at,
     );
+    expect(row).toHaveTextContent(post.description);
     expect(screen.queryByText("新着")).not.toBeInTheDocument();
   });
 
-  test("BlogFilterableList へ newSlugs が渡される（直近 30 日の記事には「新着」マークあり）", () => {
-    const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .slice(0, 10);
-    const recentPosts: BlogPostMeta[] = [
-      makePost({
-        slug: "recent-post",
-        title: "最新記事",
-        published_at: recentDate,
-      }),
-    ];
-    render(
-      <BlogListView
-        posts={recentPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-        allPosts={recentPosts}
-      />,
+  test("件数の行が全件を言い、ページ送りが2ページ目へのリンクを持つ", () => {
+    visit("/blog");
+    render(<BlogListView scope={{ type: "all" }} page={1} />);
+    const total = getAllBlogPosts().length;
+
+    expect(document.querySelector('p[tabindex="-1"]')).toHaveTextContent(
+      new RegExp(`^全${total}件のうち1〜50件目$`),
     );
-    expect(screen.getByText("新着")).toBeInTheDocument();
+    const pages = screen.getByRole("navigation", {
+      name: "ページナビゲーション",
+    });
+    expect(
+      within(pages).getByRole("link", { name: "次へ（ページ2）" }),
+    ).toHaveAttribute("href", "/blog/page/2");
   });
 
-  test("カテゴリナビゲーションが表示される（BlogFilterableList が正しく props を受け取っている）", () => {
+  test("一覧の上に、分類とタグの索引を閉じたアコーディオンで置き、語を記事の多い順に並べる", () => {
+    visit("/blog");
+    const { container } = render(
+      <BlogListView scope={{ type: "all" }} page={1} />,
+    );
+    const index = blogIndexEntries();
+
+    const details = container.querySelector("details");
+    expect(details).not.toHaveAttribute("open");
+    expect(details?.querySelector("summary")).toHaveTextContent(
+      "分類・タグから探す",
+    );
+    const categories = screen.getByRole("list", {
+      name: `分類（${index.categories.length}）`,
+    });
+    const tags = screen.getByRole("list", {
+      name: `タグ（${index.tags.length}）`,
+    });
+    for (const list of [categories, tags]) {
+      const counts = within(list)
+        .getAllByRole("link")
+        .map((link) => Number(/（(\d+)）$/.exec(link.textContent ?? "")?.[1]));
+      expect(counts).toEqual([...counts].sort((a, b) => b - a));
+    }
+    // 索引の語は一覧の上にだけ置き、行の中にタグのリンクを置かない。
+    expect(details?.compareDocumentPosition(rows()[0])).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
+  test("分類のページは、パンくずでブログへ戻れ、分類の名前を見出しにし、索引のその分類を現在地にして、行に種別を出さない", () => {
+    visit("/blog/category/dev-notes");
     render(
       <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-        allPosts={mockPosts}
+        scope={{ type: "category", category: "dev-notes" }}
+        page={1}
       />,
+    );
+    const posts = blogListPosts({ type: "category", category: "dev-notes" });
+
+    const breadcrumb = screen.getByRole("navigation", {
+      name: "パンくずリスト",
+    });
+    expect(
+      within(breadcrumb).getByRole("link", { name: "ブログ" }),
+    ).toHaveAttribute("href", "/blog");
+    expect(within(breadcrumb).getByText("開発ノート")).toHaveAttribute(
+      "aria-current",
+      "page",
     );
     expect(
-      screen.getByRole("navigation", { name: "カテゴリで絞り込む" }),
+      screen.getByRole("heading", { level: 1, name: "開発ノート" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /^開発ノート（\d+）$/ }),
+    ).toHaveAttribute("aria-current", "page");
+    expect(rows()).toHaveLength(posts.length);
+    expect(within(rows()[0]).queryByText("開発ノート")).not.toBeInTheDocument();
   });
 
-  test("tagHeader が指定された場合タグ名が表示される（タグページモード）", () => {
-    render(
-      <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog/tag/%E8%A8%AD%E8%A8%88%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3"
-        tagHeader={{
-          tag: "設計パターン",
-          description: "設計パターンの記事一覧",
-        }}
-      />,
+  test("タグのページは、パンくずでブログへ戻れ、タグの名前を見出しにする", () => {
+    visit("/blog/tag/Web%E9%96%8B%E7%99%BA");
+    render(<BlogListView scope={{ type: "tag", tag: "Web開発" }} page={1} />);
+
+    const breadcrumb = screen.getByRole("navigation", {
+      name: "パンくずリスト",
+    });
+    expect(
+      within(breadcrumb).getByRole("link", { name: "ブログ" }),
+    ).toHaveAttribute("href", "/blog");
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Web開発" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /^Web開発（\d+）$/ }),
+    ).toHaveAttribute("aria-current", "page");
+    expect(rows()).toHaveLength(
+      blogListPosts({ type: "tag", tag: "Web開発" }).length,
     );
-    // タグ名が h1 として表示される（BlogListView 内でレンダリングされる）
-    expect(screen.getByText("設計パターン")).toBeInTheDocument();
   });
 
-  test("posts が空のとき記事カードが表示されない", () => {
-    render(
-      <BlogListView
-        posts={[]}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-        allPosts={[]}
-      />,
-    );
-    // 記事タイトルが表示されない（エラーにはならない）
-    expect(screen.queryByText("記事A")).not.toBeInTheDocument();
+  test("記事の一覧は、索引の見出しの後ろに自分の見出しを持つ", () => {
+    visit("/blog");
+    render(<BlogListView scope={{ type: "all" }} page={1} />);
+
+    const headings = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((heading) => heading.textContent);
+    expect(headings.at(-1)).toBe("記事の一覧");
+    expect(
+      screen
+        .getByRole("heading", { level: 2, name: "記事の一覧" })
+        .compareDocumentPosition(rows()[0]),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  test("/blog のパンくずは、上端のナビと同じ「ブログ」を、いま開いているページの現在地にする", () => {
+    visit("/blog/page/2");
+    render(<BlogListView scope={{ type: "all" }} page={2} />);
+
+    const breadcrumb = screen.getByRole("navigation", {
+      name: "パンくずリスト",
+    });
+    const links = within(breadcrumb).getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual(["ホーム", "ブログ"]);
+    expect(links[1]).toHaveAttribute("href", "/blog/page/2");
+    expect(links[1]).toHaveAttribute("aria-current", "page");
+  });
+
+  test("名前の欄は分類の名前でも探せる", () => {
+    vi.useFakeTimers();
+    try {
+      visit("/blog");
+      render(<BlogListView scope={{ type: "all" }} page={1} />);
+      const label = "開発ノート";
+      const expected = getAllBlogPosts().filter(
+        (post) => CATEGORY_LABELS[post.category] === label,
+      );
+
+      fireEvent.change(
+        screen.getByRole("searchbox", {
+          name: "題名・説明・分類・タグ・連載名で探す",
+        }),
+        { target: { value: label } },
+      );
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      const shownTitles = rows().map(
+        (row) => within(row).getByRole("link").textContent,
+      );
+      expect(expected.length).toBeGreaterThan(0);
+      expect(shownTitles).toEqual(
+        expect.arrayContaining(expected.map((post) => post.title)),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

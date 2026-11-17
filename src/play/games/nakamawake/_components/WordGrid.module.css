@@ -1,67 +1,199 @@
-/* WordGrid（なかまわけ）— 単語盤面（DESIGN.md フェーズ R・店構えへ変換）。
- * 選択状態は朱の気配（--accent-weak）を使ってよい（DESIGN.md §2「操作・選択状態の
- * ハイライトにのみ可」・.selected は状態セレクタ）。色だけでなく罫色も変えて示す。 */
+/* 語の格子（DESIGN.md §5・§6・§8）。格子を本文の幅までに収め、コンテンツ幅の左端から組む。
+ * マスが本文の幅より広がると、行を目で横に追う距離が延びる。
+ * 選んだ語は、語に添えた 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。四角は、マスの幅に
+ * ゆとりがあれば語の左に、無ければ語の上に置く。
+ * 語のマスの太い枠は data-thick-frame（globals.css）が持つ。枠の内側に離して出す hover の線とフォーカスのリングは、
+ * マスの左右の余白に合わせてここで決める。 */
 
+/* 格子の幅のコンテナ。語の字の大きさと、マスの寸法をここで決める。狭い画面では語の字を補助情報の大きさにし、
+ * 四角を語の上に置くマスの左右の余白を、マスどうしの間隔（盤が決める --board-gap）と同じ 4px にして、マスの
+ * 1行に入る字を増やす（§5）。四角を語の左に置くマスの左右の余白は、どの画面でも 8px。 */
+.frame {
+  --word-stacked-pad: calc(var(--space-8) / 2);
+  --word-beside-pad: var(--space-8);
+  --word-mark-size: 20px;
+  --word-mark-gap: var(--space-8);
+  max-width: var(--measure);
+  font-size: var(--text-small);
+}
+
+@media (min-width: 45rem) {
+  .frame {
+    --word-stacked-pad: var(--space-8);
+    font-size: var(--text-body);
+  }
+}
+
+/*
+ * 列の数と四角の位置。マスの1行に語の字が4字（と字の幅の揺れの分 0.2em）入る、いちばん多い列の数にする
+ * （4列・2列・1列）。4字の片仮名の語は、行頭に長音符と小書きの仮名を置かないと「ジュー／ス」のようにしか
+ * 折れないので、4字が1行に入る幅にして1字の行を作らない。16の語は4列でも2列でも行が埋まり、行を横に
+ * 見比べられる。4列なら、スマートフォンの1つの画面に16の語と操作が収まる。
+ * 字が使える幅は、格子の幅から px で決まるマスの間隔・枠・内側の余白・四角を引いた残りで、字の大きさで増えない。
+ * そこで、その幅のコンテナを組み方ごとに作り（格子の幅から、その組み方で字が使えない分を引いた幅）、そのコンテナの
+ * 幅を字の大きさ（em）で測る。コンテナは、4列で四角を上に置く組み・2列で四角を上に置く組み・2列で四角を左に
+ * 置く組みの順に入れ子にし、格子はいちばん内側で、引いた分を足して元の幅に戻す。
+ */
+.fourColumnText {
+  container: word-grid-four / inline-size;
+  width: calc(
+    100% - 3 * var(--board-gap) - 8 * var(--rule-w) - 8 *
+      var(--word-stacked-pad)
+  );
+}
+
+.twoColumnText {
+  container: word-grid-two / inline-size;
+  width: calc(
+    100% + 2 * var(--board-gap) + 4 * var(--rule-w) + 4 *
+      var(--word-stacked-pad)
+  );
+}
+
+.twoColumnBesideText {
+  container: word-grid-two-beside / inline-size;
+  width: calc(
+    100% - 4 * (var(--word-beside-pad) - var(--word-stacked-pad)) - 2 *
+      (var(--word-mark-size) + var(--word-mark-gap))
+  );
+}
+
+/* 水和のときに語のマスは描き直されて動きうるので、ブラウザが画面の送りを合わせる目印（スクロールアンカー）に
+ * しない。目印にすると、開き直したときに動いた語を追って画面が送られる。 */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-8);
-  max-width: 500px;
-  margin: 0 auto;
+  grid-template-columns: 1fr;
+  gap: var(--board-gap);
+  overflow-anchor: none;
+  width: calc(
+    100% + var(--board-gap) + 4 * var(--rule-w) + 4 * var(--word-beside-pad) +
+      2 * (var(--word-mark-size) + var(--word-mark-gap))
+  );
 }
 
+/* マスの中の組みは2つ。四角を語の左に置く組み（--cell-*: 下の値）は、四角を語の1行目の中ほどにそろえ、語を
+ * 四角の右から左揃えで組む（§6 チェックボックスと同じ並び）。四角を語の上に置く組みは、四角と語を左右の中央に
+ * 置き、四角をマスの上端にそろえて、同じ行のマスの四角の高さを並べる。1列の格子は、格子の幅（266px 以上。§5）の
+ * ほとんどを語が使えるので、いつも四角を左に置く。 */
+.grid {
+  --cell-direction: row;
+  --cell-align: flex-start;
+  --cell-pad: var(--word-beside-pad);
+  --cell-text-align: start;
+  --cell-mark-offset: calc((1lh - var(--word-mark-size)) / 2);
+}
+
+/* 2マスに 4.2em ずつ。四角は語の上。 */
+@container word-grid-two (min-width: 8.4em) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    --cell-direction: column;
+    --cell-align: center;
+    --cell-pad: var(--word-stacked-pad);
+    --cell-text-align: center;
+    --cell-mark-offset: 0;
+  }
+}
+
+/* 2マスで、四角の右に 4.2em ずつ。四角は語の左。四角を語の上に積まないぶんマスが低くなる。 */
+@container word-grid-two-beside (min-width: 8.4em) {
+  .grid {
+    --cell-direction: row;
+    --cell-align: flex-start;
+    --cell-pad: var(--word-beside-pad);
+    --cell-text-align: start;
+    --cell-mark-offset: calc((1lh - var(--word-mark-size)) / 2);
+  }
+}
+
+/* 4マスに 4.2em ずつ。四角は語の上。 */
+@container word-grid-four (min-width: 16.8em) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    --cell-direction: column;
+    --cell-align: center;
+    --cell-pad: var(--word-stacked-pad);
+    --cell-text-align: center;
+    --cell-mark-offset: 0;
+  }
+}
+
+/* 広い格子（4マスに 7.5em ずつ）。四角は語の左。長い語の多い日も盤が縦に伸びない。 */
+@container word-grid-four (min-width: 30em) {
+  .grid {
+    --cell-direction: row;
+    --cell-align: flex-start;
+    --cell-pad: var(--word-beside-pad);
+    --cell-text-align: start;
+    --cell-mark-offset: calc((1lh - var(--word-mark-size)) / 2);
+  }
+}
+
+/* 語はマスの内側の余白（§5）の中で、行の長さをそろえて折り返す。行頭に長音符と小書きの仮名を置かない
+ * （line-break: strict）。
+ * フォーカスのリングと hover の線は、枠と字のあいだの左右の余白の中に出す（§6）。リングは、余白の中で両側に
+ * 細い線の太さの地を残せる太さ（太い線の太さまで）にし、枠とのあいだに、字の側に細い線の太さの地を残せる幅
+ * （太い線の太さまで）の地を挟む。hover の線も、枠とのあいだに同じ幅の地を挟む。余白が 8px のマスでは、3px の地・
+ * 3px のリング・2px の地、余白が 4px のマスでは、1px の地・2px のリング・1px の地が、枠と字のあいだに並ぶ。 */
 .wordButton {
-  padding: var(--space-16) 0.25rem;
-  border: 2px solid var(--rule);
-  border-radius: var(--radius);
+  --cell-ring-w: min(var(--rule-w), var(--cell-pad) - 2 * var(--rule-w-hair));
+  --cell-ring-gap: min(
+    var(--rule-w),
+    var(--cell-pad) - var(--cell-ring-w) - var(--rule-w-hair)
+  );
+  --focus-ring: var(--cell-ring-w) solid var(--ink);
+  --focus-ring-offset: calc(
+    -1 * (var(--rule-w) + var(--cell-ring-gap) + var(--cell-ring-w))
+  );
+  --focus-ring-fill: inset 0 0 0 calc(var(--cell-ring-gap) + var(--cell-ring-w))
+    var(--paper);
+  --hover-line:
+    inset 0 0 0 var(--cell-ring-gap) var(--paper),
+    inset 0 0 0 calc(var(--cell-ring-gap) + var(--rule-w-hair)) var(--rule-2);
+  display: flex;
+  flex-direction: var(--cell-direction);
+  align-items: var(--cell-align);
+  gap: var(--word-mark-gap);
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--space-8) var(--cell-pad);
   background: var(--paper);
   color: var(--ink);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  font-family: inherit;
+  font: inherit;
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease,
-    color 0.15s ease;
-  text-align: center;
-  min-height: 3rem;
-  word-break: break-all;
+  text-align: var(--cell-text-align);
+  line-height: var(--leading-heading);
+  overflow-wrap: anywhere;
+  line-break: strict;
+  text-wrap: balance;
 }
 
-.wordButton:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
+/* ことわざのように句を持つ語の句。句の切れ目（<wbr>）でだけ折り、句の中では折らない。句に分けるのは、どの句も
+ * 4字（PHRASE_MAX_LENGTH）以下にできる語だけで（sayingPhrases）、どの格子のマスも1行に4字が入るので
+ * （列の数の決まり）、句がはみ出さない。4字以下にできない語は句に分けず、ほかの語と同じに折る。 */
+.phrase {
+  white-space: nowrap;
 }
 
-.wordButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* 太い線で描く 20px の四角。選ぶと内側を --ink で 8px 塗る。 */
+.mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--word-mark-size);
+  height: var(--word-mark-size);
+  margin-block-start: var(--cell-mark-offset);
+  border: var(--rule-w) solid var(--rule);
 }
 
-.wordButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.mark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+  visibility: hidden;
 }
 
-.selected {
-  background: var(--accent-weak);
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.selected:hover:not(:disabled) {
-  filter: brightness(0.97);
-}
-
-@media (max-width: 480px) {
-  .grid {
-    gap: 0.375rem;
-  }
-
-  .wordButton {
-    font-size: 0.85rem;
-    padding: var(--space-8) 0.25rem;
-    min-height: 2.5rem;
-  }
+.wordButton[aria-pressed="true"] .mark::after {
+  visibility: visible;
 }

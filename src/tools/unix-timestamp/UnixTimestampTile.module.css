@@ -1,41 +1,63 @@
-/*
- * UnixTimestampTile.module.css
- * cycle-228 T-22: UnixTimestampPage.module.css をタイル向けに移植。
- * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- *
- * DESIGN トークン準拠:
- * - [B-1] 旧 --color-* トークン不使用
- * - [B-2] フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - [B-3] --accent 直塗り禁止（フォーカス outline のみ許可）
- * - [B-4] font-weight: 700 禁止
- * - [B-5] 角丸は var(--radius)
- * - [B-6] box-shadow は使わない
- * - [B-7] 罫線は var(--rule)
- */
-
-/* ---- 現在タイムスタンプ表示バー ---- */
+/* ---- いまのタイムスタンプの行 ---- */
+/* 見出し・数字・ボタンの組を縦に積む。どれも行の幅を超えない。数字の字の大きさを行の幅で決めるので、
+ * 行を幅の問い合わせの基準にする。 */
 .currentBar {
+  container-type: inline-size;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
   padding: 0.75rem 1rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background-color: var(--paper-2);
-  flex-wrap: wrap;
   margin-bottom: 1.5rem;
 }
 
+/* 語の途中で折らず、日付と時刻のあいだと「の」のあとで折る。「UNIXタイムスタンプ」は1行に収まるなら
+ * まとめて次の行へ送り、収まらないときだけ「UNIX」のあとで折る。1語が行に収まらないときだけ、その語の
+ * 中で折る。 */
 .currentLabel {
+  max-width: 100%;
   font-size: 0.9rem;
   color: var(--ink-2);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
+.term {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* 秒ごとに字が替わっても幅が揺れないよう、数字の幅を揃える。 */
+.valueAt,
+.valueAtPending {
+  font-variant-numeric: tabular-nums;
+}
+
+.valueAtPending {
+  visibility: hidden;
+}
+
+/* 10桁（等幅の字でおよそ 6.2 字ぶん）が行に1行で収まる大きさまで字を下げる。下げるのは補助情報の大きさ
+ * までで、それでも収まらないときだけ折る。行の地がコード片の地と同じなので、コード片の左右の余白を持たず、
+ * 数字の左端を見出しの左端に揃える。値が入る前も1行ぶんの高さを取る。 */
 .currentValue {
+  max-width: 100%;
+  min-block-size: 1lh;
+  padding: 0;
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: clamp(var(--text-small), 100cqi / 6.2, 1.1rem);
   color: var(--ink);
-  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.currentActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 100%;
 }
 
 /* ---- セクション ---- */
@@ -57,9 +79,10 @@
 }
 
 /* ---- タイムスタンプ入力行 ---- */
+/* 単位の組は見出しの分だけ背が高いので、下端で揃えてラジオボタンの行と入力欄を同じ高さに置く。 */
 .tsInputRow {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
@@ -73,34 +96,53 @@
 
 /* ---- 結果テーブル ---- */
 .resultTable {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
 }
 
+/* 結果の1行。項目の名前とコピーのボタンを1行目に並べ、値はその下に行の幅いっぱいで組む。値に行の幅を
+ * そのまま渡し、数字が桁の途中で折れないようにする（§8）。表が、いちばん長い名前とボタンを1行に並べられない
+ * ほど狭いときは、どの行もボタンを次の行の右端に送り、表の中でボタンの位置をそろえる。 */
 .resultRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.25rem 0.75rem;
   padding: 0.5rem 0.75rem;
   background-color: var(--paper-2);
   border-radius: var(--radius);
-  flex-wrap: wrap;
 }
 
 .resultLabel {
+  order: 1;
+  flex: 1000 1 auto;
   font-size: 0.8rem;
   color: var(--ink-2);
-  min-width: 90px;
-  flex-shrink: 0;
 }
 
+.resultCopy {
+  order: 2;
+  flex: 1 0 auto;
+}
+
+@container (max-width: 13em) {
+  .resultCopy {
+    flex-basis: 100%;
+  }
+}
+
+/* 値の字は名前の字と同じ左端から始める。行の地と同じ地の code に、字の外の余白は要らない。 */
 .resultValue {
+  order: 3;
+  padding-inline: 0;
+  flex-basis: 100%;
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--ink);
-  flex: 1;
-  word-break: break-all;
+  overflow-wrap: anywhere;
 }
 
 /* ---- 日時入力グリッド ---- */
@@ -121,22 +163,15 @@
   color: var(--ink-2);
 }
 
-/*
- * number スピナーの抑止 (unix-timestamp スコープ限定)
- * 理由: w360 などの狭い画面では、ブラウザデフォルトの number スピナー矢印が
- * フィールド内の文字領域を圧迫し、4桁の年(例: "2026")が末尾1桁欠けて表示される。
- * Webkit: スピナーを非表示。Firefox: appearance: textfield で対応。
- */
+/* 数値の欄の増減の矢印を消す。狭い画面では矢印が字の場所を削り、4桁の年の末尾が欠けるため。 */
 .dateInput {
   width: 80px;
   font-family: var(--font-mono);
-  /* Firefox: number スピナーを非表示にして文字領域を確保する */
   appearance: textfield;
 }
 
 .dateInput::-webkit-outer-spin-button,
 .dateInput::-webkit-inner-spin-button {
-  /* Webkit: number スピナーを非表示にして文字領域を確保する */
   -webkit-appearance: none;
   margin: 0;
 }
@@ -149,7 +184,6 @@
 }
 
 /* ---- スクリーンリーダー専用サマリ領域 ---- */
-/* C-3: 視覚的には非表示だが SR には読み上げられる */
 .srOnly {
   position: absolute;
   width: 1px;
@@ -163,11 +197,7 @@
 }
 
 @media (max-width: 640px) {
-  /*
-   * w360 対応: スピナー抑止後も余裕を持った幅を確保する。
-   * 4桁年(例: 2026)はフォント 14px × mono で約 32px + 左右 padding 24px = 56px 必要。
-   * モバイルでは 72px にして1〜4桁すべてのフィールドを余裕を持って表示する。
-   */
+  /* 等幅 14px の4桁（約 32px）に左右の余白 24px を足した幅に、ゆとりを持たせる。 */
   .dateInput {
     width: 72px;
   }

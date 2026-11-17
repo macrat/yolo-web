@@ -3,32 +3,30 @@
 /**
  * TextReplaceTile — テキスト置換ツールの単一正典タイル
  *
- * cycle-228 T-5 で TextReplacePage.tsx を Panel ルートのタイルへ再実装。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
  * - **1ツール 1 タイル**: text-replace は正規表現モード等の「設定差」で表現できる
  *   独立したモードがないため variant は "full" のみ。
  * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない（A-6 要件）。
+ *   同居しても id 重複・label 誤結合が起きない。
  * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（"use client" 自己完結）。
  * - **logic.ts 共有エンジン**: replaceText が唯一のロジック源。再実装・改変禁止。
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 検索/置換 Input＋3 ToggleSwitch（正規表現/大小文字/全置換）
+ * - `"full"` (デフォルト): 検索/置換 Input＋3つのチェックボックス（正規表現/大小文字/全置換）
  *   ＋置換件数表示の完全な UI。
  *   text-replace は logic に独立した出力モードがないため full のみで良い。
  *
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <TextReplaceTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
@@ -38,15 +36,11 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import Button from "@/components/Button";
 import Textarea from "@/components/Textarea";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import Checkbox from "@/components/Checkbox";
+import CopyButton from "@/components/CopyButton";
 import { replaceText, type ReplaceOptions } from "./logic";
 import styles from "./TextReplaceTile.module.css";
 
@@ -56,7 +50,7 @@ export type TextReplaceTileVariant = "full";
 export interface TextReplaceTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 検索/置換Input＋3 ToggleSwitch（正規表現/大小文字/全置換）＋置換件数表示
+   * - "full": 検索/置換Input＋3つのチェックボックス（正規表現/大小文字/全置換）＋置換件数表示
    *   text-replace は logic に独立した出力モードがないため full のみ。
    */
   variant?: TextReplaceTileVariant;
@@ -68,7 +62,7 @@ export interface TextReplaceTileProps {
   className?: string;
 }
 
-/** エラー文言を日本語に変換する（A-4 準拠: 英語生エラーを露出しない） */
+/** エラー文言を日本語に変換する（英語生エラーを露出しない） */
 function toJapaneseError(rawError: string | undefined): string | undefined {
   if (!rawError) return undefined;
   // ブラウザが返す正規表現エラーは英語のため日本語に変換する
@@ -89,8 +83,7 @@ export default function TextReplaceTile({
   className,
 }: TextReplaceTileProps = {}) {
   // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  // A-6: 現行 TextReplacePage.tsx のハードコード id（source-text / search-input 等）を
-  // useId ベースに移行する
+  // すべての id を useId ベースで作る
   const uid = useId();
   const inputId = `${uid}-input`;
   const searchId = `${uid}-search`;
@@ -107,8 +100,6 @@ export default function TextReplaceTile({
     globalReplace: true,
   });
 
-  const { copy, copiedKey } = useCopyToClipboard();
-
   // ---------- リアルタイム変換（共有エンジン logic.ts を使用・再実装禁止） ----------
   const result = useMemo(
     () => replaceText(input, search, replacement, options),
@@ -117,7 +108,7 @@ export default function TextReplaceTile({
 
   const errorMessage = toJapaneseError(result.error);
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
+  // ライブリージョン用サマリテキスト（実テキストノードのサマリ）
   const statusSummary = (() => {
     if (result.error) return "";
     if (!search) return "";
@@ -128,10 +119,6 @@ export default function TextReplaceTile({
   const output = result.error ? "" : result.output;
 
   // ---------- ハンドラ ----------
-  async function handleCopy() {
-    if (!output) return;
-    await copy(output);
-  }
 
   // ---------- Render ----------
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
@@ -188,16 +175,16 @@ export default function TextReplaceTile({
         </div>
       </div>
 
-      {/* オプション（3 ToggleSwitch: 正規表現・大文字小文字区別・全置換） */}
+      {/* オプション（正規表現・大文字小文字区別・全置換のチェックボックス） */}
       <div className={styles.optionsRow}>
-        <ToggleSwitch
+        <Checkbox
           label="正規表現"
           checked={options.useRegex}
           onChange={(e) =>
             setOptions((prev) => ({ ...prev, useRegex: e.target.checked }))
           }
         />
-        <ToggleSwitch
+        <Checkbox
           label="大文字小文字を区別"
           checked={options.caseSensitive}
           onChange={(e) =>
@@ -207,7 +194,7 @@ export default function TextReplaceTile({
             }))
           }
         />
-        <ToggleSwitch
+        <Checkbox
           label="すべて置換"
           checked={options.globalReplace}
           onChange={(e) =>
@@ -219,7 +206,7 @@ export default function TextReplaceTile({
         />
       </div>
 
-      {/* 正規表現モード時の補足説明（平易な日本語・G-2 要件） */}
+      {/* 正規表現モード時の補足説明（平易な日本語） */}
       {options.useRegex && (
         <div className={styles.regexHint} role="note" data-testid="regex-hint">
           <p className={styles.regexHintLine}>
@@ -233,7 +220,7 @@ export default function TextReplaceTile({
         </div>
       )}
 
-      {/* エラー表示（A-4 準拠: ErrorMessage・日本語化済み） */}
+      {/* エラー表示（ErrorMessage・日本語化済み） */}
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
       {/* 出力欄 */}
@@ -242,19 +229,16 @@ export default function TextReplaceTile({
           <label htmlFor={outputId} className={styles.fieldLabel}>
             置換結果
           </label>
-          {/* コピーボタン（出力空のとき disabled） */}
-          <Button
-            size="small"
-            onClick={handleCopy}
+          <CopyButton
+            text={output}
+            target="置換結果"
+            align="end"
             disabled={!output}
-            aria-label={copiedKey ? COPIED_LABEL : "コピー"}
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
+          />
         </div>
 
         {/*
-          C-3 準拠: readOnly textarea は role="status" 対象外。
+          readOnly textarea は role="status" 対象外。
           別途サマリ div を置いてスクリーンリーダーへ通知する。
           出力 textarea の外（前）に置くことで DOM 順も正しい。
         */}

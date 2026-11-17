@@ -4,38 +4,64 @@ import type { YojiGuessFeedback } from "@/play/games/yoji-kimeru/_lib/types";
 import CharFeedbackCell from "./CharFeedbackCell";
 import styles from "./styles/YojiKimeru.module.css";
 
+/** 盤の1行の中身。判定の付いた推測・答え合わせを待つ推測・次の推測を入れる空の行のどれか。 */
+export type BoardRow =
+  | { kind: "judged"; feedback: YojiGuessFeedback }
+  | { kind: "pending"; guess: string }
+  | { kind: "empty" };
+
 interface GuessRowProps {
-  feedback: YojiGuessFeedback | null;
+  row: BoardRow;
+  /** 判定が現れる動きを持つか。来訪者の推測でいま判定が付いた行だけが持つ。 */
+  appears: boolean;
 }
 
+const EMPTY_CHARS = ["", "", "", ""];
+
 /**
- * A single row in the game board showing 4 feedback cells.
- * Empty row is shown if feedback is null.
+ * 判定の付いていないマス。字（空の行では見えない字）の下に、見えない印を置き、判定の付いたマスと同じ高さを
+ * 持つ。
  */
-export default function GuessRow({ feedback }: GuessRowProps) {
-  if (!feedback) {
+function UnjudgedCell({ character }: { character: string }) {
+  return (
+    <div
+      className={styles.cellEmpty}
+      role="cell"
+      aria-label={character ? `${character}: 答え合わせ中` : "空欄"}
+    >
+      <span className={styles.char} aria-hidden="true">
+        {character || " "}
+      </span>
+      <span className={styles.mark} aria-hidden="true">
+        {" "}
+      </span>
+    </div>
+  );
+}
+
+/** 盤の1行。推測した4つの字と、その判定。 */
+export default function GuessRow({ row, appears }: GuessRowProps) {
+  if (row.kind !== "judged") {
+    const characters = row.kind === "pending" ? [...row.guess] : EMPTY_CHARS;
     return (
-      <div className={styles.guessRow} role="row">
-        {[0, 1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className={styles.cellEmpty}
-            role="cell"
-            aria-label="空欄"
-          />
+      <div className={styles.row} role="row">
+        {characters.map((character, i) => (
+          <UnjudgedCell key={i} character={character} />
         ))}
       </div>
     );
   }
 
-  const chars = [...feedback.guess];
   return (
-    <div className={styles.guessRow} role="row">
-      {chars.map((ch, i) => (
+    <div
+      className={appears ? `${styles.row} ${styles.rowAppears}` : styles.row}
+      role="row"
+    >
+      {[...row.feedback.guess].map((character, i) => (
         <CharFeedbackCell
           key={i}
-          character={ch}
-          feedback={feedback.charFeedbacks[i]}
+          character={character}
+          feedback={row.feedback.charFeedbacks[i]}
         />
       ))}
     </div>

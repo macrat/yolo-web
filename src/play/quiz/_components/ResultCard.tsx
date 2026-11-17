@@ -1,21 +1,24 @@
 "use client";
 
 /**
- * ResultCard は「受検者本人向け」のインライン結果表示です。
+ * 解き終えた画面（`/play/[slug]`）。
  *
- * 診断を完了した本人は、`/play/[slug]` 上でこの ResultCard を通して結果を見ます
- * （`QuizContainer` の intro→playing→result フェーズ遷移。variant ごとの結果コンポーネント
- *  への dispatch もここで行う）。本人はこの後 `/play/[slug]/result/[resultId]` へは遷移せず、
- *  その `/result/<id>` URL はシェア用にここで生成される（→ 第三者が開く静的ページ）。
- *
- * つまり「本人向け = ResultCard（このファイル）」「第三者向けシェア/検索ランディング =
- *  /play/[slug]/result/[resultId] ルート（ResultPageShell 側）」と役割が分かれている。
- * 本人向けの結果体験を変えたいときは必ずこちら（ResultCard）を編集すること。
+ * `QuizContainer` が開始→設問→結果と進んだあとに描き、variant ごとの詳しい読みものへの振り分けもここで行う。
+ * 画面はページのセクションを上から並べる（DESIGN.md §5・§8）。
+ *   1. ページの頭（パンくず・h1）・結果のボックス（タイプ名・キャッチコピー・説明）・結果を持ち帰る・共有する区画
+ *   2. このタイプについて（詳しい読みもの。その結果の辞典の項目へのリンクと、診断ごとの追加の読みもの・相性・招待を、
+ *      その後ろに置く）
+ *   3. 次はこれを試してみよう（「もう一度挑戦する」と、辞典の一覧やほかの遊びへの結果ごとのおすすめ、次の遊びの一覧）
+ *   4. すべてのタイプ
+ * 2 は、詳しい読みもの・辞典の項目へのリンク・追加の読みもののどれかがあるときだけ描く。4 は、詳しい読みものを
+ * 持たない診断・クイズでは描かない。結果ごとのおすすめを 2 と 3 のどちらに置くかは、リンクの行き先から
+ * recommendationPlacement が決める。各タイプの結果のページ（`/play/[slug]/result/[resultId]`。枠は
+ * ResultPageShell）は、ここから共有する URL であり、すべてのタイプの行から移る先でもある。
  */
 import type React from "react";
+import { useId, useState, type ReactNode, type Ref } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import Tsutsumi from "@/components/Tsutsumi";
 import type {
   QuizResult,
   QuizType,
@@ -31,15 +34,34 @@ import {
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import ShareButtons from "./ShareButtons";
+import PhrasedText from "@/components/PhrasedText";
+import ShareButtons from "@/components/ShareButtons";
+import FittedNumber from "@/components/FittedNumber";
+import ResultBox, { type ResultHeading } from "@/components/ResultBox";
 import FudaActions from "./FudaActions";
-import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import OtherTypesNav from "./OtherTypesNav";
+import {
+  resultHeadingName,
+  resultNameWithReading,
+} from "@/play/quiz/resultName";
+import { standardReadingHeadings } from "@/play/quiz/readingHeadings";
+import { recommendationPlacement } from "@/play/quiz/recommendationPlacement";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingSection,
+  ReadingText,
+} from "./ResultReading";
+import Button from "@/components/Button";
+import type { ItemListItem } from "@/components/ItemList";
+import Section from "@/components/Section";
+import ResultNextContent from "./ResultNextContent";
 import styles from "./ResultCard.module.css";
 
-// dynamic importにより、これらのコンポーネントとデータファイル（計120KB以上）を
-// クイズページの初期バンドルから分離し、/play/[slug] の140KBバジェットを維持する。
+// 詳しい読みものの部品とそれが読む診断のデータ（あわせて 120KB を超える）を、クイズのページの最初のバンドルから
+// 分け、/play/[slug] の転送量の上限 140KB を保つ。
 const AnimalPersonalityContent = dynamic(
   () => import("./AnimalPersonalityContent"),
   { ssr: true },
@@ -80,68 +102,74 @@ const ContrarianFortuneContent = dynamic(
   { ssr: true },
 );
 
-type ResultCardProps = {
+interface ResultCardProps {
+  /** 最初のセクションの頭に置くページの頭（パンくずと h1）。 */
+  head?: ReactNode;
   result: QuizResult;
+  /** 結果の見出し（タイプ名）の文節の区切りと書体の属性。サーバーで作ったものを受け取る。 */
+  heading: ResultHeading;
+  /** 詳しい読みものの小見出しの文節の区切り。小見出しの文ごとに、サーバーで作ったものを受け取る。 */
+  readingHeadings: Readonly<Record<string, readonly string[]>>;
   quizType: QuizType;
+  /** 診断の題（ハッシュタグと、端末の共有シートに渡す題に使う） */
   quizTitle: string;
+  /** 補助情報「{診断の名前}の結果」と共有の文で言う診断の名前。短い名前（shortTitle）があればそれを渡す。 */
+  quizName: string;
   quizSlug: string;
-  /** knowledge type: number of correct answers */
+  /** 知識クイズの正解の数 */
   score?: number;
-  /** knowledge type: total number of questions */
+  /** 知識クイズの問題の数 */
   totalQuestions?: number;
   onRetry: () => void;
-  /** 結果の追加コンテンツ（variant別） */
+  /** 結果の詳しい読みもの（variant 別） */
   detailedContent?: DetailedContent;
-  /** 結果ページのセクション見出しカスタマイズ */
+  /** 詳しい読みものの小見出しの文言 */
   resultPageLabels?: QuizMeta["resultPageLabels"];
-  /** クイズのアクセントカラー（見出し色やcharacterIntro背景に使用） */
-  accentColor?: string;
-  /** 相性診断用の referrer タイプID（animal-personality variantで使用） */
+  /** 相性を見る友達のタイプの id（共有のリンクの ref） */
   referrerTypeId?: string;
   /**
-   * 全タイプの結果配列（unexpected-compatibility / impossible-advice variant で使用）。
-   * 親コンポーネント（QuizContainer）から quiz.results を受け取ることで、
-   * ResultCard 内で個別クイズデータをインポートする必要をなくし、バンドルサイズを削減する。
+   * 診断ごとの追加の読みもの（理系思考のプロフィール・相性・招待など）。「このタイプについて」の最後に置く。
    */
-  allResults?: QuizResult[];
+  extra?: ReactNode;
   /**
-   * 真の残余同点（最高得点を主タイプと分け合う副タイプ）。P2b（cycle-303）。
-   * word-sense-personality の同点時のみ QuizContainer から渡される（他診断は常に空/未指定）。
-   * 1件以上あるとき、主タイプと同格に「同じくらい強く出た型」を開示するブロックを描画する。
-   * 空/未指定なら開示ブロックは出さない（＝単独勝者＝従来体験）。
+   * 「次はこれを試してみよう」に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、サーバーで行にして
+   * から受け取る。
+   */
+  nextItems?: ItemListItem[];
+  /**
+   * 診断の全タイプ。「次はこれを試してみよう」のあとの、最後のセクション「すべてのタイプ」に並べる。呼び出し側が
+   * 持つ quiz.results を受け取り、ここで診断ごとのデータを読み込まない（バンドルを小さく保つ）。
+   */
+  allResults: QuizResult[];
+  /**
+   * 主タイプと同じ最高得点を分け合ったタイプ。word-sense-personality で同点が残ったときだけ渡される。
+   * 1件以上あるとき、主タイプと同格に「同じくらい強く出た型」を結果の中で言う。
    */
   coTypes?: QuizResult[];
-};
+  /** 結果のボックスへの参照。結果に着いたとき、呼び出し側が画面を送り、フォーカスを移す。 */
+  resultBoxRef?: Ref<HTMLElement>;
+  /** 来訪者の操作（最後の設問に答えた）に応えて現れた結果か。true のときだけ結果のボックスが登場の動きを持つ。 */
+  appear?: boolean;
+}
 
 /**
- * 真の同点の開示ブロック（P2b・cycle-303）。
- *
- * 診断が構造的に残す残余同点（本当に複数タイプの声を等しく持つ人）を、恣意的・不可視に
- * 配列順で割らず、**同格**として正直に開示する。主タイプ（determineResult の決定的勝者）と
- * co-types を上下つけず同じ強さの声として列挙し、「主に X」のような X>Y を暗示するコピーには
- * しない。各 co-type にはその第三者向け結果解説ページ（/play/[slug]/result/[id]）への
+ * 同点の開示。診断が同点を残した来訪者（複数のタイプを等しく持つ人）に、配列の順で1つに割った結果だけを見せず、
+ * 同じ強さのタイプをすべて同格に言う。主タイプを先に置くのは、ボックスの見出しがそのタイプだからで、上下を
+ * 言うためではない。「主に X」のような上下を含む言い方はしない。ほかのタイプには、その結果のページへの
  * リンクを添える。
- *
- * DESIGN.md 準拠: 一段沈む面（--paper-2）＋罫（--rule）の静かな区画。装飾線・絵文字・
- * 禁止色は使わない。型名の強調は 墨（--ink）と【】括弧の組版のみ（朱はリンクに限る）。
  */
 function renderTiedTypesDisclosure(
   mainResult: QuizResult,
   coTypes: QuizResult[],
   quizSlug: string,
 ): React.ReactNode {
-  // 主タイプ＋副タイプを同格に並べる（配列順で上下をつけない）。主タイプが先頭なのは
-  // 「今表示している結果カード＝主タイプ」という所在を保つためで、優劣の含意ではない。
   const tiedTitles = [mainResult, ...coTypes]
-    .map((type) => `【${type.title}】`)
+    .map((type) => `【${resultNameWithReading(type)}】`)
     .join("と");
 
   return (
-    <section
-      className={styles.tiedDisclosure}
-      aria-label="同じくらい強く出た型"
-    >
-      <p className={styles.tiedDisclosureText}>
+    <div className={styles.tied}>
+      <p>
         あなたの言葉の感覚は、{tiedTitles}
         が同じくらい強く出ています。いずれも同じ強さの、あなたの声です。
       </p>
@@ -151,73 +179,49 @@ function renderTiedTypesDisclosure(
             <Link
               href={`/play/${quizSlug}/result/${coType.id}`}
               className={styles.tiedTypeLink}
+              data-text-box="inline"
             >
-              {coType.title}の解説を見る
+              {resultNameWithReading(coType)}の解説を見る
             </Link>
           </li>
         ))}
       </ul>
-    </section>
+    </div>
   );
 }
+
+/** 小見出しの文の文節の区切り。受け取っていない文は、1つの文節として組む。 */
+type PhrasesOf = (text: string) => readonly string[];
 
 function renderStandardContent(
   content: QuizResultDetailedContent,
+  phrasesOf: PhrasesOf,
   labels?: QuizMeta["resultPageLabels"],
-  accentColor?: string,
-  allResults?: QuizResult[],
-  quizSlug?: string,
-  resultId?: string,
 ): React.ReactNode {
-  const traitsHeading = labels?.traitsHeading ?? "このタイプの特徴";
-  const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
-  const adviceHeading = labels?.adviceHeading ?? "このタイプの人へのアドバイス";
-
-  // 標準 variant の見出し・アドバイスは新デザイン体系の共通アクセント（--accent）に
-  // 統一する（クイズごとの派手色を使わない）。accentColor は variant 別サブ
-  // コンポーネント（legacy 結果コンテンツ）でのみ引き続き使用する。
-  void accentColor;
+  const headings = standardReadingHeadings(labels);
 
   return (
-    <>
-      {/* traits（持ち味）。診断を遊んだ本人にも持ち味を届けるため、
-          静的結果ページと同じく behaviors の前に表示する（cycle-250）。 */}
-      <h3 className={styles.detailedHeading}>{traitsHeading}</h3>
-      <ul className={styles.traitsList}>
-        {content.traits.map((t, i) => (
-          <li key={i} className={styles.traitsItem}>
-            {t}
-          </li>
-        ))}
-      </ul>
-      <h3 className={styles.detailedHeading}>{behaviorsHeading}</h3>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
-      <h3 className={styles.detailedHeading}>{adviceHeading}</h3>
-      <div className={styles.adviceCard}>{content.advice}</div>
-      {allResults && quizSlug && resultId && (
-        <OtherTypesNav
-          quizSlug={quizSlug}
-          currentResultId={resultId}
-          results={allResults}
-        />
-      )}
-    </>
+    <Reading>
+      <ReadingHeading phrases={phrasesOf(headings.traits)} />
+      <ReadingList items={content.traits} />
+      <ReadingHeading phrases={phrasesOf(headings.behaviors)} />
+      <ReadingList items={content.behaviors} />
+      <ReadingHeading phrases={phrasesOf(headings.advice)} />
+      <ReadingText>{content.advice}</ReadingText>
+    </Reading>
   );
 }
 
+/**
+ * 動物性格診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
+ */
 function buildAnimalPersonalityAfterTodayAction(
   resultId: string,
   referrerTypeId?: string,
 ): React.ReactNode {
   const quiz = animalPersonalityQuiz;
 
-  // 相性セクション: referrerTypeIdが有効な場合は相性表示、なければ招待ボタン
   if (referrerTypeId && isValidAnimalTypeId(referrerTypeId)) {
     const myResult = quiz.results.find((r) => r.id === resultId);
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
@@ -227,15 +231,14 @@ function buildAnimalPersonalityAfterTodayAction(
       return (
         <>
           <CompatibilitySection
+            placement="solvedScreen"
             myType={{
               id: myResult.id,
               title: myResult.title,
-              icon: myResult.icon,
             }}
             friendType={{
               id: friendResult.id,
               title: friendResult.title,
-              icon: friendResult.icon,
             }}
             compatibility={compatibility}
             quizTitle={quiz.meta.title}
@@ -264,79 +267,44 @@ function buildAnimalPersonalityAfterTodayAction(
 
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
+  phrasesOf: PhrasesOf,
 ): React.ReactNode {
-  // 新デザイン体系ではクイズごとの任意 hex（accentColor）を器/成果物の色に使わない
-  // （DESIGN.md §2「成果物パレットは和色8色に限る・直書き禁止」）。見出し・面はすべて
-  // 標準トークン（--accent・--paper-2）に統一する。
   return (
-    <>
-      <p className={styles.characterIntro}>{content.characterIntro}</p>
-      <h3 className={styles.detailedHeading}>{content.behaviorsHeading}</h3>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
-      <h3 className={styles.detailedHeading}>
-        {content.characterMessageHeading}
-      </h3>
-      <p className={styles.characterMessage}>{content.characterMessage}</p>
-    </>
+    <Reading>
+      <ReadingText>{content.characterIntro}</ReadingText>
+      <ReadingHeading phrases={phrasesOf(content.behaviorsHeading)} />
+      <ReadingList items={content.behaviors} />
+      <ReadingHeading phrases={phrasesOf(content.characterMessageHeading)} />
+      <ReadingText>{content.characterMessage}</ReadingText>
+    </Reading>
   );
 }
 
 function renderDetailedContent(
   content: DetailedContent,
   resultId: string,
-  quizSlug: string,
+  phrasesOf: PhrasesOf,
   labels?: QuizMeta["resultPageLabels"],
-  accentColor?: string,
   referrerTypeId?: string,
-  resultColor?: string,
-  allResults?: QuizResult[],
 ): React.ReactNode {
-  // Standard variant (variant === undefined)
+  // variant を持たない標準の形
   if (!content.variant) {
-    return renderStandardContent(
-      content,
-      labels,
-      accentColor,
-      allResults,
-      quizSlug,
-      resultId,
-    );
+    return renderStandardContent(content, phrasesOf, labels);
   }
   switch (content.variant) {
     case "contrarian-fortune": {
-      // ResultCard（インライン）経路は 8 variant 共通で縦リスト統一
-      // （`allTypesLayout` の pill/list 差は独立変数の外側にあるため）。
       const Comp = ContrarianFortuneContent;
-      return (
-        <Comp
-          quizSlug={quizSlug}
-          resultId={resultId}
-          detailedContent={content}
-          allResults={allResults ?? []}
-          headingLevel={3}
-          allTypesLayout="list"
-          resultColor={resultColor ?? ""}
-        />
-      );
+      return <Comp detailedContent={content} />;
     }
     case "character-fortune":
       // character-fortune は専用 *Content を持たず、常に
       // renderCharacterFortuneContent で描画する。
-      return renderCharacterFortuneContent(content);
+      return renderCharacterFortuneContent(content, phrasesOf);
     case "animal-personality": {
       const Comp = AnimalPersonalityContent;
       return (
         <Comp
           content={content}
-          resultId={resultId}
-          headingLevel={3}
-          allTypesLayout="list"
           afterTodayAction={buildAnimalPersonalityAfterTodayAction(
             resultId,
             referrerTypeId,
@@ -350,38 +318,17 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          headingLevel={3}
-          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
-          allTypesLayout="list"
           referrerTypeId={referrerTypeId}
         />
       );
     }
     case "traditional-color": {
       const Comp = TraditionalColorContent;
-      return (
-        <Comp
-          content={content}
-          resultId={resultId}
-          resultColor={resultColor ?? ""}
-          headingLevel={3}
-          allTypesLayout="list"
-          // ResultCard内では相性データがないため afterColorAdvice は省略
-        />
-      );
+      return <Comp content={content} />;
     }
     case "yoji-personality": {
       const Comp = YojiPersonalityContent;
-      return (
-        <Comp
-          content={content}
-          resultId={resultId}
-          resultColor={resultColor ?? ""}
-          headingLevel={3}
-          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
-          allTypesLayout="list"
-        />
-      );
+      return <Comp content={content} />;
     }
     case "character-personality": {
       const Comp = CharacterPersonalityContent;
@@ -389,43 +336,17 @@ function renderDetailedContent(
         <Comp
           content={content}
           resultId={resultId}
-          resultColor={resultColor ?? ""}
-          headingLevel={3}
-          allTypesLayout="list"
           referrerTypeId={referrerTypeId}
         />
       );
     }
     case "unexpected-compatibility": {
       const Comp = UnexpectedCompatibilityContent;
-      return (
-        <Comp
-          quizSlug={quizSlug}
-          resultId={resultId}
-          detailedContent={content}
-          allResults={allResults ?? []}
-          headingLevel={3}
-          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
-          allTypesLayout="list"
-          resultColor={resultColor ?? ""}
-          // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
-        />
-      );
+      return <Comp detailedContent={content} />;
     }
     case "impossible-advice": {
       const Comp = ImpossibleAdviceContent;
-      return (
-        <Comp
-          quizSlug={quizSlug}
-          resultId={resultId}
-          detailedContent={content}
-          allResults={allResults ?? []}
-          headingLevel={3}
-          allTypesLayout="list"
-          resultColor={resultColor ?? ""}
-          // ResultCard内では afterPracticalTip スロットは不要
-        />
-      );
+      return <Comp detailedContent={content} />;
     }
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
@@ -435,158 +356,181 @@ function renderDetailedContent(
   }
 }
 
+/** キャッチコピーを持つ variant。キャッチコピーはタイプ名のすぐ下、説明の前に置く。 */
+const CATCHPHRASE_VARIANTS = [
+  "animal-personality",
+  "music-personality",
+  "traditional-color",
+  "yoji-personality",
+  "character-personality",
+  "unexpected-compatibility",
+  "impossible-advice",
+  "contrarian-fortune",
+] as const;
+
+type CatchphraseVariant = (typeof CATCHPHRASE_VARIANTS)[number];
+
+function catchphraseOf(detailedContent?: DetailedContent): string | null {
+  if (
+    !detailedContent ||
+    !CATCHPHRASE_VARIANTS.includes(
+      detailedContent.variant as CatchphraseVariant,
+    )
+  ) {
+    return null;
+  }
+  return (detailedContent as { catchphrase: string }).catchphrase;
+}
+
 export default function ResultCard({
+  head,
   result,
+  heading,
+  readingHeadings,
   quizType,
   quizTitle,
+  quizName,
   quizSlug,
   score,
   totalQuestions,
   onRetry,
   detailedContent,
   resultPageLabels,
-  accentColor,
   referrerTypeId,
+  extra,
+  nextItems = [],
   allResults,
   coTypes,
+  resultBoxRef,
+  appear = false,
 }: ResultCardProps) {
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/play/${quizSlug}/result/${result.id}`
-      : `/play/${quizSlug}/result/${result.id}`;
-
-  const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
-
-  // catchphrase を description の前に表示する variant のリスト。
-  // このリストに含まれる variant は detailedContent.catchphrase を持つことが保証される。
-  const CATCHPHRASE_VARIANTS = [
-    "animal-personality",
-    "music-personality",
-    "traditional-color",
-    "yoji-personality",
-    "character-personality",
-    "unexpected-compatibility",
-    "impossible-advice",
-    "contrarian-fortune",
-  ] as const;
-
-  const catchphrase =
-    detailedContent &&
-    CATCHPHRASE_VARIANTS.includes(
-      detailedContent.variant as (typeof CATCHPHRASE_VARIANTS)[number],
-    )
-      ? (
-          detailedContent as {
-            catchphrase: string;
-            variant: (typeof CATCHPHRASE_VARIANTS)[number];
-          }
-        ).catchphrase
-      : null;
-
-  // 勲章 first-view（B：§7 / personality 型のみ）。
-  // 適用条件は「personality 型 かつ 結果自身の象徴 icon と固有色 color が両方存在」。
-  // これ以外（knowledge 型、icon/color 欠落）は現行の抑制ヘッダにフォールバックする
-  // （§7 は knowledge 系に勲章を一律適用しない方針。ResultCard は複数の personality
-  //  診断で共有されるため、特定診断に依存しない汎用の文言・構造にする）。
-  const showMedal =
-    quizType === "personality" && Boolean(result.icon) && Boolean(result.color);
+  const shareHeadingId = useId();
+  // ハッシュタグは、これまでの共有と同じ語で数えられるよう、題から作る。
+  const shareText = `${quizName}の結果は「${resultNameWithReading(result)}」でした！　#${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  // 札の画像のボタンの知らせ。区画の知らせの行を1つにするため、共有のボタンの知らせの行に出す。
+  const [fudaNotice, setFudaNotice] = useState<string[]>([]);
+  const catchphrase = catchphraseOf(detailedContent);
+  // 見出しは名前だけにし、読みにくい名前の読みは見出しのすぐ下に添える（伝統色の「藍色」と「あいいろ」など）。
+  const { reading } = resultHeadingName(result);
+  // 伝統色診断は、結果の色が結果そのものなので、色見本で見せる（DESIGN.md §2）。
+  const resultColor =
+    detailedContent?.variant === "traditional-color" ? result.color : undefined;
+  // 結果ごとのおすすめのリンク。行き先がその結果の辞典の項目なら「このタイプについて」、辞典の一覧やほかの遊びなら
+  // 「次はこれを試してみよう」に置く。
+  const { recommendation: recommendationText, recommendationLink } = result;
+  const recommendation =
+    recommendationText && recommendationLink
+      ? {
+          placement: recommendationPlacement(recommendationLink),
+          link: (
+            <Link
+              href={recommendationLink}
+              className={styles.recommendation}
+              data-text-box="inline"
+            >
+              {recommendationText}
+            </Link>
+          ),
+        }
+      : undefined;
+  const aboutLink =
+    recommendation?.placement === "aboutType" ? recommendation.link : null;
+  const nextLink =
+    recommendation?.placement === "next" ? recommendation.link : null;
 
   return (
-    <div className={styles.card}>
-      {showMedal ? (
-        // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
-        // 器（この見出し部）は静かな到達ラベルだけを持ち、結果そのものは罫で明確に
-        // 包まれた独立ビジュアル（Tsutsumi）が主役になる。固有色は quiz データの任意
-        // hex を捨て、id から和色8色へ決定的に写像する（§2「成果物パレットは8色に限る」）。
-        // symbol は絵文字（result.icon）ではなくタイプ名の先頭1字（§8-6 絵文字禁止）。
-        <div className={styles.medalWrap}>
-          {/* 到達の承認を兼ねた静かなラベル（煽らない・けばけばしくしない） */}
-          <p className={styles.medalLabel}>
-            <span className={styles.medalLabelDone}>診断完了</span>
-            あなたの結果
-          </p>
-          <Tsutsumi
-            typeName={result.title}
-            // 診断結果の主タイトル（クライマックス）を見出し(h2)にし、SRの見出しナビで
-            // 結果へ到達できるようにする（cycle-287 F5・WCAG 1.3.1）。ページ h1 は
-            // QuizPlayPageLayout、結果内の詳細見出しは h3 のため h2 が階層上妥当。
-            typeNameAs="h2"
-            word={catchphrase ?? undefined}
-            symbol={pickResultSymbol(result.title)}
-            color={pickResultWairoColor(result.id)}
-            productName={quizTitle}
-            seal="診"
-          />
-          {/* 「札を持ち帰る」保存/共有アクション（cycle-280・§4札/§7）。
-              character-personality に限定する（PM判断5）。固定 URL の札画像 Route Handler
-              （/play/character-personality/result/<id>/fuda-image）が存在する面のみ。 */}
-          {detailedContent?.variant === "character-personality" && (
-            <FudaActions
-              resultId={result.id}
-              resultTitle={result.title}
-              quizTitle={quizTitle}
-              quizSlug={quizSlug}
+    <>
+      <Section>
+        {head}
+        <div className={styles.card}>
+          <ResultBox
+            ref={resultBoxRef}
+            tabIndex={resultBoxRef ? -1 : undefined}
+            caption={`${quizName}の結果`}
+            heading={reading === undefined ? heading : { ...heading, reading }}
+            appear={appear}
+          >
+            <div className={styles.result}>
+              {resultColor && (
+                <div
+                  className={styles.swatch}
+                  style={{ backgroundColor: resultColor }}
+                />
+              )}
+              {quizType === "knowledge" &&
+                score !== undefined &&
+                totalQuestions !== undefined && (
+                  <FittedNumber
+                    segments={[`${totalQuestions}問中`, `${score}問正解`]}
+                  />
+                )}
+              {catchphrase && <p>{catchphrase}</p>}
+              <p className={styles.description}>{result.description}</p>
+              {coTypes &&
+                coTypes.length > 0 &&
+                renderTiedTypesDisclosure(result, coTypes, quizSlug)}
+            </div>
+          </ResultBox>
+          <section className={styles.share} aria-labelledby={shareHeadingId}>
+            <PhrasedText
+              as="h3"
+              id={shareHeadingId}
+              className={styles.shareHeading}
+              phrases={["この", "結果を", "共有"]}
             />
-          )}
-        </div>
-      ) : (
-        <>
-          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
-          <p className={styles.resultLabel}>あなたの結果</p>
-          <h2 className={styles.title}>{result.title}</h2>
-          {quizType === "knowledge" &&
-            score !== undefined &&
-            totalQuestions !== undefined && (
-              <p className={styles.score}>
-                {totalQuestions}問中{score}問正解
-              </p>
+            {detailedContent?.variant === "character-personality" && (
+              <FudaActions
+                resultId={result.id}
+                resultTitle={result.title}
+                quizName={quizName}
+                quizSlug={quizSlug}
+                onNoticeChange={setFudaNotice}
+              />
             )}
-          {/* catchphrase を description の前に静かなリード文として表示する。Tsutsumi 内に
-              既に word として表示している場合（showMedal=true）はここでは重複させない。 */}
-          {catchphrase && (
-            <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
-          )}
-        </>
-      )}
-      <p className={styles.description}>{result.description}</p>
-      {/* 真の残余同点の開示（P2b・cycle-303）。co-types が1件以上あるときのみ描画。
-          単独勝者（約8割）には出さず従来体験を保つ。判定は変えず表示のみの加算ブロック。 */}
-      {coTypes &&
-        coTypes.length > 0 &&
-        renderTiedTypesDisclosure(result, coTypes, quizSlug)}
-      {result.recommendation && result.recommendationLink && (
-        <Link
-          href={result.recommendationLink}
-          className={styles.recommendation}
-        >
-          {result.recommendation}
-        </Link>
-      )}
-      {detailedContent && (
-        <div className={styles.detailedSection}>
-          {renderDetailedContent(
-            detailedContent,
-            result.id,
-            quizSlug,
-            resultPageLabels,
-            accentColor,
-            referrerTypeId,
-            result.color,
-            allResults,
-          )}
+            <ShareButtons
+              url={`/play/${quizSlug}/result/${result.id}`}
+              title={quizTitle}
+              text={shareText}
+              sns={["x", "line", "copy"]}
+              contentType={quizType === "personality" ? "diagnosis" : "quiz"}
+              contentId={contentIdForQuiz(quizSlug)}
+              surface="text"
+              notice={fudaNotice}
+            />
+          </section>
         </div>
+      </Section>
+      {(detailedContent || aboutLink || extra) && (
+        <Section>
+          <ReadingSection>
+            {detailedContent &&
+              renderDetailedContent(
+                detailedContent,
+                result.id,
+                (text) => readingHeadings[text] ?? [text],
+                resultPageLabels,
+                referrerTypeId,
+              )}
+            {aboutLink && <div className={styles.aboutLink}>{aboutLink}</div>}
+            {extra}
+          </ReadingSection>
+        </Section>
       )}
-      <ShareButtons
-        shareText={shareText}
-        shareUrl={shareUrl}
-        quizTitle={quizTitle}
-        contentType={quizType === "personality" ? "diagnosis" : "quiz"}
-        contentId={contentIdForQuiz(quizSlug)}
-        surface="text"
-      />
-      <button type="button" className={styles.retryButton} onClick={onRetry}>
-        もう一度挑戦する
-      </button>
-    </div>
+      <ResultNextContent items={nextItems}>
+        <Button onClick={onRetry} phrases={["もう一度", "挑戦する"]} />
+        {nextLink}
+      </ResultNextContent>
+      {detailedContent && (
+        <Section>
+          <OtherTypesNav
+            quizSlug={quizSlug}
+            currentResultId={result.id}
+            results={allResults}
+            placement="solvedScreen"
+            showSwatch={resultColor !== undefined}
+          />
+        </Section>
+      )}
+    </>
   );
 }

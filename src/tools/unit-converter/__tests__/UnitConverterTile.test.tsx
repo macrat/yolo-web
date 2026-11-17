@@ -1,8 +1,6 @@
 /**
  * UnitConverterTile 回帰テスト
  *
- * 旧 UnitConverterPage.test.tsx の全ケースを移植・拡張。
- *
  * T-1: 基本レンダリング（Panel ルート確認・必須コントロール存在）
  * T-2: 入力→結果更新
  * T-3: 空入力時の挙動
@@ -19,6 +17,7 @@ import { describe, test, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 import UnitConverterTile from "../UnitConverterTile";
 
 // ---- T-1: 基本レンダリング ----
@@ -33,7 +32,7 @@ describe("T-1: 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  test("カテゴリのSegmentedControlが表示される", () => {
+  test("カテゴリのラジオボタンの組が表示される", () => {
     render(<UnitConverterTile />);
     expect(screen.getByText("カテゴリ")).toBeInTheDocument();
     const radioButtons = screen.getAllByRole("radio");
@@ -129,7 +128,7 @@ describe("T-4: 変換ロジックの正確性", () => {
     expect(result).toHaveTextContent("32");
   });
 
-  test("カテゴリ切替後に古い結果が残らない（G-1要件）", () => {
+  test("カテゴリ切替後に古い結果が残らない", () => {
     render(<UnitConverterTile />);
     // 長さカテゴリで 1000 を入力 → 結果が表示される
     const input = screen.getByLabelText("変換する値");
@@ -150,13 +149,13 @@ describe("T-4: 変換ロジックの正確性", () => {
 
 // ---- T-5: ARIA 属性 ----
 describe("T-5: ARIA 属性", () => {
-  test("SegmentedControl が role='radiogroup' を持つ", () => {
+  test("ラジオボタンの組が role='radiogroup' を持つ", () => {
     render(<UnitConverterTile />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toBeInTheDocument();
   });
 
-  test("カテゴリ SegmentedControl が aria-labelledby を持つ", () => {
+  test("カテゴリ ラジオボタンの組が aria-labelledby を持つ", () => {
     render(<UnitConverterTile />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toHaveAttribute("aria-labelledby");
@@ -177,6 +176,14 @@ describe("T-5: ARIA 属性", () => {
     expect(swapButton).toBeInTheDocument();
   });
 
+  test("スワップボタンの面の字「入れ替え」は PhrasedText で1つの文節として組む", () => {
+    render(<UnitConverterTile />);
+    const swapButton = screen.getByLabelText("変換元と変換先の単位を入れ替え");
+    const face = swapButton.querySelector("span");
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face!.innerHTML).toBe("入れ替え");
+  });
+
   test("スワップボタンが生グリフ「⇄」を含まず SVG アイコンを使う", () => {
     render(<UnitConverterTile />);
     const swapButton = screen.getByLabelText("変換元と変換先の単位を入れ替え");
@@ -190,7 +197,7 @@ describe("T-5: ARIA 属性", () => {
   test("初期値で長さカテゴリのラジオボタンが選択状態になっている", () => {
     render(<UnitConverterTile />);
     const lengthRadio = screen.getByRole("radio", { name: "長さ" });
-    expect(lengthRadio).toHaveAttribute("aria-checked", "true");
+    expect(lengthRadio).toBeChecked();
   });
 
   test("Input と label の関連付けが useId で一意化されている", () => {
@@ -322,21 +329,21 @@ describe("T-10: CSS トークン検証", () => {
   );
   const css = readFileSync(cssPath, "utf-8");
 
-  test("旧 --color-* トークンが存在しない（B-1）", () => {
+  test("CSS が --color-* トークンを参照しない", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  test("--accent を塗りに直接使っていない（B-3）", () => {
+  test("--accent を塗りに直接使っていない", () => {
     expect(css).not.toMatch(/background[^:]*:[^;]*var\(--accent\)/);
     expect(css).not.toMatch(/color[^:]*:[^;]*var\(--accent\)/);
   });
 
-  test("font-weight: 700 がコメント外のルールに存在しない（B-4）", () => {
+  test("font-weight: 700 がコメント外のルールに存在しない", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(/font-weight:\s*700/);
   });
 
-  test("box-shadow が通常要素に使われていない（B-6）", () => {
+  test("box-shadow が通常要素に使われていない", () => {
     const boxShadowMatches = css.match(/box-shadow:/g) ?? [];
     expect(boxShadowMatches).toHaveLength(0);
   });

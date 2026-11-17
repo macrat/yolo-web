@@ -1,3 +1,21 @@
+/** 凡例の1項目。 */
+export interface GameLegendEntry {
+  /**
+   * 盤に出る印（「◯」など）。読み上げでは読ませず、意味の語だけを読ませる。印の字は読み上げで別の語
+   * （× を「かける」など）になり、盤のマスの読み上げ（「部首: 一致」）とも食い違うため。
+   */
+  mark?: string;
+  /** 印の意味。盤のマスの読み上げも同じ語で言う。 */
+  meaning: string;
+}
+
+/** 盤の印の意味を言う凡例。 */
+export interface GameLegend {
+  /** 何の凡例かを言う名前。読み上げでリストの名前になる。 */
+  name: string;
+  entries: readonly GameLegendEntry[];
+}
+
 /**
  * Game metadata interface.
  * Single source of truth for all game-related metadata.
@@ -12,25 +30,14 @@ export interface GameMeta {
   shortDescription: string;
   /** Longer description (~60 chars, used on game list page and search index) */
   description: string;
-  /** Icon emoji */
-  icon: string;
-  /** Theme color (CSS hex) */
-  accentColor: string;
   /** Difficulty label */
   difficulty: string;
   /** Keywords for search index */
   keywords: string[];
   /** localStorage stats key (e.g. "kanji-kanaru-stats") */
   statsKey: string;
-  /**
-   * デイリーゲームかどうか。
-   * trueのゲームはNextGameBannerの「今日のパズル」進捗に含まれる。
-   * falseまたは未設定のゲームはランダム出題型など、デイリー以外のゲーム。
-   * デフォルト: false（後方互換性のため、既存ゲームはregistryで明示的にtrueを設定）
-   */
+  /** デイリーゲームかどうか。true のゲームが、解き終えた画面の今日の進み（NextGameBanner）に数えられる。 */
   isDaily?: boolean;
-  /** OGP image subtitle */
-  ogpSubtitle: string;
   /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
@@ -54,26 +61,18 @@ export interface GameMeta {
     ogDescription: string;
   };
 
-  /** 一行価値テキスト: 「誰が・何を・どう解決するか」（40字以内推奨） */
-  valueProposition?: string;
-
   /**
-   * 具体例: 入力→出力のサンプル
-   * ゲームの場合:
-   * - input: ゲームの遊び方や挑戦シーン（例: 「漢字1文字を6回以内に推理」）
-   * - output: 得られる体験（例: 「部首・画数・読みのヒントで正解にたどり着く快感」）
-   * - description: 補足説明テキスト
+   * ページの頭で h1 の下に置く要約。今日の問題で何を、どこまでに当てる（作る）かを言う。
+   * 320px の画面で2行に収まる長さ（約30字）にする。
    */
-  usageExample?: {
-    input: string;
-    output: string;
-    description?: string;
-  };
+  summary: string;
+
+  /** 盤の印の意味を言う凡例。要約の下に置く。印を持たないゲームは持たない。 */
+  legend?: GameLegend;
 
   /**
-   * FAQ: Q&A形式の配列
-   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
-   * answerはプレーンテキストのみ（HTML・特殊記法不可）。
+   * よくある質問。ページの「よくある質問」の節と FAQPage の JSON-LD の元になる。
+   * answer はプレーンテキストのみ（HTML・特殊記法不可）。
    */
   faq?: Array<{
     question: string;

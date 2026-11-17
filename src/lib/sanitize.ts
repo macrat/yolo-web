@@ -4,7 +4,7 @@
  * Uses sanitize-html with a whitelist approach to allow only the HTML elements
  * and attributes that marked legitimately generates. This protects against XSS
  * attacks from user-supplied or AI-generated markdown content while preserving
- * all expected formatting (mermaid diagrams, GFM Alerts, task lists, tables, etc.).
+ * all expected formatting (mermaid diagrams, GFM Alerts, task lists, tables, code boxes).
  */
 
 import sanitizeHtml from "sanitize-html";
@@ -42,6 +42,8 @@ const ALLOWED_TAGS: string[] = [
   "code",
   "del",
   "img",
+  // Word breaks that markdown-extensions.ts places between words in table cells
+  "wbr",
   // GFM task list checkbox
   "input",
   // Structural elements used by mermaid extension and GFM Alerts
@@ -50,9 +52,6 @@ const ALLOWED_TAGS: string[] = [
   "section",
   "details",
   "summary",
-  // SVG icons used by marked-alert for GFM Alert admonitions (> [!NOTE], etc.)
-  "svg",
-  "path",
 ];
 
 /**
@@ -76,47 +75,14 @@ const ALLOWED_ATTRIBUTES: Record<string, sanitizeHtml.AllowedAttribute[]> = {
   p: ["class"],
   // mermaid extension uses <div class="mermaid">, GFM Alerts use class attributes
   div: ["class"],
-  // <span> inside Shiki output carries inline `style` declarations with per-token colors
-  span: ["class", "style"],
+  // Code comments in code boxes are wrapped in <span class="code-comment"> (highlight.ts)
+  span: ["class"],
   section: ["class"],
-  // SVG elements in GFM Alert icons
-  svg: ["class", "viewBox", "width", "height", "aria-hidden"],
-  path: ["d"],
   // Code blocks can have class for language hints (e.g., class="language-js")
   code: ["class"],
-  // Shiki wraps highlighted output in <pre class="shiki ..." style="..." tabindex="0">
-  pre: ["class", "style", "tabindex"],
   // Table alignment
   td: ["align", "style"],
   th: ["align", "style"],
-};
-
-/**
- * Hex color values produced by Shiki (e.g. `#fff`, `#dbd7caee`).
- * Restricted to 3, 4, 6, or 8 hex digits — blocks `expression(...)`,
- * `url(javascript:...)`, named colors, etc.
- */
-const HEX_COLOR_REGEX = /^#[0-9a-fA-F]{3,8}$/;
-
-/**
- * Style declarations Shiki emits on `<pre>` and `<span>` elements.
- *
- * Shiki's dual-theme output uses regular `color` / `background-color` for the
- * light theme and CSS custom properties (`--shiki-dark`, `--shiki-dark-bg`)
- * for the dark theme. We whitelist these explicitly so that table cell styles
- * stay locked down to `text-align`.
- */
-const SHIKI_STYLE_WHITELIST: Record<string, RegExp[]> = {
-  "background-color": [HEX_COLOR_REGEX],
-  color: [HEX_COLOR_REGEX],
-  "--shiki-dark": [HEX_COLOR_REGEX],
-  "--shiki-dark-bg": [HEX_COLOR_REGEX],
-  "font-style": [/^(italic|normal|oblique)$/],
-  "font-weight": [/^(bold|bolder|lighter|normal|\d{3})$/],
-  "text-decoration": [/^(underline|line-through|overline|none)$/],
-  "--shiki-dark-font-style": [/^(italic|normal|oblique)$/],
-  "--shiki-dark-font-weight": [/^(bold|bolder|lighter|normal|\d{3})$/],
-  "--shiki-dark-text-decoration": [/^(underline|line-through|overline|none)$/],
 };
 
 /**
@@ -140,17 +106,15 @@ export function sanitize(html: string): string {
       img: ["http", "https"],
     },
     // Preserve self-closing tags like <br />, <hr />, <img />
-    selfClosing: ["br", "hr", "img", "input"],
+    selfClosing: ["br", "hr", "img", "input", "wbr"],
     // Strip disallowed tags entirely (don't show their text content)
     disallowedTagsMode: "discard",
     // Allow only safe CSS properties per tag. Anything outside this whitelist
-    // (e.g. `expression(...)`, `url(javascript:...)`, named colors) is stripped
-    // by sanitize-html's value regex matching.
+    // (e.g. `expression(...)`, `url(javascript:...)`) is stripped by
+    // sanitize-html's value regex matching.
     allowedStyles: {
       td: { "text-align": [/^(left|center|right)$/] },
       th: { "text-align": [/^(left|center|right)$/] },
-      pre: SHIKI_STYLE_WHITELIST,
-      span: SHIKI_STYLE_WHITELIST,
     },
   });
 }

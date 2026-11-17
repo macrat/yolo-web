@@ -1,58 +1,49 @@
-/* FileDropZone コンポーネントのスタイル（DESIGN.md フェーズ R・店構えへ変換）。
- * 入力欄扱い（ファイル取り込み口）として角丸 2px の例外を適用（§4）。
- * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
- *              --accent はリンク/フォーカス用。塗りには使わない。
- * border: 2px dashed --rule-strong（通常）/ --accent（ドラッグ中・ホバー）
- */
+/* ラベルを欄の上に置き、あいだを 8px あける（§5・§8）。 */
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
 
+.label {
+  max-width: 100%;
+  font-size: var(--text-body);
+}
+
+/* 見えないまま、フォーカスと選ぶ画面を開く動作を受ける。display: none にするとフォーカスを受けない。 */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 選ぶ欄の枠は globals.css の [data-field] が引く。選ぶ欄は hover で見え方を変えない（§6）。 */
 .dropZone {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  border: 2px dashed var(--rule-strong);
-  border-radius: var(--radius-sm);
-  background-color: var(--paper-2);
+  align-self: stretch;
   cursor: pointer;
-  transition: border-color 0.15s;
 }
 
-/* ホバー時: border 色を --accent に変化（塗りは変えない。DESIGN.md §2 準拠） */
-.dropZone:hover {
-  border-color: var(--accent);
+/* エラーのあいだは、入力が持つ aria-invalid を見えている欄に太い線で出す（§8）。 */
+.fileInput[aria-invalid="true"] + .dropZone {
+  --field-line: var(--rule-w);
+  border-color: var(--rule);
 }
 
-/* フォーカス時: DESIGN.md §2 に従い outline を使う */
-.dropZone:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* 入力が受けたフォーカスを、見えている欄に二重リングで出す（§6）。 */
+.fileInput:focus-visible + .dropZone {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
 }
 
-/* ドラッグアクティブ時: border 色を --accent に変化のみ（shadow/opacity 変化は DESIGN.md 禁止） */
-.dropZoneActive {
-  border-color: var(--accent);
-}
-
-.dropText {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.dropDescription {
-  margin: 0.25rem 0 0;
-  font-size: 0.8rem;
+.description {
   color: var(--ink-2);
-}
-
-/* hidden file input — クリックで programmatic open するための隠しインプット */
-.fileInput {
-  display: none;
-}
-
-@media (max-width: 640px) {
-  .dropZone {
-    padding: 1.5rem;
-  }
+  font-size: var(--text-small);
 }

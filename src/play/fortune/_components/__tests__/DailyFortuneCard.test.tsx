@@ -1,141 +1,141 @@
 /**
- * Tests for DailyFortuneCard component.
- *
- * DailyFortuneCard is a Client Component that:
- * - Shows a loading state on SSR (state is null initially via server snapshot)
- * - Shows fortune data (title, description, luckyItem, luckyAction) after mount
- *
- * Hydration Error prevention:
- * - useSyncExternalStore is used with a server snapshot that returns null
- * - This ensures SSR output and first client render output match (both null/loading)
- * - The client snapshot computes the actual fortune from localStorage
+ * DailyFortuneCard のテスト。サーバーの描画と最初の描画では占っていることを字で言い、読み込んだあとに
+ * 端末の種で選んだ運勢を結果のボックスに出す。
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { readFileSync } from "fs";
-import { resolve } from "path";
-import { render, screen, act } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
+import { render, screen, act, within } from "@testing-library/react";
 import DailyFortuneCard from "../DailyFortuneCard";
 
-// Mock fortune logic to return deterministic values
+const mockGetTodayJst = vi.fn(() => "2026-03-28");
+
 vi.mock("@/play/fortune/logic", () => ({
   getUserSeed: () => 12345,
-  selectFortune: () => ({
+  selectFortune: (today: string) => ({
     id: "test-fortune",
     title: "テスト運勢タイトル",
-    description: "テスト用の運勢説明文",
+    description: `${today}の運勢説明文`,
     luckyItem: "テストアイテム",
     luckyAction: "テストアクション",
-    rating: 3.5,
+    rating: 4,
   }),
 }));
 
-// Mock date utility (fortuneStore reads getTodayJst from crossGameProgress)
 vi.mock("@/play/games/shared/_lib/crossGameProgress", () => ({
-  getTodayJst: () => "2026-03-28",
+  getTodayJst: () => mockGetTodayJst(),
 }));
 
-// Mock ShareButtons to avoid complex dependencies
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
-  default: ({ shareText }: { shareText: string }) => (
-    <div data-testid="share-buttons">{shareText}</div>
+vi.mock("@/components/ShareButtons", () => ({
+  default: ({ text }: { text: string }) => (
+    <div data-testid="share-buttons">{text}</div>
   ),
 }));
 
-// Import resetFortuneCache to ensure test isolation across date changes
 import { resetFortuneCache } from "@/play/fortune/fortuneStore";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
-const SOURCE_PATH = resolve(__dirname, "../DailyFortuneCard.tsx");
+const HEADINGS = {
+  "test-fortune": { phrases: ["テスト運勢", "タイトル"] },
+};
+const PENDING_HEADING = { phrases: ["占っています……"] };
+
+async function renderLoaded() {
+  await act(async () => {
+    render(
+      <DailyFortuneCard headings={HEADINGS} pendingHeading={PENDING_HEADING} />,
+    );
+  });
+}
 
 describe("DailyFortuneCard", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    // Reset module-scope cache so each test starts with a clean state.
-    // Without this, a cache populated by a previous test (possibly with a
-    // different date) would persist and cause flaky behavior.
     resetFortuneCache();
+    mockGetTodayJst.mockReturnValue("2026-03-28");
   });
 
-  it("renders fortune title after mount", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
-    });
-    expect(screen.getByText("テスト運勢タイトル")).toBeInTheDocument();
+  it("renders only the loading message on the server, not a fortune", () => {
+    const html = renderToString(
+      <DailyFortuneCard headings={HEADINGS} pendingHeading={PENDING_HEADING} />,
+    );
+    const text = html.replace(/<[^>]*>/g, "");
+    expect(text).toContain("占っています……");
+    expect(html).toMatch(
+      /<noscript>.*JavaScript を有効にすると表示されます。.*<\/noscript>/,
+    );
+    expect(text).not.toContain("テスト運勢タイトル");
+    expect(text).not.toContain("運勢説明文");
   });
 
-  it("renders fortune description after mount", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
+  it("renders the fortune name as the heading of the result box", async () => {
+    await renderLoaded();
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "テスト運勢タイトル",
     });
-    expect(screen.getByText("テスト用の運勢説明文")).toBeInTheDocument();
-  });
-
-  it("renders lucky item after mount", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
-    });
-    expect(screen.getByText("テストアイテム")).toBeInTheDocument();
-  });
-
-  it("renders lucky action after mount", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
-    });
-    expect(screen.getByText("テストアクション")).toBeInTheDocument();
-  });
-
-  it("renders formatted date after mount", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
-    });
-    // "2026-03-28" should become "2026年3月28日の運勢"
-    expect(screen.getByText("2026年3月28日の運勢")).toBeInTheDocument();
-  });
-
-  it("renders comeback message", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
-    });
+    expect(heading.querySelectorAll("wbr")).toHaveLength(1);
     expect(
-      screen.getByText("明日も来てね! 毎日運勢が変わります"),
+      screen.getByRole("region", { name: "テスト運勢タイトル" }),
+    ).toContainElement(heading);
+  });
+
+  it("renders the date, stars, description, lucky item and action inside the result box", async () => {
+    await renderLoaded();
+    const region = screen.getByRole("region", { name: "テスト運勢タイトル" });
+    expect(
+      within(region).getByText("2026年3月28日のユーモア運勢"),
     ).toBeInTheDocument();
-  });
-});
-
-describe("DailyFortuneCard Hydration Error prevention (source code verification)", () => {
-  const sourceCode = readFileSync(SOURCE_PATH, "utf-8");
-
-  it("does NOT use lazy initializer useState(computeInitialFortune)", () => {
-    // Hydration Error の原因: useState(computeInitialFortune) の lazy initializer は
-    // SSR では null を返すが、クライアント初回レンダリングでは window が存在するため
-    // 実際の運勢データを返してしまい、SSR とクライアントの出力が不一致になる。
-    // 修正後は useSyncExternalStore を使い、server snapshot で null を返す。
-    expect(sourceCode).not.toMatch(/useState\(computeInitialFortune\)/);
+    expect(
+      within(region).getByRole("img", { name: "5つ星のうち4.0" }),
+    ).toBeInTheDocument();
+    expect(
+      within(region).getByText("2026-03-28の運勢説明文"),
+    ).toBeInTheDocument();
+    expect(within(region).getByText("テストアイテム")).toBeInTheDocument();
+    expect(within(region).getByText("テストアクション")).toBeInTheDocument();
   });
 
-  it("uses useSyncExternalStore for hydration-safe fortune computation", () => {
-    // useSyncExternalStore の server snapshot (第3引数) で null を返すことで
-    // SSR とクライアントの初回レンダリング出力を一致させる。
-    expect(sourceCode).toMatch(/useSyncExternalStore/);
+  it("puts the share buttons right after the result box under a heading, with the rating in the same form", async () => {
+    await renderLoaded();
+    const region = screen.getByRole("region", { name: "テスト運勢タイトル" });
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    expect(region.nextElementSibling).toBe(share);
+    expect(within(share).getByTestId("share-buttons").textContent).toBe(
+      "今日のユーモア運勢は「テスト運勢タイトル」(4.0/5) でした！　#ユーモア運勢 #yolosnet",
+    );
   });
 
-  it("provides a server snapshot function that returns null to prevent hydration mismatch", () => {
-    // server snapshot 関数は SSR 時に null を返すこと。
-    // DailyFortuneCard は fortuneStore から getFortuneServerSnapshot をインポートする。
-    expect(sourceCode).toMatch(/getFortuneServerSnapshot/);
+  it("does not animate the result box, since it appears on opening the page", async () => {
+    await renderLoaded();
+    const region = screen.getByRole("region", { name: "テスト運勢タイトル" });
+    expect(region.className).not.toMatch(/appears/);
   });
 
-  it("does NOT use setState(computeInitialFortune()) pattern", () => {
-    // 旧パターン (useEffect + setState) は使われていないこと。
-    expect(sourceCode).not.toMatch(/setState\(computeInitialFortune\(\)\)/);
+  it("renders the comeback message", async () => {
+    await renderLoaded();
+    const share = screen.getByRole("region", { name: "この結果を共有" });
+    expect(share.nextElementSibling?.textContent).toBe(
+      "明日も来てね！　毎日運勢が変わります",
+    );
   });
 
-  it("imports store functions from fortuneStore module (no duplicate store implementation)", () => {
-    // ストア実装が fortuneStore モジュールに集約されており、
-    // DailyFortuneCard 内にストアのキャッシュ変数が定義されていないこと。
-    expect(sourceCode).toMatch(/from "@\/play\/fortune\/fortuneStore"/);
-    // モジュールスコープのキャッシュ変数が DailyFortuneCard 内に定義されていないこと
-    expect(sourceCode).not.toMatch(/^let fortuneCache/m);
-    expect(sourceCode).not.toMatch(/^let fortuneListeners/m);
+  it("shows the new day's fortune when the date in Japan changes while the page is open", async () => {
+    await renderLoaded();
+    mockGetTodayJst.mockReturnValue("2026-03-29");
+    await act(async () => {
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    expect(screen.getByText("2026年3月29日のユーモア運勢")).toBeInTheDocument();
+    expect(screen.getByText("2026-03-29の運勢説明文")).toBeInTheDocument();
+  });
+
+  it("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", async () => {
+    await renderLoaded();
+    const headings: string[][] = [["この", "結果を", "共有"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

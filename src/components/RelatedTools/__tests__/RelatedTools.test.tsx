@@ -1,7 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 
 // allToolMetas をモックする
 vi.mock("@/tools/registry", () => ({
@@ -13,7 +11,7 @@ vi.mock("@/tools/registry", () => ({
       nameEn: "Base64 Encoder/Decoder",
       description: "テスト用",
       keywords: [],
-      category: "encoding",
+      category: "data",
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
@@ -49,9 +47,10 @@ vi.mock("@/tools/registry", () => ({
 }));
 
 import RelatedTools from "../index";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 describe("RelatedTools", () => {
-  it("関連ツールのカードリンクをレンダリングする", () => {
+  it("見出し「関連ツール」を名前に持つ一覧に、関連ツールが行として並ぶ", () => {
     render(
       <RelatedTools
         currentSlug="base64"
@@ -59,16 +58,23 @@ describe("RelatedTools", () => {
       />,
     );
 
-    // ナビゲーション要素が存在する
-    expect(screen.getByRole("navigation")).toBeInTheDocument();
+    const list = screen.getByRole("list", { name: "関連ツール" });
+    expect(list.querySelectorAll("li")).toHaveLength(2);
+  });
 
-    // 関連ツール2件がリンクとして表示される
+  it("行のリンクの読み上げの名前はツール名だけで、説明を含まない", () => {
+    render(
+      <RelatedTools
+        currentSlug="base64"
+        relatedSlugs={["char-count", "byte-counter"]}
+      />,
+    );
+
+    const names = screen.getAllByRole("link").map((link) => link.textContent);
+    expect(names).toEqual(["文字数カウンター", "バイト数カウンター"]);
     expect(
-      screen.getByRole("link", { name: /文字数カウンター/ }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /バイト数カウンター/ }),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "文字数カウンター" }),
+    ).toHaveAccessibleName("文字数カウンター");
   });
 
   it("currentSlug のツールは表示されない", () => {
@@ -102,7 +108,7 @@ describe("RelatedTools", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("各ツールの shortDescription（一行説明）が表示される（M-3: 遷移先が何かを判断できる導線）", () => {
+  it("各ツールの一行の説明が表示される", () => {
     render(
       <RelatedTools
         currentSlug="base64"
@@ -110,7 +116,6 @@ describe("RelatedTools", () => {
       />,
     );
 
-    // 一行説明が表示されること（リンク名だけに簡素化しない）
     expect(
       screen.getByText("テキストの文字数・バイト数を数えるツール"),
     ).toBeInTheDocument();
@@ -122,8 +127,33 @@ describe("RelatedTools", () => {
   it("リンクが /tools/<slug> の正しいパスを持つ", () => {
     render(<RelatedTools currentSlug="base64" relatedSlugs={["char-count"]} />);
 
-    const link = screen.getByRole("link", { name: /文字数カウンター/ });
+    const link = screen.getByRole("link", { name: "文字数カウンター" });
     expect(link).toHaveAttribute("href", "/tools/char-count");
+  });
+
+  it("種別が混ざるとき、各行がツールの一覧と同じ種別の語を持つ", () => {
+    render(
+      <RelatedTools
+        currentSlug="byte-counter"
+        relatedSlugs={["base64", "char-count"]}
+      />,
+    );
+
+    const row = (name: string) =>
+      screen.getByRole("link", { name }).closest("li") as HTMLElement;
+    expect(row("Base64エンコード・デコード")).toHaveTextContent("データ");
+    expect(row("文字数カウンター")).toHaveTextContent("文章");
+  });
+
+  it("載せたツールがすべて同じ種別なら、行に種別を出さない", () => {
+    render(
+      <RelatedTools
+        currentSlug="base64"
+        relatedSlugs={["char-count", "byte-counter"]}
+      />,
+    );
+
+    expect(screen.queryByText("文章")).not.toBeInTheDocument();
   });
 
   it("「関連ツール」の見出しが表示される", () => {
@@ -132,39 +162,13 @@ describe("RelatedTools", () => {
     expect(screen.getByText("関連ツール")).toBeInTheDocument();
   });
 
-  // CSS 規約: 新トークンのみ使用（--color-* 旧トークン不使用）
-  it("CSS に旧 --color-* トークンが含まれていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/--color-/);
-  });
-
-  // CSS 規約（DESIGN.md フェーズ R・店構え）: 新トークン（--ink, --ink-2, --rule, --accent）を使用
-  it("CSS に新デザイントークンが含まれている", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // いずれかの新トークンが使われていること
-    const hasNewToken =
-      css.includes("--ink") ||
-      css.includes("--rule") ||
-      css.includes("--accent");
-    expect(hasNewToken).toBe(true);
-  });
-
-  // CSS 規約: 旧トークン（--fg / --border / --bg 等）が残っていないこと
-  it("CSS に旧デザイントークンが含まれていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(
-      /--fg\b|--bg\b|--border\b|--r-normal|--r-interactive/,
-    );
-  });
-
-  // CSS 規約: カードリンクのフォーカス可視（WCAG 2.4.7）
-  it("CSS に focus-visible のフォーカス outline 定義が含まれている", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("focus-visible");
-    expect(css).toContain("outline");
+  it("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+    render(<RelatedTools currentSlug="base64" relatedSlugs={["char-count"]} />);
+    const headings: string[][] = [["関連", "ツール"]];
+    for (const phrases of headings) {
+      expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+      const heading = screen.getByRole("heading", { name: phrases.join("") });
+      expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+    }
   });
 });

@@ -1,7 +1,9 @@
 import { expect, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import KanjiDetail from "../kanji/KanjiDetail";
+import { getKanjiByChar, getKanjiByRadical } from "@/dictionary/_lib/kanji";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
+import { followsPhraseRules, splitIntoPhrases } from "@/lib/phrase-breaks";
 
 const mockKanji: KanjiEntry = {
   character: "山",
@@ -16,37 +18,141 @@ const mockKanji: KanjiEntry = {
 };
 
 test("renders kanji detail section", () => {
-  render(<KanjiDetail kanji={mockKanji} />);
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
   const detail = screen.getByTestId("kanji-detail");
   expect(detail).toBeInTheDocument();
   expect(screen.getByText(/漢字「山」/)).toBeInTheDocument();
 });
 
 test("renders readings", () => {
-  render(<KanjiDetail kanji={mockKanji} />);
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
   expect(screen.getByText("サン・セン")).toBeInTheDocument();
   expect(screen.getByText("やま")).toBeInTheDocument();
 });
 
 test("renders basic info", () => {
-  render(<KanjiDetail kanji={mockKanji} />);
-  // 画数・部首番号は tabular 数字書体の span に分離（DESIGN §3）。数値と単位が別ノードになる。
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
+  // 画数・部首番号は数値の span に分離。数値と単位が別ノードになる。
   expect(screen.getByText("3")).toBeInTheDocument(); // 画数
   expect(screen.getByText("46")).toBeInTheDocument(); // 部首番号
   expect(screen.getByText("小学1年")).toBeInTheDocument(); // 学年
 });
 
 test("renders examples", () => {
-  render(<KanjiDetail kanji={mockKanji} />);
-  // 使用例はカード/ピルではなく読点で組んだ自然な一文で見せる（DESIGN §4/§6）。
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
+  // 使用例は読点で組んだ一文で見せる。
   expect(screen.getByText("山脈、火山、登山")).toBeInTheDocument();
 });
 
 test("renders game cross-link", () => {
-  render(<KanjiDetail kanji={mockKanji} />);
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
   expect(
     screen.getByRole("link", {
       name: "漢字カナール - 毎日の漢字パズルで遊ぶ",
     }),
   ).toHaveAttribute("href", "/play/kanji-kanaru");
+});
+
+test("Zen Antique で組める見出しには、本文の書体で組む属性を付けない", () => {
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
+  expect(
+    screen.getByRole("heading", { level: 1, name: "漢字「山」" }),
+  ).not.toHaveAttribute("data-heading-font");
+});
+
+test("Zen Antique に無い字の見出しと大字は、和文を本文の書体で組む", () => {
+  render(
+    <KanjiDetail
+      kanji={{ ...mockKanji, character: "𠮟", radical: "辵" }}
+      head={null}
+    />,
+  );
+  expect(
+    screen.getByRole("heading", { level: 1, name: "漢字「𠮟」" }),
+  ).toHaveAttribute("data-heading-font", "fallback");
+  expect(screen.getByText("𠮟", { selector: "span" })).toHaveAttribute(
+    "data-heading-font",
+    "fallback",
+  );
+});
+
+test("大字は直後の h1 と同じ字なので、読み上げの木に現れない", () => {
+  render(<KanjiDetail kanji={mockKanji} head={null} />);
+  expect(screen.getByText("山", { selector: "span" })).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+});
+
+test("同じ部首の漢字は、見出しだけが字の数を言い、画数ごとのリストとして読まれる", () => {
+  const water = getKanjiByChar("水")!;
+  const others = getKanjiByRadical("水").filter((k) => k.character !== "水");
+  expect(others).toHaveLength(117);
+  render(<KanjiDetail kanji={water} head={null} />);
+
+  const heading = screen.getByRole("heading", {
+    level: 2,
+    name: `同じ部首の漢字（${others.length}字）`,
+  });
+  expect(heading).toBeInTheDocument();
+  // 索引の名前は見出しだけが言う。領域にも索引のまとまりにも同じ名前を重ねない。
+  const index = heading.closest("section") as HTMLElement;
+  expect(index).not.toHaveAttribute("aria-labelledby");
+  expect(within(index).queryByRole("group")).not.toBeInTheDocument();
+
+  const strokeCounts = [...new Set(others.map((k) => k.strokeCount))].sort(
+    (a, b) => a - b,
+  );
+  const groupHeadings = within(index).getAllByRole("heading", { level: 3 });
+  expect(groupHeadings.map((h) => h.textContent)).toEqual(
+    strokeCounts.map((count) => `${count}画`),
+  );
+
+  for (const count of strokeCounts) {
+    const list = within(index).getByRole("list", { name: `${count}画` });
+    expect(
+      within(list)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual(
+      others.filter((k) => k.strokeCount === count).map((k) => k.character),
+    );
+  }
+  expect(within(index).getAllByRole("link")).toHaveLength(others.length);
+});
+
+test("見出しは文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  const water = getKanjiByChar("水")!;
+  render(<KanjiDetail kanji={water} head={null} />);
+  const title = screen.getByRole("heading", { level: 1 });
+  expect(title.innerHTML).toBe(
+    splitIntoPhrases(title.textContent ?? "").join("<wbr>"),
+  );
+  const game = ["関連", "ゲーム"];
+  expect(followsPhraseRules(game)).toBe(true);
+  expect(screen.getByRole("heading", { name: game.join("") }).innerHTML).toBe(
+    game.join("<wbr>"),
+  );
+});
+
+test("同じ部首の漢字の見出しは、名前に括弧で数を添えたものとして、名前の中の語の切れ目と始め括弧の前でだけ折れる（DESIGN.md §4）", () => {
+  render(<KanjiDetail kanji={getKanjiByChar("水")!} head={null} />);
+  const text = "同じ部首の漢字（117字）";
+  const phrases = splitIntoPhrases(text, { countedName: true });
+  expect(phrases).toEqual(["同じ", "部首の", "漢字", "（117字）"]);
+  expect(screen.getByRole("heading", { name: text }).innerHTML).toBe(
+    phrases.join("<wbr>"),
+  );
+});
+
+test("渡されたページの頭を、項目の本文のセクションの最初の子として、主見出しより前に置く", () => {
+  const { container } = render(
+    <KanjiDetail kanji={mockKanji} head={<nav data-testid="page-head" />} />,
+  );
+  const head = screen.getByTestId("page-head");
+  expect(container.querySelector("section")!.firstElementChild).toBe(head);
+  expect(
+    head.compareDocumentPosition(screen.getByRole("heading", { level: 1 })) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
 });

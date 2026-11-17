@@ -14,6 +14,33 @@ export interface AgeResult {
   totalMonths: number;
 }
 
+/** その年・月の日数。月は 0 から数える。 */
+function daysInMonth(year: number, month: number): number {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+/**
+ * 生まれた日から monthCount か月目の区切りの日。この日に月が1つ進み、日数は0に戻る（12か月ごとに年齢が1つ進む）。
+ *
+ * 年齢計算ニ関スル法律は、年齢を出生の日から数え、民法 143 条を準用する。民法 143 条2項では、期間は応当日の
+ * 前日が終わった時に満ち、最後の月に応当日が無いときは、その月の末日が終わった時に満ちる。区切りの日は満ちた
+ * 翌日なので、応当日のある月はその日、無い月は翌月の1日になる（1月31日生まれの1か月目の区切りの日は3月1日、
+ * 2月29日生まれの平年の誕生日の区切りの日は3月1日）。
+ */
+function monthAnniversary(birth: Date, monthCount: number): Date {
+  const year =
+    birth.getFullYear() + Math.floor((birth.getMonth() + monthCount) / 12);
+  const month = (birth.getMonth() + monthCount) % 12;
+  if (birth.getDate() > daysInMonth(year, month)) {
+    return new Date(year, month + 1, 1);
+  }
+  return new Date(year, month, birth.getDate());
+}
+
+/**
+ * 生年月日から基準日までの年齢を、満ちた月の数と、最後の区切りの日から数えた残りの日数で返す。
+ * 生年月日は基準日と同じ日か、それより前の日であること（画面がそれより後の日をエラーで返す）。
+ */
 export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
   const birth = new Date(
     birthDate.getFullYear(),
@@ -26,28 +53,18 @@ export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
     targetDate.getDate(),
   );
 
-  const totalDays = diffUtcCalendarDays(birth, target);
+  let totalMonths =
+    (target.getFullYear() - birth.getFullYear()) * 12 +
+    (target.getMonth() - birth.getMonth());
+  if (monthAnniversary(birth, totalMonths) > target) totalMonths--;
 
-  const [earlier, later] = birth <= target ? [birth, target] : [target, birth];
-
-  let years = later.getFullYear() - earlier.getFullYear();
-  let months = later.getMonth() - earlier.getMonth();
-  let days = later.getDate() - earlier.getDate();
-
-  if (days < 0) {
-    months--;
-    const prevMonth = new Date(later.getFullYear(), later.getMonth(), 0);
-    days += prevMonth.getDate();
-  }
-
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-
-  const totalMonths = years * 12 + months;
-
-  return { years, months, days, totalDays, totalMonths };
+  return {
+    years: Math.floor(totalMonths / 12),
+    months: totalMonths % 12,
+    days: diffUtcCalendarDays(monthAnniversary(birth, totalMonths), target),
+    totalDays: diffUtcCalendarDays(birth, target),
+    totalMonths,
+  };
 }
 
 // --- Wareki (Japanese Era) Conversion ---
@@ -55,7 +72,8 @@ export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
 export interface WarekiInfo {
   era: string;
   year: number;
-  formatted: string;
+  /** 年の表記。1年目は「元年」、ほかは「2年」のように数字で書く。 */
+  yearLabel: string;
 }
 
 interface EraDefinition {
@@ -77,11 +95,10 @@ export function toWareki(date: Date): WarekiInfo | null {
     if (d >= era.startDate) {
       // Japanese era years follow calendar years, not anniversaries
       const eraYear = d.getFullYear() - era.startDate.getFullYear() + 1;
-      const yearStr = eraYear === 1 ? "元" : String(eraYear);
       return {
         era: era.name,
         year: eraYear,
-        formatted: `${era.name}${yearStr}年`,
+        yearLabel: eraYear === 1 ? "元年" : `${eraYear}年`,
       };
     }
   }
@@ -90,8 +107,15 @@ export function toWareki(date: Date): WarekiInfo | null {
 
 // --- Zodiac (干支) ---
 
+export interface Zodiac {
+  /** 干支の漢字1字（「午」）。 */
+  kanji: string;
+  /** その読み（「うま」）。 */
+  reading: string;
+}
+
 // 十二支の漢字と読み仮名のペア。FAQの順序（子〜亥）と一致させる。
-const ZODIAC_ENTRIES: ReadonlyArray<{ kanji: string; reading: string }> = [
+const ZODIAC_ENTRIES: readonly Zodiac[] = [
   { kanji: "子", reading: "ね" },
   { kanji: "丑", reading: "うし" },
   { kanji: "寅", reading: "とら" },
@@ -106,18 +130,10 @@ const ZODIAC_ENTRIES: ReadonlyArray<{ kanji: string; reading: string }> = [
   { kanji: "亥", reading: "い" },
 ] as const;
 
-/** 生まれ年の西暦から干支の漢字一字を返す（後方互換・内部用）。 */
-export function getZodiac(year: number): string {
-  // 2020 = 子 (Rat). 2020 % 12 = 4, so offset is 4 for 子 (index 0)
+/** 生まれ年の西暦から干支を返す。2020年が子。 */
+export function getZodiac(year: number): Zodiac {
   const index = (((year - 2020) % 12) + 12) % 12;
-  return ZODIAC_ENTRIES[index].kanji;
-}
-
-/** 生まれ年の西暦から干支の漢字に読み仮名を括弧付きで付与した文字列を返す（例: 「午（うま）」）。 */
-export function getZodiacWithReading(year: number): string {
-  const index = (((year - 2020) % 12) + 12) % 12;
-  const { kanji, reading } = ZODIAC_ENTRIES[index];
-  return `${kanji}（${reading}）`;
+  return ZODIAC_ENTRIES[index];
 }
 
 // --- Constellation (星座) ---
@@ -146,28 +162,13 @@ const CONSTELLATIONS: ConstellationRange[] = [
 ];
 
 export function getConstellation(month: number, day: number): string {
+  // 星座はどれも2つの月にまたがるので、始まりの月の始まりの日以後か、終わりの月の終わりの日以前で決まる。
   for (const c of CONSTELLATIONS) {
-    if (c.startMonth === c.endMonth) {
-      // Same month range
-      if (month === c.startMonth && day >= c.startDay && day <= c.endDay) {
-        return c.name;
-      }
-    } else if (c.startMonth > c.endMonth) {
-      // Wraps around year (Capricorn: Dec-Jan)
-      if (
-        (month === c.startMonth && day >= c.startDay) ||
-        (month === c.endMonth && day <= c.endDay)
-      ) {
-        return c.name;
-      }
-    } else {
-      // Normal range
-      if (
-        (month === c.startMonth && day >= c.startDay) ||
-        (month === c.endMonth && day <= c.endDay)
-      ) {
-        return c.name;
-      }
+    if (
+      (month === c.startMonth && day >= c.startDay) ||
+      (month === c.endMonth && day <= c.endDay)
+    ) {
+      return c.name;
     }
   }
   return "";

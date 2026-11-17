@@ -84,8 +84,16 @@ describe("word-sense-personality — meta", () => {
     expect(wordSensePersonalityQuiz.meta.questionCount).toBe(10);
   });
 
-  it("has faq with at least 4 entries", () => {
-    expect(wordSensePersonalityQuiz.meta.faq?.length).toBeGreaterThanOrEqual(4);
+  it("has faq with at least 3 entries", () => {
+    expect(wordSensePersonalityQuiz.meta.faq?.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("does not promise a friend compatibility feature the quiz does not offer", () => {
+    const { description, faq } = wordSensePersonalityQuiz.meta;
+    expect(description).not.toContain("相性");
+    for (const entry of faq ?? []) {
+      expect(entry.question + entry.answer).not.toContain("相性");
+    }
   });
 });
 
@@ -117,7 +125,7 @@ describe("word-sense-personality — questions", () => {
     }
   });
 
-  // cycle-303 P2a（結果先行の再設計・redesign-v2.md A-3）で配点構造が変わった。
+  // 配点の構造:
   //   - pure（強度3）: 他タイプの声を帯びない単一 voice。エントリは1つ（主 signal のみ、値3）。
   //   - blended（強度2）: 主が明確だが文が近傍タイプの性質を帯びる。エントリは2つ（主2＋副1）。
   // 「固定影結合を作らない・副点は文が実際に帯びる性質からのみ」という設計原則の構造ガード。
@@ -206,7 +214,7 @@ describe("word-sense-personality — results", () => {
     }
   });
 
-  it("each result has a non-empty title, description, color, icon", () => {
+  it("each result has a non-empty title and description", () => {
     for (const result of wordSensePersonalityQuiz.results) {
       expect(
         result.title.length,
@@ -216,8 +224,24 @@ describe("word-sense-personality — results", () => {
         result.description.length,
         `Empty description for ${result.id}`,
       ).toBeGreaterThan(0);
-      expect(result.color, `Missing color for ${result.id}`).toBeTruthy();
-      expect(result.icon, `Missing icon for ${result.id}`).toBeTruthy();
+    }
+  });
+
+  it("each title is the yoji type name, and the reading of the yoji is kept apart", () => {
+    const expected: Record<string, [string, string]> = {
+      "elegant-precise": ["一字千金", "いちじせんきん"],
+      "warm-empathy": ["和顔愛語", "わがんあいご"],
+      "creative-playful": ["奇想天外", "きそうてんがい"],
+      "logical-clear": ["理路整然", "りろせいぜん"],
+      "poetic-sensory": ["花鳥風月", "かちょうふうげつ"],
+      "bold-impact": ["疾風迅雷", "しっぷうじんらい"],
+      "humor-wit": ["抱腹絶倒", "ほうふくぜっとう"],
+      "gentle-indirect": ["柔和温順", "にゅうわおんじゅん"],
+    };
+    for (const result of wordSensePersonalityQuiz.results) {
+      const [yoji, reading] = expected[result.id];
+      expect(result.title).toBe(`${yoji}タイプ`);
+      expect(result.reading).toEqual({ word: yoji, kana: reading });
     }
   });
 

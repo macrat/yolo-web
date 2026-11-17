@@ -1,56 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import YojiPersonalityContent from "../YojiPersonalityContent";
 import type { YojiPersonalityDetailedContent } from "../../types";
-
-// next/linkをモック
-vi.mock("next/link", () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string;
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
-
-// yoji-personalityデータモジュールをモック
-vi.mock("@/play/quiz/data/yoji-personality", () => ({
-  default: {
-    meta: {
-      slug: "yoji-personality",
-      title: "あなたを四字熟語に例えると?",
-      accentColor: "#b91c1c",
-      questionCount: 8,
-    },
-    results: [
-      {
-        id: "shoshikantetsu",
-        title: "初志貫徹",
-        icon: "🎯",
-        color: "#1e40af",
-      },
-      {
-        id: "tenshinranman",
-        title: "天真爛漫",
-        icon: "☀️",
-        color: "#f59e0b",
-      },
-      {
-        id: "sessatakuma",
-        title: "切磋琢磨",
-        icon: "💪",
-        color: "#059669",
-      },
-    ],
-  },
-}));
 
 const sampleContent: YojiPersonalityDetailedContent = {
   variant: "yoji-personality",
@@ -68,19 +19,9 @@ const sampleContent: YojiPersonalityDetailedContent = {
   motto: "始めた志を信じ、最後まで歩き続けよう。",
 };
 
-const sampleColor = "#1e40af";
-
 describe("YojiPersonalityContent - 基本レンダリング", () => {
   it("kanjiBreakdownセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この四字熟語の成り立ち")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -90,15 +31,7 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
   });
 
   it("originセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この四字熟語のルーツ")).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -108,129 +41,31 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
   });
 
   it("behaviorsセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("この四字熟語が現れる日常")).toBeInTheDocument();
     expect(screen.getByText("行動あるある1")).toBeInTheDocument();
     expect(screen.getByText("行動あるある4")).toBeInTheDocument();
   });
 
   it("mottoセクションが表示されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
+    render(<YojiPersonalityContent content={sampleContent} />);
     expect(screen.getByText("座右の銘として")).toBeInTheDocument();
     expect(
       screen.getByText("始めた志を信じ、最後まで歩き続けよう。"),
     ).toBeInTheDocument();
   });
-
-  it("全タイプ一覧が表示されること（見出しは「他の四字熟語も見てみよう」）", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    expect(screen.getByText("他の四字熟語も見てみよう")).toBeInTheDocument();
-    expect(screen.getByText("初志貫徹")).toBeInTheDocument();
-    expect(screen.getByText("天真爛漫")).toBeInTheDocument();
-    expect(screen.getByText("切磋琢磨")).toBeInTheDocument();
-  });
 });
 
-describe("YojiPersonalityContent - headingLevel prop", () => {
-  it("headingLevel=2 の場合、セクション見出しがh2タグでレンダリングされること", () => {
+describe("YojiPersonalityContent - 見出しの段", () => {
+  it("小見出しはどれもセクションの中の小見出しの段（h3）で組み、すべてのタイプを持たない", () => {
     const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
+      <YojiPersonalityContent content={sampleContent} />,
     );
-    const h2s = container.querySelectorAll("h2");
-    // kanjiBreakdown / origin / behaviors / motto / 全タイプのh2が存在する
-    expect(h2s.length).toBeGreaterThanOrEqual(5);
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBe(0);
-  });
-
-  it("headingLevel=3 の場合、セクション見出しがh3タグでレンダリングされること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const h3s = container.querySelectorAll("h3");
-    expect(h3s.length).toBeGreaterThanOrEqual(5);
-    const h2s = container.querySelectorAll("h2");
-    expect(h2s.length).toBe(0);
-  });
-});
-
-describe("YojiPersonalityContent - allTypesLayout prop", () => {
-  // 新デザイン体系（cycle-254）で、旧 "pill"（角丸999px ピル＋--type-color 枠）を廃し、
-  // CharacterPersonalityContent と同じ allTypesGrid（2-3列グリッド）に統一した。
-  // 一方 public props signature 互換のため `allTypesLayout: "list" | "pill"` の型は維持し、
-  // 内部実装で "pill" を allTypesGrid クラスへマップしている。
-  // テストは pill / list で **別物の** レイアウトクラスが付くことを担保する。
-  it("allTypesLayout='pill' の場合、グリッド型レイアウトクラスが適用されること（pill は新デザインで grid へマップ）", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    // pill 指定時はグリッドクラスが付く
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // 同時に list 用の縦並びクラスは付かない（pill/list で別物のレイアウトであることの担保）
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  it("allTypesLayout='list' の場合、縦並びリスト型レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const listEl = container.querySelector("[class*='allTypesListVertical']");
-    expect(listEl).not.toBeNull();
-    // 同時に grid クラスは付かない（pill/list で別物のレイアウトであることの担保）
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
+    expect(container.querySelectorAll("h3").length).toBeGreaterThanOrEqual(3);
+    expect(container.querySelectorAll("h1, h2")).toHaveLength(0);
+    expect(
+      screen.queryByRole("heading", { name: /^すべてのタイプ/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -242,10 +77,6 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
     render(
       <YojiPersonalityContent
         content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
         afterMotto={afterContent}
       />,
     );
@@ -255,113 +86,26 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
 
   it("afterMotto が未設定の場合、エラーなくレンダリングされること", () => {
     expect(() => {
-      render(
-        <YojiPersonalityContent
-          content={sampleContent}
-          resultId="shoshikantetsu"
-          resultColor={sampleColor}
-          headingLevel={2}
-          allTypesLayout="pill"
-        />,
-      );
+      render(<YojiPersonalityContent content={sampleContent} />);
     }).not.toThrow();
   });
 });
 
-describe("YojiPersonalityContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
+describe("YojiPersonalityContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
+      <YojiPersonalityContent content={sampleContent} />,
     );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
-  });
-});
-
-describe("YojiPersonalityContent - wrapper クラスと --type-color CSS変数", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-
-  it("wrapperに --type-color がインラインスタイルとして注入されること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const wrapper = container.querySelector(
-      "[class*='wrapper']",
-    ) as HTMLElement;
-    expect(wrapper).not.toBeNull();
-    // CSS変数 --type-color がインラインスタイルで設定されていること
-    expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
-  });
-});
-
-describe("YojiPersonalityContent - aria-current", () => {
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /初志貫徹/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /天真爛漫/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
-  });
-
-  it("allTypesLayout='list' でも現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="tenshinranman"
-        resultColor="#f59e0b"
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /天真爛漫/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-    const otherLink = screen.getByRole("link", { name: /初志貫徹/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
+    for (const text of [
+      sampleContent.kanjiBreakdown,
+      sampleContent.origin,
+      sampleContent.motto,
+    ]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [...sampleContent.behaviors]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });

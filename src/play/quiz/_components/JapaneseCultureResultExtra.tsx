@@ -13,13 +13,10 @@ interface JapaneseCultureResultExtraProps {
   referrerTypeId?: string;
 }
 
-/**
- * Returns a render function for extra content below the Japanese culture
- * quiz result card. Used by QuizContainer's renderResultExtra prop.
- */
+/** ResultExtraLoader が読み込んで、解き終えた画面の「このタイプについて」の最後に描く。 */
 export function renderJapaneseCultureExtra(
   referrerTypeId?: string,
-): (resultId: string, refTypeId?: string) => React.ReactNode {
+): (resultId: string) => React.ReactNode {
   function ResultExtraRenderer(resultId: string): React.ReactNode {
     return (
       <JapaneseCultureResultExtra
@@ -31,6 +28,10 @@ export function renderJapaneseCultureExtra(
   return ResultExtraRenderer;
 }
 
+/**
+ * 日本文化適性診断の、解き終えた画面の相性と招待。友達の結果の共有のリンクから来て、そのタイプとの相性が
+ * 引けたときは相性を出し、招待のボタンを続ける。そうでなければ招待のボタンだけを出す。
+ */
 function JapaneseCultureResultExtra({
   resultId,
   referrerTypeId,
@@ -40,7 +41,6 @@ function JapaneseCultureResultExtra({
 
   if (!myResult) return null;
 
-  // If we have a valid referrer type, show compatibility
   if (referrerTypeId && isValidCultureTypeId(referrerTypeId)) {
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
     const compatibility = getCompatibility(resultId, referrerTypeId);
@@ -49,15 +49,14 @@ function JapaneseCultureResultExtra({
       return (
         <>
           <CompatibilitySection
+            placement="solvedScreen"
             myType={{
               id: myResult.id,
               title: myResult.title,
-              icon: myResult.icon,
             }}
             friendType={{
               id: friendResult.id,
               title: friendResult.title,
-              icon: friendResult.icon,
             }}
             compatibility={compatibility}
             quizTitle={quiz.meta.title}
@@ -73,7 +72,6 @@ function JapaneseCultureResultExtra({
     }
   }
 
-  // No referrer: show invite button only
   return (
     <InviteFriendButton
       quizSlug={quiz.meta.slug}

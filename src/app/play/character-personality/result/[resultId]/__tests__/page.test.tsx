@@ -15,7 +15,7 @@ vi.mock("@/components/Breadcrumb", () => ({
 }));
 
 // Mock ShareButtons
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
+vi.mock("@/components/ShareButtons", () => ({
   default: () => <div data-testid="share-buttons" />,
 }));
 
@@ -29,15 +29,8 @@ vi.mock("@/play/_components/RecommendedContent", () => ({
   default: () => <div data-testid="recommended-content" />,
 }));
 
-// Mock DescriptionExpander
-vi.mock("@/app/play/[slug]/result/[resultId]/DescriptionExpander", () => ({
-  default: ({ description }: { description: string }) => (
-    <p data-testid="description-expander">{description}</p>
-  ),
-}));
-
 // Mock CompatibilityDisplay
-vi.mock("@/app/play/[slug]/result/[resultId]/CompatibilityDisplay", () => ({
+vi.mock("@/play/quiz/_components/CompatibilityDisplay", () => ({
   default: () => <div data-testid="compatibility-display" />,
 }));
 
@@ -46,10 +39,28 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
   default: () => <button data-testid="invite-friend-button">友達を招待</button>,
 }));
 
-// Mock ResultPageShell: childrenを透過的にレンダリングするmock
+// ResultPageShell は、ページが渡した値（添えた段落・誘い・説明・中身）をそのまま出す部品に替える
 vi.mock("@/play/quiz/_components/ResultPageShell", () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="result-page-shell">{children}</div>
+  default: ({
+    quiz,
+    lead,
+    description,
+    ctaText,
+    children,
+  }: {
+    quiz: { meta: { questionCount: number } };
+    lead?: string;
+    description?: string;
+    ctaText: string;
+    children: React.ReactNode;
+  }) => (
+    <div data-testid="result-page-shell">
+      {lead && <p>{lead}</p>}
+      <a href="#try">{ctaText}</a>
+      <p>全{quiz.meta.questionCount}問 / 登録不要</p>
+      {description && <p>{description}</p>}
+      {children}
+    </div>
   ),
 }));
 
@@ -83,7 +94,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
   isValidCharacterPersonalityTypeId: vi.fn((id: string) =>
     ["blazing-strategist", "blazing-poet"].includes(id),
   ),
-  CHARACTER_PERSONALITY_TYPE_IDS: ["blazing-strategist", "blazing-poet"],
   default: {
     meta: {
       title: "あなたに似たキャラ診断",
@@ -91,7 +101,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
       shortDescription: "日常の行動パターン12問から診断",
       type: "personality",
       questionCount: 12,
-      accentColor: "#7c3aed",
       category: "personality",
     },
     results: [
@@ -99,7 +108,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
         id: "blazing-strategist",
         title: "締切3分前の頭脳司令塔",
         description: "blazing-strategistの説明テキスト。",
-        icon: "🔥",
         color: "#ef4444",
         detailedContent: {
           variant: "character-personality" as const,
@@ -118,7 +126,6 @@ vi.mock("@/play/quiz/data/character-personality", () => ({
         id: "blazing-poet",
         title: "全力疾走の途中で空を見る詩人",
         description: "blazing-poetの説明テキスト。",
-        icon: "🌟",
         color: "#f59e0b",
         detailedContent: {
           variant: "character-personality" as const,
@@ -157,8 +164,8 @@ describe("CharacterPersonalityResultPage catchphrase", () => {
   });
 });
 
-describe("CharacterPersonalityResultPage CTA1", () => {
-  it("最初のCTAボタンが表示されること", async () => {
+describe("CharacterPersonalityResultPage 最初の誘い", () => {
+  it("最初の誘いのボタンが表示されること", async () => {
     const params = Promise.resolve({ resultId: "blazing-strategist" });
     const page = await CharacterPersonalityResultPage({ params });
     render(page);
@@ -190,13 +197,12 @@ describe("CharacterPersonalityResultPage characterMessage", () => {
   });
 });
 
-describe("CharacterPersonalityResultPage CTA2", () => {
-  it("CTA2テキストリンクが表示されること", async () => {
+describe("CharacterPersonalityResultPage 読み終えた人への2つ目の誘い", () => {
+  it("2つ目の誘いのリンクが表示されること", async () => {
     const params = Promise.resolve({ resultId: "blazing-strategist" });
     const page = await CharacterPersonalityResultPage({ params });
     render(page);
 
-    // CTA2はテキストリンク形式
     const links = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(links.length).toBeGreaterThanOrEqual(1);
   });

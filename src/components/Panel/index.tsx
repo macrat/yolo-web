@@ -11,35 +11,29 @@ interface PanelOwnProps<T extends PanelTag = "section"> {
   /** 追加クラス */
   className?: string;
   /**
-   * padding バリアント。
-   * - "normal" (デフォルト): 1.5rem — 通常のパネル
-   * - "comfortable": 2rem — 長文読み物用の広めのパディング
+   * 行の一覧を入れるボックスか。上下の内側の余白を持たず、太い枠がそのまま最初の行の上と最後の行の下の辺になる
+   * （DESIGN.md §5・§7）。
    */
-  padding?: "normal" | "comfortable";
+  rows?: boolean;
 }
 
 type PanelProps<T extends PanelTag = "section"> = PanelOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof PanelOwnProps<T>>;
 
 /**
- * Panel — 矩形コンテナの汎用ラッパー。
+ * Panel — DESIGN.md §5 のボックス。道具の面をこれで囲む。
  *
- * DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される。
- * DESIGN.md §4: パネルは入れ子にしない。パネルには影をつけない。
+ * ボックスは入れ子にしない。中を分けるときは、小見出しの上の細い罫線で区切る（§5）。
  */
 function Panel<T extends PanelTag = "section">({
   as,
   children,
   className,
-  padding = "normal",
+  rows = false,
   ...rest
 }: PanelProps<T>) {
   const Tag = (as ?? "section") as ElementType;
-  const combinedClassName = [
-    styles.panel,
-    padding === "comfortable" ? styles.paddingComfortable : null,
-    className,
-  ]
+  const combinedClassName = [styles.panel, rows && styles.rows, className]
     .filter(Boolean)
     .join(" ");
 

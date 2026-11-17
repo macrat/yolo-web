@@ -1,58 +1,22 @@
 /*
- * サイト紹介（/about）— DESIGN.md フェーズR・店構え（§1/§4/§6 読み物）。
- * 読み物ページのため、幅は --measure（読む面・約42rem）に絞り、中央寄せせず左揃え基調（§4）。
- * 器は静か（紙墨朱・罫・組版のみ）。カード・影・色付き区画・角丸装飾は使わない（§8）。
- * 全トークン経由（色・スペーシング・書体を直書きしない・§10）。旧トークン（--fg/--bg/--border/
- * --r-*）・Panel は使わない。
+ * サイト紹介（/about）。最初のセクションにパンくず・主見出し・冒頭の一言を、2つ目からのセクションに章を1つずつ
+ * 置く（DESIGN.md §5）。見出しの大きさは h1・h2 の既定（§4 の主見出し・セクションの見出し）に従う。
  */
 
-.page {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: var(--space-32) var(--space-24) var(--space-64);
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
 .title {
-  margin: 0 0 var(--space-24);
-  color: var(--ink);
+  margin-block-end: var(--space-8);
 }
 
-/* 冒頭の一言（自己紹介の正典・docs/site-concept.md 参照）。本文よりやや大きく見せ場にする。 */
-.lead {
-  margin: 0 0 var(--space-32);
-  color: var(--ink);
-  font-size: 1.25rem; /* 20px */
-  line-height: 1.7;
+.heading {
+  margin-block-end: var(--space-16);
 }
 
-.section {
-  margin-bottom: var(--space-32);
-}
-
-.section:last-child {
-  margin-bottom: 0;
-}
-
-/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4。dictionary/humor 詳細と同じ流儀で揃える）。 */
-.sectionTitle {
-  font-size: 1.25rem; /* 20px */
-  margin-bottom: var(--space-16);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink);
-}
-
-/* 読ませる本文: 16px / line-height 1.9（§3）。 */
 .text {
-  margin: 0 0 var(--space-16);
-  font-size: 1rem;
-  line-height: 1.9;
-  color: var(--ink);
+  max-width: var(--measure);
 }
-
-.text:last-child {
-  margin-bottom: 0;
-}
-
-/* 本文中のリンクは globals.css の既定 a{}（朱・下線・:hover/:focus-visible 済み）に委ねる
- * （§3「下線はリンクの専有」。privacy 等ほかの読み物ページと同じ流儀で揃える）。 */

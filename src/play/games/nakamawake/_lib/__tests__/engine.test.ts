@@ -4,8 +4,10 @@ import {
   isOneAway,
   shuffleArray,
   getAllWords,
-  getDifficultyColor,
-  getDifficultyEmoji,
+  difficultyLabel,
+  dailyOrder,
+  sayingPhrases,
+  fitPhrase,
 } from "../engine";
 import type { NakamawakePuzzle, NakamawakeGroup } from "../types";
 
@@ -256,38 +258,66 @@ describe("getAllWords", () => {
   });
 });
 
-describe("getDifficultyColor", () => {
-  test("returns yellow for difficulty 1", () => {
-    expect(getDifficultyColor(1)).toBe("yellow");
-  });
-
-  test("returns green for difficulty 2", () => {
-    expect(getDifficultyColor(2)).toBe("green");
-  });
-
-  test("returns blue for difficulty 3", () => {
-    expect(getDifficultyColor(3)).toBe("blue");
-  });
-
-  test("returns purple for difficulty 4", () => {
-    expect(getDifficultyColor(4)).toBe("purple");
+describe("difficultyLabel", () => {
+  test("難易度を「難易度」と数字で言う", () => {
+    expect(difficultyLabel(1)).toBe("難易度1");
+    expect(difficultyLabel(4)).toBe("難易度4");
   });
 });
 
-describe("getDifficultyEmoji", () => {
-  test("returns yellow square for difficulty 1", () => {
-    expect(getDifficultyEmoji(1)).toBe("\u{1F7E8}");
+describe("dailyOrder", () => {
+  test("gives the same order for the same day and keeps every item", () => {
+    const words = ["あ", "い", "う", "え", "お", "か", "き", "く"];
+    const order = dailyOrder(words, "2026-09-28");
+    expect(dailyOrder(words, "2026-09-28")).toEqual(order);
+    expect([...order].sort()).toEqual([...words].sort());
+    expect(dailyOrder(words, "2026-09-29")).not.toEqual(order);
+  });
+});
+
+describe("sayingPhrases", () => {
+  test("keeps the phrases of a saying", () => {
+    for (const phrases of [
+      ["風が", "吹けば", "桶屋が", "儲かる"],
+      ["猿も", "木から", "落ちる"],
+      ["花より", "団子"],
+      ["雨降って", "地固まる"],
+    ]) {
+      expect(sayingPhrases(phrases)).toEqual(phrases);
+    }
   });
 
-  test("returns green square for difficulty 2", () => {
-    expect(getDifficultyEmoji(2)).toBe("\u{1F7E9}");
+  test("does not split a single word", () => {
+    for (const phrases of [
+      ["は", "まぐり"],
+      ["たい", "焼き"],
+      ["ぬか", "漬け"],
+      ["こうの", "とり"],
+      ["七", "並べ"],
+      ["あか", "つき"],
+      ["リュウグウノツカイ"],
+    ]) {
+      expect(sayingPhrases(phrases)).toBeNull();
+    }
+  });
+});
+
+describe("fitPhrase", () => {
+  test("keeps a phrase that fits one line of a word cell", () => {
+    expect(fitPhrase("口ほどに")).toEqual(["口ほどに"]);
   });
 
-  test("returns blue square for difficulty 3", () => {
-    expect(getDifficultyEmoji(3)).toBe("\u{1F7E6}");
+  test("splits a long phrase where kana turns into kanji", () => {
+    expect(fitPhrase("棒に当たる")).toEqual(["棒に", "当たる"]);
   });
 
-  test("returns purple square for difficulty 4", () => {
-    expect(getDifficultyEmoji(4)).toBe("\u{1F7EA}");
+  test("leaves a long phrase whole when it has no such point", () => {
+    expect(fitPhrase("船頭多くして")).toEqual(["船頭多くして"]);
+  });
+});
+
+describe("sayingPhrases with a phrase that cannot fit", () => {
+  test("does not split the word into phrases", () => {
+    expect(sayingPhrases(["船頭多くして", "船山に上る"])).toBeNull();
   });
 });

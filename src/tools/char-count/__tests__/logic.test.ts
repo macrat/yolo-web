@@ -26,13 +26,12 @@ describe("countChars", () => {
     expect(countChars("Hello 世界")).toBe(8);
   });
 
-  // 回帰テスト: 絵文字（サロゲートペア）はコードポイント単位で1文字
-  test("counts emoji as 1 character (Unicode code point, not surrogate pair)", () => {
+  test("counts emoji as 1 character (not 2 UTF-16 code units)", () => {
     expect(countChars("😀")).toBe(1);
   });
 
   test("counts mixed string with emoji correctly", () => {
-    // "あ"(1) + "a"(1) + "😀"(1) = 3 コードポイント
+    // "あ"(1) + "a"(1) + "😀"(1) = 3
     expect(countChars("あa😀")).toBe(3);
   });
 });

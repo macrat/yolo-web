@@ -1,14 +1,10 @@
-/*
- * 今日のユーモア運勢（/play/daily）— DESIGN.md フェーズR・店構え。
- * GameLayout/ResultPageShell と同じ「狭い読みカラム」の max-width: 600px を踏襲する
- * （占いの結果は1カラムの見せ場であり、盤面/結果ページと同じ幅感で揃える）。
- * 全トークン経由（色・スペーシングを直書きしない・§10）。旧トークン（--fg/--bg/--border/
- * --r-*）は使わない。
- */
+/* 今日のユーモア運勢（/play/daily）。ページの割り方と、セクションのあいだの全幅の罫線と余白は Section が持ち、
+ * 横の余白と幅はコンテナのものだけを使う（DESIGN.md §5）。見出しの大きさは h1 の既定（§4 の主見出し）に従う。 */
 
-.wrapper {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: var(--space-16) var(--space-16) var(--space-64);
-  width: 100%;
+/* 最初のセクションの頭。パンくずと主見出しを、その下の結果のボックスと同じ間隔で積む（§5 の間隔）。 */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
 }

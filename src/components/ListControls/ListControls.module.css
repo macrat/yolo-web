@@ -1,0 +1,73 @@
+/* 名前の欄と畳める枠を縦に積む（§5 の間隔）。 */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 開閉のボタンはアコーディオン（§6）。縁が見えないので、三角を並びの左端に揃え、その左右 8px を押せる範囲に
+ * 含める（data-text-box="inline"）。行は 44px 以上で、ラベルが折り返しても三角は1行目の字の中央に並ぶ。 */
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: fit-content;
+  min-width: 44px;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  line-height: var(--leading-body);
+  text-align: start;
+  cursor: pointer;
+}
+
+/* 収まらないラベルは文節の切れ目で折り返す（折り所は PhrasedText が組む）。 */
+.toggleLabel {
+  min-width: 0;
+}
+
+/* いまの選択を言う丸括弧の一続きは1つの箱にし、1行に収まるなら丸ごと次の行へ送る。収まらないときだけ、箱が行の幅に
+ * 縮んで、中の区切り（「、」の後ろと値の名前の区切り）で折れる（§4）。 */
+.selection {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* 狭い画面では組を縦に積み、組どうしを 16px あける。閉じているあいだは組を隠して、一覧を押し出さない（§7）。 */
+.region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.disclosure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+@media (width < 45rem) {
+  .region:not([data-open]) {
+    display: none;
+  }
+}
+
+/* 広い画面では組をいつも出し、開閉のボタンを持たない。組は縦に積まず横に並べ、収まらない組だけを次の行へ
+ * 送る。縦に積むと組の数だけ一覧が下がり、画面の外へ押し出されるからである（§7）。選択肢の多い組は1行を
+ * 占めて、その中で選択肢を折り返す。組どうしの間隔を選択肢どうしの字の間隔（16px）より広い 32px にして、
+ * 隣の組の選択肢と続けて読まれないようにする。 */
+@media (min-width: 45rem) {
+  .toggle {
+    display: none;
+  }
+
+  .region {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: var(--space-32);
+  }
+}

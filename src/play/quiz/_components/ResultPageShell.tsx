@@ -1,114 +1,149 @@
 /**
- * ⚠️ 重要 — このコンポーネントは「受検者本人には表示されない」第三者向け結果ページの共通枠です。
+ * 診断の結果のページ（`/play/[slug]/result/[resultId]`）の共通の枠。
  *
- * ResultPageShell は静的ルート `/play/[slug]/result/[resultId]`（各診断の result ページ）でのみ
- * 使われる。これらは【第三者向けのシェア／検索ランディング専用ページ】であり、診断を遊んだ
- * 本人には表示されない。本人は完了時に `/play/[slug]` 上のインライン `ResultCard` で結果を見る。
- * 本人向けの結果表示を変えたい場合は ResultPageShell ではなく `ResultCard.tsx` を編集すること。
+ * このページを開くのは、シェアや検索で着いた来訪者と、解き終えた画面（`ResultCard`）に並ぶタイプの行から
+ * 来た来訪者である。操作の結果ではなくタイプを説明するページなので、結果のボックスを持たず、タイプ名を
+ * ページの h1 にする（DESIGN.md §4・§8）。解き終えた画面の結果は `ResultCard.tsx` が描く。
  */
+import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
-import Tsutsumi from "@/components/Tsutsumi";
-import ShareButtons from "@/play/quiz/_components/ShareButtons";
+import PhrasedText from "@/components/PhrasedText";
+import ShareButtons from "@/components/ShareButtons";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
+import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
+import { ReadingSection } from "@/play/quiz/_components/ResultReading";
 import RecommendedContent from "@/play/_components/RecommendedContent";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import type { QuizDefinition, QuizResult } from "../types";
-import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
+import { resultHeadingName } from "../resultName";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./ResultPageShell.module.css";
+
+/** 共有の区画の見出しの id。共有の区画はページに1つだけなので、固定の値でよい。 */
+const SHARE_HEADING_ID = "result-share-heading";
 
 interface ResultPageShellProps {
   quiz: QuizDefinition;
   result: QuizResult;
-  children: React.ReactNode;
+  /** タイプ名のすぐ後に置く、本文の大きさの段落（キャッチコピーやキャラの自己紹介）。 */
+  lead?: string;
+  /** 誘いのあとに置くタイプの説明。全文を段落で置き、切り分けない（DESIGN.md §8）。 */
+  description?: string;
+  /** 添えた段落のすぐ下に置く、この診断を遊ぶ誘いのボタンの文言。 */
+  ctaText: string;
+  /**
+   * 誘いのあとに続く、ルートごとの読みもの（詳しい読みものと、?with= で受け取った相性）。渡したときに、
+   * セクション「このタイプについて」に置く。
+   */
+  children?: React.ReactNode;
   shareText: string;
   shareUrl: string;
-  /** シェアボタン直後に表示するコンテンツ（相性診断表示など、ルート固有の追加要素） */
-  afterShare?: React.ReactNode;
+  /** 結果が色そのものである診断で、タイプ名のすぐ下に出す結果の色（DESIGN.md §2 の色見本）。 */
+  swatch?: string;
 }
 
 /**
- * 結果ページの共通wrapper構造を提供するServer Component。
+ * 結果のページを組む。上から、何の診断の結果かの行・タイプ名の h1・読み・色見本、添えた段落・診断への誘い・
+ * タイプの説明、ルートごとの読みもの（セクション「このタイプについて」）、すべてのタイプ、共有の区画、関連の区画。
+ * 誘いを説明の前に置き、共有のリンクから来た来訪者が、最初の画面でタイプ名と添えた段落と誘いを見られるように
+ * する。読みもののセクションはルートが中身を渡したときに、すべてのタイプはタイプが詳しい読みものを持つときに置く。
  *
- * Breadcrumb, クイズ名, quizContext, icon, h1, ShareButtons,
- * RelatedQuizzes, RecommendedContent を描画し、
- * ルート固有のコンテンツは children として受け取る。
- *
- * dispatch機構を含まず、variant固有のJSXはchildrenとして委譲される。
+ * タイプ名は、サーバーで作った文節の区切りで折る（DESIGN.md §4）。読みは見出しの折れを避けるため h1 に
+ * 入れず、すぐ下に補助情報として添える。共有の操作はページに1か所だけ置き、何を共有するかを見出しが言う（§8）。
  */
 export default function ResultPageShell({
   quiz,
   result,
+  lead,
+  description,
+  ctaText,
   children,
   shareText,
   shareUrl,
-  afterShare,
+  swatch,
 }: ResultPageShellProps) {
   const slug = quiz.meta.slug;
-
-  // MUST-2（§7 トーン統一）: 単独結果ページのヘッダを、インライン ResultCard の
-  // 勲章と同じ視覚（象徴タイル＋固有名）に揃える。シェア/検索で着地した第三者にも
-  // 「結果＝勲章」の印象を割らずに届ける（DESIGN.md §7「インライン結果と単独結果
-  //  ページの視覚トーンを統一」）。
-  // 適用条件はインラインと同じ「personality 型 かつ result.icon・result.color が両方存在」。
-  // それ以外（knowledge 型・欠落）は現行の素の icon+title にフォールバックする。
-  // 重要: 単独ページには「診断完了」バッジを付けない。第三者は診断を完走していないため、
-  //   完了主張は偽になる。単独ページの勲章＝(象徴タイル＋固有名) のみ。
-  const showMedal =
-    quiz.meta.type === "personality" &&
-    Boolean(result.icon) &&
-    Boolean(result.color);
+  const heading = resultHeadingName(result);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.page}>
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
+          { label: "遊び", href: "/play" },
           { label: quiz.meta.title, href: `/play/${slug}` },
-          { label: "結果" },
+          { label: "結果", href: `/play/${slug}/result/${result.id}` },
         ]}
       />
-      <div className={styles.card}>
-        {/* クイズ名 + shortDescription: 第三者が「この診断は何か」を即座に把握できるコンテキスト */}
-        <p className={styles.quizName}>{quiz.meta.title}の結果</p>
-        <p className={styles.quizContext}>{quiz.meta.shortDescription}</p>
+      <header className={styles.header}>
+        <p className={styles.quizName}>
+          {quiz.meta.shortTitle ?? quiz.meta.title}の結果
+        </p>
+        <PhrasedText
+          as="h1"
+          phrases={splitIntoPhrases(heading.name)}
+          className={styles.title}
+          {...headingFontAttr(heading.name)}
+        />
+        {heading.reading && <p className={styles.reading}>{heading.reading}</p>}
+        {swatch && (
+          <div
+            className={styles.swatch}
+            style={{ backgroundColor: swatch }}
+            aria-hidden="true"
+          />
+        )}
+      </header>
 
-        {showMedal ? (
-          // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
-          // h1 は SEO/見出し構造のため維持するが控えめに（器は静か）。結果そのものは
-          // Tsutsumi が主役——第三者向けページでもインライン結果と同じ視覚トーンで届ける
-          // （§7 トーン統一）。固有色は quiz データの任意 hex を捨て、id から和色8色へ
-          // 決定的に写像する（§2）。symbol は絵文字ではなくタイプ名の先頭1字（§8-6）。
-          // 重要: 単独ページには「診断完了」の完了主張は付けない（第三者は完走していない）。
-          <div className={styles.medalWrap}>
-            <h1 className={styles.medalHeading}>{result.title}</h1>
-            <Tsutsumi
-              typeName={result.title}
-              symbol={pickResultSymbol(result.title)}
-              color={pickResultWairoColor(result.id)}
-              productName={quiz.meta.title}
-              seal="診"
-            />
+      <div className={styles.body}>
+        <div className={styles.intro}>
+          {lead && <p className={styles.lead}>{lead}</p>}
+          <div>
+            <Link
+              href={`/play/${slug}`}
+              className={styles.tryButton}
+              data-inverted
+            >
+              {ctaText}
+            </Link>
+            <p className={styles.tryCost}>
+              全{quiz.meta.questionCount}問 / 登録不要
+            </p>
           </div>
-        ) : (
-          <h1 className={styles.title}>{result.title}</h1>
+          {description && <p className={styles.description}>{description}</p>}
+        </div>
+
+        {children && <ReadingSection>{children}</ReadingSection>}
+        {result.detailedContent && (
+          <OtherTypesNav
+            quizSlug={slug}
+            currentResultId={result.id}
+            results={quiz.results}
+            placement="resultPage"
+            showSwatch={swatch !== undefined}
+          />
         )}
 
-        {children}
-
-        <div className={styles.shareSection}>
+        <section className={styles.share} aria-labelledby={SHARE_HEADING_ID}>
+          <PhrasedText
+            as="h2"
+            id={SHARE_HEADING_ID}
+            className={styles.shareHeading}
+            phrases={["この", "結果を", "共有"]}
+          />
           <ShareButtons
-            shareText={shareText}
-            shareUrl={shareUrl}
-            quizTitle={quiz.meta.title}
+            url={shareUrl}
+            title={quiz.meta.title}
+            text={shareText}
+            sns={["x", "line", "copy"]}
             contentType={
               quiz.meta.type === "personality" ? "diagnosis" : "quiz"
             }
             contentId={contentIdForQuiz(slug)}
             surface="text"
           />
-        </div>
-        {afterShare}
+        </section>
       </div>
       <RelatedQuizzes currentSlug={slug} category={quiz.meta.category} />
       <RecommendedContent currentSlug={slug} />

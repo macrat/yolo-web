@@ -1,8 +1,9 @@
 import { expect, test, describe, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import React from "react";
 import OtherTypesNav from "../OtherTypesNav";
 import type { QuizResult } from "../../types";
+import { splitIntoPhrases } from "@/lib/phrase-breaks";
 
 // next/link をモック（テスト環境で <a> として描画する）
 vi.mock("next/link", () => ({
@@ -26,119 +27,237 @@ const results: QuizResult[] = [
     id: "type-a",
     title: "タイプA",
     description: "説明A",
-    icon: "🅰️",
     color: "#111111",
   },
-  { id: "type-b", title: "タイプB", description: "説明B", icon: "🅱️" },
+  { id: "type-b", title: "タイプB", description: "説明B" },
   { id: "type-c", title: "タイプC", description: "説明C" },
 ];
 
 describe("OtherTypesNav", () => {
-  test("2件以上のとき見出しと全タイプが描画されること", () => {
+  test("見出しがタイプの数を言い、一覧がその見出しの名前を持つこと", () => {
     render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
         currentResultId="type-a"
         results={results}
-      />,
-    );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
-    expect(screen.getByText("タイプA")).toBeInTheDocument();
-    expect(screen.getByText("タイプB")).toBeInTheDocument();
-    expect(screen.getByText("タイプC")).toBeInTheDocument();
-  });
-
-  test("自タイプ以外は同一診断の結果ページへのリンクになること", () => {
-    render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    expect(screen.getByText("タイプB").closest("a")).toHaveAttribute(
-      "href",
-      "/play/word-sense-personality/result/type-b",
-    );
-    expect(screen.getByText("タイプC").closest("a")).toHaveAttribute(
-      "href",
-      "/play/word-sense-personality/result/type-c",
-    );
-  });
-
-  test("現在の自タイプはリンクにせず aria-current=page の span で示すこと", () => {
-    const { container } = render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    const current = container.querySelector('[aria-current="page"]');
-    expect(current).not.toBeNull();
-    expect(current?.tagName).toBe("SPAN");
-    expect(current?.textContent).toContain("タイプA");
-    // 自タイプの結果ページへのリンクは存在しない
-    expect(
-      container.querySelector(
-        'a[href="/play/word-sense-personality/result/type-a"]',
-      ),
-    ).toBeNull();
-  });
-
-  test("現在タイプに color があれば --type-color が CSS 変数として設定されること", () => {
-    const { container } = render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    const current = container.querySelector(
-      '[aria-current="page"]',
-    ) as HTMLElement | null;
-    expect(current).not.toBeNull();
-    expect(current?.style.getPropertyValue("--type-color")).toBe("#111111");
-  });
-
-  test("ランドマーク nav（aria-label 付き）であること", () => {
-    render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
+        placement="solvedScreen"
       />,
     );
     expect(
-      screen.getByRole("navigation", { name: "同じ診断の他のタイプ" }),
+      screen.getByRole("heading", { name: "すべてのタイプ（3）" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "すべてのタイプ（3）" }),
     ).toBeInTheDocument();
   });
 
-  test("headingLevel=2 のとき見出しが h2 になること（静的結果ページ用）", () => {
-    const { container } = render(
+  test("全タイプを渡された順に並べ、各行のリンクの名前がタイプ名だけであること", () => {
+    render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
         currentResultId="type-a"
         results={results}
-        headingLevel={2}
+        placement="solvedScreen"
       />,
     );
-    const h2 = container.querySelector("h2");
-    expect(h2?.textContent).toBe("他のタイプも見てみよう");
+    const list = screen.getByRole("list", { name: "すべてのタイプ（3）" });
+    const names = within(list)
+      .getAllByRole("link")
+      .map((link) => link.textContent);
+    expect(names).toEqual(["タイプA", "タイプB", "タイプC"]);
   });
 
-  test("デフォルト（headingLevel 未指定）は h3 になること（ResultCard 用）", () => {
+  test("各行は同じ診断の結果ページへ進むこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+        placement="solvedScreen"
+      />,
+    );
+    expect(screen.getByRole("link", { name: "タイプB" })).toHaveAttribute(
+      "href",
+      "/play/word-sense-personality/result/type-b",
+    );
+  });
+
+  test("結果のページでは、いまのタイプが現在地（aria-current=page）で、ほかのタイプは現在地でないこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+        placement="resultPage"
+      />,
+    );
+    expect(screen.getByRole("link", { name: "タイプA" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "タイプB" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
+  test("解き終えた画面では、いまのタイプは結果のページへ移る行なので、現在地でなくいまの項目（aria-current=true）であること", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+        placement="solvedScreen"
+      />,
+    );
+    expect(screen.getByRole("link", { name: "タイプA" })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+    expect(screen.getByRole("link", { name: "タイプB" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
+  test("解き終えた画面では、いまのタイプの行だけに「あなたのタイプ」とリンクの外で添えること", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={results}
+        placement="solvedScreen"
+      />,
+    );
+    const label = screen.getByText("あなたのタイプ");
+    expect(label.closest("a")).toBeNull();
+    expect(label.closest("li")).toContainElement(
+      screen.getByRole("link", { name: "タイプB" }),
+    );
+    expect(screen.getAllByText("あなたのタイプ")).toHaveLength(1);
+  });
+
+  test("解き終えた画面では、いまのタイプのリンクの説明が「あなたのタイプ」で、ほかのタイプのリンクは説明を持たないこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={results}
+        placement="solvedScreen"
+      />,
+    );
+    expect(
+      screen.getByRole("link", { name: "タイプB" }),
+    ).toHaveAccessibleDescription("あなたのタイプ");
+    expect(screen.getByRole("link", { name: "タイプA" })).not.toHaveAttribute(
+      "aria-describedby",
+    );
+  });
+
+  test("結果のページでは、いまのタイプは現在地で示し、「あなたのタイプ」と添えないこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={results}
+        placement="resultPage"
+      />,
+    );
+    expect(screen.queryByText("あなたのタイプ")).toBeNull();
+  });
+
+  test("名前と読みに分けたタイプは、名前だけをリンクにし、読みをリンクの外に置くこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="traditional-color"
+        currentResultId="type-b"
+        results={[
+          {
+            id: "ai",
+            title: "藍色(あいいろ)",
+            nameParts: { name: "藍色", reading: "あいいろ" },
+          },
+          ...results.slice(1),
+        ]}
+        placement="solvedScreen"
+      />,
+    );
+    expect(screen.getByRole("link", { name: "藍色" })).toBeInTheDocument();
+    expect(screen.getByText("あいいろ").closest("a")).toBeNull();
+  });
+
+  test("読み方を持つタイプは、名前だけをリンクにし、読み方をリンクの外に置くこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-b"
+        results={[
+          {
+            id: "poetic-sensory",
+            title: "花鳥風月タイプ",
+            reading: { word: "花鳥風月", kana: "かちょうふうげつ" },
+          },
+          ...results.slice(1),
+        ]}
+        placement="solvedScreen"
+      />,
+    );
+    expect(
+      screen.getByRole("link", { name: "花鳥風月タイプ" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("かちょうふうげつ").closest("a")).toBeNull();
+  });
+
+  test("showSwatch のとき、色を持つタイプの行に色見本を置くこと", () => {
+    const { container } = render(
+      <OtherTypesNav
+        quizSlug="traditional-color"
+        currentResultId="type-a"
+        results={results}
+        placement="solvedScreen"
+        showSwatch
+      />,
+    );
+    const swatches = container.querySelectorAll<HTMLElement>(
+      'li span[aria-hidden="true"]',
+    );
+    expect(swatches).toHaveLength(1);
+    expect(swatches[0].style.backgroundColor).toBe("rgb(17, 17, 17)");
+  });
+
+  test("showSwatch が無いとき、色見本を置かないこと", () => {
     const { container } = render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
         currentResultId="type-a"
         results={results}
+        placement="solvedScreen"
       />,
     );
-    expect(container.querySelector("h3")?.textContent).toBe(
-      "他のタイプも見てみよう",
-    );
-    expect(container.querySelector("h2")).toBeNull();
+    expect(
+      container.querySelectorAll('li > span[aria-hidden="true"]'),
+    ).toHaveLength(0);
+  });
+
+  test("どちらの面でも、見出しはセクションの見出しの段の h2 で、一覧のセクションの名前になること", () => {
+    for (const placement of ["resultPage", "solvedScreen"] as const) {
+      const { unmount } = render(
+        <OtherTypesNav
+          quizSlug="word-sense-personality"
+          currentResultId="type-a"
+          results={results}
+          placement={placement}
+        />,
+      );
+      const section = screen.getByRole("region", {
+        name: "すべてのタイプ（3）",
+      });
+      expect(
+        within(section).getByRole("heading", {
+          level: 2,
+          name: "すべてのタイプ（3）",
+        }),
+      ).toBeInTheDocument();
+      unmount();
+    }
   });
 
   test("1件以下のときは何も描画されないこと", () => {
@@ -147,11 +266,26 @@ describe("OtherTypesNav", () => {
         quizSlug="word-sense-personality"
         currentResultId="type-a"
         results={[results[0]]}
+        placement="solvedScreen"
       />,
     );
-    expect(container.firstChild).toBeNull();
-    expect(
-      screen.queryByText("他のタイプも見てみよう"),
-    ).not.toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  test("見出しは名前に括弧で数を添えたものとして、名前の中の語の切れ目と始め括弧の前でだけ折れる（DESIGN.md §4）", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+        placement="resultPage"
+      />,
+    );
+    const phrases = splitIntoPhrases("すべてのタイプ（3）", {
+      countedName: true,
+    });
+    expect(phrases).toEqual(["すべての", "タイプ", "（3）"]);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
   });
 });

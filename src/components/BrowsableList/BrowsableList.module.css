@@ -1,0 +1,6 @@
+/* 件数の行の下に名前の欄と畳む枠を積む（§5 の間隔）。 */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}

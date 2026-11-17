@@ -1,28 +1,12 @@
 /* KanaConverterTile スタイル
- * cycle-228 T-3: KanaConverterPage.module.css をタイル向けに移植。
- * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
  * 本ファイルは補足文字（--ink-2）のみ持つ軽量レイアウト。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- *
- * ## モバイル対応（cycle-227 申し送り・cycle-228 T-3 実機確認済み）
- * SegmentedControl 4択が w360 で横はみ出ししないことを実機で確認済み。
- * SegmentedControl 自体の flex-wrap: wrap により 4択が縦折返しされる（横スクロールは発生しない）。
- * 2カラムレイアウトは使用しない（w360 で縦積みになる設計・単一カラム）。
  */
 
-/* モード切替ラッパー（variant=full のみ表示） */
+/* 変換モードのラジオボタンの組と、その下の入力欄のあいだをあける */
 .modeControl {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
   margin-bottom: 1rem;
-  width: 100%;
-}
-
-.modeLabel {
-  font-size: 0.875rem;
-  color: var(--ink-2);
 }
 
 /* 入力/出力フィールド */
@@ -43,14 +27,16 @@
   color: var(--ink-2);
 }
 
-/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+/* ラベルとコピーのボタンを1行に並べる。1行に入らないときはボタンを次の行の右端に回し、ラベルの幅を
+ * 削らない（§6）。 */
 .outputHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+/* ライブリージョン（実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
   color: var(--ink-2);

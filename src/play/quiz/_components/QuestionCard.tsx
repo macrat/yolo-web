@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { useId, useMemo, type Ref } from "react";
+import type { ChoicePhrases } from "@/play/quiz/choicePhrases";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
 import { isCorrectChoice } from "@/play/quiz/scoring";
+import Button, {
+  buttonFaceBoxClassName,
+  buttonUnderlineClassName,
+} from "@/components/Button";
+import PhrasedText from "@/components/PhrasedText";
 import styles from "./QuestionCard.module.css";
 
 /** Fisher-Yates shuffle: returns a new array with elements in random order */
@@ -18,116 +24,155 @@ function shuffleArray<T>(array: readonly T[]): T[] {
 type QuestionCardProps = {
   question: QuizQuestion;
   quizType: QuizType;
+  /**
+   * 選択肢の文節の区切り（選択肢の id ごと）。押す前のボタンの面も、答えたあとの字も、同じ区切りで組む。区切りを
+   * 受け取っていない選択肢は、文の全体を1つの文節として組む。
+   */
+  choicePhrases: ChoicePhrases;
+  /** この問に記録した答えの選択肢の id。まだ答えていなければ undefined。押した形はこの記録から描く。 */
+  answeredChoiceId: string | undefined;
   onAnswer: (choiceId: string) => void;
   onNext: () => void;
+  /** 問の見出し。問が出たとき、QuizContainer がここへフォーカスを移す。 */
+  headingRef: Ref<HTMLHeadingElement>;
+  /** 選択肢の並び。QuizContainer が、問のまとまりの下端（最後の行の下端）をここで測る。 */
+  choicesRef: Ref<HTMLUListElement>;
+  /** 押した行。答えたとき、QuizContainer がここへフォーカスを移す。 */
+  pressedRowRef: Ref<HTMLLIElement>;
+  /**
+   * 知識クイズで答えたあとの、押していない正解の行。QuizContainer が、答えたあとに見せる範囲の上端を、押した行と
+   * この行の上のほうで測る。
+   */
+  correctRowRef: Ref<HTMLLIElement>;
+  /** 知識クイズの「次へ」。QuizContainer が、答えたあとに見せる範囲の下端をここで測る。 */
+  nextButtonRef: Ref<HTMLButtonElement>;
 };
 
+/** 知識クイズで答えたあと、行の名前の下に添える正誤の字（DESIGN.md §8）。1つの行に1つの字だけを添える。 */
+function feedbackOf(
+  question: QuizQuestion,
+  choiceId: string,
+  pressed: boolean,
+): string | undefined {
+  const correct = isCorrectChoice(question, choiceId);
+  if (pressed) return correct ? "あなたの回答は正解" : "あなたの回答は不正解";
+  return correct ? "正解" : undefined;
+}
+
+/**
+ * 1つの問。選択肢は押すと回答が決まるボタンで、答えたあとはどれもボタンでない字に替わる（DESIGN.md §6）。
+ * 選択肢の字は、ボタンでも字でも同じ文節の区切りで折り、押しても折れる位置が変わらない（§4）。
+ * 診断では、押した行の字は次の問か結果が出るまで押す前と同じ下線を持ったままでいて（実行のさいちゅう）、ほかの行は
+ * 下線の無い字（答えた選択肢）になる。知識クイズでは、どの行も答えた選択肢になり、正誤の字と解説と「次へ」が出る。
+ * 自分では画面を送らずフォーカスも動かさず、送りの範囲を測る要素とフォーカスを受ける要素を QuizContainer に渡す。
+ */
 export default function QuestionCard({
   question,
   quizType,
+  choicePhrases,
+  answeredChoiceId,
   onAnswer,
   onNext,
+  headingRef,
+  choicesRef,
+  pressedRowRef,
+  correctRowRef,
+  nextButtonRef,
 }: QuestionCardProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [answered, setAnswered] = useState(false);
+  const explanationId = useId();
 
-  // F2（WCAG 2.4.3 / 4.1.3）: 設問切替時のフォーカス管理。
-  // QuizContainer は playing phase で key={question.id} により QuestionCard を
-  // 再マウントする。何もしないと前設問の回答ボタンにあった focus が <body> に
-  // 落ち、キーボード/SR 利用者は「設問が変わったこと」も現在位置も失う。
-  // マウント時（=設問切替時）に設問見出しへプログラム的にフォーカスを移すことで、
-  // 新設問が読み上げられ、そこから操作を続けられる。
-  // preventScroll: true は結果リビール（QuizContainer）の流儀に合わせる
-  // （設問はページ上部で通常スクロール不要。focus() 既定スクロールの誤発火を抑止）。
-  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
-  useEffect(() => {
-    questionHeadingRef.current?.focus({ preventScroll: true });
-  }, []);
-
-  // Shuffle choices when the question changes to prevent positional bias
+  // 選択肢の位置で選ぶ偏りを避けるため、問ごとに並びを混ぜる。
   const shuffledChoices: QuizChoice[] = useMemo(
     () => shuffleArray(question.choices),
     [question.choices],
   );
 
-  const handleSelect = useCallback(
-    (choiceId: string) => {
-      if (answered) return;
-
-      setSelectedId(choiceId);
-      onAnswer(choiceId);
-
-      if (quizType === "knowledge") {
-        // Show feedback, wait for "Next" button
-        setAnswered(true);
-      }
-      // personality type: onAnswer triggers immediate transition via parent
-    },
-    [answered, onAnswer, quizType],
-  );
-
-  const getChoiceClassName = (choiceId: string): string => {
-    if (!answered || quizType !== "knowledge") {
-      return styles.choiceButton;
-    }
-    const correct = isCorrectChoice(question, choiceId);
-    if (correct) {
-      return `${styles.choiceButton} ${styles.choiceCorrect}`;
-    }
-    if (choiceId === selectedId && !correct) {
-      return `${styles.choiceButton} ${styles.choiceWrong}`;
-    }
-    return styles.choiceButton;
-  };
-
-  // 正誤は色だけで伝えない（WCAG 1.4.1）。色に加えて短い文字ラベルを添える。
-  const getFeedbackTag = (choiceId: string): string | null => {
-    if (!answered || quizType !== "knowledge") return null;
-    const correct = isCorrectChoice(question, choiceId);
-    if (correct) return "正解";
-    if (choiceId === selectedId) return "あなたの回答";
-    return null;
-  };
+  const answered = answeredChoiceId !== undefined;
+  const isKnowledge = quizType === "knowledge";
+  const explanation = isKnowledge && answered ? question.explanation : "";
 
   return (
-    <div className={styles.card} key={question.id}>
-      {/* 設問文は見出し（h2）。ページ h1 は QuizPlayPageLayout が持つため設問は h2。
-       * SR の見出しナビで設問に到達でき、F2 のフォーカス移動先も兼ねる
-       * （tabIndex={-1} でプログラム的フォーカスのみ受ける）。 */}
+    <div>
+      {/* 問の見出し（h2。ページの h1 は頭が持つ）。プログラムからだけフォーカスを受ける。 */}
       <h2
-        ref={questionHeadingRef}
+        ref={headingRef}
         tabIndex={-1}
         className={styles.questionText}
+        data-text-box="inline"
       >
         {question.text}
       </h2>
-      <div className={styles.choices}>
+      <ul ref={choicesRef} className={styles.choices} data-text-box="rows">
         {shuffledChoices.map((choice) => {
-          const feedbackTag = getFeedbackTag(choice.id);
+          const pressed = choice.id === answeredChoiceId;
+          const phrases = choicePhrases[choice.id] ?? [choice.text];
+          const feedback =
+            isKnowledge && answered
+              ? feedbackOf(question, choice.id, pressed)
+              : undefined;
+          const unpressedCorrect =
+            isKnowledge &&
+            answered &&
+            !pressed &&
+            isCorrectChoice(question, choice.id);
+          // 押した行は、押したボタンが字に替わってもフォーカスを body に落とさないよう、プログラムからフォーカスを
+          // 受ける。知識クイズでは、着いたときに名前と正誤の字に続けて解説が読まれる。
           return (
-            <button
+            <li
               key={choice.id}
-              type="button"
-              className={getChoiceClassName(choice.id)}
-              onClick={() => handleSelect(choice.id)}
-              disabled={answered}
+              ref={
+                pressed
+                  ? pressedRowRef
+                  : unpressedCorrect
+                    ? correctRowRef
+                    : undefined
+              }
+              tabIndex={pressed ? -1 : undefined}
+              aria-describedby={
+                pressed && explanation ? explanationId : undefined
+              }
+              className={styles.choice}
             >
-              <span>{choice.text}</span>
-              {feedbackTag && (
-                <span className={styles.feedbackTag}>{feedbackTag}</span>
+              {!answered ? (
+                <Button
+                  className={styles.choiceButton}
+                  phrases={phrases}
+                  onClick={() => onAnswer(choice.id)}
+                  data-hit-area="after"
+                />
+              ) : pressed && !isKnowledge ? (
+                <span
+                  className={`${buttonFaceBoxClassName} ${buttonUnderlineClassName} ${styles.answeredFace} ${styles.pressedFace}`}
+                  data-text-box="inline"
+                  data-hit-area="after"
+                >
+                  <PhrasedText as="span" phrases={phrases} />
+                </span>
+              ) : (
+                <span
+                  className={`${buttonFaceBoxClassName} ${styles.answeredFace}`}
+                  data-text-box="inline"
+                >
+                  <PhrasedText as="span" phrases={phrases} />
+                </span>
               )}
-            </button>
+              {feedback && <span className={styles.feedback}>{feedback}</span>}
+            </li>
           );
         })}
-      </div>
-      {answered && quizType === "knowledge" && (
+      </ul>
+      {isKnowledge && answered && (
         <>
-          {question.explanation && (
-            <div className={styles.explanation}>{question.explanation}</div>
+          {explanation && (
+            <p id={explanationId} className={styles.explanation}>
+              {explanation}
+            </p>
           )}
-          <button type="button" className={styles.nextButton} onClick={onNext}>
-            次へ
-          </button>
+          <div className={styles.next}>
+            <Button variant="primary" onClick={onNext} ref={nextButtonRef}>
+              次へ
+            </Button>
+          </div>
         </>
       )}
     </div>

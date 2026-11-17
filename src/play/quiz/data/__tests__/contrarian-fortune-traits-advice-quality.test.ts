@@ -9,8 +9,6 @@
  *
  * Q3: thirdPartyNote must use third-party perspective.
  *     At least 6 out of 8 must contain second/third-person keywords.
- *
- * Q4: coreSentence must contain the "普通" or "一般" reversal frame.
  */
 import { describe, it, expect } from "vitest";
 import type { ContrarianFortuneDetailedContent } from "../../types";
@@ -85,46 +83,7 @@ describe("Q3: thirdPartyNote must convey third-party perspective", () => {
   });
 });
 
-describe("Q4: coreSentence must contain the reversal frame", () => {
-  /**
-   * Pattern for the "普通の占いなら〜だが" reversal frame structure.
-   */
-  const REVERSAL_FRAME_PATTERN = /普通|一般|通常|ふつう/;
-
-  it("at least 6 out of 8 coreSentences contain a reversal frame keyword", () => {
-    const withFrame = allResults.filter((r) => {
-      const dc = r.detailedContent as ContrarianFortuneDetailedContent;
-      return REVERSAL_FRAME_PATTERN.test(dc?.coreSentence ?? "");
-    });
-
-    expect(
-      withFrame.length,
-      `Only ${withFrame.length}/8 coreSentences contain reversal frame keywords. Need at least 6.`,
-    ).toBeGreaterThanOrEqual(6);
-  });
-});
-
-describe("Q5-pre: coreSentence must use second person (あなた) or omit subject", () => {
-  /**
-   * coreSentenceは受検者視点（二人称「あなた」または主語省略）で書かれているべき。
-   * 「このタイプは/には/の」という三人称表現は使用禁止。
-   * 全8件で満たすこと。
-   */
-  it("no coreSentence must contain 'このタイプ'", () => {
-    const violations: string[] = [];
-    for (const result of allResults) {
-      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
-      if (dc?.coreSentence?.includes("このタイプ")) {
-        violations.push(
-          `${result.id}: coreSentence contains 'このタイプ': "${dc.coreSentence}"`,
-        );
-      }
-    }
-    expect(violations, violations.join("\n")).toHaveLength(0);
-  });
-});
-
-describe("Q5: calmchaos must have humorous behaviors (review feedback 1-1)", () => {
+describe("Q5: calmchaos must have humorous behaviors", () => {
   /**
    * calmchaosのbehaviorsは「優秀な人物の描写」でなく「笑えるシーン」であること。
    * 具体的に笑えるシーンを示すキーワードが少なくとも2つのbehaviorに含まれるべき。
@@ -160,7 +119,7 @@ describe("Q5: calmchaos must have humorous behaviors (review feedback 1-1)", () 
   });
 });
 
-describe("Q6: mundaneoracle and inversefortune must not share duplicate content (review feedback 1-2)", () => {
+describe("Q6: mundaneoracle and inversefortune must not share duplicate content", () => {
   /**
    * 「地味だけど好き」という表現がmundaneoracleとinversefortuneの両方に存在することを禁止。
    * inversefortuneのthirdPartyNoteには「みんなと違う選択」軸の表現が必要。

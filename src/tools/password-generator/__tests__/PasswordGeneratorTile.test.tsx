@@ -1,13 +1,13 @@
 /**
  * PasswordGeneratorTile 回帰テスト
  *
- * PasswordGeneratorPage.test.tsx の振る舞いを移植・拡張。
- * 主な追加観点:
- * - [A-1] Panel がルートであること
- * - [A-6] useId ベースの id 一意性（複数インスタンス）
+ * 主な観点:
+ * - 生成と強度の振る舞い
+ * - Panel がルートであること
+ * - useId ベースの id 一意性（複数インスタンス）
  * - variant="full" の全機能保持
  * - 複数インスタンスで DOM id 重複なし
- * - E-12 相当の CSS トークン検証
+ * - CSS トークン検証
  *
  * CSS トークン検証は `import { readFileSync } from "fs"` で書く（require() は eslint error）。
  */
@@ -47,27 +47,27 @@ describe("CSS トークン検証", () => {
     return css.replace(/\/\*[\s\S]*?\*\//g, "");
   }
 
-  it("--color-* 旧トークンが存在しない [B-1]", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("--accent 直塗り（background-color）が存在しない [B-3]", () => {
+  it("--accent 直塗り（background-color）が存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/background-color\s*:\s*var\(--accent\)/);
   });
 
-  it("--accent 直塗り（color）が存在しない [B-3]", () => {
+  it("--accent 直塗り（color）が存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/(?:^|[;\s])color\s*:\s*var\(--accent\)/m);
   });
 
-  it("非インタラクティブ要素に --r-interactive が使われていない [B-5]", () => {
+  it("非インタラクティブ要素に --r-interactive が使われていない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/border-radius\s*:\s*var\(--r-interactive\)/);
   });
 
-  it("font-weight: 700 が存在しない [B-4]", () => {
+  it("font-weight: 700 が存在しない", () => {
     const css = stripCssComments(readFileSync(cssPath, "utf-8"));
     expect(css).not.toMatch(/font-weight\s*:\s*700/);
   });
@@ -79,9 +79,9 @@ describe("CSS トークン検証", () => {
 });
 
 // =========================================================
-// [A-1] アーキテクチャ: Panel ルート確認
+// アーキテクチャ: Panel ルート確認
 // =========================================================
-describe("[A-1] Panel ルート確認", () => {
+describe("Panel ルート確認", () => {
   it("ルート要素が Panel（section または div）で、data-tile 等の Panel 特有属性を持つ", () => {
     const { container } = render(<PasswordGeneratorTile />);
     // Panel の index.tsx を見ると styles.panel クラスが付与される
@@ -93,9 +93,9 @@ describe("[A-1] Panel ルート確認", () => {
 });
 
 // =========================================================
-// [A-6] useId ベースの id 一意性（複数インスタンス）
+// useId ベースの id 一意性（複数インスタンス）
 // =========================================================
-describe("[A-6] 複数インスタンスで DOM id 一意性", () => {
+describe("複数インスタンスで DOM id 一意性", () => {
   it("2 つのインスタンスを同一ページに配置しても DOM id が重複しない", () => {
     const { container } = render(
       <>
@@ -165,10 +165,10 @@ describe("基本レンダリング", () => {
 describe("空入力・初期状態", () => {
   it("全文字種を OFF にするとエラーメッセージが表示される", async () => {
     render(<PasswordGeneratorTile />);
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
     expect(screen.getByRole("alert")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /パスワード生成/ }),
@@ -222,10 +222,10 @@ describe("ARIA", () => {
     expect(statusEl).toHaveAttribute("aria-live", "polite");
   });
 
-  it("ToggleSwitch が role='switch' で5つ描画される", () => {
+  it("文字種のチェックボックスが5つ描画される", () => {
     render(<PasswordGeneratorTile />);
-    const switches = screen.getAllByRole("switch");
-    expect(switches.length).toBe(5);
+    const checkboxes = screen.getAllByRole("checkbox");
+    expect(checkboxes.length).toBe(5);
   });
 
   it("パスワード表示の code 要素には aria-live がない（秘密情報配慮）", async () => {
@@ -245,7 +245,7 @@ describe("ARIA", () => {
 // コピー
 // =========================================================
 describe("コピー機能", () => {
-  it("コピーボタンが COPIED_LABEL に変化する", async () => {
+  it("コピーボタンが「コピー済み」に変化する", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: false });
     render(<PasswordGeneratorTile />);
 
@@ -261,24 +261,22 @@ describe("コピー機能", () => {
       fireEvent.click(copyBtn);
     });
 
-    expect(
-      screen.getByRole("button", { name: /コピーしました/ }),
-    ).toBeInTheDocument();
+    expect(copyBtn).toHaveTextContent("コピー済み");
 
     act(() => {
       vi.advanceTimersByTime(2000);
     });
     expect(
-      screen.getByRole("button", { name: /^コピー$/ }),
+      screen.getByRole("button", { name: "パスワードをコピー" }),
     ).toBeInTheDocument();
   });
 
   it("全文字種を OFF にすると生成ボタンが disabled になる", async () => {
     render(<PasswordGeneratorTile />);
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
 
     const generateBtn = screen.getByRole("button", { name: /パスワード生成/ });
     expect(generateBtn).toBeDisabled();
@@ -295,7 +293,7 @@ describe("コピー機能", () => {
     expect(copyBtn).not.toBeDisabled();
   });
 
-  it("navigator.clipboard が存在しない環境でエラーがスローされない", async () => {
+  it("どの写し方でも写せない端末では、エラーを出さずに「コピー失敗」を出す", async () => {
     vi.stubGlobal("navigator", {
       ...navigator,
       clipboard: undefined,
@@ -307,11 +305,11 @@ describe("コピー機能", () => {
       fireEvent.click(screen.getByRole("button", { name: /パスワード生成/ }));
     });
 
-    await expect(async () => {
-      await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: /^コピー$/ }));
-      });
-    }).not.toThrow();
+    const copyBtn = screen.getByRole("button", { name: "パスワードをコピー" });
+    await act(async () => {
+      fireEvent.click(copyBtn);
+    });
+    expect(copyBtn).toHaveTextContent("コピー失敗");
   });
 });
 
@@ -341,10 +339,10 @@ describe("強度バーの動的更新", () => {
   it("全文字種を OFF にすると強度バーが「—」表示になる（弱い誤表示防止）", () => {
     render(<PasswordGeneratorTile />);
 
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
 
     const statusEl = screen.getByRole("status");
     expect(statusEl.textContent).toContain("—");
@@ -353,9 +351,9 @@ describe("強度バーの動的更新", () => {
   it("数字のみ・8文字では強度が weak になる", () => {
     render(<PasswordGeneratorTile />);
 
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
 
     const slider = document.querySelector(
       'input[type="range"]',
@@ -368,41 +366,35 @@ describe("強度バーの動的更新", () => {
 });
 
 // =========================================================
-// ToggleSwitch
+// 文字種のチェックボックス
 // =========================================================
-describe("ToggleSwitch", () => {
-  it("ToggleSwitch が role='switch' で使われている（checkbox ではない）", () => {
+describe("文字種のチェックボックス", () => {
+  it("チェックボックスのラベルが正しく表示される", () => {
     render(<PasswordGeneratorTile />);
-    const switches = screen.getAllByRole("switch");
-    expect(switches.length).toBeGreaterThan(0);
-    switches.forEach((sw) => {
-      expect(sw).toHaveAttribute("type", "checkbox");
-      expect(sw).toHaveAttribute("role", "switch");
-    });
-  });
-
-  it("ToggleSwitch のラベルが正しく表示される", () => {
-    render(<PasswordGeneratorTile />);
-    expect(screen.getByRole("switch", { name: /大文字/ })).toBeInTheDocument();
-    expect(screen.getByRole("switch", { name: /小文字/ })).toBeInTheDocument();
-    expect(screen.getByRole("switch", { name: /数字/ })).toBeInTheDocument();
-    expect(screen.getByRole("switch", { name: /記号/ })).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: /紛らわしい文字/ }),
+      screen.getByRole("checkbox", { name: /大文字/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: /小文字/ }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: /数字/ })).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: /記号/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: /紛らわしい文字/ }),
     ).toBeInTheDocument();
   });
 });
 
 // =========================================================
-// UX是正: 全文字種OFFのエラー状態
+// 全文字種OFFのエラー状態
 // =========================================================
-describe("UX是正: 全文字種OFFのエラーフィードバック", () => {
+describe("全文字種OFFのエラーフィードバック", () => {
   it("全文字種をOFFにするとエラーメッセージが表示される", () => {
     render(<PasswordGeneratorTile />);
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
     expect(screen.getByRole("alert")).toHaveTextContent(
       "使用する文字の種類を 1 つ以上選んでください",
     );
@@ -410,10 +402,10 @@ describe("UX是正: 全文字種OFFのエラーフィードバック", () => {
 
   it("全文字種をOFFにすると生成ボタンが無効化される", () => {
     render(<PasswordGeneratorTile />);
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
     expect(
       screen.getByRole("button", { name: /パスワード生成/ }),
     ).toBeDisabled();
@@ -421,12 +413,12 @@ describe("UX是正: 全文字種OFFのエラーフィードバック", () => {
 
   it("いずれか1つ以上の文字種をONにするとエラーメッセージが消える", () => {
     render(<PasswordGeneratorTile />);
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
-    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /記号/ }));
     expect(screen.getByRole("alert")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /大文字/ }));
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 

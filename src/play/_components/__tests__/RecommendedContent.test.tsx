@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import RecommendedContent from "../RecommendedContent";
+import { followsPhraseRules } from "@/lib/phrase-breaks";
 
 // getRecommendedContents をモックしてテストを安定させる
 vi.mock("@/play/recommendation", () => ({
@@ -12,11 +13,9 @@ vi.mock("@/play/recommendation", () => ({
           title: "今日の運勢",
           shortTitle: "今日の運勢",
           shortDescription: "今日のあなたの運勢は？",
-          icon: "🔮",
           category: "fortune",
           contentType: "fortune",
           description: "毎日の運勢を占います",
-          accentColor: "#ff5733",
           keywords: ["運勢", "占い"],
           publishedAt: "2026-01-01T00:00:00+09:00",
         },
@@ -25,11 +24,9 @@ vi.mock("@/play/recommendation", () => ({
           title: "あなたの色タイプ診断",
           shortTitle: "色タイプ診断",
           shortDescription: "あなたのパーソナリティカラーは？",
-          icon: "🎨",
           category: "personality",
           contentType: "quiz",
           description: "個性を色で表現する診断",
-          accentColor: "#33a1ff",
           keywords: ["個性", "色"],
           publishedAt: "2026-01-02T00:00:00+09:00",
         },
@@ -37,11 +34,9 @@ vi.mock("@/play/recommendation", () => ({
           slug: "puzzle-game",
           title: "パズルゲーム",
           shortDescription: "頭を使うパズルゲーム",
-          icon: "🧩",
           category: "game",
           contentType: "game",
           description: "楽しいパズルゲーム",
-          accentColor: "#5733ff",
           keywords: ["パズル", "ゲーム"],
           publishedAt: "2026-01-03T00:00:00+09:00",
         },
@@ -80,21 +75,31 @@ test("RecommendedContent renders 3 cards", () => {
   expect(links.length).toBe(3);
 });
 
-test("RecommendedContent renders section heading", () => {
-  render(<RecommendedContent currentSlug="kanji-level" />);
-
-  expect(screen.getByText("他のジャンルも試してみよう")).toBeInTheDocument();
-});
-
-test("RecommendedContent has nav with correct aria-label", () => {
-  render(<RecommendedContent currentSlug="kanji-level" />);
-
+test("ページの1つのセクションで、見出しはセクションの見出し（h2）", () => {
+  const { container } = render(
+    <RecommendedContent currentSlug="kanji-level" />,
+  );
+  const section = container.firstChild as HTMLElement;
+  expect(section.tagName).toBe("SECTION");
   expect(
-    screen.getByRole("navigation", { name: "おすすめコンテンツ" }),
+    within(section).getByRole("heading", {
+      level: 2,
+      name: "他のジャンルも試してみよう",
+    }),
   ).toBeInTheDocument();
 });
 
-test("RecommendedContent renders title, description, and category badge for each card", () => {
+test("RecommendedContent の一覧が見出しの名前を持ち、リンクの読み上げの名前が行の名前だけであること", () => {
+  render(<RecommendedContent currentSlug="kanji-level" />);
+
+  const list = screen.getByRole("list", { name: "他のジャンルも試してみよう" });
+  const names = within(list)
+    .getAllByRole("link")
+    .map((link) => link.textContent);
+  expect(names).toEqual(["今日の運勢", "色タイプ診断", "パズルゲーム"]);
+});
+
+test("RecommendedContent renders title, description, and category for each card", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
   // タイトル（shortTitle優先）
@@ -145,12 +150,22 @@ test("RecommendedContent returns null when no recommendations", () => {
   expect(container.firstChild).toBeNull();
 });
 
-test("RecommendedContent renders category label badges", () => {
+test("RecommendedContent renders category labels", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
-  // 新デザイン体系ではカテゴリラベルを静かなタグとして表示する
-  // （data-category 属性によるカテゴリ別配色は廃止。色は機能のみ・DESIGN.md §2.4）。
+  // カテゴリラベルは静かなタグとして表示し、カテゴリ別には色を分けない
+  // （色は機能のみ・DESIGN.md §2.4）。
   expect(screen.getByText("運勢")).toBeInTheDocument();
   expect(screen.getByText("診断")).toBeInTheDocument();
   expect(screen.getByText("パズル")).toBeInTheDocument();
+});
+
+test("見出しは書き手が分けた文節の切れ目でだけ折れる（DESIGN.md §4）", () => {
+  render(<RecommendedContent currentSlug="kanji-level" />);
+  const headings: string[][] = [["他の", "ジャンルも", "試して", "みよう"]];
+  for (const phrases of headings) {
+    expect(followsPhraseRules(phrases), phrases.join("|")).toBe(true);
+    const heading = screen.getByRole("heading", { name: phrases.join("") });
+    expect(heading.innerHTML).toBe(phrases.join("<wbr>"));
+  }
 });

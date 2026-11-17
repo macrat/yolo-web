@@ -26,7 +26,7 @@ export default function KeigoReferencePage() {
         }}
       />
       <ToolErrorBoundary>
-        <KeigoReferenceTile variant="full" />
+        <KeigoReferenceTile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

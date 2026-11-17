@@ -1,42 +1,46 @@
-import Link from "next/link";
-import { getRelatedBlogPostsForTool } from "@/lib/cross-links";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
+import { CATEGORY_LABELS } from "@/blog/_lib/blog";
+import { getBlogPostsReferencing } from "@/lib/cross-links";
 import { formatDate } from "@/lib/date";
 import styles from "./RelatedBlogPosts.module.css";
 
 interface RelatedBlogPostsProps {
-  /** ツールのスラッグ。このツールに関連するブログ記事を表示する */
-  toolSlug: string;
+  /** いまのツール・ゲームの slug。それを取り上げた記事を載せる。 */
+  slug: string;
 }
 
+const HEADING_ID = "related-blog-posts";
+
 /**
- * RelatedBlogPosts — 関連ブログ記事セクション。
- *
- * 仕様:
- * - `getRelatedBlogPostsForTool` で取得した関連記事をリスト表示する
- * - 記事タイトルと公開日（published_at）を表示し、来訪者が記事の新しさを判断できる情報を保持する
- * - 関連記事が 0 件のとき null を返す
- * - スタイルは new デザイン体系のみ（DESIGN.md §2 参照）
- * - 旧 --color-* トークンは使用しない
+ * ツール・ゲームのページの末尾の「関連ブログ記事」。ページの1つのセクション（DESIGN.md §5）で、見出しはセクションの
+ * 見出しの段に立つ（§4）。行は題名・説明・分類・公開日で、説明があれば開く前に中身が分かり、公開日で記事の新しさを
+ * 比べられる。関連記事が無いときは、セクションごと描かない。
  */
-export default function RelatedBlogPosts({ toolSlug }: RelatedBlogPostsProps) {
-  const posts = getRelatedBlogPostsForTool(toolSlug);
+export default function RelatedBlogPosts({ slug }: RelatedBlogPostsProps) {
+  const posts = getBlogPostsReferencing(slug);
   if (posts.length === 0) return null;
 
+  const items: ItemListItem[] = posts.map((post) => ({
+    name: post.title,
+    href: `/blog/${post.slug}`,
+    description: post.description,
+    kind: CATEGORY_LABELS[post.category],
+    facts: [
+      { text: formatDate(post.published_at), dateTime: post.published_at },
+    ],
+  }));
+
   return (
-    <section className={styles.section} aria-label="関連ブログ記事">
-      <h2 className={styles.title}>関連ブログ記事</h2>
-      <ul className={styles.list}>
-        {posts.map((post) => (
-          <li key={post.slug} className={styles.item}>
-            <Link href={`/blog/${post.slug}`} className={styles.link}>
-              <span className={styles.postTitle}>{post.title}</span>
-              <time className={styles.date} dateTime={post.published_at}>
-                {formatDate(post.published_at)}
-              </time>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <Section>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["関連", "ブログ", "記事"]}
+      />
+      <ItemList labelledBy={HEADING_ID} items={items} />
+    </Section>
   );
 }

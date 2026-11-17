@@ -1,38 +1,33 @@
-"use client";
-
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface HintBarProps {
-  strokeCount: number;
-  readingCount: number;
-  kunYomiCount: number;
+  /** 答えの漢字のヒント。読み込むまでは null。 */
+  hints: {
+    strokeCount: number;
+    onYomiCount: number;
+    kunYomiCount: number;
+  } | null;
 }
 
 /**
- * Displays initial hints: stroke count, number of on'yomi readings,
- * and number of kun'yomi readings.
+ * 遊び始める前から分かる、答えの漢字のヒント（画数・音読みの数・訓読みの数）。読み込むまでは値を空にし、
+ * 読み込んだあとと同じ幅と行を取る。
  */
-export default function HintBar({
-  strokeCount,
-  readingCount,
-  kunYomiCount,
-}: HintBarProps) {
+export default function HintBar({ hints }: HintBarProps) {
+  const items = [
+    { label: "画数", value: hints?.strokeCount },
+    { label: "音読み数", value: hints?.onYomiCount },
+    { label: "訓読み数", value: hints?.kunYomiCount },
+  ];
   return (
-    <div
-      className={styles.hintBar}
-      role="status"
-      aria-label={"\u30D2\u30F3\u30C8"}
-    >
-      <span className={styles.hintLabel}>{"\u30D2\u30F3\u30C8:"}</span>
-      <span className={styles.hintValue}>
-        {"\u753B\u6570"} {strokeCount}
-      </span>
-      <span className={styles.hintValue}>
-        {"\u97F3\u8AAD\u307F\u6570"} {readingCount}
-      </span>
-      <span className={styles.hintValue}>
-        {"\u8A13\u8AAD\u307F\u6570"} {kunYomiCount}
-      </span>
-    </div>
+    <p className={styles.hintBar} role="status">
+      <span className={styles.hintLabel}>ヒント</span>
+      {items.map(({ label, value }) => (
+        <span key={label}>
+          {label}
+          <span className={styles.hintValue}>{value ?? ""}</span>
+        </span>
+      ))}
+    </p>
   );
 }

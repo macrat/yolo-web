@@ -110,9 +110,7 @@ describe("renderFudaImage", () => {
   });
 
   test("記号面の地に和色 hex（成果物パレット）を使う", async () => {
-    const { WAIRO_HEX } = await import("../wairoHex");
-    const { pickResultWairoColor } =
-      await import("@/play/quiz/_components/resultVisual");
+    const { WAIRO_HEX, pickResultWairoColor } = await import("../wairoHex");
     const { element } = await render({
       id: "blazing-strategist",
       title: "炎の策士",
@@ -121,8 +119,8 @@ describe("renderFudaImage", () => {
     expect(collectBackgroundColors(element)).toContain(expectedBg);
   });
 
-  test("絵文字（§8-6 禁止）を画像に持ち込まない", async () => {
-    // クイズデータの result.icon は絵文字。札にはタイプ名の先頭書記素だけを立てる。
+  test("絵文字（§5）を画像に持ち込まない", async () => {
+    // 札にはタイプ名の先頭書記素だけを立てる。
     const { element } = await render({
       id: "blazing-strategist",
       title: "締切3分前に5手先を読む炎の策士",
@@ -146,9 +144,7 @@ describe("renderFudaImage", () => {
   });
 
   test("colorOverride 指定時: 記号面の地に固有 hex を使い、和色8色へ丸めない", async () => {
-    const { WAIRO_HEX } = await import("../wairoHex");
-    const { pickResultWairoColor } =
-      await import("@/play/quiz/_components/resultVisual");
+    const { WAIRO_HEX, pickResultWairoColor } = await import("../wairoHex");
     // 藍色（伝統色診断・色＝中身）の固有 hex。
     const hex = "#0d5661";
     const { element } = await render({
@@ -179,7 +175,7 @@ describe("renderFudaImage", () => {
   test("colorOverride 指定時（明地）: 前景色は黒（#1a1a1a）へ切り替わる", async () => {
     // 明るい伝統色（桜色）は白字ではコントラスト不足 → 黒字（DARK_TEXT_COLOR）。
     // symbolOn が #ffffff にハードコードされる回帰をこのケースが捕える。
-    // 本文の墨字 INK は #201e1a なので、#1a1a1a は記号面前景のみを指す。
+    // 本文の墨字 INK は #0b0b0b なので、#1a1a1a は記号面前景のみを指す。
     const { getContrastTextColor } = await import("@/play/color-utils");
     const hex = "#fedfe1"; // 桜色（明地）
     expect(getContrastTextColor(hex)).toBe("#1a1a1a"); // 前提を固定
@@ -203,9 +199,7 @@ describe("renderFudaImage", () => {
   });
 
   test("colorOverride 未指定時: 従来の和色経路と既定の印 '診' を保つ", async () => {
-    const { WAIRO_HEX } = await import("../wairoHex");
-    const { pickResultWairoColor } =
-      await import("@/play/quiz/_components/resultVisual");
+    const { WAIRO_HEX, pickResultWairoColor } = await import("../wairoHex");
     const { element } = await render({
       id: "blazing-strategist",
       title: "炎の策士",

@@ -1,19 +1,20 @@
-import Link from "next/link";
+import ItemList from "@/components/ItemList";
+import PhrasedText from "@/components/PhrasedText";
+import Section from "@/components/Section";
 import { getRecommendedContents } from "@/play/recommendation";
-import { getContentPath } from "@/play/paths";
-import { resolveDisplayCategory } from "@/play/seo";
+import { toPlayListItems } from "@/play/listItems";
 import styles from "./RecommendedContent.module.css";
 
 interface RecommendedContentProps {
   currentSlug: string;
 }
 
+const HEADING_ID = "recommended-content";
+
 /**
- * 他カテゴリからおすすめコンテンツ3件を表示するServer Component。
- *
- * - 現在のコンテンツとは異なるカテゴリから各1件を選出
- * - 各カードにアイコン、タイトル（shortTitle優先）、短い説明、カテゴリバッジを表示
- * - レコメンドが0件の場合はnullを返す
+ * いまの遊びと違う分類から、おすすめを1件ずつ選んで並べる、ページの1つのセクション（DESIGN.md §5）。
+ * 見出しはセクションの見出しで、どの面に置いても主見出しより小さい段に立つ（§4）。
+ * 選ぶものが無いときは、セクションごと描かない。
  */
 export default function RecommendedContent({
   currentSlug,
@@ -23,25 +24,14 @@ export default function RecommendedContent({
   if (recommended.length === 0) return null;
 
   return (
-    <nav className={styles.related} aria-label="おすすめコンテンツ">
-      <h2 className={styles.heading}>他のジャンルも試してみよう</h2>
-      <ul className={styles.list}>
-        {recommended.map((content) => (
-          <li key={content.slug}>
-            <Link href={getContentPath(content)} className={styles.link}>
-              <span className={styles.name}>
-                {content.shortTitle ?? content.title}
-              </span>
-              <span className={styles.description}>
-                {content.shortDescription}
-              </span>
-              <span className={styles.badge}>
-                {resolveDisplayCategory(content)}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <Section>
+      <PhrasedText
+        as="h2"
+        id={HEADING_ID}
+        className={styles.heading}
+        phrases={["他の", "ジャンルも", "試して", "みよう"]}
+      />
+      <ItemList labelledBy={HEADING_ID} items={toPlayListItems(recommended)} />
+    </Section>
   );
 }

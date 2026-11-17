@@ -49,8 +49,6 @@ export interface ContrarianFortuneDetailedContent {
   variant: "contrarian-fortune";
   /** タイプのキャッチコピー（一行、10-50字） */
   catchphrase: string;
-  /** 逆張りコンセプトの核心を伝える1-2文（20-100字） */
-  coreSentence: string;
   /** あるある箇条書き（3-5項目、具体的シーンで笑えるトーン） */
   behaviors: string[];
   /** タイプの人物像（散文150-250字、内面・動機の解説、ユーモアトーンの締め含む） */
@@ -257,11 +255,20 @@ export type QuizResult = {
   /** URL-safe ID (e.g. 'master', 'ai-iro') */
   id: string;
   title: string;
+  /**
+   * title が名前に読みを添えた形（「藍色(あいいろ)」）のタイプの、名前と読み。
+   * タイプを並べる一覧は、読みをリンクの外に置くためにこれを使う（DESIGN.md §7）。
+   */
+  nameParts?: { name: string; reading: string };
+  /**
+   * title の中の読みにくい語（word）と、その読み方（kana）。「一字千金タイプ」なら「一字千金」と「いちじせんきん」。
+   * 見出しでは title の下に kana を添え、タイプを並べる一覧では名前の後ろに置く（DESIGN.md §7）。
+   * 見出しでない所でタイプ名を文として使うときは、`resultNameWithReading` で語の後ろに読みを丸括弧で添える。
+   */
+  reading?: { word: string; kana: string };
   description: string;
-  /** Theme color hex (used for personality type) */
+  /** 結果そのものの色（CSS hex）。結果そのものが色である診断だけが持つ */
   color?: string;
-  /** Icon emoji */
-  icon?: string;
   /** knowledge type: minimum score to get this result */
   minScore?: number;
   /** Recommendation text for related content */
@@ -292,8 +299,6 @@ export interface QuizMeta {
   /** PlayContentMeta のカテゴリへの変換に使用する明示的フィールド。"knowledge" | "personality" に限定（クイズに fortune は存在しない） */
   category: "knowledge" | "personality";
   questionCount: number;
-  icon: string;
-  accentColor: string;
   keywords: string[];
   /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;
@@ -303,7 +308,7 @@ export interface QuizMeta {
 
   /**
    * FAQ: Q&A形式の配列
-   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
+   * FAQPage JSON-LD のデータソースである。
    * answerはプレーンテキストのみ（HTML・特殊記法不可）。
    */
   faq?: Array<{

@@ -3,8 +3,6 @@
 /**
  * ColorConverterTile — カラーコード変換の単一正典タイル
  *
- * cycle-228 T-15 で ColorConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -15,22 +13,19 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl で HEX/RGB/HSL モードをユーザーが切り替える。
- * - `"hex"`: 入力モードを HEX に固定し、SegmentedControl を非表示にする。
- * - `"rgb"`: 入力モードを RGB に固定し、SegmentedControl を非表示にする。
- * - `"hsl"`: 入力モードを HSL に固定し、SegmentedControl を非表示にする。
+ * - `"full"` (デフォルト): ラジオボタンの組で HEX/RGB/HSL モードをユーザーが切り替える。
+ * - `"hex"`: 入力モードを HEX に固定し、ラジオボタンの組を出さない。
+ * - `"rgb"`: 入力モードを RGB に固定し、ラジオボタンの組を出さない。
+ * - `"hsl"`: 入力モードを HSL に固定し、ラジオボタンの組を出さない。
  *
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <ColorConverterTile variant="full" />
- * <ColorConverterTile variant="hex" />
- * <ColorConverterTile variant="rgb" />
- * <ColorConverterTile variant="hsl" />
  * ```
  *
- * ## アクセシビリティ (C-3 準拠)
+ * ## アクセシビリティ
  *
  * - 変換結果エリアに role="status" aria-live="polite" のライブリージョンを置き
  *   スクリーンリーダーへ変換完了を通知する。
@@ -39,13 +34,10 @@
 import { useId, useState, useCallback } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   parseHex,
   parseRgb,
@@ -68,7 +60,7 @@ const MODE_OPTIONS: { label: string; value: InputMode }[] = [
 ];
 
 /**
- * logic.ts が返す英語エラーメッセージを日本語化する（B-2 要件）。
+ * logic.ts が返す英語エラーメッセージを日本語化する。
  * logic.ts のエラーをそのまま ErrorMessage に渡すと英語が露出するため、
  * ここで日本語へ変換する。
  */
@@ -84,7 +76,7 @@ function toJapaneseError(mode: InputMode): string {
 }
 
 /**
- * 変換結果のサマリ文言（C-3: ライブリージョンに実テキストノードを置く要件）。
+ * 変換結果のサマリ文言（ライブリージョンに実テキストノードを置く要件）。
  * スクリーンリーダーはサマリテキストを読み上げ、出力の変化を通知する。
  */
 function buildSummary(result: ColorResult | null): string {
@@ -96,10 +88,10 @@ function buildSummary(result: ColorResult | null): string {
 export interface ColorConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl でモードを切り替え可能
-   * - "hex": HEX モードに固定、SegmentedControl 非表示
-   * - "rgb": RGB モードに固定、SegmentedControl 非表示
-   * - "hsl": HSL モードに固定、SegmentedControl 非表示
+   * - "full": ラジオボタンの組でモードを切り替える
+   * - "hex": HEX モードに固定、ラジオボタンの組を出さない
+   * - "rgb": RGB モードに固定、ラジオボタンの組を出さない
+   * - "hsl": HSL モードに固定、ラジオボタンの組を出さない
    */
   variant?: ColorConverterTileVariant;
   /** 初期入力値（デフォルト: ""）。"full" または固定モードの初期値として使われる。 */
@@ -138,8 +130,6 @@ export default function ColorConverterTile({
   const [dynamicMode, setDynamicMode] = useState<InputMode>("hex");
   const [inputText, setInputText] = useState(defaultInput);
   const [result, setResult] = useState<ColorResult | null>(null);
-
-  const { copy, copiedKey } = useCopyToClipboard();
 
   // 実際に使うモード: fixed があればそれを使い、なければ state を使う
   const inputMode = fixedMode ?? dynamicMode;
@@ -191,7 +181,7 @@ export default function ColorConverterTile({
    * ユーザーが誤入力を疑う。空欄から入力し直してもらう設計が最もシンプル。
    */
   const handleModeChange = useCallback((newMode: string) => {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(newMode as InputMode);
     setResult(null);
     setInputText("");
@@ -234,11 +224,11 @@ export default function ColorConverterTile({
       {/* モード切替 (variant=full のみ表示) */}
       {fixedMode === null && (
         <div className={styles.modeControl}>
-          <SegmentedControl
+          <RadioGroup
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="入力モード"
+            legend="入力モード"
           />
         </div>
       )}
@@ -255,7 +245,7 @@ export default function ColorConverterTile({
             value={inputText}
             onChange={(e) => {
               setInputText(e.target.value);
-              // G-1: 入力内容を書き換えたとき、エラー状態だけクリアする。
+              // 入力内容を書き換えたとき、エラー状態だけクリアする。
               // 来訪者が「直した」操作に即座に応えるために必要。
               // 成功結果は次の「変換」まで保持する（過剰なクリアを防ぐ）。
               if (result && !result.success) setResult(null);
@@ -305,51 +295,27 @@ export default function ColorConverterTile({
             <div className={styles.resultCard}>
               <div className={styles.resultCardLabel}>HEX</div>
               <div className={styles.resultCardValue}>{hexValue}</div>
-              <Button
-                size="small"
-                variant="default"
-                disabled={!hexValue}
-                onClick={() => void copy(hexValue, "hex")}
-                aria-label="HEXをコピー"
-              >
-                {copiedKey === "hex" ? COPIED_LABEL : "コピー"}
-              </Button>
+              <CopyButton text={hexValue} target="HEX" disabled={!hexValue} />
             </div>
 
             {/* RGB カード */}
             <div className={styles.resultCard}>
               <div className={styles.resultCardLabel}>RGB</div>
               <div className={styles.resultCardValue}>{rgbValue}</div>
-              <Button
-                size="small"
-                variant="default"
-                disabled={!rgbValue}
-                onClick={() => void copy(rgbValue, "rgb")}
-                aria-label="RGBをコピー"
-              >
-                {copiedKey === "rgb" ? COPIED_LABEL : "コピー"}
-              </Button>
+              <CopyButton text={rgbValue} target="RGB" disabled={!rgbValue} />
             </div>
 
             {/* HSL カード */}
             <div className={styles.resultCard}>
               <div className={styles.resultCardLabel}>HSL</div>
               <div className={styles.resultCardValue}>{hslValue}</div>
-              <Button
-                size="small"
-                variant="default"
-                disabled={!hslValue}
-                onClick={() => void copy(hslValue, "hsl")}
-                aria-label="HSLをコピー"
-              >
-                {copiedKey === "hsl" ? COPIED_LABEL : "コピー"}
-              </Button>
+              <CopyButton text={hslValue} target="HSL" disabled={!hslValue} />
             </div>
           </div>
         </>
       )}
 
-      {/* C-3: ライブリージョンに実テキストノードのサマリを置く。
+      {/* ライブリージョンに実テキストノードのサマリを置く。
           変換成功/失敗をスクリーンリーダーに通知する。
           .liveRegion は sr-only スタイル（視覚的に非表示、SR 専用）。 */}
       <div

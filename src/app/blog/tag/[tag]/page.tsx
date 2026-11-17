@@ -1,131 +1,34 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { MIN_POSTS_FOR_TAG_PAGE, getTagsWithMinPosts } from "@/blog/_lib/blog";
 import {
-  getPostsByTag,
-  getTagsWithMinPosts,
-  TAG_DESCRIPTIONS,
-  MIN_POSTS_FOR_TAG_INDEX,
-} from "@/blog/_lib/blog";
-import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
-import { SITE_NAME, BASE_URL } from "@/lib/constants";
+  blogListMetadata,
+  hasTagPage,
+  type BlogListScope,
+} from "@/blog/_lib/blog-list";
 import BlogListView from "@/blog/_components/BlogListView";
-
-/** Minimum number of posts a tag must have to generate a static page. */
-const MIN_POSTS_FOR_TAG_PAGE = 3;
 
 interface Props {
   params: Promise<{ tag: string }>;
 }
 
-export function generateStaticParams() {
-  const tags = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE);
-  // encodeURIComponent は不要: Next.js が動的セグメントを自動的にデコードするため
-  // generateStaticParams では生の（デコード済み）タグ名を返す
-  return tags.map((tag) => ({ tag }));
+// Next.js は動的セグメントをデコードして渡すので、生のタグ名を返す。
+export function generateStaticParams(): Array<{ tag: string }> {
+  return getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE).map((tag) => ({ tag }));
+}
+
+// 二重に百分率符号化された URL でも同じタグとして読む。
+async function resolveScope(params: Props["params"]): Promise<BlogListScope> {
+  const tag = decodeURIComponent((await params).tag);
+  if (!hasTagPage(tag)) notFound();
+  return { type: "tag", tag };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { tag: rawTag } = await params;
-  // URL パラメータは Next.js によってデコードされるが、二重エンコードされた場合に備えて
-  // 明示的に decodeURIComponent を適用する
-  const tag = decodeURIComponent(rawTag);
-  const posts = getPostsByTag(tag);
-
-  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) return {};
-
-  const description =
-    TAG_DESCRIPTIONS[tag] ??
-    `AI試行錯誤ブログの「${tag}」タグが付いた記事一覧。`;
-
-  const shouldIndex = posts.length >= MIN_POSTS_FOR_TAG_INDEX;
-
-  return {
-    title: `${tag} - AI試行錯誤ブログ | ${SITE_NAME}`,
-    description,
-    robots: shouldIndex
-      ? { index: true, follow: true }
-      : { index: false, follow: true },
-    openGraph: {
-      title: `${tag} - AI試行錯誤ブログ | ${SITE_NAME}`,
-      description,
-      type: "website",
-      url: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
-      siteName: SITE_NAME,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${tag} - AI試行錯誤ブログ | ${SITE_NAME}`,
-      description,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
-      types: {
-        "application/rss+xml": "/feed",
-        "application/atom+xml": "/feed/atom",
-      },
-    },
-  };
+  return blogListMetadata(await resolveScope(params), 1);
 }
 
-/** Tag-filtered blog listing page (/blog/tag/[tag]) */
+/** /blog/tag/[tag] は1つのタグの記事の一覧の1ページ目。 */
 export default async function TagPage({ params }: Props) {
-  const { tag: rawTag } = await params;
-  // URL パラメータは Next.js によってデコードされるが、二重エンコードされた場合に備えて
-  // 明示的に decodeURIComponent を適用する
-  const tag = decodeURIComponent(rawTag);
-
-  const posts = getPostsByTag(tag);
-
-  // Return 404 for tags with too few posts
-  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) {
-    notFound();
-  }
-
-  const description =
-    TAG_DESCRIPTIONS[tag] ??
-    `AI試行錯誤ブログの「${tag}」タグが付いた記事一覧。`;
-
-  const { items, totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
-
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "ホーム",
-        item: BASE_URL,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "ブログ",
-        item: `${BASE_URL}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: tag,
-        item: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
-      },
-    ],
-  };
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <BlogListView
-        posts={items}
-        currentPage={1}
-        totalPages={totalPages}
-        basePath={`/blog/tag/${encodeURIComponent(tag)}`}
-        tagHeader={{ tag, description }}
-        allPosts={posts}
-      />
-    </>
-  );
+  return <BlogListView scope={await resolveScope(params)} page={1} />;
 }

@@ -15,7 +15,7 @@ describe("experiment registry", () => {
     expect(getExperiment("does_not_exist")).toBeUndefined();
   });
 
-  it("has no registered experiments (quiz_result_visual_v1 removed in cycle-279 C1)", () => {
+  it("has no registered experiments", () => {
     expect(Object.keys(AB_EXPERIMENTS)).toEqual([]);
   });
 

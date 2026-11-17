@@ -3,8 +3,6 @@
 /**
  * ImageBase64Tile — 画像 Base64 変換の単一正典タイル
  *
- * cycle-228 T-26: ImageBase64Page.tsx を Panel ルートのタイルへ再実装。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -17,21 +15,20 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   encode / decode をユーザーが切り替えられる。
- * - `"encode"`: 方向を encode に固定し、SegmentedControl を非表示にする。
- *   T-31 で道具箱に恒久展示されるファイル I/O 系の代表として「画像 → Base64」の
- *   変換器として一目で分かる構成にする。
- * - `"decode"`: 方向を decode に固定し、SegmentedControl を非表示にする。
+ * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。
+ *   「画像 → Base64」の変換器として一目で分かる。
+ * - `"decode"`: 方向を decode に固定し、ラジオボタンの組を出さない。
  *
- * ## 非同期安全性（D-4 準拠）
+ * ## 非同期安全性
  *
  * FileReader は Promise ベースではなくコールバックベースのため、アンマウント後に
  * onload が呼ばれると setState が実行されてメモリリークや警告の原因になる。
  * 世代カウンタ（generationRef）を使って古い FileReader 読み込み結果を無視する。
  * 連続ドロップ時も前の読み込み結果が後の結果を上書きしない。
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - エンコード出力の readOnly textarea は role="status" 対象外。
  * - 別途 srOnly の role="status" aria-live="polite" div にサマリを置く。
@@ -41,14 +38,11 @@
 import { useId, useState, useCallback, useRef } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import FileDropZone from "@/components/FileDropZone";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
+import CopyButton from "@/components/CopyButton";
 import {
   fileToBase64,
   parseBase64Image,
@@ -76,9 +70,9 @@ export type ImageBase64TileVariant = "full" | "encode" | "decode";
 export interface ImageBase64TileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向トグル非表示
-   * - "decode": 方向を decode に固定、方向トグル非表示
+   * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
+   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない
+   * - "decode": 方向を decode に固定、方向のラジオボタンを出さない
    */
   variant?: ImageBase64TileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -115,7 +109,7 @@ export default function ImageBase64Tile({
     null,
   );
   const [encodeError, setEncodeError] = useState("");
-  // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
+  // スクリーンリーダーへ通知するための短いサマリテキスト
   const [encodeSummary, setEncodeSummary] = useState("");
 
   // デコードモードの状態
@@ -123,10 +117,7 @@ export default function ImageBase64Tile({
   const [parsedImage, setParsedImage] = useState<ParsedImage | null>(null);
   const [decodeError, setDecodeError] = useState("");
 
-  // コピーフック（Base64 と Data URI を別キーで管理）
-  const { copy, copiedKey } = useCopyToClipboard();
-
-  // ---------- 世代カウンタ（D-4: アンマウント後 setState 防止・連続ドロップ対策） ----------
+  // ---------- 世代カウンタ（アンマウント後 setState 防止・連続ドロップ対策） ----------
   // FileReader は非同期コールバックベースのため、アンマウント後や
   // 連続ドロップ時に古い結果が setState されないよう世代で管理する。
   const generationRef = useRef(0);
@@ -139,7 +130,7 @@ export default function ImageBase64Tile({
     setBase64Result(null);
     setEncodeSummary("");
     if (!file.type.startsWith("image/")) {
-      setEncodeError("画像ファイルを選択してください");
+      setEncodeError("画像ファイルを選んでください（PNG・JPEG・GIF・WebP）");
       return;
     }
     // 世代カウントを進める（連続ドロップ・アンマウント対策）
@@ -149,14 +140,16 @@ export default function ImageBase64Tile({
       // 世代が一致する場合のみ setState（古い結果の上書き防止）
       if (currentGeneration === generationRef.current) {
         setBase64Result(result);
-        // C-3: 変換成功サマリを role="status" 領域に実テキストとして配置
+        // 変換成功サマリを role="status" 領域に実テキストとして配置
         setEncodeSummary(
           `Base64に変換しました。元サイズ ${formatFileSize(result.originalSize)}、Base64サイズ ${formatFileSize(result.base64Size)}、MIMEタイプ ${result.mimeType}`,
         );
       }
-    } catch (e) {
+    } catch {
       if (currentGeneration === generationRef.current) {
-        setEncodeError(e instanceof Error ? e.message : "エラーが発生しました");
+        setEncodeError(
+          "ファイルを読み込めませんでした。もう一度選び直してください",
+        );
       }
     }
   }, []);
@@ -204,7 +197,7 @@ export default function ImageBase64Tile({
 
   const handleModeChange = useCallback((value: string) => {
     setDynamicMode(value as TabMode);
-    // G-1: モード切替時に古い結果をリセット
+    // モード切替時に古い結果をリセット
     setEncodeError("");
     setDecodeError("");
     setEncodeSummary("");
@@ -216,14 +209,14 @@ export default function ImageBase64Tile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* variant=full のみ方向トグルを表示。encode/decode は固定のため非表示。 */}
+      {/* variant=full のみ方向のラジオボタンを出す。encode/decode は固定のため非表示。 */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <SegmentedControl
+          <RadioGroup
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="変換モード"
+            legend="変換の向き"
           />
         </div>
       )}
@@ -231,23 +224,21 @@ export default function ImageBase64Tile({
       {/* エンコードモード */}
       {mode === "encode" && (
         <div className={styles.encodePanel}>
-          {/* FileDropZone でファイルのドラッグ&ドロップ
-           *  maxSizeBytes: 10MB 上限 / onError で日本語エラーメッセージを受け取る */}
+          {/* ファイルの問題は、選ぶ欄の直下に欄の説明として出す（§8） */}
           <FileDropZone
+            label="画像ファイル"
             onFileSelect={handleFileSelect}
             onError={handleFileError}
             maxSizeBytes={MAX_FILE_SIZE}
             accept="image/*"
             description="PNG, JPEG, GIF, WebP 対応（最大10MB）"
+            error={encodeError || undefined}
           />
-
-          {/* エラー表示 */}
-          {encodeError && <ErrorMessage message={encodeError} />}
 
           {/* 結果表示エリア（ファイル選択後） */}
           {base64Result && (
             <div className={styles.resultArea}>
-              {/* C-3: role="status" aria-live="polite" で動的通知。
+              {/* role="status" aria-live="polite" で動的通知。
                   実テキストノード（サマリ）を置くことでスクリーンリーダーに変化を通知する。
                   readOnly textarea をラップするだけでは値変化が読み上げられないため分離する。
                   srOnly で視覚的に隠し SR のみに読ませる。 */}
@@ -288,14 +279,13 @@ export default function ImageBase64Tile({
                   >
                     Base64
                   </label>
-                  <Button
-                    size="small"
-                    onClick={() => copy(base64Result.base64, "base64")}
-                  >
-                    {copiedKey === "base64" ? COPIED_LABEL : "コピー"}
-                  </Button>
+                  <CopyButton
+                    text={base64Result.base64}
+                    target="Base64"
+                    align="end"
+                  />
                 </div>
-                {/* A-1: Textarea "mono" バリアント。role=status は textarea に直付与しない（C-3 禁止パターン）。 */}
+                {/* Textarea "mono" バリアント。role=status は textarea に直付与しない（禁止パターン）。 */}
                 <Textarea
                   id={base64OutputId}
                   variant="mono"
@@ -314,12 +304,11 @@ export default function ImageBase64Tile({
                   >
                     Data URI
                   </label>
-                  <Button
-                    size="small"
-                    onClick={() => copy(base64Result.dataUri, "datauri")}
-                  >
-                    {copiedKey === "datauri" ? COPIED_LABEL : "コピー"}
-                  </Button>
+                  <CopyButton
+                    text={base64Result.dataUri}
+                    target="Data URI"
+                    align="end"
+                  />
                 </div>
                 <Textarea
                   id={dataUriOutputId}

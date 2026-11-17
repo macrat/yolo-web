@@ -3,8 +3,6 @@
 /**
  * EmailValidatorTile — メールアドレスバリデーターの単一正典タイル
  *
- * cycle-228 T-10 で EmailValidatorPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -23,16 +21,16 @@
  * ## 使い方
  *
  * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * // ツールの詳細ページ（src/app/tools/<slug>/page.tsx）が描画する
  * <EmailValidatorTile variant="full" />
  * ```
  *
- * ## アクセシビリティ（C-3 準拠）
+ * ## アクセシビリティ
  *
  * - role="status" aria-live="polite" のライブリージョンに実テキストノードのサマリを置く
  * - バッジアイコン SVG は aria-hidden="true" で装飾専用を宣言
- * - ①-4: タイポ提案がある場合は「有効（要確認）」として警告色で表示し矛盾シグナルを解消
- * - ②-15: コピーボタンは実装しない（知る対象のため不要）
+ * - タイポの提案があるときは、判定を「有効（要確認）」と文言で言い、有効と提案が食い違って見えないようにする
+ * - コピーボタンは実装しない（知る対象のため不要）
  */
 
 import { useId, useState } from "react";
@@ -86,7 +84,7 @@ export default function EmailValidatorTile({
   // 空のときは EMPTY_STATE を使い（エラー非表示）、入力があるときのみ検証する
   const result = email.trim() ? validateEmail(email) : EMPTY_STATE;
 
-  /** タイポ提案の有無（①-4 矛盾シグナル解消の判定） */
+  /** タイポ提案の有無（「有効」と提案が食い違って見えないよう「有効（要確認）」にする判定） */
   const hasSuggestion = result.suggestions.length > 0;
 
   // ---------- ハンドラ ----------
@@ -117,7 +115,7 @@ export default function EmailValidatorTile({
       </div>
 
       {/*
-       * ライブリージョン（C-3）:
+       * ライブリージョン:
        * role="status" aria-live="polite" で動的に通知。
        * 実テキストノードのサマリを直接配置（readOnly textarea ラップ禁止）。
        * 結果ボックス全体をライブリージョンとして兼用。
@@ -134,7 +132,7 @@ export default function EmailValidatorTile({
           <>
             {/*
              * 判定バッジのテキスト「有効」「有効（要確認）」「無効」がライブリージョン内の
-             * 実テキストノードとして機能し、C-3 要件を満たす。
+             * 実テキストノードとして読み上げられる。
              */}
             <div
               className={
@@ -193,15 +191,17 @@ export default function EmailValidatorTile({
               </span>
             </div>
 
-            {/* タイポ提案（①-4: warning 色で強調。コピーボタンなし＝②-15確定） */}
+            {/* タイポの提案。コピーボタンを持たないのは、写すものではなく確かめるものだから。 */}
             {result.suggestions.length > 0 && (
-              <div className={styles.suggestionPanel}>
-                <h2 className={styles.suggestionTitle}>
+              <div className={styles.notice}>
+                <h2 className={styles.noticeTitle}>
                   もしかして（タイポの可能性）
                 </h2>
-                <ul className={styles.suggestionList}>
+                <ul className={styles.noticeList}>
                   {result.suggestions.map((sug, i) => (
-                    <li key={i}>{sug.replace("もしかして: ", "")}</li>
+                    <li key={i} className={styles.suggestionItem}>
+                      {sug.replace("もしかして: ", "")}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -211,8 +211,8 @@ export default function EmailValidatorTile({
                 複数エラーがある場合は各エラーを個別の ErrorMessage として表示する。
                 logic.ts が返すエラーメッセージはすべて日本語のため、そのまま渡す。 */}
             {result.errors.length > 0 && (
-              <div className={styles.errorPanel}>
-                <h2 className={styles.listTitle}>エラー</h2>
+              <div className={styles.notice}>
+                <h2 className={styles.noticeTitle}>エラー</h2>
                 {result.errors.map((err, i) => (
                   <ErrorMessage key={i} message={err} />
                 ))}
@@ -221,9 +221,9 @@ export default function EmailValidatorTile({
 
             {/* 警告リスト */}
             {result.warnings.length > 0 && (
-              <div className={styles.warningPanel}>
-                <h2 className={styles.listTitle}>警告</h2>
-                <ul className={styles.warningList}>
+              <div className={styles.notice}>
+                <h2 className={styles.noticeTitle}>警告</h2>
+                <ul className={styles.noticeList}>
                   {result.warnings.map((warn, i) => (
                     <li key={i}>{warn}</li>
                   ))}

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 
 // analytics をモック（外部サービス統合はモックする・testing.md）
@@ -16,7 +16,6 @@ function renderTracker() {
   return render(
     <TileInteractionTracker
       itemId="base64"
-      className="content"
       ariaLabel="Base64エンコード・デコードツール"
     >
       <button type="button">変換する</button>
@@ -30,14 +29,13 @@ describe("TileInteractionTracker", () => {
     vi.clearAllMocks();
   });
 
-  it("children を <section>（className / aria-label 付き）内に描画する", () => {
+  it("children を名前の付いた <section> 内に描画する", () => {
     renderTracker();
     const section = screen.getByRole("region", {
       name: "Base64エンコード・デコードツール",
     });
-    expect(section).toHaveClass("content");
     expect(
-      screen.getByRole("button", { name: "変換する" }),
+      within(section).getByRole("button", { name: "変換する" }),
     ).toBeInTheDocument();
   });
 
@@ -97,7 +95,6 @@ describe("TileInteractionTracker", () => {
     const html = renderToString(
       <TileInteractionTracker
         itemId="base64"
-        className="content"
         ariaLabel="Base64エンコード・デコードツール"
       >
         <div>本体</div>

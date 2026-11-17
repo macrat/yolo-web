@@ -159,8 +159,7 @@ describe("analyzeText", () => {
     expect(r.charCount).toBe(9); // H,e,l,l,o, ,あ,い,う
     expect(r.charCountNoSpaces).toBe(8);
     expect(r.lineCount).toBe(1);
-    // Intl.Segmenter（SSoT）では "Hello" + "あ" + "いう" = 3 単語
-    // （旧実装の空白split では 2 だったが、日本語形態素解析として正しい結果に更新）
+    // Intl.Segmenter（SSoT）では "Hello" + "あ" + "いう" = 3 単語（空白で分けるのではなく、日本語の語の区切りで数える）
     expect(r.wordCount).toBe(3);
     expect(r.singleByteChars).toBe(6); // H,e,l,l,o,space
     expect(r.threeByteChars).toBe(3); // あ,い,う

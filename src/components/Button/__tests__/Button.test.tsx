@@ -1,8 +1,13 @@
 import { expect, test, describe, vi, it } from "vitest";
+import { createRef } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
-import Button from "@/components/Button";
+import Button, {
+  buttonFaceBoxClassName,
+  buttonUnderlineClassName,
+} from "@/components/Button";
+import phrasedStyles from "@/components/PhrasedText/PhrasedText.module.css";
 
 describe("Button", () => {
   test("children が描画される", () => {
@@ -28,8 +33,21 @@ describe("Button", () => {
     );
   });
 
-  // 旧 ghost variant は廃止。TypeScript 型から除外されているため、
-  // ランタイムでも "ghost" を受け付けないことを確認する（型レベルの保証で十分）。
+  test("primary は反転の地を持つ（data-inverted）", () => {
+    render(<Button variant="primary">primary</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("data-inverted");
+  });
+
+  test("default は反転の地を持たない", () => {
+    render(<Button>default</Button>);
+    expect(screen.getByRole("button")).not.toHaveAttribute("data-inverted");
+  });
+
+  test("ref は button 要素に渡る", () => {
+    const ref = createRef<HTMLButtonElement>();
+    render(<Button ref={ref}>次へ</Button>);
+    expect(ref.current).toBe(screen.getByRole("button", { name: "次へ" }));
+  });
 
   test("variant を省略すると data-variant='default' がデフォルト", () => {
     render(<Button>省略</Button>);
@@ -37,21 +55,6 @@ describe("Button", () => {
       "data-variant",
       "default",
     );
-  });
-
-  test("size prop: default は data-size='default' を持つ", () => {
-    render(<Button size="default">default size</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "default");
-  });
-
-  test("size prop: small は data-size='small' を持つ", () => {
-    render(<Button size="small">small</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "small");
-  });
-
-  test("size を省略すると data-size='default' がデフォルト", () => {
-    render(<Button>省略</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "default");
   });
 
   test("通常時に onClick が発火する", () => {
@@ -92,27 +95,117 @@ describe("Button", () => {
     expect(screen.getByRole("button")).toHaveAttribute("type", "reset");
   });
 
-  // WCAG 2.5.5 AAA タップターゲット保証
-  it(".button has min-height: 44px for WCAG 2.5.5 AAA tap target", () => {
+  it("ボタンの面の箱は min-height: 44px を持つ（§6 tap target）", () => {
     const cssPath = resolve(__dirname, "../Button.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    const buttonBlock = css.match(/\.button\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(buttonBlock).toContain("min-height: 44px");
+    const faceBoxBlock = css.match(/\.faceBox\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(faceBoxBlock).toContain("min-height: 44px");
   });
 
-  // small は密集レイアウト限定で WCAG 非準拠のまま据え置く設計意図の回帰防止
-  // .button からの cascade 継承（min-height: 44px）を unset で明示的に切ること
-  it(".sizeSmall does not enforce min-height: 44px (intentional: dense-layout-only variant)", () => {
-    const cssPath = resolve(__dirname, "../Button.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const sizeSmallBlock = css.match(/\.sizeSmall\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(sizeSmallBlock).not.toContain("min-height: 44px");
+  test("どの種類のボタンも面の箱を持ち、プライマリでないボタンは下線を持つ", () => {
+    render(
+      <>
+        <Button>既定</Button>
+        <Button variant="primary">主</Button>
+      </>,
+    );
+    const plain = screen.getByRole("button", { name: "既定" });
+    const primary = screen.getByRole("button", { name: "主" });
+    expect(plain).toHaveClass(buttonFaceBoxClassName, buttonUnderlineClassName);
+    expect(primary).toHaveClass(buttonFaceBoxClassName);
+    expect(primary).not.toHaveClass(buttonUnderlineClassName);
   });
 
-  it(".sizeSmall explicitly sets min-height: unset to cut cascade from .button", () => {
-    const cssPath = resolve(__dirname, "../Button.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const sizeSmallBlock = css.match(/\.sizeSmall\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(sizeSmallBlock).toContain("min-height: unset");
+  test("無効で理由があれば、理由を横に出してボタンの説明にする", () => {
+    render(
+      <Button disabled disabledReason="文字を入れると押せます">
+        変換
+      </Button>,
+    );
+    const button = screen.getByRole("button", { name: "変換" });
+    expect(button).toHaveAccessibleDescription("文字を入れると押せます");
+    expect(screen.getByText("文字を入れると押せます")).toBeInTheDocument();
+  });
+
+  test("有効なときは理由を出さない", () => {
+    render(<Button disabledReason="文字を入れると押せます">変換</Button>);
+    expect(
+      screen.queryByText("文字を入れると押せます"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button")).not.toHaveAttribute("aria-describedby");
+  });
+
+  test("呼び出し側の aria-describedby と理由を両方つなぐ", () => {
+    render(
+      <>
+        <p id="note">注記</p>
+        <Button disabled disabledReason="理由" aria-describedby="note">
+          変換
+        </Button>
+      </>,
+    );
+    expect(screen.getByRole("button")).toHaveAccessibleDescription("注記 理由");
+  });
+
+  test("字だけの面は1つの文節として、文節で折るクラスの span で組む", () => {
+    render(<Button>今日に設定</Button>);
+    const face = screen.getByRole("button", {
+      name: "今日に設定",
+    }).firstElementChild!;
+    expect(face.tagName).toBe("SPAN");
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face.innerHTML).toBe("今日に設定");
+  });
+
+  test("字と値を並べた面も、<wbr> を置かずに1つの文節として組む", () => {
+    const count = 12;
+    const label = "件";
+    render(
+      <Button>
+        {count}
+        {label}を表示
+      </Button>,
+    );
+    const face = screen.getByRole("button", {
+      name: "12件を表示",
+    }).firstElementChild!;
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face.innerHTML).toBe("12件を表示");
+  });
+
+  test("phrases の面は並びのあいだにだけ <wbr> を置き、読み上げの名前は元の文のまま", () => {
+    render(<Button phrases={["画像を", "保存"]} />);
+    const button = screen.getByRole("button", { name: "画像を保存" });
+    const face = button.firstElementChild!;
+    expect(face.tagName).toBe("SPAN");
+    expect(face).toHaveClass(phrasedStyles.phrased);
+    expect(face.innerHTML).toBe("画像を<wbr>保存");
+    expect(button.querySelectorAll("wbr")).toHaveLength(1);
+  });
+
+  test("phrases と children は両方を渡せない", () => {
+    // @ts-expect-error 面は phrases と children のどちらか一方だけを受け取る
+    render(<Button phrases={["画像を", "保存"]}>画像を保存</Button>);
+  });
+
+  test("要素を含む面はそのまま組む", () => {
+    render(
+      <Button>
+        <span className="face">送信</span>
+      </Button>,
+    );
+    const face = screen.getByRole("button", {
+      name: "送信",
+    }).firstElementChild!;
+    expect(face).toHaveClass("face");
+    expect(face).not.toHaveClass(phrasedStyles.phrased);
+  });
+
+  test("面の字の折り方は PhrasedText だけが持ち、auto-phrase に頼らない", () => {
+    const css = readFileSync(
+      resolve(__dirname, "../Button.module.css"),
+      "utf-8",
+    );
+    expect(css).not.toMatch(/auto-phrase/);
   });
 });

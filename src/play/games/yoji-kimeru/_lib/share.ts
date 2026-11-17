@@ -1,50 +1,28 @@
-import type { CharFeedback, Difficulty, YojiGameState } from "./types";
-
-/** Map difficulty to a Japanese label for share text. */
-const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  beginner: "初級",
-  intermediate: "中級",
-  advanced: "上級",
-};
+import type { Difficulty, YojiGameState } from "./types";
+import { difficultyNames } from "./constants";
+import { FEEDBACK_MARKS } from "./feedbackMarks";
 
 /**
- * Map a CharFeedback to its emoji representation.
- */
-function charFeedbackToEmoji(fb: CharFeedback): string {
-  switch (fb) {
-    case "correct":
-      return "\u{1F7E9}"; // green square
-    case "present":
-      return "\u{1F7E8}"; // yellow square
-    case "absent":
-      return "\u2B1C"; // white square
-  }
-}
-
-/**
- * Generate the share text for a completed game.
+ * 解き終えた回の共有の文。推測ごとに1行、盤と同じ印（◯・△・×）を並べ、答えを明かさずにどう解いたかを
+ * 見せる。ページの URL は含めない（共有先ごとの形で ShareButtons が付ける）。
  *
- * Format:
  *   四字キメル #42 (中級) 3/6
- *   🟩⬜🟨🟩
- *   🟩🟩🟨🟩
- *   🟩🟩🟩🟩
+ *   ◯×△◯
+ *   ◯◯△◯
+ *   ◯◯◯◯
  *   #四字キメル #yolosnet
- *   https://.../play/yoji-kimeru
  */
 export function generateShareText(
   state: YojiGameState,
   difficulty: Difficulty,
 ): string {
   const result = state.status === "won" ? `${state.guesses.length}/6` : "X/6";
-  const diffLabel = DIFFICULTY_LABELS[difficulty];
-
   const rows = state.guesses.map((g) =>
-    g.charFeedbacks.map(charFeedbackToEmoji).join(""),
+    g.charFeedbacks.map((feedback) => FEEDBACK_MARKS[feedback].mark).join(""),
   );
-
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/play/yoji-kimeru`;
-
-  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet\n${url}`;
+  return [
+    `四字キメル #${state.puzzleNumber} (${difficultyNames[difficulty]}) ${result}`,
+    ...rows,
+    "#四字キメル #yolosnet",
+  ].join("\n");
 }

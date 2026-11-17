@@ -13,11 +13,9 @@ vi.mock("@/play/recommendation", () => ({
       title: "漢字力診断",
       shortTitle: "漢字力診断",
       shortDescription: "あなたの漢字力は？",
-      icon: "📝",
       category: "knowledge",
       contentType: "quiz",
       description: "漢字の実力を測る診断",
-      accentColor: "#ff5733",
       keywords: ["漢字", "知識"],
       publishedAt: "2026-01-01T00:00:00+09:00",
     },
@@ -62,10 +60,23 @@ vi.mock("@/play/seo", () => ({
 }));
 
 describe("DailyFortunePage (/play/daily)", () => {
-  it("renders the page wrapper", () => {
+  it("builds the page from sections: the fortune first, then the recommendations", () => {
+    const { container } = render(<DailyFortunePage />);
+    const sections = container.querySelectorAll(":scope > section");
+    expect(sections).toHaveLength(2);
+    expect(
+      within(sections[0] as HTMLElement).getByRole("heading", { level: 1 }),
+    ).toHaveTextContent("今日のユーモア運勢");
+    expect(
+      within(sections[1] as HTMLElement).getByRole("heading", { level: 2 }),
+    ).toHaveTextContent("他のジャンルも試してみよう");
+  });
+
+  it("renders the page title as the main heading", () => {
     render(<DailyFortunePage />);
-    const main = document.querySelector('[class*="wrapper"]');
-    expect(main).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "今日のユーモア運勢" }),
+    ).toBeInTheDocument();
   });
 
   it("renders breadcrumb navigation", () => {
@@ -75,21 +86,21 @@ describe("DailyFortunePage (/play/daily)", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders breadcrumb with 3 items (ホーム > 遊ぶ > 今日のユーモア運勢)", () => {
+  it("renders breadcrumb with 3 items (ホーム > 遊び > 今日のユーモア運勢)", () => {
     render(<DailyFortunePage />);
     const breadcrumb = screen.getByRole("navigation", {
       name: "パンくずリスト",
     });
     const homeLink = within(breadcrumb).getByRole("link", { name: "ホーム" });
-    const playLink = within(breadcrumb).getByRole("link", { name: "遊ぶ" });
+    const playLink = within(breadcrumb).getByRole("link", { name: "遊び" });
     expect(homeLink).toHaveAttribute("href", "/");
     expect(playLink).toHaveAttribute("href", "/play");
   });
 
-  it("renders RecommendedContent navigation for exit links", () => {
+  it("renders RecommendedContent list for exit links", () => {
     render(<DailyFortunePage />);
     expect(
-      screen.getByRole("navigation", { name: "おすすめコンテンツ" }),
+      screen.getByRole("list", { name: "他のジャンルも試してみよう" }),
     ).toBeInTheDocument();
   });
 

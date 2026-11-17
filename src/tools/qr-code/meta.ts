@@ -1,11 +1,21 @@
 import type { ToolMeta } from "@/tools/types";
+import {
+  DEFAULT_LEVEL,
+  LOWEST_LEVEL,
+  formatCount,
+  levelName,
+  maxChars,
+} from "./levels";
+
+const DEFAULT = maxChars(DEFAULT_LEVEL);
+const LOWEST = maxChars(LOWEST_LEVEL);
 
 export const meta: ToolMeta = {
   slug: "qr-code",
   name: "QRコード生成",
   nameEn: "QR Code Generator",
   description:
-    "テキストやURLからQRコードを生成するツール。SVG形式で高品質なQRコードを作成。エラー訂正レベルの設定に対応。登録不要・無料。",
+    "テキストやURLからQRコードを作り、PNG画像で保存できる無料ツール。日本語の文も正しく読み取れるQRコードになり、エラー訂正レベル（L/M/Q/H）も選べます。登録は不要です。",
   shortDescription: "テキストやURLからQRコードを生成",
   keywords: [
     "QRコード生成",
@@ -14,13 +24,13 @@ export const meta: ToolMeta = {
     "URL QRコード",
     "QRコード無料",
   ],
-  category: "generator",
+  category: "image",
   relatedSlugs: ["password-generator", "url-encode"],
   publishedAt: "2026-02-13T19:03:42+09:00",
-  updatedAt: "2026-02-28T13:00:40+09:00",
+  updatedAt: "2026-09-27T15:49:23+09:00",
   structuredDataType: "WebApplication",
   howItWorks:
-    "入力されたテキストやURLをQRコード規格でエンコードし、SVG形式でブラウザ上に高品質なQRコードを表示します。エラー訂正レベル（L/M/Q/H）を選択でき、PNG形式でダウンロードすることも可能です。生成処理はすべてブラウザ上で完結します。",
+    "入力されたテキストやURLをQRコード規格でエンコードし、PNG画像としてブラウザ上に表示します。日本語の文はUTF-8でエンコードするので、スマートフォンの読み取りアプリで正しく読めます。エラー訂正レベル（L/M/Q/H）を選択でき、表示した画像をそのままPNG形式でダウンロードできます。生成処理はすべてブラウザ上で完結します。",
   faq: [
     {
       question: "エラー訂正レベルとは何ですか？",
@@ -30,12 +40,11 @@ export const meta: ToolMeta = {
     {
       question: "生成したQRコードはどの形式でダウンロードできますか？",
       answer:
-        "PNG形式でダウンロードできます。画面上ではSVG形式で高品質に表示されるため、そのままスクリーンショットで保存することも可能です。",
+        "画像の下の「PNG画像をダウンロード」のボタンで、PNG形式で保存できます。画面に表示された画像がそのまま保存されます。",
     },
     {
       question: "QRコードに入力できるテキストの長さに制限はありますか？",
-      answer:
-        "QRコードの規格上、数字のみなら最大7,089文字、英数字なら4,296文字、バイナリデータなら2,953バイトまで格納できます。ただしエラー訂正レベルが高いほど格納できるデータ量は少なくなります。",
+      answer: `あります。このツールは文をUTF-8でエンコードするので、日本語は1字で半角英数の約3倍の容量を使います。既定のエラー訂正レベル「${levelName(DEFAULT_LEVEL)}」では、半角英数（数字だけの文も同じ）なら${formatCount(DEFAULT.ascii)}字、日本語なら${formatCount(DEFAULT.japanese)}字まで入ります。いちばん低いレベル「${levelName(LOWEST_LEVEL)}」にすると、半角英数なら${formatCount(LOWEST.ascii)}字、日本語なら${formatCount(LOWEST.japanese)}字まで増えます。レベルを上げるほど、入る字の数は減ります。長い文ほどQRコードの点が細かくなり、スマートフォンなどの小さな画面に出すと読み取りにくくなります。読み取ってもらうときは、文を短くするか、ダウンロードしたPNG画像を大きく表示するか印刷してください。`,
     },
   ],
 };

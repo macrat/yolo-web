@@ -1,168 +1,143 @@
 /* KeigoReferenceTile.module.css
- * cycle-228 T-18: KeigoReferencePage.module.css をタイル向けに移植。
- * Panel がルート要素のため .container クラスは不要（Panel.module.css に委譲）。
- *
- * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
- * DESIGN トークン準拠:
- * - font-weight の最大値は 600（700以上は禁止）
- * - 角丸は --radius（0）に統一・フォーム境界線は --rule-strong
- * - 「よくある間違い」の 誤/正 は色分けしない。誤は墨（--ink）、
- *   正は朱（--accent）で「持ち帰るべき正答」だけを強調する。
- *   誤/正の区別は文言ラベル「誤:」「正:」が担う（DESIGN §2）。
+ * 枠と内側の余白はルートの Panel（§5 のボックス）が持つ。
+ * 「よくある間違い」の誤/正は色分けせず、文言のラベル「誤:」「正:」が区別を担う。
  */
 
-/* タイル内レイアウト（Panel のパディング内側） */
+/* 表示する内容の切り替えと、その下の中身を 16px あけて積む（§5 の間隔）。早見表の件数の行と操作の組のあいだと
+ * 同じ間隔にして、操作どうしを同じ並びに見せる。 */
 .inner {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-16);
 }
 
-/* 検索バー: 操作側 flexShrink:0・膨張側 flex:1（AP-P21 スクロール競合防止） */
-.searchBar {
+.head {
   display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-.searchInputWrapper {
-  flex: 1;
-  min-width: 200px;
-}
-
-/* カテゴリフィルター SegmentedControl のレイアウト調整 */
-.categoryControl {
-  flex-shrink: 0;
-}
-
-/* C-3: ライブリージョンサマリ */
-.resultCount {
-  font-size: 0.875rem;
-  color: var(--ink-2);
-  min-height: 1.25rem;
-  flex-shrink: 0;
-}
-
-/* デスクトップテーブル */
+/* 広い画面の表（§5）。外枠を持たず、見出し行は太字で、行どうし・列どうしを細い罫線で区切る。表の外側の縁の
+ * 左右では、セルは余白を持たない。セルの上下の余白を、先頭のセルの開閉のボタンが 44px の中で字を置く位置と
+ * 揃え、行の字の1行目を並べる。 */
 .table {
+  --row-line: calc(var(--text-body) * var(--leading-body));
   width: 100%;
   border-collapse: collapse;
 }
 
-.th {
-  font-size: 0.875rem;
-  font-weight: 600;
-  background-color: var(--paper-2);
-  border-bottom: 2px solid var(--rule-strong);
-  padding: 0.6rem 0.75rem;
-  text-align: left;
+.table th,
+.table td {
+  padding: max(0px, (44px - var(--row-line)) / 2) var(--space-8);
+  border: var(--rule-w-hair) solid var(--rule-2);
   color: var(--ink);
-}
-
-.tableRow {
-  border-bottom: 1px solid var(--rule);
-  transition: background-color 0.15s;
-}
-
-.tableRow:hover {
-  background-color: var(--paper-2);
-}
-
-.tableRowExpanded {
-  background-color: var(--paper-2);
-}
-
-.td {
-  padding: 0.6rem 0.75rem;
-  font-size: 0.9rem;
-  color: var(--ink);
+  line-height: var(--row-line);
+  text-align: start;
   vertical-align: top;
 }
 
-/* 先頭の th scope="row" セルのスタイル（td と同等だが th 要素） */
-.casualTh {
-  font-weight: inherit;
+.table thead th {
+  font-weight: 700;
+  border-top: none;
 }
 
-.casualCell {
-  font-weight: 600;
+.table tr > :first-child {
+  border-left: none;
+  padding-inline-start: 0;
+}
+
+.table tr > :last-child {
+  border-right: none;
+  padding-inline-end: 0;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: none;
+}
+
+/* 先頭のセルは普通語の開閉のボタンを持つ。セルの余白はボタンが押せる範囲の内側に持つ。 */
+.table .casualCell {
+  padding: 0;
+}
+
+.kindCell {
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  white-space: nowrap;
 }
 
 /*
- * <th scope="row"> 内の実 <button> にインタラクションを持たせる。
- * ボタンはテキストとして見えるように外観をリセット。
- * <tr> に role="button" を付けると ARIA in HTML 仕様に違反するため
- * この設計を採用（cycle-225 reviewer指摘1対応）。
+ * <th scope="row"> の中のボタンで、その行の例文を開閉する。例文は次の行に出るので details で組めず、
+ * アコーディオン（§6）と同じ三角（DisclosureTriangle）をボタンに置く。縁の見えないコントロールなので、三角を
+ * 表の左端（本文の左端）に置き、左右の余白を持つ字の箱を左へ張り出させる（§5）。hover の線とフォーカスの
+ * リングは globals.css の既定に従い、字の箱の内側に出る。
  */
 .expandButton {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  padding-inline: var(--text-box-pad);
+  margin-inline-start: calc(-1 * var(--text-box-pad));
   background: none;
   border: none;
-  padding: 0;
   font: inherit;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
   cursor: pointer;
-  text-align: left;
-  width: 100%;
+  text-align: start;
   line-height: inherit;
 }
 
-.expandButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius);
+/* 「・」で区切った敬語の形。形の中の字どうしでは折らず、折る所を「・」の後ろ（<wbr>）に限る。1つの形が1行に
+ * 収まらないときだけ、形の中で折る（§4）。 */
+.forms {
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
-/* 例文パネル（アコーディオン） */
-.examplePanel {
-  padding: 0.75rem 1rem;
-  background-color: var(--paper-2);
-  border-radius: var(--radius);
-}
-
-.examplePanelRow {
-  background-color: var(--paper-2);
-}
-
-.examplePanelRow td {
-  padding: 0 0.75rem 0.75rem;
-}
-
-.exampleItem {
-  margin-bottom: 0.5rem;
-}
-
-.exampleItem:last-child {
-  margin-bottom: 0;
+/* 開いた行の例文。場面どうしを 16px あけ、場面の名前・言い方の行・注記を上から積む（§5 の間隔）。 */
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
 .exampleContext {
-  font-size: 0.8rem;
-  font-weight: 600;
+  margin: 0;
   color: var(--ink-2);
-  margin-bottom: 0.25rem;
+  font-size: var(--text-small);
 }
 
+.exampleLines {
+  margin: 0;
+}
+
+/* 言い方の名前の右に例文を置き、例文の幅が足りなければ名前の下へ回して、1字ずつ折れる細い列にしない。
+ * 名前の幅を揃えて、例文の左端を行ごとに揃える。 */
 .exampleLine {
-  font-size: 0.875rem;
-  color: var(--ink);
-  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
+  align-items: baseline;
 }
 
 .exampleLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 3.5rem;
   color: var(--ink-2);
-  margin-right: 0.4rem;
+  font-size: var(--text-small);
 }
 
-.noteText {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  font-style: italic;
-  margin-top: 0.5rem;
+.exampleText {
+  flex: 1 1 12em;
+  min-width: 0;
+  margin: 0;
+}
+
+.note {
+  margin: 0;
 }
 
 /* よくある間違いタブ */
@@ -172,7 +147,6 @@
 
 .mistakeSectionTitle {
   font-size: 1rem;
-  font-weight: 600;
   color: var(--ink);
   margin: 0 0 0.75rem;
 }
@@ -211,81 +185,74 @@
   line-height: 1.5;
 }
 
-/* 検索結果なし */
-.noResults {
-  font-size: 0.9rem;
-  color: var(--ink-2);
-  text-align: center;
-  padding: 2rem 0;
-}
-
-/* モバイルカードビュー（デフォルト非表示） */
-.mobileCards {
+/* 狭い画面の行（広い画面では表を出すので隠す）。1行1項目で、行どうしを細い線で区切る。 */
+.mobileRows {
   display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.mobileCard {
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  background-color: var(--paper);
-  cursor: pointer;
-  transition: background-color 0.1s;
+.mobileRow + .mobileRow {
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.mobileCard:hover {
-  background-color: var(--paper-2);
-}
-
-.mobileCard:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.mobileCardTitle {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--ink);
-  margin-bottom: 0.4rem;
-}
-
-.mobileCardRow {
+/* 普通語の行の右端に分類を置き、その下に敬語の形を1つずつ並べる。普通語は短い語なので、分類を並べても語を
+ * 圧迫しない（§7 の広い画面の行と同じ位置）。収まらない幅では、分類は普通語の下へ回る。分類と敬語の形は読み上げの
+ * 説明として1つの要素に包まれるので、その要素を display: contents にして、字を普通語と同じ並びに置く。 */
+.mobileRowHead {
   display: flex;
-  gap: 0.4rem;
-  font-size: 0.875rem;
-  color: var(--ink);
-  line-height: 1.5;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-16);
 }
 
-.mobileCardLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
+.mobileRowTitle {
+  min-width: 0;
+  font-weight: 700;
+}
+
+.mobileRowDetails {
+  display: contents;
+}
+
+.mobileRowKind {
+  margin-inline-start: auto;
   color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+/* 敬語の形の名前の右に語を置き、名前の右に「・」までの1つの形が収まらなければ語を名前の下へ回して、形の途中で
+ * 折らない。名前の下でも1行に収まらない形は、行の幅の中で形の途中で折る。そのため、この組の最小の幅を形の長さでは
+ * なく行の幅に合わせ、語は行の幅を越えない。語は来訪者が引きに来た答えそのものなので、広い画面の表と同じ本文の
+ * 大きさで組み、名前だけを補助情報の字にする（§4）。 */
+.mobileRowForm {
+  flex-basis: 100%;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-8);
+}
+
+.mobileRowLabel {
+  color: var(--ink-2);
+  font-size: var(--text-small);
   min-width: 3.5rem;
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .searchBar {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.mobileRowValue {
+  flex: 1 1 8em;
+  max-width: 100%;
+}
 
-  .searchInputWrapper {
-    min-width: unset;
-  }
-
-  .categoryControl {
-    width: 100%;
-  }
-
-  /* モバイルではテーブル非表示・カード表示 */
+@media (width < 45rem) {
   .desktopTable {
     display: none;
   }
 
-  .mobileCards {
+  .mobileRows {
     display: block;
   }
 }

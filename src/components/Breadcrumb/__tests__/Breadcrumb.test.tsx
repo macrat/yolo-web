@@ -7,7 +7,7 @@ describe("Breadcrumb", () => {
   const items = [
     { label: "ホーム", href: "/" },
     { label: "ツール", href: "/tools" },
-    { label: "文字数カウント" },
+    { label: "文字数カウント", href: "/tools/char-count" },
   ];
 
   test("items 配列の長さに応じた <li> が生成される", () => {
@@ -17,32 +17,44 @@ describe("Breadcrumb", () => {
   });
 
   test("1 件のみの場合も <li> が 1 つ生成される", () => {
-    render(<Breadcrumb items={[{ label: "ホーム" }]} />);
+    render(<Breadcrumb items={[{ label: "ホーム", href: "/" }]} />);
     const listItems = screen.getAllByRole("listitem");
     expect(listItems).toHaveLength(1);
   });
 
-  test("最後の要素に aria-current='page' が付く", () => {
-    render(<Breadcrumb items={items} />);
-    const current = screen.getByText("文字数カウント");
-    expect(current).toHaveAttribute("aria-current", "page");
-  });
-
-  test("最後の要素にリンクがない（href なし）", () => {
+  test("どの項目もリンクで、行き先を持つ", () => {
     render(<Breadcrumb items={items} />);
     const links = screen.getAllByRole("link");
-    // ホームとツールの 2 リンクのみで、最後の要素はリンクではない
-    expect(links).toHaveLength(2);
-    const linkNames = links.map((l) => l.textContent);
-    expect(linkNames).not.toContain("文字数カウント");
+    expect(links.map((link) => link.textContent)).toEqual([
+      "ホーム",
+      "ツール",
+      "文字数カウント",
+    ]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/",
+      "/tools",
+      "/tools/char-count",
+    ]);
   });
 
-  test("href を持つ要素はリンクとしてレンダリングされる", () => {
+  // §6 の現在地: リンクのままで、キーボードで到達でき、aria-current で現在地と伝わる
+  test("最後の項目だけが現在地（aria-current='page'）のリンクになる", () => {
     render(<Breadcrumb items={items} />);
-    const homeLink = screen.getByRole("link", { name: "ホーム" });
-    expect(homeLink).toHaveAttribute("href", "/");
-    const toolsLink = screen.getByRole("link", { name: "ツール" });
-    expect(toolsLink).toHaveAttribute("href", "/tools");
+    const current = screen.getByRole("link", { name: "文字数カウント" });
+    expect(current).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "ツール" })).not.toHaveAttribute(
+      "aria-current",
+    );
+    expect(screen.getByRole("link", { name: "ホーム" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
+  test("どの項目も縁の見えないコントロールの字の箱を持つ", () => {
+    render(<Breadcrumb items={items} />);
+    for (const link of screen.getAllByRole("link")) {
+      expect(link).toHaveAttribute("data-text-box", "inline");
+    }
   });
 
   test("nav 要素に aria-label='パンくずリスト' が付く", () => {
@@ -58,15 +70,19 @@ describe("Breadcrumb", () => {
     expect(list.tagName).toBe("OL");
   });
 
-  test("separator が JSX で明示的に各 li に配置されている（CSS ::before ではなく inline 方式）", () => {
+  // 区切りを前の項目の後ろに置くと、li のあいだで折り返しても項目の中で折り返しても、行の頭が項目の名前になる
+  test("区切りは、いまのページより前の各 li の末尾にある", () => {
     const { container } = render(<Breadcrumb items={items} />);
-    // separator は JSX <span aria-hidden="true"> で生成し、current span と同じ li 内にある
-    // これにより SP で折返し時に「/」が単独行に落ちる問題を防ぐ
     const listItems = container.querySelectorAll("li");
-    // 2 番目・3 番目 li にそれぞれ aria-hidden="true" の separator span が含まれる
-    expect(listItems[0].querySelector("[aria-hidden='true']")).toBeNull();
-    expect(listItems[1].querySelector("[aria-hidden='true']")).not.toBeNull();
-    expect(listItems[2].querySelector("[aria-hidden='true']")).not.toBeNull();
+    expect(listItems[0].lastElementChild).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(listItems[1].lastElementChild).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(listItems[2].querySelector("[aria-hidden='true']")).toBeNull();
   });
 
   test("separator の textContent が '/' であること", () => {
@@ -90,7 +106,6 @@ describe("Breadcrumb", () => {
     expect(parsed.itemListElement[0].name).toBe("ホーム");
     expect(parsed.itemListElement[0].item).toBe(`${BASE_URL}/`);
     expect(parsed.itemListElement[2].name).toBe("文字数カウント");
-    // 最後の要素（現在位置）は item プロパティを持たない
-    expect(parsed.itemListElement[2].item).toBeUndefined();
+    expect(parsed.itemListElement[2].item).toBe(`${BASE_URL}/tools/char-count`);
   });
 });

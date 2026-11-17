@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
 import { KANJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import KanjiDetail from "@/dictionary/_components/kanji/KanjiDetail";
 import { generateKanjiPageMetadata, generateKanjiJsonLd } from "@/lib/seo";
@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { char } = await params;
   const decoded = decodeURIComponent(char);
   const kanji = getKanjiByChar(decoded);
-  if (!kanji) return {};
+  if (!kanji) notFound();
   return generateKanjiPageMetadata(kanji);
 }
 
@@ -42,14 +42,18 @@ export default async function KanjiDetailPage({
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
         { label: "漢字辞典", href: "/dictionary/kanji" },
-        { label: kanji.character },
+        {
+          label: kanji.character,
+          href: `/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
+        },
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/kanji/${encodeURIComponent(kanji.character)}`}
       shareTitle={`漢字「${kanji.character}」の情報`}
+      shareHeading={["この", "漢字を", "共有"]}
       playRecommendations={playRecommendations}
     >
-      <KanjiDetail kanji={kanji} />
+      {(head) => <KanjiDetail kanji={kanji} head={head} />}
     </DictionaryDetailLayout>
   );
 }

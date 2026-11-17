@@ -1,267 +1,224 @@
 "use client";
 
 /**
- * Base64Tile — Base64エンコード/デコードの単一正典タイル
+ * Base64Tile — Base64 のエンコードとデコードの道具。道具のページ（src/app/tools/base64/page.tsx）が描く。
  *
- * cycle-227 T-2 で Base64Tool.tsx を Panel ルートのタイルへ作り直したもの。
+ * 向きのラジオボタン・URL-safe のチェックボックス・入力欄は枠で囲まず（DESIGN.md §8 入力）、変換の結果だけを
+ * 結果のボックスに入れる（§8 結果）。変換は logic.ts の関数が持ち、この部品は入力と表示だけを持つ。
  *
- * ## 設計原則
- *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **1ツール n タイル = variant**: full / encode / decode は同一コンポーネントの
- *   設定差で表現。別実装を作らない（分裂ゼロ）。
- * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合・aria-describedby 誤結合が起きない。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- * - **logic.ts 共有エンジン**: encodeBase64 / decodeBase64 / toUrlSafe が唯一のロジック源。
- *
- * ## variant
- *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
- *   encode / decode をユーザーが切り替えられる。URL-safe トグルは encode 時のみ表示。
- * - `"encode"`: 方向を encode に固定し、SegmentedControl を非表示にする。URL-safe トグル表示。
- * - `"decode"`: 方向を decode に固定し、SegmentedControl と URL-safe トグルを非表示にする。
- *
- * ## URL-safe トグルの表示ルール
- *
- * decode 時に URL-safe トグルを表示すると「操作しても出力が変わらない」死んだコントロールに
- * なるため、encode 方向の時のみ表示する（full では動的に、encode/decode では静的に制御）。
- *
- * ## 使い方
- *
- * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
- * <Base64Tile variant="full" />
- * <Base64Tile variant="encode" />
- * <Base64Tile variant="decode" />
- * ```
- *
- * ## アクセシビリティ（C-3 準拠）
- *
- * - 出力 textarea は readOnly で表示専用
- * - role="status" aria-live="polite" の div にサマリテキストを置く
- *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
- * - URL-safe 説明文は useId ベースの id で aria-describedby に関連付ける
- *   （複数インスタンス同居時の誤結合防止）
+ * - エンコードの結果（Base64）は符号にした文字列で、全体が1語である。「-」や「/」の後ろで折らず、字のあいだの
+ *   どこでも折って行を埋める。デコードの結果（文）は本文と同じく通常の禁則で折る。
+ * - 向きを切り替えると、いまの結果を入力に移し、変換した結果を逆の向きでそのまま確かめられる。
+ * - デコードで、打ちかけ（字の数が4字の区切りに合わない・中身が文字の途中で切れる）の入力のあいだは、前の
+ *   結果を出したままにし、打つ手が止まってから理由の文を出す。1字ごとに結果が消えて下が上下し、登場の動きと
+ *   知らせが繰り返されないためである。Base64 に使わない字は、打った所ですぐ理由を言う。
+ * - 結果が現れて画面の下にはみ出すときは、結果が見えるまで送る（src/lib/reveal.ts）。結果が出たことは、
+ *   画面に出さない status の行で知らせる。
  */
 
-import { useId, useMemo, useState } from "react";
-import Panel from "@/components/Panel";
-import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import RadioGroup from "@/components/RadioGroup";
+import Field from "@/components/Field";
 import Textarea from "@/components/Textarea";
-import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import Checkbox from "@/components/Checkbox";
+import CopyButton from "@/components/CopyButton";
+import ResultBox from "@/components/ResultBox";
+import { revealResult } from "@/lib/reveal";
 import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
-import { encodeBase64, decodeBase64, toUrlSafe } from "./logic";
+  encodeBase64,
+  decodeBase64,
+  toUrlSafe,
+  type DecodeError,
+} from "./logic";
 import styles from "./Base64Tile.module.css";
 
 type Direction = "encode" | "decode";
-
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
-export type Base64TileVariant = "full" | "encode" | "decode";
 
 const DIRECTION_OPTIONS: { label: string; value: Direction }[] = [
   { label: "エンコード", value: "encode" },
   { label: "デコード", value: "decode" },
 ];
 
-export interface Base64TileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向トグル非表示、URL-safe トグル表示
-   * - "decode": 方向を decode に固定、方向トグル・URL-safe トグル両方非表示
-   */
-  variant?: Base64TileVariant;
-  /** 初期入力値（デフォルト: ""） */
-  defaultInput?: string;
-  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
-  as?: "section" | "div" | "article" | "aside";
-  /** 追加クラス */
-  className?: string;
+/** 向きごとの、入力欄のラベル・結果の名前・コピーで写すもの・結果が出たときの知らせ。 */
+const DIRECTION_TEXT: Record<
+  Direction,
+  { inputLabel: string; caption: string; copyTarget: string; done: string }
+> = {
+  encode: {
+    inputLabel: "エンコードするテキスト",
+    caption: "エンコードしたBase64",
+    copyTarget: "Base64",
+    done: "エンコードしました",
+  },
+  decode: {
+    inputLabel: "デコードするBase64",
+    caption: "デコードしたテキスト",
+    copyTarget: "テキスト",
+    done: "デコードしました",
+  },
+};
+
+/** 打つ手が止まったとみなすまでの時間（ms）。打ちかけの入力の理由の文は、これだけ手が止まってから出す。 */
+export const TYPING_PAUSE_MS = 600;
+
+/** 打ちかけの入力で起きうる理由。これらは打ち進めると消えうるので、手が止まるまで言わない。 */
+const PENDING_KINDS: ReadonlySet<DecodeError["kind"]> = new Set([
+  "incomplete",
+  "not-text",
+]);
+
+/** デコードできなかった理由と、どう直すかを言う文（§8）。 */
+function decodeErrorMessage(error: DecodeError): string {
+  switch (error.kind) {
+    case "invalid-char":
+      return `Base64に使わない字「${error.char}」が入っています。使えるのは英字・数字と「+」「/」「-」「_」「=」です。ほかの字を取り除いてください。`;
+    case "misplaced-padding":
+      return "「=」は末尾にだけ置けます。途中の「=」を取り除くか、2つの文字列に分けてデコードしてください。";
+    case "incomplete":
+      return "字の数が1つ足りないか、1つ多すぎます。最後まで写せているか、余分な字が無いかを確かめてください。";
+    case "not-text":
+      return "中身を文字（UTF-8）として読めませんでした。文字をBase64にしたものか、途中で切れていないかを確かめてください。";
+  }
 }
 
-export default function Base64Tile({
-  variant = "full",
-  defaultInput = "",
-  as = "section",
-  className,
-}: Base64TileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合・aria-describedby 誤結合防止） ----------
-  const uid = useId();
-  const inputId = `${uid}-input`;
-  const outputId = `${uid}-output`;
-  const urlSafeDescId = `${uid}-url-safe-desc`;
+type Conversion =
+  | { output: string; error?: undefined }
+  | { output?: undefined; error: DecodeError };
 
-  // ---------- variant から初期方向を決定 ----------
-  // "full" は初期値 encode で、ユーザーが切り替え可能。
-  // "encode" / "decode" は固定（ユーザーが変更できない）。
-  const fixedDirection: Direction | null =
-    variant === "encode" ? "encode" : variant === "decode" ? "decode" : null;
+function convert(
+  input: string,
+  direction: Direction,
+  urlSafe: boolean,
+): Conversion {
+  if (direction === "encode") {
+    const encoded = encodeBase64(input);
+    return { output: urlSafe ? toUrlSafe(encoded) : encoded };
+  }
+  const decoded = decodeBase64(input);
+  return decoded.success
+    ? { output: decoded.output }
+    : { error: decoded.error };
+}
 
-  // ---------- State ----------
-  // full の場合のみ方向を state で管理。encode/decode は固定。
-  const [dynamicDirection, setDynamicDirection] = useState<Direction>("encode");
+export default function Base64Tile() {
+  // URL-safe の説明の id を、この部品の中で作ってチェックボックスと結ぶ。
+  const urlSafeDescId = useId();
+  const operationsRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLElement>(null);
+
+  const [direction, setDirection] = useState<Direction>("encode");
   const [urlSafe, setUrlSafe] = useState(false);
-  const [input, setInput] = useState(defaultInput);
+  const [input, setInput] = useState("");
+  const [pausedInput, setPausedInput] = useState<string | null>(null);
+  // 打ちかけのあいだ出したままにする、最後に変換できた結果。
+  const [lastOutput, setLastOutput] = useState("");
 
-  const { copy, copiedKey } = useCopyToClipboard();
+  const conversion = useMemo(
+    () => convert(input, direction, urlSafe),
+    [input, direction, urlSafe],
+  );
 
-  // 実際に使う方向: fixed があればそれを使い、なければ state を使う
-  const direction = fixedDirection ?? dynamicDirection;
+  useEffect(() => {
+    const timer = setTimeout(() => setPausedInput(input), TYPING_PAUSE_MS);
+    return () => clearTimeout(timer);
+  }, [input]);
 
-  // URL-safe トグルを表示するのは encode 方向の時のみ
-  // decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため
-  const showUrlSafeToggle = direction === "encode";
+  const typingPaused = pausedInput === input;
+  const error =
+    conversion.error &&
+    (typingPaused || !PENDING_KINDS.has(conversion.error.kind))
+      ? conversion.error
+      : undefined;
+  const output = conversion.error
+    ? error
+      ? ""
+      : lastOutput
+    : conversion.output;
+  if (output !== lastOutput) setLastOutput(output);
 
-  // ---------- リアルタイム変換（共有エンジン logic.ts を使用） ----------
-  const conversionResult = useMemo(() => {
-    if (!input) return null;
-    if (direction === "encode") {
-      const r = encodeBase64(input);
-      if (!r.success) return r;
-      return {
-        success: true as const,
-        output: urlSafe ? toUrlSafe(r.output) : r.output,
-        error: undefined,
-      };
+  const resultShown = output !== "";
+  useEffect(() => {
+    if (resultShown && operationsRef.current && resultRef.current) {
+      revealResult(operationsRef.current, resultRef.current);
     }
-    // デコード: logic.ts が URL-safe 文字とパディング欠損を自動正規化
-    return decodeBase64(input);
-  }, [input, direction, urlSafe]);
+  }, [resultShown]);
 
-  const output = conversionResult?.success ? conversionResult.output : "";
-  // エラー文言の日本語化（A-4: ErrorMessage には必ず日本語を渡す）
-  const errorMessage =
-    conversionResult?.success === false
-      ? "不正な Base64 文字列です。入力内容を確認してください。"
-      : "";
+  const text = DIRECTION_TEXT[direction];
 
-  // ライブリージョン用サマリテキスト（C-3: 実テキストノードのサマリ）
-  const statusSummary = useMemo(() => {
-    if (!input || conversionResult === null) return "";
-    if (conversionResult.success === false) return "変換エラー";
-    return direction === "encode" ? "エンコード完了" : "デコード完了";
-  }, [input, conversionResult, direction]);
-
-  // 入力・出力のラベルテキスト（方向によって変わる）
-  const inputLabel = direction === "encode" ? "テキスト入力" : "Base64入力";
-  const outputLabel = direction === "encode" ? "Base64出力" : "テキスト出力";
-  const inputPlaceholder =
-    direction === "encode"
-      ? "エンコードするテキストを入力..."
-      : "デコードするBase64文字列を入力（標準形・URL-safe形・パディングなし、いずれも対応）...";
-
-  // ---------- ハンドラ ----------
-  function handleDirectionChange(val: string) {
-    // fixedDirection がある場合はここに到達しない（SegmentedControl が非表示）
-    setDynamicDirection(val as Direction);
+  function handleDirectionChange(next: Direction): void {
+    if (conversion.output) setInput(conversion.output);
+    setDirection(next);
   }
 
-  function handleInputChange(e: { target: { value: string } }) {
-    setInput(e.target.value);
-  }
-
-  async function handleCopy() {
-    if (!output) return;
-    await copy(output);
-  }
-
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <Panel as={as} className={className}>
-      {/* コントロール行: 方向選択（full のみ表示） */}
-      {fixedDirection === null && (
-        <div className={styles.controls}>
-          {/* variant=full のみ方向トグルを表示。encode/decode は固定のため非表示。 */}
-          <SegmentedControl
-            options={DIRECTION_OPTIONS}
-            value={dynamicDirection}
-            onChange={handleDirectionChange}
-            aria-label="変換モード"
-          />
-        </div>
-      )}
+    <div className={styles.tile}>
+      <RadioGroup
+        options={DIRECTION_OPTIONS}
+        value={direction}
+        onChange={(value) => handleDirectionChange(value as Direction)}
+        legend="変換の向き"
+      />
 
-      {/* URL-safe オプション（encode 方向の時のみ表示）
-          decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため非表示 */}
-      {showUrlSafeToggle && (
-        <div className={styles.optionRow}>
-          <ToggleSwitch
-            label="URL-safe 形式で出力"
+      {direction === "encode" && (
+        <div className={styles.option}>
+          <Checkbox
+            label="URL-safe形式で出力"
             checked={urlSafe}
             onChange={(e) => setUrlSafe(e.target.checked)}
             aria-describedby={urlSafeDescId}
           />
-          {/* useId ベースの id で aria-describedby に関連付け（複数インスタンス同居時の誤結合防止） */}
           <span id={urlSafeDescId} className={styles.optionDesc}>
-            （+ → -, / → _。JWT や URL クエリ向け）
+            （+を-に、/を_にする。JWTやURLのクエリ向け）
           </span>
         </div>
       )}
 
-      {/* 入力欄 */}
-      <div className={styles.field}>
-        <label htmlFor={inputId} className={styles.fieldLabel}>
-          {inputLabel}
-        </label>
-        <Textarea
-          id={inputId}
-          variant="mono"
-          value={input}
-          onChange={handleInputChange}
-          placeholder={inputPlaceholder}
-          rows={6}
-          spellCheck={false}
-        />
-      </div>
-
-      {/* エラー表示（A-4 準拠: 日本語化済みメッセージを渡す） */}
-      {errorMessage && <ErrorMessage message={errorMessage} />}
-
-      {/* 出力欄 */}
-      <div className={styles.field}>
-        <div className={styles.outputHeader}>
-          <label htmlFor={outputId} className={styles.fieldLabel}>
-            {outputLabel}
-          </label>
-          {/* コピーボタン */}
-          <Button
-            variant="default"
-            size="small"
-            onClick={handleCopy}
-            disabled={!output}
-            aria-label="出力をコピー"
-          >
-            {copiedKey ? COPIED_LABEL : "コピー"}
-          </Button>
-        </div>
-
-        {/* C-3 準拠: readOnly textarea は role="status" 対象外。
-            別途サマリ div を置いてスクリーンリーダーへ通知する */}
-        <div
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-          className={styles.statusSummary}
+      <div ref={operationsRef}>
+        <Field
+          label={text.inputLabel}
+          error={error ? decodeErrorMessage(error) : undefined}
         >
-          {statusSummary}
-        </div>
-
-        <Textarea
-          id={outputId}
-          variant="mono"
-          value={output}
-          readOnly
-          placeholder="結果がここに表示されます"
-          rows={6}
-        />
+          {(control) => (
+            <Textarea
+              {...control}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={
+                direction === "decode"
+                  ? "標準形・URL-safe形・パディングなし・改行入りのどれも読めます"
+                  : undefined
+              }
+              rows={6}
+              spellCheck={false}
+            />
+          )}
+        </Field>
       </div>
-    </Panel>
+
+      <p role="status" aria-live="polite" className="visually-hidden">
+        {resultShown ? text.done : ""}
+      </p>
+
+      {resultShown && (
+        <ResultBox
+          ref={resultRef}
+          caption={text.caption}
+          appear
+          copyButton={
+            <CopyButton text={output} target={text.copyTarget} align="end" />
+          }
+        >
+          <p
+            className={
+              direction === "encode"
+                ? `${styles.output} ${styles.encoded}`
+                : styles.output
+            }
+          >
+            {output}
+          </p>
+        </ResultBox>
+      )}
+    </div>
   );
 }

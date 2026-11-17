@@ -1,70 +1,52 @@
-/**
- * Breadcrumb — パンくずリストコンポーネント。
- * new デザイン体系のみ使用（DESIGN.md §2, globals.css 参照）。
- *
- * 区切り文字「/」は JSX <span aria-hidden="true"> で li 内に配置する。
- *
- * CSS ::before を使わない理由:
- * li が display:inline-flex のとき、::before は flex item として扱われる。
- * flex-wrap: wrap の環境で current span が長いと、::before（「/」）と
- * current span が別の flex item として分離され、行頭に「/」が孤立する。
- * JSX でセパレータを li 内にインライン配置し、li 自体を display:inline に
- * することで「/」と後続テキストが同じインラインフォーマットコンテキストに属し、
- * li 単位でしか折り返しが起きなくなる。
- */
+/* パンくず（DESIGN.md §5・§6）。 */
 
-.nav {
-  /* コンテンツ幅に追従 */
-}
-
+/* 項目の並び。幅が足りなければ li のあいだで折り返し、1つの項目だけで行に収まらなければその項目の中で
+ * 折り返す。li のあいだの間隔は同じ行の中にだけ置き、行の端には置かない。間隔は、区切りの「/」から次の項目の
+ * 箱までを、前の項目の箱から「/」までと同じ 8px にする量で、次の項目の箱が字より余白の分だけ前へ張り出す
+ * ぶんを足してある。 */
 .list {
-  /* リストスタイルをリセットし、横並び折返しにする */
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0;
+  column-gap: calc(var(--space-8) + var(--text-box-pad));
+  align-items: center;
   list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 0.875rem; /* 14px — 本文 16px より少し小さめ */
+  font-size: var(--text-small);
   line-height: 1.5;
   color: var(--ink-2);
 }
 
-/*
- * 各 li を display:inline にする。
- * display:inline-flex や display:flex は使わない。
- * inline にすることで、li 内の separator と link/current が
- * 同じインラインフォーマットコンテキストに属し、折り返しが li 単位になる。
- */
+/* 項目と、その後ろの区切りを1つにまとめ、あいだで折り返さない。項目が折り返したときは、区切りを最後の行に
+ * 並べる。 */
 .item {
-  display: inline;
+  display: flex;
+  align-items: last baseline;
+  min-width: 0;
 }
 
-/* 区切り「/」— JSX で明示配置する aria-hidden span */
-.separator {
-  display: inline;
-  color: var(--ink-2);
-  user-select: none;
-  margin: 0 0.4em;
-}
-
+/* パンくずは縁の見えないコントロールで、本文の中のリンクではない（§5・§6）。押せる範囲は字の左右に 8px で、
+ * 44px に届かなければ届くまで右へ広げる。折り返した名前も、押せる範囲が全体を囲む。英数字の長い語
+ * （「Worker.terminate()で100msに」）は、それだけで行に収まらないときに限り語の中で折る（§4）。本文から
+ * 継ぐ break-word では、語の幅が項目の最小の幅に残って並びからはみ出すので、anywhere にする。字の左右の
+ * 余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。下線と訪問済みの色は
+ * globals.css の a の既定に従う。 */
 .link {
-  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+
+/* いまのページは §6 の現在地。太字で示し、押しても何も起きないので下線も hover も持たない。 */
+.link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
   text-decoration: none;
 }
 
-.link:hover {
-  text-decoration: underline;
-}
-
-.link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
-.current {
-  /* 現在位置はリンクではなく通常テキスト。より強調された文字色を使う */
-  color: var(--ink);
+/* 区切りの「/」。前の項目の箱から 8px あけ、リングと hover の線を「/」に掛けない。 */
+.separator {
+  flex-shrink: 0;
+  margin-inline-start: var(--space-8);
+  user-select: none;
 }

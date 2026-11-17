@@ -7,7 +7,7 @@ export interface DiffPart {
   added: boolean;
   removed: boolean;
   /** diff ライブラリが返す要素数（単語数・文字数・行数）。
-   *  word/char モードでの正確なカウント計算に使用（①-2 件数・ラベル一致）。
+   *  word/char モードでの正確なカウント計算に使用（件数・ラベル一致）。
    *  undefined の場合は value から計算する。 */
   count?: number;
 }
@@ -21,8 +21,8 @@ export function computeDiff(
   switch (mode) {
     case "line":
       // ignoreNewlineAtEof: true で末尾改行の有無だけの差を「変更なし」として扱う。
-      // 修正前は末尾改行の有無のみが異なる場合に不変行が +/- の無意味な差分として
-      // 表示され、サマリ件数も過剰になるバグがあった（U-7 是正）。
+      // 指定しないと、末尾改行の有無のみが異なるときに変わっていない行が +/- の差分として
+      // 表示され、サマリの件数も増える。
       changes = diffLines(oldText, newText, { ignoreNewlineAtEof: true });
       break;
     case "word":

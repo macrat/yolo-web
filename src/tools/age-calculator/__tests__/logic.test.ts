@@ -3,7 +3,6 @@ import {
   calculateAge,
   toWareki,
   getZodiac,
-  getZodiacWithReading,
   getConstellation,
   formatDate,
   parseDate,
@@ -45,14 +44,6 @@ describe("calculateAge", () => {
     expect(result.totalDays).toBe(1);
   });
 
-  it("handles leap year birthday (Feb 29)", () => {
-    const birth = new Date(2000, 1, 29);
-    const target = new Date(2001, 1, 28);
-    const result = calculateAge(birth, target);
-    expect(result.years).toBe(0);
-    expect(result.months).toBe(11);
-  });
-
   it("handles leap day boundary for totalDays", () => {
     const birth = new Date(2024, 1, 28);
     const target = new Date(2024, 2, 1);
@@ -79,14 +70,6 @@ describe("calculateAge", () => {
     expect(result.totalMonths).toBe(3);
   });
 
-  it("handles future date (birth after target) using absolute value", () => {
-    const birth = new Date(2026, 0, 1);
-    const target = new Date(2025, 0, 1);
-    const result = calculateAge(birth, target);
-    expect(result.years).toBe(1);
-    expect(result.totalDays).toBe(365);
-  });
-
   it("keeps one day difference stable", () => {
     const birth = new Date(2026, 0, 1);
     const target = new Date(2026, 0, 2);
@@ -101,7 +84,7 @@ describe("toWareki", () => {
     expect(result).not.toBeNull();
     expect(result!.era).toBe("令和");
     expect(result!.year).toBe(8);
-    expect(result!.formatted).toBe("令和8年");
+    expect(result!.yearLabel).toBe("8年");
   });
 
   it("converts 2019-05-01 to Reiwa 1 (元年)", () => {
@@ -109,7 +92,7 @@ describe("toWareki", () => {
     expect(result).not.toBeNull();
     expect(result!.era).toBe("令和");
     expect(result!.year).toBe(1);
-    expect(result!.formatted).toBe("令和元年");
+    expect(result!.yearLabel).toBe("元年");
   });
 
   it("converts 2019-04-30 to Heisei 31 (day before Reiwa)", () => {
@@ -124,7 +107,7 @@ describe("toWareki", () => {
     expect(result).not.toBeNull();
     expect(result!.era).toBe("平成");
     expect(result!.year).toBe(30);
-    expect(result!.formatted).toBe("平成30年");
+    expect(result!.yearLabel).toBe("30年");
   });
 
   it("converts 1989-01-08 to Heisei 1 (boundary)", () => {
@@ -190,88 +173,57 @@ describe("toWareki", () => {
 });
 
 describe("getZodiac", () => {
-  it("returns 子 for 2020", () => {
-    expect(getZodiac(2020)).toBe("子");
-  });
-
-  it("returns 丑 for 2021", () => {
-    expect(getZodiac(2021)).toBe("丑");
-  });
-
-  it("returns 亥 for 2019", () => {
-    expect(getZodiac(2019)).toBe("亥");
-  });
-
-  it("returns 辰 for 2024", () => {
-    expect(getZodiac(2024)).toBe("辰");
-  });
-
-  it("returns 巳 for 2025", () => {
-    expect(getZodiac(2025)).toBe("巳");
-  });
-
-  it("returns 午 for 2026", () => {
-    expect(getZodiac(2026)).toBe("午");
-  });
-
-  it("cycles correctly for historical year", () => {
-    // 12-year cycle: 2020 = 子, so 2008 = 子
-    expect(getZodiac(2008)).toBe("子");
-  });
-});
-
-describe("getZodiacWithReading", () => {
   it("returns kanji with reading for 子 (2020)", () => {
-    expect(getZodiacWithReading(2020)).toBe("子（ね）");
+    expect(getZodiac(2020)).toEqual({ kanji: "子", reading: "ね" });
   });
 
   it("returns kanji with reading for 丑 (2021)", () => {
-    expect(getZodiacWithReading(2021)).toBe("丑（うし）");
+    expect(getZodiac(2021)).toEqual({ kanji: "丑", reading: "うし" });
   });
 
   it("returns kanji with reading for 寅 (2022)", () => {
-    expect(getZodiacWithReading(2022)).toBe("寅（とら）");
+    expect(getZodiac(2022)).toEqual({ kanji: "寅", reading: "とら" });
   });
 
   it("returns kanji with reading for 卯 (2023)", () => {
-    expect(getZodiacWithReading(2023)).toBe("卯（う）");
+    expect(getZodiac(2023)).toEqual({ kanji: "卯", reading: "う" });
   });
 
   it("returns kanji with reading for 辰 (2024)", () => {
-    expect(getZodiacWithReading(2024)).toBe("辰（たつ）");
+    expect(getZodiac(2024)).toEqual({ kanji: "辰", reading: "たつ" });
   });
 
   it("returns kanji with reading for 巳 (2025)", () => {
-    expect(getZodiacWithReading(2025)).toBe("巳（み）");
+    expect(getZodiac(2025)).toEqual({ kanji: "巳", reading: "み" });
   });
 
   it("returns kanji with reading for 午 (2026)", () => {
-    expect(getZodiacWithReading(2026)).toBe("午（うま）");
+    expect(getZodiac(2026)).toEqual({ kanji: "午", reading: "うま" });
   });
 
   it("returns kanji with reading for 未 (2027)", () => {
-    expect(getZodiacWithReading(2027)).toBe("未（ひつじ）");
+    expect(getZodiac(2027)).toEqual({ kanji: "未", reading: "ひつじ" });
   });
 
   it("returns kanji with reading for 申 (2028)", () => {
-    expect(getZodiacWithReading(2028)).toBe("申（さる）");
+    expect(getZodiac(2028)).toEqual({ kanji: "申", reading: "さる" });
   });
 
   it("returns kanji with reading for 酉 (2029)", () => {
-    expect(getZodiacWithReading(2029)).toBe("酉（とり）");
+    expect(getZodiac(2029)).toEqual({ kanji: "酉", reading: "とり" });
   });
 
   it("returns kanji with reading for 戌 (2030)", () => {
-    expect(getZodiacWithReading(2030)).toBe("戌（いぬ）");
+    expect(getZodiac(2030)).toEqual({ kanji: "戌", reading: "いぬ" });
   });
 
   it("returns kanji with reading for 亥 (2019)", () => {
-    expect(getZodiacWithReading(2019)).toBe("亥（い）");
+    expect(getZodiac(2019)).toEqual({ kanji: "亥", reading: "い" });
   });
 
   it("cycles correctly across 12-year boundary", () => {
     // 2020 = 子（ね）, 2032 should also be 子（ね）
-    expect(getZodiacWithReading(2032)).toBe("子（ね）");
+    expect(getZodiac(2032)).toEqual({ kanji: "子", reading: "ね" });
   });
 });
 
@@ -384,5 +336,104 @@ describe("parseDate", () => {
 
   it("returns null for Feb 29 in non-leap year", () => {
     expect(parseDate("2026-02-29")).toBeNull();
+  });
+});
+
+// 年齢計算ニ関スル法律・民法 143 条の数え方。年齢と月は応当日の当日から1つ進み、応当日の無い月は翌月の1日から進む。
+describe("calculateAge counts like the law", () => {
+  const age = (
+    birth: [number, number, number],
+    target: [number, number, number],
+  ) => {
+    const r = calculateAge(
+      new Date(birth[0], birth[1] - 1, birth[2]),
+      new Date(target[0], target[1] - 1, target[2]),
+    );
+    return `${r.years}歳${r.months}ヶ月${r.days}日`;
+  };
+
+  it.each([
+    [[2000, 2, 29], [2000, 3, 28], "0歳0ヶ月28日"],
+    [[2000, 2, 29], [2000, 3, 29], "0歳1ヶ月0日"],
+    [[2000, 2, 29], [2001, 1, 29], "0歳11ヶ月0日"],
+    [[2000, 2, 29], [2001, 2, 28], "0歳11ヶ月30日"],
+    [[2000, 2, 29], [2001, 3, 1], "1歳0ヶ月0日"],
+    [[2000, 2, 29], [2002, 2, 28], "1歳11ヶ月30日"],
+    [[2000, 2, 29], [2002, 3, 1], "2歳0ヶ月0日"],
+    [[2000, 2, 29], [2004, 2, 28], "3歳11ヶ月30日"],
+    [[2000, 2, 29], [2004, 2, 29], "4歳0ヶ月0日"],
+    [[2000, 2, 29], [2004, 3, 1], "4歳0ヶ月1日"],
+  ] as const)(
+    "Feb 29 births over leap and common years: %j → %j is %s",
+    (birth, target, expected) => {
+      expect(age([...birth], [...target])).toBe(expected);
+    },
+  );
+
+  it.each([
+    [[2001, 1, 31], [2001, 2, 27], "0歳0ヶ月27日"],
+    [[2001, 1, 31], [2001, 2, 28], "0歳0ヶ月28日"],
+    [[2001, 1, 31], [2001, 3, 1], "0歳1ヶ月0日"],
+    [[2001, 1, 31], [2001, 3, 2], "0歳1ヶ月1日"],
+    [[2001, 1, 31], [2001, 3, 31], "0歳2ヶ月0日"],
+    [[2000, 1, 31], [2000, 2, 29], "0歳0ヶ月29日"],
+    [[2000, 1, 31], [2000, 3, 1], "0歳1ヶ月0日"],
+    [[2001, 1, 30], [2001, 3, 1], "0歳1ヶ月0日"],
+    [[2001, 1, 29], [2001, 3, 1], "0歳1ヶ月0日"],
+    [[2000, 1, 29], [2000, 3, 1], "0歳1ヶ月1日"],
+    [[1990, 1, 31], [2026, 3, 1], "36歳1ヶ月0日"],
+  ] as const)(
+    "Jan 29–31 births into February and early March: %j → %j is %s",
+    (birth, target, expected) => {
+      expect(age([...birth], [...target])).toBe(expected);
+    },
+  );
+
+  it.each([
+    [[2001, 3, 31], [2001, 4, 30], "0歳0ヶ月30日"],
+    [[2001, 3, 31], [2001, 5, 1], "0歳1ヶ月0日"],
+    [[2001, 3, 31], [2001, 5, 31], "0歳2ヶ月0日"],
+    [[2001, 3, 31], [2001, 6, 30], "0歳2ヶ月30日"],
+    [[2001, 3, 31], [2002, 2, 28], "0歳10ヶ月28日"],
+    [[2001, 3, 31], [2002, 3, 1], "0歳11ヶ月0日"],
+    [[2001, 5, 31], [2001, 6, 30], "0歳0ヶ月30日"],
+    [[2001, 8, 31], [2001, 10, 1], "0歳1ヶ月0日"],
+    [[2001, 12, 31], [2002, 1, 31], "0歳1ヶ月0日"],
+    [[2001, 12, 31], [2002, 3, 1], "0歳2ヶ月0日"],
+    [[2001, 4, 30], [2001, 5, 31], "0歳1ヶ月1日"],
+  ] as const)(
+    "month-end births into short months: %j → %j is %s",
+    (birth, target, expected) => {
+      expect(age([...birth], [...target])).toBe(expected);
+    },
+  );
+
+  it("moves forward one day at a time and stays consistent for births in 2000–2001", () => {
+    const failures: string[] = [];
+    for (let b = 0; b < 731 && failures.length < 5; b += 1) {
+      const birth = new Date(2000, 0, 1 + b);
+      let previous = calculateAge(birth, birth);
+      for (let t = b + 1; t < b + 1200; t += 1) {
+        const target = new Date(2000, 0, 1 + t);
+        const r = calculateAge(birth, target);
+        const next = `${formatDate(birth)} → ${formatDate(target)}`;
+        const stepsOneDay =
+          r.totalMonths === previous.totalMonths &&
+          r.days === previous.days + 1;
+        const startsMonth =
+          r.totalMonths === previous.totalMonths + 1 && r.days === 0;
+        if (r.days < 0 || r.days > 30) failures.push(`${next}: days ${r.days}`);
+        if (!stepsOneDay && !startsMonth)
+          failures.push(
+            `${next}: went from ${JSON.stringify(previous)} to ${JSON.stringify(r)}`,
+          );
+        if (r.totalDays !== t - b)
+          failures.push(`${next}: totalDays ${r.totalDays}`);
+        if (r.years * 12 + r.months !== r.totalMonths)
+          failures.push(`${next}: totalMonths ${r.totalMonths}`);
+        previous = r;
+      }
+    }
+    expect(failures).toEqual([]);
   });
 });

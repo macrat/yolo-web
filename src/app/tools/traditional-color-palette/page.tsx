@@ -26,7 +26,7 @@ export default function TraditionalColorPalettePageRoute() {
         }}
       />
       <ToolErrorBoundary>
-        <TraditionalColorPaletteTile variant="full" />
+        <TraditionalColorPaletteTile />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

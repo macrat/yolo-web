@@ -5,23 +5,14 @@ import * as path from "path";
 // 各テストで何度も readFileSync するのを避けるため、モジュールロード時に一度だけ読む。
 const pagePath = path.resolve(__dirname, "../page.tsx");
 const cssPath = path.resolve(__dirname, "../page.module.css");
-const footerCssPath = path.resolve(
+// 共有のボタンは共通の Button で組むので、タップの標的の大きさは Button の CSS が持つ。
+const buttonCssPath = path.resolve(
   __dirname,
-  "../../../../components/Footer/Footer.module.css",
-);
-const headerCssPath = path.resolve(
-  __dirname,
-  "../../../../components/Header/Header.module.css",
-);
-const shareButtonsCssPath = path.resolve(
-  __dirname,
-  "../../../../components/ShareButtons/ShareButtons.module.css",
+  "../../../../components/Button/Button.module.css",
 );
 const source = fs.readFileSync(pagePath, "utf-8");
 const css = fs.readFileSync(cssPath, "utf-8");
-const footerCss = fs.readFileSync(footerCssPath, "utf-8");
-const headerCss = fs.readFileSync(headerCssPath, "utf-8");
-const shareButtonsCss = fs.readFileSync(shareButtonsCssPath, "utf-8");
+const buttonCss = fs.readFileSync(buttonCssPath, "utf-8");
 
 describe("app/blog/[slug]/page", () => {
   describe("page module exports", () => {
@@ -33,40 +24,20 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  describe("PlayRecommendBlock が撤去されていること（コンセプト不整合撤去）", () => {
-    it("page.tsx does NOT import PlayRecommendBlock", () => {
-      expect(source).not.toContain("PlayRecommendBlock");
-    });
-
-    it("page.tsx does NOT import getPlayRecommendationsForBlog", () => {
-      expect(source).not.toContain("getPlayRecommendationsForBlog");
-    });
-  });
-
-  describe("新デザイン構造の検証", () => {
-    it("page.tsx imports new-system Breadcrumb (@/components/Breadcrumb)", () => {
+  describe("記事のページの組み立て", () => {
+    it("パンくずを共有の Breadcrumb で組むこと", () => {
       expect(source).toContain('@/components/Breadcrumb"');
     });
 
-    it("page.tsx imports new-system ShareButtons (@/components/ShareButtons)", () => {
+    it("共有のボタンを共有の ShareButtons で組むこと", () => {
       expect(source).toContain('@/components/ShareButtons"');
     });
 
-    // DESIGN.md フェーズ R（C5・cycle-279）: 読み物本文を Panel の矩形コンテナから
-    // 解放し、読む幅 --measure に絞ったテキスト列として直接置く構造へ変換した。
-    // SeriesNav・TOC 等の区画は各コンポーネント自身が罫囲みを持つため、
-    // page.tsx から Panel への依存はなくなった。
-    it("page.tsx は Panel を使わないこと（読み物は矩形パネルに包まない・§4）", () => {
+    // 記事はセクションとそのあいだの全幅の罫線で組み（DESIGN.md §5 ページの割り方）、連載の案内と目次はそれぞれ
+    // 自分のボックスを持つので、ページ全体を枠で包まない。
+    it("page.tsx は Panel を使わないこと（記事はセクションと全幅の罫線で組む・§5）", () => {
       expect(source).not.toMatch(/<Panel\b/);
       expect(source).not.toContain('@/components/Panel"');
-    });
-
-    it("page.tsx does NOT import TrustLevelBadge", () => {
-      expect(source).not.toContain("TrustLevelBadge");
-    });
-
-    it("page.tsx does NOT import from @/components/common/", () => {
-      expect(source).not.toContain("@/components/common/");
     });
 
     it("page.tsx に <RelatedArticles JSX タグが存在すること", () => {
@@ -77,148 +48,115 @@ describe("app/blog/[slug]/page", () => {
       expect(source).toMatch(/<SeriesNav\b/);
     });
 
-    it("page.tsx に contentColumn クラスの div が存在すること（Grid 右カラム wrapper）", () => {
-      expect(source).toContain("contentColumn");
+    it("記事の頭・目次・連載の案内・本文を1つのセクションに置き、共有・関連記事・前後の記事をそれぞれセクションにすること（§5）", () => {
+      expect(source).toContain('@/components/Section"');
+      const order = [
+        "<Breadcrumb",
+        "<CollapsibleTOC",
+        "<SeriesNav",
+        "<Prose",
+        "</Section>",
+        "<ShareButtons",
+        "</Section>",
+        "<RelatedArticles",
+        'aria-label="前後の記事（時系列順）"',
+        "</Section>",
+      ];
+      let from = 0;
+      for (const marker of order) {
+        const at = source.indexOf(marker, from);
+        expect(at, marker).toBeGreaterThanOrEqual(from);
+        from = at + marker.length;
+      }
+    });
+
+    it("目次に記事の slug を渡し、目次の計測の content_id にすること", () => {
+      expect(source).toMatch(
+        /<CollapsibleTOC\s+headings=\{post\.headings\}\s+contentId=\{post\.slug\}/,
+      );
+    });
+
+    it("目次を本文と同じ要素の中に置き、本文を読み終えるまで目次が上端に留まること（§5）", () => {
+      // 留まる要素は、自分を包む要素の中でだけ留まる。目次と本文を同じ .body に置く。
+      const bodyStart = source.indexOf("<div className={styles.body}>");
+      const bodyEnd = source.indexOf("</Section>", bodyStart);
+      expect(bodyStart).toBeGreaterThanOrEqual(0);
+      const body = source.slice(bodyStart, bodyEnd);
+      expect(body).toContain("<CollapsibleTOC");
+      expect(body).toContain("<Prose");
+    });
+
+    it("パンくずと主見出しのあいだを 16px にすること", () => {
+      expect(css).toMatch(/\.header\s*\{[^}]*gap:\s*var\(--space-16\)/);
+    });
+
+    it("補助情報の字を §4 の下限（0.875rem）より小さくしないこと", () => {
+      const sizes = [...css.matchAll(/font-size:\s*([^;]+);/g)].map(
+        ([, value]) => value.trim(),
+      );
+      expect(sizes.every((size) => size === "var(--text-small)")).toBe(true);
     });
   });
 
-  describe("postNav は hasSeries に関わらず常時表示されること", () => {
-    it("page.tsx の前後ナビが !hasSeries 条件なしで常時表示される", () => {
-      // !hasSeries 条件でpostNavを隠す実装がないこと
+  describe("前後の記事のリンク", () => {
+    it("連載の有無で隠さないこと", () => {
       expect(source).not.toMatch(
         /!hasSeries[\s\S]*?postNav|postNav[\s\S]*?!hasSeries/,
       );
       expect(source).toMatch(/postNav/);
     });
 
-    it("postNav ラベルはシリーズ有無に関わらず固定文言（前の記事 / 次の記事）であること", () => {
-      // series ? "すべての記事から：..." : "..." の三項演算子が除去されていること
-      expect(source).not.toContain("すべての記事から");
-      // 固定文言「前の記事」「次の記事」が存在すること
+    it("ラベルは「前の記事」「次の記事」で、時系列順であることを読み上げに伝えること", () => {
       expect(source).toContain("前の記事");
       expect(source).toContain("次の記事");
-      // aria-label による時系列順の明示は維持されること
       expect(source).toContain("時系列順");
     });
   });
 
-  describe("page.module.css — CSS Grid によるレイアウト構造", () => {
-    it("articleBody に display:grid が定義されていること（デスクトップ 2カラム Grid）", () => {
-      expect(css).toContain("display: grid");
-    });
-
-    it("grid-template-columns: 1fr 220px が定義されていること（本文左・TOC右の配置）", () => {
-      // 本文が残り全幅を占め TOC が 220px 固定で右端に配置される
-      expect(css).toContain("1fr 220px");
-    });
-
-    it("articleMain に grid-column: 1 が定義されていること（左カラム固定）", () => {
-      expect(css).toMatch(/\.articleMain[^{]*\{[^}]*grid-column:\s*1/);
-    });
-
-    it("articleAside に position:sticky が定義されていること（スクロール追従）", () => {
-      expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
-    });
-
-    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（SeriesNav 開閉や記事本文中の <details> で grid が動かない退行防止）", () => {
-      // <details> 単独だと SeriesNav や記事本文中の <details> でも誤発火する。
-      // .articleAside（TOC ラッパー専用クラス）配下に限定することで誤マッチを防ぐ。
-      expect(css).toMatch(
-        /\.articleBody:has\(\.articleAside\s+details:not\(\[open\]\)\)/,
+  describe("構造化データ", () => {
+    it("記事の JSON-LD の image と openGraph.images の url が、同じ画像の URL であること", async () => {
+      const {
+        default: BlogPostPage,
+        generateMetadata,
+        generateStaticParams,
+      } = await import("../page");
+      const [{ slug }] = generateStaticParams();
+      const params = Promise.resolve({ slug });
+      const page = await BlogPostPage({ params });
+      const [script] = page.props.children;
+      const jsonLd = JSON.parse(script.props.dangerouslySetInnerHTML.__html);
+      const metadata = await generateMetadata({ params });
+      const images = metadata.openGraph?.images as { url: string }[];
+      expect(images).toHaveLength(1);
+      expect(jsonLd.image).toBe(images[0].url);
+      expect(jsonLd.image).toMatch(
+        new RegExp(`/blog/${slug}/opengraph-image\\?v=[0-9a-f]{16}$`),
       );
+    }, 60_000); // 記事の本文を Shiki で組むので、初めの1回は既定の時間を超えうる。
+
+    it("記事のディレクトリに規約の画像のファイルを置かない（画像は Route Handler が描く）", () => {
+      const dir = path.resolve(__dirname, "..");
+      expect(fs.existsSync(path.join(dir, "opengraph-image.tsx"))).toBe(false);
+      expect(fs.existsSync(path.join(dir, "twitter-image.tsx"))).toBe(false);
+      expect(
+        fs.existsSync(path.join(dir, "opengraph-image", "route.tsx")),
+      ).toBe(true);
     });
   });
 
-  describe("エの字レイアウト — DOM 構造の検証", () => {
-    it("page.tsx に mobileToc クラスが存在しないこと（TOC 重複レンダリング撤廃）", () => {
-      expect(source).not.toContain("mobileToc");
-    });
-
-    it("page.tsx に <CollapsibleTOC が1箇所のみ存在すること（a11y: nav ランドマーク重複なし）", () => {
-      const matches = source.match(/<CollapsibleTOC\b/g);
-      expect(matches).not.toBeNull();
-      expect(matches!.length).toBe(1);
-    });
-
-    it("page.tsx は <TableOfContents を直接呼ばないこと（CollapsibleTOC 経由で1インスタンスにまとめる）", () => {
-      // 直接 <TableOfContents JSX があると CollapsibleTOC 内のものと合わせて二重になる
-      expect(source).not.toMatch(/<TableOfContents\b/);
-    });
-
-    it("page.tsx に articleBody クラスが存在すること（エの字中央ボディ）", () => {
-      expect(source).toContain("articleBody");
-    });
-
-    it("page.tsx に articleAside クラスが存在すること（TOC サイドバー）", () => {
-      expect(source).toContain("articleAside");
-    });
-
-    it("page.tsx に articleFooter クラスが存在すること（フッター横幅いっぱい）", () => {
-      expect(source).toContain("articleFooter");
-    });
-
-    it("page.tsx の最上位ラッパーが <article タグであること（セマンティクス改善）", () => {
-      expect(source).toMatch(/<article\s+className=\{styles\.contentColumn\}/);
+  describe("本文", () => {
+    it("本文を markdown-preview と同じ組み方の Prose で出すこと", () => {
+      expect(source).toMatch(/<Prose\s[^>]*html=\{post\.contentHtml\}/);
     });
   });
 
-  // cycle-188/189 の右端ズレ退行防止ガード。cycle-279 フェーズR で のれん/Footer(chrome) は
-  // 新デザイン（横パディング=var(--space-16)=§4 の 8px スケール・--max-width）へ移行済み。
-  // C5（blog 移行・本テスト更新時点）で blog 本文カラムも新デザイン基準（--max-width・
-  // --space スケール）へ揃えた。
-  describe("グローバルヘッダー/フッターと本文カラムの横幅整列（cycle-188/189 退行防止・C5で本文も新デザインへ移行）", () => {
-    it(".contentColumn に max-width: var(--max-width) が定義されていること（新デザイン・操作面の最大幅）", () => {
-      expect(css).toMatch(
-        /\.contentColumn[^{]*\{[^}]*max-width:\s*var\(--max-width\)/,
-      );
+  describe("共有のボタンのタップの標的が 44px 以上であること（§6）", () => {
+    it("Button.module.css に min-height: 44px ルールが存在する", () => {
+      expect(buttonCss).toMatch(/min-height:\s*44px/);
     });
 
-    it(".contentColumn の横パディングが var(--space-24) であること（新デザインの 8px スケール）", () => {
-      expect(css).toMatch(
-        /\.contentColumn[^{]*\{[^}]*padding:[^;}]*var\(--space-24\)/,
-      );
-    });
-
-    it("Footer.module.css の .inner 横パディングが var(--space-16) であること（新デザイン chrome の一貫性）", () => {
-      expect(footerCss).toMatch(
-        /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--space-16\)/,
-      );
-    });
-
-    it("Header.module.css の .inner 横パディングが var(--space-16) であること（新デザイン chrome の一貫性）", () => {
-      expect(headerCss).toMatch(
-        /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--space-16\)/,
-      );
-    });
-
-    it("page.module.css の SP ブレークポイントは 720px（Header/Footer と一致）", () => {
-      // サイト共通の SP ブレークポイントは 720px
-      expect(css).toMatch(/@media\s*\(max-width:\s*720px\)/);
-      expect(css).not.toMatch(/@media\s*\(max-width:\s*768px\)/);
-    });
-  });
-
-  describe("page.module.css — 読む幅とコードブロックの背景", () => {
-    it(".prose が --measure（読む幅）に絞られていること（DESIGN.md §4「本文幅と操作幅」）", () => {
-      expect(css).toMatch(/\.prose[^{]*\{[^}]*max-width:\s*var\(--measure\)/);
-    });
-
-    it("prose pre のフォールバック背景に --paper-2（一段沈む面・light/dark 両対応）が使われていること", () => {
-      expect(css).toMatch(/\.prose pre[^{]*\{[^}]*var\(--paper-2\)/);
-    });
-
-    it("Shiki dual-theme 切替（:global(.dark) .shiki）は維持されていること", () => {
-      expect(css).toMatch(/:global\(\.dark\)\s*\.prose\s*:global\(\.shiki\)/);
-    });
-  });
-
-  describe("WCAG 2.5.5: ShareButtons.module.css に min-height: 44px が定義されていること", () => {
-    it("ShareButtons.module.css に min-height: 44px ルールが存在する", () => {
-      expect(shareButtonsCss).toMatch(/min-height:\s*44px/);
-    });
-
-    it("ShareButtons.module.css に min-width: 44px ルールが存在する", () => {
-      expect(shareButtonsCss).toMatch(/min-width:\s*44px/);
+    it("Button.module.css に min-width: 44px ルールが存在する", () => {
+      expect(buttonCss).toMatch(/min-width:\s*44px/);
     });
   });
 });

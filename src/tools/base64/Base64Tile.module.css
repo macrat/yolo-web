@@ -1,62 +1,38 @@
-/* Base64Tile スタイル
- * cycle-227 T-2: Base64Tool.module.css をタイル向けに継承・移植。
- * DESIGN.md「店構え」準拠（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
- * 朱 --accent。角丸 0 基調 var(--radius)、入力欄・値札のみ var(--radius-sm)=2px。影は使わない）。
- *
- * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- */
-
-/* コントロール行: SegmentedControl を配置 */
-.controls {
+/* 向き・形式・入力欄・結果を縦に積み、あいだを 16px あける（§5）。 */
+.tile {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-/* URL-safe オプション行 */
-.optionRow {
+/* URL-safe のチェックボックスと、その説明。説明は収まらなければ次の行に回る。 */
+.option {
   display: flex;
-  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  column-gap: var(--space-8);
 }
 
 .optionDesc {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  line-height: 1.5;
-}
-
-/* 入力/出力フィールド */
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
-}
-
-.field:last-child {
-  margin-bottom: 0;
-}
-
-.fieldLabel {
-  font-size: 0.85rem;
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
   color: var(--ink-2);
 }
 
-/* 出力ヘッダー: ラベルとコピーボタンを横並び */
-.outputHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* 変換の結果（§8 の1続きの文字列）。本文の大きさで本文の幅に組む。デコードした文は通常の禁則で折り、1行に
+ * 収まらない語だけを語の中で折る。改行と空白は、そのまま見せる。 */
+.output {
+  max-width: var(--measure);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
-/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
-.statusSummary {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  min-height: 1.2em;
+/* エンコードした Base64 は全体が1語で、「-」「/」は語の区切りでなく値の中の1字である。その後ろを折り所に
+ * せず、字のあいだのどこでも折って行を埋める。 */
+.encoded {
+  word-break: break-all;
+  line-break: anywhere;
 }

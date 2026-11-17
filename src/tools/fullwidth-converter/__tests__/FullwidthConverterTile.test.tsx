@@ -1,19 +1,19 @@
 /**
- * FullwidthConverterTile ユニットテスト（T-3 TDD: 実装前に書く）
+ * FullwidthConverterTile ユニットテスト
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（方向トグル・checkbox 3個が表示される）
- * - V-2: variant=toHalfwidth（方向固定・トグル非表示・checkbox 3個あり）
- * - V-3: variant=toFullwidth（方向固定・トグル非表示・checkbox 3個あり）
+ * - V-1: variant=full でのレンダリング（方向のラジオボタン・checkbox 3個が表示される）
+ * - V-2: variant=toHalfwidth（方向固定・方向のラジオボタン非表示・checkbox 3個あり）
+ * - V-3: variant=toFullwidth（方向固定・方向のラジオボタン非表示・checkbox 3個あり）
  * - V-4: variant=toHalfwidth で半角変換が動く
  * - V-5: variant=toFullwidth で全角変換が動く
  * - V-6: variant=full でモード切り替えが動く
  * - V-7: id インスタンス一意性（複数インスタンスで id が重複しない）
  * - V-8: checkbox group ラベル関連（role=group + aria-label が存在する）
  * - V-9: checkbox の label と input の関連（htmlFor/id が正しく機能する）
- * - V-10: 出力 readOnly + role=status サマリ（C-3 準拠）
+ * - V-10: 出力 readOnly + role=status サマリ
  * - V-11: コピーボタン disabled/enabled 状態
- * - V-12: コピー後ラベル変化（COPIED_LABEL）
+ * - V-12: コピー後ラベル変化（コピー済み）
  * - V-13: オプション checkbox OFF で対象文字種が変換されない
  * - V-14: デフォルト variant は full と同等
  */
@@ -39,7 +39,7 @@ beforeEach(() => {
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("方向トグル（SegmentedControl）が表示される", () => {
+  it("方向のラジオボタンの組が表示される", () => {
     render(<FullwidthConverterTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -59,8 +59,8 @@ describe("V-1: variant=full", () => {
 });
 
 // --- V-2: variant=toHalfwidth ---
-describe("V-2: variant=toHalfwidth（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+describe("V-2: variant=toHalfwidth（方向固定・方向のラジオボタン非表示）", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<FullwidthConverterTile variant="toHalfwidth" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -80,8 +80,8 @@ describe("V-2: variant=toHalfwidth（方向固定・トグル非表示）", () =
 });
 
 // --- V-3: variant=toFullwidth ---
-describe("V-3: variant=toFullwidth（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+describe("V-3: variant=toFullwidth（方向固定・方向のラジオボタン非表示）", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<FullwidthConverterTile variant="toFullwidth" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -243,7 +243,7 @@ describe("V-9: checkbox label/input 関連", () => {
   });
 });
 
-// --- V-10: 出力 readOnly + role=status サマリ（C-3） ---
+// --- V-10: 出力 readOnly + role=status サマリ ---
 describe("V-10: 出力 readOnly + role=status サマリ", () => {
   it("出力 textarea が readOnly である", () => {
     render(<FullwidthConverterTile variant="full" />);
@@ -276,7 +276,7 @@ describe("V-10: 出力 readOnly + role=status サマリ", () => {
 describe("V-11: コピーボタン disabled/enabled 状態", () => {
   it("入力が空のときコピーボタンが disabled", () => {
     render(<FullwidthConverterTile variant="full" />);
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     expect(copyBtn).toBeDisabled();
   });
 
@@ -284,25 +284,23 @@ describe("V-11: コピーボタン disabled/enabled 状態", () => {
     render(<FullwidthConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト") as HTMLTextAreaElement;
     fireEvent.change(input, { target: { value: "ABC" } });
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     expect(copyBtn).not.toBeDisabled();
   });
 });
 
 // --- V-12: コピー後ラベル変化 ---
-describe("V-12: コピー後ラベル変化（COPIED_LABEL）", () => {
-  it("コピー後に「コピーしました」と表示される", async () => {
+describe("V-12: コピー後ラベル変化（コピー済み）", () => {
+  it("コピー後に「コピー済み」と表示される", async () => {
     render(<FullwidthConverterTile variant="full" />);
     const input = screen.getByLabelText("入力テキスト") as HTMLTextAreaElement;
     fireEvent.change(input, { target: { value: "ABC" } });
 
-    const copyBtn = screen.getByRole("button", { name: "コピー" });
+    const copyBtn = screen.getByRole("button", { name: "変換結果をコピー" });
     fireEvent.click(copyBtn);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "コピーしました" }),
-      ).toBeInTheDocument();
+      expect(copyBtn).toHaveTextContent("コピー済み");
     });
   });
 });
@@ -340,7 +338,7 @@ describe("V-13: オプション checkbox OFF での変換抑制", () => {
 
 // --- V-14: デフォルト variant は full と同等 ---
 describe("V-14: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等の動作をする（トグルが表示される）", () => {
+  it("variant 未指定の場合 full と同等の動作をする（方向のラジオボタンが表示される）", () => {
     render(<FullwidthConverterTile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -355,7 +353,7 @@ describe("V-14: デフォルト variant", () => {
 
 // --- CSS トークン検証 ---
 describe("CSS トークン検証", () => {
-  it("--color-* 旧トークンが CSS に存在しない", () => {
+  it("CSS が --color-* トークンを参照しない", () => {
     const cssPath = join(
       process.cwd(),
       "src/tools/fullwidth-converter/FullwidthConverterTile.module.css",
