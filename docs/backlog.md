@@ -94,7 +94,7 @@
 | B-797 | 来訪者が読む文言の見直し | P3 | 着手: B-754の出荷のあと、B-796のT6-6のあと。T7のうち、ゲームの判定を色で説明する記事(B-754で直す。cycle-320/rollout-plan.md 2)のほかのもの。B-649も扱う。詳細cycle-316/carryover-tasks.mdのT7の行 |
 | B-798 | テストと機械の検査の作り直し | P3 | 着手: B-754の出荷のあと。T8: デザイン値を固定したテストをDESIGN.mdの規定の検査へ作り直し、quizのdataのテストをまとめ直し、機械の検査を全ページと操作で現れる状態に掛ける。詳細cycle-316/carryover-tasks.mdのT8の行・completion-criteria.md |
 | B-799 | 実機に頼る確かめの振り分け | P3 | 着手: B-754の出荷のあと。T9の残り: 実機の確かめを1つずつ、端末に頼らない作り・近似・受け入れてGAで見張る(線はADR009)に振り分け、レビューのあと進める。B-621の確かめも。詳細cycle-316/carryover-tasks.mdのT9の行 |
-| B-800 | T11の残り | P4 | 着手: B-754の出荷のあと。tmp/等の参照を替え、T3でbuilderが直したDESIGN.mdの文言を確認。originのdesign-rolloutを消す(cycle-321は権限が無く未了)。design-rollout-wipはB-793後に消す。詳細cycle-316/carryover-tasks.md |
+| B-800 | T11の残り | P4 | 着手: B-754の出荷のあと。tmp/等の参照をcycle-316-recordsへ替え、T3レビュー中止時にbuilderが直したDESIGN.mdの文言を確かめる。design-rollout-wipはB-793後に消す。詳細cycle-316/carryover-tasks.md |
 | B-801 | ADR009の基線を取る | P1 | 着手: 2026-12-01まで(出荷は11-17)。出荷の直前28日のSCのカテゴリ別とGAの基線をADR009に保存し撤退基準を確定。release 852f2c4のGAのイベントがBigQueryに届いたことも確かめる。出荷日から変わる計測もADR009へ。SCのCWV実地値はB-758へ |
 | B-802 | 日本語として正しくない用語の利用を是正する | P3 | 着手: B-754の出荷のあと。DESIGN.md・スキル・knowledge・コードのコメントとテスト名の「着地」「道具」「測り」「送り」「面」など。過去のサイクル文書は記録なので直さない。経緯cycle-320/incident-3.md |
 | B-803 | 文節の分け方が複合動詞の中に折り所を置く | P2 | 着手: B-754の出荷のあと。「成し／遂げている」など、診断の選択肢で375px・320pxに4か所ずつ。共通の分け方（splitIntoPhrases）を直し、全ページの折れ方を確かめ直す。測るスクリプトは作り直す。詳細cycle-321/review-fix-choice-wrap.md |
@@ -106,6 +106,7 @@
 | B-809 | デザインの刷新についてブログ記事を書くか判断する | P3 | 着手: B-754の出荷のあと。出荷のサイクルでは書かないと決めていた（cycle-320/rollout-plan.md）。読者にとって学びか楽しみになる題材があるかで判断する |
 | B-810 | 記事の番号つきの箇条が補足の枠で切れると、後ろの番号が1から振り直される | P3 | 着手: B-754の出荷のあと。sanitizeがolのstartを落とすためと見られ、全記事に当たりうる。例: /blog/japanese-word-puzzle-games-guide。刷新の前から同じ。詳細cycle-321/review-t2e-2.md |
 | B-811 | 確かめの道具を守る（pushの前の検査が.nextを壊す・完了で確かめのスクリプトを消す） | P3 | 着手: B-754の出荷のあと。pre-push-check.shのビルドの出力先を分ける。後のサイクルが使うスクリプトの残し方を手順に書く。詳細cycle-321/index.md 補足事項 |
+| B-812 | originのdesign-rolloutブランチを消す | P4 | 着手: 作業ブランチ以外を消す権限のあるセッションで。中身はすべてmainにあり、CIの対象からも外した。cycle-321のセッションは作業ブランチ以外を消す権限が無く、消せなかった(HTTP 403)。詳細cycle-321/index.md 補足事項 |
 | B-791 | .claude/settings.jsonのenvにLC_ALL=C.UTF-8を置くか決める | P3 | 着手: B-754の出荷のあと、mainで。日本語をCロケールのgrepで探す型が再発(cycle-318)。hookとスクリプトのふるまいが変わらないか確かめて決める。詳細cycle-318/review-ap-check-6.md |
 | B-792 | 失敗した呼び出しの後の同じバッチのcommit・push・木の削除をhookで止める | P2 | 着手: B-754の出荷のあと、mainで。AP-WF29が7度目(cycle-319)。同じバッチが順に走るかから確かめて組む。組めないなら根拠を記録して手で守る。詳細cycle-319/review-ap-check-2.md |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 着手: B-754の出荷のあと、B-793のT5-18で。記事の表はT4、DataTableはcycle-317のT5-8bで済んだ。残りは道具の表。詳細cycle-302/incident-2.md |
